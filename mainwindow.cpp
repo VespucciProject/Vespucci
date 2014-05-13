@@ -68,3 +68,9 @@ void MainWindow::on_actionNew_Univariate_Map_triggered()
     UnivariateDialog *univariate_dialog = new UnivariateDialog(this, workspace, row);
     univariate_dialog->show();
 }
+
+void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+
+}

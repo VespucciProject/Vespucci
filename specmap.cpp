@@ -121,7 +121,6 @@ void SpecMap::Univariate(int min,
                          QString value_method)
 {
 
-    x_.print(cout);
     cout << "SpecMap::Univariate" << endl;
 
     unsigned int size = x_.n_elem;
@@ -177,6 +176,73 @@ void SpecMap::Univariate(int min,
     map_ptr->CreateImage(QCPColorGradient::gpHot); //a switch statement will select colorscheme later.
     map_ptr->ShowMapWindow();
 }
+
+void SpecMap::BandRatio(int first_min,
+                        int first_max,
+                        int second_min,
+                        int second_max,
+                        QString name,
+                        QString value_method)
+{
+
+    cout << "SpecMap::Univariate" << endl;
+
+    unsigned int size = x_.n_elem;
+    unsigned int i;
+
+    const QCPRange value_range = this->ValueRange();
+    const QCPRange key_range = this->KeyRange();
+    int key_size = this->KeySize();
+    int value_size = this->ValueSize();
+
+    MapData* map = new MapData(x_axis_description_, y_axis_description_, this);
+
+    map->set_name(name);
+    map->set_type("1-Region Univariate");
+
+    QCPColorMapData map_data(key_size, value_size, key_range, value_range);
+
+    rowvec first_region;
+    rowvec second_region;
+    colvec results;
+    results.set_size(size);
+
+    cout << "conditionals based on peak determination method" << endl;
+
+    if(value_method == "area"){
+        // Do peak fitting stuff here.
+    }
+
+    else if(value_method == "derivative"){
+        // Do derivative stuff here
+    }
+
+    else{
+        // Makes an intensity map
+        cout << "conditional for intensity map" << endl;
+        map->set_type("1-Region Univariate (Intensity)");
+        cout << "line 157" <<endl;
+        for (i=0; i<size; ++i){
+            first_region = spectra_(i, span(first_min, first_max));
+            second_region = spectra_(i, span(second_min, second_max));
+            results(i)= first_region.max()/second_region.max();
+        }
+    }
+
+    //double results_min = results.min();
+    //load data
+    for (i=0; i<size; i++){
+        //results(i) = results(i) - results_min;
+        map_data.setData(x_(i), y_(i), results(i));
+    }
+
+    map->SetMapData(&map_data);
+    this->AddMap(map);
+    MapData *map_ptr = maps_.last();
+    map_ptr->CreateImage(QCPColorGradient::gpHot); //a switch statement will select colorscheme later.
+    map_ptr->ShowMapWindow();
+}
+
 
 vector<int> SpecMap::FindRange(double start, double end)
 {

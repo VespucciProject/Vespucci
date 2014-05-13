@@ -46,6 +46,8 @@ private slots:
 
     void on_actionNew_Univariate_Map_triggered();
 
+    void on_actionNew_Band_Ratio_Map_triggered();
+
 private:
     Ui::MainWindow *ui;
     VespucciWorkspace *workspace;

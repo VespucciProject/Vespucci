@@ -76,6 +76,13 @@ public:
                     QString name,
                     QString value_method);
 
+    void BandRatio(int first_min,
+                   int first_max,
+                   int second_min,
+                   int second_max,
+                   QString name,
+                   QString value_method);
+
     mat PartialLeastSquares(int components,
                             bool include_negative_scores);
 
