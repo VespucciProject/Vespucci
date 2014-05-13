@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>338</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Vespucci</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>vespuccilogo.svg</normaloff>vespuccilogo.svg</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QListWidget" name="datasetsListWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>181</width>
+      <height>251</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="mapsListWidget">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>30</y>
+      <width>181</width>
+      <height>251</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Datasets</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>10</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Maps</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>400</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionLoad_Workspace"/>
+    <addaction name="actionImport_Dataset_from_File"/>
+    <addaction name="actionSave_Workspace"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionDocumentation"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout_Vespucci"/>
+    <addaction name="actionCiting_Vespucci"/>
+   </widget>
+   <widget class="QMenu" name="menuData">
+    <property name="title">
+     <string>Data</string>
+    </property>
+    <addaction name="actionClose_Dataset"/>
+    <addaction name="actionExport_Dataset_As"/>
+    <addaction name="actionConcatenate_Datasets"/>
+   </widget>
+   <widget class="QMenu" name="menuMap">
+    <property name="title">
+     <string>Map</string>
+    </property>
+    <addaction name="actionNew_Univariate_Map"/>
+    <addaction name="actionNew_Band_Ratio_Map"/>
+    <addaction name="actionNew_Multivariate_Map"/>
+    <addaction name="separator"/>
+    <addaction name="actionDelete_Map"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuData"/>
+   <addaction name="menuMap"/>
+   <addaction name="menuWindow"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionLoad_Workspace">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Load Workspace...</string>
+   </property>
+   <property name="toolTip">
+    <string>Load a Vespucci workspace saved in HDF5 format</string>
+   </property>
+  </action>
+  <action name="actionSave_Workspace">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Save Workspace...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save current workspace (all datasets and created maps) as HDF5 file</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionImport_Dataset_from_File">
+   <property name="text">
+    <string>Import Dataset from File</string>
+   </property>
+   <property name="toolTip">
+    <string>Import a hyperspectral dataset from a text or instrument file</string>
+   </property>
+  </action>
+  <action name="actionDocumentation">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Vespucci Webpage</string>
+   </property>
+  </action>
+  <action name="actionAbout_Vespucci">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>About Vespucci</string>
+   </property>
+  </action>
+  <action name="actionClose_Dataset">
+   <property name="text">
+    <string>Close Dataset</string>
+   </property>
+  </action>
+  <action name="actionExport_Dataset_As">
+   <property name="text">
+    <string>Export Dataset As...</string>
+   </property>
+  </action>
+  <action name="actionConcatenate_Datasets">
+   <property name="text">
+    <string>Concatenate Datasets</string>
+   </property>
+  </action>
+  <action name="actionNew_Univariate_Map">
+   <property name="text">
+    <string>New Univariate Map...</string>
+   </property>
+  </action>
+  <action name="actionNew_Band_Ratio_Map">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>New Band Ratio Map...</string>
+   </property>
+  </action>
+  <action name="actionNew_Multivariate_Map">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>New Multivariate Map...</string>
+   </property>
+  </action>
+  <action name="actionInterpolate_Map">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Interpolate Map</string>
+   </property>
+  </action>
+  <action name="actionSet_Color_Scheme">
+   <property name="text">
+    <string>Set Color Scheme</string>
+   </property>
+  </action>
+  <action name="actionDelete_Map">
+   <property name="text">
+    <string>Delete Map</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete the currently selected map</string>
+   </property>
+  </action>
+  <action name="actionCiting_Vespucci">
+   <property name="text">
+    <string>Citing Vespucci</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
