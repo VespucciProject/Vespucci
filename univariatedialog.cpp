@@ -53,8 +53,9 @@ void UnivariateDialog::on_buttonBox_accepted()
 
     QString name = name_box_->text();
     QString value_method = value_method_selector_->currentText();
+    int color_index = color_selector_->currentIndex();
 
     cout << "call to SpecMap::Univariate" << endl;
-    data_->Univariate(min, max, name, value_method);
+    data_->Univariate(min, max, name, value_method, color_index);
 
 }

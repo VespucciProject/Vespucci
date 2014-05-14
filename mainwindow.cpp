@@ -23,6 +23,7 @@
 #include "aboutdialog.h"
 #include "citationdialog.h"
 #include "univariatedialog.h"
+#include "bandratiodialog.h"
 
 MainWindow::MainWindow(QWidget *parent, VespucciWorkspace *ws) :
     QMainWindow(parent),
@@ -72,5 +73,7 @@ void MainWindow::on_actionNew_Univariate_Map_triggered()
 void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
 {
     int row = dataset_list_widget_->currentRow();
+    BandRatioDialog *band_ratio_dialog = new BandRatioDialog(this, workspace, row);
+    band_ratio_dialog->show();
 
 }

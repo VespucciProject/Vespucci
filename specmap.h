@@ -74,7 +74,8 @@ public:
     void Univariate(int min,
                     int max,
                     QString name,
-                    QString value_method);
+                    QString value_method,
+                    int gradient_index);
 
     void BandRatio(int first_min,
                    int first_max,
@@ -123,6 +124,8 @@ public:
 
     QCPRange WavelengthRange();
     QCPRange PointSpectrumRange(int i);
+
+    QCPColorGradient GetGradient(int gradient_number);
 
 private:
     rowvec wavelength_;

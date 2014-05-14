@@ -31,12 +31,12 @@ SOURCES += main.cpp\
     mapdata.cpp \
     univariatemap.cpp \
     vespucciworkspace.cpp \
-    mapviewer.cpp \
     aboutdialog.cpp \
     citationdialog.cpp \
     univariatedialog.cpp \
     spectrumviewer.cpp \
-    bandratiodialog.cpp
+    bandratiodialog.cpp \
+    mapviewer.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -45,21 +45,21 @@ HEADERS  += mainwindow.h \
     mapdata.h \
     univariatemap.h \
     vespucciworkspace.h \
-    mapviewer.h \
     aboutdialog.h \
     citationdialog.h \
     univariatedialog.h \
     spectrumviewer.h \
-    bandratiodialog.h
+    bandratiodialog.h \
+    mapviewer.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
-    mapviewer.ui \
     aboutdialog.ui \
     citationdialog.ui \
     univariatedialog.ui \
     spectrumviewer.ui \
-    bandratiodialog.ui
+    bandratiodialog.ui \
+    mapviewer.ui
 
 RESOURCES += \
     resources.qrc

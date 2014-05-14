@@ -131,6 +131,8 @@ void MapData::CreateImage(QCPColorGradient color_scheme)
     int value_size = map_->data()->valueSize();
     key_size *= 9;
     value_size *= 9;
+    key_size +=75;
+    value_size +=75;
     plot->resize(key_size, value_size);
     QSize plot_size = plot->size();
     map_display_->resize(plot_size);

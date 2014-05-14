@@ -118,7 +118,8 @@ SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window)
 void SpecMap::Univariate(int min,
                          int max,
                          QString name,
-                         QString value_method)
+                         QString value_method,
+                         int gradient_index)
 {
 
     cout << "SpecMap::Univariate" << endl;
@@ -173,7 +174,7 @@ void SpecMap::Univariate(int min,
     map->SetMapData(&map_data);
     this->AddMap(map);
     MapData *map_ptr = maps_.last();
-    map_ptr->CreateImage(QCPColorGradient::gpHot); //a switch statement will select colorscheme later.
+    map_ptr->CreateImage(this->GetGradient(gradient_index)); //a switch statement will select colorscheme later.
     map_ptr->ShowMapWindow();
 }
 
@@ -185,7 +186,7 @@ void SpecMap::BandRatio(int first_min,
                         QString value_method)
 {
 
-    cout << "SpecMap::Univariate" << endl;
+    cout << "SpecMap::BandRatio" << endl;
 
     unsigned int size = x_.n_elem;
     unsigned int i;
@@ -477,4 +478,51 @@ QCPRange SpecMap::PointSpectrumRange(int i)
 
     QCPRange range(min, max);
     return range;
+}
+
+QCPColorGradient SpecMap::GetGradient(int gradient_number)
+{
+    switch (gradient_number)
+    {
+    case 0: return QCPColorGradient::cbBuGn;
+    case 1: return QCPColorGradient::cbBuPu;
+    case 2: return QCPColorGradient::cbGnBu;
+    case 3: return QCPColorGradient::cbOrRd;
+    case 4: return QCPColorGradient::cbPuBu;
+    case 5: return QCPColorGradient::cbPuBuGn;
+    case 6: return QCPColorGradient::cbPuRd;
+    case 7: return QCPColorGradient::cbRdPu;
+    case 8: return QCPColorGradient::cbYlGn;
+    case 9: return QCPColorGradient::cbYlGnBu;
+    case 10: return QCPColorGradient::cbYlOrBr;
+    case 11: return QCPColorGradient::cbYlOrRd;
+    case 12: return QCPColorGradient::cbBlues;
+    case 13: return QCPColorGradient::cbGreens;
+    case 14: return QCPColorGradient::cbOranges;
+    case 15: return QCPColorGradient::cbPurples;
+    case 16: return QCPColorGradient::cbReds;
+    case 17: return QCPColorGradient::cbGreys;
+    case 18: return QCPColorGradient::gpGrayscale;
+    case 19: return QCPColorGradient::gpNight;
+    case 20: return QCPColorGradient::gpCandy;
+    case 21: return QCPColorGradient::gpIon;
+    case 22: return QCPColorGradient::gpThermal;
+    case 23: return QCPColorGradient::gpPolar;
+    case 24: return QCPColorGradient::gpSpectrum;
+    case 25: return QCPColorGradient::gpJet;
+    case 26: return QCPColorGradient::gpHues;
+    case 27: return QCPColorGradient::gpHot;
+    case 28: return QCPColorGradient::gpCold;
+    case 29: return QCPColorGradient::cbBrBG;
+    case 30: return QCPColorGradient::cbPiYG;
+    case 31: return QCPColorGradient::cbPRGn;
+    case 32: return QCPColorGradient::cbPuOr;
+    case 33: return QCPColorGradient::cbRdBu;
+    case 34: return QCPColorGradient::cbRdGy;
+    case 35: return QCPColorGradient::cbRdYlBu;
+    case 36: return QCPColorGradient::cbRdYlGn;
+    case 37: return QCPColorGradient::cbSpectral;
+    case 38: return QCPColorGradient::cbCluster;
+    default: return QCPColorGradient::gpCold;
+    }
 }
