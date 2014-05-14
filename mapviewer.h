@@ -21,7 +21,9 @@
 #define MAPVIEWER_H
 
 #include <QMainWindow>
+#include "mapdata.h"
 
+class MapData;
 
 namespace Ui {
 class MapViewer;
@@ -32,11 +34,18 @@ class MapViewer : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MapViewer(QWidget *parent = 0);
+    MapViewer(MapData *data);
+    //explicit MapViewer(MapData *data);
     ~MapViewer();
+
+private slots:
+    void on_actionInterpolate_triggered();
+
+    void on_actionInterpolate_toggled(bool arg1);
 
 private:
     Ui::MapViewer *ui;
+    MapData *parent_;
 };
 
 #endif // MAPVIEWER_H

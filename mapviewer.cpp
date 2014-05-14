@@ -20,14 +20,25 @@
 #include "mapviewer.h"
 #include "ui_mapviewer.h"
 
-MapViewer::MapViewer(QWidget *parent) :
-    QMainWindow(parent),
+MapViewer::MapViewer(MapData *data) :
+    QMainWindow(0),
     ui(new Ui::MapViewer)
 {
     ui->setupUi(this);
+    parent_ = data;
 }
 
 MapViewer::~MapViewer()
 {
     delete ui;
+}
+
+void MapViewer::on_actionInterpolate_triggered()
+{
+    parent_->setInterpolate(true);
+}
+
+void MapViewer::on_actionInterpolate_toggled(bool arg1)
+{
+    parent_->setInterpolate(arg1);
 }

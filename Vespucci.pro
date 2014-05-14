@@ -9,7 +9,7 @@ QT       += widgets printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = classtest
+TARGET = vespucci
 TEMPLATE = app
 
 win32: LIBS += -L$$PWD/../../../../../Libraries/OpenBLAS-v0.2.8-x86-Win/lib/ -llibopenblas

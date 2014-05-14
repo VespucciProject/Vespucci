@@ -25,6 +25,7 @@
 #include "qcustomplot.h"
 #include "mapviewer.h"
 #include "spectrumviewer.h"
+#include "specmap.h"
 
 
 using namespace std;
@@ -32,6 +33,8 @@ using namespace arma;
 
 // This a class for processed map data.  All other map classes are subclasses.
 // Includes data (in QCPData formats), descriptive information, and statistics.
+class MapViewer;
+class SpecMap;
 
 class MapData
 {
@@ -61,7 +64,7 @@ public:
 
     //Displays the map window
     void ShowMapWindow();
-    void CreateImage(QCPColorGradient color_scheme);
+    void CreateImage(QCPColorGradient color_scheme, bool interpolation);
     void SetMapData(QCPColorMapData *map_data);
 
     void ShowSpectrumViewer();
@@ -73,7 +76,8 @@ public:
                  QString y_axis_description,
                  void *parent);
     void setSize(int key_size, int value_size);
-    //QCPColorMapData *map_data();
+    bool interpolate();
+    void setInterpolate(bool enabled);
 
 private:
     QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor

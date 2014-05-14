@@ -13,6 +13,7 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
     spectrum_plot_ = this->findChild<QCustomPlot *>("spectrumPlot");
     value_method_selector_ = this->findChild<QComboBox *>("peakComboBox");
     color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
+    interpolation_box_ = this->findChild<QCheckBox *>("interpolateCheckBox");
 
     double min = workspace->GetWavelengthMin(row);
     double max = workspace->GetWavelengthMax(row);
@@ -44,6 +45,7 @@ void UnivariateDialog::on_buttonBox_accepted()
 {
     double entered_min = min_box_->text().toDouble();
     double entered_max = min_box_->text().toDouble();
+    bool interpolation = interpolation_box_->isChecked();
 
     cout << "call to SpecMap::FindRange" << endl;
     vector<int> range = data_->FindRange(entered_min, entered_max);
@@ -56,6 +58,6 @@ void UnivariateDialog::on_buttonBox_accepted()
     int color_index = color_selector_->currentIndex();
 
     cout << "call to SpecMap::Univariate" << endl;
-    data_->Univariate(min, max, name, value_method, color_index);
+    data_->Univariate(min, max, name, value_method, color_index, interpolation);
 
 }

@@ -24,7 +24,7 @@ MapData::MapData(QString x_axis_description,
                  QString y_axis_description,
                  void *parent)
 {
-    map_display_ = new MapViewer;
+    map_display_ = new MapViewer(this);
     map_qcp_ = map_display_->findChild<QCustomPlot *>("mapView");
     map_ = new QCPColorMap(map_qcp_->xAxis, map_qcp_->yAxis);
     spectrum_display_ = new SpectrumViewer;
@@ -115,7 +115,7 @@ void MapData::SetMapData(QCPColorMapData* map_data)
     map_->setData(map_data);
 }
 
-void MapData::CreateImage(QCPColorGradient color_scheme)
+void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation)
 {
     QCustomPlot *plot = map_display_->findChild<QCustomPlot *>("mapView");
     map_->setGradient(color_scheme);
@@ -126,7 +126,7 @@ void MapData::CreateImage(QCPColorGradient color_scheme)
     QCPColorScale *color_scale = new QCPColorScale(plot);
     color_scale->setGradient(color_scheme);
     plot->plotLayout()->addElement(0, 1, color_scale);
-    map_->setInterpolate(false);
+    map_->setInterpolate(interpolation);
     int key_size = map_->data()->keySize();
     int value_size = map_->data()->valueSize();
     key_size *= 9;
@@ -136,7 +136,6 @@ void MapData::CreateImage(QCPColorGradient color_scheme)
     plot->resize(key_size, value_size);
     QSize plot_size = plot->size();
     map_display_->resize(plot_size);
-
 
 }
 
@@ -159,3 +158,15 @@ void MapData::SetYDescription(QString description)
 //{
 //    return &map_data_;
 //}
+
+bool MapData::interpolate()
+{
+    return map_->interpolate();
+}
+
+void MapData::setInterpolate(bool enabled)
+{
+    cout << "call to setInterpoloate method of MapData" << endl;
+    cout << enabled << endl;
+    map_->setInterpolate(enabled);
+}

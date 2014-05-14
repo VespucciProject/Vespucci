@@ -31,6 +31,8 @@
 using namespace std;
 using namespace arma;
 
+class MapData;
+
 class SpecMap
 {
 public:
@@ -75,7 +77,8 @@ public:
                     int max,
                     QString name,
                     QString value_method,
-                    int gradient_index);
+                    int gradient_index,
+                    bool interpolation);
 
     void BandRatio(int first_min,
                    int first_max,

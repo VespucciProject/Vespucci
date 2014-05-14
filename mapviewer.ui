@@ -40,6 +40,7 @@
     </property>
     <addaction name="actionSave_Image_As"/>
     <addaction name="actionMap_Properties"/>
+    <addaction name="actionInterpolate"/>
    </widget>
    <addaction name="menuMap"/>
   </widget>
@@ -52,6 +53,14 @@
   <action name="actionMap_Properties">
    <property name="text">
     <string>Map Properties</string>
+   </property>
+  </action>
+  <action name="actionInterpolate">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Interpolate</string>
    </property>
   </action>
  </widget>

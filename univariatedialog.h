@@ -28,6 +28,7 @@ private:
     QLineEdit *name_box_;
     QComboBox *color_selector_;
     QComboBox *value_method_selector_;
+    QCheckBox *interpolation_box_;
 
     //index of the SpecMap object in the various lists
     int data_index_;

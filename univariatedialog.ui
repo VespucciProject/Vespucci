@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>402</width>
-    <height>384</height>
+    <height>409</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>350</y>
+     <y>370</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>60</y>
+     <y>70</y>
      <width>381</width>
      <height>181</height>
     </rect>
@@ -110,9 +110,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>250</y>
+     <y>260</y>
      <width>381</width>
-     <height>91</height>
+     <height>101</height>
     </rect>
    </property>
    <property name="title">
@@ -124,10 +124,13 @@
       <x>10</x>
       <y>20</y>
       <width>361</width>
-      <height>61</height>
+      <height>71</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout_3">
+     <property name="fieldGrowthPolicy">
+      <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+     </property>
      <item row="0" column="0">
       <widget class="QLabel" name="label_6">
        <property name="text">
@@ -310,6 +313,20 @@
        </item>
       </widget>
      </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Interpolate Image?</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QCheckBox" name="interpolateCheckBox">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -317,7 +334,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>0</y>
+     <y>10</y>
      <width>381</width>
      <height>51</height>
     </rect>

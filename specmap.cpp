@@ -119,7 +119,8 @@ void SpecMap::Univariate(int min,
                          int max,
                          QString name,
                          QString value_method,
-                         int gradient_index)
+                         int gradient_index,
+                         bool interpolation)
 {
 
     cout << "SpecMap::Univariate" << endl;
@@ -174,7 +175,7 @@ void SpecMap::Univariate(int min,
     map->SetMapData(&map_data);
     this->AddMap(map);
     MapData *map_ptr = maps_.last();
-    map_ptr->CreateImage(this->GetGradient(gradient_index)); //a switch statement will select colorscheme later.
+    map_ptr->CreateImage(this->GetGradient(gradient_index), interpolation);
     map_ptr->ShowMapWindow();
 }
 
@@ -240,7 +241,7 @@ void SpecMap::BandRatio(int first_min,
     map->SetMapData(&map_data);
     this->AddMap(map);
     MapData *map_ptr = maps_.last();
-    map_ptr->CreateImage(QCPColorGradient::gpHot); //a switch statement will select colorscheme later.
+    map_ptr->CreateImage(QCPColorGradient::gpHot, false); //values will be determined later
     map_ptr->ShowMapWindow();
 }
 
