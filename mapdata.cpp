@@ -22,19 +22,38 @@
 
 MapData::MapData(QString x_axis_description,
                  QString y_axis_description,
-                 void *parent)
+                 colvec x,
+                 colvec y,
+                 colvec results,
+                 SpecMap *parent,
+                 QString *directory,
+                 QCPColorGradient gradient)
 {
-    map_display_ = new MapViewer(this);
+    directory_ = directory;
+    map_display_ = new MapViewer(this, directory_);
     map_qcp_ = map_display_->findChild<QCustomPlot *>("mapView");
     map_ = new QCPColorMap(map_qcp_->xAxis, map_qcp_->yAxis);
+    map_->setGradient(gradient);
+    map_qcp_->addPlottable(map_);
+    map_->data()->setKeyRange(parent->KeyRange());
+    map_->data()->setValueRange(parent->ValueRange());
+    map_->data()->setKeySize(parent->KeySize());
+    map_->data()->setValueSize(parent->ValueSize());
+
+    for(unsigned int i = 0; i<x.n_elem; ++i){
+        map_->data()->setData(x(i), y(i), results(i));
+    }
+    map_->rescaleDataRange();
+    map_qcp_->rescaleAxes();
+    this->CreateImage(gradient, false);
+
     spectrum_display_ = new SpectrumViewer;
     spectrum_qcp_ = spectrum_display_->findChild<QCustomPlot *>("spectrum");
-    //map_data_ = temp_map_data;
-
+    map_qcp_->setBackground(Qt::transparent);
     //create the objects the pointers point to
     x_axis_description_ = x_axis_description;
     y_axis_description_ = y_axis_description;
-    dataset_ = parent;  //parent will always be a specmap, but isn't explicitly cast as such until necessary.
+    dataset_ = parent;
 }
 
 void MapData::SetVariables(QString x_axis_description,
@@ -110,22 +129,22 @@ void MapData::ShowMapWindow()
 }
 
 //Plots the data on the MapViewer window
-void MapData::SetMapData(QCPColorMapData* map_data)
+void MapData::SetMapData(QCPColorMapData *map_data)
 {
     map_->setData(map_data);
 }
 
 void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation)
 {
-    QCustomPlot *plot = map_display_->findChild<QCustomPlot *>("mapView");
+
     map_->setGradient(color_scheme);
     map_->rescaleDataRange(true);
-    plot->addPlottable(map_);
-    plot->rescaleAxes(true);
+    map_qcp_->addPlottable(map_);
+    map_qcp_->rescaleAxes(true);
 
-    QCPColorScale *color_scale = new QCPColorScale(plot);
+    QCPColorScale *color_scale = new QCPColorScale(map_qcp_);
     color_scale->setGradient(color_scheme);
-    plot->plotLayout()->addElement(0, 1, color_scale);
+    map_qcp_->plotLayout()->addElement(0, 1, color_scale);
     map_->setInterpolate(interpolation);
     int key_size = map_->data()->keySize();
     int value_size = map_->data()->valueSize();
@@ -133,8 +152,8 @@ void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation)
     value_size *= 9;
     key_size +=75;
     value_size +=75;
-    plot->resize(key_size, value_size);
-    QSize plot_size = plot->size();
+    map_qcp_->resize(key_size, value_size);
+    QSize plot_size = map_qcp_->size();
     map_display_->resize(plot_size);
 
 }
@@ -156,17 +175,73 @@ void MapData::SetYDescription(QString description)
 
 //QCPColorMapData *MapData::map_data()
 //{
-//    return &map_data_;
+//    return map_data_;
 //}
 
 bool MapData::interpolate()
 {
+    if (!map_qcp_->hasPlottable(map_)){
+        map_qcp_->addPlottable(map_);
+    }
     return map_->interpolate();
 }
 
 void MapData::setInterpolate(bool enabled)
 {
-    cout << "call to setInterpoloate method of MapData" << endl;
-    cout << enabled << endl;
+    if (!map_qcp_->hasPlottable(map_)){
+        map_qcp_->addPlottable(map_);
+    }
     map_->setInterpolate(enabled);
+    map_qcp_->replot();
+}
+
+bool MapData::saveBmp(const QString &fileName, int width, int height, double scale)
+{
+
+    map_qcp_->setBackground(Qt::white);
+    if (!map_qcp_->hasPlottable(map_)){
+        map_qcp_->addPlottable(map_);
+    }
+
+    map_qcp_->replot();
+    bool success = map_qcp_->saveBmp(fileName, width, height, scale);
+    map_qcp_->setBackground(Qt::transparent);
+    map_qcp_->replot();
+
+    return success;
+}
+
+bool MapData::savePng(const QString &fileName, int width, int height, double scale, int quality)
+{
+    if (!map_qcp_->hasPlottable(map_)){
+        map_qcp_->addPlottable(map_);
+        map_qcp_->replot();
+    }
+
+    bool success = map_qcp_->savePng(fileName, width, height, scale, quality);
+    return success;
+}
+
+bool MapData::saveJpg(const QString &fileName, int width, int height, double scale, int quality)
+{
+    map_qcp_->setBackground(Qt::white);
+    if (!map_qcp_->hasPlottable(map_)){
+        map_qcp_->addPlottable(map_);
+    }
+    map_qcp_->replot();
+    bool success = map_qcp_->saveJpg(fileName, width, height, scale, quality);
+    map_qcp_->setBackground(Qt::transparent);
+    map_qcp_->replot();
+    return success;
+
+}
+
+bool MapData::saveTiff(const QString &fileName, int width, int height, double scale, int quality)
+{
+    if (!map_qcp_->hasPlottable(map_)){
+        map_qcp_->addPlottable(map_);
+    }
+    map_qcp_->replot();
+    bool success = map_qcp_->saveRastered(fileName, width, height, scale, "TIF", quality);
+    return success;
 }

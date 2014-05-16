@@ -27,7 +27,6 @@
 #include "spectrumviewer.h"
 #include "specmap.h"
 
-
 using namespace std;
 using namespace arma;
 
@@ -36,12 +35,18 @@ using namespace arma;
 class MapViewer;
 class SpecMap;
 
+
 class MapData
 {
 public:
     MapData(QString x_axis_description,
             QString y_axis_description,
-            void *parent); //dataset is the parent
+            colvec x,
+            colvec y,
+            colvec results,
+            SpecMap *parent,
+            QString *directory,
+            QCPColorGradient gradient);
 
     QString name();
     QString type();
@@ -79,6 +84,29 @@ public:
     bool interpolate();
     void setInterpolate(bool enabled);
 
+    bool savePng(const QString & fileName,
+                 int width = 0,
+                 int height = 0,
+                 double scale = 1.0,
+                 int quality = -1);
+
+    bool saveJpg(const QString & fileName,
+                 int width=0,
+                 int height = 0,
+                 double scale = 1.0,
+                 int quality = -1);
+
+    bool saveBmp(const QString & fileName,
+                 int width = 0,
+                 int height = 0,
+                 double scale = 1.0);
+
+    bool saveTiff(const QString & fileName,
+                  int width = 0,
+                  int height = 0,
+                  double scale = 1.0,
+                  int quality = 0);
+
 private:
     QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
     QString y_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
@@ -98,6 +126,9 @@ private:
     QCustomPlot *map_qcp_; //pointer to the QCustomPlot widget in MapViewer
     QCPColorMap *map_; //pointer to QCPColorMap object within the QCustomPlot widget
 
+    //QCPColorMap map_;
+    //QCPColorMapData map_data_;
+
     QCustomPlot *spectrum_qcp_; //pointer to the QCustomPlot widget in SpectrumViewer
 
     int key_size_; //size of x (number of unique x values)
@@ -105,6 +136,7 @@ private:
 
     QCPColorGradient gradient_;
 
+    QString *directory_;
 };
 
 #endif // MAPDATA_H

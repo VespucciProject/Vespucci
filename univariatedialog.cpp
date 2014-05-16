@@ -45,7 +45,6 @@ void UnivariateDialog::on_buttonBox_accepted()
 {
     double entered_min = min_box_->text().toDouble();
     double entered_max = min_box_->text().toDouble();
-    bool interpolation = interpolation_box_->isChecked();
 
     cout << "call to SpecMap::FindRange" << endl;
     vector<int> range = data_->FindRange(entered_min, entered_max);
@@ -58,6 +57,6 @@ void UnivariateDialog::on_buttonBox_accepted()
     int color_index = color_selector_->currentIndex();
 
     cout << "call to SpecMap::Univariate" << endl;
-    data_->Univariate(min, max, name, value_method, color_index, interpolation);
+    data_->Univariate(min, max, name, value_method, color_index);
 
 }

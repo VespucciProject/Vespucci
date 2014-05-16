@@ -22,6 +22,7 @@
 
 #include "specmap.h"
 #include "univariatemap.h"
+class SpecMap;
 
 class VespucciWorkspace
 {
@@ -47,6 +48,7 @@ public:
 
     void set_directory(QString directory);
     QString directory();
+    QString *directory_ptr();
 
     void close();
     void SetPointers(QMainWindow *main_window);

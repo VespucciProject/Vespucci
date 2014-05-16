@@ -19,13 +19,15 @@
 
 #include "mapviewer.h"
 #include "ui_mapviewer.h"
+#include "vespucciworkspace.h"
 
-MapViewer::MapViewer(MapData *data) :
+MapViewer::MapViewer(MapData *data, QString *directory) :
     QMainWindow(0),
     ui(new Ui::MapViewer)
 {
     ui->setupUi(this);
     parent_ = data;
+    directory_ = directory;
 }
 
 MapViewer::~MapViewer()
@@ -35,10 +37,68 @@ MapViewer::~MapViewer()
 
 void MapViewer::on_actionInterpolate_triggered()
 {
-    parent_->setInterpolate(true);
+    //see on_actionInterpolate_toggled
 }
 
 void MapViewer::on_actionInterpolate_toggled(bool arg1)
 {
     parent_->setInterpolate(arg1);
+}
+
+void MapViewer::on_actionSave_Image_As_triggered()
+{
+    QString path = *directory_;
+    path = path + "/" + parent_->name();
+
+    //this almost looks as bad as putting it all on one line.
+    QString filename =
+            QFileDialog::getSaveFileName(this,
+                                         tr("Save File"),
+                                         path,
+                                         tr("Tagged Image File Format (*.tif);; "
+                                            "Windows Bitmap (*.bmp);; "
+                                            "Portable Network Graphics (*.png);; "
+                                            "JPEG (*.jpg)"));
+
+    QStringList filename_list = filename.split(".");
+    QString extension = filename_list.last();
+
+    //this method of determining type may not be valid on non-Win platforms
+    //check this on GNU/Linux and Mac OSX later.
+
+    if (extension == "bmp")
+        parent_->saveBmp(filename, 0, 0, 1.0);
+
+    else if (extension == "png"){
+        bool ok;
+        int quality = QInputDialog::getInt(this, "Enter Quality",
+                                           "Quality (%)",
+                                           80, 0, 100, 1, &ok);
+        if (ok)
+            parent_->savePng(filename, 0, 0, 1.0, quality);
+    }
+
+    else if (extension == "jpg"){
+        bool ok;
+        int quality = QInputDialog::getInt(this, "Enter Quality",
+                                           "Quality (%)",
+                                           80, 0, 100, 1, &ok);
+        if (ok)
+            parent_->saveJpg(filename, 0, 0, 1.0, quality);
+    }
+
+    else{
+        //default to tif, force extension (for Windows compatability)
+        if (extension != "tif")
+            filename.append(".tif");
+        bool ok;
+        int quality = QInputDialog::getInt(this,
+                                           "Compression",
+                                           "Enter 0 for no compression,"
+                                           "1 for LZW lossless compression",
+                                           0, 0, 1, 1, &ok);
+        if (ok)
+            parent_->saveTiff(filename, 0, 0, 1.0, quality);
+    }
+
 }

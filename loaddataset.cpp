@@ -29,7 +29,7 @@ LoadDataset::LoadDataset(QWidget *parent, VespucciWorkspace *ws) :
 {
     ui->setupUi(this);
     workspace = ws;
-
+    directory_ = ws->directory_ptr();
     QLineEdit *name_box = this->findChild<QLineEdit *>("nameBox");
     QString name = "Dataset" + QString::number(workspace->dataset_loading_count());
     name_box->setText(name); //puts in default name
@@ -99,7 +99,7 @@ void LoadDataset::on_buttonBox_accepted()
         QFile inputfile(filename);
         inputfile.open(QIODevice::ReadOnly);
         QTextStream inputstream(&inputfile);
-        SpecMap data(inputstream, workspace->main_window());
+        SpecMap data(inputstream, workspace->main_window(), directory_);
         inputfile.close();
 
         data.SetName(name);

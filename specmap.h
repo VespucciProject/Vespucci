@@ -37,7 +37,7 @@ class SpecMap
 {
 public:
     SpecMap();
-    SpecMap(QTextStream& inputstream, QMainWindow *main_window);
+    SpecMap(QTextStream& inputstream, QMainWindow *main_window, QString *directory);
 
 
 
@@ -77,15 +77,15 @@ public:
                     int max,
                     QString name,
                     QString value_method,
-                    int gradient_index,
-                    bool interpolation);
+                    int gradient_index);
 
     void BandRatio(int first_min,
                    int first_max,
                    int second_min,
                    int second_max,
                    QString name,
-                   QString value_method);
+                   QString value_method,
+                   int gradient_index);
 
     mat PartialLeastSquares(int components,
                             bool include_negative_scores);
@@ -146,6 +146,8 @@ private:
 
     QString x_axis_description_; //abcissa legend
     QString y_axis_description_; //ordinate legend
+
+    QString *directory_;
 };
 
 #endif // SPECMAP_H

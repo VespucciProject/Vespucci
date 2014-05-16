@@ -44,6 +44,7 @@ private slots:
 private:
     Ui::LoadDataset *ui;
     VespucciWorkspace *workspace;
+    QString *directory_;
 };
 
 #endif // LOADDATASET_H

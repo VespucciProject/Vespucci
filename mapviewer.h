@@ -24,7 +24,6 @@
 #include "mapdata.h"
 
 class MapData;
-
 namespace Ui {
 class MapViewer;
 }
@@ -34,7 +33,7 @@ class MapViewer : public QMainWindow
     Q_OBJECT
 
 public:
-    MapViewer(MapData *data);
+    MapViewer(MapData *data, QString *directory);
     //explicit MapViewer(MapData *data);
     ~MapViewer();
 
@@ -43,9 +42,12 @@ private slots:
 
     void on_actionInterpolate_toggled(bool arg1);
 
+    void on_actionSave_Image_As_triggered();
+
 private:
     Ui::MapViewer *ui;
     MapData *parent_;
+    QString *directory_;
 };
 
 #endif // MAPVIEWER_H

@@ -28,13 +28,13 @@ SpecMap::SpecMap()
 
 }
 
-SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window)
+SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *directory)
 {
     //Set up variables unrelated to hyperspectral data:
     map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
     map_loading_count_ = 0;
 
-
+    directory_ = directory;
 
     int i, j;
     wall_clock timer;
@@ -119,8 +119,7 @@ void SpecMap::Univariate(int min,
                          int max,
                          QString name,
                          QString value_method,
-                         int gradient_index,
-                         bool interpolation)
+                         int gradient_index)
 {
 
     cout << "SpecMap::Univariate" << endl;
@@ -128,54 +127,51 @@ void SpecMap::Univariate(int min,
     unsigned int size = x_.n_elem;
     unsigned int i;
 
-    const QCPRange value_range = this->ValueRange();
-    const QCPRange key_range = this->KeyRange();
-    int key_size = this->KeySize();
-    int value_size = this->ValueSize();
+//    const QCPRange value_range = this->ValueRange();
+//    const QCPRange key_range = this->KeyRange();
+//    int key_size = this->KeySize();
+//    int value_size = this->ValueSize();
 
-    MapData* map = new MapData(x_axis_description_, y_axis_description_, this);
 
-    map->set_name(name);
-    map->set_type("1-Region Univariate");
-
-    QCPColorMapData map_data(key_size, value_size, key_range, value_range);
 
     rowvec region;
     colvec results;
     results.set_size(size);
+    QString map_type;
 
     cout << "conditionals based on peak determination method" << endl;
 
     if(value_method == "area"){
         // Do peak fitting stuff here.
+        map_type = "1-Region Univariate (Area)";
     }
 
     else if(value_method == "derivative"){
         // Do derivative stuff here
+        map_type = "1-Region Univariate (Derivative)";
     }
 
     else{
         // Makes an intensity map
         cout << "conditional for intensity map" << endl;
-        map->set_type("1-Region Univariate (Intensity)");
+        map_type = "1-Region Univariate (Intensity)";
         cout << "line 157" <<endl;
         for (i=0; i<size; ++i){
             region = spectra_(i, span(min, max));
             results(i)=region.max();
         }
     }
+   // MapData* map = new MapData(x_axis_description_, y_axis_description_, this, directory_);
+    MapData* map = new MapData(x_axis_description_,
+                               y_axis_description_,
+                               x_, y_, results,
+                               this, directory_,
+                               this->GetGradient(gradient_index));
 
-    //double results_min = results.min();
-    //load data
-    for (i=0; i<size; i++){
-        //results(i) = results(i) - results_min;
-        map_data.setData(x_(i), y_(i), results(i));
-    }
-
-    map->SetMapData(&map_data);
+    map->set_name(name);
+    map->set_type(map_type);
     this->AddMap(map);
     MapData *map_ptr = maps_.last();
-    map_ptr->CreateImage(this->GetGradient(gradient_index), interpolation);
     map_ptr->ShowMapWindow();
 }
 
@@ -184,25 +180,15 @@ void SpecMap::BandRatio(int first_min,
                         int second_min,
                         int second_max,
                         QString name,
-                        QString value_method)
+                        QString value_method,
+                        int gradient_index)
 {
 
     cout << "SpecMap::BandRatio" << endl;
+    QString map_type;
 
     unsigned int size = x_.n_elem;
     unsigned int i;
-
-    const QCPRange value_range = this->ValueRange();
-    const QCPRange key_range = this->KeyRange();
-    int key_size = this->KeySize();
-    int value_size = this->ValueSize();
-
-    MapData* map = new MapData(x_axis_description_, y_axis_description_, this);
-
-    map->set_name(name);
-    map->set_type("1-Region Univariate");
-
-    QCPColorMapData map_data(key_size, value_size, key_range, value_range);
 
     rowvec first_region;
     rowvec second_region;
@@ -213,16 +199,18 @@ void SpecMap::BandRatio(int first_min,
 
     if(value_method == "area"){
         // Do peak fitting stuff here.
+        map_type = "2-Region Band Ratio Map (Area)";
     }
 
     else if(value_method == "derivative"){
         // Do derivative stuff here
+        map_type = "2-Region Band Ratio Map (Derivative)";
     }
 
     else{
         // Makes an intensity map
         cout << "conditional for intensity map" << endl;
-        map->set_type("1-Region Univariate (Intensity)");
+        map_type = "2-Region Band Ratio Map (Intensity)";
         cout << "line 157" <<endl;
         for (i=0; i<size; ++i){
             first_region = spectra_(i, span(first_min, first_max));
@@ -231,17 +219,17 @@ void SpecMap::BandRatio(int first_min,
         }
     }
 
-    //double results_min = results.min();
-    //load data
-    for (i=0; i<size; i++){
-        //results(i) = results(i) - results_min;
-        map_data.setData(x_(i), y_(i), results(i));
-    }
+    MapData* map = new MapData(x_axis_description_,
+                               y_axis_description_,
+                               x_, y_, results,
+                               this, directory_,
+                               this->GetGradient(gradient_index));
 
-    map->SetMapData(&map_data);
+    map->set_name(name);
+    map->set_type(map_type);
+
     this->AddMap(map);
     MapData *map_ptr = maps_.last();
-    map_ptr->CreateImage(QCPColorGradient::gpHot, false); //values will be determined later
     map_ptr->ShowMapWindow();
 }
 

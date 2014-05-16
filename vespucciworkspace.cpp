@@ -127,3 +127,8 @@ SpecMap* VespucciWorkspace::DatasetAt(int i)
 {
     return &datasets_[i];
 }
+
+QString* VespucciWorkspace::directory_ptr()
+{
+    return &directory_;
+}
