@@ -127,13 +127,6 @@ void SpecMap::Univariate(int min,
     unsigned int size = x_.n_elem;
     unsigned int i;
 
-//    const QCPRange value_range = this->ValueRange();
-//    const QCPRange key_range = this->KeyRange();
-//    int key_size = this->KeySize();
-//    int value_size = this->ValueSize();
-
-
-
     rowvec region;
     colvec results;
     results.set_size(size);
@@ -141,12 +134,12 @@ void SpecMap::Univariate(int min,
 
     cout << "conditionals based on peak determination method" << endl;
 
-    if(value_method == "area"){
+    if(value_method == "Area"){
         // Do peak fitting stuff here.
         map_type = "1-Region Univariate (Area)";
     }
 
-    else if(value_method == "derivative"){
+    else if(value_method == "Derivative"){
         // Do derivative stuff here
         map_type = "1-Region Univariate (Derivative)";
     }
@@ -197,12 +190,12 @@ void SpecMap::BandRatio(int first_min,
 
     cout << "conditionals based on peak determination method" << endl;
 
-    if(value_method == "area"){
+    if(value_method == "Area"){
         // Do peak fitting stuff here.
         map_type = "2-Region Band Ratio Map (Area)";
     }
 
-    else if(value_method == "derivative"){
+    else if(value_method == "Derivative"){
         // Do derivative stuff here
         map_type = "2-Region Band Ratio Map (Derivative)";
     }

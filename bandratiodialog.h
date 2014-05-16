@@ -16,6 +16,9 @@ public:
     explicit BandRatioDialog(QWidget *parent, VespucciWorkspace *ws, int row);
     ~BandRatioDialog();
 
+private slots:
+    void on_buttonBox_accepted();
+
 private:
     Ui::BandRatioDialog *ui;
 
