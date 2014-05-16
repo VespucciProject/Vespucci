@@ -19,6 +19,7 @@
 
 #include "specmap.h" //specmap includes all necessary headers.
 #include <cmath>
+#include <fstream>
 
 using namespace arma;
 using namespace std;
@@ -95,7 +96,6 @@ SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *di
         spectra_string=inputstream.readLine();
         spectra_string_list =
                 spectra_string.split("\t", QString::SkipEmptyParts);
-
         x_(i) = spectra_string_list.at(0).toDouble();
         spectra_string_list.removeAt(0);
 
@@ -161,13 +161,14 @@ void SpecMap::Univariate(int min,
                                this, directory_,
                                this->GetGradient(gradient_index));
 
-    map->set_name(name);
-    map->set_type(map_type);
+    map->set_name(name, map_type);
     this->AddMap(map);
     MapData *map_ptr = maps_.last();
     map_ptr->ShowMapWindow();
 }
 
+
+// Creates a band ratio univariate map
 void SpecMap::BandRatio(int first_min,
                         int first_max,
                         int second_min,
@@ -218,14 +219,72 @@ void SpecMap::BandRatio(int first_min,
                                this, directory_,
                                this->GetGradient(gradient_index));
 
-    map->set_name(name);
-    map->set_type(map_type);
+    map->set_name(name, map_type);
 
     this->AddMap(map);
     MapData *map_ptr = maps_.last();
     map_ptr->ShowMapWindow();
 }
 
+
+//Creates a PCA map
+void SpecMap::PrincipalComponents(int component,
+                                  bool include_negative_scores,
+                                  QString name,
+                                  int gradient_index)
+{
+    //this is because the first component corresponds to column 0 in armadillo speak
+    component -= 1;
+    cout << "SpecMap::PrincipalComponents" << endl;
+
+    mat coefficients;
+    mat score;
+    vec latent;
+    vec tsquared;
+    unsigned int i;
+    cout << "princomp (run-time error if fails!)" << endl;
+    princomp(coefficients, score, latent, tsquared, spectra_);
+
+    QString map_type;
+    QTextStream(&map_type) << "(Principal Component " << component << ")";
+
+    coefficients.save("coefficients.txt", arma_ascii);
+    score.save("score.txt", arma_ascii);
+    latent.save("latent.txt", arma_ascii);
+    tsquared.save("tsquared.txt", arma_ascii);
+
+    colvec results = score.col(component);
+
+    if (!include_negative_scores){
+        for (i=0; i<results.n_rows; ++i){
+            if (results(i) < 0){
+                results(i) = 0;
+            }
+        }
+    }
+
+    MapData *map = new MapData(x_axis_description_,
+                               y_axis_description_,
+                               x_, y_, results,
+                               this, directory_,
+                               this->GetGradient(gradient_index));
+
+
+    map->set_name(name, map_type);
+    this->AddMap(map);
+
+    PrincipalComponentsData *princompstats =
+            new PrincipalComponentsData(this,
+                                        directory_,
+                                        coefficients,
+                                        score,
+                                        latent,
+                                        tsquared,
+                                        maps_.indexOf(map));
+    this->AddPCA(princompstats);
+    MapData *map_ptr = maps_.last();
+    map_ptr->ShowMapWindow();
+}
 
 vector<int> SpecMap::FindRange(double start, double end)
 {
@@ -507,4 +566,9 @@ QCPColorGradient SpecMap::GetGradient(int gradient_number)
     case 38: return QCPColorGradient::cbCluster;
     default: return QCPColorGradient::gpCold;
     }
+}
+
+void SpecMap::AddPCA(PrincipalComponentsData *pca)
+{
+    PCA_stats_.append(pca);
 }

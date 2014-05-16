@@ -36,7 +36,9 @@ SOURCES += main.cpp\
     univariatedialog.cpp \
     spectrumviewer.cpp \
     bandratiodialog.cpp \
-    mapviewer.cpp
+    mapviewer.cpp \
+    principalcomponentsdata.cpp \
+    principalcomponentsdialog.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -50,7 +52,9 @@ HEADERS  += mainwindow.h \
     univariatedialog.h \
     spectrumviewer.h \
     bandratiodialog.h \
-    mapviewer.h
+    mapviewer.h \
+    principalcomponentsdata.h \
+    principalcomponentsdialog.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
@@ -59,7 +63,8 @@ FORMS    += mainwindow.ui \
     univariatedialog.ui \
     spectrumviewer.ui \
     bandratiodialog.ui \
-    mapviewer.ui
+    mapviewer.ui \
+    principalcomponentsdialog.ui
 
 RESOURCES += \
     resources.qrc

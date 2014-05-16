@@ -24,6 +24,7 @@
 #include "citationdialog.h"
 #include "univariatedialog.h"
 #include "bandratiodialog.h"
+#include "principalcomponentsdialog.h"
 
 MainWindow::MainWindow(QWidget *parent, VespucciWorkspace *ws) :
     QMainWindow(parent),
@@ -76,4 +77,11 @@ void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
     BandRatioDialog *band_ratio_dialog = new BandRatioDialog(this, workspace, row);
     band_ratio_dialog->show();
 
+}
+
+void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    PrincipalComponentsDialog *principal_components_dialog = new PrincipalComponentsDialog(this, workspace, row);
+    principal_components_dialog->show();
 }

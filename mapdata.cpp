@@ -29,8 +29,9 @@ MapData::MapData(QString x_axis_description,
                  QString *directory,
                  QCPColorGradient gradient)
 {
+    name_ = parent->name();
     directory_ = directory;
-    map_display_ = new MapViewer(this, directory_);
+    map_display_ = new MapViewer(name_, directory_, this);
     map_qcp_ = map_display_->findChild<QCustomPlot *>("mapView");
     map_ = new QCPColorMap(map_qcp_->xAxis, map_qcp_->yAxis);
     map_->setGradient(gradient);
@@ -56,14 +57,6 @@ MapData::MapData(QString x_axis_description,
     dataset_ = parent;
 }
 
-void MapData::SetVariables(QString x_axis_description,
-                           QString y_axis_description,
-                           void *parent)
-{
-    x_axis_description_ = x_axis_description;
-    y_axis_description_ = y_axis_description;
-    dataset_ = parent;  //parent will always be a specmap, but isn't explicitly cast as such until necessary.
-}
 
 QString MapData::name()
 {
@@ -85,9 +78,12 @@ void MapData::set_type(QString type)
     type_ = type;
 }
 
-void MapData::set_name(QString name)
+void MapData::set_name(QString name, QString type)
 {
     name_ = name;
+    type_ = type;
+    QString window_title = dataset_->name() + "—" + name + " " + type;
+    map_display_->setWindowTitle(window_title);
 }
 
 //void MapData::setKeyRange(const QCPRange& range)

@@ -27,11 +27,13 @@
 #include "qcustomplot.h"
 #include "univariatemap.h"
 //#include "vespucciworkspace.h"
+#include "principalcomponentsdata.h"
 
 using namespace std;
 using namespace arma;
 
 class MapData;
+class PrincipalComponentsData;
 
 class SpecMap
 {
@@ -87,19 +89,24 @@ public:
                    QString value_method,
                    int gradient_index);
 
-    mat PartialLeastSquares(int components,
+    void PartialLeastSquares(int components,
                             bool include_negative_scores);
 
-    mat PrincipalComponents(int components,
-                            bool include_negative_scores);
+    void PrincipalComponents(int component,
+                            bool include_negative_scores,
+                            QString name,
+                            int gradient_index);
 
-    mat VectorComponents(int endmembers,
-                         bool include_negative_scores);
+    void VectorComponents(int endmembers,
+                         bool include_negative_scores,
+                         QString name);
 
-    mat KMeans(int clusters);
+    void KMeans(int clusters,
+               QString name);
 
-    mat Agglomerative(int clusters,
-                      QString distance_metric);
+    void Agglomerative(int clusters,
+                      QString distance_metric,
+                      QString name);
 
     //MEMBER ACCESS FUNCTIONS:
     rowvec wavelength();
@@ -122,6 +129,9 @@ public:
     void RemoveMapAt(int i);
     int map_loading_count();
 
+
+    void AddPCA(PrincipalComponentsData *pca);
+
     void SetXDescription(QString description);
     void SetYDescription(QString description);
 
@@ -141,6 +151,7 @@ private:
 
     QListWidget *map_list_widget_;
     QList<MapData *> maps_;
+    QList<PrincipalComponentsData *> PCA_stats_;
     QStringList map_names_;
     int map_loading_count_;
 

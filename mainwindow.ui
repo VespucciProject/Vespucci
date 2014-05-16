@@ -43,6 +43,9 @@
       <height>251</height>
      </rect>
     </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QAbstractScrollArea::AdjustIgnored</enum>
+    </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
@@ -116,9 +119,22 @@
     <property name="title">
      <string>Map</string>
     </property>
+    <widget class="QMenu" name="menuNew_Multivariate_Map">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="title">
+      <string>New Multivariate Map...</string>
+     </property>
+     <addaction name="actionPrincipal_Components_Analysis"/>
+     <addaction name="actionPartial_Least_Squares"/>
+     <addaction name="actionVertex_Components"/>
+     <addaction name="actionK_means_Hierarchical_Clustering"/>
+     <addaction name="actionAgglomerative_Hierarchical_Clustering"/>
+    </widget>
     <addaction name="actionNew_Univariate_Map"/>
     <addaction name="actionNew_Band_Ratio_Map"/>
-    <addaction name="actionNew_Multivariate_Map"/>
+    <addaction name="menuNew_Multivariate_Map"/>
     <addaction name="separator"/>
     <addaction name="actionDelete_Map"/>
    </widget>
@@ -216,14 +232,6 @@
     <string>New Band Ratio Map...</string>
    </property>
   </action>
-  <action name="actionNew_Multivariate_Map">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>New Multivariate Map...</string>
-   </property>
-  </action>
   <action name="actionInterpolate_Map">
    <property name="checkable">
     <bool>true</bool>
@@ -248,6 +256,31 @@
   <action name="actionCiting_Vespucci">
    <property name="text">
     <string>Citing Vespucci</string>
+   </property>
+  </action>
+  <action name="actionPrincipal_Components_Analysis">
+   <property name="text">
+    <string>Principal Components</string>
+   </property>
+  </action>
+  <action name="actionPartial_Least_Squares">
+   <property name="text">
+    <string>Partial Least Squares</string>
+   </property>
+  </action>
+  <action name="actionVertex_Components">
+   <property name="text">
+    <string>Vertex Components</string>
+   </property>
+  </action>
+  <action name="actionK_means_Hierarchical_Clustering">
+   <property name="text">
+    <string>K-means Hierarchical Clustering</string>
+   </property>
+  </action>
+  <action name="actionAgglomerative_Hierarchical_Clustering">
+   <property name="text">
+    <string>Agglomerative Hierarchical Clustering</string>
    </property>
   </action>
  </widget>

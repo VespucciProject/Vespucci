@@ -24,6 +24,8 @@
 #include "mapdata.h"
 
 class MapData;
+
+
 namespace Ui {
 class MapViewer;
 }
@@ -33,8 +35,7 @@ class MapViewer : public QMainWindow
     Q_OBJECT
 
 public:
-    MapViewer(MapData *data, QString *directory);
-    //explicit MapViewer(MapData *data);
+    MapViewer(QString name, QString *directory, MapData *parent);
     ~MapViewer();
 
 private slots:
@@ -46,8 +47,13 @@ private slots:
 
 private:
     Ui::MapViewer *ui;
-    MapData *parent_;
+    QString name_;
     QString *directory_;
+
+    QCustomPlot *qcp_;
+
+    //QCPColorMap *color_map_;
+    MapData *parent_;
 };
 
 #endif // MAPVIEWER_H

@@ -48,6 +48,8 @@ private slots:
 
     void on_actionNew_Band_Ratio_Map_triggered();
 
+    void on_actionPrincipal_Components_Analysis_triggered();
+
 private:
     Ui::MainWindow *ui;
     VespucciWorkspace *workspace;

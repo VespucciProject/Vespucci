@@ -34,7 +34,7 @@ using namespace arma;
 // Includes data (in QCPData formats), descriptive information, and statistics.
 class MapViewer;
 class SpecMap;
-
+class PrincipalComponentsData;
 
 class MapData
 {
@@ -53,7 +53,7 @@ public:
     QString source_index();
 
     void set_type(QString type);
-    void set_name(QString name);
+    void set_name(QString name, QString type);
 
     mat stats_; //a statistics matrix like made by MATLAB
 
@@ -77,9 +77,6 @@ public:
     void SetXDescription(QString description);
     void SetYDescription(QString description);
 
-    void SetVariables(QString x_axis_description,
-                 QString y_axis_description,
-                 void *parent);
     void setSize(int key_size, int value_size);
     bool interpolate();
     void setInterpolate(bool enabled);
@@ -111,7 +108,7 @@ private:
     QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
     QString y_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
 
-    void* dataset_;
+    SpecMap* dataset_;
 
     QString name_; //Name, this is displayed in the QListView
     QString type_; //Short description of type.  set by subclass constructor.

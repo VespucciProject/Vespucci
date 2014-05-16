@@ -19,21 +19,29 @@
 
 #include "mapviewer.h"
 #include "ui_mapviewer.h"
-#include "vespucciworkspace.h"
 
-MapViewer::MapViewer(MapData *data, QString *directory) :
+
+MapViewer::MapViewer(QString name, QString *directory, MapData *parent):
     QMainWindow(0),
     ui(new Ui::MapViewer)
 {
     ui->setupUi(this);
-    parent_ = data;
+    name_ = name;
     directory_ = directory;
+
+    qcp_= this->findChild<QCustomPlot *>("mapView");
+    //QCPAbstractPlottable *color_map_abs = qcp_->plottable();
+    parent_ = parent;
+    //color_map_ = qobject_cast<QCPColorMap *>(color_map_abs);
 }
 
 MapViewer::~MapViewer()
 {
     delete ui;
 }
+
+
+
 
 void MapViewer::on_actionInterpolate_triggered()
 {
@@ -45,10 +53,11 @@ void MapViewer::on_actionInterpolate_toggled(bool arg1)
     parent_->setInterpolate(arg1);
 }
 
+
 void MapViewer::on_actionSave_Image_As_triggered()
 {
     QString path = *directory_;
-    path = path + "/" + parent_->name();
+    path = path + "/" + name_;
 
     //this almost looks as bad as putting it all on one line.
     QString filename =
@@ -67,7 +76,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
     //check this on GNU/Linux and Mac OSX later.
 
     if (extension == "bmp")
-        parent_->saveBmp(filename, 0, 0, 1.0);
+        qcp_->saveBmp(filename, 0, 0, 1.0);
 
     else if (extension == "png"){
         bool ok;
@@ -75,7 +84,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
                                            "Quality (%)",
                                            80, 0, 100, 1, &ok);
         if (ok)
-            parent_->savePng(filename, 0, 0, 1.0, quality);
+            qcp_->savePng(filename, 0, 0, 1.0, quality);
     }
 
     else if (extension == "jpg"){
@@ -84,7 +93,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
                                            "Quality (%)",
                                            80, 0, 100, 1, &ok);
         if (ok)
-            parent_->saveJpg(filename, 0, 0, 1.0, quality);
+            qcp_->saveJpg(filename, 0, 0, 1.0, quality);
     }
 
     else{
@@ -98,7 +107,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
                                            "1 for LZW lossless compression",
                                            0, 0, 1, 1, &ok);
         if (ok)
-            parent_->saveTiff(filename, 0, 0, 1.0, quality);
+            qcp_->saveRastered(filename, 0, 0, 1.0, "TIF", quality);
     }
 
 }
