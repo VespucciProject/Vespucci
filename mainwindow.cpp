@@ -43,7 +43,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionExit_triggered()
 {
-    this->close();
+    qApp->closeAllWindows();
 }
 
 void MainWindow::on_actionImport_Dataset_from_File_triggered()

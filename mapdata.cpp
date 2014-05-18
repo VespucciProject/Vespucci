@@ -106,7 +106,6 @@ void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation)
 
     map_->setGradient(color_scheme);
     map_->rescaleDataRange(true);
-    map_qcp_->addPlottable(map_);
     map_qcp_->rescaleAxes(true);
 
     QCPColorScale *color_scale = new QCPColorScale(map_qcp_);

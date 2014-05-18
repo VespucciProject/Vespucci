@@ -10,7 +10,7 @@ class PrincipalComponentsWorker : public QObject
     Q_OBJECT
 
 public:
-    PrincipalComponentsWorker(mat coeff, mat score, vec latent, vec tsquared, mat X);
+    PrincipalComponentsWorker(mat *coeff, mat *score, vec *latent, vec *tsquared, mat *X);
     ~PrincipalComponentsWorker();
 
 public slots:
@@ -21,11 +21,11 @@ signals:
     void error(QString err);
 
 private:
-    mat coeff_;
-    mat score_;
-    vec latent_;
-    vec tsquared_;
-    mat X_;
+    mat *coeff_;
+    mat *score_;
+    vec *latent_;
+    vec *tsquared_;
+    mat *X_;
 };
 
 #endif // PRINCIPALCOMPONENTSWORKER_H

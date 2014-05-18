@@ -21,6 +21,7 @@
 #include <cmath>
 #include <fstream>
 #include "principalcomponentsworker.h"
+#include <QtConcurrent/QtConcurrentRun>
 
 using namespace arma;
 using namespace std;
@@ -58,8 +59,6 @@ SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *di
     }
     double seconds = timer.toc();
     cout << "Reading wavelength took " << seconds <<" s." << endl;
-    //cout << "Wavelength vector:";
-    //wavelength_.print(cout);
     i=0;
     j=0;
 
@@ -133,7 +132,6 @@ void SpecMap::Univariate(int min,
     results.set_size(size);
     QString map_type;
 
-    cout << "conditionals based on peak determination method" << endl;
 
     if(value_method == "Area"){
         // Do peak fitting stuff here.
@@ -147,7 +145,6 @@ void SpecMap::Univariate(int min,
 
     else{
         // Makes an intensity map
-        cout << "conditional for intensity map" << endl;
         map_type = "1-Region Univariate (Intensity)";
         cout << "line 157" <<endl;
         for (i=0; i<size; ++i){
@@ -190,8 +187,6 @@ void SpecMap::BandRatio(int first_min,
     colvec results;
     results.set_size(size);
 
-    cout << "conditionals based on peak determination method" << endl;
-
     if(value_method == "Area"){
         // Do peak fitting stuff here.
         map_type = "2-Region Band Ratio Map (Area)";
@@ -204,7 +199,6 @@ void SpecMap::BandRatio(int first_min,
 
     else{
         // Makes an intensity map
-        cout << "conditional for intensity map" << endl;
         map_type = "2-Region Band Ratio Map (Intensity)";
         cout << "line 157" <<endl;
         for (i=0; i<size; ++i){
@@ -244,41 +238,29 @@ void SpecMap::PrincipalComponents(int component,
         vec latent;
         vec tsquared;
 
-        //thread executes principal components analysis using a modified arma::princomp()
-        QThread *thread = new QThread;
-        PrincipalComponentsWorker *worker =
-                new PrincipalComponentsWorker(coefficients,
-                                              score,
-                                              latent,
-                                              tsquared,
-                                              spectra_);
-        worker->moveToThread(thread);
-        //there is no error handling function in this class.  oops.
-        //connect(worker ,SIGNAL(error(QString)), this, SLOT(errorString(QString)));
-
-        QObject::connect(thread, SIGNAL(started()), worker, SLOT(princomp()));
-        QObject::connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
-        QObject::connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
-        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-        thread->start();
-
         QMessageBox alert;
-        alert.setText("Calculating principal components...");
-        alert.setInformativeText("When complete, the image will appear in a new window.");
-        alert.setStandardButtons(QMessageBox::Ok);
+        alert.setText("Calculating principal components may take a while.");
+        alert.setInformativeText("When complete, the image will appear in a new window. "
+                                 "The program may appear not to respond.  Principal "
+                                 "components only need to be calculated once per dataset. "
+                                 "OK to continue");
+
+        alert.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
         alert.setWindowTitle("Principal Components Analysis");
         int ret = alert.exec();
 
-        if (ret == QMessageBox::Ok){
-            alert.close();
+        if (ret == QMessageBox::Cancel){
+            return;
         }
 
+        if (ret == QMessageBox::Ok){
+            cout << "call to arma::princomp" << endl;
+            wall_clock timer;
+            timer.tic();
+            princomp_econ(coefficients, score, latent, tsquared, spectra_);
+            int seconds = timer.toc();
+            cout << "call to arma::princomp successful. Took " << seconds << " s" << endl;
 
-        if (thread->isFinished()){
-            if (alert.isVisible()){
-                alert.close();
-            }
-            //save the data for later use and mark PCA complete
             principal_components_data_ =
                     new PrincipalComponentsData(this,
                                                 directory_,
@@ -287,11 +269,7 @@ void SpecMap::PrincipalComponents(int component,
                                                 latent,
                                                 tsquared);
             principal_components_calculated_ = true;
-
         }
-
-
-
     }
 
     QString map_type;
@@ -323,11 +301,9 @@ void SpecMap::PrincipalComponents(int component,
 
 vector<int> SpecMap::FindRange(double start, double end)
 {
-    cout << "SpecMap::FindRange" << endl;
     vector<int> indices(2,0);
     int length = wavelength_.size();
     int i;
-    cout << "looping through wavelength_ for start" << endl;
     for (i=0; i<length; ++i){
         if(wavelength_(i)>=start){
             break;
@@ -346,7 +322,6 @@ vector<int> SpecMap::FindRange(double start, double end)
         indices[0]= i;
     }
 
-    cout <<"looping through wavelength until end found" <<endl;
     for (i=i; i<length; ++i){
         if(wavelength_(i)>=end){
             break;
@@ -397,7 +372,6 @@ QVector<double> SpecMap::WavelengthQVector()
 
 QCPRange SpecMap::ValueRange()
 {
-    cout << "SpecMap::ValueRange" << endl;
     double lower = y_.min();
     double upper = y_.max();
     QCPRange range(upper, lower);
@@ -406,7 +380,6 @@ QCPRange SpecMap::ValueRange()
 
 QCPRange SpecMap::KeyRange()
 {
-    cout << "SpecMap::KeyRange" << endl;
     double lower = x_.min();
     double upper = x_.max();
     QCPRange range(upper, lower);
@@ -415,8 +388,6 @@ QCPRange SpecMap::KeyRange()
 
 int SpecMap::KeySize()
 {
-    cout << "SpecMap::KeySize" << endl;
-
     unsigned int i;
     int x_count=1;  //this counts the first entry in x_
     double x_buf = x_(0);
@@ -429,13 +400,11 @@ int SpecMap::KeySize()
         }
     }
 
-    cout << "return value: " << x_count << endl;
     return x_count;
 }
 
 int SpecMap::ValueSize()
 {
-    cout << "SpecMap::ValueSize" << endl;
 
     unsigned int i = 0;
     int y_count = 0;
@@ -453,8 +422,6 @@ int SpecMap::ValueSize()
         }
     }
 
-
-    cout << "return value:" << y_count << endl;
     return y_count;
 }
 
@@ -524,17 +491,11 @@ void SpecMap::RemoveMap(QString name)
 
 void SpecMap::AddMap(MapData* map)
 {
-    cout << "SpecMap::AddMap" << endl;
     QString name = map->name();
-    cout << "name: " << name.toStdString() << endl;
-    cout << "adding map to list" << endl;
     maps_.append(map);
-    cout << "adding map name to list" << endl;
     map_names_.append(name);
-    cout << "adding map name to QListWidget" << endl;;
 
     map_list_widget_->addItem(name);
-    cout<<"incrementing map count" << endl;
     ++map_loading_count_;
 }
 

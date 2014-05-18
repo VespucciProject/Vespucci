@@ -28,7 +28,6 @@
 #include <fstream>
 #include "mapdata.h"
 #include "vespucciworkspace.h"
-
 using namespace std;
 using namespace arma;
 
@@ -37,7 +36,6 @@ void DeleteMap(QList<MapData> *maps, QListWidget *map_list_widget, QString name)
 
 int main(int argc, char *argv[])
 {
-
     QApplication a(argc, argv);
     //A pointer to this goes by "workspace" in every window that needs it
     VespucciWorkspace ws;
