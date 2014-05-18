@@ -50,7 +50,6 @@ MapData::MapData(QString x_axis_description,
 
     spectrum_display_ = new SpectrumViewer;
     spectrum_qcp_ = spectrum_display_->findChild<QCustomPlot *>("spectrum");
-    map_qcp_->setBackground(Qt::transparent);
     //create the objects the pointers point to
     x_axis_description_ = x_axis_description;
     y_axis_description_ = y_axis_description;
@@ -86,34 +85,6 @@ void MapData::set_name(QString name, QString type)
     map_display_->setWindowTitle(window_title);
 }
 
-//void MapData::setKeyRange(const QCPRange& range)
-//{
-//    map_data_.setKeyRange(range);
-//}
-
-//void MapData::setValueRange(const QCPRange& range)
-//{
-//    map_data_.setValueRange(range);
-//}
-
-//void MapData::setKeySize(int size)
-//{
-//    cout << "MapData::setKeySize" << endl;
-//   map_data_.setKeySize(size);
-//}
-
-//void MapData::setValueSize(int size)
-//{
-//    //++size;
-//    map_data_.setValueSize(size);
-//}
-
-//void MapData::setSize(int key_size, int value_size)
-//{
-//    cout << "MapData::setSize" << endl;
-//    map_data_.setSize(key_size, value_size);
-//}
-
 void MapData::ShowMapWindow()
 {
     if(!map_display_->isVisible()){
@@ -141,6 +112,8 @@ void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation)
     QCPColorScale *color_scale = new QCPColorScale(map_qcp_);
     color_scale->setGradient(color_scheme);
     map_qcp_->plotLayout()->addElement(0, 1, color_scale);
+    color_scale_ = map_qcp_->plotLayout()->element(0, 1);
+
     map_->setInterpolate(interpolation);
     int key_size = map_->data()->keySize();
     int value_size = map_->data()->valueSize();
@@ -154,11 +127,6 @@ void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation)
 
 }
 
-//void MapData::setData(double key, double value, double z)
-//{
-//    map_data_.setData(key, value, z);
-//}
-
 void MapData::SetXDescription(QString description)
 {
     x_axis_description_ = description;
@@ -168,11 +136,6 @@ void MapData::SetYDescription(QString description)
 {
     y_axis_description_ = description;
 }
-
-//QCPColorMapData *MapData::map_data()
-//{
-//    return map_data_;
-//}
 
 bool MapData::interpolate()
 {
@@ -191,53 +154,74 @@ void MapData::setInterpolate(bool enabled)
     map_qcp_->replot();
 }
 
-bool MapData::saveBmp(const QString &fileName, int width, int height, double scale)
+void MapData::ShowColorScale(bool enabled)
 {
-
-    map_qcp_->setBackground(Qt::white);
-    if (!map_qcp_->hasPlottable(map_)){
-        map_qcp_->addPlottable(map_);
+    if (enabled){
+        if (!map_qcp_->plotLayout()->element(0,1)->visible()){
+            map_qcp_->plotLayout()->element(0, 1)->setVisible(true);
+            map_qcp_->replot();
+            map_qcp_->repaint();
+        }
     }
 
-    map_qcp_->replot();
-    bool success = map_qcp_->saveBmp(fileName, width, height, scale);
-    map_qcp_->setBackground(Qt::transparent);
-    map_qcp_->replot();
+    else{
+        if (map_qcp_->plotLayout()->element(0, 1)->visible()){
+            map_qcp_->plotLayout()->element(0, 1)->setVisible(false);
+            map_qcp_->replot();
+            map_qcp_->repaint();
+        }
+    }
+}
 
+void MapData::ShowAxes(bool enabled)
+{
+    if (enabled){
+        if (!map_qcp_->xAxis->visible()){
+            map_qcp_->xAxis->setVisible(true);
+            map_qcp_->yAxis->setVisible(true);
+            map_qcp_->replot();
+            map_qcp_->repaint();
+        }
+    }
+
+    else{
+        if (map_qcp_->xAxis->visible()){
+            map_qcp_->xAxis->setVisible(false);
+            map_qcp_->yAxis->setVisible(false);
+            map_qcp_->replot();
+            map_qcp_->repaint();
+        }
+    }
+}
+
+bool MapData::saveBmp(const QString &fileName, int width, int height, double scale)
+{
+    bool success = map_qcp_->saveBmp(fileName, width, height, scale);
     return success;
 }
 
 bool MapData::savePng(const QString &fileName, int width, int height, double scale, int quality)
 {
-    if (!map_qcp_->hasPlottable(map_)){
-        map_qcp_->addPlottable(map_);
-        map_qcp_->replot();
-    }
-
+    map_qcp_->setBackground(Qt::transparent);
+    map_qcp_->replot();
     bool success = map_qcp_->savePng(fileName, width, height, scale, quality);
+    map_qcp_->setBackground(Qt::white);
+    map_qcp_->replot();
     return success;
 }
 
 bool MapData::saveJpg(const QString &fileName, int width, int height, double scale, int quality)
 {
-    map_qcp_->setBackground(Qt::white);
-    if (!map_qcp_->hasPlottable(map_)){
-        map_qcp_->addPlottable(map_);
-    }
-    map_qcp_->replot();
     bool success = map_qcp_->saveJpg(fileName, width, height, scale, quality);
-    map_qcp_->setBackground(Qt::transparent);
-    map_qcp_->replot();
     return success;
-
 }
 
 bool MapData::saveTiff(const QString &fileName, int width, int height, double scale, int quality)
 {
-    if (!map_qcp_->hasPlottable(map_)){
-        map_qcp_->addPlottable(map_);
-    }
+    map_qcp_->setBackground(Qt::transparent);
     map_qcp_->replot();
     bool success = map_qcp_->saveRastered(fileName, width, height, scale, "TIF", quality);
+    map_qcp_->setBackground(Qt::white);
+    map_qcp_->replot();
     return success;
 }

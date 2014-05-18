@@ -30,7 +30,7 @@ MapViewer::MapViewer(QString name, QString *directory, MapData *parent):
     directory_ = directory;
 
     qcp_= this->findChild<QCustomPlot *>("mapView");
-    //QCPAbstractPlottable *color_map_abs = qcp_->plottable();
+    qcp_->setBackground(Qt::white);
     parent_ = parent;
     //color_map_ = qobject_cast<QCPColorMap *>(color_map_abs);
 }
@@ -76,7 +76,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
     //check this on GNU/Linux and Mac OSX later.
 
     if (extension == "bmp")
-        qcp_->saveBmp(filename, 0, 0, 1.0);
+        parent_->saveBmp(filename, 0, 0, 1.0);
 
     else if (extension == "png"){
         bool ok;
@@ -84,7 +84,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
                                            "Quality (%)",
                                            80, 0, 100, 1, &ok);
         if (ok)
-            qcp_->savePng(filename, 0, 0, 1.0, quality);
+            parent_->savePng(filename, 0, 0, 1.0, quality);
     }
 
     else if (extension == "jpg"){
@@ -93,7 +93,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
                                            "Quality (%)",
                                            80, 0, 100, 1, &ok);
         if (ok)
-            qcp_->saveJpg(filename, 0, 0, 1.0, quality);
+            parent_->saveJpg(filename, 0, 0, 1.0, quality);
     }
 
     else{
@@ -107,7 +107,17 @@ void MapViewer::on_actionSave_Image_As_triggered()
                                            "1 for LZW lossless compression",
                                            0, 0, 1, 1, &ok);
         if (ok)
-            qcp_->saveRastered(filename, 0, 0, 1.0, "TIF", quality);
+            parent_->saveTiff(filename, 0, 0, 1.0, quality);
     }
 
+}
+
+void MapViewer::on_actionShow_Axes_toggled(bool arg1)
+{
+    parent_->ShowAxes(arg1);
+}
+
+void MapViewer::on_actionShow_Color_Scale_toggled(bool arg1)
+{
+    parent_->ShowColorScale(arg1);
 }

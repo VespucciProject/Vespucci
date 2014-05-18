@@ -12,8 +12,7 @@ public:
                             mat coeff,
                             mat score,
                             vec latent,
-                            vec tsquared,
-                            int map_list_index);
+                            vec tsquared);
 
     bool SaveCoefficientMatrix();
     bool SaveScoreMatrix();
@@ -22,6 +21,8 @@ public:
     bool SaveReport(); //saves all as a text report
     bool SaveAll(); //saves all as MS Excel or HDF5
 
+    colvec Results(int component);
+
 private:
     mat coeff_;
     mat score_;
@@ -29,7 +30,6 @@ private:
     vec tsquared_;
     SpecMap *parent_;
     QString *directory_;
-    int map_list_index_;
 };
 
 #endif // PRINCIPALCOMPONENTSDATA_H

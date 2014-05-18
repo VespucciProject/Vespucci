@@ -41,6 +41,8 @@
     <addaction name="actionSave_Image_As"/>
     <addaction name="actionMap_Properties"/>
     <addaction name="actionInterpolate"/>
+    <addaction name="actionShow_Axes"/>
+    <addaction name="actionShow_Color_Scale"/>
    </widget>
    <addaction name="menuMap"/>
   </widget>
@@ -51,8 +53,11 @@
    </property>
   </action>
   <action name="actionMap_Properties">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>Map Properties</string>
+    <string>Set Color Scheme...</string>
    </property>
   </action>
   <action name="actionInterpolate">
@@ -61,6 +66,28 @@
    </property>
    <property name="text">
     <string>Interpolate</string>
+   </property>
+  </action>
+  <action name="actionShow_Axes">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Axes</string>
+   </property>
+  </action>
+  <action name="actionShow_Color_Scale">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Color Scale</string>
    </property>
   </action>
  </widget>

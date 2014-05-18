@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     bandratiodialog.cpp \
     mapviewer.cpp \
     principalcomponentsdata.cpp \
-    principalcomponentsdialog.cpp
+    principalcomponentsdialog.cpp \
+    principalcomponentsworker.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -54,7 +55,8 @@ HEADERS  += mainwindow.h \
     bandratiodialog.h \
     mapviewer.h \
     principalcomponentsdata.h \
-    principalcomponentsdialog.h
+    principalcomponentsdialog.h \
+    principalcomponentsworker.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \

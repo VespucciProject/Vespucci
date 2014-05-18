@@ -45,6 +45,10 @@ private slots:
 
     void on_actionSave_Image_As_triggered();
 
+    void on_actionShow_Axes_toggled(bool arg1);
+
+    void on_actionShow_Color_Scale_toggled(bool arg1);
+
 private:
     Ui::MapViewer *ui;
     QString name_;

@@ -20,6 +20,7 @@
 #include "specmap.h" //specmap includes all necessary headers.
 #include <cmath>
 #include <fstream>
+#include "principalcomponentsworker.h"
 
 using namespace arma;
 using namespace std;
@@ -34,7 +35,7 @@ SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *di
     //Set up variables unrelated to hyperspectral data:
     map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
     map_loading_count_ = 0;
-
+    principal_components_calculated_ = false;
     directory_ = directory;
 
     int i, j;
@@ -233,30 +234,73 @@ void SpecMap::PrincipalComponents(int component,
                                   QString name,
                                   int gradient_index)
 {
-    //this is because the first component corresponds to column 0 in armadillo speak
-    component -= 1;
-    cout << "SpecMap::PrincipalComponents" << endl;
+    if (!principal_components_calculated_){
 
-    mat coefficients;
-    mat score;
-    vec latent;
-    vec tsquared;
-    unsigned int i;
-    cout << "princomp (run-time error if fails!)" << endl;
-    princomp(coefficients, score, latent, tsquared, spectra_);
+        component -= 1;
+        cout << "SpecMap::PrincipalComponents" << endl;
+
+        mat coefficients;
+        mat score;
+        vec latent;
+        vec tsquared;
+
+        //thread executes principal components analysis using a modified arma::princomp()
+        QThread *thread = new QThread;
+        PrincipalComponentsWorker *worker =
+                new PrincipalComponentsWorker(coefficients,
+                                              score,
+                                              latent,
+                                              tsquared,
+                                              spectra_);
+        worker->moveToThread(thread);
+        //there is no error handling function in this class.  oops.
+        //connect(worker ,SIGNAL(error(QString)), this, SLOT(errorString(QString)));
+
+        QObject::connect(thread, SIGNAL(started()), worker, SLOT(princomp()));
+        QObject::connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+        QObject::connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+        thread->start();
+
+        QMessageBox alert;
+        alert.setText("Calculating principal components...");
+        alert.setInformativeText("When complete, the image will appear in a new window.");
+        alert.setStandardButtons(QMessageBox::Ok);
+        alert.setWindowTitle("Principal Components Analysis");
+        int ret = alert.exec();
+
+        if (ret == QMessageBox::Ok){
+            alert.close();
+        }
+
+
+        if (thread->isFinished()){
+            if (alert.isVisible()){
+                alert.close();
+            }
+            //save the data for later use and mark PCA complete
+            principal_components_data_ =
+                    new PrincipalComponentsData(this,
+                                                directory_,
+                                                coefficients,
+                                                score,
+                                                latent,
+                                                tsquared);
+            principal_components_calculated_ = true;
+
+        }
+
+
+
+    }
 
     QString map_type;
-    QTextStream(&map_type) << "(Principal Component " << component << ")";
+    QTextStream(&map_type) << "(Principal Component " << component + 1 << ")";
 
-    coefficients.save("coefficients.txt", arma_ascii);
-    score.save("score.txt", arma_ascii);
-    latent.save("latent.txt", arma_ascii);
-    tsquared.save("tsquared.txt", arma_ascii);
-
-    colvec results = score.col(component);
+    colvec results = principal_components_data_->Results(component);
 
     if (!include_negative_scores){
-        for (i=0; i<results.n_rows; ++i){
+        for (unsigned int i=0; i<results.n_rows; ++i){
             if (results(i) < 0){
                 results(i) = 0;
             }
@@ -273,15 +317,6 @@ void SpecMap::PrincipalComponents(int component,
     map->set_name(name, map_type);
     this->AddMap(map);
 
-    PrincipalComponentsData *princompstats =
-            new PrincipalComponentsData(this,
-                                        directory_,
-                                        coefficients,
-                                        score,
-                                        latent,
-                                        tsquared,
-                                        maps_.indexOf(map));
-    this->AddPCA(princompstats);
     MapData *map_ptr = maps_.last();
     map_ptr->ShowMapWindow();
 }
@@ -566,9 +601,4 @@ QCPColorGradient SpecMap::GetGradient(int gradient_number)
     case 38: return QCPColorGradient::cbCluster;
     default: return QCPColorGradient::gpCold;
     }
-}
-
-void SpecMap::AddPCA(PrincipalComponentsData *pca)
-{
-    PCA_stats_.append(pca);
 }

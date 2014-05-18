@@ -21,9 +21,16 @@ PrincipalComponentsDialog::~PrincipalComponentsDialog()
 
 void PrincipalComponentsDialog::on_buttonBox_accepted()
 {
+    cout << "PrincipalComponentsDialog::on_buttonBox_accepted()" << endl;
+    cout << "get value from component selector" << endl;
     int component = component_selector_->value();
-    bool negative_scores = negative_score_box_->isChecked();
+    //cout << "get value of negative score checkbox" << endl;
+    //bool negative_scores = negative_score_box_->isChecked();
+    bool negative_scores = true;
+    cout << "get name of map" << endl;
     QString name = name_box_->text();
+    cout << "get gradient index" << endl;
     int gradient_index = color_selector_->currentIndex();
+    cout << "call to SpecMap::PrincipalComponents" << endl;
     data_->PrincipalComponents(component, negative_scores, name, gradient_index);
 }

@@ -129,9 +129,6 @@ public:
     void RemoveMapAt(int i);
     int map_loading_count();
 
-
-    void AddPCA(PrincipalComponentsData *pca);
-
     void SetXDescription(QString description);
     void SetYDescription(QString description);
 
@@ -151,7 +148,8 @@ private:
 
     QListWidget *map_list_widget_;
     QList<MapData *> maps_;
-    QList<PrincipalComponentsData *> PCA_stats_;
+    PrincipalComponentsData *principal_components_data_;
+
     QStringList map_names_;
     int map_loading_count_;
 
@@ -159,6 +157,8 @@ private:
     QString y_axis_description_; //ordinate legend
 
     QString *directory_;
+
+    bool principal_components_calculated_;
 };
 
 #endif // SPECMAP_H

@@ -80,6 +80,8 @@ public:
     void setSize(int key_size, int value_size);
     bool interpolate();
     void setInterpolate(bool enabled);
+    void ShowColorScale(bool enabled);
+    void ShowAxes(bool enabled);
 
     bool savePng(const QString & fileName,
                  int width = 0,
@@ -134,6 +136,8 @@ private:
     QCPColorGradient gradient_;
 
     QString *directory_;
+
+    QCPLayoutElement *color_scale_;
 };
 
 #endif // MAPDATA_H
