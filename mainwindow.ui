@@ -269,16 +269,25 @@
    </property>
   </action>
   <action name="actionVertex_Components">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Vertex Components</string>
    </property>
   </action>
   <action name="actionK_means_Hierarchical_Clustering">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>K-means Hierarchical Clustering</string>
    </property>
   </action>
   <action name="actionAgglomerative_Hierarchical_Clustering">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Agglomerative Hierarchical Clustering</string>
    </property>

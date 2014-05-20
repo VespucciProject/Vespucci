@@ -90,7 +90,9 @@ public:
                    int gradient_index);
 
     void PartialLeastSquares(int components,
-                            bool include_negative_scores);
+                             bool include_negative_scores,
+                             QString name,
+                             int gradient_index);
 
     void PrincipalComponents(int component,
                             bool include_negative_scores,
@@ -159,6 +161,7 @@ private:
     QString *directory_;
 
     bool principal_components_calculated_;
+    bool partial_least_squares_calculated_;
 };
 
 #endif // SPECMAP_H

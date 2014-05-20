@@ -30,13 +30,22 @@ SpecMap::SpecMap()
 {
 
 }
-
+///
+/// \brief SpecMap::SpecMap
+/// Main function for processing data from text files to create SpecMap objects.
+/// Currently written to accept files in "wide" format, will be expanded to deal
+/// with different ASCII formats later with conditionals.
+/// \param inputstream a text stream derived from the input file
+/// \param main_window the main window of the app
+/// \param directory the working directory
+///
 SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *directory)
 {
     //Set up variables unrelated to hyperspectral data:
     map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
+    partial_least_squares_calculated_ = false;
     directory_ = directory;
 
     int i, j;
@@ -114,7 +123,15 @@ SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *di
 
 // MAPPING FUNCTIONS //
 
-
+///
+/// \brief SpecMap::Univariate
+/// Creates a univariate image
+/// \param min left bound of spectral region of interest
+/// \param max right bound of spectral region of interest
+/// \param name name of MapData object to be created
+/// \param value_method method of determining peak (intensity, derivative, or area)
+/// \param gradient_index index of color scheme in master list (GetGradient());
+///
 void SpecMap::Univariate(int min,
                          int max,
                          QString name,
@@ -165,8 +182,17 @@ void SpecMap::Univariate(int min,
     map_ptr->ShowMapWindow();
 }
 
-
-// Creates a band ratio univariate map
+///
+/// \brief SpecMap::BandRatio
+/// Creates a band ratio univariate map.
+/// \param first_min index of left bound of first region of interest
+/// \param first_max index of right bound of first region of interest
+/// \param second_min index of left bound of second region of interest
+/// \param second_max index of right bound of second region of interest
+/// \param name name of the MapData object to be created.  This becomes name of the map to the user
+/// \param value_method how the maxima are to be determined (area, derivative, or intensity)
+/// \param gradient_index index of gradient in the master list (GetGradient())
+///
 void SpecMap::BandRatio(int first_min,
                         int first_max,
                         int second_min,
@@ -222,7 +248,17 @@ void SpecMap::BandRatio(int first_min,
 }
 
 
-//Creates a PCA map
+
+///
+/// \brief SpecMap::PrincipalComponents
+/// Performs principal component analysis on the data.  Calls a modified version
+/// of armadillo's princomp function, changed to use economical singular value
+/// decomposition.
+/// \param component the PCA component from which the image will be produced
+/// \param include_negative_scores if false, all negative scores are changed to 0
+/// \param name the name of the MapData object to be created
+/// \param gradient_index the index of the gradient in the master list (in function GetGradient)
+///
 void SpecMap::PrincipalComponents(int component,
                                   bool include_negative_scores,
                                   QString name,
@@ -299,6 +335,79 @@ void SpecMap::PrincipalComponents(int component,
     map_ptr->ShowMapWindow();
 }
 
+
+///
+/// \brief SpecMap::PartialLeastSquares
+/// Performs PLS regression on data.  Resulting map is score for one PLS Component
+/// PLS is performed once.  Subsequent maps use data from first call, stored
+/// as PartialLeastSquaresData object.
+/// Each component is determined separately using NIPALS PLS1 algorithm.
+/// \param components the number of components/response variables of the regression data
+/// \param include_negative_scores if false, program sets all negative values in the results to 0
+/// \param name the name of the MapData object to be created.
+/// \param gradient_index the index of the color gradient in the color gradient list
+///
+void SpecMap::PartialLeastSquares(int components,
+                                  bool include_negative_scores,
+                                  QString name,
+                                  int gradient_index)
+{
+    /*
+    mat p, q, w, tt;
+    mat model_space_parameters; //q in y=Tq' + e
+    mat predictor; //X in glm
+    mat response; //Y in glm, collection of column vectors
+    colvec parameters; //glm parameters b in Y=Xb +e
+    mat loadings; //in T = XV, V
+    mat scores; //in T = XV, T
+
+
+
+    //allocate appropriate amount of memory by setting sizes
+    int samples = spectra_.n_rows;
+    int responses = spectra_.n_cols;
+
+    //predictor, x, is IxK
+    //response, y, is IxJ
+    predictor.set_size(spectra_.n_rows, spectra_.n_cols);
+    response.set_size(spectra_.n_rows, components);
+    parameters.set_size(spectra_.n_rows, components);
+    scores.set_size(spectra_.n_rows, spectra_.n_cols);
+
+
+
+
+
+    //this is the NIPALS PLS1 algorithm
+    //converted from MATLAB syntax from
+    //Andersson, M. (2009), A comparison of nine PLS1 algorithms.
+    //J. Chemometrics, 23: 518–529. doi: 10.1002/cem.1248
+
+    unsigned int i;
+    for (i=0; i<components; ++i){
+        v = trans(predictor) * response;
+        w.col(i) = v / sqrt(trans(v) * v);
+        t.col(i) = predictor * w.col(i);
+        tt = trans(t.col(i)) * t.col(i);
+        p.col(i) = trans(predictor) * t.col(i) / tt;
+        predictor = predictor - t.col(i) * trans(p.col(i));
+        q(i, 1) = trans(t.col(i)) * response / tt;
+    }
+    parameters = cumsum(w * inv(trans(p) * w) * diag(trans(q)), 2);
+*/
+
+}
+
+
+
+///
+/// \brief SpecMap::FindRange.
+/// Finds the index of the wavelength value closest
+/// to the specified wavelength range.
+/// \param start the first wavelength in the spectral region of interest
+/// \param end the second wavelength in the spectral region of interest
+/// \return
+///
 vector<int> SpecMap::FindRange(double start, double end)
 {
     vector<int> indices(2,0);
@@ -346,7 +455,11 @@ vector<int> SpecMap::FindRange(double start, double end)
     return indices;
 }
 
-// HELPER FUNCTIONS (Will go in own file later to speed compilation //
+/// HELPER FUNCTIONS (Will go in own file later to speed compilation ///
+/// \brief SpecMap::PointSpectrum
+/// \param index
+/// \return
+///
 QVector<double> SpecMap::PointSpectrum(int index)
 {
     std::vector<double> spectrum_stdvector =
@@ -369,7 +482,12 @@ QVector<double> SpecMap::WavelengthQVector()
     return wavelength_qvector;
 }
 
-
+///
+/// \brief SpecMap::ValueRange
+/// Finds the minima and maxima of y variable to properly set axes
+///  of QCustomPlot objects
+/// \return
+///
 QCPRange SpecMap::ValueRange()
 {
     double lower = y_.min();
@@ -377,7 +495,12 @@ QCPRange SpecMap::ValueRange()
     QCPRange range(upper, lower);
     return range;
 }
-
+///
+/// \brief SpecMap::KeyRange
+/// Finds the minima and maxima of x variable to properly set axes
+///  of QCustomPlot objects
+/// \return
+///
 QCPRange SpecMap::KeyRange()
 {
     double lower = x_.min();
@@ -386,6 +509,12 @@ QCPRange SpecMap::KeyRange()
     return range;
 }
 
+///
+/// \brief SpecMap::KeySize
+/// Finds the number of data points in x variable to properly set axes
+///  of QCustomPlot objects
+/// \return number of unique x values
+///
 int SpecMap::KeySize()
 {
     unsigned int i;
@@ -403,6 +532,11 @@ int SpecMap::KeySize()
     return x_count;
 }
 
+///
+/// \brief SpecMap::ValueSize
+/// Finds number of unique y values for properly setting QCPAxis
+/// \return number of unique y values
+///
 int SpecMap::ValueSize()
 {
 
@@ -427,47 +561,83 @@ int SpecMap::ValueSize()
 
 
 // MEMBER ACCESS FUNCTIONS
+///
+/// \brief SpecMap::wavelength
+/// \return member wavelength_ (spectrum key values)
+///
 rowvec SpecMap::wavelength()
 {
     return wavelength_;
 }
 
+///
+/// \brief SpecMap::x
+/// \return member x_
+///
 colvec SpecMap::x()
 {
     return x_;
 }
 
+///
+/// \brief SpecMap::y
+/// \return member y_
+///
 colvec SpecMap::y()
 {
     return y_;
 }
 
+///
+/// \brief SpecMap::spectra
+/// \return member spectra_
+///
 mat SpecMap::spectra()
 {
     return spectra_;
 }
 
+///
+/// \brief SpecMap::name
+/// \return member name_, the name of the dataset as seen by the user
+///
 const QString SpecMap::name()
 {
     return name_;
 }
 
+///
+/// \brief SpecMap::SetName
+/// \param new_name new name of dataset
+///
 void SpecMap::SetName(QString new_name)
 {
     name_ = new_name;
 }
 
 //MAP HANDLING FUNCTIONS
+///
+/// \brief SpecMap::map_names
+/// \return list of names of the maps created from this dataset
+///
 QStringList SpecMap::map_names()
 {
     return map_names_;
 }
 
+///
+/// \brief SpecMap::map_loading_count
+/// \return number of maps created for this dataset
+///
 int SpecMap::map_loading_count()
 {
     return map_loading_count_;
 }
 
+///
+/// \brief SpecMap::RemoveMapAt
+/// \param i index of map in the relevant lists
+///
 void SpecMap::RemoveMapAt(int i)
 {
     QString name = map_names_.at(i);
@@ -477,7 +647,14 @@ void SpecMap::RemoveMapAt(int i)
     map_list_widget_->removeItemWidget(item);
 }
 
-// Useful when only the name is easily known, and index won't be used
+
+///
+/// \brief SpecMap::RemoveMap
+/// Removes a map by its name.
+/// Useful when only the name is easily known, and index won't be used.
+/// Probably useless, might be removed later.
+/// \param name
+///
 void SpecMap::RemoveMap(QString name)
 {
     int i;
@@ -488,7 +665,11 @@ void SpecMap::RemoveMap(QString name)
     }
 }
 
-
+///
+/// \brief SpecMap::AddMap
+/// Adds a map to the list of map pointers and adds its name to relevant lists
+/// \param map
+///
 void SpecMap::AddMap(MapData* map)
 {
     QString name = map->name();
@@ -499,6 +680,10 @@ void SpecMap::AddMap(MapData* map)
     ++map_loading_count_;
 }
 
+///
+/// \brief SpecMap::WavelengthRange
+/// \return the range of the wavlength vector (for plotting point spectra)
+///
 QCPRange SpecMap::WavelengthRange()
 {
     double min = wavelength_.min();
@@ -507,6 +692,11 @@ QCPRange SpecMap::WavelengthRange()
     return range;
 }
 
+///
+/// \brief SpecMap::PointSpectrumRange
+/// \param i row of spectra_ containing desired spectrum
+/// \return the range of y values for the point spectra at i
+///
 QCPRange SpecMap::PointSpectrumRange(int i)
 {
     rowvec row = spectra_.row(i);
@@ -517,6 +707,12 @@ QCPRange SpecMap::PointSpectrumRange(int i)
     return range;
 }
 
+///
+/// \brief SpecMap::GetGradient
+/// Selects the color gradient from list of presets
+/// \param gradient_number
+/// \return
+///
 QCPColorGradient SpecMap::GetGradient(int gradient_number)
 {
     switch (gradient_number)

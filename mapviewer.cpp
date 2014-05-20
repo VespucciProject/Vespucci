@@ -30,7 +30,7 @@ MapViewer::MapViewer(QString name, QString *directory, MapData *parent):
     directory_ = directory;
 
     qcp_= this->findChild<QCustomPlot *>("mapView");
-    qcp_->setBackground(Qt::white);
+    qcp_->setBackground(this->palette().window());
     parent_ = parent;
     //color_map_ = qobject_cast<QCPColorMap *>(color_map_abs);
 }

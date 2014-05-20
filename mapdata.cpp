@@ -195,7 +195,12 @@ void MapData::ShowAxes(bool enabled)
 
 bool MapData::saveBmp(const QString &fileName, int width, int height, double scale)
 {
+    map_qcp_->setBackground(Qt::white);
+    map_qcp_->replot();
     bool success = map_qcp_->saveBmp(fileName, width, height, scale);
+
+    map_qcp_->setBackground(map_display_->palette().window());
+    map_qcp_->replot();
     return success;
 }
 
@@ -204,14 +209,18 @@ bool MapData::savePng(const QString &fileName, int width, int height, double sca
     map_qcp_->setBackground(Qt::transparent);
     map_qcp_->replot();
     bool success = map_qcp_->savePng(fileName, width, height, scale, quality);
-    map_qcp_->setBackground(Qt::white);
+    map_qcp_->setBackground(map_display_->palette().window());
     map_qcp_->replot();
     return success;
 }
 
 bool MapData::saveJpg(const QString &fileName, int width, int height, double scale, int quality)
 {
+    map_qcp_->setBackground(Qt::white);
+    map_qcp_->replot();
     bool success = map_qcp_->saveJpg(fileName, width, height, scale, quality);
+    map_qcp_->setBackground(map_display_->palette().window());
+    map_qcp_->replot();
     return success;
 }
 
@@ -220,7 +229,7 @@ bool MapData::saveTiff(const QString &fileName, int width, int height, double sc
     map_qcp_->setBackground(Qt::transparent);
     map_qcp_->replot();
     bool success = map_qcp_->saveRastered(fileName, width, height, scale, "TIF", quality);
-    map_qcp_->setBackground(Qt::white);
+    map_qcp_->setBackground(map_display_->palette().window());
     map_qcp_->replot();
     return success;
 }
