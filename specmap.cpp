@@ -20,12 +20,14 @@
 #include "specmap.h" //specmap includes all necessary headers.
 #include <cmath>
 #include <fstream>
-#include "principalcomponentsworker.h"
 #include <QtConcurrent/QtConcurrentRun>
 
 using namespace arma;
 using namespace std;
 
+///
+/// \brief SpecMap::SpecMap
+///Default constructor
 SpecMap::SpecMap()
 {
 

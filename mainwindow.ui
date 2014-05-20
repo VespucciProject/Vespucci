@@ -111,9 +111,18 @@
     <property name="title">
      <string>Data</string>
     </property>
+    <widget class="QMenu" name="menuData_Pre_Processing">
+     <property name="title">
+      <string>Data Pre-Processing</string>
+     </property>
+     <addaction name="actionNormalize"/>
+     <addaction name="actionFilter"/>
+    </widget>
     <addaction name="actionClose_Dataset"/>
     <addaction name="actionExport_Dataset_As"/>
     <addaction name="actionConcatenate_Datasets"/>
+    <addaction name="separator"/>
+    <addaction name="menuData_Pre_Processing"/>
    </widget>
    <widget class="QMenu" name="menuMap">
     <property name="title">
@@ -290,6 +299,16 @@
    </property>
    <property name="text">
     <string>Agglomerative Hierarchical Clustering</string>
+   </property>
+  </action>
+  <action name="actionNormalize">
+   <property name="text">
+    <string>Normalize</string>
+   </property>
+  </action>
+  <action name="actionFilter">
+   <property name="text">
+    <string>Filter</string>
    </property>
   </action>
  </widget>

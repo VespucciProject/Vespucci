@@ -7,6 +7,9 @@
 QT       += core gui
 QT       += widgets printsupport
 
+QMAKE_CXXFLAGS += -static-libgcc
+                  -static-libstdc++
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = vespucci
@@ -39,7 +42,8 @@ SOURCES += main.cpp\
     mapviewer.cpp \
     principalcomponentsdata.cpp \
     principalcomponentsdialog.cpp \
-    principalcomponentsworker.cpp
+    filterdialog.cpp \
+    normalizationdialog.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -56,7 +60,8 @@ HEADERS  += mainwindow.h \
     mapviewer.h \
     principalcomponentsdata.h \
     principalcomponentsdialog.h \
-    principalcomponentsworker.h
+    filterdialog.h \
+    normalizationdialog.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
@@ -66,7 +71,9 @@ FORMS    += mainwindow.ui \
     spectrumviewer.ui \
     bandratiodialog.ui \
     mapviewer.ui \
-    principalcomponentsdialog.ui
+    principalcomponentsdialog.ui \
+    filterdialog.ui \
+    normalizationdialog.ui
 
 RESOURCES += \
     resources.qrc

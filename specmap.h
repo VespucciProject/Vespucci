@@ -162,6 +162,8 @@ private:
 
     bool principal_components_calculated_;
     bool partial_least_squares_calculated_;
+
+    double spectra_maximum_; //keeps track of maximum value of normalized spectrum
 };
 
 #endif // SPECMAP_H

@@ -110,6 +110,7 @@ void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation)
 
     QCPColorScale *color_scale = new QCPColorScale(map_qcp_);
     color_scale->setGradient(color_scheme);
+    color_scale->setDataRange(map_->dataRange());
     map_qcp_->plotLayout()->addElement(0, 1, color_scale);
     color_scale_ = map_qcp_->plotLayout()->element(0, 1);
 
@@ -118,12 +119,10 @@ void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation)
     int value_size = map_->data()->valueSize();
     key_size *= 9;
     value_size *= 9;
-    key_size +=75;
-    value_size +=75;
     map_qcp_->resize(key_size, value_size);
-    QSize plot_size = map_qcp_->size();
-    map_display_->resize(plot_size);
-
+    key_size +=50;
+    value_size +=50;
+    map_display_->resize(key_size, value_size);
 }
 
 void MapData::SetXDescription(QString description)
