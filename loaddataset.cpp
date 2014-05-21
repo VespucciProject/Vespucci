@@ -105,6 +105,9 @@ void LoadDataset::on_buttonBox_accepted()
         data.SetName(name);
 
         workspace->AddDataset(data);
+        workspace->dataset_loading_count();
+        data.SetGlobalIndex(workspace->dataset_loading_count());
+
         workspace->set_directory(file_info.dir().absolutePath());
 
     }

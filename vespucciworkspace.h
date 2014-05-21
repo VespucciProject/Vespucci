@@ -22,7 +22,10 @@
 
 #include "specmap.h"
 #include "univariatemap.h"
+#include "mapdata.h"
+
 class SpecMap;
+class MapData;
 
 class VespucciWorkspace
 {
@@ -36,12 +39,16 @@ public:
     void AddDataset(SpecMap dataset);
     void RemoveDataset(QString name);
 
-    //void AddMap(MapData map);
-    //void RemoveMap(QString name);
+    void AddMap(MapData* map);
+    void RemoveMap(MapData* map);
+
+    void RemoveMapAt(int row);
+
+    MapData* MapAt(int i);
 
     void RemoveDatasetAt(int i);
-    //void RemoveMapAt(int i);
 
+    void RefreshLists();
 
     int dataset_loading_count();
     //int map_loading_count();
@@ -73,6 +80,8 @@ private:
 
     int dataset_loading_count_;
     //int map_loading_count_;
+
+    QList<MapData *> master_map_list_;
 };
 
 #endif // VESPUCCIWORKSPACE_H

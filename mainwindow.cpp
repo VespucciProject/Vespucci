@@ -25,6 +25,7 @@
 #include "univariatedialog.h"
 #include "bandratiodialog.h"
 #include "principalcomponentsdialog.h"
+#include "normalizationdialog.h"
 
 MainWindow::MainWindow(QWidget *parent, VespucciWorkspace *ws) :
     QMainWindow(parent),
@@ -84,4 +85,50 @@ void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
     int row = dataset_list_widget_->currentRow();
     PrincipalComponentsDialog *principal_components_dialog = new PrincipalComponentsDialog(this, workspace, row);
     principal_components_dialog->show();
+}
+
+void MainWindow::on_actionDocumentation_triggered()
+{
+    QDesktopServices::openUrl(QUrl("http://dpfoose.github.io/Vespucci/"));
+}
+
+void MainWindow::on_actionNormalize_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    NormalizationDialog *normalization_dialog = new NormalizationDialog(this, workspace, row);
+    normalization_dialog->show();
+}
+
+void MainWindow::on_mapsListWidget_doubleClicked(const QModelIndex &index)
+{
+    int row = index.row();
+    MapData *map_data_object = workspace->MapAt(row);
+    bool visible = map_data_object->MapDisplayVisible();
+    map_data_object->SetMapDisplayVisible(!visible);
+}
+
+void MainWindow::on_actionClose_Dataset_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    SpecMap *dataset = workspace->DatasetAt(row);
+    workspace->RemoveDatasetAt(row);
+    delete dataset;
+}
+
+void MainWindow::on_actionDelete_Map_triggered()
+{
+    int row = map_list_widget_->currentRow();
+    MapData *mapdata = workspace->MapAt(row);
+    SpecMap *dataset = workspace->DatasetAt(mapdata->parent_index());
+
+    //remove from global map list
+    workspace->RemoveMapAt(row);
+    workspace->RefreshLists();
+
+    //remove from SpecMap map list
+    dataset->RemoveMapAt(row);
+    dataset->RefreshLists();
+
+    delete mapdata;
+
 }

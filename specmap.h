@@ -45,6 +45,10 @@ public:
 
     // PRE-PROCESSING FUNCTIONS //
 
+    void MinMaxNormalization();
+    void StandardNormalVariableNormalization();
+    void UnitAreaNormalization();
+
     int PreProcess(QString normalization_method,
                    int polynomial_order,
                    int derivative_order,
@@ -131,6 +135,9 @@ public:
     void RemoveMapAt(int i);
     int map_loading_count();
 
+    int global_index();
+    void SetGlobalIndex(int index);
+
     void SetXDescription(QString description);
     void SetYDescription(QString description);
 
@@ -138,6 +145,8 @@ public:
     QCPRange PointSpectrumRange(int i);
 
     QCPColorGradient GetGradient(int gradient_number);
+
+    void RefreshLists(); //refreshes list of maps after a map is deleted
 
 private:
     rowvec wavelength_;
@@ -164,6 +173,7 @@ private:
     bool partial_least_squares_calculated_;
 
     double spectra_maximum_; //keeps track of maximum value of normalized spectrum
+    int global_index_;
 };
 
 #endif // SPECMAP_H

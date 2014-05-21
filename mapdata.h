@@ -50,7 +50,12 @@ public:
 
     QString name();
     QString type();
-    QString source_index();
+    int source_index();
+    int global_index();
+    int parent_index();
+
+    void SetSourceIndex(int source_index);
+    void SetGlobalIndex(int global_index);
 
     void set_type(QString type);
     void set_name(QString name, QString type);
@@ -106,6 +111,9 @@ public:
                   double scale = 1.0,
                   int quality = 0);
 
+    bool MapDisplayVisible();
+    void SetMapDisplayVisible(bool visible);
+
 private:
     QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
     QString y_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
@@ -114,7 +122,8 @@ private:
 
     QString name_; //Name, this is displayed in the QListView
     QString type_; //Short description of type.  set by subclass constructor.
-    QString source_index_; //List index of this
+    int source_index_; //List index of this
+    int global_index_;
 
     //QCPColorMapData map_data_;
 
