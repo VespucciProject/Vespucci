@@ -1,15 +1,14 @@
 Vespucci
 ========
-A not-yet-very-good chemical imaging application written in C++ using Qt and armadillo.  Vespucci creates false-color images from hyperspectral datasets using band intensities, band intensity ratios, and principal component analysis, with the intent to support partial least squares imaging and hierarchical clustering in development.  Vespucci is designed primarily for Raman and IR spectromicroscopy, but can (in theory, eventually) process any dataset consisting of spatial and spectral information.  Vespucci is designed to be as easy to use as possible, with a lower memory footprint than packages written for systems like MATLAB or R.  This focus on ease of use somewhat reduces the program's functionality, as the user does not have access to anything "under the hood".
+Because the members of my group primarily use Windows machines, most releases will only include Windows binaries.  Major releases may include binaries for Windows, Mac OSX,  and GNU/Linux.  
 
-Currently, Vespucci can only handle ASCII files in a "wide" format (as the Raman spectrometer currently used by my group, manufactured by Horiba, outputs ASCII files in this format):
 
-		wavelength
-x	y	spectra
+Compiling Vespucci:
+This program requires the armadillo template library. Armadillo must be configured to use LAPACK and BLAS or a replacement for them (such as OpenBLAS or the commercial equivalent from your CPU manufacturer).  This program incorporates a modified version of the QCustomPlot library, which is included in the repository.
 
-The ability to import other data formats will be implemented in the near future.
+The Qt Creator profile in this repository is designed for my personal use for compiling the program on a Windows machine.
+Windows:
+This should compile from Qt Creator on your platform.  The program requires armadillo and OpenBLAS.  You will have to modify the .pro file to direct the compiler to your copy of the libraries.  If you wish to compile on Windows, you probably know what you are doing 
 
-Daniel P. Foose
-Department of Chemistry
-Wright State University
-Dayton, OH, United States of America
+GNU/Linux
+Armadillo and OpenBLAS should be availible from your distribution.  There are no makefiles included in the master branch, but future releases may include them.  You can open the program from Qt Creator and compile it there if you wish.  
