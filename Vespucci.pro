@@ -7,23 +7,12 @@
 QT       += core gui
 QT       += widgets printsupport
 
-QMAKE_CXXFLAGS += -static-libgcc
-                  -static-libstdc++
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = vespucci
 TEMPLATE = app
 
-win32: LIBS += -L$$PWD/../../../../../Libraries/OpenBLAS-v0.2.8-x86-Win/lib/ -llibopenblas
 
-INCLUDEPATH += $$PWD/../../../../../Libraries/OpenBLAS-v0.2.8-x86-Win/include/
-DEPENDPATH += $$PWD/../../../../../Libraries/OpenBLAS-v0.2.8-x86-Win/include/
-
-
-
-INCLUDEPATH += "C:/Libraries/armadillo-4.300.0/include"
-DEPENDPATH += "C:/Libraries/armadillo-4.300.0/include"
 
 
 SOURCES += main.cpp\
@@ -79,3 +68,11 @@ RESOURCES += \
     resources.qrc
 
 
+
+LIBS += -L$$PWD/../../../../../Libraries/OpenBLAS-v0.2.8-x86_64-Win/lib/ -llibopenblas
+
+INCLUDEPATH += $$PWD/../../../../../Libraries/OpenBLAS-v0.2.8-x86_64-Win/include
+DEPENDPATH += $$PWD/../../../../../Libraries/OpenBLAS-v0.2.8-x86_64-Win/include
+
+INCLUDEPATH += "C:/Libraries/armadillo-4.300.6/include"
+DEPENDPATH += "C:/Libraries/armadillo-4.300.6/include"

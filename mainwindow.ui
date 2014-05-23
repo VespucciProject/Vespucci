@@ -93,11 +93,6 @@
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
-   <widget class="QMenu" name="menuWindow">
-    <property name="title">
-     <string>Window</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
@@ -112,6 +107,9 @@
      <string>Data</string>
     </property>
     <widget class="QMenu" name="menuData_Pre_Processing">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
       <string>Data Pre-Processing</string>
      </property>
@@ -150,7 +148,6 @@
    <addaction name="menuFile"/>
    <addaction name="menuData"/>
    <addaction name="menuMap"/>
-   <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -214,16 +211,25 @@
    </property>
   </action>
   <action name="actionClose_Dataset">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Close Dataset</string>
    </property>
   </action>
   <action name="actionExport_Dataset_As">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Export Dataset As...</string>
    </property>
   </action>
   <action name="actionConcatenate_Datasets">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Concatenate Datasets</string>
    </property>
@@ -255,6 +261,9 @@
    </property>
   </action>
   <action name="actionDelete_Map">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Delete Map</string>
    </property>
@@ -273,6 +282,9 @@
    </property>
   </action>
   <action name="actionPartial_Least_Squares">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Partial Least Squares</string>
    </property>

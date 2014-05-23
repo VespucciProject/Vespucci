@@ -295,7 +295,7 @@ void SpecMap::PrincipalComponents(int component,
             cout << "call to arma::princomp" << endl;
             wall_clock timer;
             timer.tic();
-            princomp_econ(coefficients, score, latent, tsquared, spectra_);
+            princomp(coefficients, score, latent, tsquared, spectra_);
             int seconds = timer.toc();
             cout << "call to arma::princomp successful. Took " << seconds << " s" << endl;
 
