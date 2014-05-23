@@ -67,29 +67,9 @@ QString MapData::type()
     return type_;
 }
 
-int MapData::parent_index()
-{
-    return dataset_->global_index();
-}
-
-int MapData::source_index()
+QString MapData::source_index()
 {
     return source_index_;
-}
-
-int MapData::global_index()
-{
-    return global_index_;
-}
-
-void MapData::SetSourceIndex(int source_index)
-{
-    source_index_ = source_index;
-}
-
-void MapData::SetGlobalIndex(int global_index)
-{
-    global_index_ = global_index;
 }
 
 void MapData::set_type(QString type)
@@ -251,14 +231,4 @@ bool MapData::saveTiff(const QString &fileName, int width, int height, double sc
     map_qcp_->setBackground(map_display_->palette().window());
     map_qcp_->replot();
     return success;
-}
-
-bool MapData::MapDisplayVisible()
-{
-    return map_display_->isVisible();
-}
-
-void MapData::SetMapDisplayVisible(bool visible)
-{
-    map_display_->setVisible(visible);
 }

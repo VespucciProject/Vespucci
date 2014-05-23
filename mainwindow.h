@@ -50,16 +50,6 @@ private slots:
 
     void on_actionPrincipal_Components_Analysis_triggered();
 
-    void on_actionDocumentation_triggered();
-
-    void on_actionNormalize_triggered();
-
-    void on_mapsListWidget_doubleClicked(const QModelIndex &index);
-
-    void on_actionClose_Dataset_triggered();
-
-    void on_actionDelete_Map_triggered();
-
 private:
     Ui::MainWindow *ui;
     VespucciWorkspace *workspace;

@@ -94,9 +94,6 @@
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
     <property name="title">
      <string>Window</string>
     </property>
@@ -202,7 +199,7 @@
   </action>
   <action name="actionDocumentation">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Vespucci Webpage</string>
@@ -217,25 +214,16 @@
    </property>
   </action>
   <action name="actionClose_Dataset">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string>Close Dataset</string>
    </property>
   </action>
   <action name="actionExport_Dataset_As">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string>Export Dataset As...</string>
    </property>
   </action>
   <action name="actionConcatenate_Datasets">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string>Concatenate Datasets</string>
    </property>
@@ -267,9 +255,6 @@
    </property>
   </action>
   <action name="actionDelete_Map">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string>Delete Map</string>
    </property>
@@ -322,9 +307,6 @@
    </property>
   </action>
   <action name="actionFilter">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string>Filter</string>
    </property>

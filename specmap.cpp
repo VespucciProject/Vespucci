@@ -122,69 +122,6 @@ SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *di
 
 }
 
-// PRE-PROCESSING FUNCTIONS //
-///
-/// \brief SpecMap::MinMaxNormalization
-///Sets all negative values to 0 by subtracting most negative then divides all
-/// values by the overall maximum, yielding a spectra matrix with values between
-/// 0 and 1.
-void SpecMap::MinMaxNormalization()
-{
-    int i;
-    double minimum = spectra_.min();
-    if (spectra_.min() < 0){
-        for (i = 0; i<spectra_.n_elem; ++i){
-            spectra_(i) = spectra_(i) - minimum;
-        }
-    }
-    double maximum = spectra_.max();
-    spectra_ = spectra_ / maximum;
-
-}
-
-///
-/// \brief SpecMap::StandardNormalVariableNormalization
-///"Normalizes" the spectra matrix by assigning each point a Z-score based on
-/// the data in each column
-void SpecMap::StandardNormalVariableNormalization()
-{
-    int i, j;
-    double average;
-    double standard_deviation;
-    int matrix_size = spectra_.n_cols;
-    QProgressDialog progress("Processing Data...", "Cancel", 0, matrix_size, 0);
-    for (j=0; j < matrix_size; ++j){
-        average = mean(spectra_.col(j));
-        standard_deviation = stddev(spectra_.col(j));
-        for(i = 0; i < spectra_.col(j).n_elem; ++i){
-            spectra_(i, j) = (spectra_(i, j) - average) / standard_deviation;
-        }
-        progress.setValue(i);
-    }
-}
-
-///
-/// \brief SpecMap::UnitAreaNormalization
-///Processes the data using unit area normalization. Divides each value of
-/// each row by the sum of that row, so that the area under the curve at each point
-/// is 1.
-void SpecMap::UnitAreaNormalization()
-{
-    unsigned int i, j;
-    colvec row_sums = sum(spectra_, 1);
-    
-    int size = spectra_.n_rows;
-    QProgressDialog progress("Processing Data...", "Cancel", 0, size, 0);
-    progress.setWindowModality(Qt::WindowModal);
-
-    for (i = 0; i < row_sums.n_rows; ++i){
-        for (j = 0; j < spectra_.n_cols; ++j){
-            spectra_(i, j) = spectra_(i, j) / row_sums(i);
-        }
-        progress.setValue(i);
-    }
-}
-
 
 // MAPPING FUNCTIONS //
 
@@ -740,32 +677,9 @@ void SpecMap::AddMap(MapData* map)
     QString name = map->name();
     maps_.append(map);
     map_names_.append(name);
-    map->SetSourceIndex(maps_.lastIndexOf(map));
+
     map_list_widget_->addItem(name);
-    int list_size = map_list_widget_->count();
-    map->SetGlobalIndex(list_size);
-    //map object knows where it is to both data object and main window
     ++map_loading_count_;
-}
-
-
-
-int SpecMap::global_index()
-{
-    return global_index_;
-}
-
-void SpecMap::SetGlobalIndex(int index)
-{
-    global_index_ = index;
-}
-
-void SpecMap::RefreshLists()
-{
-    int i;
-    for (i = 0; i < maps_.count(); ++i){
-        maps_.at(i)->SetSourceIndex(i);
-    }
 }
 
 ///

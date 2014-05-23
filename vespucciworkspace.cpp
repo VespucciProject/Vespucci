@@ -67,42 +67,16 @@ void VespucciWorkspace::RemoveDataset(QString name)
 // These functions should be safe because the names list and the object list only update together
 void VespucciWorkspace::RemoveDatasetAt(int i)
 {
+    QString name = dataset_names_.at(i);
     QListWidgetItem *item = dataset_list_widget_->takeItem(i);
     datasets_.removeAt(i);
     dataset_names_.removeAt(i);
     dataset_list_widget_->removeItemWidget(item);
-    --dataset_loading_count_;
+
 }
 
-void VespucciWorkspace::RemoveMap(MapData *map)
-{
-    int dataset_index = map->parent_index();
-    int source_index = map->source_index();
-    datasets_[dataset_index].RemoveMapAt(source_index);
-    master_map_list_.removeOne(map);
-    this->RefreshLists();
-}
 
-void VespucciWorkspace::RemoveMapAt(int i)
-{
-    MapData *map = master_map_list_[i];
-    int dataset_index = map->parent_index();
-    int source_index = map->source_index();
-    SpecMap dataset = datasets_[dataset_index];
-    dataset.RemoveMapAt(source_index);
-    master_map_list_.removeAt(i);
-    this->RefreshLists();
-}
 
-void VespucciWorkspace::AddMap(MapData *map)
-{
-    master_map_list_.append(map);
-}
-
-MapData* VespucciWorkspace::MapAt(int i)
-{
-    return master_map_list_[i];
-}
 
 //ACCESS FUNCTIONS
 int VespucciWorkspace::dataset_loading_count()
@@ -157,16 +131,4 @@ SpecMap* VespucciWorkspace::DatasetAt(int i)
 QString* VespucciWorkspace::directory_ptr()
 {
     return &directory_;
-
-}
-
-void VespucciWorkspace::RefreshLists()
-{
-    int i;
-    for (i = 0; i < datasets_.count(); ++i){
-        datasets_[i].SetGlobalIndex(i);
-    }
-    for (i = 0; i < master_map_list_.count(); ++i){
-        master_map_list_[i]->SetGlobalIndex(i);
-    }
 }
