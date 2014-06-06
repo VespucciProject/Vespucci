@@ -34,7 +34,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent, VespucciWorkspace *ws);
     ~MainWindow();
-
+protected:
+    void closeEvent(QCloseEvent *event);
 private slots:
     void on_actionExit_triggered();
 
@@ -49,6 +50,26 @@ private slots:
     void on_actionNew_Band_Ratio_Map_triggered();
 
     void on_actionPrincipal_Components_Analysis_triggered();
+
+    void on_actionNormalize_Standardize_triggered();
+
+    void on_actionSubtract_Background_triggered();
+
+    void on_actionSpectra_triggered();
+
+    void on_actionAverage_Spectra_triggered();
+
+    void on_actionAverage_Spectra_with_Abcissa_triggered();
+
+    void on_actionSpatial_Data_triggered();
+
+    void on_actionSpectral_Abcissa_triggered();
+
+    void on_actionAll_Data_triggered();
+
+    void on_actionPrincipal_Component_Statistics_triggered();
+
+    void on_actionFilter_Derivatize_triggered();
 
 private:
     Ui::MainWindow *ui;

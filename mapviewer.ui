@@ -36,15 +36,23 @@
    </property>
    <widget class="QMenu" name="menuMap">
     <property name="title">
-     <string>Map</string>
+     <string>File</string>
     </property>
     <addaction name="actionSave_Image_As"/>
-    <addaction name="actionMap_Properties"/>
+   </widget>
+   <widget class="QMenu" name="menuDisplay">
+    <property name="title">
+     <string>Display</string>
+    </property>
     <addaction name="actionInterpolate"/>
     <addaction name="actionShow_Axes"/>
     <addaction name="actionShow_Color_Scale"/>
+    <addaction name="separator"/>
+    <addaction name="actionAdd_Scale_Bar"/>
+    <addaction name="actionSet_Color_Scheme"/>
    </widget>
    <addaction name="menuMap"/>
+   <addaction name="menuDisplay"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSave_Image_As">
@@ -52,9 +60,9 @@
     <string>Save Image As...</string>
    </property>
   </action>
-  <action name="actionMap_Properties">
+  <action name="actionSet_Color_Scheme">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Set Color Scheme...</string>
@@ -88,6 +96,11 @@
    </property>
    <property name="text">
     <string>Show Color Scale</string>
+   </property>
+  </action>
+  <action name="actionAdd_Scale_Bar">
+   <property name="text">
+    <string>Add Scale Bar...</string>
    </property>
   </action>
  </widget>
