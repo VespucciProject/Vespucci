@@ -40,7 +40,6 @@ void FilterDialog::on_buttonBox_accepted()
     switch (method_box_->currentIndex())
     {
     case 0:
-        QMessageBox::information(0, "Debug", "call to SpecMap::MedianFilter()");
         dataset_->MedianFilter(window_box_->value());
         break;
     case 1:

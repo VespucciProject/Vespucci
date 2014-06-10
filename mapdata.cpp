@@ -64,15 +64,11 @@ MapData::MapData(QString x_axis_description,
 /// Destructor triggered when this is removed from SpecMap list.
 MapData::~MapData()
 {
-    QMessageBox::information(0, "Debug", "MapData::~MapData");
 
-    QMessageBox::information(0, "Debug", "Delete SpecViewer");
     delete spectrum_display_;
 
-    QMessageBox::information(0, "Debug", "Delete QCPColorScale");
     delete new_color_scale_;
 
-    QMessageBox::information(0, "Debug", "Delete QCPColorMap");
     delete map_;
 
 }
@@ -261,7 +257,6 @@ bool MapData::saveTiff(const QString &fileName, int width, int height, double sc
 /// contains this pointer, this removal results in this object being deleted.
 void MapData::RemoveThis()
 {
-    QMessageBox::information(0, "Debug", "call to SpecMap::RemoveMapAt()");
     dataset_->RemoveMapAt(source_index_);
 }
 

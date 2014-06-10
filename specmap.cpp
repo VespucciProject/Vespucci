@@ -296,7 +296,6 @@ void SpecMap::MedianFilter(int window_size)
 /// boundaries are not processed.  See also SpecMap::MedianFilter.
 void SpecMap::LinearMovingAverage(int window_size)
 {
-    QMessageBox::information(0, "Debug", "SpecMap::MedianFilter");
     int starting_index = (window_size - 1) / 2;
     int ending_index = wavelength_.n_cols - starting_index;
     int i, j;
