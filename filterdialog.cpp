@@ -10,7 +10,11 @@ FilterDialog::FilterDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     dataset_ = workspace->DatasetAt(row);
     method_box_ = this->findChild<QComboBox *>("methodComboBox");
     derivative_box_ = this->findChild<QSpinBox *>("derivativeSpinBox");
+<<<<<<< HEAD
+    polynomial_box_ = this->findChild<QSpinBox *>("polynomailSpinBox");
+=======
     polynomial_box_ = this->findChild<QSpinBox *>("polynomialSpinBox");
+>>>>>>> origin/master
     window_box_ = this->findChild<QSpinBox *>("windowSpinBox");
 }
 
@@ -41,18 +45,31 @@ void FilterDialog::on_buttonBox_accepted()
     {
     case 0:
         QMessageBox::information(0, "Debug", "call to SpecMap::MedianFilter()");
+<<<<<<< HEAD
+        dataset_->MedianFilter(window_box_->value()); //needs debugging
+=======
         dataset_->MedianFilter(window_box_->value());
+>>>>>>> origin/master
         break;
     case 1:
         dataset_->LinearMovingAverage(window_box_->value());
         break;
     case 2:
+<<<<<<< HEAD
+        //dataset_->Derivatize(derivative_box_->value(),
+        //                    polynomial_box_->value(),
+        //                    window_box_->value());
+        break;
+    case 3:
+        //dataset_->SavitzkyGolay(polynomial_box_->value(), window_box_->value());
+=======
         dataset_->Derivatize(derivative_box_->value(),
                              polynomial_box_->value(),
                              window_box_->value());
         break;
     case 3:
         dataset_->SavitzkyGolay(polynomial_box_->value(), window_box_->value());
+>>>>>>> origin/master
         break;
     case 4:
         dataset_->SingularValue();

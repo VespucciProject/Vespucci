@@ -406,6 +406,8 @@ void MainWindow::on_actionFilter_Derivatize_triggered()
     FilterDialog *filter_dialog = new FilterDialog(this, workspace, row);
     filter_dialog->show();
 }
+<<<<<<< HEAD
+=======
 
 void MainWindow::on_actionClose_Dataset_triggered()
 {
@@ -426,3 +428,4 @@ void MainWindow::on_actionDocumentation_triggered()
     QUrl website_url("http://dpfoose.github.io/Vespucci/");
     QDesktopServices::openUrl(website_url);
 }
+>>>>>>> origin/master

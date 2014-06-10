@@ -71,10 +71,13 @@ private slots:
 
     void on_actionFilter_Derivatize_triggered();
 
+<<<<<<< HEAD
+=======
     void on_actionClose_Dataset_triggered();
 
     void on_actionDocumentation_triggered();
 
+>>>>>>> origin/master
 private:
     Ui::MainWindow *ui;
     VespucciWorkspace *workspace;
