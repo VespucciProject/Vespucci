@@ -57,10 +57,7 @@ public:
     void LinearMovingAverage(int window_size);
     void Derivatize(int derivative_order, int polynomial_order, int window_size);
     void SingularValue();
-<<<<<<< HEAD
-=======
     mat spdiags(mat B, QVector<int> d, int m, int n);
->>>>>>> origin/master
 
 
     // HELPER FUNCTIONS //

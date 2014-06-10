@@ -27,11 +27,7 @@ void ScaleBarDialog::on_colorPushButton_clicked()
 
 void ScaleBarDialog::on_buttonBox_accepted()
 {
-<<<<<<< HEAD
-    QMessageBox::information(this, "Debug", "call to DrawScaleBar");
-=======
     QMessageBox::information(this, "Scale Bar", "Click on the map to show the scale bar.");
->>>>>>> origin/master
     double width = width_box_->value();
     double height = height_box_->value();
     QString units = units_box_->text();
