@@ -22,7 +22,9 @@
 
 #include <QMainWindow>
 #include "mapdata.h"
+#include "scalebardialog.h"
 
+class ScaleBarDialog;
 class MapData;
 
 
@@ -33,6 +35,11 @@ class MapViewer;
 class MapViewer : public QMainWindow
 {
     Q_OBJECT
+public:
+    QCPColorGradient GetGradient(int gradient_number);
+
+protected:
+    void closeEvent(QCloseEvent *event);
 
 public:
     MapViewer(QString name, QString *directory, MapData *parent);
@@ -49,6 +56,10 @@ private slots:
 
     void on_actionShow_Color_Scale_toggled(bool arg1);
 
+    void on_actionSet_Color_Scheme_triggered();
+
+    void on_actionAdd_Scale_Bar_triggered();
+
 private:
     Ui::MapViewer *ui;
     QString name_;
@@ -58,6 +69,10 @@ private:
 
     //QCPColorMap *color_map_;
     MapData *parent_;
+
+    QStringList color_list_;
+
+
 };
 
 #endif // MAPVIEWER_H

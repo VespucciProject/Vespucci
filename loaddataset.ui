@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>360</height>
+    <width>399</width>
+    <height>391</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>330</y>
+     <y>350</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>180</y>
+     <y>190</y>
      <width>381</width>
      <height>151</height>
     </rect>
@@ -140,7 +140,7 @@
      <x>10</x>
      <y>10</y>
      <width>381</width>
-     <height>161</height>
+     <height>171</height>
     </rect>
    </property>
    <property name="title">
@@ -152,10 +152,13 @@
       <x>10</x>
       <y>20</y>
       <width>361</width>
-      <height>131</height>
+      <height>145</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout_3">
+     <property name="fieldGrowthPolicy">
+      <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+     </property>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
@@ -242,6 +245,11 @@
          <string>Thermo Galactic .spc</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Vespucci Dataset</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item row="4" column="0">
@@ -255,6 +263,16 @@
       <widget class="QLineEdit" name="nameBox">
        <property name="toolTip">
         <string>The dataset should have a unique name that is a valid filename on your operating system.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QCheckBox" name="swapCheckBox">
+       <property name="toolTip">
+        <string>Depending on your settings, your data may have y in the column before x, rather than the traditional x before y.  Enabling this option will take the first column as y and second column as x.  Applies only to text files.</string>
+       </property>
+       <property name="text">
+        <string>Swap x and y?</string>
        </property>
       </widget>
      </item>

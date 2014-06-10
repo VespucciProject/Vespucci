@@ -1,4 +1,4 @@
-/************************************************************************************
+/******************************************************************************
     Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
 
     This file is part of Vespucci.
@@ -15,11 +15,13 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
+*******************************************************************************/
 #include "bandratiodialog.h"
 #include "ui_bandratiodialog.h"
 
-BandRatioDialog::BandRatioDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
+BandRatioDialog::BandRatioDialog(QWidget *parent,
+                                 VespucciWorkspace *ws,
+                                 int row) :
     QDialog(parent),
     ui(new Ui::BandRatioDialog)
 {
@@ -75,8 +77,10 @@ void BandRatioDialog::on_buttonBox_accepted()
     double first_entered_max = first_max_box_->text().toDouble();
     double second_entered_max = second_max_box_->text().toDouble();
 
-    vector<int> first_range = data_->FindRange(first_entered_min, first_entered_max);
-    vector<int> second_range = data_->FindRange(second_entered_min, second_entered_max);
+    vector<int> first_range =
+            data_->FindRange(first_entered_min, first_entered_max);
+    vector<int> second_range =
+            data_->FindRange(second_entered_min, second_entered_max);
 
     int first_min = first_range[0];
     int first_max = first_range[1];

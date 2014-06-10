@@ -46,11 +46,12 @@ public:
             colvec results,
             SpecMap *parent,
             QString *directory,
-            QCPColorGradient gradient);
-
+            QCPColorGradient gradient,
+            int source_index);
+    ~MapData();
     QString name();
     QString type();
-    QString source_index();
+    int source_index();
 
     void set_type(QString type);
     void set_name(QString name, QString type);
@@ -67,6 +68,7 @@ public:
     void setValueRange(const QCPRange& range);
     //void setData(double key, double value, double z);
 
+    void setGradient(const QCPColorGradient &gradient);
     //Displays the map window
     void ShowMapWindow();
     void CreateImage(QCPColorGradient color_scheme, bool interpolation);
@@ -82,6 +84,8 @@ public:
     void setInterpolate(bool enabled);
     void ShowColorScale(bool enabled);
     void ShowAxes(bool enabled);
+
+    void RemoveThis();
 
     bool savePng(const QString & fileName,
                  int width = 0,
@@ -106,6 +110,8 @@ public:
                   double scale = 1.0,
                   int quality = 0);
 
+    void DrawScaleBar(double width, double height, QString units, QColor color, QString position);
+
 private:
     QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
     QString y_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
@@ -114,12 +120,13 @@ private:
 
     QString name_; //Name, this is displayed in the QListView
     QString type_; //Short description of type.  set by subclass constructor.
-    QString source_index_; //List index of this
+    int source_index_; //List index of this
 
     //QCPColorMapData map_data_;
 
 
-    MapViewer *map_display_;  //pointer to the window generated when constructed
+    //MapViewer *map_display_;  //pointer to the window generated when constructed
+    MapViewer *map_display_;
     SpectrumViewer *spectrum_display_; //pointer to the spectrum viewer window (not automatically opened).
 
     QCustomPlot *map_qcp_; //pointer to the QCustomPlot widget in MapViewer
@@ -134,10 +141,12 @@ private:
     int value_size_; //size of y (number of unique y values)
 
     QCPColorGradient gradient_;
+    QCPColorScale *new_color_scale_;
 
     QString *directory_;
 
     QCPLayoutElement *color_scale_;
+
 };
 
 #endif // MAPDATA_H

@@ -13,7 +13,8 @@ TARGET = vespucci
 TEMPLATE = app
 
 
-
+INCLUDEPATH += "C:/Libraries/armadillo-4.300.6/include"
+DEPENDPATH += "C:/Libraries/armadillo-4.300.6/include"
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -31,8 +32,8 @@ SOURCES += main.cpp\
     mapviewer.cpp \
     principalcomponentsdata.cpp \
     principalcomponentsdialog.cpp \
-    filterdialog.cpp \
-    normalizationdialog.cpp
+    scalebardialog.cpp \
+    filterdialog.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -49,8 +50,8 @@ HEADERS  += mainwindow.h \
     mapviewer.h \
     principalcomponentsdata.h \
     principalcomponentsdialog.h \
-    filterdialog.h \
-    normalizationdialog.h
+    scalebardialog.h \
+    filterdialog.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
@@ -61,18 +62,13 @@ FORMS    += mainwindow.ui \
     bandratiodialog.ui \
     mapviewer.ui \
     principalcomponentsdialog.ui \
-    filterdialog.ui \
-    normalizationdialog.ui
+    scalebardialog.ui \
+    filterdialog.ui
 
 RESOURCES += \
     resources.qrc
-
-
 
 LIBS += -L$$PWD/../../../../../Libraries/OpenBLAS-v0.2.8-x86_64-Win/lib/ -llibopenblas
 
 INCLUDEPATH += $$PWD/../../../../../Libraries/OpenBLAS-v0.2.8-x86_64-Win/include
 DEPENDPATH += $$PWD/../../../../../Libraries/OpenBLAS-v0.2.8-x86_64-Win/include
-
-INCLUDEPATH += "C:/Libraries/armadillo-4.300.6/include"
-DEPENDPATH += "C:/Libraries/armadillo-4.300.6/include"

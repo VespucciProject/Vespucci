@@ -406,3 +406,26 @@ void MainWindow::on_actionFilter_Derivatize_triggered()
     FilterDialog *filter_dialog = new FilterDialog(this, workspace, row);
     filter_dialog->show();
 }
+<<<<<<< HEAD
+=======
+
+void MainWindow::on_actionClose_Dataset_triggered()
+{
+    int dataset_row = dataset_list_widget_->currentRow();
+    QString name = dataset_list_widget_->currentItem()->text();
+    QString text = "Are you sure you want to close the dataset " + name + "?" +
+            " The data and all associated maps will be deleted.";
+
+    int response = QMessageBox::question(this, "Close Dataset?", text,
+                                         QMessageBox::Ok, QMessageBox::Cancel);
+
+    if (response == QMessageBox::Ok)
+        workspace->RemoveDatasetAt(dataset_row);
+}
+
+void MainWindow::on_actionDocumentation_triggered()
+{
+    QUrl website_url("http://dpfoose.github.io/Vespucci/");
+    QDesktopServices::openUrl(website_url);
+}
+>>>>>>> origin/master

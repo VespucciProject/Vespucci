@@ -32,7 +32,17 @@ SpecMap::SpecMap()
 
 SpecMap::~SpecMap()
 {
+<<<<<<< HEAD
     delete principal_components_data_;
+=======
+    //make sure principal components stats are deleted properly.
+    if (principal_components_calculated_)
+        delete principal_components_data_;
+
+    //make sure all maps are delted properly.
+    for (int i = 0; i < maps_.size(); ++i)
+        RemoveMapAt(i);
+>>>>>>> origin/master
 }
 
 
@@ -179,6 +189,7 @@ SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *di
     constructor_canceled_ = false;
     cout << "Reading x, y, and spectra took " << seconds << " s." << endl;
 }
+<<<<<<< HEAD
 
 // PRE-PROCESSING FUNCTIONS //
 ///
@@ -340,6 +351,75 @@ void SpecMap::SingularValue()
 
     svd_econ(U, s, V, spectra_);
     spectra_ = U.cols(span(0,5))*diagmat(s)*V.t();
+=======
+
+// PRE-PROCESSING FUNCTIONS //
+///
+/// \brief SpecMap::MinMaxNormalize
+///normalizes data so that smallest value is 0 and highest is 1 through the
+/// entire spectra_ matrix.  If the minimum of spectra_ is negative, it subtracts
+/// this minimum from all points.  The entire spectra_ matrix is then divided
+/// by the maximum of spectra_
+void SpecMap::MinMaxNormalize()
+{
+    int n_elem = spectra_.n_elem;
+    double minimum = spectra_.min();
+    if (minimum < 0)
+        for (int i = 0; i < n_elem; ++i)
+            spectra_(i) = spectra_(i) - minimum;
+    double maximum = spectra_.max();
+    spectra_ = spectra_/maximum;
+}
+///
+/// \brief SpecMap::UnitAreaNormalize
+///normalizes the spectral data so that the area under each point spectrum is 1
+void SpecMap::UnitAreaNormalize()
+{
+    int num_rows = spectra_.n_rows;
+    int num_cols = spectra_.n_cols;
+    for (int i = 0; i < num_rows; ++i){
+        rowvec row = spectra_.row(i);
+        double row_sum = sum(row);
+        for (int j = 0; j < num_cols; ++j){
+            spectra_(i, j) = spectra_(i, j) / row_sum;
+        }
+    }
+}
+
+///
+/// \brief SpecMap::ZScoreNormalize
+///Computes a Z score for every entry based on the distribution of its column,
+/// assuming normality of "population".  Because some values will be negative,
+/// this must be accounted for in Univariate Mapping Functions.
+///
+void SpecMap::ZScoreNormalize()
+{
+    int num_rows = spectra_.n_rows;
+    int num_cols = spectra_.n_cols;
+    for (int j = 0; j < num_cols; ++j){
+        double mean = arma::mean(spectra_.col(j));
+        double standard_deviation = arma::stddev(spectra_.col(j));
+        for (int i = 0; i < num_rows; ++i){
+            spectra_(i, j) = (spectra_(i, j) - mean) / standard_deviation;
+        }
+    }
+    z_scores_calculated_ = true;
+}
+
+void SpecMap::SubtractBackground(mat background)
+{
+    if (background.n_cols != spectra_.n_cols){
+        QMessageBox::warning(0,
+                             "Improper Dimensions!",
+                             "The background spectrum has a different number of"
+                             " points than the map data."
+                             " No subtraction can be performed");
+        return;
+    }
+    else{
+        spectra_.each_row() -= background.row(0);
+    }
+>>>>>>> origin/master
 }
 
 /*
@@ -404,6 +484,210 @@ void SpecMap::Derivatize(int derivative_order,
     derivatives(span(0, window_size), span(0, ))
 }
 */
+
+//Filtering functions
+
+///
+/// \brief SpecMap::MedianFilter
+/// \param window_size - an odd number representing the width of the window.
+///performs median filtering on the spectral data.  Entries near the boundaries
+/// are not processed.
+void SpecMap::MedianFilter(int window_size)
+{
+    int starting_index = (window_size - 1) / 2;
+    int ending_index = wavelength_.n_cols - starting_index;
+    int i, j;
+    int rows = spectra_.n_rows;
+    int columns = spectra_.n_cols;
+    rowvec window;
+    mat processed;
+    window.set_size(window_size);
+    processed.set_size(spectra_.n_rows, spectra_.n_cols);
+
+    for (i = 0; i < rows; ++i){
+        for (j = 0; j < starting_index; ++j){
+            processed(i, j) = spectra_(i, j);
+        }
+        for (j = ending_index; j < columns; ++j){
+            processed(i, j) = spectra_(i, j);
+        }
+        for (j = starting_index; j < ending_index; ++j){
+            window = spectra_(i, span((j - starting_index), (j+starting_index)));
+            processed(i, j) = median(window);
+        }
+    }
+    spectra_ = processed;
+}
+
+///
+/// \brief SpecMap::LinearMovingAverage
+/// \param window_size - an odd number representing the width of the window.
+/// performs moving average filtering on the spectral data.  Entries near the
+/// boundaries are not processed.  See also SpecMap::MedianFilter.
+void SpecMap::LinearMovingAverage(int window_size)
+{
+    QMessageBox::information(0, "Debug", "SpecMap::MedianFilter");
+    int starting_index = (window_size - 1) / 2;
+    int ending_index = wavelength_.n_cols - starting_index;
+    int i, j;
+    int rows = spectra_.n_rows;
+    int columns = spectra_.n_cols;
+    rowvec window;
+    mat processed;
+    window.set_size(window_size);
+    processed.set_size(spectra_.n_rows, spectra_.n_cols);
+
+    for (i = 0; i < rows; ++i){
+        for (j = 0; j < starting_index; ++j){
+            processed(i, j) = spectra_(i, j);
+        }
+        for (j = ending_index; j < columns; ++j){
+            processed(i, j) = spectra_(i, j);
+        }
+        for (j = starting_index; j < ending_index; ++j){
+            window = spectra_(i, span((j - starting_index), (j+starting_index)));
+            processed(i, j) = mean(window);
+        }
+    }
+    spectra_ = processed;
+}
+
+///
+/// \brief SpecMap::SingularValue
+/// Denoises the spectra matrix using a singular value decomposition.  The first
+/// 5 singular values are used.
+void SpecMap::SingularValue()
+{
+    bool ok = QMessageBox::question(0,
+                                    "Singular Value Decomposition",
+                                    "The singular value decomposition takes"
+                                    " several seconds to complete.  The program"
+                                    " may appear to freeze during this time."
+                                    " Are you sure you want to continue?");
+    if (!ok)
+        return;
+
+    mat U;
+    vec s;
+    mat V;
+
+    svd_econ(U, s, V, spectra_);
+    spectra_ = U.cols(span(0,5))*diagmat(s)*V.t();
+}
+
+
+void SpecMap::Derivatize(int derivative_order,
+                         int polynomial_order,
+                         int window_size)
+{
+    int i, j;
+    int columns = wavelength_.n_elem;
+    int p = (window_size - 1) / 2;
+    mat x;
+    x.set_size(window_size, 1 + polynomial_order);
+    int p_buf = -p;
+
+    for (i = 0; i <window_size; ++i){
+        for (j = 0; j <= polynomial_order; ++j){
+            x(i, j) = p_buf ^ j;
+        }
+        ++p_buf;
+    }
+
+    mat weights = solve(x, eye(window_size, window_size));
+
+    mat coeff_mat;
+
+    coeff_mat.set_size(derivative_order, polynomial_order + 1 - derivative_order);
+
+    for (i = 0; i < derivative_order; ++i){
+        for (j = 0; j < polynomial_order + 1 - derivative_order; ++j){
+            coeff_mat(i, j) = j + 1.0 + i;
+        }
+    }
+
+
+
+    rowvec coeff = prod(coeff_mat);
+    mat diagonals;
+    diagonals.set_size(columns, window_size);
+    for (i = 0; i < columns; ++i){
+        diagonals.row(i) =
+                weights.row(derivative_order) * coeff(0);
+    }
+
+    QVector<int> p_range;
+    for (i = -p; i <= p; ++i){
+        p_range.append(i);
+    }
+
+
+
+    mat SG_Coefficients =
+            spdiags(diagonals,
+                    p_range,
+                    columns,
+                    columns);
+
+    mat weights_submatrix;
+    weights_submatrix.set_size(polynomial_order - derivative_order + 1, window_size);
+
+    for (i = 0; i < polynomial_order - derivative_order + 1; ++i){
+        for (j = 0; j < window_size; ++j){
+            weights_submatrix(i, j) = weights(i + derivative_order, j);
+        }
+    }
+
+    mat w1 = diagmat(coeff)*weights_submatrix;
+
+    mat x_submatrix_1;
+    x_submatrix_1.set_size(p, 1+ polynomial_order - derivative_order);
+    mat x_submatrix_2;
+    x_submatrix_2.set_size(p, 1 + polynomial_order - derivative_order);
+
+    for (i = 0; i < p; ++i){
+        for (j = 0; j <= polynomial_order - derivative_order; ++j){
+            x_submatrix_1(i, j) = x(i, j);
+        }
+    }
+
+    int x_row = p;
+
+    for (i = 0; i < p; ++i){
+        for (j = 0; j <= polynomial_order - derivative_order; ++j){
+            x_submatrix_2(i, j) = x(x_row, j);
+        }
+        ++x_row;
+    }
+
+
+    mat x_product_1 = x_submatrix_1 * w1;
+    mat x_product_2 =x_submatrix_2 * w1;
+
+    mat x_product_1_transpose = x_product_1.t();
+    mat x_product_2_transpose = x_product_2.t();
+
+    for (i = 0; i < window_size; ++i){
+        for (j = 0; j < p; ++j){
+            SG_Coefficients(i, j) = x_product_1_transpose(i, j);
+        }
+    }
+    for (i = columns-window_size; i < window_size; ++i){
+        for (j = columns - p; j < columns; ++j){
+            SG_Coefficients(i, j) = x_product_2_transpose(i, j);
+        }
+    }
+
+    spectra_ = spectra_ * SG_Coefficients;
+}
+
+
+void SpecMap::SavitzkyGolay(int polynomial_order, int window_size)
+{
+    polynomial_order = 0;
+    window_size = 0;
+    QMessageBox::information(0, "Feature not Implemented", "This feature not yet implemented");
+}
 
 // MAPPING FUNCTIONS //
 
@@ -982,10 +1266,17 @@ int SpecMap::map_loading_count()
 ///
 void SpecMap::RemoveMapAt(int i)
 {
+<<<<<<< HEAD
     QMessageBox::information(0, "Debug", "SpecMap::RemoveMapAt()");
     QListWidgetItem *item = map_list_widget_->takeItem(i);
     maps_.removeAt(i); //map falls out of scope and memory freed!
+=======
+
+    QListWidgetItem *item = map_list_widget_->takeItem(i);
+>>>>>>> origin/master
     map_list_widget_->removeItemWidget(item);
+    maps_.removeAt(i); //map falls out of scope and memory freed!
+
 }
 
 
@@ -1135,3 +1426,89 @@ bool SpecMap::principal_components_calculated()
 {
     return principal_components_calculated_;
 }
+<<<<<<< HEAD
+=======
+
+
+// A non-member function that is only called on members of specmap objects
+///
+/// \brief spdiags analgous to the MATLAB function A = spdiags(B, d, m, n).
+/// \param B a matrix containing the new diagonal vectors as columns
+/// \param d a vector containing the row numbers to set.  The first column
+/// vector of B corresponds to the first entry in d.
+/// \param m the number of rows of the output matrix
+/// \param n the number of columns of the output matrix
+/// \return a m by n sparase matrix with the columns of B as diagonals
+/// A translation of the MATLAB function A = spdiags(B, d, m, n).  For
+/// subdiagonals (entries of d < 0) vectors are truncated at the end when they
+/// are longer than the target diagonal.  For superdiagonals, vectors are
+/// truncated at the beginning when they are longer than the target diagonal.
+mat SpecMap::spdiags(mat B, QVector<int> d, int m, int n)
+{
+    int i, j, k;
+    int size = B.n_cols;
+    int number = d.size();
+    int diag_size;
+    int column_size = B.n_rows;
+    colvec column;
+    mat output;
+    output.zeros();
+    output.set_size(m, n);
+    colvec diagonal;
+    QVector<int> subdiagonals;
+    QVector<int> superdiagonals;
+
+    if (number > size){
+        QMessageBox::warning(0, "Out of Range!", "An error has occured in an "
+                             "internal function.");
+        return output;
+    }
+
+
+    for (i = 0; i < number; ++i){
+        if (d[i] < 0)
+            subdiagonals.append(d[i]);
+        else
+            superdiagonals.append(d[i]);
+    }
+
+    for (i = 0; i < subdiagonals.size(); ++i){
+        k = subdiagonals[i];
+        diagonal = output.diag(k);
+        diag_size = diagonal.n_elem;
+        column = B.col(i);
+
+        if (diag_size < column_size){
+            for (i = 0; i < diag_size; ++i){
+                output.diag(k)(i) = column(i);
+            }
+        }
+
+        else {
+            for (i = 0; i < column_size; ++i){
+                output.diag(k)(i) = column(i);
+            }
+        }
+    }
+
+    for (i = 0; i < superdiagonals.size(); ++i){
+        k = superdiagonals[i];
+        diag_size = output.diag(k).n_elem;
+        column = B.col(i);
+        if (diag_size < column_size){
+            j = column_size;
+            for (i = diag_size; i <=0; --i){
+                output.diag(k)(i) = column(j);
+                --j;
+            }
+        }
+
+        else {
+            for (i = 0; i < column_size; ++i){
+                output.diag(k)(i) = column(i);
+            }
+        }
+    }
+    return output;
+}
+>>>>>>> origin/master

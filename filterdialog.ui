@@ -75,6 +75,12 @@
       <property name="minimum">
        <number>1</number>
       </property>
+<<<<<<< HEAD
+=======
+      <property name="value">
+       <number>2</number>
+      </property>
+>>>>>>> origin/master
      </widget>
     </item>
     <item row="2" column="1">
@@ -96,7 +102,11 @@
        <number>2</number>
       </property>
       <property name="value">
+<<<<<<< HEAD
        <number>5</number>
+=======
+       <number>7</number>
+>>>>>>> origin/master
       </property>
      </widget>
     </item>

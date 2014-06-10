@@ -37,12 +37,10 @@ void VespucciWorkspace::SetPointers(QMainWindow *main_window)
 
 // FUNCTIONS THAT ADD AND REMOVE WORKSPACE OBJECTS
 
-void VespucciWorkspace::AddDataset(SpecMap dataset)
+void VespucciWorkspace::AddDataset(QSharedPointer<SpecMap> dataset)
 {
-    QString name = dataset.name();
-
+    QString name = dataset->name();
     datasets_.append(dataset);
-    dataset_names_.append(name);
     dataset_list_widget_->addItem(name);
     ++dataset_loading_count_;
 }
@@ -53,12 +51,7 @@ void VespucciWorkspace::AddDataset(SpecMap dataset)
 //looks up the index and deletes at the index.
 void VespucciWorkspace::RemoveDataset(QString name)
 {
-    int i;
-    for(i=0; i<dataset_names_.size(); ++i){
-        if(dataset_names_.at(i) == name){
-            this->RemoveDatasetAt(i);
-        }
-    }
+
 }
 
 
@@ -67,11 +60,9 @@ void VespucciWorkspace::RemoveDataset(QString name)
 // These functions should be safe because the names list and the object list only update together
 void VespucciWorkspace::RemoveDatasetAt(int i)
 {
-    QString name = dataset_names_.at(i);
     QListWidgetItem *item = dataset_list_widget_->takeItem(i);
-    datasets_.removeAt(i);
-    dataset_names_.removeAt(i);
     dataset_list_widget_->removeItemWidget(item);
+    datasets_.removeAt(i);
 
 }
 
@@ -107,13 +98,12 @@ QMainWindow* VespucciWorkspace::main_window()
 
 double VespucciWorkspace::GetWavelengthMax(int row)
 {
-
-    return datasets_[row].wavelength().max();
+    return datasets_[row]->wavelength().max();
 }
 
 double VespucciWorkspace::GetWavelengthMin(int row)
 {
-    return datasets_[row].wavelength().min();
+    return datasets_[row]->wavelength().min();
 }
 
 //Will later include a sanity check before closing workspace.
@@ -123,9 +113,9 @@ void VespucciWorkspace::close()
     cout<<"Closing workspace" << endl;
 }
 
-SpecMap* VespucciWorkspace::DatasetAt(int i)
+QSharedPointer<SpecMap> VespucciWorkspace::DatasetAt(int i)
 {
-    return &datasets_[i];
+    return datasets_[i];
 }
 
 QString* VespucciWorkspace::directory_ptr()

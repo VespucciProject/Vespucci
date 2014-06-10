@@ -41,6 +41,8 @@ public:
 
     colvec Results(int component);
 
+    mat *tsquared();
+
 private:
     mat coeff_;
     mat score_;
