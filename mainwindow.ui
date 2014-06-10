@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>338</height>
+    <height>328</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -107,20 +107,34 @@
      <string>Data</string>
     </property>
     <widget class="QMenu" name="menuData_Pre_Processing">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
      <property name="title">
       <string>Data Pre-Processing</string>
      </property>
-     <addaction name="actionNormalize"/>
-     <addaction name="actionFilter"/>
+     <addaction name="actionFilter_Derivatize"/>
+     <addaction name="actionNormalize_Standardize"/>
+     <addaction name="actionSubtract_Background"/>
+     <addaction name="actionCorrect_Baseline"/>
     </widget>
-    <addaction name="actionClose_Dataset"/>
-    <addaction name="actionExport_Dataset_As"/>
-    <addaction name="actionConcatenate_Datasets"/>
-    <addaction name="separator"/>
+    <widget class="QMenu" name="menuExport_Dataset_Elements">
+     <property name="title">
+      <string>Export Dataset Elements</string>
+     </property>
+     <addaction name="actionSpectra"/>
+     <addaction name="actionAverage_Spectra"/>
+     <addaction name="actionAverage_Spectra_with_Abcissa"/>
+     <addaction name="actionSpatial_Data"/>
+     <addaction name="actionSpectral_Abcissa"/>
+     <addaction name="separator"/>
+     <addaction name="actionAll_Data"/>
+     <addaction name="separator"/>
+     <addaction name="actionPrincipal_Component_Statistics"/>
+    </widget>
     <addaction name="menuData_Pre_Processing"/>
+    <addaction name="separator"/>
+    <addaction name="actionConcatenate_Datasets"/>
+    <addaction name="menuExport_Dataset_Elements"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose_Dataset"/>
    </widget>
    <widget class="QMenu" name="menuMap">
     <property name="title">
@@ -150,14 +164,6 @@
    <addaction name="menuMap"/>
    <addaction name="menuHelp"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionLoad_Workspace">
    <property name="enabled">
@@ -175,7 +181,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Save Workspace...</string>
+    <string>Save Workspace</string>
    </property>
    <property name="toolTip">
     <string>Save current workspace (all datasets and created maps) as HDF5 file</string>
@@ -196,7 +202,7 @@
   </action>
   <action name="actionDocumentation">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Vespucci Webpage</string>
@@ -208,22 +214,6 @@
    </property>
    <property name="text">
     <string>About Vespucci</string>
-   </property>
-  </action>
-  <action name="actionClose_Dataset">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Close Dataset</string>
-   </property>
-  </action>
-  <action name="actionExport_Dataset_As">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Export Dataset As...</string>
    </property>
   </action>
   <action name="actionConcatenate_Datasets">
@@ -245,19 +235,6 @@
    </property>
    <property name="text">
     <string>New Band Ratio Map...</string>
-   </property>
-  </action>
-  <action name="actionInterpolate_Map">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Interpolate Map</string>
-   </property>
-  </action>
-  <action name="actionSet_Color_Scheme">
-   <property name="text">
-    <string>Set Color Scheme</string>
    </property>
   </action>
   <action name="actionDelete_Map">
@@ -313,14 +290,70 @@
     <string>Agglomerative Hierarchical Clustering</string>
    </property>
   </action>
-  <action name="actionNormalize">
+  <action name="actionFilter_Derivatize">
    <property name="text">
-    <string>Normalize</string>
+    <string>Filter/Derivatize</string>
    </property>
   </action>
-  <action name="actionFilter">
+  <action name="actionNormalize_Standardize">
    <property name="text">
-    <string>Filter</string>
+    <string>Normalize/Standardize</string>
+   </property>
+  </action>
+  <action name="actionSubtract_Background">
+   <property name="text">
+    <string>Subtract Background</string>
+   </property>
+  </action>
+  <action name="actionCorrect_Baseline">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Correct Baseline</string>
+   </property>
+  </action>
+  <action name="actionSpectra">
+   <property name="text">
+    <string>Spectra</string>
+   </property>
+  </action>
+  <action name="actionSpatial_Data">
+   <property name="text">
+    <string>Spatial Data</string>
+   </property>
+  </action>
+  <action name="actionSpectral_Abcissa">
+   <property name="text">
+    <string>Spectral Abcissa</string>
+   </property>
+  </action>
+  <action name="actionAll_Data">
+   <property name="text">
+    <string>All Data</string>
+   </property>
+  </action>
+  <action name="actionAverage_Spectra">
+   <property name="text">
+    <string>Average Spectra</string>
+   </property>
+  </action>
+  <action name="actionAverage_Spectra_with_Abcissa">
+   <property name="text">
+    <string>Average Spectra (with Abcissa)</string>
+   </property>
+  </action>
+  <action name="actionPrincipal_Component_Statistics">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Principal Component Statistics</string>
+   </property>
+  </action>
+  <action name="actionClose_Dataset">
+   <property name="text">
+    <string>Close Dataset</string>
    </property>
   </action>
  </widget>

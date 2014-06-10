@@ -51,7 +51,9 @@ void LoadDataset::on_browseButton_clicked()
 
     filename = QFileDialog::getOpenFileName(this, tr("Open Data File"),
                                             workspace->directory(),
-                                            tr("Text Files (*.txt);; SPC Files (*.spc);;"));
+                                            tr("Text Files (*.txt);;"
+                                               "SPC Files (*.spc);;"
+                                               "Vespucci Dataset Files (*.vds);;"));
     filename_line_edit->setText(filename);
 
 }
@@ -59,6 +61,7 @@ void LoadDataset::on_browseButton_clicked()
 void LoadDataset::on_buttonBox_accepted()
 {
 
+    QCheckBox *swap_check_box = this->findChild<QCheckBox *>("swapCheckBox");
     QLineEdit *filename_line_edit = this->findChild<QLineEdit *>("filenameBox");
     QLineEdit *name_box = this->findChild<QLineEdit *>("nameBox");
 
@@ -66,49 +69,64 @@ void LoadDataset::on_buttonBox_accepted()
     QString filename = filename_line_edit->text();
     QFileInfo file_info(filename);
 
-    bool remove_at_position = false;
-    int temp_position=0;
-    int position;
+    //bool remove_at_position = false;
+    //int temp_position=0;
+    //int position;
+    bool swap = swap_check_box->isChecked();
 
     QStringList names_list = workspace->dataset_names();
     QStringList::iterator i;
 
-    int warning_response=QMessageBox::Ok;
+    int warning_response=QMessageBox::Yes;
     //Warning message pops up when user enters a name that already exists
     for (i=names_list.begin(); i != names_list.end(); ++i){
         if (name==(*i)){
-            QMessageBox warning;
-            warning.setText("There is already a dataset with this name in the workspace.");
-            warning.setInformativeText("Importing a dataset with this name will overwrite existing dataset.  OK to overwrite previous dataset.");
-            warning.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-            warning.setDefaultButton(QMessageBox::Cancel);
-            warning_response = warning.exec();
-            if (warning_response==QMessageBox::Ok){
-                remove_at_position = true;
-                position = temp_position;
+            warning_response =
+                    QMessageBox::question(this,
+                                          "Duplicate Name",
+                                          "There is already a dataset with this"
+                                          " name in the workspace. Datasets are"
+                                          " not indexed by name, but using two"
+                                          " datasets with the same name may lead"
+                                          " to confusion. Are you sure you wish"
+                                          " to continue with this name?",
+                                          QMessageBox::No,
+                                          QMessageBox::Yes);
+        }
+    }
+
+    if (warning_response == QMessageBox::Yes && file_info.exists()){
+        if (file_info.suffix() == "txt"){
+            QFile inputfile(filename);
+            inputfile.open(QIODevice::ReadOnly);
+            QTextStream inputstream(&inputfile);
+            QSharedPointer<SpecMap> data(new SpecMap(inputstream,
+                                                     workspace->main_window(),
+                                                     directory_,
+                                                     swap));
+            inputfile.close();
+            if (!data->ConstructorCancelled()){
+                data->SetName(name);
+                workspace->AddDataset(data);
+                workspace->set_directory(file_info.dir().absolutePath());
             }
         }
-        ++temp_position;
-    }
 
-    if (remove_at_position==true){
-        workspace->RemoveDatasetAt(position);
-    }
+        if (file_info.suffix() == "vds"){
+            QMessageBox::critical(this, "Feature not Implemented", "This file type is not supported yet.");
+            return;
+            //QSharedPointer<SpecMap> data(new SpecMap(filename,
+            //                                         workspace->main_window(),
+            //                                         directory_));
+            //if (!data->ConstructorCancelled()){
+            //    data.data()->SetName(name);
+            //    workspace->AddDataset(data);
+            //    workspace->set_directory(file_info.dir().absolutePath());
+            //}
+        }
 
-    if (warning_response == QMessageBox::Ok && file_info.exists()){
-        QFile inputfile(filename);
-        inputfile.open(QIODevice::ReadOnly);
-        QTextStream inputstream(&inputfile);
-        SpecMap data(inputstream, workspace->main_window(), directory_);
-        inputfile.close();
-
-        data.SetName(name);
-
-        workspace->AddDataset(data);
-        workspace->set_directory(file_info.dir().absolutePath());
 
     }
-
 }
 
 

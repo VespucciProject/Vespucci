@@ -25,13 +25,61 @@
 using namespace arma;
 using namespace std;
 
-///
-/// \brief SpecMap::SpecMap
-///Default constructor
 SpecMap::SpecMap()
 {
 
 }
+
+SpecMap::~SpecMap()
+{
+    //make sure principal components stats are deleted properly.
+    if (principal_components_calculated_)
+        delete principal_components_data_;
+
+    //make sure all maps are delted properly.
+    for (int i = 0; i < maps_.size(); ++i)
+        RemoveMapAt(i);
+}
+
+
+///
+/// \brief SpecMap::SpecMap
+/// \param binary_file_name file name of the binary
+/// \param main_window the main window
+/// \param directory the working directory
+/// This constructor loads a previously saved dataset.  The dataset is saved
+/// as an armadillo binary in the same format as the long text.
+///
+SpecMap::SpecMap(QString binary_file_name, QMainWindow *main_window, QString *directory)
+{
+    //Set up variables unrelated to hyperspectral data:
+    map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
+    map_loading_count_ = 0;
+    principal_components_calculated_ = false;
+    partial_least_squares_calculated_ = false;
+    z_scores_calculated_ = false;
+    directory_ = directory;
+
+    mat input_data;
+    input_data.load(binary_file_name.toStdString());
+    int cols = input_data.n_cols;
+    int rows = input_data.n_rows;
+    int wavelength_size = cols - 2;
+    int spatial_size = rows - 1;
+    x_.set_size(spatial_size);
+    y_.set_size(spatial_size);
+    wavelength_.set_size(wavelength_size);
+    spectra_.set_size(spatial_size, wavelength_size);
+
+    wavelength_ = input_data(0, span(2, cols));
+    x_ = input_data(span(1, rows), 0);
+    y_ = input_data(span(1, rows), 1);
+    spectra_ = input_data(span(1, rows), span(2, cols));
+}
+
+
+
+
 ///
 /// \brief SpecMap::SpecMap
 /// Main function for processing data from text files to create SpecMap objects.
@@ -41,15 +89,16 @@ SpecMap::SpecMap()
 /// \param main_window the main window of the app
 /// \param directory the working directory
 ///
-SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *directory)
+SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *directory, bool swap_spatial)
 {
     //Set up variables unrelated to hyperspectral data:
     map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
     partial_least_squares_calculated_ = false;
+    z_scores_calculated_ = false;
     directory_ = directory;
-
+    flipped_ = swap_spatial;
     int i, j;
     wall_clock timer;
 
@@ -107,21 +156,308 @@ SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *di
         spectra_string=inputstream.readLine();
         spectra_string_list =
                 spectra_string.split("\t", QString::SkipEmptyParts);
-        x_(i) = spectra_string_list.at(0).toDouble();
-        spectra_string_list.removeAt(0);
 
-        y_(i) = spectra_string_list.at(0).toDouble();
-        spectra_string_list.removeAt(0);
+        if (swap_spatial){
+            y_(i) = spectra_string_list.at(0).toDouble();
+            spectra_string_list.removeAt(0);
+
+            x_(i) = spectra_string_list.at(0).toDouble();
+            spectra_string_list.removeAt(0);
+        }
+        else{
+            x_(i) = spectra_string_list.at(0).toDouble();
+            spectra_string_list.removeAt(0);
+
+            y_(i) = spectra_string_list.at(0).toDouble();
+            spectra_string_list.removeAt(0);
+        }
+
         for (j=0; j<columns; ++j){
             spectra_(i,j) = spectra_string_list.at(j).toDouble();
+        }
+        if (progress.wasCanceled()){
+            constructor_canceled_ = true;
+            return;
         }
         progress.setValue(i);
     }
     seconds = timer.toc();
+    constructor_canceled_ = false;
     cout << "Reading x, y, and spectra took " << seconds << " s." << endl;
-
 }
 
+// PRE-PROCESSING FUNCTIONS //
+///
+/// \brief SpecMap::MinMaxNormalize
+///normalizes data so that smallest value is 0 and highest is 1 through the
+/// entire spectra_ matrix.  If the minimum of spectra_ is negative, it subtracts
+/// this minimum from all points.  The entire spectra_ matrix is then divided
+/// by the maximum of spectra_
+void SpecMap::MinMaxNormalize()
+{
+    int n_elem = spectra_.n_elem;
+    double minimum = spectra_.min();
+    if (minimum < 0)
+        for (int i = 0; i < n_elem; ++i)
+            spectra_(i) = spectra_(i) - minimum;
+    double maximum = spectra_.max();
+    spectra_ = spectra_/maximum;
+}
+///
+/// \brief SpecMap::UnitAreaNormalize
+///normalizes the spectral data so that the area under each point spectrum is 1
+void SpecMap::UnitAreaNormalize()
+{
+    int num_rows = spectra_.n_rows;
+    int num_cols = spectra_.n_cols;
+    for (int i = 0; i < num_rows; ++i){
+        rowvec row = spectra_.row(i);
+        double row_sum = sum(row);
+        for (int j = 0; j < num_cols; ++j){
+            spectra_(i, j) = spectra_(i, j) / row_sum;
+        }
+    }
+}
+
+///
+/// \brief SpecMap::ZScoreNormalize
+///Computes a Z score for every entry based on the distribution of its column,
+/// assuming normality of "population".  Because some values will be negative,
+/// this must be accounted for in Univariate Mapping Functions.
+///
+void SpecMap::ZScoreNormalize()
+{
+    int num_rows = spectra_.n_rows;
+    int num_cols = spectra_.n_cols;
+    for (int j = 0; j < num_cols; ++j){
+        double mean = arma::mean(spectra_.col(j));
+        double standard_deviation = arma::stddev(spectra_.col(j));
+        for (int i = 0; i < num_rows; ++i){
+            spectra_(i, j) = (spectra_(i, j) - mean) / standard_deviation;
+        }
+    }
+    z_scores_calculated_ = true;
+}
+
+void SpecMap::SubtractBackground(mat background)
+{
+    if (background.n_cols != spectra_.n_cols){
+        QMessageBox::warning(0,
+                             "Improper Dimensions!",
+                             "The background spectrum has a different number of"
+                             " points than the map data."
+                             " No subtraction can be performed");
+        return;
+    }
+    else{
+        spectra_.each_row() -= background.row(0);
+    }
+}
+
+
+//Filtering functions
+
+///
+/// \brief SpecMap::MedianFilter
+/// \param window_size - an odd number representing the width of the window.
+///performs median filtering on the spectral data.  Entries near the boundaries
+/// are not processed.
+void SpecMap::MedianFilter(int window_size)
+{
+    int starting_index = (window_size - 1) / 2;
+    int ending_index = wavelength_.n_cols - starting_index;
+    int i, j;
+    int rows = spectra_.n_rows;
+    int columns = spectra_.n_cols;
+    rowvec window;
+    mat processed;
+    window.set_size(window_size);
+    processed.set_size(spectra_.n_rows, spectra_.n_cols);
+
+    for (i = 0; i < rows; ++i){
+        for (j = 0; j < starting_index; ++j){
+            processed(i, j) = spectra_(i, j);
+        }
+        for (j = ending_index; j < columns; ++j){
+            processed(i, j) = spectra_(i, j);
+        }
+        for (j = starting_index; j < ending_index; ++j){
+            window = spectra_(i, span((j - starting_index), (j+starting_index)));
+            processed(i, j) = median(window);
+        }
+    }
+    spectra_ = processed;
+}
+
+///
+/// \brief SpecMap::LinearMovingAverage
+/// \param window_size - an odd number representing the width of the window.
+/// performs moving average filtering on the spectral data.  Entries near the
+/// boundaries are not processed.  See also SpecMap::MedianFilter.
+void SpecMap::LinearMovingAverage(int window_size)
+{
+    QMessageBox::information(0, "Debug", "SpecMap::MedianFilter");
+    int starting_index = (window_size - 1) / 2;
+    int ending_index = wavelength_.n_cols - starting_index;
+    int i, j;
+    int rows = spectra_.n_rows;
+    int columns = spectra_.n_cols;
+    rowvec window;
+    mat processed;
+    window.set_size(window_size);
+    processed.set_size(spectra_.n_rows, spectra_.n_cols);
+
+    for (i = 0; i < rows; ++i){
+        for (j = 0; j < starting_index; ++j){
+            processed(i, j) = spectra_(i, j);
+        }
+        for (j = ending_index; j < columns; ++j){
+            processed(i, j) = spectra_(i, j);
+        }
+        for (j = starting_index; j < ending_index; ++j){
+            window = spectra_(i, span((j - starting_index), (j+starting_index)));
+            processed(i, j) = mean(window);
+        }
+    }
+    spectra_ = processed;
+}
+
+///
+/// \brief SpecMap::SingularValue
+/// Denoises the spectra matrix using a singular value decomposition.  The first
+/// 5 singular values are used.
+void SpecMap::SingularValue()
+{
+    bool ok = QMessageBox::question(0,
+                                    "Singular Value Decomposition",
+                                    "The singular value decomposition takes"
+                                    " several seconds to complete.  The program"
+                                    " may appear to freeze during this time."
+                                    " Are you sure you want to continue?");
+    if (!ok)
+        return;
+
+    mat U;
+    vec s;
+    mat V;
+
+    svd_econ(U, s, V, spectra_);
+    spectra_ = U.cols(span(0,5))*diagmat(s)*V.t();
+}
+
+
+void SpecMap::Derivatize(int derivative_order,
+                         int polynomial_order,
+                         int window_size)
+{
+    int i, j;
+    int columns = wavelength_.n_elem;
+    int p = (window_size - 1) / 2;
+    mat x;
+    x.set_size(window_size, 1 + polynomial_order);
+    int p_buf = -p;
+
+    for (i = 0; i <window_size; ++i){
+        for (j = 0; j <= polynomial_order; ++j){
+            x(i, j) = p_buf ^ j;
+        }
+        ++p_buf;
+    }
+
+    mat weights = solve(x, eye(window_size, window_size));
+
+    mat coeff_mat;
+
+    coeff_mat.set_size(derivative_order, polynomial_order + 1 - derivative_order);
+
+    for (i = 0; i < derivative_order; ++i){
+        for (j = 0; j < polynomial_order + 1 - derivative_order; ++j){
+            coeff_mat(i, j) = j + 1.0 + i;
+        }
+    }
+
+
+
+    rowvec coeff = prod(coeff_mat);
+    mat diagonals;
+    diagonals.set_size(columns, window_size);
+    for (i = 0; i < columns; ++i){
+        diagonals.row(i) =
+                weights.row(derivative_order) * coeff(0);
+    }
+
+    QVector<int> p_range;
+    for (i = -p; i <= p; ++i){
+        p_range.append(i);
+    }
+
+
+
+    mat SG_Coefficients =
+            spdiags(diagonals,
+                    p_range,
+                    columns,
+                    columns);
+
+    mat weights_submatrix;
+    weights_submatrix.set_size(polynomial_order - derivative_order + 1, window_size);
+
+    for (i = 0; i < polynomial_order - derivative_order + 1; ++i){
+        for (j = 0; j < window_size; ++j){
+            weights_submatrix(i, j) = weights(i + derivative_order, j);
+        }
+    }
+
+    mat w1 = diagmat(coeff)*weights_submatrix;
+
+    mat x_submatrix_1;
+    x_submatrix_1.set_size(p, 1+ polynomial_order - derivative_order);
+    mat x_submatrix_2;
+    x_submatrix_2.set_size(p, 1 + polynomial_order - derivative_order);
+
+    for (i = 0; i < p; ++i){
+        for (j = 0; j <= polynomial_order - derivative_order; ++j){
+            x_submatrix_1(i, j) = x(i, j);
+        }
+    }
+
+    int x_row = p;
+
+    for (i = 0; i < p; ++i){
+        for (j = 0; j <= polynomial_order - derivative_order; ++j){
+            x_submatrix_2(i, j) = x(x_row, j);
+        }
+        ++x_row;
+    }
+
+
+    mat x_product_1 = x_submatrix_1 * w1;
+    mat x_product_2 =x_submatrix_2 * w1;
+
+    mat x_product_1_transpose = x_product_1.t();
+    mat x_product_2_transpose = x_product_2.t();
+
+    for (i = 0; i < window_size; ++i){
+        for (j = 0; j < p; ++j){
+            SG_Coefficients(i, j) = x_product_1_transpose(i, j);
+        }
+    }
+    for (i = columns-window_size; i < window_size; ++i){
+        for (j = columns - p; j < columns; ++j){
+            SG_Coefficients(i, j) = x_product_2_transpose(i, j);
+        }
+    }
+
+    spectra_ = spectra_ * SG_Coefficients;
+}
+
+
+void SpecMap::SavitzkyGolay(int polynomial_order, int window_size)
+{
+    polynomial_order = 0;
+    window_size = 0;
+    QMessageBox::information(0, "Feature not Implemented", "This feature not yet implemented");
+}
 
 // MAPPING FUNCTIONS //
 
@@ -141,18 +477,69 @@ void SpecMap::Univariate(int min,
                          int gradient_index)
 {
 
-    cout << "SpecMap::Univariate" << endl;
-
-    unsigned int size = x_.n_elem;
-    unsigned int i;
+    int size = x_.n_elem;
+    int i, j;
 
     rowvec region;
     colvec results;
     results.set_size(size);
     QString map_type;
 
+    if (value_method == "Bandwidth"){
+        double maximum, half_maximum, width, region_size;
+        int max_index, left_index, right_index;
+        map_type = "1-Region Univariate (Bandwidth (FWHM))";
+        int columns = spectra_.n_cols;
+        for (i = 0; i < size; ++i){
 
-    if(value_method == "Area"){
+            //find maximum and half-maximum
+            region = spectra_(i, span(min, max));
+            region_size = region.n_elem;
+            maximum = region.max();
+            half_maximum = maximum / 2.0;
+
+            //find index of maximum
+            for (j = 0; j < columns; ++j){
+                if (maximum == spectra_(i, j) && j >= min && j <= max){
+                    max_index = j;
+                    break;
+                }
+            }
+            //find index of left limit
+            for (j = max_index; j > 0; --j){
+                if (spectra_(i, j) - half_maximum < 0){
+                    left_index = j;
+                    break;
+                }
+            }
+
+            //find index of right limit
+            for (j = max_index; j < columns; ++j){
+                if (spectra_(i, j) - half_maximum < 0){
+                    right_index = j;
+                    break;
+                }
+            }
+
+            //make sure adjacent points on other side of inflection aren't better
+            if (fabs(spectra_(i, left_index) - half_maximum) <
+                    fabs(spectra_(i, left_index - 1) - half_maximum)){
+                --left_index;
+            }
+            if (fabs(spectra_(i, right_index) - half_maximum) <
+                     fabs(spectra_(i, right_index + 1) - half_maximum)){
+                ++right_index;
+            }
+
+            //record to results.  using fabs because order of wavelength unknown
+            width = fabs(wavelength_(right_index) - wavelength_(left_index));
+            results(i) = width;
+
+        }
+    }
+
+
+    else if(value_method == "Area"){
         // Do peak fitting stuff here.
         map_type = "1-Region Univariate (Area)";
     }
@@ -165,23 +552,49 @@ void SpecMap::Univariate(int min,
     else{
         // Makes an intensity map
         map_type = "1-Region Univariate (Intensity)";
-        cout << "line 157" <<endl;
-        for (i=0; i<size; ++i){
-            region = spectra_(i, span(min, max));
-            results(i)=region.max();
-        }
-    }
-   // MapData* map = new MapData(x_axis_description_, y_axis_description_, this, directory_);
-    MapData* map = new MapData(x_axis_description_,
-                               y_axis_description_,
-                               x_, y_, results,
-                               this, directory_,
-                               this->GetGradient(gradient_index));
+        if (z_scores_calculated_){
+            int elements = spectra_.n_elem;
+            rowvec region_temp;
+            double peak_height;
+            double peak_height_temp;
+            mat spectra_temp(spectra_.n_rows, spectra_.n_cols);
+            for (i = 0; i < elements; ++i)
+                spectra_temp(i) = fabs(spectra_(i));
 
-    map->set_name(name, map_type);
+            for (i = 0; i < size; ++i){
+                region = spectra_(i, span(min, max));
+                region_temp = spectra_temp(i, span(min, max));
+                peak_height_temp = region_temp.max();
+                peak_height = region.max();
+
+                // If the maxes aren't equal, then we know the peak is negative
+                if (peak_height_temp != peak_height)
+                    peak_height = peak_height_temp * -1.0;
+
+                results(i) = peak_height;
+            }
+        }
+        else{
+            for (i=0; i < size; ++i){
+                region = spectra_(i, span(min, max));
+                results(i)=region.max();
+            }
+
+        }
+
+    }
+
+    QSharedPointer<MapData> map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, results,
+                                            this, directory_,
+                                            this->GetGradient(gradient_index),
+                                            maps_.size()));
+
+
+    map.data()->set_name(name, map_type);
     this->AddMap(map);
-    MapData *map_ptr = maps_.last();
-    map_ptr->ShowMapWindow();
+    maps_.last().data()->ShowMapWindow();
 }
 
 ///
@@ -236,17 +649,17 @@ void SpecMap::BandRatio(int first_min,
         }
     }
 
-    MapData* map = new MapData(x_axis_description_,
-                               y_axis_description_,
-                               x_, y_, results,
-                               this, directory_,
-                               this->GetGradient(gradient_index));
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, results,
+                                            this, directory_,
+                                            this->GetGradient(gradient_index),
+                                            maps_.size()));
 
-    map->set_name(name, map_type);
 
-    this->AddMap(map);
-    MapData *map_ptr = maps_.last();
-    map_ptr->ShowMapWindow();
+    new_map.data()->set_name(name, map_type);
+    this->AddMap(new_map);
+    maps_.last().data()->ShowMapWindow();
 }
 
 
@@ -285,7 +698,10 @@ void SpecMap::PrincipalComponents(int component,
 
         alert.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
         alert.setWindowTitle("Principal Components Analysis");
+        alert.setIcon(QMessageBox::Question);
+
         int ret = alert.exec();
+
 
         if (ret == QMessageBox::Cancel){
             return;
@@ -323,18 +739,15 @@ void SpecMap::PrincipalComponents(int component,
         }
     }
 
-    MapData *map = new MapData(x_axis_description_,
-                               y_axis_description_,
-                               x_, y_, results,
-                               this, directory_,
-                               this->GetGradient(gradient_index));
-
-
-    map->set_name(name, map_type);
-    this->AddMap(map);
-
-    MapData *map_ptr = maps_.last();
-    map_ptr->ShowMapWindow();
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, results,
+                                            this, directory_,
+                                            this->GetGradient(gradient_index),
+                                            maps_.size()));
+    new_map.data()->set_name(name, map_type);
+    this->AddMap(new_map);
+    maps_.last().data()->ShowMapWindow();
 }
 
 
@@ -349,57 +762,13 @@ void SpecMap::PrincipalComponents(int component,
 /// \param name the name of the MapData object to be created.
 /// \param gradient_index the index of the color gradient in the color gradient list
 ///
-void SpecMap::PartialLeastSquares(int components,
-                                  bool include_negative_scores,
-                                  QString name,
-                                  int gradient_index)
-{
-    /*
-    mat p, q, w, tt;
-    mat model_space_parameters; //q in y=Tq' + e
-    mat predictor; //X in glm
-    mat response; //Y in glm, collection of column vectors
-    colvec parameters; //glm parameters b in Y=Xb +e
-    mat loadings; //in T = XV, V
-    mat scores; //in T = XV, T
-
-
-
-    //allocate appropriate amount of memory by setting sizes
-    int samples = spectra_.n_rows;
-    int responses = spectra_.n_cols;
-
-    //predictor, x, is IxK
-    //response, y, is IxJ
-    predictor.set_size(spectra_.n_rows, spectra_.n_cols);
-    response.set_size(spectra_.n_rows, components);
-    parameters.set_size(spectra_.n_rows, components);
-    scores.set_size(spectra_.n_rows, spectra_.n_cols);
-
-
-
-
-
-    //this is the NIPALS PLS1 algorithm
-    //converted from MATLAB syntax from
-    //Andersson, M. (2009), A comparison of nine PLS1 algorithms.
-    //J. Chemometrics, 23: 518–529. doi: 10.1002/cem.1248
-
-    unsigned int i;
-    for (i=0; i<components; ++i){
-        v = trans(predictor) * response;
-        w.col(i) = v / sqrt(trans(v) * v);
-        t.col(i) = predictor * w.col(i);
-        tt = trans(t.col(i)) * t.col(i);
-        p.col(i) = trans(predictor) * t.col(i) / tt;
-        predictor = predictor - t.col(i) * trans(p.col(i));
-        q(i, 1) = trans(t.col(i)) * response / tt;
-    }
-    parameters = cumsum(w * inv(trans(p) * w) * diag(trans(q)), 2);
-*/
-
-}
-
+//void SpecMap::PartialLeastSquares(int components,
+//                                  bool include_negative_scores,
+//                                  QString name,
+//                                  int gradient_index)
+//{
+//
+//}
 
 
 ///
@@ -453,11 +822,10 @@ vector<int> SpecMap::FindRange(double start, double end)
     else{
         indices[1] = i;
     }
-
     return indices;
 }
 
-/// HELPER FUNCTIONS (Will go in own file later to speed compilation ///
+/// HELPER FUNCTIONS (Will go in own file later to speed compilation? ///
 /// \brief SpecMap::PointSpectrum
 /// \param index
 /// \return
@@ -520,14 +888,27 @@ QCPRange SpecMap::KeyRange()
 int SpecMap::KeySize()
 {
     unsigned int i;
-    int x_count=1;  //this counts the first entry in x_
-    double x_buf = x_(0);
+    int x_count=1;
+    double x_buf;
 
     //loop through x until a value different then the first is met.
-    for(i=0; i<x_.n_elem; ++i){
-        if(x_(i)!=x_buf){
-            ++x_count;
-            x_buf=x_(i);
+    if (!flipped_){
+        x_count = 1; //this counts the first entry in x_
+        x_buf = x_(0);
+        for(i=0; i<x_.n_elem; ++i){
+            if(x_(i)!=x_buf){
+                ++x_count;
+                x_buf=x_(i);
+            }
+        }
+    } else{
+        x_count = 0;
+        for (i=0; i<x_.n_elem; ++i){
+            if(y_(i)!=y_(0)){
+                break;
+            } else{
+                ++x_count;
+            }
         }
     }
 
@@ -543,20 +924,33 @@ int SpecMap::ValueSize()
 {
 
     unsigned int i = 0;
-    int y_count = 0;
+    int y_count;
 
 
     //long-text files hold x constant and vary y
     //until x is different, count y
-
-    for (i=0; i<x_.n_elem; ++i){
-        if(x_(i)!=x_(0)){
-            break;
+    //reverse if flipped
+    if (!flipped_){
+        y_count = 0;
+        for (i=0; i<x_.n_elem; ++i){
+            if(x_(i)!=x_(0)){
+                break;
+            }
+            else{
+                ++y_count;
+            }
         }
-        else{
-            ++y_count;
+    } else{
+        y_count = 1;
+        double y_buf = y_(0);
+        for(i=0; i<y_.n_elem; ++i){
+            if(y_(i)!=y_buf){
+                ++y_count;
+                y_buf=y_(i);
+            }
         }
     }
+
 
     return y_count;
 }
@@ -642,11 +1036,11 @@ int SpecMap::map_loading_count()
 ///
 void SpecMap::RemoveMapAt(int i)
 {
-    QString name = map_names_.at(i);
+
     QListWidgetItem *item = map_list_widget_->takeItem(i);
-    maps_.removeAt(i);
-    map_names_.removeAt(i);
     map_list_widget_->removeItemWidget(item);
+    maps_.removeAt(i); //map falls out of scope and memory freed!
+
 }
 
 
@@ -672,7 +1066,7 @@ void SpecMap::RemoveMap(QString name)
 /// Adds a map to the list of map pointers and adds its name to relevant lists
 /// \param map
 ///
-void SpecMap::AddMap(MapData* map)
+void SpecMap::AddMap(QSharedPointer<MapData> map)
 {
     QString name = map->name();
     maps_.append(map);
@@ -757,7 +1151,125 @@ QCPColorGradient SpecMap::GetGradient(int gradient_number)
     case 35: return QCPColorGradient::cbRdYlBu;
     case 36: return QCPColorGradient::cbRdYlGn;
     case 37: return QCPColorGradient::cbSpectral;
-    case 38: return QCPColorGradient::cbCluster;
+    case 38: return QCPColorGradient::vSpectral;
+    case 39: return QCPColorGradient::cbCluster;
     default: return QCPColorGradient::gpCold;
     }
+}
+
+bool SpecMap::ConstructorCancelled()
+{
+    return constructor_canceled_;
+}
+
+mat SpecMap::AverageSpectrum(bool stats)
+{
+    mat spectrum;
+    int size = spectra_.n_cols;
+    double spec_mean;
+    double spec_std;
+
+    if (stats)
+        spectrum.set_size(2, size);
+    else
+        spectrum.set_size(1, size);
+
+    for (int j = 0; j < size; ++j){
+        spec_mean = mean(spectra_.col(j));
+        spectrum(0, j) = spec_mean;
+        if (stats){
+            spec_std = stddev(spectra_.col(j));
+            spectrum(1, j) = spec_std;
+        }
+    }
+
+    return spectrum;
+}
+
+bool SpecMap::principal_components_calculated()
+{
+    return principal_components_calculated_;
+}
+
+
+// A non-member function that is only called on members of specmap objects
+///
+/// \brief spdiags analgous to the MATLAB function A = spdiags(B, d, m, n).
+/// \param B a matrix containing the new diagonal vectors as columns
+/// \param d a vector containing the row numbers to set.  The first column
+/// vector of B corresponds to the first entry in d.
+/// \param m the number of rows of the output matrix
+/// \param n the number of columns of the output matrix
+/// \return a m by n sparase matrix with the columns of B as diagonals
+/// A translation of the MATLAB function A = spdiags(B, d, m, n).  For
+/// subdiagonals (entries of d < 0) vectors are truncated at the end when they
+/// are longer than the target diagonal.  For superdiagonals, vectors are
+/// truncated at the beginning when they are longer than the target diagonal.
+mat SpecMap::spdiags(mat B, QVector<int> d, int m, int n)
+{
+    int i, j, k;
+    int size = B.n_cols;
+    int number = d.size();
+    int diag_size;
+    int column_size = B.n_rows;
+    colvec column;
+    mat output;
+    output.zeros();
+    output.set_size(m, n);
+    colvec diagonal;
+    QVector<int> subdiagonals;
+    QVector<int> superdiagonals;
+
+    if (number > size){
+        QMessageBox::warning(0, "Out of Range!", "An error has occured in an "
+                             "internal function.");
+        return output;
+    }
+
+
+    for (i = 0; i < number; ++i){
+        if (d[i] < 0)
+            subdiagonals.append(d[i]);
+        else
+            superdiagonals.append(d[i]);
+    }
+
+    for (i = 0; i < subdiagonals.size(); ++i){
+        k = subdiagonals[i];
+        diagonal = output.diag(k);
+        diag_size = diagonal.n_elem;
+        column = B.col(i);
+
+        if (diag_size < column_size){
+            for (i = 0; i < diag_size; ++i){
+                output.diag(k)(i) = column(i);
+            }
+        }
+
+        else {
+            for (i = 0; i < column_size; ++i){
+                output.diag(k)(i) = column(i);
+            }
+        }
+    }
+
+    for (i = 0; i < superdiagonals.size(); ++i){
+        k = superdiagonals[i];
+        diag_size = output.diag(k).n_elem;
+        column = B.col(i);
+        if (diag_size < column_size){
+            j = column_size;
+            for (i = diag_size; i <=0; --i){
+                output.diag(k)(i) = column(j);
+                --j;
+            }
+        }
+
+        else {
+            for (i = 0; i < column_size; ++i){
+                output.diag(k)(i) = column(i);
+            }
+        }
+    }
+    return output;
 }

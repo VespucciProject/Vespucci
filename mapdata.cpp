@@ -27,7 +27,8 @@ MapData::MapData(QString x_axis_description,
                  colvec results,
                  SpecMap *parent,
                  QString *directory,
-                 QCPColorGradient gradient)
+                 QCPColorGradient gradient,
+                 int source_index)
 {
     name_ = parent->name();
     directory_ = directory;
@@ -54,8 +55,27 @@ MapData::MapData(QString x_axis_description,
     x_axis_description_ = x_axis_description;
     y_axis_description_ = y_axis_description;
     dataset_ = parent;
+    source_index_ = source_index;
 }
 
+///
+/// \brief MapData::~MapData
+///Deletes everything the new keyword is used on in this object.
+/// Destructor triggered when this is removed from SpecMap list.
+MapData::~MapData()
+{
+    QMessageBox::information(0, "Debug", "MapData::~MapData");
+
+    QMessageBox::information(0, "Debug", "Delete SpecViewer");
+    delete spectrum_display_;
+
+    QMessageBox::information(0, "Debug", "Delete QCPColorScale");
+    delete new_color_scale_;
+
+    QMessageBox::information(0, "Debug", "Delete QCPColorMap");
+    delete map_;
+
+}
 
 QString MapData::name()
 {
@@ -67,7 +87,7 @@ QString MapData::type()
     return type_;
 }
 
-QString MapData::source_index()
+int MapData::source_index()
 {
     return source_index_;
 }
@@ -108,10 +128,11 @@ void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation)
     map_->rescaleDataRange(true);
     map_qcp_->rescaleAxes(true);
 
-    QCPColorScale *color_scale = new QCPColorScale(map_qcp_);
-    color_scale->setGradient(color_scheme);
-    color_scale->setDataRange(map_->dataRange());
-    map_qcp_->plotLayout()->addElement(0, 1, color_scale);
+    new_color_scale_ = new QCPColorScale(map_qcp_);
+    new_color_scale_->setGradient(color_scheme);
+    new_color_scale_->setDataRange(map_->dataRange());
+    map_qcp_->plotLayout()->addElement(0, 1, new_color_scale_);
+
     color_scale_ = map_qcp_->plotLayout()->element(0, 1);
 
     map_->setInterpolate(interpolation);
@@ -231,4 +252,98 @@ bool MapData::saveTiff(const QString &fileName, int width, int height, double sc
     map_qcp_->setBackground(map_display_->palette().window());
     map_qcp_->replot();
     return success;
+}
+
+///
+/// \brief MapData::RemoveThis
+///Triggers the SpecMap object to remove this from the list.  Since SpecMap
+/// stores MapData objects as shared pointers, and only one object (the map list)
+/// contains this pointer, this removal results in this object being deleted.
+void MapData::RemoveThis()
+{
+    QMessageBox::information(0, "Debug", "call to SpecMap::RemoveMapAt()");
+    dataset_->RemoveMapAt(source_index_);
+}
+
+void MapData::setGradient(const QCPColorGradient &gradient)
+{
+    map_->setGradient(gradient);
+    QCPColorScale *color_scale = qobject_cast<QCPColorScale *>(color_scale_);
+    color_scale->setGradient(gradient);
+    map_qcp_->replot();
+}
+
+void MapData::DrawScaleBar(double width,
+                           double height,
+                           QString units,
+                           QColor color,
+                           QString position)
+{
+    //instantiate shape
+
+    //QCustomPlot object will take ownership of these and make sure they're deleted.
+    QCPItemRect *scale_bar = new QCPItemRect(map_qcp_);
+    QCPItemText *scale_bar_text = new QCPItemText(map_qcp_);
+
+
+    map_qcp_->addItem(scale_bar);
+    map_qcp_->addItem(scale_bar_text);
+
+    QString text = QString::number(width) + " " + units;
+    scale_bar_text->setText(text);
+    scale_bar_text->setPositionAlignment(Qt::AlignCenter);
+    scale_bar_text->setColor(color);
+
+    QPen pen(color);
+    QBrush brush(color, Qt::SolidPattern);
+    scale_bar->setPen(pen);
+    scale_bar->setBrush(brush);
+    QCPRange key_range = map_->keyAxis()->range();
+    QCPRange value_range = map_->valueAxis()->range();
+
+    //find corners of image
+    double key_max = key_range.upper;
+    double key_min = key_range.lower;
+    double value_max = value_range.upper;
+    double value_min = value_range.lower;
+
+    double x_min, y_min, x_max, y_max;
+
+    if (position == "Top Left"){
+        x_min = key_min + 2.0;
+        x_max = x_min + width;
+        y_max = value_max - 4.0;
+        y_min = y_max - height;
+    }
+
+    else if (position == "Top Right"){
+        x_max = key_max - 2.0;
+        x_min = x_max - width;
+        y_max = value_max - 4.0;
+        y_min = y_max - height;
+    }
+
+    else if (position == "Bottom Left"){
+        x_min = key_min + 2.0;
+        x_max = x_min + width;
+        y_min = value_min + 2.0;
+        y_max = y_min + height;
+    }
+
+    else{
+        x_max = key_max - 2.0;
+        x_min = x_max - width;
+        y_min = value_min + 2.0;
+        y_max = y_min + height;
+    }
+
+    scale_bar->bottomRight->setCoords(x_max, y_min);
+    scale_bar->topLeft->setCoords(x_min, y_max);
+    double x_mid = ((x_max - x_min) / 2.0) + x_min;
+    double y_text = y_max + 1;
+
+    scale_bar_text->position->setCoords(x_mid, y_text);
+
+    map_qcp_->show();
+
 }

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FilterDialog</class>
- <widget class="QDialog" name="FilterDialog">
+ <class>ScaleBarDialog</class>
+ <widget class="QDialog" name="ScaleBarDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>169</height>
+    <height>190</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Add Scale Bar</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>130</y>
+     <y>150</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -35,101 +35,104 @@
      <x>10</x>
      <y>10</y>
      <width>381</width>
-     <height>111</height>
+     <height>131</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
+    <property name="fieldGrowthPolicy">
+     <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+    </property>
     <item row="0" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Method</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Polynomial Order</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Derivative Order</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Filter Window Size</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QSpinBox" name="polynomialSpinBox">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="minimum">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>2</number>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QSpinBox" name="derivativeSpinBox">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="minimum">
-       <number>1</number>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QSpinBox" name="windowSpinBox">
-      <property name="minimum">
-       <number>1</number>
-      </property>
-      <property name="singleStep">
-       <number>2</number>
-      </property>
-      <property name="value">
-       <number>7</number>
+       <string>Bar Width (in spatial units)</string>
       </property>
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QComboBox" name="methodComboBox">
+     <widget class="QDoubleSpinBox" name="widthDoubleSpinBox">
+      <property name="value">
+       <double>5.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Bar Height (in spatial units)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QDoubleSpinBox" name="heightDoubleSpinBox">
+      <property name="value">
+       <double>1.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Units</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="unitsLineEdit">
+      <property name="text">
+       <string>μm</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Position</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QComboBox" name="positionComboBox">
       <item>
        <property name="text">
-        <string>Median Filter</string>
+        <string>Bottom Right</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Moving Average Filter</string>
+        <string>Bottom Left</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Derivative Filter</string>
+        <string>Top Right</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Savitzky-Golay Smoothing</string>
+        <string>Top Left</string>
        </property>
       </item>
-      <item>
-       <property name="text">
-        <string>Singular Value Decomposition</string>
-       </property>
-      </item>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_4">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="text">
+       <string>Color</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QPushButton" name="colorPushButton">
+      <property name="text">
+       <string>Select...</string>
+      </property>
      </widget>
     </item>
    </layout>
@@ -140,7 +143,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>FilterDialog</receiver>
+   <receiver>ScaleBarDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -156,7 +159,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>FilterDialog</receiver>
+   <receiver>ScaleBarDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

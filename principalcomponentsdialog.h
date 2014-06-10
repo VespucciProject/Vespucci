@@ -50,7 +50,7 @@ private:
     int data_index_;
 
     //Pointer to the SpecMap object at data_index_
-    SpecMap *data_;
+    QSharedPointer<SpecMap> data_;
 };
 
 #endif // PRINCIPALCOMPONENTSDIALOG_H

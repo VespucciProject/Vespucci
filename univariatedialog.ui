@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>402</width>
-    <height>390</height>
+    <height>409</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>350</y>
+     <y>370</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -112,7 +112,7 @@
      <x>10</x>
      <y>260</y>
      <width>381</width>
-     <height>81</height>
+     <height>101</height>
     </rect>
    </property>
    <property name="title">
@@ -124,7 +124,7 @@
       <x>10</x>
       <y>20</y>
       <width>361</width>
-      <height>51</height>
+      <height>71</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout_3">
@@ -138,8 +138,52 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Peak Determination</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="peakComboBox">
+       <item>
+        <property name="text">
+         <string>Intensity</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Area</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Derivative</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Bandwidth</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QCheckBox" name="negativeScoresCheckBox">
+       <property name="text">
+        <string>Dataset Includes Negative Peaks?</string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="1">
       <widget class="QComboBox" name="gradientComboBox">
+       <property name="toolTip">
+        <string>An asterix by the color scheme name indicates a divergent color scheme particularly suited for this kind of map.</string>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
        <item>
         <property name="text">
          <string>ColorBrewer BlueGreen</string>
@@ -257,12 +301,12 @@
        </item>
        <item>
         <property name="text">
-         <string>QCustomPlot Polar</string>
+         <string>↔ QCustomPlot Polar</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>QCustomPlot Spectrum</string>
+         <string>↔ QCustomPlot Spectrum</string>
         </property>
        </item>
        <item>
@@ -285,30 +329,54 @@
          <string>QCustomPlot Cold</string>
         </property>
        </item>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>Peak Determination</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QComboBox" name="peakComboBox">
        <item>
         <property name="text">
-         <string>Intensity</string>
+         <string>↔ ColorBrewer BrownBlueGreen </string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Area</string>
+         <string>↔ ColorBrewer PinkYellowGreen</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Derivative</string>
+         <string>↔ ColorBrewer PurpleGreen</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>↔ ColorBrewer PurpleOrange</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>↔ ColorBrewer RedBlue</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>↔ ColorBrewer RedGray</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>↔ ColorBrewer RedYellowBlue</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>↔ ColorBrewer RedYellowGreen</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>↔ ColorBrewer Spectral</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>↔ Vespucci Spectral</string>
         </property>
        </item>
       </widget>

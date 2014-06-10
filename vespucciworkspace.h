@@ -33,7 +33,7 @@ public:
     //QStringList map_names();
 
     //adds or removes dataset or map to relevant lists
-    void AddDataset(SpecMap dataset);
+    void AddDataset(QSharedPointer<SpecMap> dataset);
     void RemoveDataset(QString name);
 
     //void AddMap(MapData map);
@@ -57,7 +57,8 @@ public:
     double GetWavelengthMin(int row);
     double GetWavelengthMax(int row);
 
-    SpecMap* DatasetAt(int i);
+    //SpecMap* DatasetAt(int i);
+    QSharedPointer<SpecMap> DatasetAt(int i);
 
 private:
     //pointers to main window and necessary widgets
@@ -65,7 +66,8 @@ private:
     //QListWidget *map_list_widget_;
     QListWidget *dataset_list_widget_;
 
-    QList<SpecMap> datasets_;
+    //QList<SpecMap> datasets_;
+    QList<QSharedPointer<SpecMap>> datasets_;
     QString directory_; //= QDir::homePath();
 
     QStringList dataset_names_;

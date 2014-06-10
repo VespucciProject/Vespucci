@@ -39,16 +39,25 @@ class SpecMap
 {
 public:
     SpecMap();
-    SpecMap(QTextStream& inputstream, QMainWindow *main_window, QString *directory);
-
-
-
+    SpecMap(QTextStream& inputstream, QMainWindow *main_window, QString *directory, bool swap_spatial);
+    SpecMap(QString binary_file_name, QMainWindow *main_window, QString *directory);
+    ~SpecMap();
     // PRE-PROCESSING FUNCTIONS //
+    // Normalization functions
 
-    int PreProcess(QString normalization_method,
-                   int polynomial_order,
-                   int derivative_order,
-                   int filter_window_size);
+    void MinMaxNormalize();
+    void ZScoreNormalize();
+    void UnitAreaNormalize();
+
+    //Spectral Pre-processing
+
+    void SubtractBackground(mat background);
+    void SavitzkyGolay(int polynomial_order, int window_size);
+    void MedianFilter(int window_size);
+    void LinearMovingAverage(int window_size);
+    void Derivatize(int derivative_order, int polynomial_order, int window_size);
+    void SingularValue();
+    mat spdiags(mat B, QVector<int> d, int m, int n);
 
 
     // HELPER FUNCTIONS //
@@ -116,6 +125,8 @@ public:
     colvec y();
     mat spectra();
     const QString name();
+    bool principal_components_calculated();
+    PrincipalComponentsData *principal_components_data();
 
     void SetName(QString new_name);
 
@@ -126,7 +137,7 @@ public:
     void AddDataset(SpecMap dataset);
     void RemoveDataset(QString name);
 
-    void AddMap(MapData *map);
+    void AddMap(QSharedPointer<MapData> map);
     void RemoveMap(QString name);
     void RemoveMapAt(int i);
     int map_loading_count();
@@ -139,6 +150,10 @@ public:
 
     QCPColorGradient GetGradient(int gradient_number);
 
+    bool ConstructorCancelled();
+    mat AverageSpectrum(bool stats);
+
+
 private:
     rowvec wavelength_;
     colvec x_;
@@ -149,7 +164,10 @@ private:
 
 
     QListWidget *map_list_widget_;
-    QList<MapData *> maps_;
+    //QList<MapData *> maps_;
+
+    QList<QSharedPointer<MapData>> maps_;
+
     PrincipalComponentsData *principal_components_data_;
 
     QStringList map_names_;
@@ -160,10 +178,12 @@ private:
 
     QString *directory_;
 
+    bool z_scores_calculated_;
     bool principal_components_calculated_;
     bool partial_least_squares_calculated_;
 
-    double spectra_maximum_; //keeps track of maximum value of normalized spectrum
+    bool constructor_canceled_;
+    bool flipped_;
 };
 
 #endif // SPECMAP_H

@@ -135,7 +135,6 @@
       <height>71</height>
      </rect>
     </property>
-    <zorder>formLayoutWidget</zorder>
    </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_2">
@@ -194,6 +193,11 @@
          <string>Derivative</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Bandwidth (FWHM)</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item row="0" column="1">
@@ -202,7 +206,7 @@
         <string>An asterix by the color scheme name indicates a divergent color scheme particularly suited for this kind of map.</string>
        </property>
        <property name="currentIndex">
-        <number>29</number>
+        <number>0</number>
        </property>
        <item>
         <property name="text">
@@ -321,12 +325,12 @@
        </item>
        <item>
         <property name="text">
-         <string>*QCustomPlot Polar</string>
+         <string>↔ QCustomPlot Polar</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>*QCustomPlot Spectrum</string>
+         <string>↔ QCustomPlot Spectrum</string>
         </property>
        </item>
        <item>
@@ -351,47 +355,52 @@
        </item>
        <item>
         <property name="text">
-         <string>*ColorBrewer BrownBlueGreen </string>
+         <string>↔ ColorBrewer BrownBlueGreen </string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>*ColorBrewer PinkYellowGreen</string>
+         <string>↔ ColorBrewer PinkYellowGreen</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>*ColorBrewer PurpleGreen</string>
+         <string>↔ ColorBrewer PurpleGreen</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>*ColorBrewer PurpleOrange</string>
+         <string>↔ ColorBrewer PurpleOrange</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>*ColorBrewer RedBlue</string>
+         <string>↔ ColorBrewer RedBlue</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>*ColorBrewer RedGray</string>
+         <string>↔ ColorBrewer RedGray</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>*ColorBrewer RedYellowBlue</string>
+         <string>↔ ColorBrewer RedYellowBlue</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>*ColorBrewer RedYellowGreen</string>
+         <string>↔ ColorBrewer RedYellowGreen</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>*ColorBrewer Spectral</string>
+         <string>↔ ColorBrewer Spectral</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>↔ Vespucci Spectral</string>
         </property>
        </item>
       </widget>
