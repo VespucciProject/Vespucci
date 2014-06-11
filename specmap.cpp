@@ -296,7 +296,6 @@ void SpecMap::MedianFilter(int window_size)
 /// boundaries are not processed.  See also SpecMap::MedianFilter.
 void SpecMap::LinearMovingAverage(int window_size)
 {
-    QMessageBox::information(0, "Debug", "SpecMap::MedianFilter");
     int starting_index = (window_size - 1) / 2;
     int ending_index = wavelength_.n_cols - starting_index;
     int i, j;
@@ -341,8 +340,17 @@ void SpecMap::SingularValue()
     vec s;
     mat V;
 
+    wall_clock timer;
+    timer.tic();
+    cout << "call to svd_econ" << endl;
     svd_econ(U, s, V, spectra_);
-    spectra_ = U.cols(span(0,5))*diagmat(s)*V.t();
+    double seconds = timer.toc();
+    cout << "took " << seconds << " seconds" <<endl;
+    //must cast submatrix view as mat for multiplication to work
+    mat U_submatrix = U.cols(span(0,5));
+    vec s_subvec = s.rows(span(0, 5));
+    mat V_subvec = V.cols(span(0, 5));
+    spectra_ = U_submatrix*diagmat(s_subvec)*V_subvec.t();
 }
 
 
