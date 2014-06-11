@@ -26,6 +26,7 @@
 #include "bandratiodialog.h"
 #include "principalcomponentsdialog.h"
 #include "filterdialog.h"
+#include "cropdialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -425,4 +426,11 @@ void MainWindow::on_actionDocumentation_triggered()
 {
     QUrl website_url("http://dpfoose.github.io/Vespucci/");
     QDesktopServices::openUrl(website_url);
+}
+
+void MainWindow::on_actionCrop_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    CropDialog *crop_dialog = new CropDialog(this, workspace, row);
+    crop_dialog->show();
 }

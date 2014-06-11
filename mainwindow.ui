@@ -114,6 +114,7 @@
      <addaction name="actionNormalize_Standardize"/>
      <addaction name="actionSubtract_Background"/>
      <addaction name="actionCorrect_Baseline"/>
+     <addaction name="actionCrop"/>
     </widget>
     <widget class="QMenu" name="menuExport_Dataset_Elements">
      <property name="title">
@@ -354,6 +355,11 @@
   <action name="actionClose_Dataset">
    <property name="text">
     <string>Close Dataset</string>
+   </property>
+  </action>
+  <action name="actionCrop">
+   <property name="text">
+    <string>Crop</string>
    </property>
   </action>
  </widget>

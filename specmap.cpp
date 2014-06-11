@@ -187,6 +187,33 @@ SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *di
 }
 
 // PRE-PROCESSING FUNCTIONS //
+
+///
+/// \brief SpecMap::CropSpectra
+/// \param x_min value of x below which spectra are deleted
+/// \param x_max value of x above which spectra are deleted
+/// \param y_min value of y below which spectra are deleted
+/// \param y_max value of y above which spectra are deleted
+/// removes all data points outside of the range.
+void SpecMap::CropSpectra(double x_min, double x_max, double y_min, double y_max)
+{
+    int max = x_.n_rows;
+    QProgressDialog progress("Cropping...", "Cancel", 0, max);
+    progress.setWindowModality(Qt::WindowModal);
+
+    for (unsigned i = 0; i < max; ++i){
+        if ((x_(i) < x_min) || (x_(i) > x_max) || (y_(i) < y_min) || (y_(i) > y_max)){
+            spectra_.shed_row(i);
+            x_.shed_row(i);
+            y_.shed_row(i);
+            --i; //forces repeat of same index after deletion
+            --max;
+        }
+        progress.setValue(i);
+    }
+}
+
+
 ///
 /// \brief SpecMap::MinMaxNormalize
 ///normalizes data so that smallest value is 0 and highest is 1 through the

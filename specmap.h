@@ -43,6 +43,9 @@ public:
     SpecMap(QString binary_file_name, QMainWindow *main_window, QString *directory);
     ~SpecMap();
     // PRE-PROCESSING FUNCTIONS //
+    // map editing
+    void CropSpectra(double x_min, double x_max, double y_min, double y_max);
+
     // Normalization functions
 
     void MinMaxNormalize();
