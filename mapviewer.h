@@ -26,6 +26,7 @@
 
 class ScaleBarDialog;
 class MapData;
+class SpectrumViewer;
 
 
 namespace Ui {
@@ -59,6 +60,8 @@ private slots:
     void on_actionSet_Color_Scheme_triggered();
 
     void on_actionAdd_Scale_Bar_triggered();
+
+    void on_actionShow_Spectrum_Viewer_toggled(bool arg1);
 
 private:
     Ui::MapViewer *ui;

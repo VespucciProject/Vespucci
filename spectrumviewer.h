@@ -2,27 +2,35 @@
 #define SPECTRUMVIEWER_H
 
 #include <QDialog>
-#include "mapdata.h"
+#include "mapviewer.h"
+class MapViewer;
+class MapData;
 
 namespace Ui {
 class SpectrumViewer;
 }
+
 
 class SpectrumViewer : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit SpectrumViewer(QWidget parent = 0, MapData *map_data = 0);
+    explicit SpectrumViewer(MapViewer *parent,
+                            MapData *map_data,
+                            QVector<double> wavelength,
+                            QVector<double> initial_data,
+                            const QString x_axis_description,
+                            const QString y_axis_description);
     ~SpectrumViewer();
-    void SetPlot(QVector wavelength,
-                 QVector intensity,
-                 QString x_axis_description,
-                 QString y_axis_description);
+    void SetPlot(QVector<double> wavelength,
+                 QVector<double> intensity);
 
 private:
     Ui::SpectrumViewer *ui;
     QCustomPlot *spectrum_plot_;
+    MapViewer *parent_;
+    MapData *map_data_;
 };
 
 #endif // SPECTRUMVIEWER_H

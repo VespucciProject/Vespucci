@@ -48,14 +48,20 @@ MapData::MapData(QString x_axis_description,
     map_->rescaleDataRange();
     map_qcp_->rescaleAxes();
     this->CreateImage(gradient, false);
-
-    spectrum_display_ = new SpectrumViewer;
-    spectrum_qcp_ = spectrum_display_->findChild<QCustomPlot *>("spectrum");
-    //create the objects the pointers point to
     x_axis_description_ = x_axis_description;
     y_axis_description_ = y_axis_description;
     dataset_ = parent;
     source_index_ = source_index;
+    spectrum_display_ = new SpectrumViewer(map_display_,
+                                           this,
+                                           parent->WavelengthQVector(),
+                                           parent->PointSpectrum(0),
+                                           x_axis_description,
+                                           y_axis_description);
+
+    spectrum_qcp_ = spectrum_display_->findChild<QCustomPlot *>("spectrum");
+    //create the objects the pointers point to
+
 }
 
 ///
@@ -345,4 +351,9 @@ void MapData::DrawScaleBar(double width,
     scale_bar_text->position->setCoords(x_mid, y_text);
 
     map_qcp_->show();
+}
+
+void MapData::ShowSpectrumViewer(bool enabled)
+{
+    spectrum_display_->setVisible(enabled);
 }

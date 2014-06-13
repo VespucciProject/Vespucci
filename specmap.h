@@ -130,6 +130,8 @@ public:
     const QString name();
     bool principal_components_calculated();
     PrincipalComponentsData *principal_components_data();
+    const QString x_axis_description();
+    const QString y_axis_description();
 
     void SetName(QString new_name);
 

@@ -784,6 +784,10 @@ void SpecMap::PrincipalComponents(int component,
     maps_.last().data()->ShowMapWindow();
 }
 
+void SpecMap::VertexComponents(int endmembers, bool include_negative_scores, QString name)
+{
+
+}
 
 ///
 /// \brief SpecMap::PartialLeastSquares
@@ -1225,8 +1229,16 @@ bool SpecMap::principal_components_calculated()
     return principal_components_calculated_;
 }
 
+const QString SpecMap::x_axis_description()
+{
+    return x_axis_description_;
+}
 
-// A non-member function that is only called on members of specmap objects
+const QString SpecMap::y_axis_description()
+{
+    return y_axis_description_;
+}
+
 ///
 /// \brief spdiags analgous to the MATLAB function A = spdiags(B, d, m, n).
 /// \param B a matrix containing the new diagonal vectors as columns

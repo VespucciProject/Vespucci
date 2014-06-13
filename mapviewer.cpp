@@ -246,3 +246,8 @@ void MapViewer::on_actionAdd_Scale_Bar_triggered()
     ScaleBarDialog *scale_bar_dialog = new ScaleBarDialog(this, parent_);
     scale_bar_dialog->show();
 }
+
+void MapViewer::on_actionShow_Spectrum_Viewer_toggled(bool arg1)
+{
+    parent_->ShowSpectrumViewer(arg1);
+}

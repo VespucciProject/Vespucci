@@ -35,6 +35,7 @@ using namespace arma;
 class MapViewer;
 class SpecMap;
 class PrincipalComponentsData;
+class SpectrumViewer;
 
 class MapData
 {
@@ -74,7 +75,7 @@ public:
     void CreateImage(QCPColorGradient color_scheme, bool interpolation);
     void SetMapData(QCPColorMapData *map_data);
 
-    void ShowSpectrumViewer();
+    void ShowSpectrumViewer(bool enabled);
 
     void SetXDescription(QString description);
     void SetYDescription(QString description);

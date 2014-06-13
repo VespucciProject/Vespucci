@@ -50,6 +50,8 @@
     <addaction name="separator"/>
     <addaction name="actionAdd_Scale_Bar"/>
     <addaction name="actionSet_Color_Scheme"/>
+    <addaction name="separator"/>
+    <addaction name="actionShow_Spectrum_Viewer"/>
    </widget>
    <addaction name="menuMap"/>
    <addaction name="menuDisplay"/>
@@ -101,6 +103,17 @@
   <action name="actionAdd_Scale_Bar">
    <property name="text">
     <string>Add Scale Bar...</string>
+   </property>
+  </action>
+  <action name="actionShow_Spectrum_Viewer">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Show Spectrum Viewer</string>
    </property>
   </action>
  </widget>

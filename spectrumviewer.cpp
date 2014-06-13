@@ -19,12 +19,23 @@
 #include "spectrumviewer.h"
 #include "ui_spectrumviewer.h"
 
-SpectrumViewer::SpectrumViewer(QWidget parent, MapData *map_data) :
-    QDialog(map_data),
+SpectrumViewer::SpectrumViewer(MapViewer *parent,
+                               MapData *map_data,
+                               QVector<double> wavelength,
+                               QVector<double> initial_data,
+                               const QString x_axis_description,
+                               const QString y_axis_description) :
+    QDialog(parent),
     ui(new Ui::SpectrumViewer)
 {
     ui->setupUi(this);
+    map_data_ = map_data;
     spectrum_plot_ = this->findChild<QCustomPlot *>("spectrum");
+    spectrum_plot_->addGraph();
+    spectrum_plot_->xAxis->setLabel(x_axis_description);
+    spectrum_plot_->yAxis->setLabel(y_axis_description);
+    spectrum_plot_->graph(0)->setData(wavelength, initial_data);
+    spectrum_plot_->replot();
 }
 
 SpectrumViewer::~SpectrumViewer()
@@ -32,10 +43,8 @@ SpectrumViewer::~SpectrumViewer()
     delete ui;
 }
 
-void SpectrumViewer::SetPlot(QVector wavelength,
-                             QVector intensity,
-                             QString x_axis_description,
-                             QString y_axis_description)
+void SpectrumViewer::SetPlot(QVector<double> wavelength,
+                             QVector<double> intensity)
 {
-
+    spectrum_plot_->graph(0)->setData(wavelength, intensity);
 }
