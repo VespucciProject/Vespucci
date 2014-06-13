@@ -201,7 +201,7 @@ void SpecMap::CropSpectra(double x_min, double x_max, double y_min, double y_max
     QProgressDialog progress("Cropping...", "Cancel", 0, max);
     progress.setWindowModality(Qt::WindowModal);
 
-    for (unsigned i = 0; i < max; ++i){
+    for (int i = 0; i < max; ++i){
         if ((x_(i) < x_min) || (x_(i) > x_max) || (y_(i) < y_min) || (y_(i) > y_max)){
             spectra_.shed_row(i);
             x_.shed_row(i);
@@ -362,7 +362,6 @@ void SpecMap::SingularValue()
                                     " Are you sure you want to continue?");
     if (!ok)
         return;
-
     mat U;
     vec s;
     mat V;

@@ -31,6 +31,8 @@ private:
     QLineEdit *units_box_;
     QPushButton *color_button_;
     QComboBox *position_box_;
+    QFontComboBox *font_box_;
+    QSpinBox *font_size_box_;
     QColor color_;
     MapData *map_data_;
 };

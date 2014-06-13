@@ -11,6 +11,8 @@ ScaleBarDialog::ScaleBarDialog(QWidget *parent, MapData *map_data) :
     units_box_ = this->findChild<QLineEdit *>("unitsLineEdit");
     color_button_ = this->findChild<QPushButton *>("colorPushButton");
     position_box_ = this->findChild<QComboBox *>("positionComboBox");
+    font_box_ = this->findChild<QFontComboBox *>("fontComboBox");
+    font_size_box_ = this->findChild<QSpinBox *>("fontSizeSpinBox");
     color_ = Qt::black;
     map_data_ = map_data;
 }
@@ -32,11 +34,16 @@ void ScaleBarDialog::on_buttonBox_accepted()
     double height = height_box_->value();
     QString units = units_box_->text();
     QString position = position_box_->currentText();
+    QFont font = font_box_->currentFont();
+    int font_size = font_size_box_->value();
+    font.setPointSize(font_size);
+    font.setBold(true);
 
 
     map_data_->DrawScaleBar(width,
                             height,
                             units,
                             color_,
-                            position);
+                            position,
+                            font);
 }

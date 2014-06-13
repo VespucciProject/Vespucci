@@ -110,7 +110,7 @@ public:
                   double scale = 1.0,
                   int quality = 0);
 
-    void DrawScaleBar(double width, double height, QString units, QColor color, QString position);
+    void DrawScaleBar(double width, double height, QString units, QColor color, QString position, QFont font);
 
 private:
     QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor

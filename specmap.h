@@ -111,7 +111,7 @@ public:
                             QString name,
                             int gradient_index);
 
-    void VectorComponents(int endmembers,
+    void VertexComponents(int endmembers,
                          bool include_negative_scores,
                          QString name);
 

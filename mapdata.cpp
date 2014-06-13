@@ -272,7 +272,8 @@ void MapData::DrawScaleBar(double width,
                            double height,
                            QString units,
                            QColor color,
-                           QString position)
+                           QString position,
+                           QFont font)
 {
     //instantiate shape
 
@@ -288,6 +289,7 @@ void MapData::DrawScaleBar(double width,
     scale_bar_text->setText(text);
     scale_bar_text->setPositionAlignment(Qt::AlignCenter);
     scale_bar_text->setColor(color);
+    scale_bar_text->setFont(font);
 
     QPen pen(color);
     QBrush brush(color, Qt::SolidPattern);
@@ -336,9 +338,11 @@ void MapData::DrawScaleBar(double width,
     scale_bar->topLeft->setCoords(x_min, y_max);
     double x_mid = ((x_max - x_min) / 2.0) + x_min;
     double y_text = y_max + 1;
+    if (font.pointSize() >= 10){
+        y_text += (font.pointSize() - 10) / 4;
+    }
 
     scale_bar_text->position->setCoords(x_mid, y_text);
 
     map_qcp_->show();
-
 }
