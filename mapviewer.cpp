@@ -247,7 +247,8 @@ void MapViewer::on_actionAdd_Scale_Bar_triggered()
     scale_bar_dialog->show();
 }
 
-void MapViewer::on_actionShow_Spectrum_Viewer_toggled(bool arg1)
+
+void MapViewer::on_actionShow_Spectrum_Viewer_triggered()
 {
-    parent_->ShowSpectrumViewer(arg1);
+    parent_->ShowSpectrumViewer(true);
 }

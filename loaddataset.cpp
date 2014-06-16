@@ -64,6 +64,13 @@ void LoadDataset::on_buttonBox_accepted()
     QCheckBox *swap_check_box = this->findChild<QCheckBox *>("swapCheckBox");
     QLineEdit *filename_line_edit = this->findChild<QLineEdit *>("filenameBox");
     QLineEdit *name_box = this->findChild<QLineEdit *>("nameBox");
+    QLineEdit *y_description_box = this->findChild<QLineEdit *>("yDescription");
+    QLineEdit *x_description_box = this->findChild<QLineEdit *>("xDescription");
+    QComboBox *y_units_box = this->findChild<QComboBox *>("yUnits");
+    QComboBox *x_units_box = this->findChild<QComboBox *>("xUnits");
+
+    QString y_description = y_description_box->text() + " (" + y_units_box->currentText() + ")";
+    QString x_description = x_description_box->text() + " (" + x_units_box->currentText() + ")";
 
     QString name = name_box->text();
     QString filename = filename_line_edit->text();
@@ -107,6 +114,8 @@ void LoadDataset::on_buttonBox_accepted()
             inputfile.close();
             if (!data->ConstructorCancelled()){
                 data->SetName(name);
+                data->SetXDescription(x_description);
+                data->SetYDescription(y_description);
                 workspace->AddDataset(data);
                 workspace->set_directory(file_info.dir().absolutePath());
             }

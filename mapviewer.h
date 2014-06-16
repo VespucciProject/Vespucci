@@ -61,7 +61,7 @@ private slots:
 
     void on_actionAdd_Scale_Bar_triggered();
 
-    void on_actionShow_Spectrum_Viewer_toggled(bool arg1);
+    void on_actionShow_Spectrum_Viewer_triggered();
 
 private:
     Ui::MapViewer *ui;

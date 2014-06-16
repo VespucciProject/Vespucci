@@ -21,10 +21,11 @@
 
 SpectrumViewer::SpectrumViewer(MapViewer *parent,
                                MapData *map_data,
-                               QVector<double> wavelength,
-                               QVector<double> initial_data,
                                const QString x_axis_description,
-                               const QString y_axis_description) :
+                               const QString y_axis_description,
+                               SpecMap *dataset,
+                               QSize widget_size,
+                               QString directory) :
     QDialog(parent),
     ui(new Ui::SpectrumViewer)
 {
@@ -34,8 +35,21 @@ SpectrumViewer::SpectrumViewer(MapViewer *parent,
     spectrum_plot_->addGraph();
     spectrum_plot_->xAxis->setLabel(x_axis_description);
     spectrum_plot_->yAxis->setLabel(y_axis_description);
-    spectrum_plot_->graph(0)->setData(wavelength, initial_data);
+
     spectrum_plot_->replot();
+
+    QVector<double> plot_data = dataset->PointSpectrum(0);
+    QVector<double> wavelength = dataset->WavelengthQVector();
+
+    spectrum_plot_->graph(0)->addData(wavelength, plot_data);
+
+
+    spectrum_plot_->xAxis->setRange(dataset->WavelengthRange());
+    spectrum_plot_->yAxis->setRange(dataset->PointSpectrumRange(0));
+    dataset_ = dataset;
+    widget_size_ = widget_size;
+    directory_ = directory;
+
 }
 
 SpectrumViewer::~SpectrumViewer()
@@ -47,4 +61,139 @@ void SpectrumViewer::SetPlot(QVector<double> wavelength,
                              QVector<double> intensity)
 {
     spectrum_plot_->graph(0)->setData(wavelength, intensity);
+    spectrum_plot_->rescaleAxes();
+    spectrum_plot_->replot();
+}
+
+void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *event)
+{
+    unsigned int i;
+    double x = (double) event->x();
+    double y = (double) widget_size_.height() - (double) event->y();
+
+    x /= widget_size_.width();
+    y /= widget_size_.height();
+
+    QCPRange key_range = dataset_->KeyRange();
+    QCPRange value_range = dataset_->ValueRange();
+    double key_span = key_range.upper - key_range.lower;
+    double value_span = value_range.upper - value_range.lower;
+
+    double x_position = x * key_span + key_range.lower;
+    double y_position = y * value_span + value_range.lower;
+
+
+    //find nearest x value
+    colvec x_values = dataset_->x();
+    colvec y_values = dataset_->y();
+
+    double x_diff = x_position - x_values(0);
+    double y_diff = y_position - y_values(0);
+    double x_diff_buf, y_diff_buf, x_value, y_value;
+
+    for (i = 0; i < x_values.n_rows; ++i){
+        x_diff_buf = x_position - x_values(i);
+        if ((x_diff < 0 && x_diff_buf >= 0) || (x_diff >= 0 && x_diff_buf < 0))
+            break;
+    }
+
+    if (fabs(x_diff_buf) > fabs(x_position - x_values(i-1)))
+        x_value = x_values(i-1);
+    else
+        x_value = x_values(i);
+
+    for (i = 0; i < y_values.n_rows; ++i){
+        y_diff_buf = y_position - y_values(i);
+        if ((y_diff < 0 && y_diff_buf >= 0) || (y_diff >= 0 && y_diff_buf < 0))
+            break;
+    }
+
+    if (fabs(y_diff_buf) > fabs(y_position - y_values(i-1)))
+        y_value = y_values(i-1);
+    else
+        y_value = y_values(i);
+
+    QVector<int> x_indices;
+    for (i = 0; i < x_values.n_elem; ++i){
+        if (x_values(i) == x_value)
+            x_indices.append(i);
+    }
+    for (i = 0; i < (unsigned int) x_indices.size(); ++i){
+        if (y_values(x_indices[i]) == y_value)
+            break;
+    }
+    current_index_ = x_indices[i];
+
+    QVector<double> wavelength = dataset_->WavelengthQVector();
+    QVector<double> intensities = dataset_->PointSpectrum(current_index_);
+
+    current_x_ = x_value;
+    current_y_ = y_value;
+
+    SetPlot(wavelength, intensities);
+
+}
+
+void SpectrumViewer::on_pushButton_clicked()
+{
+    QString filename =
+            QFileDialog::getSaveFileName(this,
+                                         "Save As...",
+                                         directory_,
+                                         tr("Tab-delimited text (*.txt);;"
+                                            "PDF (*.pdf);;"
+                                            "TIFF (*.tif);;"
+                                            "JPEG (*.jpg);;"
+                                            "PNG (*.png);;"
+                                            "BMP (*.bmp);;"
+                                            "CSV (*.csv);;"
+                                            "Armadillo binary (*.arma);;"));
+    bool success;
+    QFileInfo file_info(filename);
+    QString extension = file_info.suffix();
+
+    int width = spectrum_plot_->width();
+    int height = spectrum_plot_->height();
+    double scale = 1.0;
+
+    rowvec spectrum = dataset_->spectra().row(current_index_);
+    rowvec wavelength = dataset_->wavelength();
+    mat results;
+    results.insert_rows(0, wavelength);
+    results.insert_rows(1, spectrum);
+    results = results.t();
+    QString description =
+            map_data_->name()
+            +" ("
+            +QString::number(current_x_)
+            +", "
+            +QString::number(current_y_)
+            +")";
+
+    if (extension== "pdf")
+        success = spectrum_plot_->savePdf(filename,
+                                          true, width, height,
+                                          "Vespucci", description);
+    else if (extension == "tif")
+        success = spectrum_plot_->saveRastered(filename, width, height, scale, "TIF", 1);
+    else if (extension == "bmp")
+        success = spectrum_plot_->saveBmp(filename);
+    else if (extension == "jpg")
+        success = spectrum_plot_->saveJpg(filename);
+    else if (extension == "png")
+        success = spectrum_plot_->savePng(filename);
+    else if (extension == "csv")
+        success = results.save(filename.toStdString(), csv_ascii);
+    else if (extension == "arma")
+        success = spectrum.save(filename.toStdString(), arma_binary);
+    else
+        success = results.save(filename.toStdString(), raw_ascii);
+
+    if (success)
+        QMessageBox::information(this, "Success!", "Saving " + filename + " successful");
+    else
+        QMessageBox::warning(this, "Failure", "Saving " + filename + " not successful");
+
+
+
 }

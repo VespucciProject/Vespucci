@@ -80,21 +80,21 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="lineEdit">
+      <widget class="QLineEdit" name="yDescription">
        <property name="text">
         <string>Intensity</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEdit_2">
+      <widget class="QLineEdit" name="xDescription">
        <property name="text">
         <string>Wavenumber</string>
        </property>
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="yUnits">
        <item>
         <property name="text">
          <string>a. u.</string>
@@ -113,7 +113,7 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QComboBox" name="comboBox_2">
+      <widget class="QComboBox" name="xUnits">
        <item>
         <property name="text">
          <string>cm⁻¹</string>

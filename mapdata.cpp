@@ -54,10 +54,17 @@ MapData::MapData(QString x_axis_description,
     source_index_ = source_index;
     spectrum_display_ = new SpectrumViewer(map_display_,
                                            this,
-                                           parent->WavelengthQVector(),
-                                           parent->PointSpectrum(0),
                                            x_axis_description,
-                                           y_axis_description);
+                                           y_axis_description,
+                                           dataset_,
+                                           map_qcp_->size(),
+                                           *directory);
+    QObject::connect(map_qcp_,
+                     SIGNAL(plottableClick(QCPAbstractPlottable*,QMouseEvent*)),
+                     spectrum_display_,
+                     SLOT(MapClicked(QCPAbstractPlottable*,QMouseEvent*)));
+
+
 
     spectrum_qcp_ = spectrum_display_->findChild<QCustomPlot *>("spectrum");
     //create the objects the pointers point to

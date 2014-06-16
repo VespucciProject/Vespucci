@@ -34,6 +34,7 @@ using namespace arma;
 
 class MapData;
 class PrincipalComponentsData;
+class SpectrumViewer;
 
 class SpecMap
 {

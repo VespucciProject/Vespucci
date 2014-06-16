@@ -61,8 +61,6 @@ void UnivariateDialog::on_buttonBox_accepted()
     double entered_min = min_box_->text().toDouble();
     double entered_max = min_box_->text().toDouble();
 
-    cout << "call to SpecMap::FindRange" << endl;
-
     vector<int> range = data_.data()->FindRange(entered_min, entered_max);
 
     int min = range[0];

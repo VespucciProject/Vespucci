@@ -1049,6 +1049,8 @@ void SpecMap::SetName(QString new_name)
     name_ = new_name;
 }
 
+
+
 //MAP HANDLING FUNCTIONS
 ///
 /// \brief SpecMap::map_names
@@ -1232,6 +1234,16 @@ bool SpecMap::principal_components_calculated()
 const QString SpecMap::x_axis_description()
 {
     return x_axis_description_;
+}
+
+void SpecMap::SetXDescription(QString description)
+{
+    x_axis_description_ = description;
+}
+
+void SpecMap::SetYDescription(QString description)
+{
+    y_axis_description_ = description;
 }
 
 const QString SpecMap::y_axis_description()
