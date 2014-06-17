@@ -281,6 +281,34 @@ void SpecMap::SubtractBackground(mat background)
     }
 }
 
+void SpecMap::Baseline(QString method, int window_size)
+{
+    if (method == "Median Filter"){
+        int starting_index = (window_size - 1) / 2;
+        int ending_index = wavelength_.n_cols - starting_index;
+        int i, j;
+        int rows = spectra_.n_rows;
+        int columns = spectra_.n_cols;
+        rowvec window;
+        mat processed;
+        window.set_size(window_size);
+        processed.set_size(spectra_.n_rows, spectra_.n_cols);
+
+        for (i = 0; i < rows; ++i){
+            for (j = 0; j < starting_index; ++j){
+                processed(i, j) = spectra_(i, j);
+            }
+            for (j = ending_index; j < columns; ++j){
+                processed(i, j) = spectra_(i, j);
+            }
+            for (j = starting_index; j < ending_index; ++j){
+                window = spectra_(i, span((j - starting_index), (j+starting_index)));
+                processed(i, j) = median(window);
+            }
+        }
+        spectra_ -= processed;
+    }
+}
 
 //Filtering functions
 
@@ -483,6 +511,7 @@ void SpecMap::Derivatize(int derivative_order,
     }
 
     spectra_ = spectra_ * SG_Coefficients;
+    spectra_ /= -1;
 }
 
 

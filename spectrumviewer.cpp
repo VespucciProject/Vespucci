@@ -50,6 +50,9 @@ SpectrumViewer::SpectrumViewer(MapViewer *parent,
     widget_size_ = widget_size;
     directory_ = directory;
 
+    spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
+    spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
+
 }
 
 SpectrumViewer::~SpectrumViewer()

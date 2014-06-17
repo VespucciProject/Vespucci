@@ -27,6 +27,7 @@
 #include "principalcomponentsdialog.h"
 #include "filterdialog.h"
 #include "cropdialog.h"
+#include "baselinedialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -433,4 +434,11 @@ void MainWindow::on_actionCrop_triggered()
     int row = dataset_list_widget_->currentRow();
     CropDialog *crop_dialog = new CropDialog(this, workspace, row);
     crop_dialog->show();
+}
+
+void MainWindow::on_actionCorrect_Baseline_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    BaselineDialog *baseline_dialog = new BaselineDialog(this, workspace, row);
+    baseline_dialog->show();
 }

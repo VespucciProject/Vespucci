@@ -77,6 +77,8 @@ private slots:
 
     void on_actionCrop_triggered();
 
+    void on_actionCorrect_Baseline_triggered();
+
 private:
     Ui::MainWindow *ui;
     VespucciWorkspace *workspace;

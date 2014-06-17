@@ -63,6 +63,8 @@ public:
     void SingularValue();
     mat spdiags(mat B, QVector<int> d, int m, int n);
 
+    void Baseline(QString method, int window_size);
+
 
     // HELPER FUNCTIONS //
 
