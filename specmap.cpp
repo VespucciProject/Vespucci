@@ -1360,3 +1360,18 @@ mat SpecMap::spdiags(mat B, QVector<int> d, int m, int n)
     }
     return output;
 }
+
+bool SpecMap::vertex_components_calculated()
+{
+    return vertex_components_calculated_;
+}
+
+bool SpecMap::partial_least_squares_calculated()
+{
+    return partial_least_squares_calculated_;
+}
+
+PrincipalComponentsData* SpecMap::principal_components_data()
+{
+    return principal_components_data_;
+}

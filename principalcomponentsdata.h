@@ -33,15 +33,13 @@ public:
                             vec tsquared);
 
     bool SaveCoefficientMatrix();
-    bool SaveScoreMatrix();
-    bool SaveLatentMatrix();
-    bool SaveTSquaredMatrix();
-    bool SaveReport(); //saves all as a text report
-    bool SaveAll(); //saves all as MS Excel or HDF5
 
     colvec Results(int component);
 
-    mat *tsquared();
+    vec *tsquared();
+    mat *score();
+    vec *latent();
+    mat *coeff();
 
 private:
     mat coeff_;
@@ -50,6 +48,7 @@ private:
     vec tsquared_;
     SpecMap *parent_;
     QString *directory_;
+
 };
 
 #endif // PRINCIPALCOMPONENTSDATA_H

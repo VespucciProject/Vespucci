@@ -38,7 +38,22 @@ colvec PrincipalComponentsData::Results(int component)
     return score_.col(component);
 }
 
-mat* PrincipalComponentsData::tsquared()
+vec* PrincipalComponentsData::tsquared()
 {
     return &tsquared_;
+}
+
+mat* PrincipalComponentsData::coeff()
+{
+    return &coeff_;
+}
+
+vec* PrincipalComponentsData::latent()
+{
+    return &latent_;
+}
+
+mat* PrincipalComponentsData::score()
+{
+    return &score_;
 }

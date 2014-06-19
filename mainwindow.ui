@@ -24,55 +24,32 @@
     <normaloff>vespuccilogo.svg</normaloff>vespuccilogo.svg</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QListWidget" name="datasetsListWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>181</width>
-      <height>251</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="mapsListWidget">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>30</y>
-      <width>181</width>
-      <height>251</height>
-     </rect>
-    </property>
-    <property name="sizeAdjustPolicy">
-     <enum>QAbstractScrollArea::AdjustIgnored</enum>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>46</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Datasets</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>10</y>
-      <width>46</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Maps</string>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="1">
+     <widget class="QListWidget" name="datasetsListWidget"/>
+    </item>
+    <item row="1" column="3">
+     <widget class="QListWidget" name="mapsListWidget">
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustIgnored</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Datasets</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Maps</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -134,6 +111,7 @@
     <addaction name="separator"/>
     <addaction name="actionConcatenate_Datasets"/>
     <addaction name="menuExport_Dataset_Elements"/>
+    <addaction name="actionView_Dataset_Elements"/>
     <addaction name="separator"/>
     <addaction name="actionClose_Dataset"/>
    </widget>
@@ -360,6 +338,11 @@
   <action name="actionCrop">
    <property name="text">
     <string>Crop</string>
+   </property>
+  </action>
+  <action name="actionView_Dataset_Elements">
+   <property name="text">
+    <string>View Dataset Elements</string>
    </property>
   </action>
  </widget>

@@ -20,10 +20,10 @@
   <widget class="QCustomPlot" name="spectrum" native="true">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>641</width>
-     <height>281</height>
+     <x>9</x>
+     <y>9</y>
+     <width>646</width>
+     <height>273</height>
     </rect>
    </property>
   </widget>

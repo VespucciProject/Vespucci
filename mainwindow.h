@@ -79,6 +79,8 @@ private slots:
 
     void on_actionCorrect_Baseline_triggered();
 
+    void on_actionView_Dataset_Elements_triggered();
+
 private:
     Ui::MainWindow *ui;
     VespucciWorkspace *workspace;

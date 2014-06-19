@@ -132,6 +132,8 @@ public:
     mat spectra();
     const QString name();
     bool principal_components_calculated();
+    bool vertex_components_calculated();
+    bool partial_least_squares_calculated();
     PrincipalComponentsData *principal_components_data();
     const QString x_axis_description();
     const QString y_axis_description();
@@ -189,6 +191,7 @@ private:
     bool z_scores_calculated_;
     bool principal_components_calculated_;
     bool partial_least_squares_calculated_;
+    bool vertex_components_calculated_;
 
     bool constructor_canceled_;
     bool flipped_;
