@@ -101,7 +101,7 @@ public:
                    int second_min,
                    int second_max,
                    QString name,
-                   QString value_method,
+                   QString value_method, QString integration_method,
                    int gradient_index);
 
     void PartialLeastSquares(int components,
@@ -163,6 +163,10 @@ public:
     bool ConstructorCancelled();
     mat AverageSpectrum(bool stats);
 
+    mat *x_ptr();
+    mat *y_ptr();
+    mat *wavelength_ptr();
+    mat *spectra_ptr();
 
 private:
     rowvec wavelength_;

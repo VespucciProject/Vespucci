@@ -3,8 +3,10 @@
 
 #include <QDialog>
 #include "vespucciworkspace.h"
+#include "vespuccitablemodel.h"
 namespace Ui {
 class DataViewer;
+class VespucciTableModel;
 }
 
 class DataViewer : public QDialog
@@ -22,7 +24,7 @@ private:
     Ui::DataViewer *ui;
     QSharedPointer<SpecMap> dataset_;
     VespucciWorkspace *workspace;
-    QTableWidget *table_;
+    QTableView *table_;
     QComboBox *data_selector_;
     bool constructor_in_progress_;
 

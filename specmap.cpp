@@ -677,10 +677,10 @@ void SpecMap::BandRatio(int first_min,
                         int second_max,
                         QString name,
                         QString value_method,
+                        QString integration_method,
                         int gradient_index)
 {
 
-    cout << "SpecMap::BandRatio" << endl;
     QString map_type;
 
     unsigned int size = x_.n_elem;
@@ -694,6 +694,39 @@ void SpecMap::BandRatio(int first_min,
     if(value_method == "Area"){
         // Do peak fitting stuff here.
         map_type = "2-Region Band Ratio Map (Area)";
+        if (integration_method == "Riemann Sum"){
+            rowvec first_local_baseline, second_local_baseline;
+            double first_start_value, first_end_value, second_start_value,
+                    second_end_value, first_slope, second_slope, first_sum,
+                    second_sum;
+
+            for (i=0; i<size; ++i){
+                first_start_value = spectra_(i, first_min);
+                second_start_value = spectra_(i, second_min);
+                first_end_value = spectra_(i, first_max);
+                second_end_value = spectra_(i, second_max);
+                first_slope = (first_end_value - first_start_value) / (first_max - first_min);
+                second_slope = (second_end_value - second_start_value) / (second_max - second_min);
+                first_local_baseline.set_size(first_max - first_min + 1);
+                second_local_baseline.set_size(second_max - second_min + 1);
+                int j;
+                for (j = 0; j <= (first_max - first_min); ++j)
+                    first_local_baseline(j) = j*first_slope + first_start_value;
+                for (j = 0; j <= (second_max - second_min); ++j)
+                    second_local_baseline(j) = j*second_slope + second_start_value;
+
+                first_region = spectra_(i, span(first_min, first_max));
+                second_region = spectra_(i, span(second_min, second_max));
+
+                first_sum = sum(first_region - first_local_baseline);
+                second_sum = sum(second_region - second_local_baseline);
+
+                results(i)= first_sum / second_sum;
+            }
+
+        }
+
+
     }
 
     else if(value_method == "Derivative"){
@@ -1374,4 +1407,24 @@ bool SpecMap::partial_least_squares_calculated()
 PrincipalComponentsData* SpecMap::principal_components_data()
 {
     return principal_components_data_;
+}
+
+mat* SpecMap::spectra_ptr()
+{
+    return &spectra_;
+}
+
+mat* SpecMap::wavelength_ptr()
+{
+    return &wavelength_;
+}
+
+mat* SpecMap::x_ptr()
+{
+    return &x_;
+}
+
+mat* SpecMap::y_ptr()
+{
+    return &y_;
 }
