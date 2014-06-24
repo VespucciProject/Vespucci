@@ -537,6 +537,7 @@ void SpecMap::Univariate(int min,
                          int max,
                          QString name,
                          QString value_method,
+                         QString integration_method,
                          int gradient_index)
 {
 
@@ -550,16 +551,26 @@ void SpecMap::Univariate(int min,
 
     if (value_method == "Bandwidth"){
         double maximum, half_maximum, width, region_size;
+        double start_value, end_value, slope;
+        rowvec local_baseline;
         int max_index, left_index, right_index;
         map_type = "1-Region Univariate (Bandwidth (FWHM))";
         int columns = spectra_.n_cols;
         for (i = 0; i < size; ++i){
 
+            start_value = spectra_(i, min);
+            end_value = spectra_(i, max);
+            slope = (end_value - start_value) / (max - min);
+            local_baseline.set_size(max - min + 1);
+            int j;
+            for (j = 0; j <= (max - min); ++j)
+                local_baseline(j) = j*slope + start_value;
+
+
             //find maximum and half-maximum
             region = spectra_(i, span(min, max));
             region_size = region.n_elem;
             maximum = region.max();
-            half_maximum = maximum / 2.0;
 
             //find index of maximum
             for (j = 0; j < columns; ++j){
@@ -568,6 +579,11 @@ void SpecMap::Univariate(int min,
                     break;
                 }
             }
+
+            int local_max_index = max_index-min;
+            half_maximum = (maximum - local_baseline(local_max_index) / 2.0) +
+                    local_baseline(local_max_index);
+
             //find index of left limit
             for (j = max_index; j > 0; --j){
                 if (spectra_(i, j) - half_maximum < 0){
@@ -601,10 +617,28 @@ void SpecMap::Univariate(int min,
         }
     }
 
-
     else if(value_method == "Area"){
         // Do peak fitting stuff here.
         map_type = "1-Region Univariate (Area)";
+        if (integration_method == "Riemann Sum"){
+            rowvec local_baseline;
+            double start_value, end_value, slope;
+
+            for (i=0; i<size; ++i){
+                start_value = spectra_(i, min);
+                end_value = spectra_(i, max);
+                slope = (end_value - start_value) / (max - min);
+                local_baseline.set_size(max - min + 1);
+                int j;
+                for (j = 0; j <= (max - min); ++j)
+                    local_baseline(j) = j*slope + start_value;
+
+                region = spectra_(i, span(min, max));
+                region -= local_baseline;
+                results(i) = sum(region);
+            }
+
+        }
     }
 
     else if(value_method == "Derivative"){
@@ -636,6 +670,7 @@ void SpecMap::Univariate(int min,
 
                 results(i) = peak_height;
             }
+
         }
         else{
             for (i=0; i < size; ++i){

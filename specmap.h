@@ -94,6 +94,7 @@ public:
                     int max,
                     QString name,
                     QString value_method,
+                    QString integration_method,
                     int gradient_index);
 
     void BandRatio(int first_min,
