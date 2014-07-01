@@ -67,7 +67,7 @@ private:
     QListWidget *dataset_list_widget_;
 
     //QList<SpecMap> datasets_;
-    QList<QSharedPointer<SpecMap>> datasets_;
+    QList<QSharedPointer<SpecMap> > datasets_;
     QString directory_; //= QDir::homePath();
 
     QStringList dataset_names_;

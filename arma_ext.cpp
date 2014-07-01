@@ -92,7 +92,7 @@ mat arma_ext::svds(mat X, int k, std::string form)
     B.submat(m, dimension, 0, n-1) = X.t();
     cx_vec eigval;
     cx_mat eigvec;
-    eigs_gen(eigval, eigvec, X, k, form);
+    //eigs_gen(eigval, eigvec, X, k, form);
 
 }
 

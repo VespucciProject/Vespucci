@@ -1,6 +1,10 @@
 #ifndef ARMA_EXT_H
 #define ARMA_EXT_H
 #include "armadillo"
+#include <QApplication>
+#include <QVector>
+#include <QMessageBox>
+
 using namespace arma;
 
 namespace arma_ext

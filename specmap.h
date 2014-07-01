@@ -181,7 +181,7 @@ private:
     QListWidget *map_list_widget_;
     //QList<MapData *> maps_;
 
-    QList<QSharedPointer<MapData>> maps_;
+    QList<QSharedPointer<MapData> > maps_;
 
     PrincipalComponentsData *principal_components_data_;
 

@@ -184,6 +184,7 @@ SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *di
     }
     seconds = timer.toc();
     constructor_canceled_ = false;
+    progress.setWindowModality(Qt::NonModal);
     cout << "Reading x, y, and spectra took " << seconds << " s." << endl;
 }
 
@@ -937,8 +938,8 @@ vector<int> SpecMap::FindRange(double start, double end)
     else{
         indices[0]= i;
     }
-
-    for (i=i; i<length; ++i){
+    int it = i;
+    for (i = it; i < length; ++i){
         if(wavelength_(i)>=end){
             break;
         }
