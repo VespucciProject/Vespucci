@@ -93,6 +93,7 @@ mat arma_ext::svds(mat X, int k, std::string form)
     cx_vec eigval;
     cx_mat eigvec;
     //eigs_gen(eigval, eigvec, X, k, form);
+    return mat();
 
 }
 

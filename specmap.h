@@ -26,7 +26,6 @@
 #include <vector>
 #include "qcustomplot.h"
 #include "univariatemap.h"
-//#include "vespucciworkspace.h"
 #include "principalcomponentsdata.h"
 
 using namespace std;
