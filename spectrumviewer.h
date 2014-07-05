@@ -24,6 +24,8 @@ public:
     ~SpectrumViewer();
     void SetPlot(QVector<double> wavelength,
                  QVector<double> intensity);
+
+    void SetSecondPlot(QVector<double> abcissae, QVector<double> intensities);
 private slots:
     void MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *event);
     void on_pushButton_clicked();
@@ -39,6 +41,8 @@ private:
     int current_index_;
     double current_x_;
     double current_y_;
+    QLabel *coordinate_label_;
+    QLabel *value_label_;
 };
 
 #endif // SPECTRUMVIEWER_H

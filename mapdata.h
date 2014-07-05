@@ -56,6 +56,22 @@ public:
 
     void set_type(QString type);
     void set_name(QString name, QString type);
+    void set_baseline(rowvec abcissa, mat baseline);
+    void set_baselines(rowvec first_abcissa, rowvec second_abcissa,
+                       mat first_baseline, mat second_baseline);
+    void set_fwhm(mat mid_lines);
+
+    bool univariate_area();
+    bool band_ratio_area();
+    bool univariate_bandwidth();
+
+    QVector<double> first_baseline(int i);
+    QVector<double> second_baseline(int i);
+    QVector<double> first_abcissa();
+    QVector<double> second_abcissa();
+    QVector<double> half_max(int i);
+    QVector<double> mid_line(int i);
+    QVector<double> mid_lines(int i);
 
     mat stats_; //a statistics matrix like made by MATLAB
 
@@ -113,6 +129,7 @@ public:
 
     void DrawScaleBar(double width, double height, QString units, QColor color, QString position, QFont font);
 
+    double results_at_position(double x, double y);
 private:
     QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
     QString y_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
@@ -147,6 +164,17 @@ private:
     QString *directory_;
 
     QCPLayoutElement *color_scale_;
+
+    //stuff related to baselines and such
+    mat first_baseline_;
+    mat second_baseline_;
+    rowvec first_abcissa_;
+    rowvec second_abcissa_;
+    mat mid_lines_;
+
+    bool univariate_area_;
+    bool band_ratio_area_;
+    bool univariate_bandwidth_;
 
 };
 

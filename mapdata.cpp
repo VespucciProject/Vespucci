@@ -32,6 +32,11 @@ MapData::MapData(QString x_axis_description,
 {
     name_ = parent->name();
     directory_ = directory;
+
+    univariate_area_ = false;
+    band_ratio_area_ = false;
+    univariate_bandwidth_ = false;
+
     map_display_ = new MapViewer(name_, directory_, this);
     map_qcp_ = map_display_->findChild<QCustomPlot *>("mapView");
     map_ = new QCPColorMap(map_qcp_->xAxis, map_qcp_->yAxis);
@@ -363,4 +368,87 @@ void MapData::DrawScaleBar(double width,
 void MapData::ShowSpectrumViewer(bool enabled)
 {
     spectrum_display_->setVisible(enabled);
+}
+
+void MapData::set_baseline(rowvec abcissa, mat baseline)
+{
+    first_abcissa_ = abcissa;
+    first_baseline_ = baseline;
+    univariate_area_ = true;
+}
+
+void MapData::set_baselines(rowvec first_abcissa, rowvec second_abcissa,
+                            mat first_baseline, mat second_baseline)
+{
+    first_abcissa_ = first_abcissa;
+    second_abcissa_ = second_abcissa;
+    first_baseline_ = first_baseline;
+    second_baseline_ = second_baseline;
+    band_ratio_area_ = true;
+}
+
+void MapData::set_fwhm(mat mid_lines)
+{
+    mid_lines_ = mid_lines;
+    univariate_bandwidth_ = true;
+}
+
+bool MapData::univariate_area()
+{
+    return univariate_area_;
+}
+
+bool MapData::band_ratio_area()
+{
+    return band_ratio_area_;
+}
+
+bool MapData::univariate_bandwidth()
+{
+    return univariate_bandwidth_;
+}
+
+double MapData::results_at_position(double x, double y)
+{
+    return map_->data()->data(x, y);
+}
+
+QVector<double> MapData::first_abcissa()
+{
+    std::vector<double> abcissa = conv_to<std::vector<double> >::from(first_abcissa_);
+    return QVector<double>::fromStdVector(abcissa);
+}
+
+QVector<double> MapData::first_baseline(int i)
+{
+    rowvec baseline_r = first_baseline_.row(i);
+    std::vector<double> baseline = conv_to<std::vector<double> >::from(baseline_r);
+    return QVector<double>::fromStdVector(baseline);
+}
+
+QVector<double> MapData::second_abcissa()
+{
+    std::vector<double> abcissa = conv_to<std::vector<double> >::from(second_abcissa_);
+    return QVector<double>::fromStdVector(abcissa);
+}
+
+QVector<double> MapData::second_baseline(int i)
+{
+    rowvec baseline_r = second_baseline_.row(i);
+    std::vector<double> baseline = conv_to<std::vector<double> >::from(baseline_r);
+    return QVector<double>::fromStdVector(baseline);
+}
+
+QVector<double> MapData::mid_line(int i)
+{
+    QVector<double> output;
+    output.append(mid_lines_(i, 0));
+    output.append(mid_lines_(i, 1));
+    return output;
+}
+
+QVector<double> MapData::mid_lines(int i)
+{
+    std::vector<double> lines = conv_to<std::vector<double> >::from(mid_lines_.row(i));
+    return QVector<double>::fromStdVector(lines);
 }

@@ -22,6 +22,7 @@
 
 #include "specmap.h"
 #include "univariatemap.h"
+#include "arma_ext.h"
 class SpecMap;
 
 class VespucciWorkspace

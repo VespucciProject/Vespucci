@@ -40,6 +40,32 @@
     <string>Export...</string>
    </property>
   </widget>
+  <widget class="QLabel" name="coordinateLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>290</y>
+     <width>191</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>(NA, NA)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="valueLabel">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>290</y>
+     <width>131</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>NA</string>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
