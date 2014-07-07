@@ -25,7 +25,9 @@ public:
     void SetPlot(QVector<double> wavelength,
                  QVector<double> intensity);
 
-    void SetSecondPlot(QVector<double> abcissae, QVector<double> intensities);
+    void SetSecondPlot(QVector<double> abcissa, QVector<double> intensities);
+    void SetSecondPlot(QVector<double> first_abcissa, QVector<double> second_abcissa,
+                       QVector<double> first_intensities, QVector<double> second_intensities);
 private slots:
     void MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *event);
     void on_pushButton_clicked();

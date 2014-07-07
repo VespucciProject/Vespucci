@@ -184,7 +184,13 @@ SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *di
     }
     seconds = timer.toc();
     constructor_canceled_ = false;
-    progress.setWindowModality(Qt::NonModal);
+    /*
+    //without this, menu on MacOS is wonky.
+    if (progress!=0){
+        progress.setWindowModality(Qt::NonModal);
+    }
+    */
+
     cout << "Reading x, y, and spectra took " << seconds << " s." << endl;
 }
 
@@ -557,22 +563,24 @@ void SpecMap::Univariate(int min,
     if (value_method == "Bandwidth"){
         double maximum, half_maximum, width, region_size;
         double start_value, end_value, slope;
-        rowvec local_baseline;
+        cout << "set size of baseline matrix" << endl;
+        baselines.set_size(size, max-min + 1);
         int max_index, left_index, right_index;
         map_type = "1-Region Univariate (Bandwidth (FWHM))";
         int columns = spectra_.n_cols;
+        cout << "set size of abcissa" << endl;
         abcissa.set_size(max-min + 1);
         abcissa = wavelength_.subvec(span(min, max));
+        cout << "set size of mid lines matrix" << endl;
         mid_lines.set_size(x_.n_rows, 4);
         for (i = 0; i < size; ++i){
 
             start_value = spectra_(i, min);
             end_value = spectra_(i, max);
             slope = (end_value - start_value) / (max - min);
-            local_baseline.set_size(max - min + 1);
             int j;
             for (j = 0; j <= (max - min); ++j)
-                local_baseline(j) = j*slope + start_value;
+                baselines(i, j) = j*slope + start_value;
 
 
             //find maximum and half-maximum
@@ -589,8 +597,8 @@ void SpecMap::Univariate(int min,
             }
 
             int local_max_index = max_index-min;
-            half_maximum = (maximum - local_baseline(local_max_index) / 2.0) +
-                    local_baseline(local_max_index);
+            half_maximum = (maximum - baselines(i, local_max_index) / 2.0) +
+                    baselines(i, local_max_index);
 
             //find index of left limit
             for (j = max_index; j > 0; --j){
@@ -625,14 +633,6 @@ void SpecMap::Univariate(int min,
             mid_lines(i, 1) = spectra_(left_index);
             mid_lines(i, 2) = wavelength_(right_index);
             mid_lines(i, 3) = spectra_(right_index);
-            if (i == 0){
-                baselines.set_size(local_baseline.n_rows, local_baseline.n_cols);
-                baselines.row(0) = local_baseline;
-            }
-            else{
-                baselines.insert_rows(baselines.n_rows, local_baseline);
-            }
-
         }
 
     }
@@ -640,34 +640,26 @@ void SpecMap::Univariate(int min,
     else if(value_method == "Area"){
         // Do peak fitting stuff here.
         map_type = "1-Region Univariate (Area)";
+        cout << "set size of abcissa" << endl;
         abcissa.set_size(max - min + 1);
         abcissa = wavelength_.subvec(span(min, max));
         if (integration_method == "Riemann Sum"){
-            rowvec local_baseline;
             double start_value, end_value, slope;
+            cout << "set size of baseline matrix" <<endl;
+            baselines.set_size(size, abcissa.n_cols);
 
             for (i=0; i<size; ++i){
                 start_value = spectra_(i, min);
                 end_value = spectra_(i, max);
                 slope = (end_value - start_value) / (max - min);
-                local_baseline.set_size(max - min + 1);
                 int j;
                 for (j = 0; j <= (max - min); ++j)
-                    local_baseline(j) = j*slope + start_value;
+                    baselines(i, j) = j*slope + start_value;
 
                 region = spectra_(i, span(min, max));
-                region -= local_baseline;
+                region -= baselines.row(i);
                 results(i) = sum(region);
-
-                if (i == 0){
-                    baselines.set_size(local_baseline.n_rows, local_baseline.n_cols);
-                    baselines.row(0) = local_baseline;
-                }
-                else{
-                    baselines.insert_rows(baselines.n_rows, local_baseline);
-                }
             }
-
         }
     }
 
@@ -775,15 +767,15 @@ void SpecMap::BandRatio(int first_min,
         // Do peak fitting stuff here.
         map_type = "2-Region Band Ratio Map (Area)";
         if (integration_method == "Riemann Sum"){
-            rowvec first_local_baseline, second_local_baseline;
             double first_start_value, first_end_value, second_start_value,
                     second_end_value, first_slope, second_slope, first_sum,
                     second_sum;
             first_abcissa.set_size(first_max - first_min + 1);
             second_abcissa.set_size(second_max - second_min + 1);
             first_abcissa = wavelength_.subvec(span(first_min, first_max));
-            second_abcissa = wavelength_.subvec(span(second_min, second_max));
-
+            second_abcissa = wavelength_.subvec(span(second_min, second_max));\
+            first_baselines.set_size(size, first_max - first_min + 1);
+            second_baselines.set_size(size, second_max - second_min + 1);
 
             for (i=0; i<size; ++i){
                 first_start_value = spectra_(i, first_min);
@@ -792,32 +784,19 @@ void SpecMap::BandRatio(int first_min,
                 second_end_value = spectra_(i, second_max);
                 first_slope = (first_end_value - first_start_value) / (first_max - first_min);
                 second_slope = (second_end_value - second_start_value) / (second_max - second_min);
-                first_local_baseline.set_size(first_max - first_min + 1);
-                second_local_baseline.set_size(second_max - second_min + 1);
                 int j;
                 for (j = 0; j <= (first_max - first_min); ++j)
-                    first_local_baseline(j) = j*first_slope + first_start_value;
+                    first_baselines(i, j) = j*first_slope + first_start_value;
                 for (j = 0; j <= (second_max - second_min); ++j)
-                    second_local_baseline(j) = j*second_slope + second_start_value;
+                    second_baselines(i, j) = j*second_slope + second_start_value;
 
                 first_region = spectra_(i, span(first_min, first_max));
                 second_region = spectra_(i, span(second_min, second_max));
 
-                first_sum = sum(first_region - first_local_baseline);
-                second_sum = sum(second_region - second_local_baseline);
+                first_sum = sum(first_region - first_baselines.row(i));
+                second_sum = sum(second_region - second_baselines.row(i));
 
                 results(i)= first_sum / second_sum;
-
-                if (i == 0){
-                    first_baselines.set_size(first_local_baseline.n_rows, first_local_baseline.n_cols);
-                    second_baselines.set_size(second_local_baseline.n_rows, second_local_baseline.n_cols);
-                    first_baselines.row(0) = first_local_baseline;
-                    second_baselines.row(0) = second_local_baseline;
-                }
-                else{
-                    first_baselines.insert_rows(first_baselines.n_rows, first_local_baseline);
-                    second_baselines.insert_rows(second_baselines.n_rows, second_local_baseline);
-                }
             }
 
         }
