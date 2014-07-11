@@ -11964,6 +11964,11 @@ void QCPColorGradient::loadPreset(GradientPreset preset)
       setColorStopAt(63.0/64.0, QColor(255,223,223));
       setColorStopAt(64.0/64.0, QColor(255,255,255));
       break;
+    case vMagenta:
+      setColorInterpolation(ciRGB);
+      setColorStopAt(1, QColor(255,0,255));
+      setColorStopAt(0, QColor(0,0,0));
+      break;
 
   }
 }

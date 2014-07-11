@@ -34,13 +34,14 @@ using namespace arma;
 class MapData;
 class PrincipalComponentsData;
 class SpectrumViewer;
+class MainWindow;
 
 class SpecMap
 {
 public:
     SpecMap();
-    SpecMap(QTextStream& inputstream, QMainWindow *main_window, QString *directory, bool swap_spatial);
-    SpecMap(QString binary_file_name, QMainWindow *main_window, QString *directory);
+    SpecMap(QTextStream& inputstream, MainWindow *main_window, QString *directory, bool swap_spatial);
+    SpecMap(QString binary_file_name, MainWindow *main_window, QString *directory);
     ~SpecMap();
     // PRE-PROCESSING FUNCTIONS //
     // map editing
@@ -199,6 +200,9 @@ private:
 
     bool constructor_canceled_;
     bool flipped_;
+
+    MainWindow *main_window_;
+
 };
 
 #endif // SPECMAP_H

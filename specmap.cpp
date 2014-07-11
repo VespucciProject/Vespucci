@@ -22,6 +22,7 @@
 #include <fstream>
 #include <QtConcurrent/QtConcurrentRun>
 #include "arma_ext.h"
+#include "mainwindow.h"
 
 using namespace arma;
 using namespace std;
@@ -51,7 +52,7 @@ SpecMap::~SpecMap()
 /// This constructor loads a previously saved dataset.  The dataset is saved
 /// as an armadillo binary in the same format as the long text.
 ///
-SpecMap::SpecMap(QString binary_file_name, QMainWindow *main_window, QString *directory)
+SpecMap::SpecMap(QString binary_file_name, MainWindow *main_window, QString *directory)
 {
     //Set up variables unrelated to hyperspectral data:
     map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
@@ -76,6 +77,7 @@ SpecMap::SpecMap(QString binary_file_name, QMainWindow *main_window, QString *di
     x_ = input_data(span(1, rows), 0);
     y_ = input_data(span(1, rows), 1);
     spectra_ = input_data(span(1, rows), span(2, cols));
+    main_window_ = main_window;
 }
 
 
@@ -90,7 +92,7 @@ SpecMap::SpecMap(QString binary_file_name, QMainWindow *main_window, QString *di
 /// \param main_window the main window of the app
 /// \param directory the working directory
 ///
-SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *directory, bool swap_spatial)
+SpecMap::SpecMap(QTextStream &inputstream, MainWindow *main_window, QString *directory, bool swap_spatial)
 {
     //Set up variables unrelated to hyperspectral data:
     map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
@@ -122,7 +124,6 @@ SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *di
     cout << "Reading wavelength took " << seconds <<" s." << endl;
     i=0;
     j=0;
-
 
     QString spectra_string;
 
@@ -184,14 +185,8 @@ SpecMap::SpecMap(QTextStream &inputstream, QMainWindow *main_window, QString *di
     }
     seconds = timer.toc();
     constructor_canceled_ = false;
-    /*
-    //without this, menu on MacOS is wonky.
-    if (progress!=0){
-        progress.setWindowModality(Qt::NonModal);
-    }
-    */
-
     cout << "Reading x, y, and spectra took " << seconds << " s." << endl;
+    main_window_ = main_window;
 }
 
 // PRE-PROCESSING FUNCTIONS //
@@ -709,7 +704,8 @@ void SpecMap::Univariate(int min,
                                             x_, y_, results,
                                             this, directory_,
                                             this->GetGradient(gradient_index),
-                                            maps_.size()));
+                                            maps_.size(),
+                                            main_window_));
 
 
     map.data()->set_name(name, map_type);
@@ -825,7 +821,8 @@ void SpecMap::BandRatio(int first_min,
                                             x_, y_, results,
                                             this, directory_,
                                             this->GetGradient(gradient_index),
-                                            maps_.size()));
+                                            maps_.size(),
+                                            main_window_));
 
 
     new_map.data()->set_name(name, map_type);
@@ -918,7 +915,8 @@ void SpecMap::PrincipalComponents(int component,
                                             x_, y_, results,
                                             this, directory_,
                                             this->GetGradient(gradient_index),
-                                            maps_.size()));
+                                            maps_.size(),
+                                            main_window_));
     new_map.data()->set_name(name, map_type);
     this->AddMap(new_map);
     maps_.last().data()->ShowMapWindow();

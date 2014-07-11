@@ -252,3 +252,20 @@ void MapViewer::on_actionShow_Spectrum_Viewer_triggered()
 {
     parent_->ShowSpectrumViewer(true);
 }
+
+void MapViewer::on_actionCommon_Color_Gradient_toggled(bool arg1)
+{
+    cout << "MapViewer::on_actionCommon_Color_Gradient_toggled()" << endl;
+    parent_->UseGlobalColorScale(arg1);
+    cout << "end of function" << endl;
+}
+
+void MapViewer::GlobalDataRangeChanged(QCPRange new_range)
+{
+    parent_->SetDataRange(new_range);
+}
+
+void MapViewer::GlobalGradientChanged(QCPColorGradient new_gradient)
+{
+    parent_->setGradient(new_gradient);
+}

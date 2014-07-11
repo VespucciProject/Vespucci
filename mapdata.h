@@ -26,6 +26,7 @@
 #include "mapviewer.h"
 #include "spectrumviewer.h"
 #include "specmap.h"
+#include "mainwindow.h"
 
 using namespace std;
 using namespace arma;
@@ -36,7 +37,7 @@ class MapViewer;
 class SpecMap;
 class PrincipalComponentsData;
 class SpectrumViewer;
-
+class MainWindow;
 class MapData
 {
 public:
@@ -48,7 +49,8 @@ public:
             SpecMap *parent,
             QString *directory,
             QCPColorGradient gradient,
-            int source_index);
+            int source_index,
+            MainWindow* main_window);
     ~MapData();
     QString name();
     QString type();
@@ -102,6 +104,7 @@ public:
     void ShowColorScale(bool enabled);
     void ShowAxes(bool enabled);
 
+    void SetDataRange(QCPRange new_range);
     void RemoveThis();
 
     bool savePng(const QString & fileName,
@@ -130,11 +133,14 @@ public:
     void DrawScaleBar(double width, double height, QString units, QColor color, QString position, QFont font);
 
     double results_at_position(double x, double y);
+
+    void UseGlobalColorScale(bool arg1);
 private:
     QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
     QString y_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
 
     SpecMap* dataset_;
+    MainWindow *main_window_;
 
     QString name_; //Name, this is displayed in the QListView
     QString type_; //Short description of type.  set by subclass constructor.
@@ -159,11 +165,12 @@ private:
     int value_size_; //size of y (number of unique y values)
 
     QCPColorGradient gradient_;
+    QSharedPointer<QCPColorScale> global_color_scale_;
     QCPColorScale *new_color_scale_;
 
     QString *directory_;
 
-    QCPLayoutElement *color_scale_;
+    QCPLayoutElement *color_scale_; //this color scale is not changed!
 
     //stuff related to baselines and such
     mat first_baseline_;
@@ -175,6 +182,7 @@ private:
     bool univariate_area_;
     bool band_ratio_area_;
     bool univariate_bandwidth_;
+    bool using_global_color_scale_;
 
 };
 

@@ -137,6 +137,8 @@
     <addaction name="menuNew_Multivariate_Map"/>
     <addaction name="separator"/>
     <addaction name="actionDelete_Map"/>
+    <addaction name="separator"/>
+    <addaction name="actionSet_Global_Color_Scale"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuData"/>
@@ -343,6 +345,11 @@
   <action name="actionView_Dataset_Elements">
    <property name="text">
     <string>View Dataset Elements</string>
+   </property>
+  </action>
+  <action name="actionSet_Global_Color_Scale">
+   <property name="text">
+    <string>Set Global Color Scale...</string>
    </property>
   </action>
  </widget>

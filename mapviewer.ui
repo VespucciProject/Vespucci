@@ -42,6 +42,7 @@
     <addaction name="actionInterpolate"/>
     <addaction name="actionShow_Axes"/>
     <addaction name="actionShow_Color_Scale"/>
+    <addaction name="actionCommon_Color_Gradient"/>
     <addaction name="separator"/>
     <addaction name="actionAdd_Scale_Bar"/>
     <addaction name="actionSet_Color_Scheme"/>
@@ -109,6 +110,14 @@
    </property>
    <property name="text">
     <string>Show Spectrum Viewer</string>
+   </property>
+  </action>
+  <action name="actionCommon_Color_Gradient">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Common Color Gradient</string>
    </property>
   </action>
  </widget>

@@ -28,15 +28,16 @@ MapData::MapData(QString x_axis_description,
                  SpecMap *parent,
                  QString *directory,
                  QCPColorGradient gradient,
-                 int source_index)
+                 int source_index,
+                 MainWindow *main_window)
 {
     name_ = parent->name();
     directory_ = directory;
-
+    main_window_ = main_window;
     univariate_area_ = false;
     band_ratio_area_ = false;
     univariate_bandwidth_ = false;
-
+    using_global_color_scale_ = false;
     map_display_ = new MapViewer(name_, directory_, this);
     map_qcp_ = map_display_->findChild<QCustomPlot *>("mapView");
     map_ = new QCPColorMap(map_qcp_->xAxis, map_qcp_->yAxis);
@@ -69,7 +70,15 @@ MapData::MapData(QString x_axis_description,
                      spectrum_display_,
                      SLOT(MapClicked(QCPAbstractPlottable*,QMouseEvent*)));
 
+    QObject::connect(main_window_,
+                     SIGNAL(GlobalDataRangeChanged(QCPRange)),
+                     map_display_,
+                     SLOT(GlobalDataRangeChanged(QCPRange)));
 
+    QObject::connect(main_window_,
+                     SIGNAL(GlobalGradientChanged(QCPColorGradient)),
+                     map_display_,
+                     SLOT(GlobalGradientChanged(QCPColorGradient)));
 
     spectrum_qcp_ = spectrum_display_->findChild<QCustomPlot *>("spectrum");
     //create the objects the pointers point to
@@ -281,7 +290,7 @@ void MapData::RemoveThis()
 void MapData::setGradient(const QCPColorGradient &gradient)
 {
     map_->setGradient(gradient);
-    QCPColorScale *color_scale = qobject_cast<QCPColorScale *>(color_scale_);
+    QCPColorScale *color_scale = qobject_cast<QCPColorScale *>(map_qcp_->plotLayout()->element(0, 1));
     color_scale->setGradient(gradient);
     map_qcp_->replot();
 }
@@ -451,4 +460,50 @@ QVector<double> MapData::mid_lines(int i)
 {
     std::vector<double> lines = conv_to<std::vector<double> >::from(mid_lines_.row(i));
     return QVector<double>::fromStdVector(lines);
+}
+
+void MapData::UseGlobalColorScale(bool arg1)
+{
+    cout << "MapData::UseGlobalColorScale()" << endl;
+    if (arg1){
+        if (using_global_color_scale_){
+            cout << "arg1 && using_global_color_scale_" << endl;
+            return;
+        }
+        else{
+            cout << "arg1 && !using_global_color_scale_" << endl;
+            QCPColorScale *color_scale = qobject_cast<QCPColorScale *>(map_qcp_->plotLayout()->element(0, 1));
+            color_scale->setGradient(*main_window_->global_gradient());
+            QCPRange data_range = map_->dataRange();
+            main_window_->RecalculateGlobalDataRange(&data_range);
+            color_scale->setDataRange(*main_window_->global_data_range());
+            map_->setGradient(*main_window_->global_gradient());
+            map_qcp_->replot();
+            return;
+        }
+    }
+    else{
+        cout << "!arg1" << endl;
+        if(!using_global_color_scale_){
+            cout << "!arg1 && !using_global_color_scale_" << endl;
+            return;
+        }
+        else{
+            cout << "!arg1 && using_global_color_scale_" << endl;
+            using_global_color_scale_ = false;
+            QCPColorScale *color_scale = qobject_cast<QCPColorScale *>(map_qcp_->plotLayout()->element(0, 1));
+            color_scale->setGradient(gradient_);
+            map_->setGradient(gradient_);
+            color_scale->setDataRange(map_->dataRange());
+            map_qcp_->replot();
+            return;
+        }
+    }
+}
+
+void MapData::SetDataRange(QCPRange new_range)
+{
+    QCPColorScale *color_scale = qobject_cast<QCPColorScale *>(map_qcp_->plotLayout()->element(0, 1));
+    color_scale->setDataRange(new_range);
+    map_->setColorScale(color_scale);
 }

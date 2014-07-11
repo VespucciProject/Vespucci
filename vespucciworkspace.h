@@ -23,13 +23,15 @@
 #include "specmap.h"
 #include "univariatemap.h"
 #include "arma_ext.h"
+#include "qcustomplot.h"
+#include "mainwindow.h"
 class SpecMap;
+class MainWindow;
 
 class VespucciWorkspace
 {
 public:
     VespucciWorkspace();
-
     QStringList dataset_names();
     //QStringList map_names();
 
@@ -52,18 +54,28 @@ public:
     QString *directory_ptr();
 
     void close();
-    void SetPointers(QMainWindow *main_window);
+    void SetPointers(MainWindow *main_window);
 
-    QMainWindow* main_window();
+    MainWindow* main_window();
     double GetWavelengthMin(int row);
     double GetWavelengthMax(int row);
 
     //SpecMap* DatasetAt(int i);
     QSharedPointer<SpecMap> DatasetAt(int i);
 
+    QCPRange *global_data_range();
+    QCPColorGradient *global_gradient();
+
+
+
+
+    bool RecalculateGlobalDataRange(QCPRange* new_data_range);
+    void RefreshGlobalColorGradient(QCPColorGradient new_gradient);
+    void SetGlobalDataRange(QCPRange* new_data_range);
+
 private:
     //pointers to main window and necessary widgets
-    QMainWindow *main_window_;
+    MainWindow *main_window_;
     //QListWidget *map_list_widget_;
     QListWidget *dataset_list_widget_;
 
@@ -76,6 +88,11 @@ private:
 
     int dataset_loading_count_;
     //int map_loading_count_;
+
+    QCPRange global_data_range_;
+    QCPColorGradient global_gradient_;
+
+
 };
 
 #endif // VESPUCCIWORKSPACE_H

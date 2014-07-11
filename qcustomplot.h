@@ -1943,10 +1943,11 @@ public:
                         //A special spectral class, based on a previous publication
                         //in my group
                         ,vSpectral
+                        ,vMagenta
                                };
   Q_ENUMS(GradientPreset)
 
-  QCPColorGradient(GradientPreset preset=gpCold);
+  QCPColorGradient(GradientPreset preset=cbOrRd);
   bool operator==(const QCPColorGradient &other) const;
   bool operator!=(const QCPColorGradient &other) const { return !(*this == other); }
 

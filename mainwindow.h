@@ -22,6 +22,8 @@
 
 #include <QMainWindow>
 #include "vespucciworkspace.h"
+class VespucciWorkspace;
+class SpecMap;
 
 namespace Ui {
 class MainWindow;
@@ -34,6 +36,17 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent, VespucciWorkspace *ws);
     ~MainWindow();
+    QCPRange *global_data_range();
+    QCPColorGradient *global_gradient();
+    void RecalculateGlobalDataRange(QCPRange* new_data_range);
+    void RefreshGlobalColorGradient(QCPColorGradient new_gradient);
+    void SetGlobalDataRange(QCPRange* new_data_range);
+
+signals:
+    void GlobalGradientChanged(QCPColorGradient gradient);
+    void GlobalDataRangeChanged(QCPRange data_range);
+
+
 protected:
     void closeEvent(QCloseEvent *event);
 private slots:
@@ -80,6 +93,8 @@ private slots:
     void on_actionCorrect_Baseline_triggered();
 
     void on_actionView_Dataset_Elements_triggered();
+
+    void on_actionSet_Global_Color_Scale_triggered();
 
 private:
     Ui::MainWindow *ui;

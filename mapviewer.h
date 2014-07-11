@@ -45,6 +45,9 @@ protected:
 public:
     MapViewer(QString name, QString *directory, MapData *parent);
     ~MapViewer();
+public slots:
+    void GlobalDataRangeChanged(QCPRange new_range);
+    void GlobalGradientChanged(QCPColorGradient new_gradient);
 
 private slots:
     void on_actionInterpolate_triggered();
@@ -62,6 +65,8 @@ private slots:
     void on_actionAdd_Scale_Bar_triggered();
 
     void on_actionShow_Spectrum_Viewer_triggered();
+
+    void on_actionCommon_Color_Gradient_toggled(bool arg1);
 
 private:
     Ui::MapViewer *ui;

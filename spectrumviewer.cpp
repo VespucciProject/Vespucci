@@ -181,15 +181,17 @@ void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *ev
         SetSecondPlot(map_data_->first_abcissa(), map_data_->first_baseline(current_index_));
     if (map_data_->univariate_bandwidth()){
         SetSecondPlot(map_data_->first_abcissa(), map_data_->first_baseline(current_index_));
-        /*
-         * //Midline stuff doesn't work!
-        QCPItemLine *mid_line = new QCPItemLine(spectrum_plot_);
-        QVector<double> mid_line_vec = map_data_->mid_line(current_index_);
-        mid_line->start->setCoords(mid_line_vec[0], mid_line_vec[1]);
-        mid_line->end->setCoords(mid_line_vec[2], mid_line_vec[3]);
-        mid_line->setPen(QPen(QColor("red")));
-        spectrum_plot_->addItem(mid_line);
-        */
+        QCPItemLine *mid_line;
+        QVector<double> mid_line_vec;
+        if (spectrum_plot_->itemCount() == 0){
+            QCPItemLine *mid_line = new QCPItemLine(spectrum_plot_);
+            QVector<double> mid_line_vec = map_data_->mid_line(current_index_);
+            mid_line->start->setCoords(mid_line_vec[0], mid_line_vec[1]);
+            mid_line->end->setCoords(mid_line_vec[2], mid_line_vec[3]);
+            mid_line->setPen(QPen(QColor("red")));
+            spectrum_plot_->addItem(mid_line);
+        }
+
     }
     if (map_data_->band_ratio_area()){
         SetSecondPlot(map_data_->first_abcissa(),
