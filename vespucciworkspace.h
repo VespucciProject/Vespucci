@@ -23,7 +23,7 @@
 #include "specmap.h"
 #include "univariatemap.h"
 #include "arma_ext.h"
-#include "qcustomplot.h"
+#include <qcustomplot.h>
 #include "mainwindow.h"
 class SpecMap;
 class MainWindow;

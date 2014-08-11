@@ -22,7 +22,7 @@
 
 #include <QString>
 #include <armadillo>
-#include "qcustomplot.h"
+#include <qcustomplot.h>
 #include "mapviewer.h"
 #include "spectrumviewer.h"
 #include "specmap.h"

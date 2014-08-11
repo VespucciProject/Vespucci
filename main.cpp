@@ -24,7 +24,7 @@
 #include <QTextStream>
 #include <QFileDevice>
 #include <QFile>
-#include "qcustomplot.h"
+#include <qcustomplot.h>
 #include <fstream>
 #include "mapdata.h"
 #include "vespucciworkspace.h"
