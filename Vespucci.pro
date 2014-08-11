@@ -46,6 +46,7 @@ win32: QMAKE_CXXFLAGS += -isystem "C:/Libraries/OpenBLAS/include" \
                          -isystem "C:/Boost/include/" \
                          -isystem "C:/QtSDK/include/"
 
+
 #Libraries
 #Include paths for *nix
 unix: INCLUDEPATH += /usr/include
@@ -157,14 +158,13 @@ unix: LIBS += /usr/lib/libqcustomplot1.so
 unix: PRE_TARGETDEPS += /usr/lib/libqcustomplot1.so
 
 #Armadillo
-win32: LIBS += -L$$PWD/../../../../../Libraries/armadillo/lib/ -larmadillo
+win32: LIBS += -LC:/Libraries/armadillo/lib/ -larmadillo
 win32: INCLUDEPATH += C:/Libraries/armadillo/include
 win32: DEPENDPATH += C:/Libraries/armadillo/include
-win32: PRE_TARGETDEPS += $$PWD/../../../../../Libraries/armadillo/lib/libarmadillo.a
+win32: PRE_TARGETDEPS += C:/Libraries/armadillo/lib/libarmadillo.a
 
 unix: LIBS += /usr/lib/libarmadillo.so
 unix: PRE_TARGETDEPS += /usr/lib/libarmadillo.so
-
 
 
 
