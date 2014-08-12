@@ -19,7 +19,19 @@
 
 #include "mapdata.h"
 
-
+///
+/// \brief MapData::MapData
+/// \param x_axis_description Description of the spectral abcissa
+/// \param y_axis_description Description of the spectral ordinate
+/// \param x Vector of horizontal coordinates map points
+/// \param y Vector of vertical coordinates for map points
+/// \param results Vector of results at x and y
+/// \param parent The SpecMap object storing the map data.
+/// \param directory The current working directory on the filesystem
+/// \param gradient The initially-chosen color gradient.
+/// \param source_index The index of this object in parent.
+/// \param main_window The main window of the app.
+///
 MapData::MapData(QString x_axis_description,
                  QString y_axis_description,
                  colvec x,
@@ -82,7 +94,7 @@ MapData::MapData(QString x_axis_description,
 
     spectrum_qcp_ = spectrum_display_->findChild<QCustomPlot *>("spectrum");
     //create the objects the pointers point to
-    initial_map_size_ = map_display_->size();
+    initial_map_size_ = map_qcp_->size();
 
 }
 
@@ -101,26 +113,47 @@ MapData::~MapData()
 
 }
 
+///
+/// \brief MapData::name
+/// \return The name of the map.
+///
 QString MapData::name()
 {
     return name_;
 }
 
+///
+/// \brief MapData::type
+/// \return A string describing the type of map.
+///
 QString MapData::type()
 {
     return type_;
 }
 
+///
+/// \brief MapData::source_index
+/// \return
+/// Sets the index of the map in the list of maps in the SpecMap object.
 int MapData::source_index()
 {
     return source_index_;
 }
 
+///
+/// \brief MapData::set_type
+/// \param type
+/// Sets the type description of the map.
 void MapData::set_type(QString type)
 {
     type_ = type;
 }
 
+///
+/// \brief MapData::set_name
+/// \param name
+/// \param type
+/// Sets the title of the window, default name for saved files and display name in main window.
 void MapData::set_name(QString name, QString type)
 {
     name_ = name;
@@ -129,6 +162,9 @@ void MapData::set_name(QString name, QString type)
     map_display_->setWindowTitle(window_title);
 }
 
+///
+/// \brief MapData::ShowMapWindow
+/// Shows or hides the map window.
 void MapData::ShowMapWindow()
 {
     if(!map_display_->isVisible()){
@@ -139,12 +175,20 @@ void MapData::ShowMapWindow()
     }
 }
 
-//Plots the data on the MapViewer window
+///
+/// \brief MapData::SetMapData
+/// \param map_data
+/// Sets the data of the map. See QCustomPlot::QCPColorMap::setData().
 void MapData::SetMapData(QCPColorMapData *map_data)
 {
     map_->setData(map_data);
 }
 
+///
+/// \brief MapData::CreateImage
+/// \param color_scheme
+/// \param interpolation
+/// Creates the image by sending data to the QCustomPlot widgets.
 void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation)
 {
 
@@ -170,16 +214,28 @@ void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation)
     map_display_->resize(key_size, value_size);
 }
 
+///
+/// \brief MapData::SetXDescription
+/// \param description
+/// Sets description for the X axis in the spectrum viewer.
 void MapData::SetXDescription(QString description)
 {
     x_axis_description_ = description;
 }
 
+///
+/// \brief MapData::SetYDescription
+/// \param description
+/// Sets description for the Y axis in the spectrum viewer.
 void MapData::SetYDescription(QString description)
 {
     y_axis_description_ = description;
 }
 
+///
+/// \brief MapData::interpolate
+/// \return Whether or not map is interpolated
+/// See QCustomPlot::QCPColorMap::interpolate().
 bool MapData::interpolate()
 {
     if (!map_qcp_->hasPlottable(map_)){
@@ -188,6 +244,10 @@ bool MapData::interpolate()
     return map_->interpolate();
 }
 
+///
+/// \brief MapData::setInterpolate
+/// \param enabled Whether or not image should be interpolated.
+/// Toggles image interpolation on or off. See QCustomPlot::QCPColorMap::setInterpolate.
 void MapData::setInterpolate(bool enabled)
 {
     if (!map_qcp_->hasPlottable(map_)){
@@ -197,6 +257,10 @@ void MapData::setInterpolate(bool enabled)
     map_qcp_->replot();
 }
 
+///
+/// \brief MapData::ShowColorScale
+/// \param enabled Whether or not color scale should be visible.
+/// Toggles the color scale bar on or off.
 void MapData::ShowColorScale(bool enabled)
 {
     if (enabled){
@@ -216,6 +280,10 @@ void MapData::ShowColorScale(bool enabled)
     }
 }
 
+///
+/// \brief MapData::ShowAxes
+/// \param enabled Whether or not axes should be visible on map.
+/// Toggles the axes on and off.
 void MapData::ShowAxes(bool enabled)
 {
     if (enabled){
@@ -237,6 +305,14 @@ void MapData::ShowAxes(bool enabled)
     }
 }
 
+///
+/// \brief MapData::saveBmp
+/// \param fileName
+/// \param width
+/// \param height
+/// \param scale
+/// \return
+/// Saves the map as a bitmap. See QCustomPlot::saveBmp.
 bool MapData::saveBmp(const QString &fileName, int width, int height, double scale)
 {
     map_qcp_->setBackground(Qt::white);
@@ -248,6 +324,15 @@ bool MapData::saveBmp(const QString &fileName, int width, int height, double sca
     return success;
 }
 
+///
+/// \brief MapData::savePng
+/// \param fileName
+/// \param width
+/// \param height
+/// \param scale
+/// \param quality
+/// \return
+/// Saves map as a png. See QCustomPlot::savePng.
 bool MapData::savePng(const QString &fileName, int width, int height, double scale, int quality)
 {
     map_qcp_->setBackground(Qt::transparent);
@@ -258,6 +343,15 @@ bool MapData::savePng(const QString &fileName, int width, int height, double sca
     return success;
 }
 
+///
+/// \brief MapData::saveJpg
+/// \param fileName
+/// \param width
+/// \param height
+/// \param scale
+/// \param quality
+/// \return
+/// Saves the map as a JPEG. See QCustomPlot::saveJpg
 bool MapData::saveJpg(const QString &fileName, int width, int height, double scale, int quality)
 {
     map_qcp_->setBackground(Qt::white);
@@ -268,6 +362,15 @@ bool MapData::saveJpg(const QString &fileName, int width, int height, double sca
     return success;
 }
 
+///
+/// \brief MapData::saveTiff
+/// \param fileName
+/// \param width
+/// \param height
+/// \param scale
+/// \param quality
+/// \return
+/// Saves the map as a tiff. See QCustomPlot::saveRastered.
 bool MapData::saveTiff(const QString &fileName, int width, int height, double scale, int quality)
 {
     map_qcp_->setBackground(Qt::transparent);
@@ -288,6 +391,10 @@ void MapData::RemoveThis()
     dataset_->RemoveMapAt(source_index_);
 }
 
+///
+/// \brief MapData::setGradient
+/// \param gradient
+/// Sets the color gradient of the map.
 void MapData::setGradient(const QCPColorGradient &gradient)
 {
     map_->setGradient(gradient);
@@ -296,6 +403,15 @@ void MapData::setGradient(const QCPColorGradient &gradient)
     map_qcp_->replot();
 }
 
+///
+/// \brief MapData::DrawScaleBar
+/// \param width The width of the bar in map units.
+/// \param height The height of the bar.
+/// \param units The number to display on the bar label.
+/// \param color The color of the bar.
+/// \param position The position of the bar (Top or Bottom, Left or Right)
+/// \param font The desired font for the bar label.
+/// Draws a scale bar object on the map.
 void MapData::DrawScaleBar(double width,
                            double height,
                            QString units,
@@ -375,11 +491,20 @@ void MapData::DrawScaleBar(double width,
     map_qcp_->show();
 }
 
+///
+/// \brief MapData::ShowSpectrumViewer
+/// \param enabled Whether or not spectrum viewer should be visible
+///
 void MapData::ShowSpectrumViewer(bool enabled)
 {
     spectrum_display_->setVisible(enabled);
 }
 
+///
+/// \brief MapData::set_baseline
+/// \param abcissa
+/// \param baseline
+/// Sets a single baseline of this object.
 void MapData::set_baseline(rowvec abcissa, mat baseline)
 {
     first_abcissa_ = abcissa;
@@ -387,6 +512,13 @@ void MapData::set_baseline(rowvec abcissa, mat baseline)
     univariate_area_ = true;
 }
 
+///
+/// \brief MapData::set_baselines
+/// \param first_abcissa
+/// \param second_abcissa
+/// \param first_baseline
+/// \param second_baseline
+/// Sets the baselines of this object
 void MapData::set_baselines(rowvec first_abcissa, rowvec second_abcissa,
                             mat first_baseline, mat second_baseline)
 {
@@ -397,38 +529,69 @@ void MapData::set_baselines(rowvec first_abcissa, rowvec second_abcissa,
     band_ratio_area_ = true;
 }
 
+///
+/// \brief MapData::set_fwhm
+/// \param mid_lines the FWHM representations
+///
 void MapData::set_fwhm(mat mid_lines)
 {
     mid_lines_ = mid_lines;
     univariate_bandwidth_ = true;
 }
 
+///
+/// \brief MapData::univariate_area
+/// \return Whether or not this is a univariate area map
+///
 bool MapData::univariate_area()
 {
     return univariate_area_;
 }
 
+///
+/// \brief MapData::band_ratio_area
+/// \return Whether or not this is a band ratio area map.
+///
 bool MapData::band_ratio_area()
 {
     return band_ratio_area_;
 }
 
+///
+/// \brief MapData::univariate_bandwidth
+/// \return Whether or not this is a univariate bandwidth map
+///
 bool MapData::univariate_bandwidth()
 {
     return univariate_bandwidth_;
 }
 
+///
+/// \brief MapData::results_at_position
+/// \param x The horizontal position of the mouse click relative to the axes of the map.
+/// \param y The vertical position of the mouse click relative to the axes of the map.
+/// \return The value of the data point at x and y.
+///
 double MapData::results_at_position(double x, double y)
 {
     return map_->data()->data(x, y);
 }
 
+///
+/// \brief MapData::first_abcissa
+/// \return The abcissa for the first baseline
+///
 QVector<double> MapData::first_abcissa()
 {
     std::vector<double> abcissa = conv_to<std::vector<double> >::from(first_abcissa_);
     return QVector<double>::fromStdVector(abcissa);
 }
 
+///
+/// \brief MapData::first_baseline
+/// \param i The index of first_baseline_ of the spectrum in question.
+/// \return The values of the first baseline.
+///
 QVector<double> MapData::first_baseline(int i)
 {
     rowvec baseline_r = first_baseline_.row(i);
@@ -436,12 +599,21 @@ QVector<double> MapData::first_baseline(int i)
     return QVector<double>::fromStdVector(baseline);
 }
 
+///
+/// \brief MapData::second_abcissa
+/// \return The abcissa for the second baseline
+///
 QVector<double> MapData::second_abcissa()
 {
     std::vector<double> abcissa = conv_to<std::vector<double> >::from(second_abcissa_);
     return QVector<double>::fromStdVector(abcissa);
 }
 
+///
+/// \brief MapData::second_baseline
+/// \param i index of SpecMap obejct (and also second_baseline_) of the spectrum in question.
+/// \return A QVector representing the second baseline for a two-peak map.
+///
 QVector<double> MapData::second_baseline(int i)
 {
     rowvec baseline_r = second_baseline_.row(i);
@@ -449,6 +621,13 @@ QVector<double> MapData::second_baseline(int i)
     return QVector<double>::fromStdVector(baseline);
 }
 
+///
+/// \brief MapData::mid_line
+/// \param i The row in the SpecMap object (and therefore also in mid_lines_)
+/// corresponding the the spectrum in question.
+/// \return A QVector for a line drawn from one edge of the peak in question to
+/// the other at the half-maximum of the peak.
+/// Used to visualize the FWHM.
 QVector<double> MapData::mid_line(int i)
 {
     QVector<double> output;
@@ -457,12 +636,23 @@ QVector<double> MapData::mid_line(int i)
     return output;
 }
 
+///
+/// \brief MapData::mid_lines
+/// \param i The row in the specmap object (and therefore also in mid_lines_)
+/// that contains the spectrum in question.
+/// \return Returns a QVector for two lines that extend from one edge of two peaks to
+/// the other with a vertical position equal to the half maximum of the peak.
+///  Used to visualize the FWHM.
 QVector<double> MapData::mid_lines(int i)
 {
     std::vector<double> lines = conv_to<std::vector<double> >::from(mid_lines_.row(i));
     return QVector<double>::fromStdVector(lines);
 }
 
+///
+/// \brief MapData::UseGlobalColorScale
+/// \param arg1 Whether or not the global color scale should be used for this map.
+/// Set the global color scale on or off.
 void MapData::UseGlobalColorScale(bool arg1)
 {
     cout << "MapData::UseGlobalColorScale()" << endl;
@@ -502,9 +692,54 @@ void MapData::UseGlobalColorScale(bool arg1)
     }
 }
 
+///
+/// \brief MapData::SetDataRange
+/// \param new_range
+/// Sets the data range of the map. This is used to allow common data ranges on
+/// maps that share the global color scheme, so that for a given numerical value
+/// the color is the same on all maps with this scheme.
 void MapData::SetDataRange(QCPRange new_range)
 {
     QCPColorScale *color_scale = qobject_cast<QCPColorScale *>(map_qcp_->plotLayout()->element(0, 1));
     color_scale->setDataRange(new_range);
     map_->setColorScale(color_scale);
+}
+
+///
+/// \brief MapData::RescaleMapWidget
+/// Changes the proportions of the map window back to the initial proportions.
+/// Maintains the longest of the resized dimensions and adjusts the other
+/// dimension accordingly.
+void MapData::RescaleMapWidget()
+{
+    double width_ratio = map_qcp_->width()/initial_map_size_.width();
+    double height_ratio = map_qcp_.height()/initial_map_size_.height();
+    double max_ratio = std::max(width_ratio, height_ratio);
+    double new_height = max_ratio * initial_map_size_.height();
+    double new_width = max_ratio * initial_map_size_.width();
+    map_qcp_->resize(new_width, new_height);
+    map_display_->resize(new_width + 50, new_height + 50);
+    return;
+}
+
+///
+/// \brief MapData::LockMapDisplaySize
+/// \param lock Whether the window should be locked or unlocked
+/// Locks the size of the map window to maintain proportions
+void MapData::LockMapDisplaySize(bool lock)
+{
+    if (lock)
+        map_display_->setFixedSize(map_display_->size());
+    else
+        map_display_->setFixedSize(QWIDGETSIZE_MAX);
+}
+
+///
+/// \brief MapData::ResetMapWidgetSize
+/// Returns the size of the map window to the original proportions
+void MapData::ResetMapWidgetSize()
+{
+    map_qcp_->resize(initial_map_size_);
+    map_display_->resize(initial_map_size_.width() + 50, initial_map_size_.height() + 50);
+    return;
 }

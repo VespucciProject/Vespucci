@@ -135,6 +135,11 @@ public:
     double results_at_position(double x, double y);
 
     void UseGlobalColorScale(bool arg1);
+
+    void RescaleMapWidget();
+    void LockMapDisplaySize(bool lock);
+    void ResetMapWidgetSize();
+
 private:
     QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
     QString y_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
