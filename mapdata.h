@@ -184,6 +184,9 @@ private:
     bool univariate_bandwidth_;
     bool using_global_color_scale_;
 
+    QSize initial_map_size_;
+
+
 };
 
 #endif // MAPDATA_H

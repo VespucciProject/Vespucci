@@ -15,18 +15,35 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
+
+    This file incoprorates code based on Octave
+    Copyright (C) 1994-2013 John W. Eaton
+
+    Octave is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Octave is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Octave.  If not, see <http://www.gnu.org/licenses/>.
+
 *******************************************************************************/
 #include "arma_ext.h"
 
 ///
-/// \brief spdiags analgous to the MATLAB function A = spdiags(B, d, m, n).
+/// \brief spdiags analgous to the Octave/MATLAB function A = spdiags(B, d, m, n).
 /// \param B a matrix containing the new diagonal vectors as columns
 /// \param d a vector containing the row numbers to set.  The first column
 /// vector of B corresponds to the first entry in d.
 /// \param m the number of rows of the output matrix
 /// \param n the number of columns of the output matrix
 /// \return a m by n sparase matrix with the columns of B as diagonals
-/// A translation of the MATLAB function A = spdiags(B, d, m, n).  For
+/// A translation of the Octave/MATLAB function A = spdiags(B, d, m, n).  For
 /// subdiagonals (entries of d < 0) vectors are truncated at the end when they
 /// are longer than the target diagonal.  For superdiagonals, vectors are
 /// truncated at the beginning when they are longer than the target diagonal.
@@ -99,19 +116,16 @@ mat arma_ext::spdiags(mat B, QVector<int> d, int m, int n)
     return output;
 }
 
+///
+/// \brief arma_ext::svds
+/// \param X
+/// \param k
+/// \param form
+/// \return
+///
 mat arma_ext::svds(mat X, int k, std::string form)
 {
-    sp_mat B;
-    int m = X.n_rows;
-    int n = X.n_cols;
-    int dimension = m + n;
-    B.set_size(dimension, dimension);
-    B.submat(0, m-1, m, dimension) = X;
-    B.submat(m, dimension, 0, n-1) = X.t();
-    cx_vec eigval;
-    cx_mat eigvec;
-    //eigs_gen(eigval, eigvec, X, k, form);
-    return mat();
+
 
 }
 
@@ -129,3 +143,4 @@ mat arma_ext::svds(mat X)
 {
     return arma_ext::svds(X, 6, "lm");
 }
+

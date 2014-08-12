@@ -46,107 +46,6 @@ win32-g++: QMAKE_CXXFLAGS += -isystem "C:/Libraries/OpenBLAS/include" \
                          -isystem "C:/Boost/include/" \
                          -isystem "C:/QtSDK/include/"
 
-
-#Libraries
-#Include paths for *nix
-unix: INCLUDEPATH += /usr/include
-unix: DEPENDPATH += /usr/include
-#include paths for Windows
-win32-g++: INCLUDEPATH += $$PWD/../../../../usr/include
-win32-g++: DEPENDPATH += $$PWD/../../../../usr/include
-
-#BLAS/LAPACK Libraries
-win32-g++: LIBS += -L$$PWD/../../../../usr/lib/libopenblas.a
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libopenblas.a
-
-unix: !macx: LIBS += /usr/lib/openblas-base/libopenblas.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/openblas-base/libopenblas.so
-macx: LIBS += -framework Accelerate
-
-
-#ARPACK
-win32-g++: LIBS += $$PWD/../../../../usr/lib/libarpack_win64.a
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libarpack_win64.a
-unix: LIBS += /usr/lib/libarpack.so
-unix: PRE_TARGETDEPS += /usr/lib/libarpack.so
-
-
-#gfortran
-win32-g++: LIBS += -L$$PWD/../../../../usr/lib/libgfortran.a
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libgfortran.a
-
-
-#MLPACK
-win32-g++: LIBS += -L$$PWD/../../../../usr/lib/libmlpack.a
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../../Libraries/mlpack/lib/libmlpack.a
-
-#Boost path for mac (also default nix path, but not used by ubuntu's package manager)
-macx: INCLUDEPATH += /usr/local/include
-macx: DEPENDPATH += /usr/local/include
-
-#Boost math
-win32-g++: LIBS += -L$$PWD/../../../../usr/lib/libboost_math_c99-mgw48-mt-1_55.a
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_math_c99-mgw48-mt-1_55.a
-
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.so
-
-macx: LIBS += /usr/local/lib/libboost_math_c99.so
-macx: PRE_TARGETDEPS += /usr/local/lib/libboost_math_c99.so
-
-#Boost program options
-win32-g++: LIBS += -L$$PWD/../../../../usr/lib/libboost_program_options-mgw48-mt-1_55.a
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_program_options-mgw48-mt-1_55.a
-
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_program_options.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_program_options.so
-
-macx: LIBS += /usr/local/lib/libboost_program_options.so
-macx: PRE_TARGETDEPS += /usr/local/lib/libboost_program_options.so
-
-#Boost random
-win32-g++: LIBS += -L$$PWD/../../../../usr/lib/libboost_random-mgw48-mt-1_55.a
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_random-mgw48-mt-1_55.a
-
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_random.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_random.so
-
-macx: LIBS += /usr/local/lib/libboost_random.so
-macx: PRE_TARGETDEPS += /usr/local/lib/libboost_random.so
-
-#Boost test
-win32-g++: LIBS += -L$$PWD/../../../../usr/lib/libboost_unit_test_framework-mgw48-mt-1_55.a
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_unit_test_framework-mgw48-mt-1_55.a
-
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.so
-
-macx: LIBS += /usr/local/lib/libboost_unit_test_framework.so
-macx: PRE_TARGETDEPS += /usr/local/lib/libboost_unit_test_framework.so
-
-#LibXML2 (a MLPACK dependency)
-win32-g++: LIBS += -L$$PWD/../../../../usr/lib/libxml2.a
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libxml2.a
-
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libxml2.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libxml2.so
-macx: LIBS += -framework libxml2
-
-#QCustomPlot
-win32-g++: LIBS += -L$$PWD/../../../../usr/lib/libqcustomplot1.a
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libqcustomplot1.a
-
-unix: LIBS += /usr/lib/libqcustomplot1.so
-unix: PRE_TARGETDEPS += /usr/lib/libqcustomplot1.so
-
-#Armadillo
-win32-g++: LIBS += -L$$PWD/../../../../usr/lib/libarmadillo.a
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libarmadillo.a
-
-unix: LIBS += /usr/lib/libarmadillo.so
-unix: PRE_TARGETDEPS += /usr/lib/libarmadillo.so
-
-
 SOURCES += main.cpp\
         mainwindow.cpp \
     specmap.cpp \
@@ -210,4 +109,108 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     resources.qrc
 
+#*nix Libraries
+#Include paths for *nix
+unix: INCLUDEPATH += /usr/include
+unix: DEPENDPATH += /usr/include
 
+#BLAS/LAPACK Libraries
+unix: !macx: LIBS += /usr/lib/openblas-base/libopenblas.so
+unix: !macx: PRE_TARGETDEPS += /usr/lib/openblas-base/libopenblas.so
+macx: LIBS += -framework Accelerate
+
+
+#ARPACK
+unix: LIBS += /usr/lib/libarpack.so
+unix: PRE_TARGETDEPS += /usr/lib/libarpack.so
+
+#MLPACK
+unix: LIBS += -L/usr/lib/libmlpack.a
+unix: PRE_TARGETDEPS += /usr/lib/libmlpack.a
+
+#Boost path for mac (also default nix path, but not used by ubuntu's package manager)
+macx: INCLUDEPATH += /usr/local/include
+macx: DEPENDPATH += /usr/local/include
+
+#Boost math
+unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.so
+unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.so
+
+macx: LIBS += /usr/local/lib/libboost_math_c99.so
+macx: PRE_TARGETDEPS += /usr/local/lib/libboost_math_c99.so
+
+#Boost program options
+unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_program_options.so
+unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_program_options.so
+
+macx: LIBS += /usr/local/lib/libboost_program_options.so
+macx: PRE_TARGETDEPS += /usr/local/lib/libboost_program_options.so
+
+#Boost random
+unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_random.so
+unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_random.so
+
+macx: LIBS += /usr/local/lib/libboost_random.so
+macx: PRE_TARGETDEPS += /usr/local/lib/libboost_random.so
+
+#Boost test
+unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.so
+unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.so
+
+macx: LIBS += /usr/local/lib/libboost_unit_test_framework.so
+macx: PRE_TARGETDEPS += /usr/local/lib/libboost_unit_test_framework.so
+
+#LibXML2
+unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libxml2.so
+unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libxml2.so
+macx: LIBS += -framework libxml2
+
+#QCustomPlot (linking statically for windows)
+unix: LIBS += /usr/lib/libqcustomplot1.so
+unix: PRE_TARGETDEPS += /usr/lib/libqcustomplot1.so
+
+#Armadillo
+unix: LIBS += /usr/lib/libarmadillo.so
+unix: PRE_TARGETDEPS += /usr/lib/libarmadillo.so
+
+#Windows Libraries
+INCLUDEPATH += $$PWD/../../../../usr/include
+DEPENDPATH += $$PWD/../../../../usr/include
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -larmadillo
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libarmadillo.a
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -larpack_win64
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libarpack_win64.a
+
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_math_c99-mgw48-mt-1_55
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_math_c99-mgw48-mt-1_55.a
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_program_options-mgw48-mt-1_55
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_program_options-mgw48-mt-1_55.a
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_random-mgw48-mt-1_55
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_random-mgw48-mt-1_55.a
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_unit_test_framework-mgw48-mt-1_55
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_unit_test_framework-mgw48-mt-1_55.a
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -lgfortran
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libgfortran.a
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -lmlpack
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libmlpack.a
+
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -lopenblas
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libopenblas.a
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../usr/lib/ -lqcustomplot
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../usr/lib/ -lqcustomplotd
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libqcustomplot.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libqcustomplotd.a
+
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -lxml2
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libxml2.a

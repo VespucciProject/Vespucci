@@ -24,9 +24,10 @@
 #include <iostream>
 #include <QVector>
 #include <vector>
-#include "qcustomplot.h"
+#include <qcustomplot.h>
 #include "univariatemap.h"
 #include "principalcomponentsdata.h"
+
 
 using namespace std;
 using namespace arma;

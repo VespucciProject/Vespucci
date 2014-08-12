@@ -82,6 +82,7 @@ MapData::MapData(QString x_axis_description,
 
     spectrum_qcp_ = spectrum_display_->findChild<QCustomPlot *>("spectrum");
     //create the objects the pointers point to
+    initial_map_size_ = map_display_->size();
 
 }
 
