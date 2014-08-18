@@ -45,11 +45,12 @@ using namespace arma;
 namespace arma_ext
 {
 mat spdiags(mat B, QVector<int> d, int m, int n);
-mat svds(mat X, int k, std::string form);
-mat svds(mat X, int k);
-mat svds(mat X, std::string form);
-mat svds(mat X);
+bool svds(mat X, int k, mat &U, vec &s, mat &V);
 mat orth(mat X);
+bool plsregress(mat x, mat y, int components,
+                mat &x_loadings, mat &y_loadings,
+                mat &x_scores, mat &y_scores,
+                mat &coefficients, mat &fitted_data);
 }
 
 #endif // ARMA_EXT_H

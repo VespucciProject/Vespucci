@@ -27,6 +27,7 @@ PrincipalComponentsDialog::PrincipalComponentsDialog(QWidget *parent, VespucciWo
     workspace = ws;
     component_selector_ = this->findChild<QSpinBox *>("componentSpinBox");
     color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
+    recalculate_box_ = this->findChild<QCheckBox *>("recalculateCheckBox");
     name_box_ = this->findChild<QLineEdit*>("nameLineEdit");
     data_ = workspace->DatasetAt(row);
     data_index_ = row;
@@ -42,6 +43,7 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
     int component = component_selector_->value();
     bool negative_scores = true;
     QString name = name_box_->text();
+    bool recalculate = recalculate_box_->isChecked();
     int gradient_index = color_selector_->currentIndex();
-    data_->PrincipalComponents(component, negative_scores, name, gradient_index);
+    data_->PrincipalComponents(component, negative_scores, name, gradient_index, recalculate);
 }

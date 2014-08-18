@@ -45,6 +45,7 @@ private:
     QComboBox *color_selector_;
     QCheckBox *negative_score_box_;
     QLineEdit *name_box_;
+    QCheckBox *recalculate_box_;
 
     //index of the SpecMap object in the various lists
     int data_index_;

@@ -40,11 +40,14 @@ unix: QMAKE_CXXFLAGS += -isystem "/usr/include" \
                         -isystem "/usr/include/boost" \
                         -isystem "/usr/include/mlpack"
 
-win32-g++: QMAKE_CXXFLAGS += -isystem "C:/Libraries/OpenBLAS/include" \
-                         -isystem "C:/Libraries/armadillo/include" \
-                         -isystem "C:/Libraries/mlpack/include" \
-                         -isystem "C:/Boost/include/" \
-                         -isystem "C:/QtSDK/include/"
+win32-g++: QMAKE_CXXFLAGS += -isystem "C:/usr/include" \
+                         -isystem "C:/usr/include/boost" \
+                         -isystem "C:/usr/include/armadillo_bits" \
+                         -isystem "C:/usr/include/mlpack"
+
+
+
+CONFIG(release, debug|release): QMAKE_CXXFLAGS += -O3
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -67,7 +70,8 @@ SOURCES += main.cpp\
     dataviewer.cpp \
     cropdialog.cpp \
     arma_ext.cpp \
-    vespuccitablemodel.cpp
+    vespuccitablemodel.cpp \
+    plsdata.cpp
 
 HEADERS  += mainwindow.h \
     specmap.h \
@@ -89,7 +93,8 @@ HEADERS  += mainwindow.h \
     dataviewer.h \
     baselinedialog.h \
     arma_ext.h \
-    vespuccitablemodel.h
+    vespuccitablemodel.h \
+    plsdata.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \

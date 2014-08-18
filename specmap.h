@@ -50,6 +50,7 @@ public:
 
     // Normalization functions
 
+    mat ZScoreNormCopy();
     void MinMaxNormalize();
     void ZScoreNormalize();
     void UnitAreaNormalize();
@@ -109,12 +110,13 @@ public:
     void PartialLeastSquares(int components,
                              bool include_negative_scores,
                              QString name,
-                             int gradient_index);
+                             int gradient_index, bool recalculate);
 
     void PrincipalComponents(int component,
                             bool include_negative_scores,
                             QString name,
-                            int gradient_index);
+                            int gradient_index,
+                             bool recalculate);
 
     void VertexComponents(int endmembers,
                          bool include_negative_scores,

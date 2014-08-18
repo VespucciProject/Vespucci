@@ -24,6 +24,8 @@
 #include "arma_ext.h"
 #include "mainwindow.h"
 
+
+
 using namespace arma;
 using namespace std;
 
@@ -249,6 +251,22 @@ void SpecMap::UnitAreaNormalize()
     }
 }
 
+mat SpecMap::ZScoreNormCopy()
+{
+    int num_rows = spectra_.n_rows;
+    int num_cols = spectra_.n_cols;
+    mat normalized_copy(num_rows, num_cols);
+    for (int j = 0; j < num_cols; ++j){
+        double mean = arma::mean(spectra_.col(j));
+        double standard_deviation = arma::stddev(spectra_.col(j));
+        for (int i = 0; i < num_rows; ++i){
+            normalized_copy(i, j) = (spectra_(i, j) - mean) / standard_deviation;
+        }
+    }
+
+    return normalized_copy;
+}
+
 ///
 /// \brief SpecMap::ZScoreNormalize
 ///Computes a Z score for every entry based on the distribution of its column,
@@ -399,15 +417,13 @@ void SpecMap::SingularValue()
 
     wall_clock timer;
     timer.tic();
-    cout << "call to svd_econ" << endl;
-    svd_econ(U, s, V, spectra_);
-    double seconds = timer.toc();
-    cout << "took " << seconds << " seconds" <<endl;
-    //must cast submatrix view as mat for multiplication to work
-    mat U_submatrix = U.cols(span(0,5));
-    vec s_subvec = s.rows(span(0, 5));
-    mat V_subvec = V.cols(span(0, 5));
-    spectra_ = U_submatrix*diagmat(s_subvec)*V_subvec.t();
+    cout << "call to svds" << endl;
+    bool success = arma_ext::svds(spectra_, 6, U, s, V);
+    cout << "took " << timer.toc() << " s" << endl;
+    timer.tic();
+    spectra_ = -1 * U * diagmat(s) * V.t();
+    cout << "reconstruction took " << timer.toc() << " s" << endl;
+
 }
 
 
@@ -837,9 +853,8 @@ void SpecMap::BandRatio(int first_min,
 
 ///
 /// \brief SpecMap::PrincipalComponents
-/// Performs principal component analysis on the data.  Calls a modified version
-/// of armadillo's princomp function, changed to use economical singular value
-/// decomposition.
+/// Performs principal component analysis on the data.  Uses armadillo's pca routine.
+/// This function both calculates and plots principal components maps
 /// \param component the PCA component from which the image will be produced
 /// \param include_negative_scores if false, all negative scores are changed to 0
 /// \param name the name of the MapData object to be created
@@ -848,9 +863,9 @@ void SpecMap::BandRatio(int first_min,
 void SpecMap::PrincipalComponents(int component,
                                   bool include_negative_scores,
                                   QString name,
-                                  int gradient_index)
+                                  int gradient_index, bool recalculate)
 {
-    if (!principal_components_calculated_){
+    if (recalculate || !principal_components_calculated_){
 
         component -= 1;
         cout << "SpecMap::PrincipalComponents" << endl;
@@ -879,6 +894,8 @@ void SpecMap::PrincipalComponents(int component,
         }
 
         if (ret == QMessageBox::Ok){
+
+
             cout << "call to arma::princomp" << endl;
             wall_clock timer;
             timer.tic();
@@ -929,22 +946,31 @@ void SpecMap::VertexComponents(int endmembers, bool include_negative_scores, QSt
 
 ///
 /// \brief SpecMap::PartialLeastSquares
-/// Performs PLS regression on data.  Resulting map is score for one PLS Component
+/// Performs PLS regression on data.  Resulting map is score for one PLS Component,
+/// taken from one column of the projected data.
 /// PLS is performed once.  Subsequent maps use data from first call, stored
-/// as PartialLeastSquaresData object.
-/// Each component is determined separately using NIPALS PLS1 algorithm.
+/// as PartialLeastSquaresData object, unless
 /// \param components the number of components/response variables of the regression data
 /// \param include_negative_scores if false, program sets all negative values in the results to 0
 /// \param name the name of the MapData object to be created.
 /// \param gradient_index the index of the color gradient in the color gradient list
+/// \param recalculate whether or not to recalculate PLS regression.
 ///
-//void SpecMap::PartialLeastSquares(int components,
-//                                  bool include_negative_scores,
-//                                  QString name,
-//                                  int gradient_index)
-//{
-//
-//}
+void SpecMap::PartialLeastSquares(int components,
+                                  bool include_negative_scores,
+                                  QString name,
+                                  int gradient_index,
+                                  bool recalculate)
+{
+    if (recalculate || !partial_least_squares_calculated_){
+        //implementing simpls
+        //The only data we need is X loadings, X scores, and Variance data.
+        mat x_loadings;
+        mat y_loadings;
+
+
+    }
+}
 
 
 ///

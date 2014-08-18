@@ -713,7 +713,7 @@ void MapData::SetDataRange(QCPRange new_range)
 void MapData::RescaleMapWidget()
 {
     double width_ratio = map_qcp_->width()/initial_map_size_.width();
-    double height_ratio = map_qcp_.height()/initial_map_size_.height();
+    double height_ratio = map_qcp_->height()/initial_map_size_.height();
     double max_ratio = std::max(width_ratio, height_ratio);
     double new_height = max_ratio * initial_map_size_.height();
     double new_width = max_ratio * initial_map_size_.width();
@@ -731,7 +731,8 @@ void MapData::LockMapDisplaySize(bool lock)
     if (lock)
         map_display_->setFixedSize(map_display_->size());
     else
-        map_display_->setFixedSize(QWIDGETSIZE_MAX);
+
+        map_display_->setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
 }
 
 ///
