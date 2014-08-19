@@ -96,6 +96,8 @@ private slots:
 
     void on_actionSet_Global_Color_Scale_triggered();
 
+    void on_actionPartial_Least_Squares_triggered();
+
 private:
     Ui::MainWindow *ui;
     VespucciWorkspace *workspace;

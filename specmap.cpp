@@ -23,7 +23,7 @@
 #include <QtConcurrent/QtConcurrentRun>
 #include "arma_ext.h"
 #include "mainwindow.h"
-
+#include "plsdata.h"
 
 
 using namespace arma;
@@ -39,6 +39,8 @@ SpecMap::~SpecMap()
     //make sure principal components stats are deleted properly.
     if (principal_components_calculated_)
         delete principal_components_data_;
+    if (partial_least_squares_calculated_)
+        delete partial_least_squares_data_;
 
     //make sure all maps are delted properly.
     for (int i = 0; i < maps_.size(); ++i)
@@ -957,19 +959,76 @@ void SpecMap::VertexComponents(int endmembers, bool include_negative_scores, QSt
 /// \param recalculate whether or not to recalculate PLS regression.
 ///
 void SpecMap::PartialLeastSquares(int components,
-                                  bool include_negative_scores,
+                                  int image_component,
                                   QString name,
                                   int gradient_index,
                                   bool recalculate)
 {
+    QString map_type = "Partial Least Squares Map number of components = ";
+    cout << "SpecMap::PartialLeastSquares." << endl
+            <<"recalculate = " << (recalculate ? "true" : "false") << endl
+              <<"components = " << components << endl
+                << "image_component = " << image_component << endl;
+
     if (recalculate || !partial_least_squares_calculated_){
         //implementing simpls
-        //The only data we need is X loadings, X scores, and Variance data.
-        mat x_loadings;
-        mat y_loadings;
+        //The only data we need is coefficients.
+        map_type += QString::number(components);
+        mat X_loadings;
+        mat Y_loadings;
+        mat X_scores;
+        mat Y_scores;
+        mat coefficients;
+        mat percent_variance;
+        mat Y;
+        mat fitted;
+        Y.set_size(wavelength_.n_elem, components);
+        for (int i = 0; i < components; ++i){
+            Y.col(i) = trans(wavelength_);
+        }
 
+        bool success = arma_ext::plsregress(trans(spectra_), Y, components,
+                                            X_loadings, Y_loadings,
+                                            X_scores, Y_scores,
+                                            coefficients, percent_variance,
+                                            fitted);
+        cout << "end of call to plsregress" << endl;
+        if (success){
+            partial_least_squares_calculated_ = true;
+
+            partial_least_squares_data_ =
+                    new PLSData(X_loadings, Y_loadings,
+                                X_scores, Y_scores,
+                                coefficients, percent_variance);
+
+        }
 
     }
+
+    bool valid;
+    cout << "call to PLSData::Results" << endl;
+    colvec results = partial_least_squares_data_->Results(image_component, valid);
+    if (!valid){
+        QMessageBox::warning(main_window_, "Index out of Bounds",
+                             "The component number requested is greater than"
+                             "the number of components calculated. Map generated"
+                             "corresponds to the highest component number"
+                             "calculated");
+    }
+
+    if (!recalculate && partial_least_squares_calculated_)
+        map_type += QString::number(partial_least_squares_data_->NumberComponents());
+    map_type += ". Component number " + QString::number(image_component);
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, results,
+                                            this, directory_,
+                                            this->GetGradient(gradient_index),
+                                            maps_.size(),
+                                            main_window_));
+    new_map.data()->set_name(name, map_type);
+    this->AddMap(new_map);
+    maps_.last().data()->ShowMapWindow();
 }
 
 

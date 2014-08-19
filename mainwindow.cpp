@@ -29,6 +29,7 @@
 #include "cropdialog.h"
 #include "baselinedialog.h"
 #include "dataviewer.h"
+#include "plsdialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -141,6 +142,17 @@ void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
     PrincipalComponentsDialog *principal_components_dialog =
             new PrincipalComponentsDialog(this, workspace, row);
     principal_components_dialog->show();
+}
+
+/// Triggers partial least squares dialog
+/// \brief MainWindow::on_actionPartial_Least_Squares_triggered
+///
+void MainWindow::on_actionPartial_Least_Squares_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    PLSDialog *pls_dialog =
+            new PLSDialog(this, workspace, row);
+    pls_dialog->show();
 }
 
 ///
@@ -576,3 +588,5 @@ void MainWindow::SetGlobalDataRange(QCPRange* new_data_range)
     workspace->SetGlobalDataRange(new_data_range);
     emit GlobalDataRangeChanged(*new_data_range);
 }
+
+

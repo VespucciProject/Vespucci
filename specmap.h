@@ -27,6 +27,8 @@
 #include <qcustomplot.h>
 #include "univariatemap.h"
 #include "principalcomponentsdata.h"
+#include "plsdata.h"
+
 
 
 using namespace std;
@@ -107,8 +109,7 @@ public:
                    QString value_method, QString integration_method,
                    int gradient_index);
 
-    void PartialLeastSquares(int components,
-                             bool include_negative_scores,
+    void PartialLeastSquares(int components, int image_component,
                              QString name,
                              int gradient_index, bool recalculate);
 
@@ -187,6 +188,7 @@ private:
     QList<QSharedPointer<MapData> > maps_;
 
     PrincipalComponentsData *principal_components_data_;
+    PLSData *partial_least_squares_data_;
 
     QStringList map_names_;
     int map_loading_count_;

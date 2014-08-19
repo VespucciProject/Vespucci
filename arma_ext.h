@@ -47,10 +47,10 @@ namespace arma_ext
 mat spdiags(mat B, QVector<int> d, int m, int n);
 bool svds(mat X, int k, mat &U, vec &s, mat &V);
 mat orth(mat X);
-bool plsregress(mat x, mat y, int components,
-                mat &x_loadings, mat &y_loadings,
-                mat &x_scores, mat &y_scores,
-                mat &coefficients, mat &fitted_data);
+bool plsregress(mat X, mat Y, int components,
+                mat &X_loadings, mat &Y_loadings,
+                mat &X_scores, mat &Y_scores,
+                mat &coefficients, mat &percent_variance, mat &fitted);
 }
 
 #endif // ARMA_EXT_H
