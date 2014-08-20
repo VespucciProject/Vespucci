@@ -72,7 +72,8 @@ SOURCES += main.cpp\
     arma_ext.cpp \
     vespuccitablemodel.cpp \
     plsdata.cpp \
-    plsdialog.cpp
+    plsdialog.cpp \
+    kmeansdialog.cpp
 
 HEADERS  += mainwindow.h \
     specmap.h \
@@ -96,7 +97,8 @@ HEADERS  += mainwindow.h \
     arma_ext.h \
     vespuccitablemodel.h \
     plsdata.h \
-    plsdialog.h
+    plsdialog.h \
+    kmeansdialog.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
@@ -112,7 +114,8 @@ FORMS    += mainwindow.ui \
     baselinedialog.ui \
     dataviewer.ui \
     cropdialog.ui \
-    plsdialog.ui
+    plsdialog.ui \
+    kmeansdialog.ui
 
 RESOURCES += \
     resources.qrc

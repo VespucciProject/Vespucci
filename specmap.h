@@ -123,7 +123,7 @@ public:
                          bool include_negative_scores,
                          QString name);
 
-    void KMeans(int clusters,
+    void KMeans(size_t clusters,
                QString name);
 
     void Agglomerative(int clusters,

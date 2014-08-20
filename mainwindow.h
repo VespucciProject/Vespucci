@@ -98,6 +98,8 @@ private slots:
 
     void on_actionPartial_Least_Squares_triggered();
 
+    void on_actionK_Means_Clustering_triggered();
+
 private:
     Ui::MainWindow *ui;
     VespucciWorkspace *workspace;

@@ -30,6 +30,7 @@
 #include "baselinedialog.h"
 #include "dataviewer.h"
 #include "plsdialog.h"
+#include "kmeansdialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -144,8 +145,9 @@ void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
     principal_components_dialog->show();
 }
 
-/// Triggers partial least squares dialog
+///
 /// \brief MainWindow::on_actionPartial_Least_Squares_triggered
+/// Triggers partial least squares dialog
 ///
 void MainWindow::on_actionPartial_Least_Squares_triggered()
 {
@@ -154,6 +156,20 @@ void MainWindow::on_actionPartial_Least_Squares_triggered()
             new PLSDialog(this, workspace, row);
     pls_dialog->show();
 }
+
+///
+/// \brief MainWindow::on_actionK_Means_Clustering_triggered
+/// Triggers K-Means dialog
+///
+void MainWindow::on_actionK_Means_Clustering_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    KMeansDialog *k_means_dialog =
+            new KMeansDialog(this, workspace, row);
+    k_means_dialog->show();
+
+}
+
 
 ///
 /// \brief MainWindow::on_actionNormalize_Standardize_triggered
@@ -590,5 +606,6 @@ void MainWindow::SetGlobalDataRange(QCPRange* new_data_range)
     workspace->SetGlobalDataRange(new_data_range);
     emit GlobalDataRangeChanged(*new_data_range);
 }
+
 
 

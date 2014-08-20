@@ -129,7 +129,7 @@
      <addaction name="actionPrincipal_Components_Analysis"/>
      <addaction name="actionPartial_Least_Squares"/>
      <addaction name="actionVertex_Components"/>
-     <addaction name="actionK_means_Hierarchical_Clustering"/>
+     <addaction name="actionK_Means_Clustering"/>
      <addaction name="actionAgglomerative_Hierarchical_Clustering"/>
     </widget>
     <addaction name="actionNew_Univariate_Map"/>
@@ -257,10 +257,10 @@
   </action>
   <action name="actionK_means_Hierarchical_Clustering">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string>K-means Hierarchical Clustering</string>
+    <string>K-means Clustering</string>
    </property>
   </action>
   <action name="actionAgglomerative_Hierarchical_Clustering">
@@ -350,6 +350,11 @@
   <action name="actionSet_Global_Color_Scale">
    <property name="text">
     <string>Set Global Color Scale...</string>
+   </property>
+  </action>
+  <action name="actionK_Means_Clustering">
+   <property name="text">
+    <string>K-Means Clustering</string>
    </property>
   </action>
  </widget>

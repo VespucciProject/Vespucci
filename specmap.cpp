@@ -23,6 +23,7 @@
 #include <QtConcurrent/QtConcurrentRun>
 #include "mainwindow.h"
 #include "plsdata.h"
+#include <mlpack/methods/kmeans/kmeans.hpp>
 
 
 using namespace arma;
@@ -970,8 +971,6 @@ void SpecMap::PartialLeastSquares(int components,
                 << "image_component = " << image_component << endl;
 
     if (recalculate || !partial_least_squares_calculated_){
-        //implementing simpls
-        //The only data we need is coefficients.
         map_type += QString::number(components);
         mat X_loadings;
         mat Y_loadings;
@@ -1024,6 +1023,35 @@ void SpecMap::PartialLeastSquares(int components,
                                             x_, y_, results,
                                             this, directory_,
                                             this->GetGradient(gradient_index),
+                                            maps_.size(),
+                                            main_window_));
+    new_map.data()->set_name(name, map_type);
+    this->AddMap(new_map);
+    maps_.last().data()->ShowMapWindow();
+}
+
+///
+/// \brief SpecMap::KMeans
+/// Implements K-means clustering using MLPACK
+/// \param clusters Number of clusters to find
+/// \param name Name of map in workspace.
+///
+void SpecMap::KMeans(size_t clusters, QString name)
+{
+    QString map_type = "K-means clustering map. Number of clusters = ";
+    map_type += QString::number(clusters);
+    Col<size_t> assignments;
+    mlpack::kmeans::KMeans<> k;
+    k.Cluster(spectra_, clusters, assignments);
+
+    //Currently, MapData constructor only takes type Col<double>. This may change
+    cout << "conversion" << endl;
+    colvec results = conv_to<colvec>::from(assignments);
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, results,
+                                            this, directory_,
+                                            QCPColorGradient::cbCluster,
                                             maps_.size(),
                                             main_window_));
     new_map.data()->set_name(name, map_type);
