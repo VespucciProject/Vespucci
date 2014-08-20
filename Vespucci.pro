@@ -195,8 +195,6 @@ win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libarpack_win64.a
 win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_math_c99-mgw48-mt-1_55
 win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_math_c99-mgw48-mt-1_55.a
 
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_program_options-mgw48-mt-1_55
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_program_options-mgw48-mt-1_55.a
 
 win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_random-mgw48-mt-1_55
 win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_random-mgw48-mt-1_55.a
@@ -222,3 +220,14 @@ else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../..
 
 win32: LIBS += -L$$PWD/../../../../usr/lib/ -lxml2
 win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libxml2.a
+
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -liconv
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libiconv.a
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -lz
+else:win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libz.a
+
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_program_options-mgw48-mt-1_55
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_program_options-mgw48-mt-1_55.a

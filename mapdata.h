@@ -21,7 +21,7 @@
 #define MAPDATA_H
 
 #include <QString>
-#include <armadillo>
+#include "arma_ext.h"
 #include <qcustomplot.h>
 #include "mapviewer.h"
 #include "spectrumviewer.h"

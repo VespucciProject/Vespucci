@@ -573,8 +573,10 @@ void MainWindow::RecalculateGlobalDataRange(QCPRange* new_data_range)
         workspace->SetGlobalDataRange(new_data_range);
     else
         changed = workspace->RecalculateGlobalDataRange(new_data_range);
-    if (changed)
+
+    if (changed){
         emit GlobalDataRangeChanged(*new_data_range);
+    }
 }
 
 void MainWindow::RefreshGlobalColorGradient(QCPColorGradient new_gradient)

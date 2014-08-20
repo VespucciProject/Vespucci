@@ -21,7 +21,6 @@
 #include <cmath>
 #include <fstream>
 #include <QtConcurrent/QtConcurrentRun>
-#include "arma_ext.h"
 #include "mainwindow.h"
 #include "plsdata.h"
 

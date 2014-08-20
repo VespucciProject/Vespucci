@@ -19,7 +19,7 @@
 
 #ifndef SPECMAP_H
 #define SPECMAP_H
-#include <armadillo>
+#include "arma_ext.h"
 #include <QTextStream>
 #include <iostream>
 #include <QVector>

@@ -1,6 +1,6 @@
 #ifndef PLSDATA_H
 #define PLSDATA_H
-#include <armadillo>
+#include "arma_ext.h"
 using namespace arma;
 class PLSData
 {

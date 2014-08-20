@@ -38,7 +38,7 @@
 #include <QApplication>
 #include <QVector>
 #include <QMessageBox>
-#include <armadillo>
+#include <mlpack/core.hpp>
 
 using namespace arma;
 
