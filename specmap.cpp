@@ -1016,9 +1016,10 @@ void SpecMap::PartialLeastSquares(int components,
                              "calculated");
     }
 
-    if (!recalculate && partial_least_squares_calculated_)
-        map_type += QString::number(partial_least_squares_data_->NumberComponents());
+
+    map_type += QString::number(partial_least_squares_data_->NumberComponents());
     map_type += ". Component number " + QString::number(image_component);
+
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
                                             x_, y_, results,

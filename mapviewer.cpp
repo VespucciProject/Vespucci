@@ -269,3 +269,18 @@ void MapViewer::GlobalGradientChanged(QCPColorGradient new_gradient)
 {
     parent_->setGradient(new_gradient);
 }
+
+void MapViewer::on_actionLock_Size_toggled(bool arg1)
+{
+    parent_->LockMapDisplaySize(arg1);
+}
+
+void MapViewer::on_actionReset_Size_triggered()
+{
+    parent_->ResetMapWidgetSize();
+}
+
+void MapViewer::on_actionReproportion_triggered()
+{
+    parent_->RescaleMapWidget();
+}

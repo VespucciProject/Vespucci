@@ -39,6 +39,10 @@
     <property name="title">
      <string>Display</string>
     </property>
+    <addaction name="actionReproportion"/>
+    <addaction name="actionReset_Size"/>
+    <addaction name="actionLock_Size"/>
+    <addaction name="separator"/>
     <addaction name="actionInterpolate"/>
     <addaction name="actionShow_Axes"/>
     <addaction name="actionShow_Color_Scale"/>
@@ -118,6 +122,24 @@
    </property>
    <property name="text">
     <string>Common Color Gradient</string>
+   </property>
+  </action>
+  <action name="actionLock_Size">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Lock Size</string>
+   </property>
+  </action>
+  <action name="actionReproportion">
+   <property name="text">
+    <string>Reproportion</string>
+   </property>
+  </action>
+  <action name="actionReset_Size">
+   <property name="text">
+    <string>Reset Size</string>
    </property>
   </action>
  </widget>

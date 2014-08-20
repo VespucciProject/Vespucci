@@ -68,6 +68,13 @@ private slots:
 
     void on_actionCommon_Color_Gradient_toggled(bool arg1);
 
+
+    void on_actionLock_Size_toggled(bool arg1);
+
+    void on_actionReset_Size_triggered();
+
+    void on_actionReproportion_triggered();
+
 private:
     Ui::MapViewer *ui;
     QString name_;
