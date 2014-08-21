@@ -565,7 +565,6 @@ void MainWindow::on_actionSet_Global_Color_Scale_triggered()
         case 36: gradient =  QCPColorGradient::cbRdYlGn; break;
         case 37: gradient =  QCPColorGradient::cbSpectral; break;
         case 38: gradient =  QCPColorGradient::vSpectral; break;
-        case 39: gradient =  QCPColorGradient::cbCluster; break;
         default: gradient =  QCPColorGradient::gpCold;
         }
     workspace->RefreshGlobalColorGradient(gradient);

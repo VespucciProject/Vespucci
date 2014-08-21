@@ -125,7 +125,6 @@ QCPColorGradient MapViewer::GetGradient(int gradient_number)
     case 36: return QCPColorGradient::cbRdYlGn;
     case 37: return QCPColorGradient::cbSpectral;
     case 38: return QCPColorGradient::vSpectral;
-    case 39: return QCPColorGradient::cbCluster;
     default: return QCPColorGradient::gpCold;
     }
 }
