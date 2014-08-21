@@ -51,6 +51,7 @@ public:
             QCPColorGradient gradient,
             int source_index,
             MainWindow* main_window);
+
     ~MapData();
     QString name();
     QString type();

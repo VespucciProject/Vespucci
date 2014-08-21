@@ -98,6 +98,7 @@ MapData::MapData(QString x_axis_description,
 
 }
 
+
 ///
 /// \brief MapData::~MapData
 ///Deletes everything the new keyword is used on in this object.

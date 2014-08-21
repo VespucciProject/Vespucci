@@ -1041,12 +1041,20 @@ void SpecMap::KMeans(size_t clusters, QString name)
     QString map_type = "K-means clustering map. Number of clusters = ";
     map_type += QString::number(clusters);
     Col<size_t> assignments;
+    cout << "Kmeans object initialization" << endl;
     mlpack::kmeans::KMeans<> k;
-    k.Cluster(spectra_, clusters, assignments);
+    cout << "Kmeans data extraction" << endl;
+    mat data = trans(spectra_);
+    k.Cluster(data, clusters, assignments);
+    cout << "rows in assignments" << assignments.n_rows << endl;
+    colvec results;
+    results.set_size(assignments.n_elem);
+    //conversion kludge
+    //results = assignments; //hoping implicit conversion works
+    //loop for copying values
+    for (int i = 0; i < assignments.n_rows; ++i)
+        results(i) = assignments(i);
 
-    //Currently, MapData constructor only takes type Col<double>. This may change
-    cout << "conversion" << endl;
-    colvec results = conv_to<colvec>::from(assignments);
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
                                             x_, y_, results,
