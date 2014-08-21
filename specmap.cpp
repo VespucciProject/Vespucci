@@ -1106,11 +1106,12 @@ void SpecMap::KMeans(size_t clusters, QString name)
     for (int i = 0; i < assignments.n_rows; ++i)
         results(i) = assignments(i);
 
+    QCPColorGradient gradient = GetClusterGradient(clusters);
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
                                             x_, y_, results,
                                             this, directory_,
-                                            QCPColorGradient::cbCluster,
+                                            gradient,
                                             maps_.size(),
                                             main_window_));
     new_map.data()->set_name(name, map_type);
