@@ -197,6 +197,7 @@ SpecMap::SpecMap(QTextStream &inputstream, MainWindow *main_window, QString *dir
 
 ///
 /// \brief SpecMap::CropSpectra
+/// Crops spectra_ based on
 /// \param x_min value of x below which spectra are deleted
 /// \param x_max value of x above which spectra are deleted
 /// \param y_min value of y below which spectra are deleted
@@ -237,6 +238,7 @@ void SpecMap::MinMaxNormalize()
     double maximum = spectra_.max();
     spectra_ = spectra_/maximum;
 }
+
 ///
 /// \brief SpecMap::UnitAreaNormalize
 ///normalizes the spectral data so that the area under each point spectrum is 1
@@ -253,6 +255,11 @@ void SpecMap::UnitAreaNormalize()
     }
 }
 
+///
+/// \brief SpecMap::ZScoreNormCopy
+/// For when you want to Z-score normalize without changing spectra_
+/// \return A normalized copy of the matrix.
+///
 mat SpecMap::ZScoreNormCopy()
 {
     int num_rows = spectra_.n_rows;
@@ -271,9 +278,11 @@ mat SpecMap::ZScoreNormCopy()
 
 ///
 /// \brief SpecMap::ZScoreNormalize
-///Computes a Z score for every entry based on the distribution of its column,
+/// Computes a Z score for every entry based on the distribution of its column,
 /// assuming normality of "population".  Because some values will be negative,
-/// this must be accounted for in Univariate Mapping Functions.
+/// this must be accounted for in Univariate Mapping Functions. Keep in mind that
+/// data is pre-centered by row for all methods (PCA, PLS, etc) that require
+/// centered data, but not necessarily by column, as it is here.
 ///
 void SpecMap::ZScoreNormalize()
 {
@@ -289,6 +298,14 @@ void SpecMap::ZScoreNormalize()
     z_scores_calculated_ = true;
 }
 
+///
+/// \brief SpecMap::SubtractBackground
+/// Subtracts a known background spectrum. This can be extracted from a control
+/// map using this software (using * component analysis endmember extraction or
+/// average spectrum).
+/// \param background A matrix consisting of a single spectrum representing the
+/// background.
+///
 void SpecMap::SubtractBackground(mat background)
 {
     if (background.n_cols != spectra_.n_cols){
@@ -304,6 +321,16 @@ void SpecMap::SubtractBackground(mat background)
     }
 }
 
+///
+/// \brief SpecMap::Baseline
+/// Baseline-adjusts the data. This function uses a median filter with a large
+/// window to determine the baseline on the assumption that the median value
+/// is more likely to be basline than spectrum. This will complicate things if
+/// there are many peaks. Additionally, this significantly narrows the shape of
+/// peaks. Other baseline methods may be implemented later.
+/// \param method
+/// \param window_size
+///
 void SpecMap::Baseline(QString method, int window_size)
 {
     if (method == "Median Filter"){
@@ -334,12 +361,12 @@ void SpecMap::Baseline(QString method, int window_size)
 }
 
 //Filtering functions
-
 ///
 /// \brief SpecMap::MedianFilter
+/// performs median filtering on the spectral data.  Entries near the boundaries
+/// of spectra are not processed. See also SpecMap::LinearMovingAverage
 /// \param window_size - an odd number representing the width of the window.
-///performs median filtering on the spectral data.  Entries near the boundaries
-/// are not processed.
+
 void SpecMap::MedianFilter(int window_size)
 {
     int starting_index = (window_size - 1) / 2;
@@ -369,9 +396,10 @@ void SpecMap::MedianFilter(int window_size)
 
 ///
 /// \brief SpecMap::LinearMovingAverage
+/// Performs moving average filtering on the spectral data.  Entries near the
+/// boundaries of spectra are not processed.  See also SpecMap::MedianFilter.
 /// \param window_size - an odd number representing the width of the window.
-/// performs moving average filtering on the spectral data.  Entries near the
-/// boundaries are not processed.  See also SpecMap::MedianFilter.
+
 void SpecMap::LinearMovingAverage(int window_size)
 {
     int starting_index = (window_size - 1) / 2;
@@ -401,18 +429,14 @@ void SpecMap::LinearMovingAverage(int window_size)
 
 ///
 /// \brief SpecMap::SingularValue
-/// Denoises the spectra matrix using a singular value decomposition.  The first
-/// 5 singular values are used.
-void SpecMap::SingularValue()
+/// Denoises the spectra matrix using a truncated singular value decomposition.
+/// The first singular_values singular values are used to "reconstruct" the
+/// spectra matrix. The function used to find the truncated SVD is
+/// arma_ext::svds.
+/// \param singular_values Number of singular values to use.
+///
+void SpecMap::SingularValue(int singular_values)
 {
-    bool ok = QMessageBox::question(0,
-                                    "Singular Value Decomposition",
-                                    "The singular value decomposition takes"
-                                    " several seconds to complete.  The program"
-                                    " may appear to freeze during this time."
-                                    " Are you sure you want to continue?");
-    if (!ok)
-        return;
     mat U;
     vec s;
     mat V;
@@ -420,7 +444,7 @@ void SpecMap::SingularValue()
     wall_clock timer;
     timer.tic();
     cout << "call to svds" << endl;
-    bool success = arma_ext::svds(spectra_, 6, U, s, V);
+    arma_ext::svds(spectra_, singular_values, U, s, V);
     cout << "took " << timer.toc() << " s" << endl;
     timer.tic();
     spectra_ = -1 * U * diagmat(s) * V.t();
@@ -428,7 +452,15 @@ void SpecMap::SingularValue()
 
 }
 
-
+///
+/// \brief SpecMap::Derivatize
+/// Performs derivative filtering on the data. This really looks more like
+/// Savitzky-Golay filtering. This is based on a similarly-named function in
+/// the in-house MATLAB code previously used by my group.
+/// \param derivative_order The order of the derivative.
+/// \param polynomial_order The order of the polynomial
+/// \param window_size The size of the filter window.
+///
 void SpecMap::Derivatize(int derivative_order,
                          int polynomial_order,
                          int window_size)
@@ -547,7 +579,24 @@ void SpecMap::SavitzkyGolay(int polynomial_order, int window_size)
 
 ///
 /// \brief SpecMap::Univariate
-/// Creates a univariate image
+/// Creates a univariate image. Several peak-determination methods are availible.
+/// All methods except for "Intensity" estimate a local baseline. This is done
+/// by drawing a straight line from the left to right endpoint. This can cause
+/// problems when the endpoints are near other local maxima.
+///
+/// The "Bandwidth" method calculates the full-width at half maximum of the peak
+/// near the range specified.
+///
+/// The "Intensity" method calculates the local maximum of the spectrum within
+/// the range specified.
+///
+/// The "Area" method takes a right Riemann sum of the spectrum
+///
+/// The "Derivative" method is misleadingly named (this is based on in-house
+/// MATLAB code previously used by my group). The derivative method is actually
+/// and area method which finds the edges of the peak by taking a second derivative.
+/// It then determines the peak in an identical fashion to the "Area" method///
+///
 /// \param min left bound of spectral region of interest
 /// \param max right bound of spectral region of interest
 /// \param name name of MapData object to be created
@@ -742,7 +791,9 @@ void SpecMap::Univariate(int min,
 
 ///
 /// \brief SpecMap::BandRatio
-/// Creates a band ratio univariate map.
+/// Creates a band ratio univariate map. Band ratio maps represent the ratio of
+/// two peaks. The determination methods here are identical to those in
+/// SpecMap::Univariate.
 /// \param first_min index of left bound of first region of interest
 /// \param first_max index of right bound of first region of interest
 /// \param second_min index of left bound of second region of interest
@@ -856,7 +907,7 @@ void SpecMap::BandRatio(int first_min,
 ///
 /// \brief SpecMap::PrincipalComponents
 /// Performs principal component analysis on the data.  Uses armadillo's pca routine.
-/// This function both calculates and plots principal components maps
+/// This function both calculates and plots principal components maps.
 /// \param component the PCA component from which the image will be produced
 /// \param include_negative_scores if false, all negative scores are changed to 0
 /// \param name the name of the MapData object to be created
@@ -949,9 +1000,9 @@ void SpecMap::VertexComponents(int endmembers, bool include_negative_scores, QSt
 ///
 /// \brief SpecMap::PartialLeastSquares
 /// Performs PLS regression on data.  Resulting map is score for one PLS Component,
-/// taken from one column of the projected data.
+/// taken from one column of the X loadings.
 /// PLS is performed once.  Subsequent maps use data from first call, stored
-/// as PartialLeastSquaresData object, unless
+/// as PartialLeastSquaresData object, unless user requests recalculation.
 /// \param components the number of components/response variables of the regression data
 /// \param include_negative_scores if false, program sets all negative values in the results to 0
 /// \param name the name of the MapData object to be created.
@@ -1451,16 +1502,52 @@ QCPColorGradient SpecMap::GetGradient(int gradient_number)
     case 36: return QCPColorGradient::cbRdYlGn;
     case 37: return QCPColorGradient::cbSpectral;
     case 38: return QCPColorGradient::vSpectral;
-    case 39: return QCPColorGradient::cbCluster;
     default: return QCPColorGradient::gpCold;
     }
 }
 
+///
+/// \brief SpecMap::GetClusterGradient
+/// Cluster gradients are slightly different from the continuous gradients. This
+/// selects the right gradient based on the number of clusters.
+/// \param clusters Number of clusters
+/// \return Proper color gradient for number of clusters
+///
+QCPColorGradient SpecMap::GetClusterGradient(int clusters)
+{
+    switch (clusters)
+    {
+    case 2: return QCPColorGradient::cbCluster2;
+    case 3: return QCPColorGradient::cbCluster3;
+    case 4: return QCPColorGradient::cbCluster4;
+    case 5: return QCPColorGradient::cbCluster5;
+    case 6: return QCPColorGradient::cbCluster6;
+    case 7: return QCPColorGradient::cbCluster7;
+    case 8: return QCPColorGradient::cbCluster8;
+    case 9: return QCPColorGradient::cbCluster9;
+    default: return QCPColorGradient::cbCluster9;
+    }
+}
+
+///
+/// \brief SpecMap::ConstructorCancelled
+/// Specifies whether or not the constructor has been canceled. The constructor
+/// asks this and cleans everything up in case it is canceled.
+/// \return
+///
 bool SpecMap::ConstructorCancelled()
 {
     return constructor_canceled_;
 }
 
+///
+/// \brief SpecMap::AverageSpectrum
+/// Finds the average of the spectrum. This can be saved by the user.
+/// Probably not all that useful, except for determining a spectrum to use as a
+/// background spectrum for other maps.
+/// \param stats Whether or not to include standard deviations on the second row.
+/// \return The average spectrum
+///
 mat SpecMap::AverageSpectrum(bool stats)
 {
     mat spectrum;
@@ -1485,62 +1572,119 @@ mat SpecMap::AverageSpectrum(bool stats)
     return spectrum;
 }
 
-bool SpecMap::principal_components_calculated()
-{
-    return principal_components_calculated_;
-}
 
+
+///
+/// \brief SpecMap::x_axis_description
+/// The x_axis_description is printed on the spectrum viewer.
+/// \return Spectral abcissa description.
+///
 const QString SpecMap::x_axis_description()
 {
     return x_axis_description_;
 }
 
+///
+/// \brief SpecMap::SetXDescription
+/// Sets the value of the spectral abcissa description.
+/// \param description
+///
 void SpecMap::SetXDescription(QString description)
 {
     x_axis_description_ = description;
 }
 
+///
+/// \brief SpecMap::SetYDescription
+/// \param description
+/// Sets the value of the spectral ordinate axis description
 void SpecMap::SetYDescription(QString description)
 {
     y_axis_description_ = description;
 }
 
+///
+/// \brief SpecMap::y_axis_description
+/// \return The spectral ordinate axis description.
+///
 const QString SpecMap::y_axis_description()
 {
     return y_axis_description_;
 }
 
+///
+/// \brief SpecMap::principal_components_calculated
+/// The PCA dialog requests this to make sure that the same PCA is not calculated
+/// twice.
+/// \return Whether or not PCA has been calculated.
+///
+bool SpecMap::principal_components_calculated()
+{
+    return principal_components_calculated_;
+}
 
+///
+/// \brief SpecMap::vertex_components_calculated
+/// The VCA dialog requests this to make sure that the same VCA is not calculated
+/// twice.
+/// \return Whether or not VCA has been computed.
+///
 bool SpecMap::vertex_components_calculated()
 {
     return vertex_components_calculated_;
 }
 
+///
+/// \brief SpecMap::partial_least_squares_calculated
+/// The PLS dialog requests this to make sure that the same PLS is not calculated
+/// twice.
+/// \return Whether or not PLS has been computed.
+///
 bool SpecMap::partial_least_squares_calculated()
 {
     return partial_least_squares_calculated_;
 }
 
+///
+/// \brief SpecMap::principal_components_data
+/// \return Pointer to the class that handles the output of arma::princomp
+///
 PrincipalComponentsData* SpecMap::principal_components_data()
 {
     return principal_components_data_;
 }
 
+///
+/// \brief SpecMap::spectra_ptr
+/// \return
+///
 mat* SpecMap::spectra_ptr()
 {
     return &spectra_;
 }
 
+///
+/// \brief SpecMap::wavelength_ptr
+/// \return
+///
 mat* SpecMap::wavelength_ptr()
 {
     return &wavelength_;
 }
 
+///
+/// \brief SpecMap::x_ptr
+/// \return
+///
 mat* SpecMap::x_ptr()
 {
     return &x_;
 }
 
+///
+/// \brief SpecMap::y_ptr
+/// \return
+///
 mat* SpecMap::y_ptr()
 {
     return &y_;

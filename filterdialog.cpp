@@ -72,7 +72,7 @@ void FilterDialog::on_buttonBox_accepted()
         dataset_->SavitzkyGolay(polynomial_box_->value(), window_box_->value());
         break;
     case 4:
-        dataset_->SingularValue();
+        dataset_->SingularValue(5);
     default:
         return;
     }
