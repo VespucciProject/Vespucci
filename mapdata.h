@@ -50,6 +50,7 @@ public:
             QString *directory,
             QCPColorGradient gradient,
             int source_index,
+            int tick_count,
             MainWindow* main_window);
 
     ~MapData();
@@ -91,7 +92,7 @@ public:
     void setGradient(const QCPColorGradient &gradient);
     //Displays the map window
     void ShowMapWindow();
-    void CreateImage(QCPColorGradient color_scheme, bool interpolation);
+    void CreateImage(QCPColorGradient color_scheme, bool interpolation, int tick_count);
     void SetMapData(QCPColorMapData *map_data);
 
     void ShowSpectrumViewer(bool enabled);

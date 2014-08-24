@@ -772,6 +772,7 @@ void SpecMap::Univariate(int min,
                                             this, directory_,
                                             this->GetGradient(gradient_index),
                                             maps_.size(),
+                                            6,
                                             main_window_));
 
 
@@ -891,6 +892,7 @@ void SpecMap::BandRatio(int first_min,
                                             this, directory_,
                                             this->GetGradient(gradient_index),
                                             maps_.size(),
+                                            6,
                                             main_window_));
 
 
@@ -986,6 +988,7 @@ void SpecMap::PrincipalComponents(int component,
                                             this, directory_,
                                             this->GetGradient(gradient_index),
                                             maps_.size(),
+                                            6,
                                             main_window_));
     new_map.data()->set_name(name, map_type);
     this->AddMap(new_map);
@@ -1075,6 +1078,7 @@ void SpecMap::PartialLeastSquares(int components,
                                             this, directory_,
                                             this->GetGradient(gradient_index),
                                             maps_.size(),
+                                            6,
                                             main_window_));
     new_map.data()->set_name(name, map_type);
     this->AddMap(new_map);
@@ -1101,7 +1105,7 @@ void SpecMap::KMeans(size_t clusters, QString name)
     colvec results;
     results.set_size(assignments.n_elem);
 
-    //loop for copying values, adds one so clusters indexed at 0.
+    //loop for copying values, adds one so clusters indexed at 1, not 0.
     for (int i = 0; i < assignments.n_rows; ++i)
         results(i) = assignments(i) + 1;
 
@@ -1112,6 +1116,7 @@ void SpecMap::KMeans(size_t clusters, QString name)
                                             this, directory_,
                                             gradient,
                                             maps_.size(),
+                                            clusters,
                                             main_window_));
     new_map.data()->set_name(name, map_type);
     this->AddMap(new_map);

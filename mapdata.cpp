@@ -30,6 +30,7 @@
 /// \param directory The current working directory on the filesystem
 /// \param gradient The initially-chosen color gradient.
 /// \param source_index The index of this object in parent.
+/// \param tick_count Number of ticks on the color scale
 /// \param main_window The main window of the app.
 ///
 MapData::MapData(QString x_axis_description,
@@ -41,6 +42,7 @@ MapData::MapData(QString x_axis_description,
                  QString *directory,
                  QCPColorGradient gradient,
                  int source_index,
+                 int tick_count,
                  MainWindow *main_window)
 {
     name_ = parent->name();
@@ -65,7 +67,7 @@ MapData::MapData(QString x_axis_description,
     }
     map_->rescaleDataRange();
     map_qcp_->rescaleAxes();
-    this->CreateImage(gradient, false);
+    this->CreateImage(gradient, false, tick_count);
     x_axis_description_ = x_axis_description;
     y_axis_description_ = y_axis_description;
     dataset_ = parent;
@@ -97,6 +99,7 @@ MapData::MapData(QString x_axis_description,
     initial_map_size_ = map_qcp_->size();
     //by default, window is not resizeable
     map_display_->setFixedSize(map_display_->size());
+
 
 }
 
@@ -192,7 +195,7 @@ void MapData::SetMapData(QCPColorMapData *map_data)
 /// \param color_scheme
 /// \param interpolation
 /// Creates the image by sending data to the QCustomPlot widgets.
-void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation)
+void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation, int tick_count)
 {
 
     map_->setGradient(color_scheme);
@@ -202,9 +205,10 @@ void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation)
     new_color_scale_ = new QCPColorScale(map_qcp_);
     new_color_scale_->setGradient(color_scheme);
     new_color_scale_->setDataRange(map_->dataRange());
+    new_color_scale_->axis()->setAutoTickCount(tick_count - 2);
     map_qcp_->plotLayout()->addElement(0, 1, new_color_scale_);
-
     color_scale_ = map_qcp_->plotLayout()->element(0, 1);
+
 
     map_->setInterpolate(interpolation);
     int key_size = map_->data()->keySize();
