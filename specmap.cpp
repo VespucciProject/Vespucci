@@ -1100,11 +1100,10 @@ void SpecMap::KMeans(size_t clusters, QString name)
     cout << "rows in assignments" << assignments.n_rows << endl;
     colvec results;
     results.set_size(assignments.n_elem);
-    //conversion kludge
-    //results = assignments; //hoping implicit conversion works
-    //loop for copying values
+
+    //loop for copying values, adds one so clusters indexed at 0.
     for (int i = 0; i < assignments.n_rows; ++i)
-        results(i) = assignments(i);
+        results(i) = assignments(i) + 1;
 
     QCPColorGradient gradient = GetClusterGradient(clusters);
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
@@ -1181,6 +1180,10 @@ vector<int> SpecMap::FindRange(double start, double end)
 ///
 QVector<double> SpecMap::PointSpectrum(int index)
 {
+    //perform bounds check.
+    if (index > spectra_.n_rows)
+        index = spectra_.n_rows - 1;
+
     std::vector<double> spectrum_stdvector =
             conv_to< std::vector<double> >::from(spectra_.row(index));
 

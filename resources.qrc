@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/icons">
         <file>vespuccilogo.svg</file>
+        <file>vespuccilogo.ico</file>
     </qresource>
 </RCC>

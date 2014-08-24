@@ -124,7 +124,7 @@ mat arma_ext::spdiags(mat B, QVector<int> d, int m, int n)
 mat arma_ext::orth(mat X)
 {
     //cout << "orth()" << endl;
-    double eps = pow(2.0, -52);
+    double eps = datum::eps;
     mat U, V;
     vec s;
     svd(U, s, V, X);
@@ -182,7 +182,7 @@ bool arma_ext::svds(mat X, int k, mat &U, vec &s, mat &V)
 
     double root_2 = sqrt(2.0);
     double tolerance = 1e-10 / root_2; //tolerance for convergence (ARPACK default)
-    double epsilon = pow(2.0, -52.0); //eps in Octave and MATLAB
+    double epsilon = datum::eps; //eps in Octave and MATLAB
     int m = X.n_rows;
     int n = X.n_cols;
     int p = std::min(m, n); //used below to establish tolerances.

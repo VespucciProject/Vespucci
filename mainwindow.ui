@@ -97,6 +97,15 @@
      <property name="title">
       <string>Export Dataset Elements</string>
      </property>
+     <widget class="QMenu" name="menuPCA_Data">
+      <property name="title">
+       <string>PCA Data</string>
+      </property>
+      <addaction name="actionLatent"/>
+      <addaction name="actionProjected_Data"/>
+      <addaction name="actionEigenvalues_of_Covariance_Matrix"/>
+      <addaction name="actionHotteling_s_Statistic"/>
+     </widget>
      <addaction name="actionSpectra"/>
      <addaction name="actionAverage_Spectra"/>
      <addaction name="actionAverage_Spectra_with_Abcissa"/>
@@ -105,7 +114,9 @@
      <addaction name="separator"/>
      <addaction name="actionAll_Data"/>
      <addaction name="separator"/>
-     <addaction name="actionPrincipal_Component_Statistics"/>
+     <addaction name="menuPCA_Data"/>
+     <addaction name="actionPLS_Data"/>
+     <addaction name="actionVCA_Data"/>
     </widget>
     <addaction name="menuData_Pre_Processing"/>
     <addaction name="separator"/>
@@ -324,14 +335,6 @@
     <string>Average Spectra (with Abcissa)</string>
    </property>
   </action>
-  <action name="actionPrincipal_Component_Statistics">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Principal Component Statistics</string>
-   </property>
-  </action>
   <action name="actionClose_Dataset">
    <property name="text">
     <string>Close Dataset</string>
@@ -355,6 +358,42 @@
   <action name="actionK_Means_Clustering">
    <property name="text">
     <string>K-Means Clustering</string>
+   </property>
+  </action>
+  <action name="actionLatent">
+   <property name="text">
+    <string>Coefficients</string>
+   </property>
+  </action>
+  <action name="actionProjected_Data">
+   <property name="text">
+    <string>Projected Data</string>
+   </property>
+  </action>
+  <action name="actionEigenvalues_of_Covariance_Matrix">
+   <property name="text">
+    <string>Eigenvalues of Covariance Matrix</string>
+   </property>
+  </action>
+  <action name="actionHotteling_s_Statistic">
+   <property name="text">
+    <string>Hotteling's Statistic</string>
+   </property>
+  </action>
+  <action name="actionPLS_Data">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>PLS Data</string>
+   </property>
+  </action>
+  <action name="actionVCA_Data">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>VCA Data</string>
    </property>
   </action>
  </widget>

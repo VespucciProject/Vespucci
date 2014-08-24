@@ -120,6 +120,8 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     resources.qrc
 
+RC_ICONS = "vespuccilogo.ico"
+
 #*nix Libraries
 #Include paths for *nix
 unix: INCLUDEPATH += /usr/include

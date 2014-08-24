@@ -176,7 +176,6 @@ void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *ev
                                ")");
     value_label_->setText(QString::number(map_data_->results_at_position(current_x_, current_y_)));
     SetPlot(wavelength, intensities);
-    cout << "call to SetSecondPlot" << endl;
     if (map_data_->univariate_area())
         SetSecondPlot(map_data_->first_abcissa(), map_data_->first_baseline(current_index_));
     if (map_data_->univariate_bandwidth()){
