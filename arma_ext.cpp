@@ -437,3 +437,56 @@ bool arma_ext::plsregress(mat X, mat Y, int components,
     return true;
 
 }
+
+///
+/// \brief arma_ext::VCA
+/// Vertex Component Analysis
+/// \param X The dataset
+/// \param endmembers Number of endmembers to compute
+/// \param indices Row indices of pure components.
+/// \param endmember_spectra Spectra of pure components (note that these are in
+/// columns, not rows as in spectra_)
+/// \param projected_data Projected data
+/// \param fractional_abundances Purity of a given spectrum relative to endmember
+/// \return Convergeance (no actual test implemented...)
+///
+bool arma_ext::VCA(mat X, int endmembers, uvec &indices,
+         mat &endmember_spectra, mat &projected_data, mat &fractional_abundances)
+{
+    indices.set_size(endmembers);
+    indices.zeros();
+    int m = X.n_rows;
+
+    mat U;
+    vec s;
+    mat V;
+    svds(trans(X) * X / m, endmembers, U, s, V);
+    mat x_p = trans(U) * trans(X);
+    projected_data = U * x_p;
+    mat x_p_mean = mean(x_p, 0);
+    mat t1 = sum(x_p * trans(x_p_mean));
+    mat y_p = x_p / t1(0);
+
+
+    mat A = zeros(endmembers, endmembers);
+    A(endmembers-1, 0) = 1;
+    mat w;
+    mat f;
+    mat v;
+    uvec query;
+    for (int i = 0; i < endmembers; ++i){
+        w = randu<mat>(endmembers, 1);
+        f = w - A * pinv(A) * w;
+        mat sum_squares = sqrt(sum(square(f)));
+        f /= sum_squares(0);
+        v = abs(trans(f) * y_p);
+        query = find(v == v.max());
+        indices(i) = query(0);
+        A.col(i) = y_p.col(indices(i));
+    }
+    endmember_spectra = projected_data.cols(indices);
+    fractional_abundances = trans((pinv(endmember_spectra) * projected_data));
+    //put endmember spectra in the same format used by rest of program.
+    return true;
+
+}

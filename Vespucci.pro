@@ -73,7 +73,9 @@ SOURCES += main.cpp\
     vespuccitablemodel.cpp \
     plsdata.cpp \
     plsdialog.cpp \
-    kmeansdialog.cpp
+    kmeansdialog.cpp \
+    vcadata.cpp \
+    vcadialog.cpp
 
 HEADERS  += mainwindow.h \
     specmap.h \
@@ -98,7 +100,9 @@ HEADERS  += mainwindow.h \
     vespuccitablemodel.h \
     plsdata.h \
     plsdialog.h \
-    kmeansdialog.h
+    kmeansdialog.h \
+    vcadata.h \
+    vcadialog.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
@@ -115,7 +119,8 @@ FORMS    += mainwindow.ui \
     dataviewer.ui \
     cropdialog.ui \
     plsdialog.ui \
-    kmeansdialog.ui
+    kmeansdialog.ui \
+    vcadialog.ui
 
 RESOURCES += \
     resources.qrc

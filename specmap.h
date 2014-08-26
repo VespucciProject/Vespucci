@@ -28,6 +28,7 @@
 #include "univariatemap.h"
 #include "principalcomponentsdata.h"
 #include "plsdata.h"
+#include "vcadata.h"
 
 
 
@@ -36,6 +37,8 @@ using namespace arma;
 
 class MapData;
 class PrincipalComponentsData;
+class PLSData;
+class VCAData;
 class SpectrumViewer;
 class MainWindow;
 
@@ -126,9 +129,9 @@ public:
                             int gradient_index,
                              bool recalculate);
 
-    void VertexComponents(int endmembers,
+    void VertexComponents(int endmembers, int image_component,
                          bool include_negative_scores,
-                         QString name);
+                         QString name, int gradient_index, bool recalculate);
 
     void KMeans(size_t clusters,
                QString name);
@@ -143,10 +146,16 @@ public:
     colvec y();
     mat spectra();
     const QString name();
+
     bool principal_components_calculated();
     bool vertex_components_calculated();
     bool partial_least_squares_calculated();
+    bool k_means_calculated();
+
     PrincipalComponentsData *principal_components_data();
+    VCAData *vertex_components_data();
+    PLSData *partial_least_squares_data();
+    mat *k_means_data();
     const QString x_axis_description();
     const QString y_axis_description();
 
@@ -230,6 +239,16 @@ private:
     PLSData *partial_least_squares_data_;
 
     ///
+    /// \brief vertex_components_data_
+    /// A pointer to a container (on the heap) holding all VCA data and stats.
+    VCAData *vertex_components_data_;
+
+    ///
+    /// \brief k_means_data_
+    /// A matrix containing the K-means cluster assignments. A container object
+    /// may be used later.
+    mat k_means_data_;
+    ///
     /// \brief map_names_
     /// A list of map names
     QStringList map_names_;
@@ -275,6 +294,11 @@ private:
     /// \brief vertex_components_calculated_
     /// Whether or not VCA has been performed.
     bool vertex_components_calculated_;
+
+    ///
+    /// \brief k_means_calculated_
+    /// Whether or not k means has been performed.
+    bool k_means_calculated_;
 
     ///
     /// \brief constructor_canceled_

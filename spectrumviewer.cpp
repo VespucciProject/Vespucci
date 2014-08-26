@@ -19,6 +19,17 @@
 #include "spectrumviewer.h"
 #include "ui_spectrumviewer.h"
 
+///
+/// \brief SpectrumViewer::SpectrumViewer
+/// The constructor for when a spectrum viewer is linked to a MapViewer
+/// \param parent
+/// \param map_data
+/// \param x_axis_description
+/// \param y_axis_description
+/// \param dataset
+/// \param widget_size
+/// \param directory
+///
 SpectrumViewer::SpectrumViewer(MapViewer *parent,
                                MapData *map_data,
                                const QString x_axis_description,
@@ -30,6 +41,7 @@ SpectrumViewer::SpectrumViewer(MapViewer *parent,
     ui(new Ui::SpectrumViewer)
 {
     ui->setupUi(this);
+    linked_to_map_ = true;
     map_data_ = map_data;
     spectrum_plot_ = this->findChild<QCustomPlot *>("spectrum");
     spectrum_plot_->addGraph();
@@ -56,6 +68,49 @@ SpectrumViewer::SpectrumViewer(MapViewer *parent,
     spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
     spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
 
+}
+
+///
+/// \brief SpectrumViewer::SpectrumViewer
+/// A constructor for using a spectrum viewer to view VCA endmembers
+/// \param parent
+/// \param dataset
+/// \param endmember
+/// \param directory
+///
+SpectrumViewer::SpectrumViewer(DataViewer *parent,
+                               SpecMap *dataset,
+                               int endmember,
+                               QString directory,
+                               QString type)
+{
+    spectrum_plot_ = this->findChild<QCustomPlot *>("spectrum");
+    spectrum_plot_->addGraph();
+    spectrum_plot_->xAxis->setLabel(dataset->x_axis_description());
+    spectrum_plot_->yAxis->setLabel(dataset->y_axis_description());
+    QVector<double> plot_data;
+    spectrum_plot_->replot();
+    if (type == "VCA"){
+        plot_data = dataset->vertex_components_data()->Endmember(endmember);
+    }
+
+    QVector<double> wavelength = dataset->WavelengthQVector();
+
+    coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
+    value_label_ = this->findChild<QLabel *>("valueLabel");
+
+    spectrum_plot_->graph(0)->addData(wavelength, plot_data);
+
+    double range_min = dataset_->vertex_components_data()->EndmemberMin(endmember);
+    double range_max = dataset_->vertex_components_data()->EndmemberMax(endmember);
+    QCPRange range(range_min, range_max);
+    spectrum_plot_->xAxis->setRange(dataset->WavelengthRange());
+    spectrum_plot_->yAxis->setRange(range);
+    dataset_ = dataset;
+    directory_ = directory;
+
+    spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
+    spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
 }
 
 SpectrumViewer::~SpectrumViewer()
@@ -204,6 +259,33 @@ void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *ev
 
 void SpectrumViewer::on_pushButton_clicked()
 {
+    if (!linked_to_map_){
+        //only images can be saved in this view
+        QString filename =
+                QFileDialog::getSaveFileName(this,
+                                             "Save As...",
+                                             directory_,
+                                             tr("TIFF (*.tif);;"
+                                                "JPEG (*.jpg);;"
+                                                "PNG (*.png);;"
+                                                "BMP (*.bmp);;"));
+        bool success;
+        QFileInfo file_info(filename);
+        QString extension = file_info.suffix();
+        if (extension == "bmp")
+            success = spectrum_plot_->saveBmp(filename);
+        else if (extension == "jpg")
+            success = spectrum_plot_->saveJpg(filename);
+        else
+            success = spectrum_plot_->savePng(filename);
+        //PNG is default because everyone can open them
+        return; //don't do any of the other stuff
+    }
+
+
+
+
+
     QString filename =
             QFileDialog::getSaveFileName(this,
                                          "Save As...",

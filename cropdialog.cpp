@@ -72,3 +72,8 @@ void CropDialog::on_buttonBox_accepted()
 
 
 }
+
+void CropDialog::on_buttonBox_rejected()
+{
+    this->close();
+}

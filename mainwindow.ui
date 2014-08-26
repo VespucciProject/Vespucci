@@ -260,7 +260,7 @@
   </action>
   <action name="actionVertex_Components">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Vertex Components</string>

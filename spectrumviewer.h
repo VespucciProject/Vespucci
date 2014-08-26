@@ -21,9 +21,11 @@
 
 #include <QDialog>
 #include "mapviewer.h"
+#include "dataviewer.h"
 class MapViewer;
 class MapData;
 class SpecMap;
+class DataViewer;
 
 namespace Ui {
 class SpectrumViewer;
@@ -39,6 +41,11 @@ public:
                             MapData *map_data,
                             const QString x_axis_description,
                             const QString y_axis_description, SpecMap *dataset, QSize widget_size, QString directory);
+    SpectrumViewer(DataViewer *parent,
+                   SpecMap *dataset,
+                   int endmember,
+                   QString directory,
+                   QString type);
     ~SpectrumViewer();
     void SetPlot(QVector<double> wavelength,
                  QVector<double> intensity);
@@ -63,6 +70,7 @@ private:
     double current_y_;
     QLabel *coordinate_label_;
     QLabel *value_label_;
+    bool linked_to_map_;
 };
 
 #endif // SPECTRUMVIEWER_H

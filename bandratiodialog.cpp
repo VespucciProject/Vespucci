@@ -114,3 +114,8 @@ void BandRatioDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
         integration_method_label_->setEnabled(false);
     }
 }
+
+void BandRatioDialog::on_buttonBox_rejected()
+{
+    this->close();
+}

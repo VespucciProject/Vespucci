@@ -1,20 +1,20 @@
-#ifndef PLSDIALOG_H
-#define PLSDIALOG_H
+#ifndef VCADIALOG_H
+#define VCADIALOG_H
 
 #include <QDialog>
 #include "vespucciworkspace.h"
 
 namespace Ui {
-class PLSDialog;
+class VCADialog;
 }
 
-class PLSDialog : public QDialog
+class VCADialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit PLSDialog(QWidget *parent, VespucciWorkspace *ws, int row);
-    ~PLSDialog();
+    explicit VCADialog(QWidget *parent, VespucciWorkspace *ws, int row);
+    ~VCADialog();
 
 private slots:
     void on_buttonBox_accepted();
@@ -22,7 +22,7 @@ private slots:
     void on_buttonBox_rejected();
 
 private:
-    Ui::PLSDialog *ui;
+    Ui::VCADialog *ui;
     VespucciWorkspace *workspace;
     QSpinBox *image_component_selector_;
     QSpinBox *components_selector_;
@@ -38,4 +38,4 @@ private:
     QSharedPointer<SpecMap> data_;
 };
 
-#endif // PLSDIALOG_H
+#endif // VCADIALOG_H

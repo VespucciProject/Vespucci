@@ -22,6 +22,9 @@
 #include <QDialog>
 #include "vespucciworkspace.h"
 #include "vespuccitablemodel.h"
+#include "specmap.h"
+class SpecMap;
+class VespucciWorkspace;
 namespace Ui {
 class DataViewer;
 class VespucciTableModel;
@@ -38,13 +41,21 @@ public:
 private slots:
     void on_comboBox_currentTextChanged(const QString &arg1);
 
+    void on_plotPushButton_clicked();
+
 private:
     Ui::DataViewer *ui;
+    QString current_text_;
+    QString directory_;
     QSharedPointer<SpecMap> dataset_;
     VespucciWorkspace *workspace;
     QTableView *table_;
     QComboBox *data_selector_;
+    mat *current_data_;
     bool constructor_in_progress_;
+    QPushButton *export_button_;
+    QPushButton *plot_button_;
+    SpectrumViewer *spectrum_viewer_;
 
 };
 

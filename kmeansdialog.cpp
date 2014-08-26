@@ -24,3 +24,8 @@ void KMeansDialog::on_buttonBox_accepted()
     QString name = name_line_edit_->text();
     data_->KMeans(clusters, name);
 }
+
+void KMeansDialog::on_buttonBox_rejected()
+{
+    this->close();
+}

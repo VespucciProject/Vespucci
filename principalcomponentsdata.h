@@ -25,12 +25,9 @@ using namespace arma;
 class SpecMap;
 class PrincipalComponentsData {
 public:
-    PrincipalComponentsData(SpecMap *parent,
-                            QString *directory,
-                            mat coeff,
-                            mat score,
-                            vec latent,
-                            vec tsquared);
+    PrincipalComponentsData(SpecMap *parent, QString *directory);
+
+    void Apply(mat spectra);
 
     bool SaveCoefficientMatrix();
 

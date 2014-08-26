@@ -31,6 +31,7 @@
 #include "dataviewer.h"
 #include "plsdialog.h"
 #include "kmeansdialog.h"
+#include "vcadialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -144,6 +145,18 @@ void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
             new PrincipalComponentsDialog(this, workspace, row);
     principal_components_dialog->show();
 }
+
+
+///
+/// \brief MainWindow::on_actionVertex_Components_triggered
+///Triggers vertex components dialog
+void MainWindow::on_actionVertex_Components_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    VCADialog *vca_dialog = new VCADialog(this, workspace, row);
+    vca_dialog->show();
+}
+
 
 ///
 /// \brief MainWindow::on_actionPartial_Least_Squares_triggered
@@ -605,6 +618,7 @@ void MainWindow::SetGlobalDataRange(QCPRange* new_data_range)
     workspace->SetGlobalDataRange(new_data_range);
     emit GlobalDataRangeChanged(*new_data_range);
 }
+
 
 
 

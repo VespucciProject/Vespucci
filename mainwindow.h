@@ -100,6 +100,8 @@ private slots:
 
     void on_actionK_Means_Clustering_triggered();
 
+    void on_actionVertex_Components_triggered();
+
 private:
     Ui::MainWindow *ui;
     VespucciWorkspace *workspace;

@@ -1,16 +1,25 @@
 #include "plsdata.h"
 
-PLSData::PLSData(mat X_loadings, mat Y_loadings,
-                 mat X_scores, mat Y_scores,
-                 mat coefficients, mat percent_variance)
+PLSData::PLSData(SpecMap *parent, QString *directory)
 {
-    cout << "PLSData::PLSData" << endl;
-    X_loadings_ = X_loadings;
-    Y_loadings_ = Y_loadings;
-    X_scores_ = X_scores;
-    Y_scores_ = Y_scores;
-    coefficients_ = coefficients;
-    percent_variance_ = percent_variance;
+    parent_ = parent;
+    directory_ = directory;
+}
+
+bool PLSData::Apply(mat spectra, rowvec wavelength, int components)
+{
+    mat Y;
+    cout << "PLSData::Apply set size of Y" << endl;
+    Y.set_size(wavelength.n_elem, components);
+    for (int i = 0; i < components; ++i)
+        Y.col(i) = trans(wavelength);
+    bool success = arma_ext::plsregress(trans(spectra), Y, components,
+                                        X_loadings_, Y_loadings_,
+                                        X_scores_, Y_scores_,
+                                        coefficients_, percent_variance_,
+                                        fitted_);
+    return success;
+
 }
 
 mat *PLSData::X_loadings()
@@ -50,9 +59,6 @@ int PLSData::NumberComponents()
 
 colvec PLSData::Results(int i, bool &valid)
 {
-    cout << "PLSData::Results" << endl;
-    cout << "i = " << i << endl;
-    cout << "coefficients_.n_cols = " << coefficients_.n_cols << endl;
     if (coefficients_.n_cols < i){
         valid = false;
         return X_loadings_.col(coefficients_.n_cols - 1);

@@ -77,3 +77,8 @@ void FilterDialog::on_buttonBox_accepted()
         return;
     }
 }
+
+void FilterDialog::on_buttonBox_rejected()
+{
+    this->close();
+}

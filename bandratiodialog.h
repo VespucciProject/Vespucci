@@ -40,6 +40,8 @@ private slots:
 
     void on_peakComboBox_currentTextChanged(const QString &arg1);
 
+    void on_buttonBox_rejected();
+
 private:
     Ui::BandRatioDialog *ui;
 

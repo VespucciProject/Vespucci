@@ -47,3 +47,8 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
     int gradient_index = color_selector_->currentIndex();
     data_->PrincipalComponents(component, negative_scores, name, gradient_index, recalculate);
 }
+
+void PrincipalComponentsDialog::on_buttonBox_rejected()
+{
+    this->close();
+}

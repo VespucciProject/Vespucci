@@ -160,3 +160,8 @@ void LoadDataset::on_filenameBox_textChanged(const QString &arg1)
     }
 
 }
+
+void LoadDataset::on_buttonBox_rejected()
+{
+    this->close();
+}

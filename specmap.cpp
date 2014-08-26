@@ -922,13 +922,8 @@ void SpecMap::PrincipalComponents(int component,
 {
     if (recalculate || !principal_components_calculated_){
 
-        component -= 1;
+        component--;
         cout << "SpecMap::PrincipalComponents" << endl;
-
-        mat coefficients;
-        mat score;
-        vec latent;
-        vec tsquared;
 
         QMessageBox alert;
         alert.setText("Calculating principal components may take a while.");
@@ -954,17 +949,11 @@ void SpecMap::PrincipalComponents(int component,
             cout << "call to arma::princomp" << endl;
             wall_clock timer;
             timer.tic();
-            princomp(coefficients, score, latent, tsquared, spectra_);
+            principal_components_data_ = new PrincipalComponentsData(this,
+                                                                     directory_);
+            principal_components_data_->Apply(spectra_);
             int seconds = timer.toc();
             cout << "call to arma::princomp successful. Took " << seconds << " s" << endl;
-
-            principal_components_data_ =
-                    new PrincipalComponentsData(this,
-                                                directory_,
-                                                coefficients,
-                                                score,
-                                                latent,
-                                                tsquared);
             principal_components_calculated_ = true;
         }
     }
@@ -986,18 +975,53 @@ void SpecMap::PrincipalComponents(int component,
                                             y_axis_description_,
                                             x_, y_, results,
                                             this, directory_,
-                                            this->GetGradient(gradient_index),
+                                            GetGradient(gradient_index),
                                             maps_.size(),
                                             6,
                                             main_window_));
     new_map.data()->set_name(name, map_type);
-    this->AddMap(new_map);
+    AddMap(new_map);
     maps_.last().data()->ShowMapWindow();
 }
 
-void SpecMap::VertexComponents(int endmembers, bool include_negative_scores, QString name)
+void SpecMap::VertexComponents(int endmembers,
+                               int image_component,
+                               bool include_negative_scores,
+                               QString name,
+                               int gradient_index,
+                               bool recalculate)
 {
+    cout << "SpecMap::VertexComponents" << endl;
+    QString map_type;
+    QTextStream(&map_type) << "(Vertex Component " << image_component << ")";
 
+    image_component--;
+    if (recalculate || !vertex_components_calculated_){
+        cout << "constructor" << endl;
+        vertex_components_data_ = new VCAData(this, directory_);
+        vertex_components_data_->Apply(spectra_, endmembers);
+        vertex_components_calculated_ = true;
+    }
+
+    colvec results = vertex_components_data_->Results(image_component);
+
+    //assume all negative values are actually 0
+    if (!include_negative_scores){
+        uvec negative_indices = find(results < 0);
+        results.elem(negative_indices).zeros();
+    }
+
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                                y_axis_description_,
+                                                x_, y_, results,
+                                                this, directory_,
+                                                GetGradient(gradient_index),
+                                                maps_.size(),
+                                                6,
+                                                main_window_));
+    new_map->set_name(name, map_type);
+    AddMap(new_map);
+    maps_.last().data()->ShowMapWindow();
 }
 
 ///
@@ -1018,45 +1042,24 @@ void SpecMap::PartialLeastSquares(int components,
                                   int gradient_index,
                                   bool recalculate)
 {
+    image_component--;
     QString map_type = "Partial Least Squares Map number of components = ";
-    cout << "SpecMap::PartialLeastSquares." << endl
-            <<"recalculate = " << (recalculate ? "true" : "false") << endl
-              <<"components = " << components << endl
-                << "image_component = " << image_component << endl;
 
     if (recalculate || !partial_least_squares_calculated_){
         map_type += QString::number(components);
-        mat X_loadings;
-        mat Y_loadings;
-        mat X_scores;
-        mat Y_scores;
-        mat coefficients;
-        mat percent_variance;
-        mat Y;
-        mat fitted;
-        Y.set_size(wavelength_.n_elem, components);
-        for (int i = 0; i < components; ++i){
-            Y.col(i) = trans(wavelength_);
-        }
+        cout << "call to constructor" << endl;
+        partial_least_squares_data_ = new PLSData(this, directory_);
 
-        bool success = arma_ext::plsregress(trans(spectra_), Y, components,
-                                            X_loadings, Y_loadings,
-                                            X_scores, Y_scores,
-                                            coefficients, percent_variance,
-                                            fitted);
-        cout << "end of call to plsregress" << endl;
+        cout << "call to application" << endl;
+        bool success = partial_least_squares_data_->Apply(spectra_, wavelength_, components);
+        cout << "post-call" << endl;
         if (success){
             partial_least_squares_calculated_ = true;
-
-            partial_least_squares_data_ =
-                    new PLSData(X_loadings, Y_loadings,
-                                X_scores, Y_scores,
-                                coefficients, percent_variance);
-
         }
-
     }
 
+
+    cout << "call to results" << endl;
     bool valid;
     cout << "call to PLSData::Results" << endl;
     colvec results = partial_least_squares_data_->Results(image_component, valid);
@@ -1101,18 +1104,16 @@ void SpecMap::KMeans(size_t clusters, QString name)
     cout << "Kmeans data extraction" << endl;
     mat data = trans(spectra_);
     k.Cluster(data, clusters, assignments);
-    cout << "rows in assignments" << assignments.n_rows << endl;
-    colvec results;
-    results.set_size(assignments.n_elem);
-
+    k_means_data_.set_size(assignments.n_elem, 1);
+    k_means_calculated_ = true;
     //loop for copying values, adds one so clusters indexed at 1, not 0.
     for (int i = 0; i < assignments.n_rows; ++i)
-        results(i) = assignments(i) + 1;
+        k_means_data_(i, 0) = assignments(i) + 1;
 
     QCPColorGradient gradient = GetClusterGradient(clusters);
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
-                                            x_, y_, results,
+                                            x_, y_, k_means_data_.col(0),
                                             this, directory_,
                                             gradient,
                                             maps_.size(),
@@ -1623,8 +1624,8 @@ const QString SpecMap::y_axis_description()
 
 ///
 /// \brief SpecMap::principal_components_calculated
-/// The PCA dialog requests this to make sure that the same PCA is not calculated
-/// twice.
+/// Accessor for principal_components_calculated_. The PCA dialog requests this
+/// to make sure that the same PCA is not calculated twice.
 /// \return Whether or not PCA has been calculated.
 ///
 bool SpecMap::principal_components_calculated()
@@ -1634,8 +1635,8 @@ bool SpecMap::principal_components_calculated()
 
 ///
 /// \brief SpecMap::vertex_components_calculated
-/// The VCA dialog requests this to make sure that the same VCA is not calculated
-/// twice.
+/// Accessor for vertex_components_calculated_. The VCA dialog requests this to
+/// make sure that the same VCA is not calculated twice.
 /// \return Whether or not VCA has been computed.
 ///
 bool SpecMap::vertex_components_calculated()
@@ -1645,8 +1646,8 @@ bool SpecMap::vertex_components_calculated()
 
 ///
 /// \brief SpecMap::partial_least_squares_calculated
-/// The PLS dialog requests this to make sure that the same PLS is not calculated
-/// twice.
+/// Accessor for partial_least_squares_calculated. The PLS dialog requests this
+/// to make sure that the same PLS is not calculated twice.
 /// \return Whether or not PLS has been computed.
 ///
 bool SpecMap::partial_least_squares_calculated()
@@ -1655,12 +1656,48 @@ bool SpecMap::partial_least_squares_calculated()
 }
 
 ///
+/// \brief SpecMap::k_means_calculated
+/// Accessor for k_means_calculated_. Used for filling dataviewer.
+/// \return Whether or not k means have been calculated.
+///
+bool SpecMap::k_means_calculated()
+{
+    return k_means_calculated_;
+}
+
+///
 /// \brief SpecMap::principal_components_data
+/// Accessor for principal_components_data_
 /// \return Pointer to the class that handles the output of arma::princomp
 ///
 PrincipalComponentsData* SpecMap::principal_components_data()
 {
     return principal_components_data_;
+}
+
+///
+/// \brief SpecMap::vertex_components_data
+/// Accessor for vertex_components_data_
+/// \return
+///
+VCAData* SpecMap::vertex_components_data()
+{
+    return vertex_components_data_;
+}
+
+///
+/// \brief SpecMap::partial_least_squares_data
+/// Accessor for partial_least_squares_data_;
+/// \return
+///
+PLSData* SpecMap::partial_least_squares_data()
+{
+    return partial_least_squares_data_;
+}
+
+mat *SpecMap::k_means_data()
+{
+    return &k_means_data_;
 }
 
 ///

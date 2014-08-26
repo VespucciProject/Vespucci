@@ -65,3 +65,8 @@ void ScaleBarDialog::on_buttonBox_accepted()
                             position,
                             font);
 }
+
+void ScaleBarDialog::on_buttonBox_rejected()
+{
+    this->close();
+}

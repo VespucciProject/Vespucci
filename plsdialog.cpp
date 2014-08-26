@@ -32,3 +32,8 @@ void PLSDialog::on_buttonBox_accepted()
     data_->PartialLeastSquares(components, image_component, name, gradient_index, recalculate);
 
 }
+
+void PLSDialog::on_buttonBox_rejected()
+{
+    this->close();
+}

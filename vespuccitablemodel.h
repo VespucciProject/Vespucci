@@ -21,7 +21,8 @@
 
 #include <QAbstractTableModel>
 #include "vespucciworkspace.h"
-
+#include "specmap.h"
+class SpecMap;
 class VespucciTableModel : public QAbstractTableModel
 {
     Q_OBJECT

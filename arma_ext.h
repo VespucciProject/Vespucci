@@ -51,6 +51,8 @@ bool plsregress(mat X, mat Y, int components,
                 mat &X_loadings, mat &Y_loadings,
                 mat &X_scores, mat &Y_scores,
                 mat &coefficients, mat &percent_variance, mat &fitted);
+bool VCA(mat X, int endmembers, uvec &indices,
+    mat &endmember_spectra, mat &projected_data, mat &fractional_abundances);
 }
 
 #endif // ARMA_EXT_H

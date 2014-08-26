@@ -19,18 +19,16 @@
 #include "principalcomponentsdata.h"
 
 PrincipalComponentsData::PrincipalComponentsData(SpecMap *parent,
-                                                 QString *directory,
-                                                 mat coeff,
-                                                 mat score,
-                                                 vec latent,
-                                                 vec tsquared)
+                                                 QString *directory)
 {
-    coeff_ = coeff;
-    score_ = score;
-    latent_ = latent;
-    tsquared_ = tsquared;
     parent_ = parent;
     directory_ = directory;
+}
+
+void PrincipalComponentsData::Apply(mat spectra)
+{
+    princomp(coeff_, score_, latent_, tsquared_, spectra);
+
 }
 
 colvec PrincipalComponentsData::Results(int component)
