@@ -150,14 +150,14 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
 
 void DataViewer::on_plotPushButton_clicked()
 {
-    if (current_text_ == "VCA Endmembers"){
-        bool ok;
-        int number = current_data_->n_cols;
-        int endmember = QInputDialog::getInt(this, tr("Select Endmember"), tr("Endmember"), 1, 1, number, 1, ok, 0);
-        endmember--; //fix indexing from human-intuitve 1 to programmer-intuitive 0
-        if (ok){
-            spectrum_viewer_ = new SpectrumViewer(this, dataset_, endmember, directory_, tr("VCA"));
-            spectrum_viewer_->show();
-        }
-    }
+    //if (current_text_ == "VCA Endmembers"){
+        //bool ok;
+        //int number = current_data_->n_cols;
+        //int endmember = QInputDialog::getInt(this, tr("Select Endmember"), tr("Endmember"), 1, 1, number, 1, ok, 0);
+        //endmember--; //fix indexing from human-intuitve 1 to programmer-intuitive 0
+        //if (ok){
+        //    spectrum_viewer_ = new SpectrumViewer(this, dataset_, endmember, directory_, tr("VCA"));
+        //    spectrum_viewer_->show();
+        //}
+    //}
 }
