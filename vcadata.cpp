@@ -75,16 +75,20 @@ colvec VCAData::Results(int component)
 
 double VCAData::EndmemberMax(int i)
 {
+    cout << "EndmemberMax" << endl;
     if (i >= endmember_spectra_.n_cols)
         i = endmember_spectra_.n_cols - 1;
     colvec endmember = endmember_spectra_.col(i);
-    return endmember.max();
+    double max = endmember.max();
+    return max;
 }
 
 double VCAData::EndmemberMin(int i)
 {
+    cout << "EndmemberMin" << endl;
     if (i >= endmember_spectra_.n_cols)
         i = endmember_spectra_.n_cols - 1;
     colvec endmember = endmember_spectra_.col(i);
-    return endmember.min();
+    double min = endmember.min();
+    return min;
 }

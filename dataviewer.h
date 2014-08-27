@@ -43,6 +43,8 @@ private slots:
 
     void on_plotPushButton_clicked();
 
+    void on_exportPushButton_clicked();
+
 private:
     Ui::DataViewer *ui;
     QString current_text_;
@@ -56,6 +58,7 @@ private:
     QPushButton *export_button_;
     QPushButton *plot_button_;
     SpectrumViewer *spectrum_viewer_;
+    int vca_endmembers_;
 
 };
 

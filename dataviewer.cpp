@@ -17,7 +17,7 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
     export_button_->setDisabled(true);
     table_ = this->findChild<QTableView *>("tableView");
 
-    cout << "populate list" << endl;
+    //cout << "populate list" << endl;
     QStringList object_list("Spectral Abcissa");
     object_list << "Spatial Data";
 
@@ -27,6 +27,7 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
     }
     if (dataset_->vertex_components_calculated()){
         object_list << "VCA Coefficients" << "VCA Endmembers" << "VCA Pure Components";
+        vca_endmembers_ = dataset_->vertex_components_data()->NumberComponents();
     }
     if (dataset_->partial_least_squares_calculated()){
         object_list << "PLS Variance" << "PLS Predictor Loading"
@@ -37,10 +38,10 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
         object_list << "K-means Assignments";
     }
 
-    cout << "assign list" << endl;
+    //cout << "assign list" << endl;
     data_selector_->addItems(object_list);
     data_selector_->setCurrentIndex(0);
-    cout << "end of constructor";
+    //cout << "end of constructor";
 }
 
 DataViewer::~DataViewer()
@@ -51,15 +52,15 @@ DataViewer::~DataViewer()
 void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
 {
     current_text_ = arg1;
-    cout << "DataViewer::on_comboBox_currentTextChanged" << endl;
-    cout << arg1.toStdString();
+    //cout << "DataViewer::on_comboBox_currentTextChanged" << endl;
+    //cout << arg1.toStdString();
     if (arg1 == "Spatial Data"){
         table_->setModel(new VespucciTableModel(this, dataset_, "spatial"));
         export_button_->setDisabled(true);
         plot_button_->setDisabled(true);
     }
     else if (arg1 == "Spectral Abcissa"){
-        cout << "Spectral Abcissa";
+        //cout << "Spectral Abcissa";
         table_->setModel(new VespucciTableModel(this, dataset_->wavelength_ptr()));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
@@ -137,7 +138,7 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
         plot_button_->setDisabled(true);
     }
     else{
-        cout << "Else" << endl;
+        //cout << "Else" << endl;
         table_->setModel(new VespucciTableModel(this, dataset_->wavelength_ptr()));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
@@ -150,14 +151,44 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
 
 void DataViewer::on_plotPushButton_clicked()
 {
-    //if (current_text_ == "VCA Endmembers"){
-        //bool ok;
-        //int number = current_data_->n_cols;
-        //int endmember = QInputDialog::getInt(this, tr("Select Endmember"), tr("Endmember"), 1, 1, number, 1, ok, 0);
-        //endmember--; //fix indexing from human-intuitve 1 to programmer-intuitive 0
-        //if (ok){
-        //    spectrum_viewer_ = new SpectrumViewer(this, dataset_, endmember, directory_, tr("VCA"));
-        //    spectrum_viewer_->show();
-        //}
-    //}
+    if (current_text_ == "VCA Endmembers"){
+        bool ok;
+        int endmember = QInputDialog::getInt(this,
+                                             tr("Select Endmember"),
+                                             tr("Endmember"), 1, 1,
+                                             vca_endmembers_, 1, &ok, 0);
+        endmember--; //fix indexing from human-intuitve 1 to programmer-intuitive 0
+
+        if (ok){
+            spectrum_viewer_ = new SpectrumViewer(this, dataset_.data(), endmember, directory_, tr("VCA"));
+            spectrum_viewer_->show();
+        }
+    }
 }
+
+void DataViewer::on_exportPushButton_clicked()
+{/*
+    QString filename = QFileDialog::getSaveFileName(this,
+                                                    tr("Export As..."),
+                                                    directory_,
+                                                    tr("Comma-separated Variables (*.csv);;"
+                                                       "Tab-delimited Text (*.txt);;"
+                                                       "Armadillo Binary (*.arma);;"));
+    QFileInfo file_info(filename);
+    if (filename.isEmpty())
+        return;
+
+    QString extension = file_info.suffix();
+    cout << "save" << endl;
+    if (extension == "arma"){
+        current_data_->save(filename.toStdString(), arma_binary);
+    }
+    else if (extension == "csv"){
+        current_data_->save(filename.toStdString(), csv_ascii);
+    }
+    else{
+        current_data_->save(filename.toStdString(), raw_ascii);
+    }
+
+    cout << "end of slot" << endl;
+*/}

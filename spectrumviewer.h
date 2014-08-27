@@ -37,15 +37,21 @@ class SpectrumViewer : public QDialog
     Q_OBJECT
 
 public:
-    explicit SpectrumViewer(MapViewer *parent,
-                            MapData *map_data,
-                            const QString x_axis_description,
-                            const QString y_axis_description, SpecMap *dataset, QSize widget_size, QString directory);
+    SpectrumViewer(MapViewer *parent,
+                   MapData *map_data,
+                   const QString x_axis_description,
+                   const QString y_axis_description, SpecMap *dataset, QSize widget_size, QString directory);
     SpectrumViewer(DataViewer *parent,
                    SpecMap *dataset,
                    int endmember,
                    QString directory,
                    QString type);
+
+    SpectrumViewer(QVector<double> abcissa,
+                   QVector<double> intensities,
+                   const QString x_axis_description,
+                   const QString y_axis_description);
+
     ~SpectrumViewer();
     void SetPlot(QVector<double> wavelength,
                  QVector<double> intensity);

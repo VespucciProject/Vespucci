@@ -82,36 +82,33 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
                                SpecMap *dataset,
                                int endmember,
                                QString directory,
-                               QString type)
+                               QString type) :
+    QDialog(parent),
+    ui(new Ui::SpectrumViewer)
 {
+    ui->setupUi(this);
     spectrum_plot_ = this->findChild<QCustomPlot *>("spectrum");
     spectrum_plot_->addGraph();
     spectrum_plot_->xAxis->setLabel(dataset->x_axis_description());
     spectrum_plot_->yAxis->setLabel(dataset->y_axis_description());
     QVector<double> plot_data;
     spectrum_plot_->replot();
+    cout << "If" << endl;
     if (type == "VCA"){
         plot_data = dataset->vertex_components_data()->Endmember(endmember);
     }
-
     QVector<double> wavelength = dataset->WavelengthQVector();
-
     coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
     value_label_ = this->findChild<QLabel *>("valueLabel");
-
     spectrum_plot_->graph(0)->addData(wavelength, plot_data);
-
-    double range_min = dataset_->vertex_components_data()->EndmemberMin(endmember);
-    double range_max = dataset_->vertex_components_data()->EndmemberMax(endmember);
-    QCPRange range(range_min, range_max);
-    spectrum_plot_->xAxis->setRange(dataset->WavelengthRange());
-    spectrum_plot_->yAxis->setRange(range);
     dataset_ = dataset;
     directory_ = directory;
 
     spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
     spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
+    spectrum_plot_->rescaleAxes();
 }
+
 
 SpectrumViewer::~SpectrumViewer()
 {
