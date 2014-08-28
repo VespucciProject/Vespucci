@@ -19,32 +19,50 @@
 
 #ifndef SPECMAP_H
 #define SPECMAP_H
-#include <armadillo>
+#include "arma_ext.h"
 #include <QTextStream>
 #include <iostream>
 #include <QVector>
 #include <vector>
-#include "qcustomplot.h"
+#include <qcustomplot.h>
 #include "univariatemap.h"
-//#include "vespucciworkspace.h"
 #include "principalcomponentsdata.h"
+#include "plsdata.h"
+#include "vcadata.h"
+
+
 
 using namespace std;
 using namespace arma;
 
 class MapData;
 class PrincipalComponentsData;
+class PLSData;
+class VCAData;
+class SpectrumViewer;
+class MainWindow;
 
+///
+/// \brief The SpecMap class
+/// This is the main class for dealing with hyperspectral data. It was originally
+/// named hyperSpec and modeled on the class used by the hyperSpec R pacakge. This
+/// handles the import and export of spectra, and the creation of maps. Images
+/// are handled by the MapData class. In reality, this should probably be called
+/// MapData and MapData called SpecMap...
 class SpecMap
 {
 public:
     SpecMap();
-    SpecMap(QTextStream& inputstream, QMainWindow *main_window, QString *directory, bool swap_spatial);
-    SpecMap(QString binary_file_name, QMainWindow *main_window, QString *directory);
+    SpecMap(QTextStream& inputstream, MainWindow *main_window, QString *directory, bool swap_spatial);
+    SpecMap(QString binary_file_name, MainWindow *main_window, QString *directory);
     ~SpecMap();
     // PRE-PROCESSING FUNCTIONS //
+    // map editing
+    void CropSpectra(double x_min, double x_max, double y_min, double y_max);
+
     // Normalization functions
 
+    mat ZScoreNormCopy();
     void MinMaxNormalize();
     void ZScoreNormalize();
     void UnitAreaNormalize();
@@ -56,8 +74,10 @@ public:
     void MedianFilter(int window_size);
     void LinearMovingAverage(int window_size);
     void Derivatize(int derivative_order, int polynomial_order, int window_size);
-    void SingularValue();
+    void SingularValue(int singular_values);
     mat spdiags(mat B, QVector<int> d, int m, int n);
+
+    void Baseline(QString method, int window_size);
 
 
     // HELPER FUNCTIONS //
@@ -88,6 +108,7 @@ public:
                     int max,
                     QString name,
                     QString value_method,
+                    QString integration_method,
                     int gradient_index);
 
     void BandRatio(int first_min,
@@ -95,24 +116,24 @@ public:
                    int second_min,
                    int second_max,
                    QString name,
-                   QString value_method,
+                   QString value_method, QString integration_method,
                    int gradient_index);
 
-    void PartialLeastSquares(int components,
-                             bool include_negative_scores,
+    void PartialLeastSquares(int components, int image_component,
                              QString name,
-                             int gradient_index);
+                             int gradient_index, bool recalculate);
 
     void PrincipalComponents(int component,
                             bool include_negative_scores,
                             QString name,
-                            int gradient_index);
+                            int gradient_index,
+                             bool recalculate);
 
-    void VectorComponents(int endmembers,
+    void VertexComponents(int endmembers, int image_component,
                          bool include_negative_scores,
-                         QString name);
+                         QString name, int gradient_index, bool recalculate);
 
-    void KMeans(int clusters,
+    void KMeans(size_t clusters,
                QString name);
 
     void Agglomerative(int clusters,
@@ -125,8 +146,18 @@ public:
     colvec y();
     mat spectra();
     const QString name();
+
     bool principal_components_calculated();
+    bool vertex_components_calculated();
+    bool partial_least_squares_calculated();
+    bool k_means_calculated();
+
     PrincipalComponentsData *principal_components_data();
+    VCAData *vertex_components_data();
+    PLSData *partial_least_squares_data();
+    mat *k_means_data();
+    const QString x_axis_description();
+    const QString y_axis_description();
 
     void SetName(QString new_name);
 
@@ -149,41 +180,141 @@ public:
     QCPRange PointSpectrumRange(int i);
 
     QCPColorGradient GetGradient(int gradient_number);
+    QCPColorGradient GetClusterGradient(int clusters);
 
     bool ConstructorCancelled();
     mat AverageSpectrum(bool stats);
 
+    mat *x_ptr();
+    mat *y_ptr();
+    mat *wavelength_ptr();
+    mat *spectra_ptr();
 
 private:
+    ///
+    /// \brief wavelength_
+    /// The spectral abcissa of the spectra in spectra_
     rowvec wavelength_;
+
+    ///
+    /// \brief x_
+    /// The spatial horizontal position
     colvec x_;
+
+    ///
+    /// \brief y_
+    /// The spatial vertical position
     colvec y_;
+
+    ///
+    /// \brief spectra_
+    /// The list of spectra. Every index corresponds to a value for x, a value
+    /// for y, and a spectrum.
     mat spectra_;
 
+    ///
+    /// \brief name_
+    /// The name chosen by the user for this dataset.
     QString name_;
 
-
+    ///
+    /// \brief map_list_widget_
+    /// A pointer back to the list widget containing created maps in the main
+    /// window.
     QListWidget *map_list_widget_;
-    //QList<MapData *> maps_;
 
-    QList<QSharedPointer<MapData>> maps_;
+    ///
+    /// \brief maps_
+    /// A list of the maps created from this data set, managed by SpecMap class
+    QList<QSharedPointer<MapData> > maps_;
 
+    ///
+    /// \brief principal_components_data_
+    /// A pointer to a container holding all PCA data and stats.
     PrincipalComponentsData *principal_components_data_;
 
+    ///
+    /// \brief partial_least_squares_data_
+    /// A pointer to a container holding all PLS data and stats
+    PLSData *partial_least_squares_data_;
+
+    ///
+    /// \brief vertex_components_data_
+    /// A pointer to a container (on the heap) holding all VCA data and stats.
+    VCAData *vertex_components_data_;
+
+    ///
+    /// \brief k_means_data_
+    /// A matrix containing the K-means cluster assignments. A container object
+    /// may be used later.
+    mat k_means_data_;
+    ///
+    /// \brief map_names_
+    /// A list of map names
     QStringList map_names_;
+
+    ///
+    /// \brief map_loading_count_
+    /// How many maps have been loaded, used mostly for default names.
     int map_loading_count_;
 
+    ///
+    /// \brief x_axis_description_
+    /// Spectral abcissa legend
     QString x_axis_description_; //abcissa legend
+
+    ///
+    /// \brief y_axis_description_
+    /// Spectral ordinate legend
     QString y_axis_description_; //ordinate legend
 
+    ///
+    /// \brief directory_
+    /// Pointer back to the string in the workspace containing the working path
     QString *directory_;
 
+    ///
+    /// \brief z_scores_calculated_
+    /// Whether or not Z-scores have been calculated (triggers determination of
+    /// "negative" peaks (finding minimums are areas where spectrum is lower than
+    /// average)
     bool z_scores_calculated_;
+
+    ///
+    /// \brief principal_components_calculated_
+    /// Whether or not PCA has been performed
     bool principal_components_calculated_;
+
+    ///
+    /// \brief partial_least_squares_calculated_
+    /// Whether or not PLS has been performed
     bool partial_least_squares_calculated_;
 
+    ///
+    /// \brief vertex_components_calculated_
+    /// Whether or not VCA has been performed.
+    bool vertex_components_calculated_;
+
+    ///
+    /// \brief k_means_calculated_
+    /// Whether or not k means has been performed.
+    bool k_means_calculated_;
+
+    ///
+    /// \brief constructor_canceled_
+    /// Whether or not cancel button is clicked.
     bool constructor_canceled_;
+
+    ///
+    /// \brief flipped_
+    /// Whether or not original data set had x in the second column
     bool flipped_;
+
+    ///
+    /// \brief main_window_
+    /// Pointer back to the main window of the app.
+    MainWindow *main_window_;
+
 };
 
 #endif // SPECMAP_H

@@ -1,4 +1,4 @@
-/************************************************************************************
+/*******************************************************************************
     Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
 
     This file is part of Vespucci.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
+*******************************************************************************/
 
 #ifndef ABOUTDIALOG_H
 #define ABOUTDIALOG_H

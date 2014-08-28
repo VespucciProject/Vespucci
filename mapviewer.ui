@@ -14,16 +14,11 @@
    <string>Map Viewer</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QCustomPlot" name="mapView" native="true">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>481</width>
-      <height>341</height>
-     </rect>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QCustomPlot" name="mapView" native="true"/>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -44,12 +39,19 @@
     <property name="title">
      <string>Display</string>
     </property>
+    <addaction name="actionReproportion"/>
+    <addaction name="actionReset_Size"/>
+    <addaction name="actionLock_Size"/>
+    <addaction name="separator"/>
     <addaction name="actionInterpolate"/>
     <addaction name="actionShow_Axes"/>
     <addaction name="actionShow_Color_Scale"/>
+    <addaction name="actionCommon_Color_Gradient"/>
     <addaction name="separator"/>
     <addaction name="actionAdd_Scale_Bar"/>
     <addaction name="actionSet_Color_Scheme"/>
+    <addaction name="separator"/>
+    <addaction name="actionShow_Spectrum_Viewer"/>
    </widget>
    <addaction name="menuMap"/>
    <addaction name="menuDisplay"/>
@@ -101,6 +103,46 @@
   <action name="actionAdd_Scale_Bar">
    <property name="text">
     <string>Add Scale Bar...</string>
+   </property>
+  </action>
+  <action name="actionShow_Spectrum_Viewer">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Show Spectrum Viewer</string>
+   </property>
+  </action>
+  <action name="actionCommon_Color_Gradient">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Common Color Gradient</string>
+   </property>
+  </action>
+  <action name="actionLock_Size">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Lock Size</string>
+   </property>
+  </action>
+  <action name="actionReproportion">
+   <property name="text">
+    <string>Reproportion</string>
+   </property>
+  </action>
+  <action name="actionReset_Size">
+   <property name="text">
+    <string>Reset Size</string>
    </property>
   </action>
  </widget>

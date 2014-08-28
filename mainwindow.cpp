@@ -26,6 +26,12 @@
 #include "bandratiodialog.h"
 #include "principalcomponentsdialog.h"
 #include "filterdialog.h"
+#include "cropdialog.h"
+#include "baselinedialog.h"
+#include "dataviewer.h"
+#include "plsdialog.h"
+#include "kmeansdialog.h"
+#include "vcadialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -139,6 +145,44 @@ void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
             new PrincipalComponentsDialog(this, workspace, row);
     principal_components_dialog->show();
 }
+
+
+///
+/// \brief MainWindow::on_actionVertex_Components_triggered
+///Triggers vertex components dialog
+void MainWindow::on_actionVertex_Components_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    VCADialog *vca_dialog = new VCADialog(this, workspace, row);
+    vca_dialog->show();
+}
+
+
+///
+/// \brief MainWindow::on_actionPartial_Least_Squares_triggered
+/// Triggers partial least squares dialog
+///
+void MainWindow::on_actionPartial_Least_Squares_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    PLSDialog *pls_dialog =
+            new PLSDialog(this, workspace, row);
+    pls_dialog->show();
+}
+
+///
+/// \brief MainWindow::on_actionK_Means_Clustering_triggered
+/// Triggers K-Means dialog
+///
+void MainWindow::on_actionK_Means_Clustering_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    KMeansDialog *k_means_dialog =
+            new KMeansDialog(this, workspace, row);
+    k_means_dialog->show();
+
+}
+
 
 ///
 /// \brief MainWindow::on_actionNormalize_Standardize_triggered
@@ -426,3 +470,155 @@ void MainWindow::on_actionDocumentation_triggered()
     QUrl website_url("http://dpfoose.github.io/Vespucci/");
     QDesktopServices::openUrl(website_url);
 }
+
+void MainWindow::on_actionCrop_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    CropDialog *crop_dialog = new CropDialog(this, workspace, row);
+    crop_dialog->show();
+}
+
+void MainWindow::on_actionCorrect_Baseline_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    BaselineDialog *baseline_dialog = new BaselineDialog(this, workspace, row);
+    baseline_dialog->show();
+}
+
+void MainWindow::on_actionView_Dataset_Elements_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    DataViewer *data_viewer = new DataViewer(0, workspace, row);
+    data_viewer->show();
+}
+
+void MainWindow::on_actionSet_Global_Color_Scale_triggered()
+{
+    QStringList color_list;
+    color_list  << "ColorBrewerBlueGreen"
+                << "ColorBrewerBluePurple"
+                << "ColorBrewerGreenBlue"
+                << "ColorBrewerOrangeRed"
+                << "ColorBrewerPurpleBlue"
+                << "ColorBrewerPurpleBlueGreen"
+                << "ColorBrewerPurpleRed"
+                << "ColorBrewerRedPurple"
+                << "ColorBrewerYellowGreen"
+                << "ColorBrewerYellowGreenBlue"
+                << "ColorBrewerYellowOrangeBrown"
+                << "ColorBrewerYellowOrangeRed"
+                << "ColorBrewerBlues"
+                << "ColorBrewerGreens"
+                << "ColorBrewerOranges"
+                << "ColorBrewerPurples"
+                << "ColorBrewerReds"
+                << "ColorBrewerGrayscale"
+                << "QCustomPlotGrayscale"
+                << "QCustomPlotNight"
+                << "QCustomPlotCandy"
+                << "QCustomPlotIon"
+                << "QCustomPlotThermal"
+                << "↔QCustomPlotPolar"
+                << "↔QCustomPlotSpectrum"
+                << "QCustomPlotJet"
+                << "QCustomPlotHues"
+                << "QCustomPlotHot"
+                << "QCustomPlotCold"
+                << "↔ColorBrewerBrownBlueGreen"
+                << "↔ColorBrewerPinkYellowGreen"
+                << "↔ColorBrewerPurpleGreen"
+                << "↔ColorBrewerPurpleOrange"
+                << "↔ColorBrewerRedBlue"
+                << "↔ColorBrewerRedGray"
+                << "↔ColorBrewerRedYellowBlue"
+                << "↔ColorBrewerRedYellowGreen"
+                << "↔ColorBrewerSpectral"
+                << "↔VespucciSpectral";
+    QString color_name = QInputDialog::getItem(this, "Select Color Scheme", "Choose Scheme", color_list);
+    int color_index = color_list.indexOf(color_name);
+    QCPColorGradient gradient;
+    switch (color_index)
+        {
+        case 0: gradient =  QCPColorGradient::cbBuGn; break;
+        case 1: gradient =  QCPColorGradient::cbBuPu; break;
+        case 2: gradient =  QCPColorGradient::cbGnBu; break;
+        case 3: gradient =  QCPColorGradient::cbOrRd; break;
+        case 4: gradient =  QCPColorGradient::cbPuBu; break;
+        case 5: gradient =  QCPColorGradient::cbPuBuGn; break;
+        case 6: gradient =  QCPColorGradient::cbPuRd; break;
+        case 7: gradient =  QCPColorGradient::cbRdPu; break;
+        case 8: gradient =  QCPColorGradient::cbYlGn; break;
+        case 9: gradient =  QCPColorGradient::cbYlGnBu; break;
+        case 10: gradient =  QCPColorGradient::cbYlOrBr; break;
+        case 11: gradient =  QCPColorGradient::cbYlOrRd; break;
+        case 12: gradient =  QCPColorGradient::cbBlues; break;
+        case 13: gradient =  QCPColorGradient::cbGreens; break;
+        case 14: gradient =  QCPColorGradient::cbOranges; break;
+        case 15: gradient =  QCPColorGradient::cbPurples; break;
+        case 16: gradient =  QCPColorGradient::cbReds; break;
+        case 17: gradient =  QCPColorGradient::cbGreys; break;
+        case 18: gradient =  QCPColorGradient::gpGrayscale; break;
+        case 19: gradient =  QCPColorGradient::gpNight; break;
+        case 20: gradient =  QCPColorGradient::gpCandy; break;
+        case 21: gradient =  QCPColorGradient::gpIon; break;
+        case 22: gradient =  QCPColorGradient::gpThermal; break;
+        case 23: gradient =  QCPColorGradient::gpPolar; break;
+        case 24: gradient =  QCPColorGradient::gpSpectrum; break;
+        case 25: gradient =  QCPColorGradient::gpJet; break;
+        case 26: gradient =  QCPColorGradient::gpHues; break;
+        case 27: gradient =  QCPColorGradient::gpHot; break;
+        case 28: gradient =  QCPColorGradient::gpCold; break;
+        case 29: gradient =  QCPColorGradient::cbBrBG; break;
+        case 30: gradient =  QCPColorGradient::cbPiYG; break;
+        case 31: gradient =  QCPColorGradient::cbPRGn; break;
+        case 32: gradient =  QCPColorGradient::cbPuOr; break;
+        case 33: gradient =  QCPColorGradient::cbRdBu; break;
+        case 34: gradient =  QCPColorGradient::cbRdGy; break;
+        case 35: gradient =  QCPColorGradient::cbRdYlBu; break;
+        case 36: gradient =  QCPColorGradient::cbRdYlGn; break;
+        case 37: gradient =  QCPColorGradient::cbSpectral; break;
+        case 38: gradient =  QCPColorGradient::vSpectral; break;
+        default: gradient =  QCPColorGradient::gpCold;
+        }
+    workspace->RefreshGlobalColorGradient(gradient);
+}
+
+
+QCPRange* MainWindow::global_data_range()
+{
+    return workspace->global_data_range();
+}
+
+QCPColorGradient* MainWindow::global_gradient()
+{
+    return workspace->global_gradient();
+}
+
+void MainWindow::RecalculateGlobalDataRange(QCPRange* new_data_range)
+{
+    bool changed;
+    if (this->map_list_widget_->count() <= 1)
+        workspace->SetGlobalDataRange(new_data_range);
+    else
+        changed = workspace->RecalculateGlobalDataRange(new_data_range);
+
+    if (changed){
+        emit GlobalDataRangeChanged(*new_data_range);
+    }
+}
+
+void MainWindow::RefreshGlobalColorGradient(QCPColorGradient new_gradient)
+{
+    workspace->RefreshGlobalColorGradient(new_gradient);
+    emit GlobalGradientChanged(new_gradient);
+}
+
+void MainWindow::SetGlobalDataRange(QCPRange* new_data_range)
+{
+    workspace->SetGlobalDataRange(new_data_range);
+    emit GlobalDataRangeChanged(*new_data_range);
+}
+
+
+
+

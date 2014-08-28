@@ -41,6 +41,8 @@ private slots:
 
     void on_filenameBox_textChanged(const QString &arg1);
 
+    void on_buttonBox_rejected();
+
 private:
     Ui::LoadDataset *ui;
     VespucciWorkspace *workspace;

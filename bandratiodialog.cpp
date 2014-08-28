@@ -38,7 +38,8 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     name_box_ = this->findChild<QLineEdit *>("nameLineEdit");
     color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
     value_method_selector_ = this->findChild<QComboBox *>("peakComboBox");
-
+    integration_method_selector_ = this->findChild<QComboBox *>("integrationComboBox");
+    integration_method_label_ = this->findChild<QLabel *>("integrationLabel");
 
     data_index_ = row;
 
@@ -89,6 +90,7 @@ void BandRatioDialog::on_buttonBox_accepted()
 
     QString name = name_box_->text();
     QString value_method = value_method_selector_->currentText();
+    QString integration_method = integration_method_selector_->currentText();
     int color_index = color_selector_->currentIndex();
 
     data_->BandRatio(first_min,
@@ -97,5 +99,23 @@ void BandRatioDialog::on_buttonBox_accepted()
                      second_max,
                      name,
                      value_method,
+                     integration_method,
                      color_index);
+}
+
+void BandRatioDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
+{
+    if (arg1 == "Area"){
+        integration_method_selector_->setEnabled(true);
+        integration_method_label_->setEnabled(true);
+    }
+    else{
+        integration_method_selector_->setEnabled(false);
+        integration_method_label_->setEnabled(false);
+    }
+}
+
+void BandRatioDialog::on_buttonBox_rejected()
+{
+    this->close();
 }

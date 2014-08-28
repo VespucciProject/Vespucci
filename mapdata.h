@@ -21,11 +21,12 @@
 #define MAPDATA_H
 
 #include <QString>
-#include <armadillo>
-#include "qcustomplot.h"
+#include "arma_ext.h"
+#include <qcustomplot.h>
 #include "mapviewer.h"
 #include "spectrumviewer.h"
 #include "specmap.h"
+#include "mainwindow.h"
 
 using namespace std;
 using namespace arma;
@@ -35,7 +36,8 @@ using namespace arma;
 class MapViewer;
 class SpecMap;
 class PrincipalComponentsData;
-
+class SpectrumViewer;
+class MainWindow;
 class MapData
 {
 public:
@@ -47,7 +49,10 @@ public:
             SpecMap *parent,
             QString *directory,
             QCPColorGradient gradient,
-            int source_index);
+            int source_index,
+            int tick_count,
+            MainWindow* main_window);
+
     ~MapData();
     QString name();
     QString type();
@@ -55,6 +60,22 @@ public:
 
     void set_type(QString type);
     void set_name(QString name, QString type);
+    void set_baseline(rowvec abcissa, mat baseline);
+    void set_baselines(rowvec first_abcissa, rowvec second_abcissa,
+                       mat first_baseline, mat second_baseline);
+    void set_fwhm(mat mid_lines);
+
+    bool univariate_area();
+    bool band_ratio_area();
+    bool univariate_bandwidth();
+
+    QVector<double> first_baseline(int i);
+    QVector<double> second_baseline(int i);
+    QVector<double> first_abcissa();
+    QVector<double> second_abcissa();
+    QVector<double> half_max(int i);
+    QVector<double> mid_line(int i);
+    QVector<double> mid_lines(int i);
 
     mat stats_; //a statistics matrix like made by MATLAB
 
@@ -71,10 +92,10 @@ public:
     void setGradient(const QCPColorGradient &gradient);
     //Displays the map window
     void ShowMapWindow();
-    void CreateImage(QCPColorGradient color_scheme, bool interpolation);
+    void CreateImage(QCPColorGradient color_scheme, bool interpolation, int tick_count);
     void SetMapData(QCPColorMapData *map_data);
 
-    void ShowSpectrumViewer();
+    void ShowSpectrumViewer(bool enabled);
 
     void SetXDescription(QString description);
     void SetYDescription(QString description);
@@ -85,6 +106,7 @@ public:
     void ShowColorScale(bool enabled);
     void ShowAxes(bool enabled);
 
+    void SetDataRange(QCPRange new_range);
     void RemoveThis();
 
     bool savePng(const QString & fileName,
@@ -110,13 +132,22 @@ public:
                   double scale = 1.0,
                   int quality = 0);
 
-    void DrawScaleBar(double width, double height, QString units, QColor color, QString position);
+    void DrawScaleBar(double width, double height, QString units, QColor color, QString position, QFont font);
+
+    double results_at_position(double x, double y);
+
+    void UseGlobalColorScale(bool arg1);
+
+    void RescaleMapWidget();
+    void LockMapDisplaySize(bool lock);
+    void ResetMapWidgetSize();
 
 private:
     QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
     QString y_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
 
     SpecMap* dataset_;
+    MainWindow *main_window_;
 
     QString name_; //Name, this is displayed in the QListView
     QString type_; //Short description of type.  set by subclass constructor.
@@ -141,11 +172,27 @@ private:
     int value_size_; //size of y (number of unique y values)
 
     QCPColorGradient gradient_;
+    QSharedPointer<QCPColorScale> global_color_scale_;
     QCPColorScale *new_color_scale_;
 
     QString *directory_;
 
-    QCPLayoutElement *color_scale_;
+    QCPLayoutElement *color_scale_; //this color scale is not changed!
+
+    //stuff related to baselines and such
+    mat first_baseline_;
+    mat second_baseline_;
+    rowvec first_abcissa_;
+    rowvec second_abcissa_;
+    mat mid_lines_;
+
+    bool univariate_area_;
+    bool band_ratio_area_;
+    bool univariate_bandwidth_;
+    bool using_global_color_scale_;
+
+    QSize initial_map_size_;
+
 
 };
 

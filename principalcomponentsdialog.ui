@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>160</height>
+    <height>191</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>120</y>
+     <y>150</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -35,7 +35,7 @@
      <x>10</x>
      <y>10</y>
      <width>381</width>
-     <height>101</height>
+     <height>121</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -286,6 +286,13 @@
         <string>↔ Vespucci Spectral</string>
        </property>
       </item>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QCheckBox" name="recalculateCheckBox">
+      <property name="text">
+       <string>Recalculate PCA Data?</string>
+      </property>
      </widget>
     </item>
    </layout>

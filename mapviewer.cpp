@@ -125,7 +125,6 @@ QCPColorGradient MapViewer::GetGradient(int gradient_number)
     case 36: return QCPColorGradient::cbRdYlGn;
     case 37: return QCPColorGradient::cbSpectral;
     case 38: return QCPColorGradient::vSpectral;
-    case 39: return QCPColorGradient::cbCluster;
     default: return QCPColorGradient::gpCold;
     }
 }
@@ -245,4 +244,42 @@ void MapViewer::on_actionAdd_Scale_Bar_triggered()
     //widget will delete itself
     ScaleBarDialog *scale_bar_dialog = new ScaleBarDialog(this, parent_);
     scale_bar_dialog->show();
+}
+
+
+void MapViewer::on_actionShow_Spectrum_Viewer_triggered()
+{
+    parent_->ShowSpectrumViewer(true);
+}
+
+void MapViewer::on_actionCommon_Color_Gradient_toggled(bool arg1)
+{
+    cout << "MapViewer::on_actionCommon_Color_Gradient_toggled()" << endl;
+    parent_->UseGlobalColorScale(arg1);
+    cout << "end of function" << endl;
+}
+
+void MapViewer::GlobalDataRangeChanged(QCPRange new_range)
+{
+    parent_->SetDataRange(new_range);
+}
+
+void MapViewer::GlobalGradientChanged(QCPColorGradient new_gradient)
+{
+    parent_->setGradient(new_gradient);
+}
+
+void MapViewer::on_actionLock_Size_toggled(bool arg1)
+{
+    parent_->LockMapDisplaySize(arg1);
+}
+
+void MapViewer::on_actionReset_Size_triggered()
+{
+    parent_->ResetMapWidgetSize();
+}
+
+void MapViewer::on_actionReproportion_triggered()
+{
+    parent_->RescaleMapWidget();
 }

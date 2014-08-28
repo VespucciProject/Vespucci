@@ -38,6 +38,10 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
+    void on_peakComboBox_currentTextChanged(const QString &arg1);
+
+    void on_buttonBox_rejected();
+
 private:
     Ui::BandRatioDialog *ui;
 
@@ -51,6 +55,8 @@ private:
     QLineEdit *name_box_;
     QComboBox *color_selector_;
     QComboBox *value_method_selector_;
+    QComboBox *integration_method_selector_;
+    QLabel *integration_method_label_;
 
     //index of the SpecMap object in the various lists
     int data_index_;

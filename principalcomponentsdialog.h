@@ -38,6 +38,8 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
+    void on_buttonBox_rejected();
+
 private:
     Ui::PrincipalComponentsDialog *ui;
     VespucciWorkspace *workspace;
@@ -45,6 +47,7 @@ private:
     QComboBox *color_selector_;
     QCheckBox *negative_score_box_;
     QLineEdit *name_box_;
+    QCheckBox *recalculate_box_;
 
     //index of the SpecMap object in the various lists
     int data_index_;

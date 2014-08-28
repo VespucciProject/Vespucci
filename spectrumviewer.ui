@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>664</width>
     <height>320</height>
    </rect>
   </property>
@@ -20,17 +20,17 @@
   <widget class="QCustomPlot" name="spectrum" native="true">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>381</width>
-     <height>281</height>
+     <x>9</x>
+     <y>9</y>
+     <width>646</width>
+     <height>273</height>
     </rect>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>320</x>
+     <x>580</x>
      <y>290</y>
      <width>75</width>
      <height>23</height>
@@ -38,6 +38,32 @@
    </property>
    <property name="text">
     <string>Export...</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="coordinateLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>290</y>
+     <width>191</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>(NA, NA)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="valueLabel">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>290</y>
+     <width>131</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>NA</string>
    </property>
   </widget>
  </widget>

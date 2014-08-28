@@ -24,55 +24,32 @@
     <normaloff>vespuccilogo.svg</normaloff>vespuccilogo.svg</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QListWidget" name="datasetsListWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>181</width>
-      <height>251</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="mapsListWidget">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>30</y>
-      <width>181</width>
-      <height>251</height>
-     </rect>
-    </property>
-    <property name="sizeAdjustPolicy">
-     <enum>QAbstractScrollArea::AdjustIgnored</enum>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>46</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Datasets</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>10</y>
-      <width>46</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Maps</string>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="1">
+     <widget class="QListWidget" name="datasetsListWidget"/>
+    </item>
+    <item row="1" column="3">
+     <widget class="QListWidget" name="mapsListWidget">
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustIgnored</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Datasets</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Maps</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -114,11 +91,21 @@
      <addaction name="actionNormalize_Standardize"/>
      <addaction name="actionSubtract_Background"/>
      <addaction name="actionCorrect_Baseline"/>
+     <addaction name="actionCrop"/>
     </widget>
     <widget class="QMenu" name="menuExport_Dataset_Elements">
      <property name="title">
       <string>Export Dataset Elements</string>
      </property>
+     <widget class="QMenu" name="menuPCA_Data">
+      <property name="title">
+       <string>PCA Data</string>
+      </property>
+      <addaction name="actionLatent"/>
+      <addaction name="actionProjected_Data"/>
+      <addaction name="actionEigenvalues_of_Covariance_Matrix"/>
+      <addaction name="actionHotteling_s_Statistic"/>
+     </widget>
      <addaction name="actionSpectra"/>
      <addaction name="actionAverage_Spectra"/>
      <addaction name="actionAverage_Spectra_with_Abcissa"/>
@@ -127,12 +114,15 @@
      <addaction name="separator"/>
      <addaction name="actionAll_Data"/>
      <addaction name="separator"/>
-     <addaction name="actionPrincipal_Component_Statistics"/>
+     <addaction name="menuPCA_Data"/>
+     <addaction name="actionPLS_Data"/>
+     <addaction name="actionVCA_Data"/>
     </widget>
     <addaction name="menuData_Pre_Processing"/>
     <addaction name="separator"/>
     <addaction name="actionConcatenate_Datasets"/>
     <addaction name="menuExport_Dataset_Elements"/>
+    <addaction name="actionView_Dataset_Elements"/>
     <addaction name="separator"/>
     <addaction name="actionClose_Dataset"/>
    </widget>
@@ -150,7 +140,7 @@
      <addaction name="actionPrincipal_Components_Analysis"/>
      <addaction name="actionPartial_Least_Squares"/>
      <addaction name="actionVertex_Components"/>
-     <addaction name="actionK_means_Hierarchical_Clustering"/>
+     <addaction name="actionK_Means_Clustering"/>
      <addaction name="actionAgglomerative_Hierarchical_Clustering"/>
     </widget>
     <addaction name="actionNew_Univariate_Map"/>
@@ -158,6 +148,8 @@
     <addaction name="menuNew_Multivariate_Map"/>
     <addaction name="separator"/>
     <addaction name="actionDelete_Map"/>
+    <addaction name="separator"/>
+    <addaction name="actionSet_Global_Color_Scale"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuData"/>
@@ -260,7 +252,7 @@
   </action>
   <action name="actionPartial_Least_Squares">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Partial Least Squares</string>
@@ -268,7 +260,7 @@
   </action>
   <action name="actionVertex_Components">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Vertex Components</string>
@@ -276,10 +268,10 @@
   </action>
   <action name="actionK_means_Hierarchical_Clustering">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string>K-means Hierarchical Clustering</string>
+    <string>K-means Clustering</string>
    </property>
   </action>
   <action name="actionAgglomerative_Hierarchical_Clustering">
@@ -307,7 +299,7 @@
   </action>
   <action name="actionCorrect_Baseline">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Correct Baseline</string>
@@ -343,17 +335,65 @@
     <string>Average Spectra (with Abcissa)</string>
    </property>
   </action>
-  <action name="actionPrincipal_Component_Statistics">
+  <action name="actionClose_Dataset">
+   <property name="text">
+    <string>Close Dataset</string>
+   </property>
+  </action>
+  <action name="actionCrop">
+   <property name="text">
+    <string>Crop</string>
+   </property>
+  </action>
+  <action name="actionView_Dataset_Elements">
+   <property name="text">
+    <string>View Dataset Elements</string>
+   </property>
+  </action>
+  <action name="actionSet_Global_Color_Scale">
+   <property name="text">
+    <string>Set Global Color Scale...</string>
+   </property>
+  </action>
+  <action name="actionK_Means_Clustering">
+   <property name="text">
+    <string>K-Means Clustering</string>
+   </property>
+  </action>
+  <action name="actionLatent">
+   <property name="text">
+    <string>Coefficients</string>
+   </property>
+  </action>
+  <action name="actionProjected_Data">
+   <property name="text">
+    <string>Projected Data</string>
+   </property>
+  </action>
+  <action name="actionEigenvalues_of_Covariance_Matrix">
+   <property name="text">
+    <string>Eigenvalues of Covariance Matrix</string>
+   </property>
+  </action>
+  <action name="actionHotteling_s_Statistic">
+   <property name="text">
+    <string>Hotteling's Statistic</string>
+   </property>
+  </action>
+  <action name="actionPLS_Data">
    <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Principal Component Statistics</string>
+    <string>PLS Data</string>
    </property>
   </action>
-  <action name="actionClose_Dataset">
+  <action name="actionVCA_Data">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>Close Dataset</string>
+    <string>VCA Data</string>
    </property>
   </action>
  </widget>

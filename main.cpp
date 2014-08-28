@@ -19,17 +19,14 @@
 
 #include "mainwindow.h"
 #include <QApplication>
-#include <armadillo>
 #include "specmap.h"
 #include <QTextStream>
 #include <QFileDevice>
 #include <QFile>
-#include "qcustomplot.h"
+#include <qcustomplot.h>
 #include <fstream>
 #include "mapdata.h"
 #include "vespucciworkspace.h"
-using namespace std;
-using namespace arma;
 
 void DeleteDataset(QList<SpecMap> *datasets, QListWidget *dataset_list_widget, QString name);
 void DeleteMap(QList<MapData> *maps, QListWidget *map_list_widget, QString name);

@@ -26,9 +26,13 @@ VespucciWorkspace::VespucciWorkspace()
 {
     dataset_loading_count_ = 0;
     directory_ = QDir::homePath();
+    //only datarange and colors need to be set.
+    //need to call a function here or in mainwindow to evaluate values.
+
+
 }
 
-void VespucciWorkspace::SetPointers(QMainWindow *main_window)
+void VespucciWorkspace::SetPointers(MainWindow *main_window)
 {
     main_window_ = main_window;
     dataset_list_widget_ = main_window->findChild<QListWidget *>("datasetsListWidget");
@@ -91,7 +95,7 @@ QStringList VespucciWorkspace::dataset_names()
     return dataset_names_;
 }
 
-QMainWindow* VespucciWorkspace::main_window()
+MainWindow *VespucciWorkspace::main_window()
 {
     return main_window_;
 }
@@ -110,7 +114,7 @@ double VespucciWorkspace::GetWavelengthMin(int row)
 //Will later call the workspace destructor
 void VespucciWorkspace::close()
 {
-    cout<<"Closing workspace" << endl;
+    cout<< "Closing workspace" << endl;
 }
 
 QSharedPointer<SpecMap> VespucciWorkspace::DatasetAt(int i)
@@ -121,4 +125,37 @@ QSharedPointer<SpecMap> VespucciWorkspace::DatasetAt(int i)
 QString* VespucciWorkspace::directory_ptr()
 {
     return &directory_;
+}
+
+bool VespucciWorkspace::RecalculateGlobalDataRange(QCPRange *new_data_range)
+{
+    if (new_data_range->upper > global_data_range_.upper){
+        global_data_range_.upper = new_data_range->upper;
+        return true;
+    }
+    if (new_data_range->lower < global_data_range_.lower){
+        global_data_range_.lower = new_data_range->lower;
+        return true;
+    }
+    return false;
+}
+
+void VespucciWorkspace::RefreshGlobalColorGradient(QCPColorGradient new_gradient)
+{
+    global_gradient_ = new_gradient;
+}
+
+void VespucciWorkspace::SetGlobalDataRange(QCPRange *new_data_range)
+{
+    global_data_range_ = *new_data_range;
+}
+
+QCPRange* VespucciWorkspace::global_data_range()
+{
+    return &global_data_range_;
+}
+
+QCPColorGradient* VespucciWorkspace::global_gradient()
+{
+    return &global_gradient_;
 }
