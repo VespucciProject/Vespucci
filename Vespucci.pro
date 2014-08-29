@@ -35,9 +35,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = vespucci
 TEMPLATE = app
 
-unix: QMAKE_CXXFLAGS += -isystem "/usr/include" \
-                        -isystem "/usr/include/armadillo_bits" \
-                        -isystem "/usr/include/boost" \
+unix: QMAKE_CXXFLAGS += -isystem "/usr/local/include" \
+                        -isystem "/usr/local/include/armadillo_bits" \
+                        -isystem "/usr/local/include/boost" \
                         -isystem "/usr/include/mlpack"
 
 win32-g++: QMAKE_CXXFLAGS += -isystem "C:/usr/include" \
@@ -139,57 +139,57 @@ macx: LIBS += -framework Accelerate
 
 
 #ARPACK
-unix: LIBS += /usr/lib/libarpack.so
-unix: PRE_TARGETDEPS += /usr/lib/libarpack.so
+unix: LIBS += /usr/local/lib/libarpack.so
+unix: PRE_TARGETDEPS += /usr/local/lib/libarpack.so
 
 #MLPACK
-unix: LIBS += -L/usr/lib/libmlpack.a
-unix: PRE_TARGETDEPS += /usr/lib/libmlpack.a
+unix: LIBS += -L/usr/local/lib/libmlpack.a
+unix: PRE_TARGETDEPS += /usr/local/lib/libmlpack.a
 
 #Boost path for mac (also default nix path, but not used by ubuntu's package manager)
 macx: INCLUDEPATH += /usr/local/include
 macx: DEPENDPATH += /usr/local/include
 
 #Boost math
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.so
+unix: !macx: LIBS += /usr/local/lib/x86_64-linux-gnu/libboost_math_c99.so
+unix: !macx: PRE_TARGETDEPS += /usr/local/lib/x86_64-linux-gnu/libboost_math_c99.so
 
 macx: LIBS += /usr/local/lib/libboost_math_c99.so
 macx: PRE_TARGETDEPS += /usr/local/lib/libboost_math_c99.so
 
 #Boost program options
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_program_options.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_program_options.so
+unix: !macx: LIBS += /usr/local/lib/x86_64-linux-gnu/libboost_program_options.so
+unix: !macx: PRE_TARGETDEPS += /usr/local/lib/x86_64-linux-gnu/libboost_program_options.so
 
 macx: LIBS += /usr/local/lib/libboost_program_options.so
 macx: PRE_TARGETDEPS += /usr/local/lib/libboost_program_options.so
 
 #Boost random
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_random.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_random.so
+unix: !macx: LIBS += /usr/local/lib/x86_64-linux-gnu/libboost_random.so
+unix: !macx: PRE_TARGETDEPS += /usr/local/lib/x86_64-linux-gnu/libboost_random.so
 
 macx: LIBS += /usr/local/lib/libboost_random.so
 macx: PRE_TARGETDEPS += /usr/local/lib/libboost_random.so
 
 #Boost test
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.so
+unix: !macx: LIBS += /usr/local/lib/x86_64-linux-gnu/libboost_unit_test_framework.so
+unix: !macx: PRE_TARGETDEPS += /usr/local/lib/x86_64-linux-gnu/libboost_unit_test_framework.so
 
 macx: LIBS += /usr/local/lib/libboost_unit_test_framework.so
 macx: PRE_TARGETDEPS += /usr/local/lib/libboost_unit_test_framework.so
 
 #LibXML2
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libxml2.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libxml2.so
+unix: !macx: LIBS += /usr/local/lib/x86_64-linux-gnu/libxml2.so
+unix: !macx: PRE_TARGETDEPS += /usr/local/lib/x86_64-linux-gnu/libxml2.so
 macx: LIBS += -framework libxml2
 
 #QCustomPlot (linking statically for windows)
-unix: LIBS += /usr/lib/libqcustomplot1.so
-unix: PRE_TARGETDEPS += /usr/lib/libqcustomplot1.so
+unix: LIBS += /usr/local/lib/libqcustomplot1.so
+unix: PRE_TARGETDEPS += /usr/local/lib/libqcustomplot1.so
 
 #Armadillo
-unix: LIBS += /usr/lib/libarmadillo.so
-unix: PRE_TARGETDEPS += /usr/lib/libarmadillo.so
+unix: LIBS += /usr/local/lib/libarmadillo.so
+unix: PRE_TARGETDEPS += /usr/local/lib/libarmadillo.so
 
 #Windows Libraries
 INCLUDEPATH += $$PWD/../../../../usr/include
