@@ -16,7 +16,21 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QCustomPlot" name="mapView" native="true"/>
+     <widget class="QCustomPlot" name="mapView" native="true">
+      <widget class="QRadioButton" name="radioButton">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>190</y>
+         <width>82</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>RadioButton</string>
+       </property>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -53,8 +67,15 @@
     <addaction name="separator"/>
     <addaction name="actionShow_Spectrum_Viewer"/>
    </widget>
+   <widget class="QMenu" name="menuData">
+    <property name="title">
+     <string>Data</string>
+    </property>
+    <addaction name="actionNew_Dataset_from_Boolean_Expression"/>
+   </widget>
    <addaction name="menuMap"/>
    <addaction name="menuDisplay"/>
+   <addaction name="menuData"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSave_Image_As">
@@ -143,6 +164,11 @@
   <action name="actionReset_Size">
    <property name="text">
     <string>Reset Size</string>
+   </property>
+  </action>
+  <action name="actionNew_Dataset_from_Boolean_Expression">
+   <property name="text">
+    <string>New Dataset from Boolean Expression...</string>
    </property>
   </action>
  </widget>
