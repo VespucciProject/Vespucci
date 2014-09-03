@@ -76,7 +76,8 @@ SOURCES += main.cpp\
     kmeansdialog.cpp \
     vcadata.cpp \
     vcadialog.cpp \
-    dataextractordialog.cpp
+    dataextractordialog.cpp \
+    analysiswizard.cpp
 
 HEADERS  += mainwindow.h \
     specmap.h \
@@ -104,7 +105,8 @@ HEADERS  += mainwindow.h \
     kmeansdialog.h \
     vcadata.h \
     vcadialog.h \
-    dataextractordialog.h
+    dataextractordialog.h \
+    analysiswizard.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
@@ -123,7 +125,8 @@ FORMS    += mainwindow.ui \
     plsdialog.ui \
     kmeansdialog.ui \
     vcadialog.ui \
-    dataextractordialog.ui
+    dataextractordialog.ui \
+    analysiswizard.ui
 
 RESOURCES += \
     resources.qrc

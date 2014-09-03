@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AnalysisWizard</class>
+ <widget class="QWizard" name="AnalysisWizard">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>433</width>
+    <height>339</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Analysis Wizard</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/icons/vespuccilogo.ico</normaloff>:/icons/vespuccilogo.ico</iconset>
+  </property>
+  <widget class="QWizardPage" name="datasetSelectionPage">
+   <property name="title">
+    <string>Select Dataset</string>
+   </property>
+   <property name="subTitle">
+    <string>Select which datasets to analyze and how the spectra within should be handled.</string>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Handling Method</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboBox_2">
+        <item>
+         <property name="text">
+          <string comment="Treat each row of each dataset as its own sample.">Rows as Samples</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string comment="Treats the entire dataset spectra matrix as a single sample. All datasets must have the same number of spectra for this to choose this option.">Datasets as Samples (Spectra Matrix)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string comment="Treat the average spectrum of each dataset as a sample. Datasets do not need to have the same number of spectra.">Datasets as Samples (Average Spectrum)</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="0">
+     <widget class="QListView" name="listView"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWizardPage" name="methodSelectionPage">
+   <property name="title">
+    <string>Select Method</string>
+   </property>
+   <property name="subTitle">
+    <string/>
+   </property>
+   <layout class="QFormLayout" name="formLayout_2">
+    <item row="0" column="1">
+     <widget class="QComboBox" name="comboBox">
+      <item>
+       <property name="text">
+        <string>Principal Component Analysis</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Vertex Component Analysis</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Neighborhood Component Analysis</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Independent Component Analysis (RADICAL)</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Hierarchical Clustering</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>k-Means Clustering</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Method</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Number of Components</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QSpinBox" name="spinBox">
+      <property name="minimum">
+       <number>2</number>
+      </property>
+      <property name="maximum">
+       <number>15</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWizardPage" name="outputSelectionPage">
+   <layout class="QFormLayout" name="formLayout_3">
+    <item row="0" column="1">
+     <widget class="QSpinBox" name="spinBox_2"/>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

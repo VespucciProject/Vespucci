@@ -124,6 +124,8 @@
     <addaction name="menuExport_Dataset_Elements"/>
     <addaction name="actionView_Dataset_Elements"/>
     <addaction name="separator"/>
+    <addaction name="actionAnalysis_Wizard"/>
+    <addaction name="separator"/>
     <addaction name="actionClose_Dataset"/>
    </widget>
    <widget class="QMenu" name="menuMap">
@@ -394,6 +396,11 @@
    </property>
    <property name="text">
     <string>VCA Data</string>
+   </property>
+  </action>
+  <action name="actionAnalysis_Wizard">
+   <property name="text">
+    <string>Analysis Wizard...</string>
    </property>
   </action>
  </widget>
