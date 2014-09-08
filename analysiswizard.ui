@@ -43,11 +43,6 @@
         </item>
         <item>
          <property name="text">
-          <string comment="Treats the entire dataset spectra matrix as a single sample. All datasets must have the same number of spectra for this to choose this option.">Datasets as Samples (Spectra Matrix)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
           <string comment="Treat the average spectrum of each dataset as a sample. Datasets do not need to have the same number of spectra.">Datasets as Samples (Average Spectrum)</string>
          </property>
         </item>
@@ -103,14 +98,14 @@
      </widget>
     </item>
     <item row="0" column="0">
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="methodLabel">
       <property name="text">
        <string>Method</string>
       </property>
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="componentsLabel">
       <property name="text">
        <string>Number of Components</string>
       </property>
@@ -130,13 +125,44 @@
   </widget>
   <widget class="QWizardPage" name="outputSelectionPage">
    <layout class="QFormLayout" name="formLayout_3">
-    <item row="0" column="1">
-     <widget class="QSpinBox" name="spinBox_2"/>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="label_5">
+    <item row="1" column="0">
+     <widget class="QLabel" name="xAxisLabel">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
-       <string>TextLabel</string>
+       <string>X-axis</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QComboBox" name="xAxisComboBox">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="yAxisLabel">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>Y-axis</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QComboBox" name="yAxisComboBox">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QCheckBox" name="plotCheckBox">
+      <property name="text">
+       <string>Generate Plots (data can be plotted later)</string>
       </property>
      </widget>
     </item>

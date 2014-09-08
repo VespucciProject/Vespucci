@@ -63,6 +63,7 @@ SpecMap::SpecMap(QString binary_file_name, MainWindow *main_window, QString *dir
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
     partial_least_squares_calculated_ = false;
+    vertex_components_calculated_ = false;
     z_scores_calculated_ = false;
     directory_ = directory;
 
@@ -103,6 +104,7 @@ SpecMap::SpecMap(QTextStream &inputstream, MainWindow *main_window, QString *dir
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
     partial_least_squares_calculated_ = false;
+    vertex_components_calculated_ = false;
     z_scores_calculated_ = false;
     directory_ = directory;
     flipped_ = swap_spatial;
@@ -984,6 +986,16 @@ void SpecMap::PrincipalComponents(int component,
     maps_.last().data()->ShowMapWindow();
 }
 
+
+///
+/// \brief SpecMap::VertexComponents
+/// \param endmembers
+/// \param image_component
+/// \param include_negative_scores
+/// \param name
+/// \param gradient_index
+/// \param recalculate
+///
 void SpecMap::VertexComponents(int endmembers,
                                int image_component,
                                bool include_negative_scores,
@@ -993,24 +1005,26 @@ void SpecMap::VertexComponents(int endmembers,
 {
     cout << "SpecMap::VertexComponents" << endl;
     QString map_type;
+    cout << "set map type" << endl;
     QTextStream(&map_type) << "(Vertex Component " << image_component << ")";
-
-    image_component--;
     if (recalculate || !vertex_components_calculated_){
         cout << "constructor" << endl;
+        cout << "VCAData::VCAData" << endl;
         vertex_components_data_ = new VCAData(this, directory_);
+        cout << "VCAData::Apply" << endl;
         vertex_components_data_->Apply(spectra_, endmembers);
+        cout << "set calculated" << endl;
         vertex_components_calculated_ = true;
     }
-
-    colvec results = vertex_components_data_->Results(image_component);
+    cout << "end of if statement" << endl;
+    colvec results = vertex_components_data_->Results(image_component-1);
 
     //assume all negative values are actually 0
     if (!include_negative_scores){
         uvec negative_indices = find(results < 0);
         results.elem(negative_indices).zeros();
     }
-
+    cout << "MapData::MapData" << endl;
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                                 y_axis_description_,
                                                 x_, y_, results,
@@ -1019,6 +1033,7 @@ void SpecMap::VertexComponents(int endmembers,
                                                 maps_.size(),
                                                 6,
                                                 main_window_));
+    cout << "MapData::set_name" << endl;
     new_map->set_name(name, map_type);
     AddMap(new_map);
     maps_.last().data()->ShowMapWindow();

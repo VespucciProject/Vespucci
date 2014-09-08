@@ -453,6 +453,7 @@ bool arma_ext::plsregress(mat X, mat Y, int components,
 bool arma_ext::VCA(mat X, int endmembers, uvec &indices,
          mat &endmember_spectra, mat &projected_data, mat &fractional_abundances)
 {
+    cout << "arma_ext::VCA" << endl;
     indices.set_size(endmembers);
     indices.zeros();
     int m = X.n_rows;
@@ -460,14 +461,23 @@ bool arma_ext::VCA(mat X, int endmembers, uvec &indices,
     mat U;
     vec s;
     mat V;
+    cout << "call to svds" << endl;
     svds(trans(X) * X / m, endmembers, U, s, V);
+    cout << "x_p = " << endl;
     mat x_p = trans(U) * trans(X);
+    cout << "projected data = " << endl;
     projected_data = U * x_p;
-    mat x_p_mean = mean(x_p, 0);
-    mat t1 = sum(x_p * trans(x_p_mean));
+    cout << "x_p_mean = " << endl;
+    mat x_p_mean = mean(x_p, 1);
+
+    cout << "t1 = " << endl;
+    mat t1 = sum(x_p * x_p_mean(0));
+    cout << "t1.n_rows=" << t1.n_rows << " t1.n_cols=" << t1.n_cols << endl;
+    cout << "y_p =" << endl;
     mat y_p = x_p / t1(0);
+    cout << "y_p.n_cols = " << y_p.n_cols << " y_p.n_rows = " << y_p.n_rows << endl;
 
-
+    cout << "mat A=" << endl;
     mat A = zeros(endmembers, endmembers);
     A(endmembers-1, 0) = 1;
     mat w;
@@ -475,16 +485,21 @@ bool arma_ext::VCA(mat X, int endmembers, uvec &indices,
     mat v;
     uvec query;
     for (int i = 0; i < endmembers; ++i){
+        cout << "for loop i = " << i << endl;
         w = randu<mat>(endmembers, 1);
+        cout << "f" << endl;
         f = w - A * pinv(A) * w;
         mat sum_squares = sqrt(sum(square(f)));
-        f /= sum_squares(0);
-        v = abs(trans(f) * y_p);
+        f /= sum_squares(0,0);
+        cout <<"v" << endl;
+        v = trans(f) * y_p;
         query = find(v == v.max());
         indices(i) = query(0);
+        cout << "A subview" << endl;
         A.col(i) = y_p.col(indices(i));
     }
     endmember_spectra = projected_data.cols(indices);
+    cout << "fractional abundances" << endl;
     fractional_abundances = trans((pinv(endmember_spectra) * projected_data));
     //put endmember spectra in the same format used by rest of program.
     return true;

@@ -43,13 +43,13 @@ FilterDialog::~FilterDialog()
 ///enables and disables appropriate options based on method selected
 void FilterDialog::on_methodComboBox_currentIndexChanged(int index)
 {
-    if ((index!=2) && (index!=3) &&(derivative_box_->isEnabled()))
+    if ((index!=2) && (derivative_box_->isEnabled()))
         derivative_box_->setEnabled(false);
-    if ((index == 2 || index == 3) && (!derivative_box_->isEnabled()))
+    if ((index == 2) && (!derivative_box_->isEnabled()))
         derivative_box_->setEnabled(true);
-    if ((index != 2) && (index != 3) && (polynomial_box_->isEnabled()))
+    if ((index != 2) && (polynomial_box_->isEnabled()))
         polynomial_box_->setEnabled(false);
-    if ((index == 2 || index == 3)&&(!polynomial_box_->isEnabled()))
+    if ((index == 2)&&(!polynomial_box_->isEnabled()))
         polynomial_box_->setEnabled(true);
 }
 
@@ -69,10 +69,7 @@ void FilterDialog::on_buttonBox_accepted()
                              window_box_->value());
         break;
     case 3:
-        dataset_->SavitzkyGolay(polynomial_box_->value(), window_box_->value());
-        break;
-    case 4:
-        dataset_->SingularValue(5);
+        dataset_->SingularValue(window_box_->value());
     default:
         return;
     }

@@ -16,21 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QCustomPlot" name="mapView" native="true">
-      <widget class="QRadioButton" name="radioButton">
-       <property name="geometry">
-        <rect>
-         <x>260</x>
-         <y>190</y>
-         <width>82</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>RadioButton</string>
-       </property>
-      </widget>
-     </widget>
+     <widget class="QCustomPlot" name="mapView" native="true"/>
     </item>
    </layout>
   </widget>
