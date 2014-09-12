@@ -224,6 +224,7 @@ void MainWindow::on_actionSubtract_Background_triggered()
                                          tr("Vespucci Spectrum Files (*.arma)"));
     mat input;
     bool success = input.load(filename.toStdString());
+    cout << "input elements: " << input.n_elem << endl;
     if (!success){
         QMessageBox::warning(this, "File Open Error", "File cannot be opened");
         return;
@@ -290,7 +291,6 @@ void MainWindow::on_actionAverage_Spectra_triggered()
         QMessageBox::information(this, "File Saved", "File written successfully!");
     else
         QMessageBox::warning(this, "File Not Saved", "Could not save file.");
-
 }
 
 void MainWindow::on_actionAverage_Spectra_with_Abcissa_triggered()

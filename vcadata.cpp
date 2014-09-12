@@ -15,7 +15,7 @@ VCAData::VCAData(SpecMap *parent,
 ///
 void VCAData::Apply(mat spectra, int endmembers)
 {
-    arma_ext::VCA(spectra,
+    arma_ext::VCA(trans(spectra),
                   endmembers,
                   indices_,
                   endmember_spectra_,

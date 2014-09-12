@@ -45,14 +45,15 @@ using namespace arma;
 namespace arma_ext
 {
 mat spdiags(mat B, QVector<int> d, int m, int n);
-bool svds(mat X, int k, mat &U, vec &s, mat &V);
+bool svds(mat X, unsigned int k, mat &U, vec &s, mat &V);
 mat orth(mat X);
 bool plsregress(mat X, mat Y, int components,
                 mat &X_loadings, mat &Y_loadings,
                 mat &X_scores, mat &Y_scores,
                 mat &coefficients, mat &percent_variance, mat &fitted);
-bool VCA(mat X, int endmembers, uvec &indices,
-    mat &endmember_spectra, mat &projected_data, mat &fractional_abundances);
+bool VCA(mat R, unsigned int p, uvec &indices, mat &endmember_spectra,
+         mat &projected_data, mat &fractional_abundances);
+double estimate_snr(mat R, vec r_m, mat x);
 }
 
 #endif // ARMA_EXT_H

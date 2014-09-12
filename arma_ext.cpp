@@ -172,7 +172,7 @@ mat arma_ext::orth(mat X)
 /// \param V
 /// \return Whether or not algorithm converged.
 
-bool arma_ext::svds(mat X, int k, mat &U, vec &s, mat &V)
+bool arma_ext::svds(mat X, unsigned int k, mat &U, vec &s, mat &V)
 {
     if (X.n_cols < 2){
         cerr << "svds: X must be 2D matrix" << endl;
@@ -183,11 +183,12 @@ bool arma_ext::svds(mat X, int k, mat &U, vec &s, mat &V)
     double root_2 = sqrt(2.0);
     double tolerance = 1e-10 / root_2; //tolerance for convergence (ARPACK default)
     double epsilon = datum::eps; //eps in Octave and MATLAB
-    int m = X.n_rows;
-    int n = X.n_cols;
-    int p = std::min(m, n); //used below to establish tolerances.
-    int q = std::max(m, n);
-
+    unsigned int m = X.n_rows;
+    unsigned int n = X.n_cols;
+    unsigned int p = std::min(m, n); //used below to establish tolerances.
+    unsigned int q = std::max(m, n);
+    //cout << "p = " << p << endl;
+    //cout << "k = " << k << endl;
     if (k > p){
         if (k > m)
             cerr << "svds: value of k " << k << "is greater than number of rows " << m << endl;
@@ -221,8 +222,7 @@ bool arma_ext::svds(mat X, int k, mat &U, vec &s, mat &V)
     mat eigvec;
 
     //because we're using sigma=0, results of eigs will be centered around 0
-    //we throw out the negative ones, then add in 0 eigenvalues if we have too
-    //few
+    //we throw out the negative ones, then add in 0 eigenvalues if we have to
     bool eigs_success = eigs_sym(eigval, eigvec, B, k*2);
     //cout << "eigval=" << eigval << endl;
     //cout << "eigvec=" << eigvec << endl;
@@ -255,13 +255,14 @@ bool arma_ext::svds(mat X, int k, mat &U, vec &s, mat &V)
     }
 
     //cout << "UU" << endl;
-    mat UU = trans(eigvec.rows(0, m-1)) * eigvec.rows(0, m-1);
-    vec diag_UU = UU.diag();
+    //mat UU = trans(eigvec.rows(0, m-1)) * eigvec.rows(0, m-1);
+    //vec diag_UU = UU.diag();
     //cout << "VV" << endl;
-    mat VV = trans(eigvec.rows(m, m+n-1)) * eigvec.rows(m, m+n-1);
-    vec diag_VV = VV.diag();
+    //mat VV = trans(eigvec.rows(m, m+n-1)) * eigvec.rows(m, m+n-1);
+    //vec diag_VV = VV.diag();
 
-
+    //cout << "eigvals:" << endl;
+    //cout << eigval << endl;
     //find all indices that satisfy tolerances
     //See the Octave documentation for svds:
     // We wish to exclude all eigenvalues that are less than zero as these
@@ -274,11 +275,11 @@ bool arma_ext::svds(mat X, int k, mat &U, vec &s, mat &V)
     // values.
 
     //cout << "call to find()" << endl;
-    uvec query = find((eigval > d_tolerance) && (abs(diag_UU) > uv_tolerance) && (abs(diag_VV) > uv_tolerance));
+    uvec query = find((eigval > d_tolerance) /*&& (abs(diag_UU) > uv_tolerance) && (abs(diag_VV) > uv_tolerance)*/);
     //cout << query << endl;
 
 
-    int number_of_indices = query.n_elem;
+    unsigned int number_of_indices = query.n_elem;
     int end = std::min(k, number_of_indices) - 1;
     //cout << "end=" << end;
     //cout << "query.n_elem=" << query.n_elem << endl;
@@ -293,7 +294,7 @@ bool arma_ext::svds(mat X, int k, mat &U, vec &s, mat &V)
 
     V = sqrt(2) * eigvec.rows(m, m+n-1);
     V = V.cols(return_indices);
-
+    //cout << "return_indices.n_elem=" << return_indices.n_elem << " k=" << k << endl;
     //B may have some eigenvalues that are 0 that needed to be included if the
     //number of non_zero eigenvalues is too small. Will only add eigenvalues in if
     //they exist (obviously).
@@ -308,7 +309,7 @@ bool arma_ext::svds(mat X, int k, mat &U, vec &s, mat &V)
 
             //necessary number of zero eigenvalues
             vec zero_eigvals = abs(eigval.cols(zero_indices.rows(0, n_zero)));
-
+            //cout <<"n_zero" << n_zero << endl;
             U.insert_cols(U.n_cols, QWU.cols(0, n_zero));
             s.insert_rows(s.n_rows, zero_eigvals);
             V.insert_cols(V.n_cols, QWV.cols(0, n_zero));
@@ -327,7 +328,6 @@ bool arma_ext::svds(mat X, int k, mat &U, vec &s, mat &V)
 
     return eigs_success;
 }
-
 
 ///
 /// \brief arma_ext::plsregress PLS Regression Using SIMPLS algorithm.
@@ -441,7 +441,7 @@ bool arma_ext::plsregress(mat X, mat Y, int components,
 ///
 /// \brief arma_ext::VCA
 /// Vertex Component Analysis
-/// \param X The dataset
+/// \param R The dataset
 /// \param endmembers Number of endmembers to compute
 /// \param indices Row indices of pure components.
 /// \param endmember_spectra Spectra of pure components (note that these are in
@@ -450,58 +450,120 @@ bool arma_ext::plsregress(mat X, mat Y, int components,
 /// \param fractional_abundances Purity of a given spectrum relative to endmember
 /// \return Convergeance (no actual test implemented...)
 ///
-bool arma_ext::VCA(mat X, int endmembers, uvec &indices,
-         mat &endmember_spectra, mat &projected_data, mat &fractional_abundances)
+bool arma_ext::VCA(mat R, unsigned int p,
+         uvec &indices, mat &endmember_spectra,
+         mat &projected_data, mat &fractional_abundances)
 {
-    cout << "arma_ext::VCA" << endl;
-    indices.set_size(endmembers);
-    indices.zeros();
-    int m = X.n_rows;
+//Initializations
+    unsigned int L = R.n_rows;
+    unsigned int N = R.n_cols;
+    if (L == 0 || N == 0){
+        cerr << "No data!" << endl;
+        return false;
+    }
 
-    mat U;
-    vec s;
-    mat V;
-    cout << "call to svds" << endl;
-    svds(trans(X) * X / m, endmembers, U, s, V);
-    cout << "x_p = " << endl;
-    mat x_p = trans(U) * trans(X);
-    cout << "projected data = " << endl;
-    projected_data = U * x_p;
-    cout << "x_p_mean = " << endl;
-    mat x_p_mean = mean(x_p, 1);
+    if (p < 0 || p > L){
+        cerr << "wrong number of endmembers (" << p << ")!"<< endl;
+        cerr << "set to 5 or one less than number of spectra" << endl;
+        p = (L < 5? 5: L-1);
+    }
+//Estimations of SNR
 
-    cout << "t1 = " << endl;
-    mat t1 = sum(x_p * x_p_mean(0));
-    cout << "t1.n_rows=" << t1.n_rows << " t1.n_cols=" << t1.n_cols << endl;
-    cout << "y_p =" << endl;
-    mat y_p = x_p / t1(0);
-    cout << "y_p.n_cols = " << y_p.n_cols << " y_p.n_rows = " << y_p.n_rows << endl;
+    mat r_m = mean(R, 1);
+    mat R_m = repmat(r_m, 1, N); //the mean of each spectral band
+    mat R_o = R - R_m; //mean-center the data
+    mat Ud;
+    vec Sd;
+    mat Vd;
+    //cout << "p = " << p << endl;
+    svds(R_o*trans(R_o)/N, p, Ud, Sd, Vd);
+    Ud.save("Ud.csv", csv_ascii);
+    mat x_p = trans(Ud) * R_o;
+    //cout <<"SNR"<<endl;
+    double SNR = estimate_snr(R, r_m, x_p);
+    //cout <<"end SNR"<<endl;
+    double SNR_th = 15 + 10*log10(p);
 
-    cout << "mat A=" << endl;
-    mat A = zeros(endmembers, endmembers);
-    A(endmembers-1, 0) = 1;
-    mat w;
-    mat f;
-    mat v;
-    uvec query;
-    for (int i = 0; i < endmembers; ++i){
-        cout << "for loop i = " << i << endl;
-        w = randu<mat>(endmembers, 1);
-        cout << "f" << endl;
-        f = w - A * pinv(A) * w;
-        mat sum_squares = sqrt(sum(square(f)));
-        f /= sum_squares(0,0);
-        cout <<"v" << endl;
-        v = trans(f) * y_p;
-        query = find(v == v.max());
-        indices(i) = query(0);
-        cout << "A subview" << endl;
-        A.col(i) = y_p.col(indices(i));
+//Choose projective projection or projection to p-1 subspace
+    mat y;
+    if (SNR < SNR_th){
+        //cout << "SNR < SNR_th" << endl;
+        unsigned int d = p - 1;
+        //cout << "Ud.n_cols=" << Ud.n_cols << endl;
+        Ud = Ud.cols(0, d-1);
+
+        projected_data = Ud * x_p.rows(0, d-1) + R_m; //in dimension L
+        mat x = x_p.rows(0, d-1);//x_p = trans(Ud)*R_o, p-dimensional subspace
+        //following three lines are one in matlab...
+        mat sum_squares = sum(pow(x, 2));
+        double c = sum_squares.max();
+        c = std::sqrt(c);
+        y = join_vert(x, c*ones(1, N));
+    }
+
+    else{
+        //cout << "SNR !< SNR_th" << endl;
+        unsigned int d = p;
+        svds(R*trans(R)/N, d, Ud, Sd, Vd); //R_o is a mean centered version...
+        x_p = trans(Ud)*R;
+        projected_data = Ud * x_p.rows(0, d-1);
+        mat x = trans(Ud) * R;
+        mat u = mean(x, 1);
+        y = x / repmat(sum(x % repmat(u, 1, N)), d, 1);
+    }
+
+    // The VCA algorithm
+    //cout << "VCA Algorithm" << endl;
+    colvec w;
+    w.set_size(p);
+    colvec f;
+    rowvec v;
+    indices.set_size(p);
+    //there are no fill functions for uvecs
+    for (unsigned int i = 0; i < p; ++i)
+        indices(i) = 0;
+    mat A = zeros(p, p);
+    double v_max;
+    double sum_squares;
+    uvec q1;
+    A(p-1, 0) = 1;
+    for (unsigned int i = 0; i < p; ++i){
+        //cout << "i=" << i << endl;
+        w.randu();
+        f = w - A*pinv(A)*w;
+        sum_squares = sqrt(sum(square(f)));
+        f /= sum_squares;
+        v = trans(f) * y;
+        v_max = max(abs(v));
+        q1 = find(abs(v) == v_max, 1);
+        indices(i) = q1(0);
+        //cout<<"A.col"<<endl;
+        A.col(i) = y.col(indices(i)); //same as x.col(indices(i));
     }
     endmember_spectra = projected_data.cols(indices);
-    cout << "fractional abundances" << endl;
-    fractional_abundances = trans((pinv(endmember_spectra) * projected_data));
-    //put endmember spectra in the same format used by rest of program.
+    fractional_abundances = trans(pinv(endmember_spectra) * projected_data);
     return true;
+}
 
+///
+/// \brief estimate_snr Estimates Signal-to-Noise ratio.
+/// \cite Nascimento2005
+/// \param R Input
+/// \param r_m
+/// \param x
+/// \return
+///
+double arma_ext::estimate_snr(mat R, vec r_m, mat x)
+{
+    unsigned int L = R.n_rows;
+    unsigned int N = R.n_cols;
+    unsigned int p = x.n_rows;
+    if (x.n_cols != N){
+        cerr << "invaliid input to estimate_snr" << endl;
+        return 0;
+    }
+
+    double P_y = accu(arma::square(R))/N;
+    double P_x = accu(arma::square(x))/N + dot(r_m, r_m);
+    return 10*log10( (P_x - p/L*P_y)/(P_y - P_x) );
 }

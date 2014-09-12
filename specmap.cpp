@@ -1575,26 +1575,15 @@ bool SpecMap::ConstructorCancelled()
 ///
 mat SpecMap::AverageSpectrum(bool stats)
 {
-    mat spectrum;
-    int size = spectra_.n_cols;
-    double spec_mean;
-    double spec_std;
-
-    if (stats)
-        spectrum.set_size(2, size);
-    else
-        spectrum.set_size(1, size);
-
-    for (int j = 0; j < size; ++j){
-        spec_mean = mean(spectra_.col(j));
-        spectrum(0, j) = spec_mean;
-        if (stats){
-            spec_std = stddev(spectra_.col(j));
-            spectrum(1, j) = spec_std;
-        }
+    mat spec_mean = mean(spectra_, 0);
+    rowvec spec_stddev;
+    spec_mean = mean(spectra_, 0);
+    //insert stddevs on next line if requested
+    if (stats){
+        spec_stddev = stddev(spectra_, 0);
+        spec_mean.insert_rows(1, spec_stddev);
     }
-
-    return spectrum;
+    return spec_mean;
 }
 
 
