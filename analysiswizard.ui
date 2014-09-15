@@ -46,6 +46,16 @@
           <string comment="Treat the average spectrum of each dataset as a sample. Datasets do not need to have the same number of spectra.">Datasets as Samples (Average Spectrum)</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>Datasets as Samples (Spectra Matrix)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Endmembers as Samples</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>

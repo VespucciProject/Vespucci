@@ -456,9 +456,7 @@ void SpecMap::SingularValue(int singular_values)
 
 ///
 /// \brief SpecMap::Derivatize
-/// Performs derivative filtering on the data. This really looks more like
-/// Savitzky-Golay filtering. This is based on a similarly-named function in
-/// the in-house MATLAB code previously used by my group.
+/// Performs derivatization/Savitzky-Golay smoothing
 /// \param derivative_order The order of the derivative.
 /// \param polynomial_order The order of the polynomial
 /// \param window_size The size of the filter window.
@@ -569,13 +567,6 @@ void SpecMap::Derivatize(int derivative_order,
     spectra_ /= -1;
 }
 
-
-void SpecMap::SavitzkyGolay(int polynomial_order, int window_size)
-{
-    polynomial_order = 0;
-    window_size = 0;
-    QMessageBox::information(0, "Feature not Implemented", "This feature not yet implemented");
-}
 
 // MAPPING FUNCTIONS //
 

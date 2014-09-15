@@ -70,7 +70,6 @@ public:
     //Spectral Pre-processing
 
     void SubtractBackground(mat background);
-    void SavitzkyGolay(int polynomial_order, int window_size);
     void MedianFilter(int window_size);
     void LinearMovingAverage(int window_size);
     void Derivatize(int derivative_order, int polynomial_order, int window_size);
@@ -136,6 +135,11 @@ public:
     void KMeans(size_t clusters,
                QString name);
 
+    void IndependentComponents(int image_component,
+                               QString name,
+                               int gradient_index,
+                               bool recalculate);
+
     void Agglomerative(int clusters,
                       QString distance_metric,
                       QString name);
@@ -151,11 +155,14 @@ public:
     bool vertex_components_calculated();
     bool partial_least_squares_calculated();
     bool k_means_calculated();
+    bool radical_calculated();
 
     PrincipalComponentsData *principal_components_data();
     VCAData *vertex_components_data();
     PLSData *partial_least_squares_data();
     mat *k_means_data();
+    mat *radical_components();
+    mat *radical_unmixing();
     const QString x_axis_description();
     const QString y_axis_description();
 
@@ -248,6 +255,19 @@ private:
     /// A matrix containing the K-means cluster assignments. A container object
     /// may be used later.
     mat k_means_data_;
+
+    ///
+    /// \brief radical_components_
+    /// A matrix consisting of the independent components calculated by RADICAL
+    /// Y=WX where X is spectra_
+    mat radical_components_;
+
+    ///
+    /// \brief radical_unmixing_
+    /// An unmixing matrix from RADICAL Y=WX W is the matrix.
+    ///
+    mat radical_unmixing_;
+
     ///
     /// \brief map_names_
     /// A list of map names
@@ -299,6 +319,11 @@ private:
     /// \brief k_means_calculated_
     /// Whether or not k means has been performed.
     bool k_means_calculated_;
+
+    ///
+    /// \brief radical_calcualted_
+    /// Whether or not RADICAL has been performed.
+    bool radical_calcualted_;
 
     ///
     /// \brief constructor_canceled_
