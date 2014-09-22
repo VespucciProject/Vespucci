@@ -41,6 +41,7 @@ public:
     void RecalculateGlobalDataRange(QCPRange* new_data_range);
     void RefreshGlobalColorGradient(QCPColorGradient new_gradient);
     void SetGlobalDataRange(QCPRange* new_data_range);
+    VespucciWorkspace *workspace_ptr(); //return the workspace
 
 signals:
     void GlobalGradientChanged(QCPColorGradient gradient);

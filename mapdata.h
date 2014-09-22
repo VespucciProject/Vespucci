@@ -27,6 +27,7 @@
 #include "spectrumviewer.h"
 #include "specmap.h"
 #include "mainwindow.h"
+#include "vespucciworkspace.h"
 
 using namespace std;
 using namespace arma;
@@ -38,6 +39,7 @@ class SpecMap;
 class PrincipalComponentsData;
 class SpectrumViewer;
 class MainWindow;
+class VespucciWorkspace;
 class MapData
 {
 public:
@@ -88,6 +90,7 @@ public:
     void setKeyRange(const QCPRange& range);
     void setValueRange(const QCPRange& range);
     //void setData(double key, double value, double z);
+    QCPRange dataRange();
 
     void setGradient(const QCPColorGradient &gradient);
     //Displays the map window
@@ -142,6 +145,9 @@ public:
     void LockMapDisplaySize(bool lock);
     void ResetMapWidgetSize();
 
+    uvec extract_range(double lower, double upper);
+    colvec results_;
+    void LaunchDataExtractor();
 private:
     QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
     QString y_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor

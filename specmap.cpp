@@ -58,6 +58,7 @@ SpecMap::~SpecMap()
 ///
 SpecMap::SpecMap(QString binary_file_name, MainWindow *main_window, QString *directory)
 {
+    non_spatial_ = false;
     //Set up variables unrelated to hyperspectral data:
     map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
     map_loading_count_ = 0;
@@ -99,6 +100,7 @@ SpecMap::SpecMap(QString binary_file_name, MainWindow *main_window, QString *dir
 ///
 SpecMap::SpecMap(QTextStream &inputstream, MainWindow *main_window, QString *directory, bool swap_spatial)
 {
+    non_spatial_ = false;
     //Set up variables unrelated to hyperspectral data:
     map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
     map_loading_count_ = 0;
@@ -194,6 +196,41 @@ SpecMap::SpecMap(QTextStream &inputstream, MainWindow *main_window, QString *dir
     cout << "Reading x, y, and spectra took " << seconds << " s." << endl;
     main_window_ = main_window;
 }
+
+///
+/// \brief SpecMap::SpecMap
+/// \param spectra The spectra_ matrix
+/// \param wavelength The wavelength_ vector
+/// \param name Name of the dataset that the user sees
+/// Constructor for making a new dataset from a subset of an old one
+SpecMap::SpecMap(QString name, MainWindow *main_window, QString *directory, SpecMap *original, uvec indices)
+{
+    non_spatial_ = true;
+    map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
+    map_loading_count_ = 0;
+    principal_components_calculated_ = false;
+    partial_least_squares_calculated_ = false;
+    vertex_components_calculated_ = false;
+    z_scores_calculated_ = false;
+    directory_ = directory;
+
+
+    cout << "SpecMap alternative construcutor" << endl;
+    spectra_ = original->spectra(indices);
+    cout << "spectra " << spectra_.n_rows << " x " << spectra_.n_cols << endl;
+    wavelength_ = original->wavelength(indices);
+    cout << "wavelength " << wavelength_.n_elem << endl;
+    x_ = original->x(indices);
+    cout << "x_ " << x_.n_rows << " ";
+    y_ = original->y(indices);
+    cout << "y_ " << y_.n_rows << endl;
+    name_ = name;
+    main_window_ = main_window;
+    directory_ = directory;
+
+
+}
+
 
 // PRE-PROCESSING FUNCTIONS //
 
@@ -603,7 +640,11 @@ void SpecMap::Univariate(int min,
                          QString integration_method,
                          int gradient_index)
 {
-
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
     int size = x_.n_elem;
     int i;
 
@@ -806,6 +847,11 @@ void SpecMap::BandRatio(int first_min,
                         int gradient_index)
 {
 
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
     QString map_type;
 
     unsigned int size = x_.n_elem;
@@ -913,6 +959,11 @@ void SpecMap::PrincipalComponents(int component,
                                   QString name,
                                   int gradient_index, bool recalculate)
 {
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
     if (recalculate || !principal_components_calculated_){
 
         component--;
@@ -994,6 +1045,11 @@ void SpecMap::VertexComponents(int endmembers,
                                int gradient_index,
                                bool recalculate)
 {
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
     cout << "SpecMap::VertexComponents" << endl;
     QString map_type;
     cout << "set map type" << endl;
@@ -1048,6 +1104,11 @@ void SpecMap::PartialLeastSquares(int components,
                                   int gradient_index,
                                   bool recalculate)
 {
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
     image_component--;
     QString map_type = "Partial Least Squares Map number of components = ";
 
@@ -1102,6 +1163,11 @@ void SpecMap::PartialLeastSquares(int components,
 ///
 void SpecMap::KMeans(size_t clusters, QString name)
 {
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
     QString map_type = "K-means clustering map. Number of clusters = ";
     map_type += QString::number(clusters);
     Col<size_t> assignments;
@@ -1330,6 +1396,11 @@ rowvec SpecMap::wavelength()
     return wavelength_;
 }
 
+rowvec SpecMap::wavelength(uvec indices)
+{
+    return wavelength_.cols(indices);
+}
+
 ///
 /// \brief SpecMap::x
 /// \return member x_
@@ -1337,6 +1408,16 @@ rowvec SpecMap::wavelength()
 colvec SpecMap::x()
 {
     return x_;
+}
+
+///
+/// \brief SpecMap::x
+/// \param indices Vector of indices
+/// \return Subvec of x corresponding to valeus in indices
+///
+colvec SpecMap::x(uvec indices)
+{
+    return x_(indices);
 }
 
 ///
@@ -1349,12 +1430,32 @@ colvec SpecMap::y()
 }
 
 ///
+/// \brief SpecMap::y
+/// \param indices Vector of indices
+/// \return Subvec of y at indices
+///
+colvec SpecMap::y(uvec indices)
+{
+    return y_(indices);
+}
+
+///
 /// \brief SpecMap::spectra
 /// \return member spectra_
 ///
 mat SpecMap::spectra()
 {
     return spectra_;
+}
+
+///
+/// \brief SpecMap::spectra
+/// \param indices Vector of indices
+/// \return Submat of spectra at indices
+///
+mat SpecMap::spectra(uvec indices)
+{
+    return spectra_.rows(indices);
 }
 
 ///
@@ -1729,4 +1830,13 @@ mat* SpecMap::x_ptr()
 mat* SpecMap::y_ptr()
 {
     return &y_;
+}
+
+///
+/// \brief SpecMap::non_spatial
+/// \return True if map has empty x_ and y_
+///
+bool SpecMap::non_spatial()
+{
+    return non_spatial_;
 }

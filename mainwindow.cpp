@@ -619,6 +619,12 @@ void MainWindow::SetGlobalDataRange(QCPRange* new_data_range)
     emit GlobalDataRangeChanged(*new_data_range);
 }
 
-
-
+///
+/// \brief MainWindow::workspace_ptr
+/// \return
+/// Very kludgy way of getting the workspace variable to window variables.
+VespucciWorkspace* MainWindow::workspace_ptr()
+{
+    return workspace;
+}
 

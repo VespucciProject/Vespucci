@@ -45,6 +45,7 @@ MapData::MapData(QString x_axis_description,
                  int tick_count,
                  MainWindow *main_window)
 {
+    results_ = results;
     name_ = parent->name();
     directory_ = directory;
     main_window_ = main_window;
@@ -750,4 +751,31 @@ void MapData::ResetMapWidgetSize()
     map_qcp_->resize(initial_map_size_);
     map_display_->resize(initial_map_size_.width() + 50, initial_map_size_.height() + 50);
     return;
+}
+
+///
+/// \brief MapData::data_range
+/// \return the data range of the map
+///
+QCPRange MapData::dataRange()
+{
+    return map_->dataRange();
+}
+
+///
+/// \brief MapData::extract_range
+/// \param lower
+/// \param upper
+/// \return
+/// Finds the rows that fall within a range of values
+uvec MapData::extract_range(double lower, double upper)
+{
+    return find(lower <= results_ <= upper);
+}
+
+void MapData::LaunchDataExtractor()
+{
+    DataExtractorDialog *data_extractor =
+            new DataExtractorDialog(map_display_, this, dataset_, main_window_);
+    data_extractor->show();
 }

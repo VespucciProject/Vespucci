@@ -23,9 +23,11 @@
 #include <QMainWindow>
 #include "mapdata.h"
 #include "scalebardialog.h"
+#include "dataextractordialog.h"
 
 class ScaleBarDialog;
 class MapData;
+class DataExtractorDialog;
 class SpectrumViewer;
 
 
@@ -74,6 +76,8 @@ private slots:
     void on_actionReset_Size_triggered();
 
     void on_actionReproportion_triggered();
+
+    void on_actionNew_Dataset_from_Map_triggered();
 
 private:
     Ui::MapViewer *ui;

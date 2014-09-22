@@ -29,6 +29,7 @@
 #include "principalcomponentsdata.h"
 #include "plsdata.h"
 #include "vcadata.h"
+#include "vespucciworkspace.h"
 
 
 
@@ -41,6 +42,7 @@ class PLSData;
 class VCAData;
 class SpectrumViewer;
 class MainWindow;
+class VespucciWorkspace;
 
 ///
 /// \brief The SpecMap class
@@ -55,6 +57,7 @@ public:
     SpecMap();
     SpecMap(QTextStream& inputstream, MainWindow *main_window, QString *directory, bool swap_spatial);
     SpecMap(QString binary_file_name, MainWindow *main_window, QString *directory);
+    SpecMap(QString name, MainWindow *main_window, QString *directory, SpecMap *original, uvec indices);
     ~SpecMap();
     // PRE-PROCESSING FUNCTIONS //
     // map editing
@@ -148,6 +151,10 @@ public:
     rowvec wavelength();
     colvec x();
     colvec y();
+    colvec x(uvec indices);
+    colvec y(uvec indices);
+    rowvec wavelength(uvec indices);
+    mat spectra(uvec indices);
     mat spectra();
     const QString name();
 
@@ -161,8 +168,6 @@ public:
     VCAData *vertex_components_data();
     PLSData *partial_least_squares_data();
     mat *k_means_data();
-    mat *radical_components();
-    mat *radical_unmixing();
     const QString x_axis_description();
     const QString y_axis_description();
 
@@ -196,6 +201,8 @@ public:
     mat *y_ptr();
     mat *wavelength_ptr();
     mat *spectra_ptr();
+
+    bool non_spatial();
 
 private:
     ///
@@ -340,6 +347,10 @@ private:
     /// Pointer back to the main window of the app.
     MainWindow *main_window_;
 
+    ///
+    /// \brief non_spatial_
+    /// True if the dataset has empty x_ and y_
+    bool non_spatial_;
 };
 
 #endif // SPECMAP_H

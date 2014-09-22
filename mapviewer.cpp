@@ -21,6 +21,7 @@
 #include "ui_mapviewer.h"
 
 
+
 MapViewer::MapViewer(QString name, QString *directory, MapData *parent):
     QMainWindow(0),
     ui(new Ui::MapViewer)
@@ -282,4 +283,9 @@ void MapViewer::on_actionReset_Size_triggered()
 void MapViewer::on_actionReproportion_triggered()
 {
     parent_->RescaleMapWidget();
+}
+
+void MapViewer::on_actionNew_Dataset_from_Map_triggered()
+{
+    parent_->LaunchDataExtractor();
 }

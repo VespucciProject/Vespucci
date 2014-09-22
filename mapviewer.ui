@@ -57,7 +57,7 @@
     <property name="title">
      <string>Data</string>
     </property>
-    <addaction name="actionNew_Dataset_from_Boolean_Expression"/>
+    <addaction name="actionNew_Dataset_from_Map"/>
    </widget>
    <addaction name="menuMap"/>
    <addaction name="menuDisplay"/>
@@ -152,9 +152,9 @@
     <string>Reset Size</string>
    </property>
   </action>
-  <action name="actionNew_Dataset_from_Boolean_Expression">
+  <action name="actionNew_Dataset_from_Map">
    <property name="text">
-    <string>New Dataset from Boolean Expression...</string>
+    <string>New Dataset from Map...</string>
    </property>
   </action>
  </widget>
