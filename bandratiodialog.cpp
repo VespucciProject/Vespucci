@@ -29,6 +29,14 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
 
 
     workspace = ws;
+    data_ = workspace->DatasetAt(row);
+    if(data_->non_spatial()){
+        QMessageBox::warning(this,
+                             "Non-spatial or Non-contiguous Dataset",
+                             "Images cannot be created from non-spatial or "
+                             "non-contiguous datasets.");
+        this->close();
+    }
     spectrum_plot_ = this->findChild<QCustomPlot *>("spectrumPlot");
     first_min_box_ = this->findChild<QLineEdit *>("firstMinLineEdit");
     first_max_box_ = this->findChild<QLineEdit *>("firstMaxLineEdit");
@@ -52,8 +60,6 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     first_max_box_->setValidator(validator);
     second_min_box_->setValidator(validator);
     second_max_box_->setValidator(validator);
-
-    data_ = workspace->DatasetAt(row);
 
     QVector<double> plot_data = data_->PointSpectrum(0);
     QVector<double> wavelength = data_->WavelengthQVector();

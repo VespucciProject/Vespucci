@@ -218,7 +218,7 @@ SpecMap::SpecMap(QString name, MainWindow *main_window, QString *directory, Spec
     cout << "SpecMap alternative construcutor" << endl;
     spectra_ = original->spectra(indices);
     cout << "spectra " << spectra_.n_rows << " x " << spectra_.n_cols << endl;
-    wavelength_ = original->wavelength(indices);
+    wavelength_ = original->wavelength();
     cout << "wavelength " << wavelength_.n_elem << endl;
     x_ = original->x(indices);
     cout << "x_ " << x_.n_rows << " ";
@@ -1191,7 +1191,8 @@ void SpecMap::KMeans(size_t clusters, QString name)
                                             maps_.size(),
                                             clusters,
                                             main_window_));
-    new_map.data()->set_name(name, map_type);
+    new_map->set_name(name, map_type);
+    new_map->SetCrispClusters(true);
     this->AddMap(new_map);
     maps_.last().data()->ShowMapWindow();
 }

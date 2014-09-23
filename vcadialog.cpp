@@ -8,13 +8,20 @@ VCADialog::VCADialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     cout << "VCADialog Constructor" << endl;
     ui->setupUi(this);
     workspace = ws;
+    data_ = workspace->DatasetAt(row);
+    if(data_->non_spatial()){
+        QMessageBox::warning(this,
+                             "Non-spatial or Non-contiguous Dataset",
+                             "Images cannot be created from non-spatial or "
+                             "non-contiguous datasets.");
+        this->close();
+    }
     components_selector_ = this->findChild<QSpinBox *>("endmembersSpinBox");
     image_component_selector_ = this->findChild<QSpinBox *>("componentSpinBox");
     color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
     recalculate_box_ = this->findChild<QCheckBox *>("recalculateCheckBox");
     negative_score_box_ = this->findChild<QCheckBox *>("negativeScoresCheckBox");
     name_box_ = this->findChild<QLineEdit*>("nameLineEdit");
-    data_ = workspace->DatasetAt(row);
     data_index_ = row;
 }
 

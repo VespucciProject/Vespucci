@@ -158,68 +158,22 @@ void SpectrumViewer::SetSecondPlot(QVector<double> abcissa, QVector<double> inte
 
 void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *event)
 {
-    unsigned int i;
-    double x = (double) event->x();
-    double y = (double) widget_size_.height() - (double) event->y();
-
-    x /= widget_size_.width();
-    y /= widget_size_.height();
-
-    QCPRange key_range = dataset_->KeyRange();
-    QCPRange value_range = dataset_->ValueRange();
-    double key_span = key_range.upper - key_range.lower;
-    double value_span = value_range.upper - value_range.lower;
-
-    double x_position = x * key_span + key_range.lower;
-    double y_position = y * value_span + value_range.lower;
-
-
-    //find nearest x value
-    colvec x_values = dataset_->x();
-    colvec y_values = dataset_->y();
-
-    double x_diff = x_position - x_values(0);
-    double y_diff = y_position - y_values(0);
-    double x_diff_buf, y_diff_buf, x_value, y_value;
-
-    for (i = 0; i < x_values.n_rows; ++i){
-        x_diff_buf = x_position - x_values(i);
-        if ((x_diff < 0 && x_diff_buf >= 0) || (x_diff >= 0 && x_diff_buf < 0))
-            break;
-    }
-
-    if (fabs(x_diff_buf) > fabs(x_position - x_values(i-1)))
-        x_value = x_values(i-1);
+    QCPColorMap *color_map = qobject_cast<QCPColorMap*>(plottable);
+    double x = color_map->keyAxis()->pixelToCoord(event->x());
+    double y = color_map->valueAxis()->pixelToCoord(event->y());
+    double z = color_map->data()->data(x, y);
+    arma::uvec row = arma::find(map_data_->results_ == z);
+    if (row.n_elem == 0)
+        return;
     else
-        x_value = x_values(i);
+        current_index_ = row(0);
 
-    for (i = 0; i < y_values.n_rows; ++i){
-        y_diff_buf = y_position - y_values(i);
-        if ((y_diff < 0 && y_diff_buf >= 0) || (y_diff >= 0 && y_diff_buf < 0))
-            break;
-    }
-
-    if (fabs(y_diff_buf) > fabs(y_position - y_values(i-1)))
-        y_value = y_values(i-1);
-    else
-        y_value = y_values(i);
-
-    QVector<int> x_indices;
-    for (i = 0; i < x_values.n_elem; ++i){
-        if (x_values(i) == x_value)
-            x_indices.append(i);
-    }
-    for (i = 0; i < (unsigned int) x_indices.size(); ++i){
-        if (y_values(x_indices[i]) == y_value)
-            break;
-    }
-    current_index_ = x_indices[i];
 
     QVector<double> wavelength = dataset_->WavelengthQVector();
     QVector<double> intensities = dataset_->PointSpectrum(current_index_);
 
-    current_x_ = x_value;
-    current_y_ = y_value;
+    current_x_ = x;
+    current_y_ = y;
 
     coordinate_label_->setText("(" +
                                QString::number(current_x_) +
@@ -232,8 +186,6 @@ void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *ev
         SetSecondPlot(map_data_->first_abcissa(), map_data_->first_baseline(current_index_));
     if (map_data_->univariate_bandwidth()){
         SetSecondPlot(map_data_->first_abcissa(), map_data_->first_baseline(current_index_));
-        QCPItemLine *mid_line;
-        QVector<double> mid_line_vec;
         if (spectrum_plot_->itemCount() == 0){
             QCPItemLine *mid_line = new QCPItemLine(spectrum_plot_);
             QVector<double> mid_line_vec = map_data_->mid_line(current_index_);

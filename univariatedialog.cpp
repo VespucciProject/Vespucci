@@ -25,6 +25,14 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
 {
     ui->setupUi(this);
     workspace = ws;
+    data_ = workspace->DatasetAt(row);
+    if(data_->non_spatial()){
+        QMessageBox::warning(this,
+                             "Non-spatial or Non-contiguous Dataset",
+                             "Images cannot be created from non-spatial or "
+                             "non-contiguous datasets.");
+        this->close();
+    }
     min_box_ = this->findChild<QLineEdit *>("minLineEdit");
     max_box_ = this->findChild<QLineEdit *>("maxLineEdit");
     name_box_ = this->findChild<QLineEdit *>("nameLineEdit");
@@ -41,7 +49,6 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
 
     min_box_->setValidator(new QDoubleValidator(min, max, 2, this));
     max_box_->setValidator(new QDoubleValidator(min, max, 2, this));
-    data_ = workspace->DatasetAt(row);
 
     QVector<double> plot_data = data_->PointSpectrum(0);
     QVector<double> wavelength = data_->WavelengthQVector();

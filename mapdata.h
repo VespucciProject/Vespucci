@@ -148,6 +148,8 @@ public:
     uvec extract_range(double lower, double upper);
     colvec results_;
     void LaunchDataExtractor();
+    bool crisp_clusters();
+    void SetCrispClusters(bool arg1);
 private:
     QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
     QString y_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
@@ -196,6 +198,11 @@ private:
     bool band_ratio_area_;
     bool univariate_bandwidth_;
     bool using_global_color_scale_;
+    bool k_means_;
+    bool principal_components_;
+    bool vertex_components_;
+    bool partial_least_squares_;
+    bool crisp_clusters_;
 
     QSize initial_map_size_;
 

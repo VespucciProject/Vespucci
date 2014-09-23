@@ -52,6 +52,7 @@ MapData::MapData(QString x_axis_description,
     univariate_area_ = false;
     band_ratio_area_ = false;
     univariate_bandwidth_ = false;
+    crisp_clusters_ = false;
     using_global_color_scale_ = false;
     map_display_ = new MapViewer(name_, directory_, this);
     map_qcp_ = map_display_->findChild<QCustomPlot *>("mapView");
@@ -770,7 +771,14 @@ QCPRange MapData::dataRange()
 /// Finds the rows that fall within a range of values
 uvec MapData::extract_range(double lower, double upper)
 {
-    return find(lower <= results_ <= upper);
+    uvec indices;
+    //my hunch is that it is faster to evaluate only one expression. Setting
+    //the two values equal will be useful for k-means maps.
+    if (lower == upper)
+        indices = find (results_ == lower);
+    else
+        indices = find (results_ <= upper && results_ >= lower);
+    return indices;
 }
 
 void MapData::LaunchDataExtractor()
@@ -778,4 +786,15 @@ void MapData::LaunchDataExtractor()
     DataExtractorDialog *data_extractor =
             new DataExtractorDialog(map_display_, this, dataset_, main_window_);
     data_extractor->show();
+}
+
+bool MapData::crisp_clusters()
+{
+    return crisp_clusters_;
+}
+
+void MapData::SetCrispClusters(bool arg1)
+{
+    crisp_clusters_ = arg1;
+    return;
 }
