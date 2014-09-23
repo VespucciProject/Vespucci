@@ -74,6 +74,7 @@ private:
     int current_index_;
     double current_x_;
     double current_y_;
+    double current_z_;
     QLabel *coordinate_label_;
     QLabel *value_label_;
     bool linked_to_map_;

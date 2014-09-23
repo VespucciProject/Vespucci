@@ -159,28 +159,24 @@ void SpectrumViewer::SetSecondPlot(QVector<double> abcissa, QVector<double> inte
 void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *event)
 {
     QCPColorMap *color_map = qobject_cast<QCPColorMap*>(plottable);
-    double x = color_map->keyAxis()->pixelToCoord(event->x());
-    double y = color_map->valueAxis()->pixelToCoord(event->y());
-    double z = color_map->data()->data(x, y);
-    arma::uvec row = arma::find(map_data_->results_ == z);
+    current_x_ = color_map->keyAxis()->pixelToCoord(event->x());
+    current_y_ = color_map->valueAxis()->pixelToCoord(event->y());
+    current_z_ = color_map->data()->data(current_x_, current_y_);
+    arma::uvec row = arma::find(map_data_->results_ == current_z_);
     if (row.n_elem == 0)
         return;
     else
         current_index_ = row(0);
 
-
     QVector<double> wavelength = dataset_->WavelengthQVector();
     QVector<double> intensities = dataset_->PointSpectrum(current_index_);
-
-    current_x_ = x;
-    current_y_ = y;
 
     coordinate_label_->setText("(" +
                                QString::number(current_x_) +
                                ", " +
                                QString::number(current_y_) +
                                ")");
-    value_label_->setText(QString::number(map_data_->results_at_position(current_x_, current_y_)));
+    value_label_->setText(QString::number(current_z_));
     SetPlot(wavelength, intensities);
     if (map_data_->univariate_area())
         SetSecondPlot(map_data_->first_abcissa(), map_data_->first_baseline(current_index_));
