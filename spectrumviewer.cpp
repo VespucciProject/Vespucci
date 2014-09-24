@@ -226,6 +226,10 @@ void SpectrumViewer::on_pushButton_clicked()
         else
             success = spectrum_plot_->savePng(filename);
         //PNG is default because everyone can open them
+        if(success)
+            QMessageBox::information(this, "Success!", "File " + filename + " written successfully");
+        else
+            QMessageBox::warning(this, "File Save Failed", "File " + filename + " was not written successfully");
         return; //don't do any of the other stuff
     }
 

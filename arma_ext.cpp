@@ -47,20 +47,20 @@
 /// subdiagonals (entries of d < 0) vectors are truncated at the end when they
 /// are longer than the target diagonal.  For superdiagonals, vectors are
 /// truncated at the beginning when they are longer than the target diagonal.
-mat arma_ext::spdiags(mat B, QVector<int> d, int m, int n)
+mat arma_ext::spdiags(mat B, ivec d, uword m, uword n)
 {
-    int i, j, k;
-    int size = B.n_cols;
-    int number = d.size();
-    int diag_size;
-    int column_size = B.n_rows;
+    uword i, j, k;
+    uword size = B.n_cols;
+    uword number = d.size();
+    uword diag_size;
+    uword column_size = B.n_rows;
     colvec column;
     mat output;
     output.zeros();
     output.set_size(m, n);
     colvec diagonal;
-    QVector<int> subdiagonals;
-    QVector<int> superdiagonals;
+    ivec subdiagonals;
+    ivec superdiagonals;
 
     if (number > size){
         QMessageBox::warning(0, "Out of Range!", "An error has occured in an "
@@ -68,16 +68,13 @@ mat arma_ext::spdiags(mat B, QVector<int> d, int m, int n)
         return output;
     }
 
+    superdiagonals = d(find (d >= 0));
+    subdiagonals = d(find (d < 0));
 
-    for (i = 0; i < number; ++i){
-        if (d[i] < 0)
-            subdiagonals.append(d[i]);
-        else
-            superdiagonals.append(d[i]);
-    }
+
 
     for (i = 0; i < subdiagonals.size(); ++i){
-        k = subdiagonals[i];
+        k = subdiagonals(i);
         diagonal = output.diag(k);
         diag_size = diagonal.n_elem;
         column = B.col(i);
@@ -96,7 +93,7 @@ mat arma_ext::spdiags(mat B, QVector<int> d, int m, int n)
     }
 
     for (i = 0; i < superdiagonals.size(); ++i){
-        k = superdiagonals[i];
+        k = superdiagonals(i);
         diag_size = output.diag(k).n_elem;
         column = B.col(i);
         if (diag_size < column_size){
@@ -173,8 +170,8 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
         return false;
     }
 
-    double root_2 = sqrt(2.0);
-    double tolerance = 1e-10 / root_2; //tolerance for convergence (ARPACK default)
+    //double root_2 = sqrt(2.0);
+    //double tolerance = 1e-10 / root_2; //tolerance for convergence (ARPACK default)
     double epsilon = datum::eps; //eps in Octave and MATLAB
     uword m = X.n_rows;
     uword n = X.n_cols;
@@ -236,14 +233,15 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
     //sort eigvec from largest to smallest
     eigvec = eigvec.cols(sorted_eigval_indices);
 
-    double d_tolerance, uv_tolerance; //tolerances for D and U, V
+    double d_tolerance;
+    //double uv_tolerance; //tolerances for D and U, V
     if (eigs_success){
         d_tolerance = q*n*sqrt(epsilon);
-        uv_tolerance = m*sqrt(sqrt(epsilon));
+        //uv_tolerance = m*sqrt(sqrt(epsilon));
     }
     else{
         d_tolerance = q*eigval_max*epsilon;
-        uv_tolerance = m*sqrt(epsilon);
+        //uv_tolerance = m*sqrt(epsilon);
 
     }
 

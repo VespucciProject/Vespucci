@@ -44,7 +44,7 @@ using namespace arma;
 
 namespace arma_ext
 {
-mat spdiags(mat B, QVector<int> d, int m, int n);
+mat spdiags(mat B, ivec d, uword m, uword n);
 bool svds(mat X, uword k, mat &U, vec &s, mat &V);
 mat orth(mat X);
 bool plsregress(mat X, mat Y, int components,

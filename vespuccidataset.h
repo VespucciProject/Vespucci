@@ -75,7 +75,7 @@ public:
     void SubtractBackground(mat background);
     void MedianFilter(int window_size);
     void LinearMovingAverage(int window_size);
-    void Derivatize(int derivative_order, int polynomial_order, int window_size);
+    void Derivatize(unsigned int derivative_order, unsigned int polynomial_order, unsigned int window_size);
     void SingularValue(int singular_values);
     mat spdiags(mat B, QVector<int> d, int m, int n);
 
@@ -121,9 +121,9 @@ public:
                    QString value_method, QString integration_method,
                    int gradient_index);
 
-    void PartialLeastSquares(int components, int image_component,
+    void PartialLeastSquares(uword components, uword image_component,
                              QString name,
-                             int gradient_index, bool recalculate);
+                             unsigned int gradient_index, bool recalculate);
 
     void PrincipalComponents(int component,
                             bool include_negative_scores,
@@ -131,9 +131,9 @@ public:
                             int gradient_index,
                              bool recalculate);
 
-    void VertexComponents(int endmembers, int image_component,
+    void VertexComponents(uword endmembers, uword image_component,
                          bool include_negative_scores,
-                         QString name, int gradient_index, bool recalculate);
+                         QString name, unsigned gradient_index, bool recalculate);
 
     void KMeans(size_t clusters,
                QString name);
@@ -183,8 +183,7 @@ public:
     void RemoveDataset(QString name);
 
     void AddMap(QSharedPointer<MapData> map);
-    void RemoveMap(QString name);
-    void RemoveMapAt(int i);
+    void RemoveMapAt(unsigned int i);
     int map_loading_count();
 
     void SetXDescription(QString description);

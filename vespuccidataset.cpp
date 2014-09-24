@@ -283,12 +283,12 @@ void VespucciDataset::MinMaxNormalize()
 ///normalizes the spectral data so that the area under each point spectrum is 1
 void VespucciDataset::UnitAreaNormalize()
 {
-    int num_rows = spectra_.n_rows;
-    int num_cols = spectra_.n_cols;
+    uword num_rows = spectra_.n_rows;
+    uword num_cols = spectra_.n_cols;
     for (int i = 0; i < num_rows; ++i){
         rowvec row = spectra_.row(i);
         double row_sum = sum(row);
-        for (int j = 0; j < num_cols; ++j){
+        for (uword j = 0; j < num_cols; ++j){
             spectra_(i, j) = spectra_(i, j) / row_sum;
         }
     }
@@ -301,10 +301,10 @@ void VespucciDataset::UnitAreaNormalize()
 ///
 mat VespucciDataset::ZScoreNormCopy()
 {
-    int num_rows = spectra_.n_rows;
-    int num_cols = spectra_.n_cols;
+    uword num_rows = spectra_.n_rows;
+    uword num_cols = spectra_.n_cols;
     mat normalized_copy(num_rows, num_cols);
-    for (int j = 0; j < num_cols; ++j){
+    for (uword j = 0; j < num_cols; ++j){
         double mean = arma::mean(spectra_.col(j));
         double standard_deviation = arma::stddev(spectra_.col(j));
         for (int i = 0; i < num_rows; ++i){
@@ -325,12 +325,12 @@ mat VespucciDataset::ZScoreNormCopy()
 ///
 void VespucciDataset::ZScoreNormalize()
 {
-    int num_rows = spectra_.n_rows;
-    int num_cols = spectra_.n_cols;
-    for (int j = 0; j < num_cols; ++j){
+    uword num_rows = spectra_.n_rows;
+    uword num_cols = spectra_.n_cols;
+    for (uword j = 0; j < num_cols; ++j){
         double mean = arma::mean(spectra_.col(j));
         double standard_deviation = arma::stddev(spectra_.col(j));
-        for (int i = 0; i < num_rows; ++i){
+        for (uword i = 0; i < num_rows; ++i){
             spectra_(i, j) = (spectra_(i, j) - mean) / standard_deviation;
         }
     }
@@ -373,9 +373,9 @@ void VespucciDataset::SubtractBackground(mat background)
 void VespucciDataset::Baseline(QString method, int window_size)
 {
     if (method == "Median Filter"){
-        int starting_index = (window_size - 1) / 2;
-        int ending_index = wavelength_.n_cols - starting_index;
-        int i, j;
+        uword starting_index = (window_size - 1) / 2;
+        uword ending_index = wavelength_.n_cols - starting_index;
+        uword i, j;
         int rows = spectra_.n_rows;
         int columns = spectra_.n_cols;
         rowvec window;
@@ -408,11 +408,11 @@ void VespucciDataset::Baseline(QString method, int window_size)
 
 void VespucciDataset::MedianFilter(int window_size)
 {
-    int starting_index = (window_size - 1) / 2;
-    int ending_index = wavelength_.n_cols - starting_index;
-    int i, j;
-    int rows = spectra_.n_rows;
-    int columns = spectra_.n_cols;
+    uword starting_index = (window_size - 1) / 2;
+    uword ending_index = wavelength_.n_cols - starting_index;
+    uword i, j;
+    uword rows = spectra_.n_rows;
+    uword columns = spectra_.n_cols;
     rowvec window;
     mat processed;
     window.set_size(window_size);
@@ -441,11 +441,11 @@ void VespucciDataset::MedianFilter(int window_size)
 
 void VespucciDataset::LinearMovingAverage(int window_size)
 {
-    int starting_index = (window_size - 1) / 2;
-    int ending_index = wavelength_.n_cols - starting_index;
-    int i, j;
-    int rows = spectra_.n_rows;
-    int columns = spectra_.n_cols;
+    uword starting_index = (window_size - 1) / 2;
+    uword ending_index = wavelength_.n_cols - starting_index;
+    uword i, j;
+    uword rows = spectra_.n_rows;
+    uword columns = spectra_.n_cols;
     rowvec window;
     mat processed;
     window.set_size(window_size);
@@ -498,16 +498,16 @@ void VespucciDataset::SingularValue(int singular_values)
 /// \param polynomial_order The order of the polynomial
 /// \param window_size The size of the filter window.
 ///
-void VespucciDataset::Derivatize(int derivative_order,
-                         int polynomial_order,
-                         int window_size)
+void VespucciDataset::Derivatize(unsigned int derivative_order,
+                         unsigned int polynomial_order,
+                         unsigned int window_size)
 {
-    int i, j;
-    int columns = wavelength_.n_elem;
-    int p = (window_size - 1) / 2;
+    uword i, j;
+    uword columns = wavelength_.n_elem;
+    sword p = (window_size - 1) / 2;
     mat x;
     x.set_size(window_size, 1 + polynomial_order);
-    int p_buf = -p;
+    sword p_buf = -p;
 
     for (i = 0; i <window_size; ++i){
         for (j = 0; j <= polynomial_order; ++j){
@@ -538,9 +538,9 @@ void VespucciDataset::Derivatize(int derivative_order,
                 weights.row(derivative_order) * coeff(0);
     }
 
-    QVector<int> p_range;
-    for (i = -p; i <= p; ++i){
-        p_range.append(i);
+    ivec p_range;
+    for (sword it = -p; it <= p; ++it){
+        p_range << it << endr;
     }
 
 
@@ -676,7 +676,7 @@ void VespucciDataset::Univariate(uword min,
             start_value = spectra_(i, min);
             end_value = spectra_(i, max);
             slope = (end_value - start_value) / (max - min);
-            int j;
+            uword j;
             for (j = 0; j <= (max - min); ++j)
                 baselines(i, j) = j*slope + start_value;
 
@@ -750,7 +750,7 @@ void VespucciDataset::Univariate(uword min,
                 start_value = spectra_(i, min);
                 end_value = spectra_(i, max);
                 slope = (end_value - start_value) / (max - min);
-                int j;
+                uword j;
                 for (j = 0; j <= (max - min); ++j)
                     baselines(i, j) = j*slope + start_value;
 
@@ -891,7 +891,7 @@ void VespucciDataset::BandRatio(int first_min,
                 second_end_value = spectra_(i, second_max);
                 first_slope = (first_end_value - first_start_value) / (first_max - first_min);
                 second_slope = (second_end_value - second_start_value) / (second_max - second_min);
-                int j;
+                uword j;
                 for (j = 0; j <= (first_max - first_min); ++j)
                     first_baselines(i, j) = j*first_slope + first_start_value;
                 for (j = 0; j <= (second_max - second_min); ++j)
@@ -1040,11 +1040,11 @@ void VespucciDataset::PrincipalComponents(int component,
 /// \param gradient_index
 /// \param recalculate
 ///
-void VespucciDataset::VertexComponents(int endmembers,
-                               int image_component,
+void VespucciDataset::VertexComponents(uword endmembers,
+                               uword image_component,
                                bool include_negative_scores,
                                QString name,
-                               int gradient_index,
+                               unsigned int gradient_index,
                                bool recalculate)
 {
     //if dataset is non spatial, just quit
@@ -1100,10 +1100,10 @@ void VespucciDataset::VertexComponents(int endmembers,
 /// \param gradient_index the index of the color gradient in the color gradient list
 /// \param recalculate whether or not to recalculate PLS regression.
 ///
-void VespucciDataset::PartialLeastSquares(int components,
-                                  int image_component,
+void VespucciDataset::PartialLeastSquares(uword components,
+                                  uword image_component,
                                   QString name,
-                                  int gradient_index,
+                                  unsigned int gradient_index,
                                   bool recalculate)
 {
     //if dataset is non spatial, just quit
@@ -1326,7 +1326,7 @@ QCPRange VespucciDataset::KeyRange()
 int VespucciDataset::KeySize()
 {
     uword i;
-    int x_count=1;
+    uword x_count=1;
     double x_buf;
 
     //loop through x until a value different then the first is met.
@@ -1362,7 +1362,7 @@ int VespucciDataset::ValueSize()
 {
 
     uword i = 0;
-    int y_count;
+    uword y_count;
 
 
     //long-text files hold x constant and vary y
@@ -1527,7 +1527,7 @@ int VespucciDataset::map_loading_count()
 /// \brief VespucciDataset::RemoveMapAt
 /// \param i index of map in the relevant lists
 ///
-void VespucciDataset::RemoveMapAt(int i)
+void VespucciDataset::RemoveMapAt(unsigned int i)
 {
 
     QListWidgetItem *item = map_list_widget_->takeItem(i);
@@ -1536,23 +1536,6 @@ void VespucciDataset::RemoveMapAt(int i)
 
 }
 
-
-///
-/// \brief VespucciDataset::RemoveMap
-/// Removes a map by its name.
-/// Useful when only the name is easily known, and index won't be used.
-/// Probably useless, might be removed later.
-/// \param name
-///
-void VespucciDataset::RemoveMap(QString name)
-{
-    int i;
-    for(i=0; i<map_names_.size(); ++i){
-        if(map_names_.at(i)==name){
-            this->RemoveMapAt(i);
-        }
-    }
-}
 
 ///
 /// \brief VespucciDataset::AddMap
