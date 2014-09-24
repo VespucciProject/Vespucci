@@ -170,11 +170,13 @@ void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *ev
 
     QVector<double> wavelength = dataset_->WavelengthQVector();
     QVector<double> intensities = dataset_->PointSpectrum(current_index_);
+    double x_value = dataset_->x(current_index_);
+    double y_value = dataset_->y(current_index_);
 
     coordinate_label_->setText("(" +
-                               QString::number(current_x_) +
+                               QString::number(x_value) +
                                ", " +
-                               QString::number(current_y_) +
+                               QString::number(y_value) +
                                ")");
     value_label_->setText(QString::number(current_z_));
     SetPlot(wavelength, intensities);

@@ -1421,6 +1421,16 @@ colvec SpecMap::x(uvec indices)
     return x_(indices);
 }
 
+double SpecMap::x(unsigned int index)
+{
+    if (index >= x_.n_rows)
+        return x_(x_.n_rows - 1);
+    else
+        return x_(index);
+}
+
+
+
 ///
 /// \brief SpecMap::y
 /// \return member y_
@@ -1438,6 +1448,14 @@ colvec SpecMap::y()
 colvec SpecMap::y(uvec indices)
 {
     return y_(indices);
+}
+
+double SpecMap::y(unsigned int index)
+{
+    if (index >= y_.n_rows)
+        return y_(y_.n_rows - 1);
+    else
+        return y_(index);
 }
 
 ///

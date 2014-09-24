@@ -153,6 +153,8 @@ public:
     colvec y();
     colvec x(uvec indices);
     colvec y(uvec indices);
+    double x(unsigned int index);
+    double y(unsigned int index);
     rowvec wavelength(uvec indices);
     mat spectra(uvec indices);
     mat spectra();
