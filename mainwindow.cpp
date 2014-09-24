@@ -190,7 +190,7 @@ void MainWindow::on_actionK_Means_Clustering_triggered()
 void MainWindow::on_actionNormalize_Standardize_triggered()
 {
     int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> data = workspace->DatasetAt(row);
+    QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QStringList methods;
     methods << tr("Min/Max") << tr("Unit Area") << tr("Z-score");
     bool ok;
@@ -216,7 +216,7 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
 void MainWindow::on_actionSubtract_Background_triggered()
 {
     int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> data = workspace->DatasetAt(row);
+    QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QString filename =
             QFileDialog::getOpenFileName(this,
                                          tr("Select Background File"),
@@ -241,7 +241,7 @@ void MainWindow::on_actionSpectra_triggered()
 {
     bool success;
     int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
@@ -269,7 +269,7 @@ void MainWindow::on_actionAverage_Spectra_triggered()
 {
     bool success;
     int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
@@ -297,7 +297,7 @@ void MainWindow::on_actionAverage_Spectra_with_Abcissa_triggered()
 {
     bool success;
     int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
@@ -330,7 +330,7 @@ void MainWindow::on_actionSpatial_Data_triggered()
 {
     bool success;
     int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
     mat output(dataset->x().t());
     output.insert_cols(1, dataset->y().t());
     output = output.t();
@@ -361,7 +361,7 @@ void MainWindow::on_actionSpectral_Abcissa_triggered()
 {
     bool success;
     int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
@@ -389,7 +389,7 @@ void MainWindow::on_actionAll_Data_triggered()
 {
     bool success;
     int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
     mat output(dataset->spectra());
     rowvec temp_wavelength(dataset->wavelength());
     mat addendum(1,2);
@@ -425,7 +425,7 @@ void MainWindow::on_actionPrincipal_Component_Statistics_triggered()
 {/*
     bool success;
     int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     if (dataset->principal_components_calculated()){
         QString filename =
@@ -596,7 +596,7 @@ QCPColorGradient* MainWindow::global_gradient()
 
 void MainWindow::RecalculateGlobalDataRange(QCPRange* new_data_range)
 {
-    bool changed;
+    bool changed = false;
     if (this->map_list_widget_->count() <= 1)
         workspace->SetGlobalDataRange(new_data_range);
     else

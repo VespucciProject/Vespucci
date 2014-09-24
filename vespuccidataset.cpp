@@ -17,7 +17,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************************/
 
-#include "specmap.h" //specmap includes all necessary headers.
+#include "vespuccidataset.h" //VespucciDataset includes all necessary headers.
 #include <cmath>
 #include <fstream>
 #include <QtConcurrent/QtConcurrentRun>
@@ -29,12 +29,12 @@
 using namespace arma;
 using namespace std;
 
-SpecMap::SpecMap()
+VespucciDataset::VespucciDataset()
 {
 
 }
 
-SpecMap::~SpecMap()
+VespucciDataset::~VespucciDataset()
 {
     //make sure principal components stats are deleted properly.
     if (principal_components_calculated_)
@@ -49,14 +49,14 @@ SpecMap::~SpecMap()
 
 
 ///
-/// \brief SpecMap::SpecMap
+/// \brief VespucciDataset::VespucciDataset
 /// \param binary_file_name file name of the binary
 /// \param main_window the main window
 /// \param directory the working directory
 /// This constructor loads a previously saved dataset.  The dataset is saved
 /// as an armadillo binary in the same format as the long text.
 ///
-SpecMap::SpecMap(QString binary_file_name, MainWindow *main_window, QString *directory)
+VespucciDataset::VespucciDataset(QString binary_file_name, MainWindow *main_window, QString *directory)
 {
     non_spatial_ = false;
     //Set up variables unrelated to hyperspectral data:
@@ -90,15 +90,15 @@ SpecMap::SpecMap(QString binary_file_name, MainWindow *main_window, QString *dir
 
 
 ///
-/// \brief SpecMap::SpecMap
-/// Main function for processing data from text files to create SpecMap objects.
+/// \brief VespucciDataset::VespucciDataset
+/// Main function for processing data from text files to create VespucciDataset objects.
 /// Currently written to accept files in "wide" format, will be expanded to deal
 /// with different ASCII formats later with conditionals.
 /// \param inputstream a text stream derived from the input file
 /// \param main_window the main window of the app
 /// \param directory the working directory
 ///
-SpecMap::SpecMap(QTextStream &inputstream, MainWindow *main_window, QString *directory, bool swap_spatial)
+VespucciDataset::VespucciDataset(QTextStream &inputstream, MainWindow *main_window, QString *directory, bool swap_spatial)
 {
     non_spatial_ = false;
     //Set up variables unrelated to hyperspectral data:
@@ -198,12 +198,12 @@ SpecMap::SpecMap(QTextStream &inputstream, MainWindow *main_window, QString *dir
 }
 
 ///
-/// \brief SpecMap::SpecMap
+/// \brief VespucciDataset::VespucciDataset
 /// \param spectra The spectra_ matrix
 /// \param wavelength The wavelength_ vector
 /// \param name Name of the dataset that the user sees
 /// Constructor for making a new dataset from a subset of an old one
-SpecMap::SpecMap(QString name, MainWindow *main_window, QString *directory, SpecMap *original, uvec indices)
+VespucciDataset::VespucciDataset(QString name, MainWindow *main_window, QString *directory, VespucciDataset *original, uvec indices)
 {
     non_spatial_ = true;
     map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
@@ -215,7 +215,7 @@ SpecMap::SpecMap(QString name, MainWindow *main_window, QString *directory, Spec
     directory_ = directory;
 
 
-    cout << "SpecMap alternative construcutor" << endl;
+    cout << "VespucciDataset alternative construcutor" << endl;
     spectra_ = original->spectra(indices);
     cout << "spectra " << spectra_.n_rows << " x " << spectra_.n_cols << endl;
     wavelength_ = original->wavelength();
@@ -235,14 +235,14 @@ SpecMap::SpecMap(QString name, MainWindow *main_window, QString *directory, Spec
 // PRE-PROCESSING FUNCTIONS //
 
 ///
-/// \brief SpecMap::CropSpectra
+/// \brief VespucciDataset::CropSpectra
 /// Crops spectra_ based on
 /// \param x_min value of x below which spectra are deleted
 /// \param x_max value of x above which spectra are deleted
 /// \param y_min value of y below which spectra are deleted
 /// \param y_max value of y above which spectra are deleted
 /// removes all data points outside of the range.
-void SpecMap::CropSpectra(double x_min, double x_max, double y_min, double y_max)
+void VespucciDataset::CropSpectra(double x_min, double x_max, double y_min, double y_max)
 {
     int max = x_.n_rows;
     QProgressDialog progress("Cropping...", "Cancel", 0, max);
@@ -262,12 +262,12 @@ void SpecMap::CropSpectra(double x_min, double x_max, double y_min, double y_max
 
 
 ///
-/// \brief SpecMap::MinMaxNormalize
+/// \brief VespucciDataset::MinMaxNormalize
 ///normalizes data so that smallest value is 0 and highest is 1 through the
 /// entire spectra_ matrix.  If the minimum of spectra_ is negative, it subtracts
 /// this minimum from all points.  The entire spectra_ matrix is then divided
 /// by the maximum of spectra_
-void SpecMap::MinMaxNormalize()
+void VespucciDataset::MinMaxNormalize()
 {
     int n_elem = spectra_.n_elem;
     double minimum = spectra_.min();
@@ -279,9 +279,9 @@ void SpecMap::MinMaxNormalize()
 }
 
 ///
-/// \brief SpecMap::UnitAreaNormalize
+/// \brief VespucciDataset::UnitAreaNormalize
 ///normalizes the spectral data so that the area under each point spectrum is 1
-void SpecMap::UnitAreaNormalize()
+void VespucciDataset::UnitAreaNormalize()
 {
     int num_rows = spectra_.n_rows;
     int num_cols = spectra_.n_cols;
@@ -295,11 +295,11 @@ void SpecMap::UnitAreaNormalize()
 }
 
 ///
-/// \brief SpecMap::ZScoreNormCopy
+/// \brief VespucciDataset::ZScoreNormCopy
 /// For when you want to Z-score normalize without changing spectra_
 /// \return A normalized copy of the matrix.
 ///
-mat SpecMap::ZScoreNormCopy()
+mat VespucciDataset::ZScoreNormCopy()
 {
     int num_rows = spectra_.n_rows;
     int num_cols = spectra_.n_cols;
@@ -316,14 +316,14 @@ mat SpecMap::ZScoreNormCopy()
 }
 
 ///
-/// \brief SpecMap::ZScoreNormalize
+/// \brief VespucciDataset::ZScoreNormalize
 /// Computes a Z score for every entry based on the distribution of its column,
 /// assuming normality of "population".  Because some values will be negative,
 /// this must be accounted for in Univariate Mapping Functions. Keep in mind that
 /// data is pre-centered by row for all methods (PCA, PLS, etc) that require
 /// centered data, but not necessarily by column, as it is here.
 ///
-void SpecMap::ZScoreNormalize()
+void VespucciDataset::ZScoreNormalize()
 {
     int num_rows = spectra_.n_rows;
     int num_cols = spectra_.n_cols;
@@ -338,14 +338,14 @@ void SpecMap::ZScoreNormalize()
 }
 
 ///
-/// \brief SpecMap::SubtractBackground
+/// \brief VespucciDataset::SubtractBackground
 /// Subtracts a known background spectrum. This can be extracted from a control
 /// map using this software (using * component analysis endmember extraction or
 /// average spectrum).
 /// \param background A matrix consisting of a single spectrum representing the
 /// background.
 ///
-void SpecMap::SubtractBackground(mat background)
+void VespucciDataset::SubtractBackground(mat background)
 {
     if (background.n_cols != spectra_.n_cols){
         QMessageBox::warning(0,
@@ -361,7 +361,7 @@ void SpecMap::SubtractBackground(mat background)
 }
 
 ///
-/// \brief SpecMap::Baseline
+/// \brief VespucciDataset::Baseline
 /// Baseline-adjusts the data. This function uses a median filter with a large
 /// window to determine the baseline on the assumption that the median value
 /// is more likely to be basline than spectrum. This will complicate things if
@@ -370,7 +370,7 @@ void SpecMap::SubtractBackground(mat background)
 /// \param method
 /// \param window_size
 ///
-void SpecMap::Baseline(QString method, int window_size)
+void VespucciDataset::Baseline(QString method, int window_size)
 {
     if (method == "Median Filter"){
         int starting_index = (window_size - 1) / 2;
@@ -401,12 +401,12 @@ void SpecMap::Baseline(QString method, int window_size)
 
 //Filtering functions
 ///
-/// \brief SpecMap::MedianFilter
+/// \brief VespucciDataset::MedianFilter
 /// performs median filtering on the spectral data.  Entries near the boundaries
-/// of spectra are not processed. See also SpecMap::LinearMovingAverage
+/// of spectra are not processed. See also VespucciDataset::LinearMovingAverage
 /// \param window_size - an odd number representing the width of the window.
 
-void SpecMap::MedianFilter(int window_size)
+void VespucciDataset::MedianFilter(int window_size)
 {
     int starting_index = (window_size - 1) / 2;
     int ending_index = wavelength_.n_cols - starting_index;
@@ -434,12 +434,12 @@ void SpecMap::MedianFilter(int window_size)
 }
 
 ///
-/// \brief SpecMap::LinearMovingAverage
+/// \brief VespucciDataset::LinearMovingAverage
 /// Performs moving average filtering on the spectral data.  Entries near the
-/// boundaries of spectra are not processed.  See also SpecMap::MedianFilter.
+/// boundaries of spectra are not processed.  See also VespucciDataset::MedianFilter.
 /// \param window_size - an odd number representing the width of the window.
 
-void SpecMap::LinearMovingAverage(int window_size)
+void VespucciDataset::LinearMovingAverage(int window_size)
 {
     int starting_index = (window_size - 1) / 2;
     int ending_index = wavelength_.n_cols - starting_index;
@@ -467,14 +467,14 @@ void SpecMap::LinearMovingAverage(int window_size)
 }
 
 ///
-/// \brief SpecMap::SingularValue
+/// \brief VespucciDataset::SingularValue
 /// Denoises the spectra matrix using a truncated singular value decomposition.
 /// The first singular_values singular values are used to "reconstruct" the
 /// spectra matrix. The function used to find the truncated SVD is
 /// arma_ext::svds.
 /// \param singular_values Number of singular values to use.
 ///
-void SpecMap::SingularValue(int singular_values)
+void VespucciDataset::SingularValue(int singular_values)
 {
     mat U;
     vec s;
@@ -492,13 +492,13 @@ void SpecMap::SingularValue(int singular_values)
 }
 
 ///
-/// \brief SpecMap::Derivatize
+/// \brief VespucciDataset::Derivatize
 /// Performs derivatization/Savitzky-Golay smoothing
 /// \param derivative_order The order of the derivative.
 /// \param polynomial_order The order of the polynomial
 /// \param window_size The size of the filter window.
 ///
-void SpecMap::Derivatize(int derivative_order,
+void VespucciDataset::Derivatize(int derivative_order,
                          int polynomial_order,
                          int window_size)
 {
@@ -608,7 +608,7 @@ void SpecMap::Derivatize(int derivative_order,
 // MAPPING FUNCTIONS //
 
 ///
-/// \brief SpecMap::Univariate
+/// \brief VespucciDataset::Univariate
 /// Creates a univariate image. Several peak-determination methods are availible.
 /// All methods except for "Intensity" estimate a local baseline. This is done
 /// by drawing a straight line from the left to right endpoint. This can cause
@@ -633,20 +633,20 @@ void SpecMap::Derivatize(int derivative_order,
 /// \param value_method method of determining peak (intensity, derivative, or area)
 /// \param gradient_index index of color scheme in master list (GetGradient());
 ///
-void SpecMap::Univariate(int min,
-                         int max,
-                         QString name,
-                         QString value_method,
-                         QString integration_method,
-                         int gradient_index)
+void VespucciDataset::Univariate(uword min,
+                                 uword max,
+                                 QString name,
+                                 QString value_method,
+                                 QString integration_method,
+                                 uword gradient_index)
 {
     //if dataset is non spatial, just quit
     if(non_spatial_){
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
         return;
     }
-    int size = x_.n_elem;
-    int i;
+    uword size = x_.n_elem;
+    uword i;
 
     rowvec region;
     colvec results;
@@ -661,9 +661,11 @@ void SpecMap::Univariate(int min,
         double start_value, end_value, slope;
         cout << "set size of baseline matrix" << endl;
         baselines.set_size(size, max-min + 1);
-        int max_index, left_index, right_index;
+        uword max_index = 0;
+        uword left_index = 0;
+        uword right_index = 0;
         map_type = "1-Region Univariate (Bandwidth (FWHM))";
-        int columns = spectra_.n_cols;
+        uword columns = spectra_.n_cols;
         cout << "set size of abcissa" << endl;
         abcissa.set_size(max-min + 1);
         abcissa = wavelength_.subvec(span(min, max));
@@ -825,10 +827,10 @@ void SpecMap::Univariate(int min,
 }
 
 ///
-/// \brief SpecMap::BandRatio
+/// \brief VespucciDataset::BandRatio
 /// Creates a band ratio univariate map. Band ratio maps represent the ratio of
 /// two peaks. The determination methods here are identical to those in
-/// SpecMap::Univariate.
+/// VespucciDataset::Univariate.
 /// \param first_min index of left bound of first region of interest
 /// \param first_max index of right bound of first region of interest
 /// \param second_min index of left bound of second region of interest
@@ -837,7 +839,7 @@ void SpecMap::Univariate(int min,
 /// \param value_method how the maxima are to be determined (area, derivative, or intensity)
 /// \param gradient_index index of gradient in the master list (GetGradient())
 ///
-void SpecMap::BandRatio(int first_min,
+void VespucciDataset::BandRatio(int first_min,
                         int first_max,
                         int second_min,
                         int second_max,
@@ -854,8 +856,8 @@ void SpecMap::BandRatio(int first_min,
     }
     QString map_type;
 
-    unsigned int size = x_.n_elem;
-    unsigned int i;
+    uword size = x_.n_elem;
+    uword i;
 
     rowvec first_region;
     rowvec second_region;
@@ -946,7 +948,7 @@ void SpecMap::BandRatio(int first_min,
 
 
 ///
-/// \brief SpecMap::PrincipalComponents
+/// \brief VespucciDataset::PrincipalComponents
 /// Performs principal component analysis on the data.  Uses armadillo's pca routine.
 /// This function both calculates and plots principal components maps.
 /// \param component the PCA component from which the image will be produced
@@ -954,7 +956,7 @@ void SpecMap::BandRatio(int first_min,
 /// \param name the name of the MapData object to be created
 /// \param gradient_index the index of the gradient in the master list (in function GetGradient)
 ///
-void SpecMap::PrincipalComponents(int component,
+void VespucciDataset::PrincipalComponents(int component,
                                   bool include_negative_scores,
                                   QString name,
                                   int gradient_index, bool recalculate)
@@ -967,7 +969,7 @@ void SpecMap::PrincipalComponents(int component,
     if (recalculate || !principal_components_calculated_){
 
         component--;
-        cout << "SpecMap::PrincipalComponents" << endl;
+        cout << "VespucciDataset::PrincipalComponents" << endl;
 
         QMessageBox alert;
         alert.setText("Calculating principal components may take a while.");
@@ -1008,7 +1010,7 @@ void SpecMap::PrincipalComponents(int component,
     colvec results = principal_components_data_->Results(component);
 
     if (!include_negative_scores){
-        for (unsigned int i=0; i<results.n_rows; ++i){
+        for (uword i=0; i<results.n_rows; ++i){
             if (results(i) < 0){
                 results(i) = 0;
             }
@@ -1030,7 +1032,7 @@ void SpecMap::PrincipalComponents(int component,
 
 
 ///
-/// \brief SpecMap::VertexComponents
+/// \brief VespucciDataset::VertexComponents
 /// \param endmembers
 /// \param image_component
 /// \param include_negative_scores
@@ -1038,7 +1040,7 @@ void SpecMap::PrincipalComponents(int component,
 /// \param gradient_index
 /// \param recalculate
 ///
-void SpecMap::VertexComponents(int endmembers,
+void VespucciDataset::VertexComponents(int endmembers,
                                int image_component,
                                bool include_negative_scores,
                                QString name,
@@ -1050,7 +1052,7 @@ void SpecMap::VertexComponents(int endmembers,
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
         return;
     }
-    cout << "SpecMap::VertexComponents" << endl;
+    cout << "VespucciDataset::VertexComponents" << endl;
     QString map_type;
     cout << "set map type" << endl;
     QTextStream(&map_type) << "(Vertex Component " << image_component << ")";
@@ -1087,7 +1089,7 @@ void SpecMap::VertexComponents(int endmembers,
 }
 
 ///
-/// \brief SpecMap::PartialLeastSquares
+/// \brief VespucciDataset::PartialLeastSquares
 /// Performs PLS regression on data.  Resulting map is score for one PLS Component,
 /// taken from one column of the X loadings.
 /// PLS is performed once.  Subsequent maps use data from first call, stored
@@ -1098,7 +1100,7 @@ void SpecMap::VertexComponents(int endmembers,
 /// \param gradient_index the index of the color gradient in the color gradient list
 /// \param recalculate whether or not to recalculate PLS regression.
 ///
-void SpecMap::PartialLeastSquares(int components,
+void VespucciDataset::PartialLeastSquares(int components,
                                   int image_component,
                                   QString name,
                                   int gradient_index,
@@ -1156,12 +1158,12 @@ void SpecMap::PartialLeastSquares(int components,
 }
 
 ///
-/// \brief SpecMap::KMeans
+/// \brief VespucciDataset::KMeans
 /// Implements K-means clustering using MLPACK
 /// \param clusters Number of clusters to find
 /// \param name Name of map in workspace.
 ///
-void SpecMap::KMeans(size_t clusters, QString name)
+void VespucciDataset::KMeans(size_t clusters, QString name)
 {
     //if dataset is non spatial, just quit
     if(non_spatial_){
@@ -1179,7 +1181,7 @@ void SpecMap::KMeans(size_t clusters, QString name)
     k_means_data_.set_size(assignments.n_elem, 1);
     k_means_calculated_ = true;
     //loop for copying values, adds one so clusters indexed at 1, not 0.
-    for (int i = 0; i < assignments.n_rows; ++i)
+    for (uword i = 0; i < assignments.n_rows; ++i)
         k_means_data_(i, 0) = assignments(i) + 1;
 
     QCPColorGradient gradient = GetClusterGradient(clusters);
@@ -1199,18 +1201,19 @@ void SpecMap::KMeans(size_t clusters, QString name)
 
 
 ///
-/// \brief SpecMap::FindRange.
+/// \brief VespucciDataset::FindRange.
 /// Finds the index of the wavelength value closest
 /// to the specified wavelength range.
 /// \param start the first wavelength in the spectral region of interest
 /// \param end the second wavelength in the spectral region of interest
 /// \return
 ///
-vector<int> SpecMap::FindRange(double start, double end)
+
+uvec VespucciDataset::FindRange(double start, double end)
 {
-    vector<int> indices(2,0);
-    int length = wavelength_.size();
-    int i;
+    uvec indices(2);
+    uword length = wavelength_.size();
+    uword i;
     for (i=0; i<length; ++i){
         if(wavelength_(i)>=start){
             break;
@@ -1222,13 +1225,13 @@ vector<int> SpecMap::FindRange(double start, double end)
     }
 
     if (fabs(wavelength_(i)-start)>fabs(wavelength_(i-1)-start)){
-        indices[0]=i-1;
+        indices(0)=i-1;
     }
 
     else{
-        indices[0]= i;
+        indices(0)= i;
     }
-    int it = i;
+    uword it = i;
     for (i = it; i < length; ++i){
         if(wavelength_(i)>=end){
             break;
@@ -1253,18 +1256,22 @@ vector<int> SpecMap::FindRange(double start, double end)
 }
 
 /// HELPER FUNCTIONS (Will go in own file later to speed compilation? ///
-/// \brief SpecMap::PointSpectrum
+/// \brief VespucciDataset::PointSpectrum
 /// \param index
 /// \return
 ///
-QVector<double> SpecMap::PointSpectrum(int index)
+QVector<double> VespucciDataset::PointSpectrum(const uword index)
 {
     //perform bounds check.
-    if (index > spectra_.n_rows)
-        index = spectra_.n_rows - 1;
-
-    std::vector<double> spectrum_stdvector =
-            conv_to< std::vector<double> >::from(spectra_.row(index));
+    std::vector<double> spectrum_stdvector;
+    if (index > spectra_.n_rows){
+        spectrum_stdvector =
+                conv_to< std::vector<double> >::from(spectra_.row(spectra_.n_rows - 1));
+    }
+    else{
+         spectrum_stdvector =
+                 conv_to< std::vector<double> >::from(spectra_.row(index));
+    }
 
     QVector<double> spectrum_qvector =
             QVector<double>::fromStdVector(spectrum_stdvector);
@@ -1272,7 +1279,7 @@ QVector<double> SpecMap::PointSpectrum(int index)
     return spectrum_qvector;
 }
 
-QVector<double> SpecMap::WavelengthQVector()
+QVector<double> VespucciDataset::WavelengthQVector()
 {
     std::vector<double> wavelength_stdvector =
             conv_to< std::vector<double> >::from(wavelength_);
@@ -1284,12 +1291,12 @@ QVector<double> SpecMap::WavelengthQVector()
 }
 
 ///
-/// \brief SpecMap::ValueRange
+/// \brief VespucciDataset::ValueRange
 /// Finds the minima and maxima of y variable to properly set axes
 ///  of QCustomPlot objects
 /// \return
 ///
-QCPRange SpecMap::ValueRange()
+QCPRange VespucciDataset::ValueRange()
 {
     double lower = y_.min();
     double upper = y_.max();
@@ -1297,12 +1304,12 @@ QCPRange SpecMap::ValueRange()
     return range;
 }
 ///
-/// \brief SpecMap::KeyRange
+/// \brief VespucciDataset::KeyRange
 /// Finds the minima and maxima of x variable to properly set axes
 ///  of QCustomPlot objects
 /// \return
 ///
-QCPRange SpecMap::KeyRange()
+QCPRange VespucciDataset::KeyRange()
 {
     double lower = x_.min();
     double upper = x_.max();
@@ -1311,14 +1318,14 @@ QCPRange SpecMap::KeyRange()
 }
 
 ///
-/// \brief SpecMap::KeySize
+/// \brief VespucciDataset::KeySize
 /// Finds the number of data points in x variable to properly set axes
 ///  of QCustomPlot objects
 /// \return number of unique x values
 ///
-int SpecMap::KeySize()
+int VespucciDataset::KeySize()
 {
-    unsigned int i;
+    uword i;
     int x_count=1;
     double x_buf;
 
@@ -1347,14 +1354,14 @@ int SpecMap::KeySize()
 }
 
 ///
-/// \brief SpecMap::ValueSize
+/// \brief VespucciDataset::ValueSize
 /// Finds number of unique y values for properly setting QCPAxis
 /// \return number of unique y values
 ///
-int SpecMap::ValueSize()
+int VespucciDataset::ValueSize()
 {
 
-    unsigned int i = 0;
+    uword i = 0;
     int y_count;
 
 
@@ -1389,39 +1396,39 @@ int SpecMap::ValueSize()
 
 // MEMBER ACCESS FUNCTIONS
 ///
-/// \brief SpecMap::wavelength
+/// \brief VespucciDataset::wavelength
 /// \return member wavelength_ (spectrum key values)
 ///
-rowvec SpecMap::wavelength()
+rowvec VespucciDataset::wavelength()
 {
     return wavelength_;
 }
 
-rowvec SpecMap::wavelength(uvec indices)
+rowvec VespucciDataset::wavelength(uvec indices)
 {
     return wavelength_.cols(indices);
 }
 
 ///
-/// \brief SpecMap::x
+/// \brief VespucciDataset::x
 /// \return member x_
 ///
-colvec SpecMap::x()
+colvec VespucciDataset::x()
 {
     return x_;
 }
 
 ///
-/// \brief SpecMap::x
+/// \brief VespucciDataset::x
 /// \param indices Vector of indices
 /// \return Subvec of x corresponding to valeus in indices
 ///
-colvec SpecMap::x(uvec indices)
+colvec VespucciDataset::x(uvec indices)
 {
     return x_(indices);
 }
 
-double SpecMap::x(unsigned int index)
+double VespucciDataset::x(uword index)
 {
     if (index >= x_.n_rows)
         return x_(x_.n_rows - 1);
@@ -1432,25 +1439,25 @@ double SpecMap::x(unsigned int index)
 
 
 ///
-/// \brief SpecMap::y
+/// \brief VespucciDataset::y
 /// \return member y_
 ///
-colvec SpecMap::y()
+colvec VespucciDataset::y()
 {
     return y_;
 }
 
 ///
-/// \brief SpecMap::y
+/// \brief VespucciDataset::y
 /// \param indices Vector of indices
 /// \return Subvec of y at indices
 ///
-colvec SpecMap::y(uvec indices)
+colvec VespucciDataset::y(uvec indices)
 {
     return y_(indices);
 }
 
-double SpecMap::y(unsigned int index)
+double VespucciDataset::y(uword index)
 {
     if (index >= y_.n_rows)
         return y_(y_.n_rows - 1);
@@ -1459,38 +1466,38 @@ double SpecMap::y(unsigned int index)
 }
 
 ///
-/// \brief SpecMap::spectra
+/// \brief VespucciDataset::spectra
 /// \return member spectra_
 ///
-mat SpecMap::spectra()
+mat VespucciDataset::spectra()
 {
     return spectra_;
 }
 
 ///
-/// \brief SpecMap::spectra
+/// \brief VespucciDataset::spectra
 /// \param indices Vector of indices
 /// \return Submat of spectra at indices
 ///
-mat SpecMap::spectra(uvec indices)
+mat VespucciDataset::spectra(uvec indices)
 {
     return spectra_.rows(indices);
 }
 
 ///
-/// \brief SpecMap::name
+/// \brief VespucciDataset::name
 /// \return member name_, the name of the dataset as seen by the user
 ///
-const QString SpecMap::name()
+const QString VespucciDataset::name()
 {
     return name_;
 }
 
 ///
-/// \brief SpecMap::SetName
+/// \brief VespucciDataset::SetName
 /// \param new_name new name of dataset
 ///
-void SpecMap::SetName(QString new_name)
+void VespucciDataset::SetName(QString new_name)
 {
     name_ = new_name;
 }
@@ -1499,28 +1506,28 @@ void SpecMap::SetName(QString new_name)
 
 //MAP HANDLING FUNCTIONS
 ///
-/// \brief SpecMap::map_names
+/// \brief VespucciDataset::map_names
 /// \return list of names of the maps created from this dataset
 ///
-QStringList SpecMap::map_names()
+QStringList VespucciDataset::map_names()
 {
     return map_names_;
 }
 
 ///
-/// \brief SpecMap::map_loading_count
+/// \brief VespucciDataset::map_loading_count
 /// \return number of maps created for this dataset
 ///
-int SpecMap::map_loading_count()
+int VespucciDataset::map_loading_count()
 {
     return map_loading_count_;
 }
 
 ///
-/// \brief SpecMap::RemoveMapAt
+/// \brief VespucciDataset::RemoveMapAt
 /// \param i index of map in the relevant lists
 ///
-void SpecMap::RemoveMapAt(int i)
+void VespucciDataset::RemoveMapAt(int i)
 {
 
     QListWidgetItem *item = map_list_widget_->takeItem(i);
@@ -1531,13 +1538,13 @@ void SpecMap::RemoveMapAt(int i)
 
 
 ///
-/// \brief SpecMap::RemoveMap
+/// \brief VespucciDataset::RemoveMap
 /// Removes a map by its name.
 /// Useful when only the name is easily known, and index won't be used.
 /// Probably useless, might be removed later.
 /// \param name
 ///
-void SpecMap::RemoveMap(QString name)
+void VespucciDataset::RemoveMap(QString name)
 {
     int i;
     for(i=0; i<map_names_.size(); ++i){
@@ -1548,11 +1555,11 @@ void SpecMap::RemoveMap(QString name)
 }
 
 ///
-/// \brief SpecMap::AddMap
+/// \brief VespucciDataset::AddMap
 /// Adds a map to the list of map pointers and adds its name to relevant lists
 /// \param map
 ///
-void SpecMap::AddMap(QSharedPointer<MapData> map)
+void VespucciDataset::AddMap(QSharedPointer<MapData> map)
 {
     QString name = map->name();
     maps_.append(map);
@@ -1563,10 +1570,10 @@ void SpecMap::AddMap(QSharedPointer<MapData> map)
 }
 
 ///
-/// \brief SpecMap::WavelengthRange
+/// \brief VespucciDataset::WavelengthRange
 /// \return the range of the wavlength vector (for plotting point spectra)
 ///
-QCPRange SpecMap::WavelengthRange()
+QCPRange VespucciDataset::WavelengthRange()
 {
     double min = wavelength_.min();
     double max = wavelength_.max();
@@ -1575,11 +1582,11 @@ QCPRange SpecMap::WavelengthRange()
 }
 
 ///
-/// \brief SpecMap::PointSpectrumRange
+/// \brief VespucciDataset::PointSpectrumRange
 /// \param i row of spectra_ containing desired spectrum
 /// \return the range of y values for the point spectra at i
 ///
-QCPRange SpecMap::PointSpectrumRange(int i)
+QCPRange VespucciDataset::PointSpectrumRange(int i)
 {
     rowvec row = spectra_.row(i);
     double min = row.min();
@@ -1590,12 +1597,12 @@ QCPRange SpecMap::PointSpectrumRange(int i)
 }
 
 ///
-/// \brief SpecMap::GetGradient
+/// \brief VespucciDataset::GetGradient
 /// Selects the color gradient from list of presets
 /// \param gradient_number
 /// \return
 ///
-QCPColorGradient SpecMap::GetGradient(int gradient_number)
+QCPColorGradient VespucciDataset::GetGradient(int gradient_number)
 {
     switch (gradient_number)
     {
@@ -1643,13 +1650,13 @@ QCPColorGradient SpecMap::GetGradient(int gradient_number)
 }
 
 ///
-/// \brief SpecMap::GetClusterGradient
+/// \brief VespucciDataset::GetClusterGradient
 /// Cluster gradients are slightly different from the continuous gradients. This
 /// selects the right gradient based on the number of clusters.
 /// \param clusters Number of clusters
 /// \return Proper color gradient for number of clusters
 ///
-QCPColorGradient SpecMap::GetClusterGradient(int clusters)
+QCPColorGradient VespucciDataset::GetClusterGradient(int clusters)
 {
     switch (clusters)
     {
@@ -1666,25 +1673,25 @@ QCPColorGradient SpecMap::GetClusterGradient(int clusters)
 }
 
 ///
-/// \brief SpecMap::ConstructorCancelled
+/// \brief VespucciDataset::ConstructorCancelled
 /// Specifies whether or not the constructor has been canceled. The constructor
 /// asks this and cleans everything up in case it is canceled.
 /// \return
 ///
-bool SpecMap::ConstructorCancelled()
+bool VespucciDataset::ConstructorCancelled()
 {
     return constructor_canceled_;
 }
 
 ///
-/// \brief SpecMap::AverageSpectrum
+/// \brief VespucciDataset::AverageSpectrum
 /// Finds the average of the spectrum. This can be saved by the user.
 /// Probably not all that useful, except for determining a spectrum to use as a
 /// background spectrum for other maps.
 /// \param stats Whether or not to include standard deviations on the second row.
 /// \return The average spectrum
 ///
-mat SpecMap::AverageSpectrum(bool stats)
+mat VespucciDataset::AverageSpectrum(bool stats)
 {
     mat spec_mean = mean(spectra_, 0);
     rowvec spec_stddev;
@@ -1700,162 +1707,162 @@ mat SpecMap::AverageSpectrum(bool stats)
 
 
 ///
-/// \brief SpecMap::x_axis_description
+/// \brief VespucciDataset::x_axis_description
 /// The x_axis_description is printed on the spectrum viewer.
 /// \return Spectral abcissa description.
 ///
-const QString SpecMap::x_axis_description()
+const QString VespucciDataset::x_axis_description()
 {
     return x_axis_description_;
 }
 
 ///
-/// \brief SpecMap::SetXDescription
+/// \brief VespucciDataset::SetXDescription
 /// Sets the value of the spectral abcissa description.
 /// \param description
 ///
-void SpecMap::SetXDescription(QString description)
+void VespucciDataset::SetXDescription(QString description)
 {
     x_axis_description_ = description;
 }
 
 ///
-/// \brief SpecMap::SetYDescription
+/// \brief VespucciDataset::SetYDescription
 /// \param description
 /// Sets the value of the spectral ordinate axis description
-void SpecMap::SetYDescription(QString description)
+void VespucciDataset::SetYDescription(QString description)
 {
     y_axis_description_ = description;
 }
 
 ///
-/// \brief SpecMap::y_axis_description
+/// \brief VespucciDataset::y_axis_description
 /// \return The spectral ordinate axis description.
 ///
-const QString SpecMap::y_axis_description()
+const QString VespucciDataset::y_axis_description()
 {
     return y_axis_description_;
 }
 
 ///
-/// \brief SpecMap::principal_components_calculated
+/// \brief VespucciDataset::principal_components_calculated
 /// Accessor for principal_components_calculated_. The PCA dialog requests this
 /// to make sure that the same PCA is not calculated twice.
 /// \return Whether or not PCA has been calculated.
 ///
-bool SpecMap::principal_components_calculated()
+bool VespucciDataset::principal_components_calculated()
 {
     return principal_components_calculated_;
 }
 
 ///
-/// \brief SpecMap::vertex_components_calculated
+/// \brief VespucciDataset::vertex_components_calculated
 /// Accessor for vertex_components_calculated_. The VCA dialog requests this to
 /// make sure that the same VCA is not calculated twice.
 /// \return Whether or not VCA has been computed.
 ///
-bool SpecMap::vertex_components_calculated()
+bool VespucciDataset::vertex_components_calculated()
 {
     return vertex_components_calculated_;
 }
 
 ///
-/// \brief SpecMap::partial_least_squares_calculated
+/// \brief VespucciDataset::partial_least_squares_calculated
 /// Accessor for partial_least_squares_calculated. The PLS dialog requests this
 /// to make sure that the same PLS is not calculated twice.
 /// \return Whether or not PLS has been computed.
 ///
-bool SpecMap::partial_least_squares_calculated()
+bool VespucciDataset::partial_least_squares_calculated()
 {
     return partial_least_squares_calculated_;
 }
 
 ///
-/// \brief SpecMap::k_means_calculated
+/// \brief VespucciDataset::k_means_calculated
 /// Accessor for k_means_calculated_. Used for filling dataviewer.
 /// \return Whether or not k means have been calculated.
 ///
-bool SpecMap::k_means_calculated()
+bool VespucciDataset::k_means_calculated()
 {
     return k_means_calculated_;
 }
 
 ///
-/// \brief SpecMap::principal_components_data
+/// \brief VespucciDataset::principal_components_data
 /// Accessor for principal_components_data_
 /// \return Pointer to the class that handles the output of arma::princomp
 ///
-PrincipalComponentsData* SpecMap::principal_components_data()
+PrincipalComponentsData* VespucciDataset::principal_components_data()
 {
     return principal_components_data_;
 }
 
 ///
-/// \brief SpecMap::vertex_components_data
+/// \brief VespucciDataset::vertex_components_data
 /// Accessor for vertex_components_data_
 /// \return
 ///
-VCAData* SpecMap::vertex_components_data()
+VCAData* VespucciDataset::vertex_components_data()
 {
     return vertex_components_data_;
 }
 
 ///
-/// \brief SpecMap::partial_least_squares_data
+/// \brief VespucciDataset::partial_least_squares_data
 /// Accessor for partial_least_squares_data_;
 /// \return
 ///
-PLSData* SpecMap::partial_least_squares_data()
+PLSData* VespucciDataset::partial_least_squares_data()
 {
     return partial_least_squares_data_;
 }
 
-mat *SpecMap::k_means_data()
+mat *VespucciDataset::k_means_data()
 {
     return &k_means_data_;
 }
 
 ///
-/// \brief SpecMap::spectra_ptr
+/// \brief VespucciDataset::spectra_ptr
 /// \return
 ///
-mat* SpecMap::spectra_ptr()
+mat* VespucciDataset::spectra_ptr()
 {
     return &spectra_;
 }
 
 ///
-/// \brief SpecMap::wavelength_ptr
+/// \brief VespucciDataset::wavelength_ptr
 /// \return
 ///
-mat* SpecMap::wavelength_ptr()
+mat* VespucciDataset::wavelength_ptr()
 {
     return &wavelength_;
 }
 
 ///
-/// \brief SpecMap::x_ptr
+/// \brief VespucciDataset::x_ptr
 /// \return
 ///
-mat* SpecMap::x_ptr()
+mat* VespucciDataset::x_ptr()
 {
     return &x_;
 }
 
 ///
-/// \brief SpecMap::y_ptr
+/// \brief VespucciDataset::y_ptr
 /// \return
 ///
-mat* SpecMap::y_ptr()
+mat* VespucciDataset::y_ptr()
 {
     return &y_;
 }
 
 ///
-/// \brief SpecMap::non_spatial
+/// \brief VespucciDataset::non_spatial
 /// \return True if map has empty x_ and y_
 ///
-bool SpecMap::non_spatial()
+bool VespucciDataset::non_spatial()
 {
     return non_spatial_;
 }

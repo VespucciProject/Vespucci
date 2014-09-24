@@ -58,11 +58,11 @@ private:
     QComboBox *integration_method_selector_;
     QLabel *integration_method_label_;
 
-    //index of the SpecMap object in the various lists
+    //index of the VespucciDataset object in the various lists
     int data_index_;
 
-    //Pointer to the SpecMap object at data_index_
-    QSharedPointer<SpecMap> data_;
+    //Pointer to the VespucciDataset object at data_index_
+    QSharedPointer<VespucciDataset> data_;
 };
 
 #endif // BANDRATIODIALOG_H

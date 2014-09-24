@@ -34,7 +34,7 @@ SpectrumViewer::SpectrumViewer(MapViewer *parent,
                                MapData *map_data,
                                const QString x_axis_description,
                                const QString y_axis_description,
-                               SpecMap *dataset,
+                               VespucciDataset *dataset,
                                QSize widget_size,
                                QString directory) :
     QDialog(parent),
@@ -79,7 +79,7 @@ SpectrumViewer::SpectrumViewer(MapViewer *parent,
 /// \param directory
 ///
 SpectrumViewer::SpectrumViewer(DataViewer *parent,
-                               SpecMap *dataset,
+                               VespucciDataset *dataset,
                                int endmember,
                                QString directory,
                                QString type) :

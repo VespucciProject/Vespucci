@@ -72,7 +72,7 @@ void UnivariateDialog::on_buttonBox_accepted()
     double entered_min = min_box_->text().toDouble();
     double entered_max = max_box_->text().toDouble();
 
-    vector<int> range = data_->FindRange(entered_min, entered_max);
+    uvec range = data_->FindRange(entered_min, entered_max);
 
     int min = range[0];
     int max = range[1];

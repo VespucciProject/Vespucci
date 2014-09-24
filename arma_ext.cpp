@@ -152,14 +152,7 @@ mat arma_ext::orth(mat X)
 /// value decomposition. This is designed to only take the kinds of inputs
 /// Vespucci will need (It only works on arma::mat types, and only returns the k
 /// largest singular values (none of that sigma business).
-/// To decompose the matrix X into the form \tilde{X} = U_{k}{\Sigma}_{k}{V_{k}}*
-/// A sparse matrix B is constructed of the form:
-/// \f[
-/// \begin{pmatrix}
-/// 0 & X \\
-/// X' & 0
-/// \end{pmatrix}
-/// \f]
+
 ///
 /// The eigenvalues of this matrix are then found using arma::eigs_sym, a wrapper
 /// for ARPACK.
@@ -172,7 +165,7 @@ mat arma_ext::orth(mat X)
 /// \param V
 /// \return Whether or not algorithm converged.
 
-bool arma_ext::svds(mat X, unsigned int k, mat &U, vec &s, mat &V)
+bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
 {
     if (X.n_cols < 2){
         cerr << "svds: X must be 2D matrix" << endl;
@@ -183,10 +176,10 @@ bool arma_ext::svds(mat X, unsigned int k, mat &U, vec &s, mat &V)
     double root_2 = sqrt(2.0);
     double tolerance = 1e-10 / root_2; //tolerance for convergence (ARPACK default)
     double epsilon = datum::eps; //eps in Octave and MATLAB
-    unsigned int m = X.n_rows;
-    unsigned int n = X.n_cols;
-    unsigned int p = std::min(m, n); //used below to establish tolerances.
-    unsigned int q = std::max(m, n);
+    uword m = X.n_rows;
+    uword n = X.n_cols;
+    uword p = std::min(m, n); //used below to establish tolerances.
+    uword q = std::max(m, n);
     //cout << "p = " << p << endl;
     //cout << "k = " << k << endl;
     if (k > p){
@@ -279,7 +272,7 @@ bool arma_ext::svds(mat X, unsigned int k, mat &U, vec &s, mat &V)
     //cout << query << endl;
 
 
-    unsigned int number_of_indices = query.n_elem;
+    uword number_of_indices = query.n_elem;
     int end = std::min(k, number_of_indices) - 1;
     //cout << "end=" << end;
     //cout << "query.n_elem=" << query.n_elem << endl;
@@ -450,19 +443,19 @@ bool arma_ext::plsregress(mat X, mat Y, int components,
 /// \param fractional_abundances Purity of a given spectrum relative to endmember
 /// \return Convergeance (no actual test implemented...)
 ///
-bool arma_ext::VCA(mat R, unsigned int p,
+bool arma_ext::VCA(mat R, uword p,
          uvec &indices, mat &endmember_spectra,
          mat &projected_data, mat &fractional_abundances)
 {
 //Initializations
-    unsigned int L = R.n_rows;
-    unsigned int N = R.n_cols;
+    uword L = R.n_rows;
+    uword N = R.n_cols;
     if (L == 0 || N == 0){
         cerr << "No data!" << endl;
         return false;
     }
 
-    if (p < 0 || p > L){
+    if (p > L){
         cerr << "wrong number of endmembers (" << p << ")!"<< endl;
         cerr << "set to 5 or one less than number of spectra" << endl;
         p = (L < 5? 5: L-1);
@@ -488,7 +481,7 @@ bool arma_ext::VCA(mat R, unsigned int p,
     mat y;
     if (SNR < SNR_th){
         //cout << "SNR < SNR_th" << endl;
-        unsigned int d = p - 1;
+        uword d = p - 1;
         //cout << "Ud.n_cols=" << Ud.n_cols << endl;
         Ud = Ud.cols(0, d-1);
 
@@ -503,7 +496,7 @@ bool arma_ext::VCA(mat R, unsigned int p,
 
     else{
         //cout << "SNR !< SNR_th" << endl;
-        unsigned int d = p;
+        uword d = p;
         svds(R*trans(R)/N, d, Ud, Sd, Vd); //R_o is a mean centered version...
         x_p = trans(Ud)*R;
         projected_data = Ud * x_p.rows(0, d-1);
@@ -520,14 +513,14 @@ bool arma_ext::VCA(mat R, unsigned int p,
     rowvec v;
     indices.set_size(p);
     //there are no fill functions for uvecs
-    for (unsigned int i = 0; i < p; ++i)
+    for (uword i = 0; i < p; ++i)
         indices(i) = 0;
     mat A = zeros(p, p);
     double v_max;
     double sum_squares;
     uvec q1;
     A(p-1, 0) = 1;
-    for (unsigned int i = 0; i < p; ++i){
+    for (uword i = 0; i < p; ++i){
         //cout << "i=" << i << endl;
         w.randu();
         f = w - A*pinv(A)*w;
@@ -555,9 +548,9 @@ bool arma_ext::VCA(mat R, unsigned int p,
 ///
 double arma_ext::estimate_snr(mat R, vec r_m, mat x)
 {
-    unsigned int L = R.n_rows;
-    unsigned int N = R.n_cols;
-    unsigned int p = x.n_rows;
+    uword L = R.n_rows;
+    uword N = R.n_cols;
+    uword p = x.n_rows;
     if (x.n_cols != N){
         cerr << "invaliid input to estimate_snr" << endl;
         return 0;

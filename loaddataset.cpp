@@ -20,7 +20,7 @@
 #include "loaddataset.h"
 #include "ui_loaddataset.h"
 #include <QFileDialog>
-#include "specmap.h"
+#include "vespuccidataset.h"
 #include "vespucciworkspace.h"
 
 LoadDataset::LoadDataset(QWidget *parent, VespucciWorkspace *ws) :
@@ -107,7 +107,7 @@ void LoadDataset::on_buttonBox_accepted()
             QFile inputfile(filename);
             inputfile.open(QIODevice::ReadOnly);
             QTextStream inputstream(&inputfile);
-            QSharedPointer<SpecMap> data(new SpecMap(inputstream,
+            QSharedPointer<VespucciDataset> data(new VespucciDataset(inputstream,
                                                      workspace->main_window(),
                                                      directory_,
                                                      swap));
@@ -124,7 +124,7 @@ void LoadDataset::on_buttonBox_accepted()
         if (file_info.suffix() == "vds"){
             QMessageBox::critical(this, "Feature not Implemented", "This file type is not supported yet.");
             return;
-            //QSharedPointer<SpecMap> data(new SpecMap(filename,
+            //QSharedPointer<VespucciDataset> data(new VespucciDataset(filename,
             //                                         workspace->main_window(),
             //                                         directory_));
             //if (!data->ConstructorCancelled()){

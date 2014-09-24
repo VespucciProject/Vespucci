@@ -21,7 +21,7 @@
 
 #include <QDialog>
 #include "vespucciworkspace.h"
-#include "specmap.h"
+#include "vespuccidataset.h"
 
 namespace Ui {
 class CropDialog;
@@ -49,7 +49,7 @@ private:
     QDoubleSpinBox *y_max_box_;
 
     VespucciWorkspace *workspace;
-    QSharedPointer<SpecMap> dataset_;
+    QSharedPointer<VespucciDataset> dataset_;
 };
 
 #endif // CROPDIALOG_H

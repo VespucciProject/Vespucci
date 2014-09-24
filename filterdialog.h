@@ -21,10 +21,10 @@
 
 #include <QDialog>
 #include "vespucciworkspace.h"
-#include "specmap.h"
+#include "vespuccidataset.h"
 
 class VespucciWorkspace;
-class SpecMap;
+class VespucciDataset;
 namespace Ui {
 class FilterDialog;
 }
@@ -49,7 +49,7 @@ private slots:
 private:
     Ui::FilterDialog *ui;
     VespucciWorkspace *workspace;
-    QSharedPointer<SpecMap> dataset_;
+    QSharedPointer<VespucciDataset> dataset_;
 
     QComboBox *method_box_;
     QSpinBox *derivative_box_;

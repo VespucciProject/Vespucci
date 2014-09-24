@@ -22,8 +22,8 @@
 #include <QDialog>
 #include "vespucciworkspace.h"
 #include "vespuccitablemodel.h"
-#include "specmap.h"
-class SpecMap;
+#include "vespuccidataset.h"
+class VespucciDataset;
 class VespucciWorkspace;
 namespace Ui {
 class DataViewer;
@@ -49,7 +49,7 @@ private:
     Ui::DataViewer *ui;
     QString current_text_;
     QString directory_;
-    QSharedPointer<SpecMap> dataset_;
+    QSharedPointer<VespucciDataset> dataset_;
     VespucciWorkspace *workspace;
     QTableView *table_;
     QComboBox *data_selector_;

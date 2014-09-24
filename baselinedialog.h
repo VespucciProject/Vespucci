@@ -22,7 +22,7 @@
 #include <QDialog>
 #include "vespucciworkspace.h"
 class VespucciWorkspace;
-class SpecMap;
+class VespucciDataset;
 namespace Ui {
 class BaselineDialog;
 }
@@ -42,7 +42,7 @@ private slots:
 
 private:
     Ui::BaselineDialog *ui;
-    QSharedPointer<SpecMap> dataset_;
+    QSharedPointer<VespucciDataset> dataset_;
     VespucciWorkspace *workspace;
     QSpinBox *iterations_box_;
     QComboBox *method_box_;

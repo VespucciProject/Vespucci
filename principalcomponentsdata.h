@@ -19,13 +19,13 @@
 #ifndef PRINCIPALCOMPONENTSDATA_H
 #define PRINCIPALCOMPONENTSDATA_H
 
-#include "specmap.h"
+#include "vespuccidataset.h"
 using namespace arma;
 
-class SpecMap;
+class VespucciDataset;
 class PrincipalComponentsData {
 public:
-    PrincipalComponentsData(SpecMap *parent, QString *directory);
+    PrincipalComponentsData(VespucciDataset *parent, QString *directory);
 
     void Apply(mat spectra);
 
@@ -43,7 +43,7 @@ private:
     mat score_;
     vec latent_;
     vec tsquared_;
-    SpecMap *parent_;
+    VespucciDataset *parent_;
     QString *directory_;
 
 };

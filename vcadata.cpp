@@ -1,6 +1,6 @@
 #include "vcadata.h"
 
-VCAData::VCAData(SpecMap *parent,
+VCAData::VCAData(VespucciDataset *parent,
                  QString *directory)
 {
     parent_ = parent;
@@ -28,11 +28,13 @@ void VCAData::Apply(mat spectra, int endmembers)
 /// \param i Index of endmember column
 /// \return Plottable QVector of an endmember
 ///
-QVector<double> VCAData::Endmember(int i)
+QVector<double> VCAData::Endmember(const uword i)
 {
+    std::vector<double> spectrum_std;
     if (i >= endmember_spectra_.n_cols)
-        i = endmember_spectra_.n_cols - 1;
-    std::vector<double> spectrum_std = conv_to<std::vector<double> >::from(endmember_spectra_.col(i));
+        spectrum_std = conv_to<std::vector<double> >::from(endmember_spectra_.col(i));
+    else
+        spectrum_std = conv_to<std::vector<double> >::from(endmember_spectra_.col(endmember_spectra_.n_cols - 1));
     return QVector<double>::fromStdVector(spectrum_std);
 }
 
@@ -68,27 +70,29 @@ int VCAData::NumberComponents()
     return endmember_spectra_.n_cols;
 }
 
-colvec VCAData::Results(int component)
+colvec VCAData::Results(const uword component)
 {
     return fractional_abundances_.col(component);
 }
 
-double VCAData::EndmemberMax(int i)
+double VCAData::EndmemberMax(const uword i)
 {
-    cout << "EndmemberMax" << endl;
+    colvec endmember;
     if (i >= endmember_spectra_.n_cols)
-        i = endmember_spectra_.n_cols - 1;
-    colvec endmember = endmember_spectra_.col(i);
+        endmember = endmember_spectra_.col(endmember_spectra_.n_cols - 1);
+    else
+        endmember = endmember_spectra_.col(i);
     double max = endmember.max();
     return max;
 }
 
-double VCAData::EndmemberMin(int i)
+double VCAData::EndmemberMin(const uword i)
 {
-    cout << "EndmemberMin" << endl;
+    colvec endmember;
     if (i >= endmember_spectra_.n_cols)
-        i = endmember_spectra_.n_cols - 1;
-    colvec endmember = endmember_spectra_.col(i);
+        endmember = endmember_spectra_.col(endmember_spectra_.n_cols - 1);
+    else
+        endmember = endmember_spectra_.col(i);
     double min = endmember.min();
     return min;
 }

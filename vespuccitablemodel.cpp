@@ -26,7 +26,7 @@ VespucciTableModel::VespucciTableModel(QObject *parent, mat *input_data) :
     composite_ = false;
 }
 
-VespucciTableModel::VespucciTableModel(QObject *parent, QSharedPointer<SpecMap> dataset, QString type) :
+VespucciTableModel::VespucciTableModel(QObject *parent, QSharedPointer<VespucciDataset> dataset, QString type) :
     QAbstractTableModel(parent)
 {
     dataset_ = dataset;

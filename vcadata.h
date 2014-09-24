@@ -1,28 +1,28 @@
 #ifndef VCADATA_H
 #define VCADATA_H
-#include "specmap.h"
-class SpecMap;
+#include "vespuccidataset.h"
+class VespucciDataset;
 using namespace arma;
 class VCAData
 {
 public:
-    VCAData(SpecMap *parent,
+    VCAData(VespucciDataset *parent,
             QString *directory);
     void Apply(mat spectra, int endmembers);
-    colvec Results(int component);
-    QVector<double> Endmember(int i);
+    colvec Results(const uword component);
+    QVector<double> Endmember(const uword i);
     mat *endmember_spectra();
     mat *projected_data();
     mat *fractional_abundances();
     int NumberComponents();
-    double EndmemberMin(int i);
-    double EndmemberMax(int i);
+    double EndmemberMin(const uword i);
+    double EndmemberMax(const uword i);
 private:
     mat endmember_spectra_;
     mat projected_data_;
     mat fractional_abundances_;
     uvec indices_;
-    SpecMap *parent_;
+    VespucciDataset *parent_;
     QString *directory_;
 
 };

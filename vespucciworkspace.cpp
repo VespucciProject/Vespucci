@@ -41,21 +41,12 @@ void VespucciWorkspace::SetPointers(MainWindow *main_window)
 
 // FUNCTIONS THAT ADD AND REMOVE WORKSPACE OBJECTS
 
-void VespucciWorkspace::AddDataset(QSharedPointer<SpecMap> dataset)
+void VespucciWorkspace::AddDataset(QSharedPointer<VespucciDataset> dataset)
 {
     QString name = dataset->name();
     datasets_.append(dataset);
     dataset_list_widget_->addItem(name);
     ++dataset_loading_count_;
-}
-
-
-
-//Useful when only the name is known, and looking up index separately inefficient
-//looks up the index and deletes at the index.
-void VespucciWorkspace::RemoveDataset(QString name)
-{
-
 }
 
 
@@ -117,7 +108,7 @@ void VespucciWorkspace::close()
     cout<< "Closing workspace" << endl;
 }
 
-QSharedPointer<SpecMap> VespucciWorkspace::DatasetAt(int i)
+QSharedPointer<VespucciDataset> VespucciWorkspace::DatasetAt(int i)
 {
     return datasets_[i];
 }

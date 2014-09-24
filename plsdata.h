@@ -1,11 +1,11 @@
 #ifndef PLSDATA_H
 #define PLSDATA_H
-#include "specmap.h"
+#include "vespuccidataset.h"
 using namespace arma;
 class PLSData
 {
 public:
-    PLSData(SpecMap *parent,
+    PLSData(VespucciDataset *parent,
             QString *directory);
 
     bool Apply(mat spectra, rowvec wavelength, int components);
@@ -18,7 +18,7 @@ public:
     mat *percent_variance();  
 
     int NumberComponents();
-    colvec Results(int i, bool &valid);
+    colvec Results(const uword i, bool &valid);
 private:
     mat Y_;
     mat X_loadings_;
@@ -28,7 +28,7 @@ private:
     mat coefficients_;
     mat percent_variance_;
     mat fitted_;
-    SpecMap *parent_;
+    VespucciDataset *parent_;
     QString *directory_;
 };
 

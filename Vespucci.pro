@@ -51,7 +51,6 @@ CONFIG(release, debug|release): QMAKE_CXXFLAGS += -O3
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    specmap.cpp \
     loaddataset.cpp \
     mapdata.cpp \
     univariatemap.cpp \
@@ -77,10 +76,10 @@ SOURCES += main.cpp\
     vcadata.cpp \
     vcadialog.cpp \
     dataextractordialog.cpp \
-    analysiswizard.cpp
+    analysiswizard.cpp \
+    vespuccidataset.cpp
 
 HEADERS  += mainwindow.h \
-    specmap.h \
     loaddataset.h \
     mapdata.h \
     univariatemap.h \
@@ -106,7 +105,8 @@ HEADERS  += mainwindow.h \
     vcadata.h \
     vcadialog.h \
     dataextractordialog.h \
-    analysiswizard.h
+    analysiswizard.h \
+    vespuccidataset.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \

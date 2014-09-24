@@ -33,7 +33,6 @@ PLSDialog::~PLSDialog()
 void PLSDialog::on_buttonBox_accepted()
 {
     int image_component = image_component_selector_->value();
-    bool negative_scores = true;
     QString name = name_box_->text();
     bool recalculate = recalculate_box_->isChecked();
     int gradient_index = color_selector_->currentIndex();

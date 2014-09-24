@@ -19,7 +19,7 @@
 
 #include "mainwindow.h"
 #include <QApplication>
-#include "specmap.h"
+#include "vespuccidataset.h"
 #include <QTextStream>
 #include <QFileDevice>
 #include <QFile>
@@ -28,7 +28,7 @@
 #include "mapdata.h"
 #include "vespucciworkspace.h"
 
-void DeleteDataset(QList<SpecMap> *datasets, QListWidget *dataset_list_widget, QString name);
+void DeleteDataset(QList<VespucciDataset> *datasets, QListWidget *dataset_list_widget, QString name);
 void DeleteMap(QList<MapData> *maps, QListWidget *map_list_widget, QString name);
 
 int main(int argc, char *argv[])

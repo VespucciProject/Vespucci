@@ -20,12 +20,12 @@
 
 #define VESPUCCIWORKSPACE_H
 
-#include "specmap.h"
+#include "vespuccidataset.h"
 #include "univariatemap.h"
 #include "arma_ext.h"
 #include <qcustomplot.h>
 #include "mainwindow.h"
-class SpecMap;
+class VespucciDataset;
 class MainWindow;
 
 class VespucciWorkspace
@@ -36,7 +36,7 @@ public:
     //QStringList map_names();
 
     //adds or removes dataset or map to relevant lists
-    void AddDataset(QSharedPointer<SpecMap> dataset);
+    void AddDataset(QSharedPointer<VespucciDataset> dataset);
     void RemoveDataset(QString name);
 
     //void AddMap(MapData map);
@@ -60,8 +60,8 @@ public:
     double GetWavelengthMin(int row);
     double GetWavelengthMax(int row);
 
-    //SpecMap* DatasetAt(int i);
-    QSharedPointer<SpecMap> DatasetAt(int i);
+    //VespucciDataset* DatasetAt(int i);
+    QSharedPointer<VespucciDataset> DatasetAt(int i);
 
     QCPRange *global_data_range();
     QCPColorGradient *global_gradient();
@@ -79,8 +79,8 @@ private:
     //QListWidget *map_list_widget_;
     QListWidget *dataset_list_widget_;
 
-    //QList<SpecMap> datasets_;
-    QList<QSharedPointer<SpecMap> > datasets_;
+    //QList<VespucciDataset> datasets_;
+    QList<QSharedPointer<VespucciDataset> > datasets_;
     QString directory_; //= QDir::homePath();
 
     QStringList dataset_names_;

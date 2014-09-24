@@ -23,7 +23,7 @@
 #include <QMainWindow>
 #include "vespucciworkspace.h"
 class VespucciWorkspace;
-class SpecMap;
+class VespucciDataset;
 
 namespace Ui {
 class MainWindow;

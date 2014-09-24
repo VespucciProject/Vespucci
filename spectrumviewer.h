@@ -24,7 +24,7 @@
 #include "dataviewer.h"
 class MapViewer;
 class MapData;
-class SpecMap;
+class VespucciDataset;
 class DataViewer;
 
 namespace Ui {
@@ -40,9 +40,9 @@ public:
     SpectrumViewer(MapViewer *parent,
                    MapData *map_data,
                    const QString x_axis_description,
-                   const QString y_axis_description, SpecMap *dataset, QSize widget_size, QString directory);
+                   const QString y_axis_description, VespucciDataset *dataset, QSize widget_size, QString directory);
     SpectrumViewer(DataViewer *parent,
-                   SpecMap *dataset,
+                   VespucciDataset *dataset,
                    int endmember,
                    QString directory,
                    QString type);
@@ -68,7 +68,7 @@ private:
     QCustomPlot *spectrum_plot_;
     MapViewer *parent_;
     MapData *map_data_;
-    SpecMap *dataset_;
+    VespucciDataset *dataset_;
     QSize widget_size_;
     QString directory_;
     int current_index_;

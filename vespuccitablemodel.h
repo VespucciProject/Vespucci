@@ -21,14 +21,14 @@
 
 #include <QAbstractTableModel>
 #include "vespucciworkspace.h"
-#include "specmap.h"
-class SpecMap;
+#include "vespuccidataset.h"
+class VespucciDataset;
 class VespucciTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
     explicit VespucciTableModel(QObject *parent, mat *input_data);
-    VespucciTableModel(QObject *parent, QSharedPointer<SpecMap> dataset, QString type);
+    VespucciTableModel(QObject *parent, QSharedPointer<VespucciDataset> dataset, QString type);
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
@@ -41,7 +41,7 @@ private:
     int rows_;
     int cols_;
     mat *data_;
-    QSharedPointer<SpecMap> dataset_;
+    QSharedPointer<VespucciDataset> dataset_;
     bool composite_;
     bool spatial_only_;
 

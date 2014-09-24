@@ -132,7 +132,7 @@ QCPColorGradient MapViewer::GetGradient(int gradient_number)
 
 void MapViewer::closeEvent(QCloseEvent * event)
 {
-    // the call to SpecMap::RemoveMapAt() results in program crashing
+    // the call to VespucciDataset::RemoveMapAt() results in program crashing
 
     int response = QMessageBox::question(this,
                                          "Close Map?",

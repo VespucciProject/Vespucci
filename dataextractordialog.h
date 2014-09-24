@@ -5,7 +5,7 @@
 #include "vespucciworkspace.h"
 #include "mapdata.h"
 class VespucciWorkspace;
-class SpecMap;
+class VespucciDataset;
 class MainWindow;
 class MapData;
 namespace Ui {
@@ -17,7 +17,7 @@ class DataExtractorDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit DataExtractorDialog(QWidget *parent, MapData *map, SpecMap *dataset, MainWindow *main_window);
+    explicit DataExtractorDialog(QWidget *parent, MapData *map, VespucciDataset *dataset, MainWindow *main_window);
     ~DataExtractorDialog();
 
 private slots:
@@ -29,7 +29,7 @@ private:
     QDoubleSpinBox *lower_box_;
     QDoubleSpinBox *upper_box_;
     MapData *map_;
-    SpecMap *dataset_;
+    VespucciDataset *dataset_;
     QCPRange data_range_;
     VespucciWorkspace *workspace;
     MainWindow *main_window_;

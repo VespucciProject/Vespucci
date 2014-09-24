@@ -84,10 +84,8 @@ void BandRatioDialog::on_buttonBox_accepted()
     double first_entered_max = first_max_box_->text().toDouble();
     double second_entered_max = second_max_box_->text().toDouble();
 
-    vector<int> first_range =
-            data_->FindRange(first_entered_min, first_entered_max);
-    vector<int> second_range =
-            data_->FindRange(second_entered_min, second_entered_max);
+    uvec first_range = data_->FindRange(first_entered_min, first_entered_max);
+    uvec second_range = data_->FindRange(second_entered_min, second_entered_max);
 
     int first_min = first_range[0];
     int first_max = first_range[1];

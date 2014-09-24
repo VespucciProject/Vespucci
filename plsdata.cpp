@@ -1,6 +1,6 @@
 #include "plsdata.h"
 
-PLSData::PLSData(SpecMap *parent, QString *directory)
+PLSData::PLSData(VespucciDataset *parent, QString *directory)
 {
     parent_ = parent;
     directory_ = directory;
@@ -57,7 +57,7 @@ int PLSData::NumberComponents()
     return coefficients_.n_cols;
 }
 
-colvec PLSData::Results(int i, bool &valid)
+colvec PLSData::Results(const uword i, bool &valid)
 {
     if (coefficients_.n_cols < i){
         valid = false;

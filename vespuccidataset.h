@@ -17,8 +17,8 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************************/
 
-#ifndef SPECMAP_H
-#define SPECMAP_H
+#ifndef VespucciDataset_H
+#define VespucciDataset_H
 #include "arma_ext.h"
 #include <QTextStream>
 #include <iostream>
@@ -45,20 +45,20 @@ class MainWindow;
 class VespucciWorkspace;
 
 ///
-/// \brief The SpecMap class
+/// \brief The VespucciDataset class
 /// This is the main class for dealing with hyperspectral data. It was originally
 /// named hyperSpec and modeled on the class used by the hyperSpec R pacakge. This
 /// handles the import and export of spectra, and the creation of maps. Images
 /// are handled by the MapData class. In reality, this should probably be called
-/// MapData and MapData called SpecMap...
-class SpecMap
+/// MapData and MapData called VespucciDataset...
+class VespucciDataset
 {
 public:
-    SpecMap();
-    SpecMap(QTextStream& inputstream, MainWindow *main_window, QString *directory, bool swap_spatial);
-    SpecMap(QString binary_file_name, MainWindow *main_window, QString *directory);
-    SpecMap(QString name, MainWindow *main_window, QString *directory, SpecMap *original, uvec indices);
-    ~SpecMap();
+    VespucciDataset();
+    VespucciDataset(QTextStream& inputstream, MainWindow *main_window, QString *directory, bool swap_spatial);
+    VespucciDataset(QString binary_file_name, MainWindow *main_window, QString *directory);
+    VespucciDataset(QString name, MainWindow *main_window, QString *directory, VespucciDataset *original, uvec indices);
+    ~VespucciDataset();
     // PRE-PROCESSING FUNCTIONS //
     // map editing
     void CropSpectra(double x_min, double x_max, double y_min, double y_max);
@@ -85,7 +85,7 @@ public:
     // HELPER FUNCTIONS //
 
     // Grabs one line of spectra_, at indices specified, recasts as QVector for QCustomPlot //
-    QVector<double> PointSpectrum(int index);
+    QVector<double> PointSpectrum(const uword index);
 
     // Converts wavelength_ to QVector //
     QVector<double> WavelengthQVector();
@@ -94,7 +94,7 @@ public:
     int FindIndex(int x_value, int y_value);
 
     // Returns vector containing start and end index within a range
-    vector<int> FindRange(double start, double end);
+    uvec FindRange(double start, double end);
 
     // These QCustomPlot sizes apply to all maps created from dataset //
     int KeySize();
@@ -106,12 +106,12 @@ public:
 
     // IMAGING FUNCTIONS //
 
-    void Univariate(int min,
-                    int max,
+    void Univariate(uword min,
+                    uword max,
                     QString name,
                     QString value_method,
                     QString integration_method,
-                    int gradient_index);
+                    uword gradient_index);
 
     void BandRatio(int first_min,
                    int first_max,
@@ -153,8 +153,8 @@ public:
     colvec y();
     colvec x(uvec indices);
     colvec y(uvec indices);
-    double x(unsigned int index);
-    double y(unsigned int index);
+    double x(uword index);
+    double y(uword index);
     rowvec wavelength(uvec indices);
     mat spectra(uvec indices);
     mat spectra();
@@ -179,7 +179,7 @@ public:
     QStringList map_names();
 
     //adds or removes dataset or map to relevant lists
-    void AddDataset(SpecMap dataset);
+    void AddDataset(VespucciDataset dataset);
     void RemoveDataset(QString name);
 
     void AddMap(QSharedPointer<MapData> map);
@@ -241,7 +241,7 @@ private:
 
     ///
     /// \brief maps_
-    /// A list of the maps created from this data set, managed by SpecMap class
+    /// A list of the maps created from this data set, managed by VespucciDataset class
     QList<QSharedPointer<MapData> > maps_;
 
     ///
@@ -355,4 +355,4 @@ private:
     bool non_spatial_;
 };
 
-#endif // SPECMAP_H
+#endif // VespucciDataset_H

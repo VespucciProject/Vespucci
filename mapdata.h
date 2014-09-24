@@ -25,7 +25,7 @@
 #include <qcustomplot.h>
 #include "mapviewer.h"
 #include "spectrumviewer.h"
-#include "specmap.h"
+#include "vespuccidataset.h"
 #include "mainwindow.h"
 #include "vespucciworkspace.h"
 
@@ -35,7 +35,7 @@ using namespace arma;
 // This a class for processed map data.  All other map classes are subclasses.
 // Includes data (in QCPData formats), descriptive information, and statistics.
 class MapViewer;
-class SpecMap;
+class VespucciDataset;
 class PrincipalComponentsData;
 class SpectrumViewer;
 class MainWindow;
@@ -48,7 +48,7 @@ public:
             colvec x,
             colvec y,
             colvec results,
-            SpecMap *parent,
+            VespucciDataset *parent,
             QString *directory,
             QCPColorGradient gradient,
             int source_index,
@@ -151,10 +151,10 @@ public:
     bool crisp_clusters();
     void SetCrispClusters(bool arg1);
 private:
-    QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
-    QString y_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
+    QString x_axis_description_; //equiv to member of VespucciDataset, passed to SpectraViewer constructor
+    QString y_axis_description_; //equiv to member of VespucciDataset, passed to SpectraViewer constructor
 
-    SpecMap* dataset_;
+    VespucciDataset* dataset_;
     MainWindow *main_window_;
 
     QString name_; //Name, this is displayed in the QListView

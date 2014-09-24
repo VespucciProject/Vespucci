@@ -26,7 +26,7 @@
 /// \param x Vector of horizontal coordinates map points
 /// \param y Vector of vertical coordinates for map points
 /// \param results Vector of results at x and y
-/// \param parent The SpecMap object storing the map data.
+/// \param parent The VespucciDataset object storing the map data.
 /// \param directory The current working directory on the filesystem
 /// \param gradient The initially-chosen color gradient.
 /// \param source_index The index of this object in parent.
@@ -38,7 +38,7 @@ MapData::MapData(QString x_axis_description,
                  colvec x,
                  colvec y,
                  colvec results,
-                 SpecMap *parent,
+                 VespucciDataset *parent,
                  QString *directory,
                  QCPColorGradient gradient,
                  int source_index,
@@ -64,7 +64,7 @@ MapData::MapData(QString x_axis_description,
     map_->data()->setKeySize(parent->KeySize());
     map_->data()->setValueSize(parent->ValueSize());
 
-    for(unsigned int i = 0; i<x.n_elem; ++i){
+    for(uword i = 0; i<x.n_elem; ++i){
         map_->data()->setData(x(i), y(i), results(i));
     }
     map_->rescaleDataRange();
@@ -109,7 +109,7 @@ MapData::MapData(QString x_axis_description,
 ///
 /// \brief MapData::~MapData
 ///Deletes everything the new keyword is used on in this object.
-/// Destructor triggered when this is removed from SpecMap list.
+/// Destructor triggered when this is removed from VespucciDataset list.
 MapData::~MapData()
 {
 
@@ -142,7 +142,7 @@ QString MapData::type()
 ///
 /// \brief MapData::source_index
 /// \return
-/// Sets the index of the map in the list of maps in the SpecMap object.
+/// Sets the index of the map in the list of maps in the VespucciDataset object.
 int MapData::source_index()
 {
     return source_index_;
@@ -392,7 +392,7 @@ bool MapData::saveTiff(const QString &fileName, int width, int height, double sc
 
 ///
 /// \brief MapData::RemoveThis
-///Triggers the SpecMap object to remove this from the list.  Since SpecMap
+///Triggers the VespucciDataset object to remove this from the list.  Since VespucciDataset
 /// stores MapData objects as shared pointers, and only one object (the map list)
 /// contains this pointer, this removal results in this object being deleted.
 void MapData::RemoveThis()
@@ -620,7 +620,7 @@ QVector<double> MapData::second_abcissa()
 
 ///
 /// \brief MapData::second_baseline
-/// \param i index of SpecMap obejct (and also second_baseline_) of the spectrum in question.
+/// \param i index of VespucciDataset obejct (and also second_baseline_) of the spectrum in question.
 /// \return A QVector representing the second baseline for a two-peak map.
 ///
 QVector<double> MapData::second_baseline(int i)
@@ -632,7 +632,7 @@ QVector<double> MapData::second_baseline(int i)
 
 ///
 /// \brief MapData::mid_line
-/// \param i The row in the SpecMap object (and therefore also in mid_lines_)
+/// \param i The row in the VespucciDataset object (and therefore also in mid_lines_)
 /// corresponding the the spectrum in question.
 /// \return A QVector for a line drawn from one edge of the peak in question to
 /// the other at the half-maximum of the peak.
@@ -647,7 +647,7 @@ QVector<double> MapData::mid_line(int i)
 
 ///
 /// \brief MapData::mid_lines
-/// \param i The row in the specmap object (and therefore also in mid_lines_)
+/// \param i The row in the VespucciDataset object (and therefore also in mid_lines_)
 /// that contains the spectrum in question.
 /// \return Returns a QVector for two lines that extend from one edge of two peaks to
 /// the other with a vertical position equal to the half maximum of the peak.

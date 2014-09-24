@@ -18,7 +18,7 @@
 ***************************************************************************************/
 #include "principalcomponentsdata.h"
 
-PrincipalComponentsData::PrincipalComponentsData(SpecMap *parent,
+PrincipalComponentsData::PrincipalComponentsData(VespucciDataset *parent,
                                                  QString *directory)
 {
     parent_ = parent;
