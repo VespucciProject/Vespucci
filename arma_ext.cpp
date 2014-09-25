@@ -68,7 +68,9 @@ mat arma_ext::spdiags(mat B, ivec d, uword m, uword n)
         return output;
     }
 
+    cout << "superdiagonals=" << endl << find (d >= 0) << endl;
     superdiagonals = d(find (d >= 0));
+    cout << "subdiagonals=" << endl << find (d < 0) << endl;
     subdiagonals = d(find (d < 0));
 
 

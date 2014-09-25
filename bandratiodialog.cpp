@@ -70,6 +70,8 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
 
     spectrum_plot_->xAxis->setRange(data_->WavelengthRange());
     spectrum_plot_->yAxis->setRange(data_->PointSpectrumRange(0));
+
+    spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
 }
 
 BandRatioDialog::~BandRatioDialog()
@@ -83,6 +85,17 @@ void BandRatioDialog::on_buttonBox_accepted()
     double second_entered_min = second_min_box_->text().toDouble();
     double first_entered_max = first_max_box_->text().toDouble();
     double second_entered_max = second_max_box_->text().toDouble();
+
+    if (first_entered_min < workspace->GetWavelengthMin(data_index_) || second_entered_min < workspace->GetWavelengthMin(data_index_)){
+        QMessageBox::warning(this, "Invalid Input!", "You have entered a left bound that is smaller than the smallest number on the spectral abcissa");
+        return;
+    }
+
+    if (first_entered_max > workspace->GetWavelengthMax(data_index_) || second_entered_max > workspace->GetWavelengthMax(data_index_)){
+        QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abcissa");
+        return;
+    }
+
 
     uvec first_range = data_->FindRange(first_entered_min, first_entered_max);
     uvec second_range = data_->FindRange(second_entered_min, second_entered_max);

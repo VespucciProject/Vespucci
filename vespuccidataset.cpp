@@ -499,8 +499,8 @@ void VespucciDataset::SingularValue(int singular_values)
 /// \param window_size The size of the filter window.
 ///
 void VespucciDataset::Derivatize(unsigned int derivative_order,
-                         unsigned int polynomial_order,
-                         unsigned int window_size)
+                                 unsigned int polynomial_order,
+                                 unsigned int window_size)
 {
     uword i, j;
     uword columns = wavelength_.n_elem;
@@ -511,7 +511,7 @@ void VespucciDataset::Derivatize(unsigned int derivative_order,
 
     for (i = 0; i <window_size; ++i){
         for (j = 0; j <= polynomial_order; ++j){
-            x(i, j) = p_buf ^ j;
+            x(i, j) = std::pow(p_buf, j);
         }
         ++p_buf;
     }
@@ -538,20 +538,15 @@ void VespucciDataset::Derivatize(unsigned int derivative_order,
                 weights.row(derivative_order) * coeff(0);
     }
 
+    //QVector<int> p_range;
     ivec p_range;
+    p_range.set_size(2*p + 1);
+    for (uword it = 0; it <= 2*p; ++it)
+        p_range(it) = -p + it;
 
-    //signed-unsigned comparision might be unsafe in this case...
-    sword it;
-    sword lim = p;
-    //using the () operator is faster than the possibly more obvious <<
-    uword ind = 0;
-    for (it = -p; it <= lim; ++it){
-        p_range(ind) = it;
-        ++ind;
-    }
+    cout << "p_range=" << endl << p_range << endl;
 
-
-
+    cout << "call to spdiags" << endl;
     mat SG_Coefficients =
             arma_ext::spdiags(diagonals,
                               p_range,
@@ -580,7 +575,7 @@ void VespucciDataset::Derivatize(unsigned int derivative_order,
         }
     }
 
-    uword x_row = p;
+    sword x_row = p;
 
     for (i = 0; i < p; ++i){
         for (j = 0; j <= polynomial_order - derivative_order; ++j){
@@ -608,9 +603,8 @@ void VespucciDataset::Derivatize(unsigned int derivative_order,
     }
 
     spectra_ = spectra_ * SG_Coefficients;
-    spectra_ /= -1;
+    spectra_ /= -1.0;
 }
-
 
 // MAPPING FUNCTIONS //
 

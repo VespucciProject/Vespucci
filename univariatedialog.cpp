@@ -82,6 +82,17 @@ void UnivariateDialog::on_buttonBox_accepted()
     QString integration_method = integration_method_selector_->currentText();
 
     int color_index = color_selector_->currentIndex();
+
+    if (entered_min < workspace->GetWavelengthMin(data_index_)){
+        QMessageBox::warning(this, "Invalid Input!", "You have entered a left bound that is smaller than the smallest number on the spectral abcissa");
+        return;
+    }
+
+    if (entered_max > workspace->GetWavelengthMax(data_index_)){
+        QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abcissa");
+        return;
+    }
+
     data_->Univariate(min, max, name, value_method, integration_method, color_index);
 
 }

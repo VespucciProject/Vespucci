@@ -75,7 +75,9 @@ public:
     void SubtractBackground(mat background);
     void MedianFilter(int window_size);
     void LinearMovingAverage(int window_size);
-    void Derivatize(unsigned int derivative_order, unsigned int polynomial_order, unsigned int window_size);
+    void Derivatize(unsigned int derivative_order,
+                    unsigned int polynomial_order,
+                    unsigned int window_size);
     void SingularValue(int singular_values);
     mat spdiags(mat B, QVector<int> d, int m, int n);
 
