@@ -98,10 +98,24 @@ QVariant VespucciTableModel::data(const QModelIndex &index, int role) const
 
 int VespucciTableModel::columnCount(const QModelIndex &parent) const
 {
-    return cols_;
+    if (parent.isValid()){
+        return cols_;
+    }
+    else{
+        cerr << "VespucciTableModel::columnCount invalid QModelIndex!!" << endl;
+        return 1;
+    }
+
 }
 
 int VespucciTableModel::rowCount(const QModelIndex &parent) const
 {
-    return rows_;
+    if (parent.isValid()){
+        return rows_;
+    }
+    else{
+        cerr << "VespucciTableModel::columnCount invalid QModelIndex!!" << endl;
+        return 1;
+    }
+
 }

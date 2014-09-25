@@ -285,7 +285,7 @@ void VespucciDataset::UnitAreaNormalize()
 {
     uword num_rows = spectra_.n_rows;
     uword num_cols = spectra_.n_cols;
-    for (int i = 0; i < num_rows; ++i){
+    for (uword i = 0; i < num_rows; ++i){
         rowvec row = spectra_.row(i);
         double row_sum = sum(row);
         for (uword j = 0; j < num_cols; ++j){
@@ -307,7 +307,7 @@ mat VespucciDataset::ZScoreNormCopy()
     for (uword j = 0; j < num_cols; ++j){
         double mean = arma::mean(spectra_.col(j));
         double standard_deviation = arma::stddev(spectra_.col(j));
-        for (int i = 0; i < num_rows; ++i){
+        for (uword i = 0; i < num_rows; ++i){
             normalized_copy(i, j) = (spectra_(i, j) - mean) / standard_deviation;
         }
     }
@@ -376,8 +376,8 @@ void VespucciDataset::Baseline(QString method, int window_size)
         uword starting_index = (window_size - 1) / 2;
         uword ending_index = wavelength_.n_cols - starting_index;
         uword i, j;
-        int rows = spectra_.n_rows;
-        int columns = spectra_.n_cols;
+        uword rows = spectra_.n_rows;
+        uword columns = spectra_.n_cols;
         rowvec window;
         mat processed;
         window.set_size(window_size);
@@ -504,7 +504,7 @@ void VespucciDataset::Derivatize(unsigned int derivative_order,
 {
     uword i, j;
     uword columns = wavelength_.n_elem;
-    sword p = (window_size - 1) / 2;
+    uword p = (window_size - 1) / 2;
     mat x;
     x.set_size(window_size, 1 + polynomial_order);
     sword p_buf = -p;
@@ -539,8 +539,15 @@ void VespucciDataset::Derivatize(unsigned int derivative_order,
     }
 
     ivec p_range;
-    for (sword it = -p; it <= p; ++it){
-        p_range << it << endr;
+
+    //signed-unsigned comparision might be unsafe in this case...
+    sword it;
+    sword lim = p;
+    //using the () operator is faster than the possibly more obvious <<
+    uword ind = 0;
+    for (it = -p; it <= lim; ++it){
+        p_range(ind) = it;
+        ++ind;
     }
 
 
@@ -573,7 +580,7 @@ void VespucciDataset::Derivatize(unsigned int derivative_order,
         }
     }
 
-    int x_row = p;
+    uword x_row = p;
 
     for (i = 0; i < p; ++i){
         for (j = 0; j <= polynomial_order - derivative_order; ++j){
@@ -657,7 +664,7 @@ void VespucciDataset::Univariate(uword min,
     mat mid_lines;
 
     if (value_method == "Bandwidth"){
-        double maximum, half_maximum, width, region_size;
+        double maximum, half_maximum, width/*, region_size*/;
         double start_value, end_value, slope;
         cout << "set size of baseline matrix" << endl;
         baselines.set_size(size, max-min + 1);
@@ -683,7 +690,7 @@ void VespucciDataset::Univariate(uword min,
 
             //find maximum and half-maximum
             region = spectra_(i, span(min, max));
-            region_size = region.n_elem;
+            //region_size = region.n_elem;
             maximum = region.max();
 
             //find index of maximum
@@ -770,7 +777,7 @@ void VespucciDataset::Univariate(uword min,
         // Makes an intensity map
         map_type = "1-Region Univariate (Intensity)";
         if (z_scores_calculated_){
-            int elements = spectra_.n_elem;
+            uword elements = spectra_.n_elem;
             rowvec region_temp;
             double peak_height;
             double peak_height_temp;
@@ -839,14 +846,14 @@ void VespucciDataset::Univariate(uword min,
 /// \param value_method how the maxima are to be determined (area, derivative, or intensity)
 /// \param gradient_index index of gradient in the master list (GetGradient())
 ///
-void VespucciDataset::BandRatio(int first_min,
-                        int first_max,
-                        int second_min,
-                        int second_max,
+void VespucciDataset::BandRatio(uword first_min,
+                        uword first_max,
+                        uword second_min,
+                        uword second_max,
                         QString name,
                         QString value_method,
                         QString integration_method,
-                        int gradient_index)
+                        unsigned int gradient_index)
 {
 
     //if dataset is non spatial, just quit

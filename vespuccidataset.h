@@ -113,13 +113,13 @@ public:
                     QString integration_method,
                     uword gradient_index);
 
-    void BandRatio(int first_min,
-                   int first_max,
-                   int second_min,
-                   int second_max,
+    void BandRatio(uword first_min,
+                   uword first_max,
+                   uword second_min,
+                   uword second_max,
                    QString name,
                    QString value_method, QString integration_method,
-                   int gradient_index);
+                   unsigned int gradient_index);
 
     void PartialLeastSquares(uword components, uword image_component,
                              QString name,
