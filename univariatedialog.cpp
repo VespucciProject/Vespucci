@@ -59,6 +59,7 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
 
     spectrum_plot_->xAxis->setRange(data_->WavelengthRange());
     spectrum_plot_->yAxis->setRange(data_->PointSpectrumRange(0));
+    spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
 
 }
 
