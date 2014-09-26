@@ -58,6 +58,7 @@ public:
     VespucciDataset(QTextStream& inputstream, MainWindow *main_window, QString *directory, bool swap_spatial);
     VespucciDataset(QString binary_file_name, MainWindow *main_window, QString *directory);
     VespucciDataset(QString name, MainWindow *main_window, QString *directory, VespucciDataset *original, uvec indices);
+    VespucciDataset(QString name, MainWindow *main_window, QString *directory, field<mat> parents, QStringList parent_names);
     ~VespucciDataset();
     // PRE-PROCESSING FUNCTIONS //
     // map editing

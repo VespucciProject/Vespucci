@@ -77,7 +77,8 @@ SOURCES += main.cpp\
     vcadialog.cpp \
     dataextractordialog.cpp \
     analysiswizard.cpp \
-    vespuccidataset.cpp
+    vespuccidataset.cpp \
+    metadataset.cpp
 
 HEADERS  += mainwindow.h \
     loaddataset.h \
@@ -106,7 +107,8 @@ HEADERS  += mainwindow.h \
     vcadialog.h \
     dataextractordialog.h \
     analysiswizard.h \
-    vespuccidataset.h
+    vespuccidataset.h \
+    metadataset.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
