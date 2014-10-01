@@ -33,8 +33,6 @@
 
 
 
-using namespace std;
-using namespace arma;
 
 class MapData;
 class PrincipalComponentsData;
@@ -44,13 +42,13 @@ class SpectrumViewer;
 class MainWindow;
 class VespucciWorkspace;
 
+using namespace std;
+using namespace arma;
 ///
 /// \brief The VespucciDataset class
-/// This is the main class for dealing with hyperspectral data. It was originally
-/// named hyperSpec and modeled on the class used by the hyperSpec R pacakge. This
-/// handles the import and export of spectra, and the creation of maps. Images
-/// are handled by the MapData class. In reality, this should probably be called
-/// MapData and MapData called VespucciDataset...
+/// This is the main class for dealing with hyperspectral data. This handles the
+///  import and export of spectra, and the creation of maps. Images are handled
+/// by the MapData class.
 class VespucciDataset
 {
 public:
@@ -58,9 +56,11 @@ public:
     VespucciDataset(QTextStream& inputstream, MainWindow *main_window, QString *directory, bool swap_spatial);
     VespucciDataset(QString binary_file_name, MainWindow *main_window, QString *directory);
     VespucciDataset(QString name, MainWindow *main_window, QString *directory, VespucciDataset *original, uvec indices);
-    VespucciDataset(QString name, MainWindow *main_window, QString *directory, field<mat> parents, QStringList parent_names);
     ~VespucciDataset();
     // PRE-PROCESSING FUNCTIONS //
+    //general
+    void Undo(QString operation);
+
     // map editing
     void CropSpectra(double x_min, double x_max, double y_min, double y_max);
 
@@ -208,6 +208,8 @@ public:
 
     bool non_spatial();
 
+
+
 private:
     ///
     /// \brief wavelength_
@@ -231,9 +233,21 @@ private:
     mat spectra_;
 
     ///
+    /// \brief spectra_old_
+    /// A copy of spectra_, which is not modified by pre-processing functions
+    /// until another pre-processing function is called. This allows for undoing
+    /// pre-processing functions.
+    mat spectra_old_;
+
+    ///
     /// \brief name_
     /// The name chosen by the user for this dataset.
     QString name_;
+
+    ///
+    /// \brief log_ A log of all UI-induced functions called on this dataset
+    ///
+    QTextStream log_;
 
     ///
     /// \brief map_list_widget_

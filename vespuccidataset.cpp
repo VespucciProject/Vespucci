@@ -205,6 +205,10 @@ VespucciDataset::VespucciDataset(QTextStream &inputstream, MainWindow *main_wind
 /// Constructor for making a new dataset from a subset of an old one
 VespucciDataset::VespucciDataset(QString name, MainWindow *main_window, QString *directory, VespucciDataset *original, uvec indices)
 {
+    log_ << "Dataset " << name
+         << " created from previous dataset "
+         << original->name() << "." << endl << endl;
+
     non_spatial_ = true;
     map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
     map_loading_count_ = 0;
@@ -233,6 +237,18 @@ VespucciDataset::VespucciDataset(QString name, MainWindow *main_window, QString 
 
 
 // PRE-PROCESSING FUNCTIONS //
+///
+/// \brief VespucciDataset::Undo Swap spectra_ and spectra_old_ to undo an action.
+/// Calling this function again re-does the action that was undid.
+///
+void VespucciDataset::Undo(QString operation)
+{
+    log_ << "Undo: " << operation << endl;
+    mat buffer = spectra_;
+    spectra_ = spectra_old_;
+    spectra_old_ = buffer;
+}
+
 
 ///
 /// \brief VespucciDataset::CropSpectra
@@ -241,9 +257,17 @@ VespucciDataset::VespucciDataset(QString name, MainWindow *main_window, QString 
 /// \param x_max value of x above which spectra are deleted
 /// \param y_min value of y below which spectra are deleted
 /// \param y_max value of y above which spectra are deleted
-/// removes all data points outside of the range.
+/// Removes all data points outside of the range. Cannot be undone. It is preferable
+/// to create a new dataset rather than crop an old one.
 void VespucciDataset::CropSpectra(double x_min, double x_max, double y_min, double y_max)
 {
+    log_ << "CropSpectra: " << endl;
+    log_ << "x_min == " << x_min << endl;
+    log_ << "x_max == " << x_max << endl;
+    log_ << "y_min == " << y_min << endl;
+    log_ << "y_max == " << y_max << endl << endl;
+
+
     int max = x_.n_rows;
     QProgressDialog progress("Cropping...", "Cancel", 0, max);
     progress.setWindowModality(Qt::WindowModal);
@@ -269,6 +293,7 @@ void VespucciDataset::CropSpectra(double x_min, double x_max, double y_min, doub
 /// by the maximum of spectra_
 void VespucciDataset::MinMaxNormalize()
 {
+    spectra_old_ = spectra_;
     int n_elem = spectra_.n_elem;
     double minimum = spectra_.min();
     if (minimum < 0)
@@ -283,6 +308,7 @@ void VespucciDataset::MinMaxNormalize()
 ///normalizes the spectral data so that the area under each point spectrum is 1
 void VespucciDataset::UnitAreaNormalize()
 {
+    spectra_old_ = spectra_;
     uword num_rows = spectra_.n_rows;
     uword num_cols = spectra_.n_cols;
     for (uword i = 0; i < num_rows; ++i){
@@ -325,6 +351,7 @@ mat VespucciDataset::ZScoreNormCopy()
 ///
 void VespucciDataset::ZScoreNormalize()
 {
+    spectra_old_ = spectra_;
     uword num_rows = spectra_.n_rows;
     uword num_cols = spectra_.n_cols;
     for (uword j = 0; j < num_cols; ++j){
@@ -347,6 +374,7 @@ void VespucciDataset::ZScoreNormalize()
 ///
 void VespucciDataset::SubtractBackground(mat background)
 {
+    spectra_old_ = spectra_;
     if (background.n_cols != spectra_.n_cols){
         QMessageBox::warning(0,
                              "Improper Dimensions!",
@@ -372,6 +400,7 @@ void VespucciDataset::SubtractBackground(mat background)
 ///
 void VespucciDataset::Baseline(QString method, int window_size)
 {
+    spectra_old_ = spectra_;
     if (method == "Median Filter"){
         uword starting_index = (window_size - 1) / 2;
         uword ending_index = wavelength_.n_cols - starting_index;
@@ -408,6 +437,7 @@ void VespucciDataset::Baseline(QString method, int window_size)
 
 void VespucciDataset::MedianFilter(int window_size)
 {
+    spectra_old_ = spectra_;
     uword starting_index = (window_size - 1) / 2;
     uword ending_index = wavelength_.n_cols - starting_index;
     uword i, j;
@@ -441,29 +471,15 @@ void VespucciDataset::MedianFilter(int window_size)
 
 void VespucciDataset::LinearMovingAverage(int window_size)
 {
-    uword starting_index = (window_size - 1) / 2;
-    uword ending_index = wavelength_.n_cols - starting_index;
-    uword i, j;
-    uword rows = spectra_.n_rows;
-    uword columns = spectra_.n_cols;
-    rowvec window;
-    mat processed;
-    window.set_size(window_size);
-    processed.set_size(spectra_.n_rows, spectra_.n_cols);
-
-    for (i = 0; i < rows; ++i){
-        for (j = 0; j < starting_index; ++j){
-            processed(i, j) = spectra_(i, j);
-        }
-        for (j = ending_index; j < columns; ++j){
-            processed(i, j) = spectra_(i, j);
-        }
-        for (j = starting_index; j < ending_index; ++j){
-            window = spectra_(i, span((j - starting_index), (j+starting_index)));
-            processed(i, j) = mean(window);
-        }
+    spectra_old_ = spectra_;
+    vec filter = arma_ext::CreateMovingAverageFilter(window_size);
+    //because armadillo is column-major, it is faster to filter by columns than rows
+    mat buffer = trans(spectra_);
+    mat filtered(buffer.n_rows, buffer.n_cols);
+    for (uword j = 0; j < buffer.n_cols; ++j){
+        filtered.col(j) = arma_ext::ApplyFilter(buffer.col(j), filter);
     }
-    spectra_ = processed;
+    spectra_ = trans(filtered);
 }
 
 ///
@@ -476,19 +492,12 @@ void VespucciDataset::LinearMovingAverage(int window_size)
 ///
 void VespucciDataset::SingularValue(int singular_values)
 {
+    spectra_old_ = spectra_;
     mat U;
     vec s;
     mat V;
-
-    wall_clock timer;
-    timer.tic();
-    cout << "call to svds" << endl;
     arma_ext::svds(spectra_, singular_values, U, s, V);
-    cout << "took " << timer.toc() << " s" << endl;
-    timer.tic();
     spectra_ = -1 * U * diagmat(s) * V.t();
-    cout << "reconstruction took " << timer.toc() << " s" << endl;
-
 }
 
 ///
@@ -502,108 +511,12 @@ void VespucciDataset::Derivatize(unsigned int derivative_order,
                                  unsigned int polynomial_order,
                                  unsigned int window_size)
 {
-    uword i, j;
-    uword columns = wavelength_.n_elem;
-    uword p = (window_size - 1) / 2;
-    mat x;
-    x.set_size(window_size, 1 + polynomial_order);
-    sword p_buf = -p;
-
-    for (i = 0; i <window_size; ++i){
-        for (j = 0; j <= polynomial_order; ++j){
-            x(i, j) = std::pow(p_buf, j);
-        }
-        ++p_buf;
-    }
-
-    mat weights = solve(x, eye(window_size, window_size));
-
-    mat coeff_mat;
-
-    coeff_mat.set_size(derivative_order, polynomial_order + 1 - derivative_order);
-
-    for (i = 0; i < derivative_order; ++i){
-        for (j = 0; j < polynomial_order + 1 - derivative_order; ++j){
-            coeff_mat(i, j) = j + 1.0 + i;
-        }
-    }
-
-
-
-    rowvec coeff = prod(coeff_mat);
-    mat diagonals;
-    diagonals.set_size(columns, window_size);
-    for (i = 0; i < columns; ++i){
-        diagonals.row(i) =
-                weights.row(derivative_order) * coeff(0);
-    }
-
-    //QVector<int> p_range;
-    ivec p_range;
-    p_range.set_size(2*p + 1);
-    for (uword it = 0; it <= 2*p; ++it)
-        p_range(it) = -p + it;
-
-    cout << "p_range=" << endl << p_range << endl;
-
-    cout << "call to spdiags" << endl;
-    mat SG_Coefficients =
-            arma_ext::spdiags(diagonals,
-                              p_range,
-                              columns,
-                              columns);
-
-    mat weights_submatrix;
-    weights_submatrix.set_size(polynomial_order - derivative_order + 1, window_size);
-
-    for (i = 0; i < polynomial_order - derivative_order + 1; ++i){
-        for (j = 0; j < window_size; ++j){
-            weights_submatrix(i, j) = weights(i + derivative_order, j);
-        }
-    }
-
-    mat w1 = diagmat(coeff)*weights_submatrix;
-
-    mat x_submatrix_1;
-    x_submatrix_1.set_size(p, 1+ polynomial_order - derivative_order);
-    mat x_submatrix_2;
-    x_submatrix_2.set_size(p, 1 + polynomial_order - derivative_order);
-
-    for (i = 0; i < p; ++i){
-        for (j = 0; j <= polynomial_order - derivative_order; ++j){
-            x_submatrix_1(i, j) = x(i, j);
-        }
-    }
-
-    sword x_row = p;
-
-    for (i = 0; i < p; ++i){
-        for (j = 0; j <= polynomial_order - derivative_order; ++j){
-            x_submatrix_2(i, j) = x(x_row, j);
-        }
-        ++x_row;
-    }
-
-
-    mat x_product_1 = x_submatrix_1 * w1;
-    mat x_product_2 =x_submatrix_2 * w1;
-
-    mat x_product_1_transpose = x_product_1.t();
-    mat x_product_2_transpose = x_product_2.t();
-
-    for (i = 0; i < window_size; ++i){
-        for (j = 0; j < p; ++j){
-            SG_Coefficients(i, j) = x_product_1_transpose(i, j);
-        }
-    }
-    for (i = columns-window_size; i < window_size; ++i){
-        for (j = columns - p; j < columns; ++j){
-            SG_Coefficients(i, j) = x_product_2_transpose(i, j);
-        }
-    }
-
-    spectra_ = spectra_ * SG_Coefficients;
-    spectra_ /= -1.0;
+    spectra_old_ = spectra_;
+    spectra_ = arma_ext::sgolayfilt(trans(spectra_),
+                                    polynomial_order,
+                                    window_size,
+                                    derivative_order,
+                                    1);
 }
 
 // MAPPING FUNCTIONS //
@@ -1501,6 +1414,8 @@ const QString VespucciDataset::name()
 void VespucciDataset::SetName(QString new_name)
 {
     name_ = new_name;
+    //the default constructor calls this.
+    log_ << "Dataset " << name_ << " created from text constructor." << endl << endl;
 }
 
 
