@@ -56,7 +56,6 @@ bool VCA(mat R, uword p, uvec &indices, mat &endmember_spectra,
 double estimate_snr(mat R, vec r_m, mat x);
 
 mat sgolay(uword poly_order, uword window_size, uword deriv_order, uword scaling_factor);
-vec sgolayfilt(vec x, uword poly_order, uword window_size, uword deriv_order, uword scaling_factor);
 mat sgolayfilt(mat x, uword poly_order, uword window_size, uword deriv_order, uword scaling_factor);
 vec ApplyFilter(vec x, mat coefficients, uword window_size);
 vec ApplyFilter(vec x, vec filter);

@@ -55,91 +55,95 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
     //cout << "DataViewer::on_comboBox_currentTextChanged" << endl;
     //cout << arg1.toStdString();
     if (arg1 == "Spatial Data"){
-        table_->setModel(new VespucciTableModel(this, dataset_, "spatial"));
+        VespucciTableModel *table_model = new VespucciTableModel(this, dataset_, "spatial");
+        table_->setModel(table_model);
+        current_data_ = table_model->GetData();
         export_button_->setDisabled(true);
         plot_button_->setDisabled(true);
     }
     else if (arg1 == "Spectral Abcissa"){
-        //cout << "Spectral Abcissa";
-        table_->setModel(new VespucciTableModel(this, dataset_->wavelength_ptr()));
+        VespucciTableModel *table_model = new VespucciTableModel(this, dataset_->wavelength_ptr());
+        current_data_ = table_model->GetData();
+        table_->setModel(table_model);
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
     }
     else if (arg1 == "PCA Coefficients"){
-        mat *coefficients = dataset_->principal_components_data()->coeff();
-        table_->setModel(new VespucciTableModel(this, coefficients));
+        current_data_ = dataset_->principal_components_data()->coeff();
+        table_->setModel(new VespucciTableModel(this, current_data_));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
     }
     else if (arg1 == "Eigenvalues of Covariance Matrix"){
-        mat *latent = (mat*) dataset_->principal_components_data()->latent();
-        table_->setModel(new VespucciTableModel(this, latent));
+        current_data_ = (mat*) dataset_->principal_components_data()->latent();
+        table_->setModel(new VespucciTableModel(this, current_data_));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
     }
     else if (arg1 == "PCA t² Values"){
-        mat *tsquared = (mat*) dataset_->principal_components_data()->tsquared();
-        table_->setModel(new VespucciTableModel(this, tsquared));
+        current_data_ = (mat*) dataset_->principal_components_data()->tsquared();
+        table_->setModel(new VespucciTableModel(this, current_data_));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
     }
     else if (arg1 == "VCA Coefficients"){
-        mat* coeff = dataset_->vertex_components_data()->fractional_abundances();
-        table_->setModel(new VespucciTableModel(this, coeff));
+        current_data_ = dataset_->vertex_components_data()->fractional_abundances();
+        table_->setModel(new VespucciTableModel(this, current_data_));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
     }
     else if (arg1 == "VCA Endmembers"){
-        mat *endmembers = dataset_->vertex_components_data()->endmember_spectra();
-        table_->setModel(new VespucciTableModel(this, endmembers));
+        current_data_ = dataset_->vertex_components_data()->endmember_spectra();
+        table_->setModel(new VespucciTableModel(this, current_data_));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(false);
     }
     else if (arg1 == "K-means Assignments"){
-        mat *assignments = dataset_->k_means_data();
-        table_->setModel(new VespucciTableModel(this, assignments));
+        current_data_ = dataset_->k_means_data();
+        table_->setModel(new VespucciTableModel(this, current_data_));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
     }
     else if (arg1 == "PLS Variance"){
-        mat *variance = dataset_->partial_least_squares_data()->percent_variance();
-        table_->setModel(new VespucciTableModel(this, variance));
+        current_data_ = dataset_->partial_least_squares_data()->percent_variance();
+        table_->setModel(new VespucciTableModel(this, current_data_));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
     }
     else if (arg1 == "PLS Predictor Loading"){
-        mat *XL = dataset_->partial_least_squares_data()->X_loadings();
-        table_->setModel(new VespucciTableModel(this, XL));
+        current_data_ = dataset_->partial_least_squares_data()->X_loadings();
+        table_->setModel(new VespucciTableModel(this, current_data_));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
     }
     else if (arg1 == "PLS Response Loading"){
-        mat *YL = dataset_->partial_least_squares_data()->Y_loadings();
-        table_->setModel(new VespucciTableModel(this, YL));
+        current_data_ = dataset_->partial_least_squares_data()->Y_loadings();
+        table_->setModel(new VespucciTableModel(this, current_data_));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
     }
     else if (arg1 == "PLS Predictor Scores"){
-        mat *XS = dataset_->partial_least_squares_data()->X_scores();
-        table_->setModel(new VespucciTableModel(this, XS));
+        current_data_ = dataset_->partial_least_squares_data()->X_scores();
+        table_->setModel(new VespucciTableModel(this, current_data_));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
     }
     else if (arg1 == "PLS Response Scores"){
-        mat *YS = dataset_->partial_least_squares_data()->Y_scores();
-        table_->setModel(new VespucciTableModel(this, YS));
+        current_data_ = dataset_->partial_least_squares_data()->Y_scores();
+        table_->setModel(new VespucciTableModel(this, current_data_));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
     }
     else if (arg1 == "PLS Coefficients"){
-        mat *coeff = dataset_->partial_least_squares_data()->coefficients();
-        table_->setModel(new VespucciTableModel(this, coeff));
+        current_data_ = dataset_->partial_least_squares_data()->coefficients();
+        table_->setModel(new VespucciTableModel(this, current_data_));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
     }
     else{
-        //cout << "Else" << endl;
-        table_->setModel(new VespucciTableModel(this, dataset_->wavelength_ptr()));
+        VespucciTableModel *table_model = new VespucciTableModel(this, dataset_->wavelength_ptr());
+        current_data_ = table_model->GetData();
+        table_->setModel(table_model);
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
     }
@@ -167,7 +171,7 @@ void DataViewer::on_plotPushButton_clicked()
 }
 
 void DataViewer::on_exportPushButton_clicked()
-{/*
+{
     QString filename = QFileDialog::getSaveFileName(this,
                                                     tr("Export As..."),
                                                     directory_,
@@ -175,20 +179,23 @@ void DataViewer::on_exportPushButton_clicked()
                                                        "Tab-delimited Text (*.txt);;"
                                                        "Armadillo Binary (*.arma);;"));
     QFileInfo file_info(filename);
+    bool success = false;
     if (filename.isEmpty())
         return;
 
     QString extension = file_info.suffix();
     cout << "save" << endl;
-    if (extension == "arma"){
-        current_data_->save(filename.toStdString(), arma_binary);
-    }
-    else if (extension == "csv"){
-        current_data_->save(filename.toStdString(), csv_ascii);
-    }
-    else{
-        current_data_->save(filename.toStdString(), raw_ascii);
-    }
+    if (extension == "arma")
+        success = current_data_->save(filename.toStdString(), arma_binary);
+    else if (extension == "csv")
+        success = current_data_->save(filename.toStdString(), csv_ascii);
+    else
+        success = current_data_->save(filename.toStdString(), raw_ascii);
 
-    cout << "end of slot" << endl;
-*/}
+    if (success)
+        QMessageBox::information(this, "Success!", "File " + filename + " written successfully!");
+    else
+        QMessageBox::warning(this, "File Not Saved", "File was not written successfully.");
+
+    return;
+}

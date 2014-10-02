@@ -27,7 +27,6 @@ private:
     QSpinBox *image_component_selector_;
     QSpinBox *components_selector_;
     QComboBox *color_selector_;
-    QCheckBox *negative_score_box_;
     QLineEdit *name_box_;
     QCheckBox *recalculate_box_;
 

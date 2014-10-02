@@ -53,8 +53,8 @@ class VespucciDataset
 {
 public:
     VespucciDataset();
-    VespucciDataset(QTextStream& inputstream, MainWindow *main_window, QString *directory, bool swap_spatial);
-    VespucciDataset(QString binary_file_name, MainWindow *main_window, QString *directory);
+    VespucciDataset(QString text_filename, MainWindow *main_window, QString *directory, QString name, QString x_axis_description, QString y_axis_description, bool swap_spatial);
+    VespucciDataset(QString binary_filename, MainWindow *main_window, QString *directory, QString name);
     VespucciDataset(QString name, MainWindow *main_window, QString *directory, VespucciDataset *original, uvec indices);
     ~VespucciDataset();
     // PRE-PROCESSING FUNCTIONS //
@@ -73,7 +73,7 @@ public:
 
     //Spectral Pre-processing
 
-    void SubtractBackground(mat background);
+    void SubtractBackground(mat background, QString filename);
     void MedianFilter(int window_size);
     void LinearMovingAverage(int window_size);
     void Derivatize(unsigned int derivative_order,
@@ -129,14 +129,12 @@ public:
                              unsigned int gradient_index, bool recalculate);
 
     void PrincipalComponents(int component,
-                            bool include_negative_scores,
                             QString name,
                             int gradient_index,
                              bool recalculate);
 
     void VertexComponents(uword endmembers, uword image_component,
-                         bool include_negative_scores,
-                         QString name, unsigned gradient_index, bool recalculate);
+                          QString name, unsigned gradient_index, bool recalculate);
 
     void KMeans(size_t clusters,
                QString name);
@@ -244,10 +242,15 @@ private:
     /// The name chosen by the user for this dataset.
     QString name_;
 
+    QFile *log_file_;
+
+
     ///
-    /// \brief log_ A log of all UI-induced functions called on this dataset
+    /// \brief log_stream_ A log of all UI-induced functions called on this dataset
     ///
-    QTextStream log_;
+    QTextStream log_stream_;
+
+    QString last_operation_;
 
     ///
     /// \brief map_list_widget_

@@ -230,7 +230,7 @@ void MainWindow::on_actionSubtract_Background_triggered()
         return;
     }
     else{
-        data->SubtractBackground(input);
+        data->SubtractBackground(input, filename);
     }
 }
 

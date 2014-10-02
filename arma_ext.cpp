@@ -603,10 +603,7 @@ mat arma_ext::sgolay(uword poly_order,
         for (uword j = 0; j <= poly_order; ++j){
             C.col(j) = arma::pow(column, j);
         }
-        //cout << "C = " << endl << C << endl;
-
         A = pinv(C);
-        //cout << "A = " << endl << A << endl;
         F.row(i) = A.row(deriv_order);
     }
     sword sign = (deriv_order % 2 == 0 ? 1: -1);
@@ -615,57 +612,10 @@ mat arma_ext::sgolay(uword poly_order,
         F.row(i) = sign*F.row(start_index);
         start_index++;
     }
-    //cout << "F before scaling" << endl << F << endl;
-    //cout << "std::pow(scaling_factor, deriv_order) = " << std::pow(scaling_factor, deriv_order) << endl;
-    //cout << "linspace(1, deriv_order, deriv_order) = " << linspace<vec>(1, deriv_order, deriv_order);
-
     double product = (deriv_order == 0 ? 1 : prod(linspace<vec>(1, deriv_order, deriv_order)));
     double power = pow(scaling_factor, deriv_order);
     F /= (power/product);
     return F;
-}
-
-///
-/// \brief arma_ext::sgolayfilt Apply Savitzky-Golay smoothing to a column vector
-/// \param x Signal to be smoothed
-/// \param poly_order Polynomial order for smoothing
-/// \param window_size Size of filter window. Must be odd and larger than poly order
-/// \param deriv_order Derivative order, to extract derivatized data directly
-/// \param scaling_factor A scaling factor
-/// \return Smoothed data
-///
-vec arma_ext::sgolayfilt(vec x, uword poly_order, uword window_size, uword deriv_order, uword scaling_factor)
-{
-    //this function filters by column.
-    //any invalid window size is set to preferred poly_order + 2 or poly_order + 3 for even poly_order
-    if ((poly_order > window_size) || (window_size % 2 == 0)){
-        window_size = poly_order + 3 - (poly_order % 2);
-    }
-    //if deriv_order is too high, make it one less than polynomial order
-    if (deriv_order > poly_order){
-        deriv_order = poly_order - 1;
-    }
-    if (x.n_rows < window_size){
-        cerr << "sgolayfilt: not enough data for filter window of this size" << endl;
-        return x;
-    }
-
-    mat coefficients = sgolay(poly_order, window_size, deriv_order, scaling_factor);
-
-    uword k = (window_size - 1) / 2;
-    vec filter = trans(coefficients.row(k));
-    filter = fliplr(filter);
-    vec filtered_data = conv(filter, x);
-    //for conv() to be equivalent to filter, we have to chop off the last window_size - 1 elements
-    filtered_data = filtered_data.rows(0, x.n_rows - 1);
-    cout << "filtered_data.n_rows = " << filtered_data.n_rows;
-    cout << "x.n_rows" << x.n_rows << endl;
-    //Now we have to fix the ends of the filtered data
-    cout << "fix first k rows" << endl;
-    filtered_data.rows(0, k) = coefficients.rows(k, window_size-1)*x.rows(0, window_size-1);
-    cout << "fix last k rows" << endl;
-    filtered_data.rows(x.n_rows - k, x.n_rows - 1) = coefficients.rows(0, k - 1)*x.rows(x.n_rows - window_size, x.n_rows - 1);
-    return filtered_data;
 }
 
 ///
@@ -723,12 +673,8 @@ vec arma_ext::ApplyFilter(vec x, mat coefficients, uword window_size)
     vec filtered_data = conv(filter, x);
     //for conv() to be equivalent to filter, we have to chop off the last window_size - 1 elements
     filtered_data = filtered_data.rows(0, x.n_rows - 1);
-    cout << "filtered_data.n_rows = " << filtered_data.n_rows;
-    cout << "x.n_rows" << x.n_rows << endl;
     //Now we have to fix the ends of the filtered data
-    cout << "fix first k rows" << endl;
     filtered_data.rows(0, k) = coefficients.rows(k, window_size-1)*x.rows(0, window_size-1);
-    cout << "fix last k rows" << endl;
     filtered_data.rows(x.n_rows - k, x.n_rows - 1) = coefficients.rows(0, k - 1)*x.rows(x.n_rows - window_size, x.n_rows - 1);
     return filtered_data;
 }

@@ -45,19 +45,60 @@ VespucciDataset::~VespucciDataset()
     //make sure all maps are delted properly.
     for (int i = 0; i < maps_.size(); ++i)
         RemoveMapAt(i);
+
+    log_file_->close();
+    QMessageBox::StandardButton reply =
+            QMessageBox::question(main_window_,
+                                  "Save log?",
+                                  "Would you like to save the log for this dataset?",
+                                  QMessageBox::Yes|QMessageBox::No);
+    QString filename;
+
+
+
+    if (reply == QMessageBox::No){
+        log_file_->remove();
+    }
+    else{
+        filename = QFileDialog::getSaveFileName(0, QTranslator::tr("Save File"),
+                                   *directory_,
+                                   QTranslator::tr("Text Files (*.txt)"));
+    }
+    bool success = log_file_->copy(filename);
+    if (success)
+        QMessageBox::information(main_window_, "Success!", "File " + filename + " written successfully");
+    else
+        QMessageBox::warning(main_window_, "Failure", "File not written successfully.");
+
+    delete log_file_;
+
 }
 
 
 ///
 /// \brief VespucciDataset::VespucciDataset
-/// \param binary_file_name file name of the binary
+/// \param binary_filename file name of the binary
 /// \param main_window the main window
 /// \param directory the working directory
 /// This constructor loads a previously saved dataset.  The dataset is saved
 /// as an armadillo binary in the same format as the long text.
 ///
-VespucciDataset::VespucciDataset(QString binary_file_name, MainWindow *main_window, QString *directory)
+VespucciDataset::VespucciDataset(QString binary_filename, MainWindow *main_window, QString *directory, QString name)
 {
+    //set up temporary filename (UTC date in close to ISO 8601 format)
+    QDateTime datetime = QDateTime::currentDateTimeUtc();
+    QString log_filename = datetime.toString("yyyy-MM-dd-hhmmss");
+    log_filename += "_" + name + ".temp.txt";
+    log_file_ = new QFile(name);
+    log_file_->open(QIODevice::ReadWrite | QIODevice::Text);
+    log_stream_(log_file_);
+    log_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
+    log_stream_ << "Version 0.4" << endl << endl;
+    log_stream_ << "Dataset " << name << "created "
+                << datetime.date().toString("yyyy-MM-dd") << "T"
+                << datetime.time().toString("hh:mm:ss") << "Z" << endl;
+    log_stream_ << "Imported from binary file " << binary_filename << endl << endl;
+
     non_spatial_ = false;
     //Set up variables unrelated to hyperspectral data:
     map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
@@ -69,7 +110,7 @@ VespucciDataset::VespucciDataset(QString binary_file_name, MainWindow *main_wind
     directory_ = directory;
 
     mat input_data;
-    input_data.load(binary_file_name.toStdString());
+    input_data.load(binary_filename.toStdString());
     int cols = input_data.n_cols;
     int rows = input_data.n_rows;
     int wavelength_size = cols - 2;
@@ -98,8 +139,28 @@ VespucciDataset::VespucciDataset(QString binary_file_name, MainWindow *main_wind
 /// \param main_window the main window of the app
 /// \param directory the working directory
 ///
-VespucciDataset::VespucciDataset(QTextStream &inputstream, MainWindow *main_window, QString *directory, bool swap_spatial)
+VespucciDataset::VespucciDataset(QString text_filename, MainWindow *main_window, QString *directory, QString name, QString x_axis_description, QString y_axis_description, bool swap_spatial)
 {
+    //open the text file
+    QFile inputfile(text_filename);
+    inputfile.open(QIODevice::ReadOnly);
+    QTextStream inputstream(&inputfile);
+
+    //set up temporary log filename (UTC date in close to ISO 8601ish format)
+    QDateTime datetime = QDateTime::currentDateTimeUtc();
+    QString log_filename = datetime.toString("yyyy-MM-dd-hhmmss");
+    log_filename += "_" + name + ".temp.txt";
+    log_file_ = QFile(name);
+    log_file_.open(QIODevice::ReadWrite | QIODevice::Text);
+    log_stream_ = QTextStream(&log_file_);
+    log_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
+    log_stream_ << "Version 0.4" << endl << endl;
+    log_stream_ << "Dataset " << name << "created "
+                << datetime.date().toString("yyyy-MM-dd") << "T"
+                << datetime.time().toString("hh:mm:ss") << "Z" << endl;
+    log_stream_ << "Imported from text file " << text_filename << endl << endl;
+
+
     non_spatial_ = false;
     //Set up variables unrelated to hyperspectral data:
     map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
@@ -193,6 +254,9 @@ VespucciDataset::VespucciDataset(QTextStream &inputstream, MainWindow *main_wind
     }
     seconds = timer.toc();
     constructor_canceled_ = false;
+    name_ = name;
+    x_axis_description_ = x_axis_description;
+    y_axis_description_ = y_axis_description;
     cout << "Reading x, y, and spectra took " << seconds << " s." << endl;
     main_window_ = main_window;
 }
@@ -205,9 +269,11 @@ VespucciDataset::VespucciDataset(QTextStream &inputstream, MainWindow *main_wind
 /// Constructor for making a new dataset from a subset of an old one
 VespucciDataset::VespucciDataset(QString name, MainWindow *main_window, QString *directory, VespucciDataset *original, uvec indices)
 {
-    log_ << "Dataset " << name
-         << " created from previous dataset "
-         << original->name() << "." << endl << endl;
+    QDateTime datetime = QDateTime::currentDateTimeUtc();
+    log_stream_ << "Dataset " << name << "created "
+                << datetime.date().toString("yyyy-MM-dd") << "T"
+                << datetime.time().toString("hh:mm:ss") << "Z" << endl;
+    log_stream_ << "Created from previous dataset " << original->name() << endl;
 
     non_spatial_ = true;
     map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
@@ -243,7 +309,7 @@ VespucciDataset::VespucciDataset(QString name, MainWindow *main_window, QString 
 ///
 void VespucciDataset::Undo(QString operation)
 {
-    log_ << "Undo: " << operation << endl;
+    log_stream_ << "Undo: " << operation << endl << endl;
     mat buffer = spectra_;
     spectra_ = spectra_old_;
     spectra_old_ = buffer;
@@ -261,11 +327,11 @@ void VespucciDataset::Undo(QString operation)
 /// to create a new dataset rather than crop an old one.
 void VespucciDataset::CropSpectra(double x_min, double x_max, double y_min, double y_max)
 {
-    log_ << "CropSpectra: " << endl;
-    log_ << "x_min == " << x_min << endl;
-    log_ << "x_max == " << x_max << endl;
-    log_ << "y_min == " << y_min << endl;
-    log_ << "y_max == " << y_max << endl << endl;
+    log_stream_ << "CropSpectra" << endl;
+    log_stream_ << "x_min == " << x_min << endl;
+    log_stream_ << "x_max == " << x_max << endl;
+    log_stream_ << "y_min == " << y_min << endl;
+    log_stream_ << "y_max == " << y_max << endl << endl;
 
 
     int max = x_.n_rows;
@@ -293,6 +359,7 @@ void VespucciDataset::CropSpectra(double x_min, double x_max, double y_min, doub
 /// by the maximum of spectra_
 void VespucciDataset::MinMaxNormalize()
 {
+    log_stream_ << "MinMaxNormalize" << endl << endl;
     spectra_old_ = spectra_;
     int n_elem = spectra_.n_elem;
     double minimum = spectra_.min();
@@ -308,6 +375,7 @@ void VespucciDataset::MinMaxNormalize()
 ///normalizes the spectral data so that the area under each point spectrum is 1
 void VespucciDataset::UnitAreaNormalize()
 {
+    log_stream_ << "UnitAreaNormalize" << endl << endl;
     spectra_old_ = spectra_;
     uword num_rows = spectra_.n_rows;
     uword num_cols = spectra_.n_cols;
@@ -351,6 +419,7 @@ mat VespucciDataset::ZScoreNormCopy()
 ///
 void VespucciDataset::ZScoreNormalize()
 {
+    log_stream_ << "ZScoreNormalize" << endl;
     spectra_old_ = spectra_;
     uword num_rows = spectra_.n_rows;
     uword num_cols = spectra_.n_cols;
@@ -372,8 +441,10 @@ void VespucciDataset::ZScoreNormalize()
 /// \param background A matrix consisting of a single spectrum representing the
 /// background.
 ///
-void VespucciDataset::SubtractBackground(mat background)
+void VespucciDataset::SubtractBackground(mat background, QString filename)
 {
+    log_stream_ << "SubtractBackground" << endl;
+    log_stream_ << "filename == " << filename << endl << endl;
     spectra_old_ = spectra_;
     if (background.n_cols != spectra_.n_cols){
         QMessageBox::warning(0,
@@ -400,6 +471,9 @@ void VespucciDataset::SubtractBackground(mat background)
 ///
 void VespucciDataset::Baseline(QString method, int window_size)
 {
+    log_stream_ << "Baseline" << endl;
+    log_stream_ << "method == " << method << endl;
+    log_stream_ << "window_size == " << window_size << endl << endl;
     spectra_old_ = spectra_;
     if (method == "Median Filter"){
         uword starting_index = (window_size - 1) / 2;
@@ -437,6 +511,9 @@ void VespucciDataset::Baseline(QString method, int window_size)
 
 void VespucciDataset::MedianFilter(int window_size)
 {
+    log_stream_ << "MedianFilter" << endl;
+    log_stream_ << "window_size == " << window_size << endl << endl;
+
     spectra_old_ = spectra_;
     uword starting_index = (window_size - 1) / 2;
     uword ending_index = wavelength_.n_cols - starting_index;
@@ -471,6 +548,9 @@ void VespucciDataset::MedianFilter(int window_size)
 
 void VespucciDataset::LinearMovingAverage(int window_size)
 {
+    log_stream_ << "LinearMovingAverage" << endl;
+    log_stream_ << "window_size == " << window_size << endl << endl;
+
     spectra_old_ = spectra_;
     vec filter = arma_ext::CreateMovingAverageFilter(window_size);
     //because armadillo is column-major, it is faster to filter by columns than rows
@@ -492,6 +572,8 @@ void VespucciDataset::LinearMovingAverage(int window_size)
 ///
 void VespucciDataset::SingularValue(int singular_values)
 {
+    log_stream_ << "SingularValue" << endl;
+    log_stream_ << "singular_values == " << singular_values << endl << endl;
     spectra_old_ = spectra_;
     mat U;
     vec s;
@@ -511,12 +593,17 @@ void VespucciDataset::Derivatize(unsigned int derivative_order,
                                  unsigned int polynomial_order,
                                  unsigned int window_size)
 {
+    log_stream_ << "Derivatize (Savitzky-Golay Smoothing)" << endl;
+    log_stream_ << "derivative_order == " << derivative_order << endl;
+    log_stream_ << "polynomial_order == " << polynomial_order << endl;
+    log_stream_ << "window_size == " << window_size << endl << endl;
     spectra_old_ = spectra_;
-    spectra_ = arma_ext::sgolayfilt(trans(spectra_),
-                                    polynomial_order,
-                                    window_size,
-                                    derivative_order,
-                                    1);
+    mat temp = arma_ext::sgolayfilt(trans(spectra_),
+                                      polynomial_order,
+                                      window_size,
+                                      derivative_order,
+                                      1);
+    spectra_ = trans(temp);
 }
 
 // MAPPING FUNCTIONS //
@@ -561,6 +648,15 @@ void VespucciDataset::Univariate(uword min,
     }
     uword size = x_.n_elem;
     uword i;
+
+    log_stream_ << "Univariate" << endl;
+    log_stream_ << "min == " << min << endl;
+    log_stream_ << "max == " << max << endl;
+    log_stream_ << "name == " << name << endl;
+    log_stream_ << "value_method == " << value_method << endl;
+    log_stream_ << "integration_method == " << integration_method << endl;
+    log_stream_ << "gradient_index == " << gradient_index << endl;
+
 
     rowvec region;
     colvec results;
@@ -770,6 +866,16 @@ void VespucciDataset::BandRatio(uword first_min,
     }
     QString map_type;
 
+    log_stream_ << "BandRatio" << endl;
+    log_stream_ << "first_min == " << first_min << endl;
+    log_stream_ << "first_max == " << first_max << endl;
+    log_stream_ << "second_min == " << second_min << endl;
+    log_stream_ << "second_max == " << second_max << endl;
+    log_stream_ << "name == " << name << endl;
+    log_stream_ << "value_method == " << value_method << endl;
+    log_stream_ << "integration_method == " << integration_method << endl;
+    log_stream_ << "gradient_index == " << gradient_index << endl << endl;
+
     uword size = x_.n_elem;
     uword i;
 
@@ -866,12 +972,10 @@ void VespucciDataset::BandRatio(uword first_min,
 /// Performs principal component analysis on the data.  Uses armadillo's pca routine.
 /// This function both calculates and plots principal components maps.
 /// \param component the PCA component from which the image will be produced
-/// \param include_negative_scores if false, all negative scores are changed to 0
 /// \param name the name of the MapData object to be created
 /// \param gradient_index the index of the gradient in the master list (in function GetGradient)
 ///
 void VespucciDataset::PrincipalComponents(int component,
-                                  bool include_negative_scores,
                                   QString name,
                                   int gradient_index, bool recalculate)
 {
@@ -880,6 +984,12 @@ void VespucciDataset::PrincipalComponents(int component,
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
         return;
     }
+    log_stream_ << "PrincipalComponents" << endl;
+    log_stream_ << "component == " << component << endl;
+    log_stream_ << "name == " << name << endl;
+    log_stream_ << "gradient_index == " << gradient_index << endl;
+    log_stream_ << "recalculate == " << (recalculate ? "true" : "false") << endl << endl;
+
     if (recalculate || !principal_components_calculated_){
 
         component--;
@@ -923,14 +1033,6 @@ void VespucciDataset::PrincipalComponents(int component,
 
     colvec results = principal_components_data_->Results(component);
 
-    if (!include_negative_scores){
-        for (uword i=0; i<results.n_rows; ++i){
-            if (results(i) < 0){
-                results(i) = 0;
-            }
-        }
-    }
-
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
                                             x_, y_, results,
@@ -949,14 +1051,12 @@ void VespucciDataset::PrincipalComponents(int component,
 /// \brief VespucciDataset::VertexComponents
 /// \param endmembers
 /// \param image_component
-/// \param include_negative_scores
 /// \param name
 /// \param gradient_index
 /// \param recalculate
 ///
 void VespucciDataset::VertexComponents(uword endmembers,
                                uword image_component,
-                               bool include_negative_scores,
                                QString name,
                                unsigned int gradient_index,
                                bool recalculate)
@@ -966,28 +1066,23 @@ void VespucciDataset::VertexComponents(uword endmembers,
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
         return;
     }
-    cout << "VespucciDataset::VertexComponents" << endl;
+    log_stream_ << "VertexComponents" << endl;
+    log_stream_ << "endmembers == " << endmembers << endl;
+    log_stream_ << "image_component == " << image_component << endl;
+    log_stream_ << "gradient_index == " << gradient_index;
+    log_stream_ << "recalculate == " << (recalculate ? "true" : "false") << endl << endl;
+
     QString map_type;
-    cout << "set map type" << endl;
     QTextStream(&map_type) << "(Vertex Component " << image_component << ")";
     if (recalculate || !vertex_components_calculated_){
-        cout << "constructor" << endl;
-        cout << "VCAData::VCAData" << endl;
         vertex_components_data_ = new VCAData(this, directory_);
-        cout << "VCAData::Apply" << endl;
         vertex_components_data_->Apply(spectra_, endmembers);
-        cout << "set calculated" << endl;
         vertex_components_calculated_ = true;
     }
-    cout << "end of if statement" << endl;
     colvec results = vertex_components_data_->Results(image_component-1);
 
     //assume all negative values are actually 0
-    if (!include_negative_scores){
-        uvec negative_indices = find(results < 0);
-        results.elem(negative_indices).zeros();
-    }
-    cout << "MapData::MapData" << endl;
+
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                                 y_axis_description_,
                                                 x_, y_, results,
@@ -996,7 +1091,6 @@ void VespucciDataset::VertexComponents(uword endmembers,
                                                 maps_.size(),
                                                 6,
                                                 main_window_));
-    cout << "MapData::set_name" << endl;
     new_map->set_name(name, map_type);
     AddMap(new_map);
     maps_.last().data()->ShowMapWindow();
@@ -1009,7 +1103,6 @@ void VespucciDataset::VertexComponents(uword endmembers,
 /// PLS is performed once.  Subsequent maps use data from first call, stored
 /// as PartialLeastSquaresData object, unless user requests recalculation.
 /// \param components the number of components/response variables of the regression data
-/// \param include_negative_scores if false, program sets all negative values in the results to 0
 /// \param name the name of the MapData object to be created.
 /// \param gradient_index the index of the color gradient in the color gradient list
 /// \param recalculate whether or not to recalculate PLS regression.
@@ -1025,26 +1118,28 @@ void VespucciDataset::PartialLeastSquares(uword components,
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
         return;
     }
+    log_stream_ << "PartialLeastSqares" << endl;
+    log_stream_ << "components == " << components << endl;
+    log_stream_ << "image_component == " << image_component << endl;
+    log_stream_ << "name == " << name << endl;
+    log_stream_ << "gradient_index == " << gradient_index << endl;
+    log_stream_ << "recalculate == " << (recalculate ? "true" : "false") << endl << endl;
+
+
     image_component--;
     QString map_type = "Partial Least Squares Map number of components = ";
 
     if (recalculate || !partial_least_squares_calculated_){
         map_type += QString::number(components);
-        cout << "call to constructor" << endl;
         partial_least_squares_data_ = new PLSData(this, directory_);
-
-        cout << "call to application" << endl;
         bool success = partial_least_squares_data_->Apply(spectra_, wavelength_, components);
-        cout << "post-call" << endl;
         if (success){
             partial_least_squares_calculated_ = true;
         }
     }
 
 
-    cout << "call to results" << endl;
     bool valid;
-    cout << "call to PLSData::Results" << endl;
     colvec results = partial_least_squares_data_->Results(image_component, valid);
     if (!valid){
         QMessageBox::warning(main_window_, "Index out of Bounds",
@@ -1084,6 +1179,10 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
         return;
     }
+    log_stream_ << "KMeans" << endl;
+    log_stream_ << "clusters == " << clusters << endl;
+    log_stream_ << "name == " << name << endl << endl;
+
     QString map_type = "K-means clustering map. Number of clusters = ";
     map_type += QString::number(clusters);
     Col<size_t> assignments;
@@ -1113,6 +1212,8 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
     maps_.last().data()->ShowMapWindow();
 }
 
+
+// HELPER FUNCTIONS //
 
 ///
 /// \brief VespucciDataset::FindRange.
@@ -1169,7 +1270,6 @@ uvec VespucciDataset::FindRange(double start, double end)
     return indices;
 }
 
-/// HELPER FUNCTIONS (Will go in own file later to speed compilation? ///
 /// \brief VespucciDataset::PointSpectrum
 /// \param index
 /// \return
@@ -1308,7 +1408,7 @@ int VespucciDataset::ValueSize()
 }
 
 
-// MEMBER ACCESS FUNCTIONS
+// MEMBER ACCESS FUNCTIONS //
 ///
 /// \brief VespucciDataset::wavelength
 /// \return member wavelength_ (spectrum key values)
@@ -1414,8 +1514,6 @@ const QString VespucciDataset::name()
 void VespucciDataset::SetName(QString new_name)
 {
     name_ = new_name;
-    //the default constructor calls this.
-    log_ << "Dataset " << name_ << " created from text constructor." << endl << endl;
 }
 
 

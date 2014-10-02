@@ -20,7 +20,6 @@ VCADialog::VCADialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     image_component_selector_ = this->findChild<QSpinBox *>("componentSpinBox");
     color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
     recalculate_box_ = this->findChild<QCheckBox *>("recalculateCheckBox");
-    negative_score_box_ = this->findChild<QCheckBox *>("negativeScoresCheckBox");
     name_box_ = this->findChild<QLineEdit*>("nameLineEdit");
     data_index_ = row;
 }
@@ -42,7 +41,6 @@ void VCADialog::on_buttonBox_accepted()
     int gradient_index = color_selector_->currentIndex();
     data_->VertexComponents(endmembers,
                             image_component,
-                            true,
                             name,
                             gradient_index,
                             recalculate);

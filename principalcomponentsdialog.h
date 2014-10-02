@@ -45,7 +45,6 @@ private:
     VespucciWorkspace *workspace;
     QSpinBox *component_selector_;
     QComboBox *color_selector_;
-    QCheckBox *negative_score_box_;
     QLineEdit *name_box_;
     QCheckBox *recalculate_box_;
 

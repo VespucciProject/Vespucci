@@ -104,18 +104,16 @@ void LoadDataset::on_buttonBox_accepted()
 
     if (warning_response == QMessageBox::Yes && file_info.exists()){
         if (file_info.suffix() == "txt"){
-            QFile inputfile(filename);
-            inputfile.open(QIODevice::ReadOnly);
-            QTextStream inputstream(&inputfile);
-            QSharedPointer<VespucciDataset> data(new VespucciDataset(inputstream,
+
+            QSharedPointer<VespucciDataset> data(new VespucciDataset(filename,
                                                      workspace->main_window(),
                                                      directory_,
+                                                     name,
+                                                     x_description,
+                                                     y_description,
                                                      swap));
             inputfile.close();
             if (!data->ConstructorCancelled()){
-                data->SetName(name);
-                data->SetXDescription(x_description);
-                data->SetYDescription(y_description);
                 workspace->AddDataset(data);
                 workspace->set_directory(file_info.dir().absolutePath());
             }
