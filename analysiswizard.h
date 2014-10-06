@@ -7,6 +7,9 @@ namespace Ui {
 class AnalysisWizard;
 }
 
+///
+/// \brief The AnalysisWizard class
+/// A wizard that allows analysis of data from multiple datasets
 class AnalysisWizard : public QWizard
 {
     Q_OBJECT

@@ -29,6 +29,10 @@ namespace Ui {
 class FilterDialog;
 }
 
+///
+/// \brief The FilterDialog class
+/// This dialog allows the user to apply filtering, smoothing or derivatization
+/// to the dataset.
 class FilterDialog : public QDialog
 {
     Q_OBJECT

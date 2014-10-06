@@ -8,6 +8,9 @@ namespace Ui {
 class KMeansDialog;
 }
 
+///
+/// \brief The KMeansDialog class
+/// Allows the user to create a k-means clustering map
 class KMeansDialog : public QDialog
 {
     Q_OBJECT
@@ -23,15 +26,29 @@ private slots:
 
 private:
     Ui::KMeansDialog *ui;
+    ///
+    /// \brief workspace
+    /// Current workspace
     VespucciWorkspace *workspace;
 
+    ///
+    /// \brief cluster_spin_box_
+    /// User selects the number of clusters to compute here
     QSpinBox *cluster_spin_box_;
+
+    ///
+    /// \brief name_line_edit_
+    /// User enters the name of the map here
     QLineEdit *name_line_edit_;
 
-    //index of the VespucciDataset object in the various lists
+    ///
+    /// \brief data_index_
+    /// Index of the selected dataset in the master lists
     int data_index_;
 
-    //Pointer to the VespucciDataset object at data_index_
+    ///
+    /// \brief data_
+    /// The current dataset
     QSharedPointer<VespucciDataset> data_;
 };
 

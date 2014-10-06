@@ -28,6 +28,9 @@
 class VespucciDataset;
 class MainWindow;
 
+///
+/// \brief The VespucciWorkspace class
+/// A class which contains all "global variables" (that aren't held in MainWindow)
 class VespucciWorkspace
 {
 public:

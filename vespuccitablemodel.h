@@ -23,6 +23,11 @@
 #include "vespucciworkspace.h"
 #include "vespuccidataset.h"
 class VespucciDataset;
+
+///
+/// \brief The VespucciTableModel class
+/// The QAbstractTableModel that handles armadillo objects for the DataViewer
+/// class.
 class VespucciTableModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -39,11 +44,35 @@ signals:
 public slots:
 
 private:
+    ///
+    /// \brief rows_
+    /// Number of rows of the current object displayed
     int rows_;
+
+    ///
+    /// \brief cols_
+    /// Number of columns of the current object being displayed
     int cols_;
+
+    ///
+    /// \brief data_
+    /// Pointer to the object being displayed
     mat *data_;
+
+    ///
+    /// \brief dataset_
+    /// Dataset containing the object being displayed
     QSharedPointer<VespucciDataset> dataset_;
+
+    ///
+    /// \brief composite_
+    /// Whether or not current display is a composite of multiple objects from
+    /// the dataset
     bool composite_;
+
+    ///
+    /// \brief spatial_only_
+    /// Whether or not the current data object only contains spatial data
     bool spatial_only_;
 
 };

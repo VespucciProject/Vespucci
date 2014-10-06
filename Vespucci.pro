@@ -53,7 +53,6 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     loaddataset.cpp \
     mapdata.cpp \
-    univariatemap.cpp \
     vespucciworkspace.cpp \
     aboutdialog.cpp \
     citationdialog.cpp \
@@ -83,7 +82,6 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     loaddataset.h \
     mapdata.h \
-    univariatemap.h \
     vespucciworkspace.h \
     aboutdialog.h \
     citationdialog.h \

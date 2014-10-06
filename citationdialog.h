@@ -25,6 +25,9 @@ namespace Ui {
 class CitationDialog;
 }
 
+///
+/// \brief The CitationDialog class
+/// The dialog that displays how to cite Vespucci
 class CitationDialog : public QDialog
 {
     Q_OBJECT

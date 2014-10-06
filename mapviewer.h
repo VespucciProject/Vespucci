@@ -35,6 +35,9 @@ namespace Ui {
 class MapViewer;
 }
 
+///
+/// \brief The MapViewer class
+/// Displays the image created by MapData
 class MapViewer : public QMainWindow
 {
     Q_OBJECT
@@ -81,14 +84,29 @@ private slots:
 
 private:
     Ui::MapViewer *ui;
+    ///
+    /// \brief name_
+    /// The map name, displayed in the title bar
     QString name_;
+
+    ///
+    /// \brief directory_
+    /// The global working directory
     QString *directory_;
 
+    ///
+    /// \brief qcp_
+    /// The QCustomPlot object located within this window
     QCustomPlot *qcp_;
 
-    //QCPColorMap *color_map_;
+    ///
+    /// \brief parent_
+    /// The MapData object that creates this display
     MapData *parent_;
 
+    ///
+    /// \brief color_list_
+    /// A list of names of color shemes which
     QStringList color_list_;
 
 

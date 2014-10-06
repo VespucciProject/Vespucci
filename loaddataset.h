@@ -26,6 +26,9 @@ namespace Ui {
 class LoadDataset;
 }
 
+///
+/// \brief The LoadDataset class
+/// Dialog that allows the user to import files into the program
 class LoadDataset : public QDialog
 {
     Q_OBJECT
@@ -45,7 +48,14 @@ private slots:
 
 private:
     Ui::LoadDataset *ui;
+    ///
+    /// \brief workspace
+    /// The current workspace
     VespucciWorkspace *workspace;
+
+    ///
+    /// \brief directory_
+    /// The current working directory
     QString *directory_;
 };
 

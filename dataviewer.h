@@ -30,6 +30,9 @@ class DataViewer;
 class VespucciTableModel;
 }
 
+///
+/// \brief The DataViewer class
+/// Window that displays dataset elements in a QTableView widget
 class DataViewer : public QDialog
 {
     Q_OBJECT
@@ -47,17 +50,60 @@ private slots:
 
 private:
     Ui::DataViewer *ui;
+
+    ///
+    /// \brief current_text_
+    /// Current selected text in the ComboBox
     QString current_text_;
+
+    ///
+    /// \brief directory_
+    /// Current working directory (for saving things)
     QString directory_;
+
+    ///
+    /// \brief dataset_
+    /// The current dataset from which data is pulled
     QSharedPointer<VespucciDataset> dataset_;
+
+    ///
+    /// \brief workspace
+    /// The current workspace
     VespucciWorkspace *workspace;
+
+    ///
+    /// \brief table_
+    /// The table view of the data
     QTableView *table_;
+
+    ///
+    /// \brief data_selector_
+    /// The combobox where the user chooses which dataset element to display
     QComboBox *data_selector_;
+
+    ///
+    /// \brief current_data_
+    /// The current contents of the tableview
     mat *current_data_;
-    bool constructor_in_progress_;
+
+    ///
+    /// \brief export_button_
+    /// The user clicks this to open a file dialog to save the current data
     QPushButton *export_button_;
+
+    ///
+    /// \brief plot_button_
+    /// Opens a plot of the selected spectrum
     QPushButton *plot_button_;
+
+    ///
+    /// \brief spectrum_viewer_
+    /// The plot window
     SpectrumViewer *spectrum_viewer_;
+
+    ///
+    /// \brief vca_endmembers_
+    /// Number of plottable VCA endmembers
     int vca_endmembers_;
 
 };

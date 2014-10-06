@@ -27,6 +27,10 @@ namespace Ui {
 class CropDialog;
 }
 
+///
+/// \brief The CropDialog class
+/// A dialog that allows the user to "Crop" the dataset (delete all spectra that
+/// are outside of a chosen spatial range).
 class CropDialog : public QDialog
 {
     Q_OBJECT

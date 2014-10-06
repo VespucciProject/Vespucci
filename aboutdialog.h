@@ -25,7 +25,9 @@
 namespace Ui {
 class AboutDialog;
 }
-
+///
+/// \brief The AboutDialog class
+/// A QDialog that displays information about Vespucci
 class AboutDialog : public QDialog
 {
     Q_OBJECT

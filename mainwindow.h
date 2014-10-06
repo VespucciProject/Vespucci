@@ -29,6 +29,10 @@ namespace Ui {
 class MainWindow;
 }
 
+///
+/// \brief The MainWindow class
+/// The main window of the program, this is where the user performs most
+/// operations
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -105,8 +109,20 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    ///
+    /// \brief workspace
+    /// The current workspace
     VespucciWorkspace *workspace;
+
+    ///
+    /// \brief map_list_widget_
+    /// The list widget displaying the currently created maps
     QListWidget *map_list_widget_;
+
+    ///
+    /// \brief dataset_list_widget_
+    /// The list widget displaying the currently loaded datasets
     QListWidget *dataset_list_widget_;
 
 };

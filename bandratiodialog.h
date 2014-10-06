@@ -27,6 +27,9 @@ namespace Ui {
 class BandRatioDialog;
 }
 
+///
+/// \brief The BandRatioDialog class
+/// The dialog that allows the user to create a band-ratio map
 class BandRatioDialog : public QDialog
 {
     Q_OBJECT
@@ -45,23 +48,69 @@ private slots:
 private:
     Ui::BandRatioDialog *ui;
 
+    ///
+    /// \brief workspace
+    /// Pointer to the workspace (which contains dataset list)
     VespucciWorkspace *workspace;
+
+    ///
+    /// \brief spectrum_plot_
+    /// Pointer to the plot inside this window that displays a preview of the data
     QCustomPlot *spectrum_plot_;
+
+    ///
+    /// \brief first_min_box_
+    /// User enteres first minimum here
     QLineEdit *first_min_box_;
+
+    ///
+    /// \brief first_max_box_
+    /// User enters first maximum here
     QLineEdit *first_max_box_;
+
+    ///
+    /// \brief second_min_box_
+    /// User enters second minimum here
     QLineEdit *second_min_box_;
+
+    ///
+    /// \brief second_max_box_
+    /// User enteres second maximum here
     QLineEdit *second_max_box_;
 
+    ///
+    /// \brief name_box_
+    /// User enters map name here
     QLineEdit *name_box_;
+
+    ///
+    /// \brief color_selector_
+    /// User selects the color scheme here
     QComboBox *color_selector_;
+
+    ///
+    /// \brief value_method_selector_
+    /// User selects the value determination method here
     QComboBox *value_method_selector_;
+
+    ///
+    /// \brief integration_method_selector_
+    /// User selects the integration method here
     QComboBox *integration_method_selector_;
+
+    ///
+    /// \brief integration_method_label_
+    /// A label displaying the integration method
     QLabel *integration_method_label_;
 
-    //index of the VespucciDataset object in the various lists
+    ///
+    /// \brief data_index_
+    /// Index of the VespucciDataset object in the various lists
     int data_index_;
 
-    //Pointer to the VespucciDataset object at data_index_
+    ///
+    /// \brief data_
+    /// Points to the dataset we're working with.
     QSharedPointer<VespucciDataset> data_;
 };
 
