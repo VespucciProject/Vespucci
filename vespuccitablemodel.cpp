@@ -17,6 +17,11 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "vespuccitablemodel.h"
+///
+/// \brief VespucciTableModel::VespucciTableModel
+/// \param parent See QDialog
+/// \param input_data The matrix that is displayed by the model
+///
 VespucciTableModel::VespucciTableModel(QObject *parent, mat *input_data) :
     QAbstractTableModel(parent)
 {
@@ -26,6 +31,12 @@ VespucciTableModel::VespucciTableModel(QObject *parent, mat *input_data) :
     composite_ = false;
 }
 
+///
+/// \brief VespucciTableModel::VespucciTableModel
+/// \param parent
+/// \param dataset Dataset containing data to be displayed
+/// \param type The type of data this is "spatial" or not
+///
 VespucciTableModel::VespucciTableModel(QObject *parent, QSharedPointer<VespucciDataset> dataset, QString type) :
     QAbstractTableModel(parent)
 {
@@ -43,6 +54,12 @@ VespucciTableModel::VespucciTableModel(QObject *parent, QSharedPointer<VespucciD
     }
 }
 
+///
+/// \brief VespucciTableModel::data
+/// \param index
+/// \param role
+/// \return
+/// See QAbstractTableModel::data()
 QVariant VespucciTableModel::data(const QModelIndex &index, int role) const
 {
     if (role != Qt::DisplayRole){
@@ -96,18 +113,32 @@ QVariant VespucciTableModel::data(const QModelIndex &index, int role) const
 
 }
 
+///
+/// \brief VespucciTableModel::columnCount
+/// \param parent
+/// \return
+/// See QAbstractTableModel::columnCount()
 int VespucciTableModel::columnCount(const QModelIndex &parent) const
 {
     //we don't need to use the model index here (our model only uses one object)
     return cols_;
 }
 
+///
+/// \brief VespucciTableModel::rowCount
+/// \param parent
+/// \return
+/// See QAbstractTableModel::rowCount
 int VespucciTableModel::rowCount(const QModelIndex &parent) const
 {
     //we don't need to use the model index here (our model only uses one object)
     return rows_;
 }
 
+///
+/// \brief VespucciTableModel::GetData
+/// \return
+/// Get a pointer to the displayed data
 mat* VespucciTableModel::GetData()
 {
     return data_;

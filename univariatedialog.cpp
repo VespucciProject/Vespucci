@@ -19,6 +19,12 @@
 #include "univariatedialog.h"
 #include "ui_univariatedialog.h"
 
+///
+/// \brief UnivariateDialog::UnivariateDialog
+/// \param parent See QDialog
+/// \param ws Current workspace
+/// \param row Selected row in the dataset list widget
+///
 UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
     ui(new Ui::UnivariateDialog)
@@ -68,6 +74,9 @@ UnivariateDialog::~UnivariateDialog()
     delete ui;
 }
 
+///
+/// \brief UnivariateDialog::on_buttonBox_accepted
+/// Call the appropriate method of the dataset when "Ok" is clicked
 void UnivariateDialog::on_buttonBox_accepted()
 {
     double entered_min = min_box_->text().toDouble();
@@ -98,6 +107,10 @@ void UnivariateDialog::on_buttonBox_accepted()
     this->close();
 }
 
+///
+/// \brief UnivariateDialog::on_peakComboBox_currentTextChanged
+/// \param arg1
+/// Turn options on and off when peak determination method is changed
 void UnivariateDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
 {
     if (arg1 == "Area"){
@@ -110,6 +123,9 @@ void UnivariateDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
     }
 }
 
+///
+/// \brief UnivariateDialog::on_buttonBox_rejected
+/// Close window when "Cancel" clicked.
 void UnivariateDialog::on_buttonBox_rejected()
 {
     this->close();

@@ -19,6 +19,12 @@
 #include "filterdialog.h"
 #include "ui_filterdialog.h"
 
+///
+/// \brief FilterDialog::FilterDialog
+/// \param parent Parent QWidget
+/// \param ws Current workspace
+/// \param row Row of current dataset
+///
 FilterDialog::FilterDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
     ui(new Ui::FilterDialog)
@@ -54,6 +60,9 @@ void FilterDialog::on_methodComboBox_currentIndexChanged(int index)
         polynomial_box_->setEnabled(true);
 }
 
+///
+/// \brief FilterDialog::on_buttonBox_accepted
+/// Trigger relevant filtering method when "Ok" is selected
 void FilterDialog::on_buttonBox_accepted()
 {
     switch (method_box_->currentIndex())
@@ -78,6 +87,9 @@ void FilterDialog::on_buttonBox_accepted()
     this->close();
 }
 
+///
+/// \brief FilterDialog::on_buttonBox_rejected
+/// Close window when "Cancel" selected.
 void FilterDialog::on_buttonBox_rejected()
 {
     this->close();

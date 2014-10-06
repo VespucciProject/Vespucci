@@ -115,6 +115,11 @@ SpectrumViewer::~SpectrumViewer()
     delete ui;
 }
 
+///
+/// \brief SpectrumViewer::SetPlot
+/// \param wavelength
+/// \param intensity
+/// Set the plot of the spectrum viewer
 void SpectrumViewer::SetPlot(QVector<double> wavelength,
                              QVector<double> intensity)
 {
@@ -123,6 +128,13 @@ void SpectrumViewer::SetPlot(QVector<double> wavelength,
     spectrum_plot_->replot();
 }
 
+///
+/// \brief SpectrumViewer::SetSecondPlot
+/// \param first_abcissa
+/// \param second_abcissa
+/// \param first_intensities
+/// \param second_intensities
+/// Set other plots (baselines)
 void SpectrumViewer::SetSecondPlot(QVector<double> first_abcissa, QVector<double> second_abcissa,
                                    QVector<double> first_intensities, QVector<double> second_intensities)
 {
@@ -143,6 +155,11 @@ void SpectrumViewer::SetSecondPlot(QVector<double> first_abcissa, QVector<double
     spectrum_plot_->replot();
 }
 
+///
+/// \brief SpectrumViewer::SetSecondPlot
+/// \param abcissa
+/// \param intensities
+/// Set the second plot.
 void SpectrumViewer::SetSecondPlot(QVector<double> abcissa, QVector<double> intensities)
 {
     if (spectrum_plot_->graphCount() <= 1){
@@ -156,6 +173,11 @@ void SpectrumViewer::SetSecondPlot(QVector<double> abcissa, QVector<double> inte
     spectrum_plot_->replot();
 }
 
+///
+/// \brief SpectrumViewer::MapClicked
+/// \param plottable The QCPColorMap
+/// \param event The QMouseEvent
+/// A slot which receives the locations
 void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *event)
 {
     QCPColorMap *color_map = qobject_cast<QCPColorMap*>(plottable);
@@ -204,6 +226,9 @@ void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *ev
 
 }
 
+///
+/// \brief SpectrumViewer::on_pushButton_clicked
+/// Exports the data or a picture of the plot
 void SpectrumViewer::on_pushButton_clicked()
 {
     if (!linked_to_map_){

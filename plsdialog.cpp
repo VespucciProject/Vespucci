@@ -30,6 +30,10 @@ PLSDialog::~PLSDialog()
     delete ui;
 }
 
+///
+/// \brief PLSDialog::on_buttonBox_accepted
+/// Call the appropriate function in VespucciDataset to perform PLS based on what
+/// the user has entered when the user clicks "Ok"
 void PLSDialog::on_buttonBox_accepted()
 {
     int image_component = image_component_selector_->value();
@@ -41,6 +45,9 @@ void PLSDialog::on_buttonBox_accepted()
     this->close();
 }
 
+///
+/// \brief PLSDialog::on_buttonBox_rejected
+/// Close the window when the user clicks "Cancel"
 void PLSDialog::on_buttonBox_rejected()
 {
     this->close();

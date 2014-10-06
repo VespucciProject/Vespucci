@@ -22,6 +22,10 @@
 
 //VespucciWorkspace and MainWindow objects hold information about each other
 //This might not be the best idea...
+
+///
+/// \brief VespucciWorkspace::VespucciWorkspace
+/// Constructor
 VespucciWorkspace::VespucciWorkspace()
 {
     dataset_loading_count_ = 0;
@@ -32,6 +36,11 @@ VespucciWorkspace::VespucciWorkspace()
 
 }
 
+///
+/// \brief VespucciWorkspace::SetPointers
+/// \param main_window
+/// Set pointers to the main window in the workspace (mainwindow requires
+/// workspace).
 void VespucciWorkspace::SetPointers(MainWindow *main_window)
 {
     main_window_ = main_window;
@@ -41,6 +50,10 @@ void VespucciWorkspace::SetPointers(MainWindow *main_window)
 
 // FUNCTIONS THAT ADD AND REMOVE WORKSPACE OBJECTS
 
+///
+/// \brief VespucciWorkspace::AddDataset
+/// \param dataset
+/// Add a dataset to the datasets_ QList
 void VespucciWorkspace::AddDataset(QSharedPointer<VespucciDataset> dataset)
 {
     QString name = dataset->name();
@@ -53,6 +66,13 @@ void VespucciWorkspace::AddDataset(QSharedPointer<VespucciDataset> dataset)
 
 // Useful when the index is known (as when the list is being iterated)
 // These functions should be safe because the names list and the object list only update together
+
+///
+/// \brief VespucciWorkspace::RemoveDatasetAt
+/// \param i
+/// Useful when the index is known (as when the list is being iterated)
+/// These functions should be safe because the names list and the object list only update together
+
 void VespucciWorkspace::RemoveDatasetAt(int i)
 {
     cout << "VespucciWorkspace::RemoveDatasetAt(" << i << ")" << endl;
@@ -68,59 +88,95 @@ void VespucciWorkspace::RemoveDatasetAt(int i)
 
 
 //ACCESS FUNCTIONS
+///
+/// \brief VespucciWorkspace::dataset_loading_count
+/// \return
+/// A count of the datasets that have been loaded.
 int VespucciWorkspace::dataset_loading_count()
 {
     return dataset_loading_count_;
 }
 
-
+///
+/// \brief VespucciWorkspace::directory
+/// \return
+/// The global working directory
 QString VespucciWorkspace::directory()
 {
     return directory_;
 }
 
+///
+/// \brief VespucciWorkspace::set_directory
+/// \param directory New global directory
+/// Sets the global directory
 void VespucciWorkspace::set_directory(QString directory)
 {
     directory_ = directory;
 }
 
+///
+/// \brief VespucciWorkspace::dataset_names
+/// \return List of names of all the workspaces
 QStringList VespucciWorkspace::dataset_names()
 {
     return dataset_names_;
 }
 
+///
+/// \brief VespucciWorkspace::main_window
+/// \return Pointer to the main window
+///
 MainWindow *VespucciWorkspace::main_window()
 {
     return main_window_;
 }
 
+///
+/// \brief VespucciWorkspace::GetWavelengthMax
+/// \param row Index of the dataset
+/// \return Maximum of the spectral abcissa
+///
 double VespucciWorkspace::GetWavelengthMax(int row)
 {
     return datasets_[row]->wavelength().max();
 }
 
+///
+/// \brief VespucciWorkspace::GetWavelengthMin
+/// \param row Index of the dataset
+/// \return  Minimum of the spectral abcissa
+///
 double VespucciWorkspace::GetWavelengthMin(int row)
 {
     return datasets_[row]->wavelength().min();
 }
 
-//Will later include a sanity check before closing workspace.
-//Will later call the workspace destructor
-void VespucciWorkspace::close()
-{
-    cout<< "Closing workspace" << endl;
-}
 
+///
+/// \brief VespucciWorkspace::DatasetAt
+/// \param i Index of desired dataset
+/// \return Desired dataset
+///
 QSharedPointer<VespucciDataset> VespucciWorkspace::DatasetAt(int i)
 {
     return datasets_[i];
 }
 
+///
+/// \brief VespucciWorkspace::directory_ptr
+/// \return Pointer to global working directory
+///
 QString* VespucciWorkspace::directory_ptr()
 {
     return &directory_;
 }
 
+///
+/// \brief VespucciWorkspace::RecalculateGlobalDataRange
+/// \param new_data_range Pointer to new data range
+/// \return Whether or not data range was changed
+///
 bool VespucciWorkspace::RecalculateGlobalDataRange(QCPRange *new_data_range)
 {
     if (new_data_range->upper > global_data_range_.upper){
@@ -134,21 +190,37 @@ bool VespucciWorkspace::RecalculateGlobalDataRange(QCPRange *new_data_range)
     return false;
 }
 
+///
+/// \brief VespucciWorkspace::RefreshGlobalColorGradient
+/// \param new_gradient New gradient
+/// Changes the global gradient
 void VespucciWorkspace::RefreshGlobalColorGradient(QCPColorGradient new_gradient)
 {
     global_gradient_ = new_gradient;
 }
 
+///
+/// \brief VespucciWorkspace::SetGlobalDataRange
+/// \param new_data_range
+/// Changes the global data range
 void VespucciWorkspace::SetGlobalDataRange(QCPRange *new_data_range)
 {
     global_data_range_ = *new_data_range;
 }
 
+///
+/// \brief VespucciWorkspace::global_data_range
+/// \return The global data range
+///
 QCPRange* VespucciWorkspace::global_data_range()
 {
     return &global_data_range_;
 }
 
+///
+/// \brief VespucciWorkspace::global_gradient
+/// \return The global color gradient
+///
 QCPColorGradient* VespucciWorkspace::global_gradient()
 {
     return &global_gradient_;

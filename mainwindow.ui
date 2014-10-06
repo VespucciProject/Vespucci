@@ -97,26 +97,13 @@
      <property name="title">
       <string>Export Dataset Elements</string>
      </property>
-     <widget class="QMenu" name="menuPCA_Data">
-      <property name="title">
-       <string>PCA Data</string>
-      </property>
-      <addaction name="actionLatent"/>
-      <addaction name="actionProjected_Data"/>
-      <addaction name="actionEigenvalues_of_Covariance_Matrix"/>
-      <addaction name="actionHotteling_s_Statistic"/>
-     </widget>
      <addaction name="actionSpectra"/>
      <addaction name="actionAverage_Spectra"/>
      <addaction name="actionAverage_Spectra_with_Abcissa"/>
-     <addaction name="actionSpatial_Data"/>
      <addaction name="actionSpectral_Abcissa"/>
      <addaction name="separator"/>
      <addaction name="actionAll_Data"/>
      <addaction name="separator"/>
-     <addaction name="menuPCA_Data"/>
-     <addaction name="actionPLS_Data"/>
-     <addaction name="actionVCA_Data"/>
     </widget>
     <addaction name="menuData_Pre_Processing"/>
     <addaction name="separator"/>

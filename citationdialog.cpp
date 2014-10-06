@@ -19,6 +19,10 @@
 #include "citationdialog.h"
 #include "ui_citationdialog.h"
 
+///
+/// \brief CitationDialog::CitationDialog
+/// \param parent Parent QWidget, common for all QDialogs
+///
 CitationDialog::CitationDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::CitationDialog)
@@ -31,6 +35,9 @@ CitationDialog::~CitationDialog()
     delete ui;
 }
 
+///
+/// \brief CitationDialog::on_pushButton_clicked
+/// Window closes when user clicks "Close"
 void CitationDialog::on_pushButton_clicked()
 {
     this->close();

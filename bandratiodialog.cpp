@@ -79,6 +79,10 @@ BandRatioDialog::~BandRatioDialog()
     delete ui;
 }
 
+///
+/// \brief BandRatioDialog::on_buttonBox_accepted
+/// After clicking Ok, this slot grabs the information from the dialog, then
+/// instantiates the map data
 void BandRatioDialog::on_buttonBox_accepted()
 {
     double first_entered_min = first_min_box_->text().toDouble();
@@ -121,6 +125,11 @@ void BandRatioDialog::on_buttonBox_accepted()
     this->close();
 }
 
+///
+/// \brief BandRatioDialog::on_peakComboBox_currentTextChanged
+/// \param arg1
+/// When the user changes the peak determination method, various options are
+/// enabled or disabled
 void BandRatioDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
 {
     if (arg1 == "Area"){
@@ -133,6 +142,9 @@ void BandRatioDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
     }
 }
 
+///
+/// \brief BandRatioDialog::on_buttonBox_rejected
+/// The window closes when the user clicks "Cancel"
 void BandRatioDialog::on_buttonBox_rejected()
 {
     this->close();

@@ -1,6 +1,12 @@
 #include "vcadialog.h"
 #include "ui_vcadialog.h"
 
+///
+/// \brief VCADialog::VCADialog
+/// \param parent See QDialog
+/// \param ws Current workspace
+/// \param row Currently selected row in dataset list widget
+///
 VCADialog::VCADialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
     ui(new Ui::VCADialog)
@@ -29,6 +35,9 @@ VCADialog::~VCADialog()
     delete ui;
 }
 
+///
+/// \brief VCADialog::on_buttonBox_accepted
+/// Calls appropriate dataset method when "Ok" is clicked.
 void VCADialog::on_buttonBox_accepted()
 {
     int image_component = image_component_selector_->value();
@@ -47,6 +56,9 @@ void VCADialog::on_buttonBox_accepted()
     this->close();
 }
 
+///
+/// \brief VCADialog::on_buttonBox_rejected
+/// Closes window when "Cancel" clicked.
 void VCADialog::on_buttonBox_rejected()
 {
     this->close();

@@ -19,6 +19,12 @@
 #include "principalcomponentsdialog.h"
 #include "ui_principalcomponentsdialog.h"
 
+///
+/// \brief PrincipalComponentsDialog::PrincipalComponentsDialog
+/// \param parent see QWidget
+/// \param ws Current workspace
+/// \param row Currently selected row
+///
 PrincipalComponentsDialog::PrincipalComponentsDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
     ui(new Ui::PrincipalComponentsDialog)
@@ -45,6 +51,9 @@ PrincipalComponentsDialog::~PrincipalComponentsDialog()
     delete ui;
 }
 
+///
+/// \brief PrincipalComponentsDialog::on_buttonBox_accepted
+/// Trigger appropriate method of dataset when user clicks "Ok"
 void PrincipalComponentsDialog::on_buttonBox_accepted()
 {
     int component = component_selector_->value();
@@ -55,6 +64,9 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
     this->close();
 }
 
+///
+/// \brief PrincipalComponentsDialog::on_buttonBox_rejected
+/// Close window when user selects "Cancel"
 void PrincipalComponentsDialog::on_buttonBox_rejected()
 {
     this->close();

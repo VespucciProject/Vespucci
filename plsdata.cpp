@@ -6,6 +6,13 @@ PLSData::PLSData(QSharedPointer<VespucciDataset> parent, QString *directory)
     directory_ = directory;
 }
 
+///
+/// \brief PLSData::Apply
+/// \param spectra Input matrix
+/// \param wavelength Spectral abcissa
+/// \param components Number of components to calculate
+/// \return
+/// Performs PLS analysis on a copy of the spectra matrix (transposed).
 bool PLSData::Apply(mat spectra, rowvec wavelength, int components)
 {
     mat Y;

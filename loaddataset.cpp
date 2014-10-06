@@ -23,6 +23,11 @@
 #include "vespuccidataset.h"
 #include "vespucciworkspace.h"
 
+///
+/// \brief LoadDataset::LoadDataset
+/// \param parent QWidget parent (see QDialog)
+/// \param ws Current workspace
+///
 LoadDataset::LoadDataset(QWidget *parent, VespucciWorkspace *ws) :
     QDialog(parent),
     ui(new Ui::LoadDataset)
@@ -44,6 +49,9 @@ LoadDataset::~LoadDataset()
     delete ui;
 }
 
+///
+/// \brief LoadDataset::on_browseButton_clicked
+/// Triggers dialog to open input file
 void LoadDataset::on_browseButton_clicked()
 {
     QString filename;
@@ -58,6 +66,10 @@ void LoadDataset::on_browseButton_clicked()
 
 }
 
+///
+/// \brief LoadDataset::on_buttonBox_accepted
+/// Loads dataset from the file into a new dataset object by triggering appropriate
+/// constructor.
 void LoadDataset::on_buttonBox_accepted()
 {
 
@@ -138,7 +150,10 @@ void LoadDataset::on_buttonBox_accepted()
 }
 
 
-
+///
+/// \brief LoadDataset::on_filenameBox_textChanged
+/// \param arg1
+/// Changes file info displays when file name is changed
 void LoadDataset::on_filenameBox_textChanged(const QString &arg1)
 {
     QLabel *file_size_label = this->findChild<QLabel *>("fileSize");
@@ -160,6 +175,9 @@ void LoadDataset::on_filenameBox_textChanged(const QString &arg1)
 
 }
 
+///
+/// \brief LoadDataset::on_buttonBox_rejected
+/// Closes window when "Cancel" is selected.
 void LoadDataset::on_buttonBox_rejected()
 {
     this->close();

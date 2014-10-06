@@ -28,17 +28,27 @@
 #include "mapdata.h"
 #include "vespucciworkspace.h"
 
-void DeleteDataset(QList<VespucciDataset> *datasets, QListWidget *dataset_list_widget, QString name);
-void DeleteMap(QList<MapData> *maps, QListWidget *map_list_widget, QString name);
-
+///
+/// \brief main
+/// \param argc
+/// \param argv
+/// \return
+/// Typical boilerplate C++ main() stuff. Instantiates workspace and main window.
 int main(int argc, char *argv[])
 {
+    //Launch QApplication instance
     QApplication a(argc, argv);
+
     //A pointer to this goes by "workspace" in every window that needs it
     VespucciWorkspace ws;
+
+    //Instantiate main window
     MainWindow w(0, &ws);
+
     //This "finishes construction" on ws, for the parts that come from w
     ws.SetPointers(&w);
+
+    //show main window
     w.show();
     return a.exec();
 }

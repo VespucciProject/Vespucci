@@ -1,6 +1,13 @@
 #include "dataextractordialog.h"
 #include "ui_dataextractordialog.h"
 
+///
+/// \brief DataExtractorDialog::DataExtractorDialog
+/// \param parent Parent QWidget
+/// \param map The map from which the new dataset is created
+/// \param dataset The current dataset from which the new dataset is created
+/// \param main_window The main window of the program.
+///
 DataExtractorDialog::DataExtractorDialog(QWidget *parent, MapData *map, QSharedPointer<VespucciDataset> dataset, MainWindow *main_window) :
     QDialog(parent),
     ui(new Ui::DataExtractorDialog)
@@ -26,6 +33,9 @@ DataExtractorDialog::~DataExtractorDialog()
     delete ui;
 }
 
+///
+/// \brief DataExtractorDialog::on_buttonBox_accepted
+/// Calls constructor for new dataset object when user clicks "Ok"
 void DataExtractorDialog::on_buttonBox_accepted()
 {
     QString name = name_line_edit_->text();
@@ -39,5 +49,13 @@ void DataExtractorDialog::on_buttonBox_accepted()
                                                     dataset_, 
                                                     indices));
     workspace->AddDataset(new_dataset);
+    this->close();
+}
+
+///
+/// \brief DataExtractorDialog::on_buttonBox_rejected
+/// Closes the window when the user selects "Cancel"
+void DataExtractorDialog::on_buttonBox_rejected()
+{
     this->close();
 }

@@ -56,7 +56,6 @@ public:
     QString directory();
     QString *directory_ptr();
 
-    void close();
     void SetPointers(MainWindow *main_window);
 
     MainWindow* main_window();

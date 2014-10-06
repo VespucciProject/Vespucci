@@ -2,6 +2,12 @@
 #include "ui_dataviewer.h"
 #include "spectrumviewer.h"
 
+///
+/// \brief DataViewer::DataViewer
+/// \param parent Parent QWidget
+/// \param ws Current workspace
+/// \param row Row of current dataset
+///
 DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
     ui(new Ui::DataViewer)
@@ -49,6 +55,10 @@ DataViewer::~DataViewer()
     delete ui;
 }
 
+///
+/// \brief DataViewer::on_comboBox_currentTextChanged
+/// \param arg1
+/// Changes the table model when a user changes the selected data object
 void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
 {
     current_text_ = arg1;
@@ -152,7 +162,9 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
     table_->resizeRowsToContents();
 }
 
-
+///
+/// \brief DataViewer::on_plotPushButton_clicked
+/// Triggers a dialog that allows the plotting of data
 void DataViewer::on_plotPushButton_clicked()
 {
     if (current_text_ == "VCA Endmembers"){
@@ -170,6 +182,9 @@ void DataViewer::on_plotPushButton_clicked()
     }
 }
 
+///
+/// \brief DataViewer::on_exportPushButton_clicked
+/// Triggers a save dialog to save the current dataset
 void DataViewer::on_exportPushButton_clicked()
 {
     QString filename = QFileDialog::getSaveFileName(this,

@@ -781,6 +781,9 @@ uvec MapData::extract_range(double lower, double upper)
     return indices;
 }
 
+///
+/// \brief MapData::LaunchDataExtractor
+/// Launch the data extractor dialog
 void MapData::LaunchDataExtractor()
 {
     DataExtractorDialog *data_extractor =
@@ -788,11 +791,20 @@ void MapData::LaunchDataExtractor()
     data_extractor->show();
 }
 
+///
+/// \brief MapData::crisp_clusters
+/// \return
+/// Return whether or not this map was created with a crisp clustering method
 bool MapData::crisp_clusters()
 {
     return crisp_clusters_;
 }
 
+///
+/// \brief MapData::SetCrispClusters
+/// \param arg1
+/// Set whether or not this is a cluster map (which is associated with different
+/// color scale legend than maps with wider data ranges).
 void MapData::SetCrispClusters(bool arg1)
 {
     crisp_clusters_ = arg1;

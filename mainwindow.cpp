@@ -265,6 +265,9 @@ void MainWindow::on_actionSpectra_triggered()
         QMessageBox::warning(this, "File Not Saved", "Could not save file.");
 }
 
+///
+/// \brief MainWindow::on_actionAverage_Spectra_triggered
+/// Saves an average spectrum of the selected dataset
 void MainWindow::on_actionAverage_Spectra_triggered()
 {
     bool success;
@@ -293,6 +296,9 @@ void MainWindow::on_actionAverage_Spectra_triggered()
         QMessageBox::warning(this, "File Not Saved", "Could not save file.");
 }
 
+///
+/// \brief MainWindow::on_actionAverage_Spectra_with_Abcissa_triggered
+/// Saves average spectrum (with abcissa above).
 void MainWindow::on_actionAverage_Spectra_with_Abcissa_triggered()
 {
     bool success;
@@ -326,37 +332,9 @@ void MainWindow::on_actionAverage_Spectra_with_Abcissa_triggered()
         QMessageBox::warning(this, "File Not Saved", "Could not save file.");
 }
 
-void MainWindow::on_actionSpatial_Data_triggered()
-{
-    bool success;
-    int row = dataset_list_widget_->currentRow();
-    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
-    mat output(dataset->x().t());
-    output.insert_cols(1, dataset->y().t());
-    output = output.t();
-
-    QString filename =
-            QFileDialog::getSaveFileName(this,
-                                         tr("Save Spectra Matrix"),
-                                         workspace->directory(),
-                                         tr("Vespucci Binary (*.arma);;"
-                                            "Comma-separated Values (*.csv);;"
-                                            "Tab-separated Txt (*.txt);;"));
-    QFileInfo file_info(filename);
-
-    if (file_info.suffix() == "arma")
-        success = output.save(filename.toStdString(), arma_binary);
-    else if (file_info.suffix() == "csv")
-        success = output.save(filename.toStdString(), csv_ascii);
-    else
-        success = output.save(filename.toStdString(), raw_ascii);
-
-    if (success)
-        QMessageBox::information(this, "File Saved", "File written successfully!");
-    else
-        QMessageBox::warning(this, "File Not Saved", "Could not save file.");
-}
-
+///
+/// \brief MainWindow::on_actionSpectral_Abcissa_triggered
+/// Saves the spectral abcissa
 void MainWindow::on_actionSpectral_Abcissa_triggered()
 {
     bool success;
@@ -385,6 +363,9 @@ void MainWindow::on_actionSpectral_Abcissa_triggered()
         QMessageBox::warning(this, "File Not Saved", "Could not save file.");
 }
 
+///
+/// \brief MainWindow::on_actionAll_Data_triggered
+/// Saves a matrix containing all spatial and spectral data
 void MainWindow::on_actionAll_Data_triggered()
 {
     bool success;
@@ -421,29 +402,9 @@ void MainWindow::on_actionAll_Data_triggered()
         QMessageBox::warning(this, "File Not Saved", "Could not save file.");
 }
 
-void MainWindow::on_actionPrincipal_Component_Statistics_triggered()
-{/*
-    bool success;
-    int row = dataset_list_widget_->currentRow();
-    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
-
-    if (dataset->principal_components_calculated()){
-        QString filename =
-                QFileDialog::getSaveFileName(this,
-                                             tr("Save Spectra Matrix"),
-                                             workspace->directory(),
-                                             tr("Comma-separated Variables (*.csv);;"
-                                                "Tab-delimited Text (*.txt);;"));
-        QFileInfo file_info(filename);
-        if (file_info.suffix() == "txt")
-            success = dataset->principal_components_data()->tsquared()->save(filename.toStdString(), raw_ascii);
-        else
-            success = dataset->principal_components_data()->tsquared()->save(filename.toStdString(), csv_ascii);
-    }
-    */
-
-}
-
+///
+/// \brief MainWindow::on_actionFilter_Derivatize_triggered
+/// Triggers dialog to filter data
 void MainWindow::on_actionFilter_Derivatize_triggered()
 {
     int row = dataset_list_widget_->currentRow();
@@ -451,6 +412,9 @@ void MainWindow::on_actionFilter_Derivatize_triggered()
     filter_dialog->show();
 }
 
+///
+/// \brief MainWindow::on_actionClose_Dataset_triggered
+/// Closes the dataset. Should force it to go out of scope
 void MainWindow::on_actionClose_Dataset_triggered()
 {
     int dataset_row = dataset_list_widget_->currentRow();
@@ -465,12 +429,18 @@ void MainWindow::on_actionClose_Dataset_triggered()
         workspace->RemoveDatasetAt(dataset_row);
 }
 
+///
+/// \brief MainWindow::on_actionDocumentation_triggered
+/// Triggers the window that takes you to the website
 void MainWindow::on_actionDocumentation_triggered()
 {
     QUrl website_url("http://dpfoose.github.io/Vespucci/");
     QDesktopServices::openUrl(website_url);
 }
 
+///
+/// \brief MainWindow::on_actionCrop_triggered
+/// Triggers the CropDialog
 void MainWindow::on_actionCrop_triggered()
 {
     int row = dataset_list_widget_->currentRow();
@@ -478,6 +448,9 @@ void MainWindow::on_actionCrop_triggered()
     crop_dialog->show();
 }
 
+///
+/// \brief MainWindow::on_actionCorrect_Baseline_triggered
+/// Triggers Baseline correction dialog
 void MainWindow::on_actionCorrect_Baseline_triggered()
 {
     int row = dataset_list_widget_->currentRow();
@@ -485,6 +458,9 @@ void MainWindow::on_actionCorrect_Baseline_triggered()
     baseline_dialog->show();
 }
 
+///
+/// \brief MainWindow::on_actionView_Dataset_Elements_triggered
+/// Triggers DataViewer
 void MainWindow::on_actionView_Dataset_Elements_triggered()
 {
     int row = dataset_list_widget_->currentRow();
@@ -492,8 +468,12 @@ void MainWindow::on_actionView_Dataset_Elements_triggered()
     data_viewer->show();
 }
 
+///
+/// \brief MainWindow::on_actionSet_Global_Color_Scale_triggered
+/// Set the global color scale.
 void MainWindow::on_actionSet_Global_Color_Scale_triggered()
 {
+    //populate a list
     QStringList color_list;
     color_list  << "ColorBrewerBlueGreen"
                 << "ColorBrewerBluePurple"
@@ -583,17 +563,28 @@ void MainWindow::on_actionSet_Global_Color_Scale_triggered()
     workspace->RefreshGlobalColorGradient(gradient);
 }
 
-
+///
+/// \brief MainWindow::global_data_range
+/// \return
+/// Return the global data range (to MapViewer widgets)
 QCPRange* MainWindow::global_data_range()
 {
     return workspace->global_data_range();
 }
 
+///
+/// \brief MainWindow::global_gradient
+/// \return
+/// Return the global color gradient (to MapViewer widgets)
 QCPColorGradient* MainWindow::global_gradient()
 {
     return workspace->global_gradient();
 }
 
+///
+/// \brief MainWindow::RecalculateGlobalDataRange
+/// \param new_data_range
+/// Recalculate the global data range based on previous range and the new data
 void MainWindow::RecalculateGlobalDataRange(QCPRange* new_data_range)
 {
     bool changed = false;
@@ -607,12 +598,20 @@ void MainWindow::RecalculateGlobalDataRange(QCPRange* new_data_range)
     }
 }
 
+///
+/// \brief MainWindow::RefreshGlobalColorGradient
+/// \param new_gradient
+/// Change the global color gradient and update it for all objects using it
 void MainWindow::RefreshGlobalColorGradient(QCPColorGradient new_gradient)
 {
     workspace->RefreshGlobalColorGradient(new_gradient);
     emit GlobalGradientChanged(new_gradient);
 }
 
+///
+/// \brief MainWindow::SetGlobalDataRange
+/// \param new_data_range
+/// Set the global data range and update it for all objects using it
 void MainWindow::SetGlobalDataRange(QCPRange* new_data_range)
 {
     workspace->SetGlobalDataRange(new_data_range);

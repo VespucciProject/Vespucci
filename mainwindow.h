@@ -79,13 +79,9 @@ private slots:
 
     void on_actionAverage_Spectra_with_Abcissa_triggered();
 
-    void on_actionSpatial_Data_triggered();
-
     void on_actionSpectral_Abcissa_triggered();
 
     void on_actionAll_Data_triggered();
-
-    void on_actionPrincipal_Component_Statistics_triggered();
 
     void on_actionFilter_Derivatize_triggered();
 

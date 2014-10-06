@@ -1,6 +1,12 @@
 #include "kmeansdialog.h"
 #include "ui_kmeansdialog.h"
 
+///
+/// \brief KMeansDialog::KMeansDialog
+/// \param parent Parent QWidget
+/// \param ws Current workspace
+/// \param row Row of current dataset
+///
 KMeansDialog::KMeansDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
     ui(new Ui::KMeansDialog)
@@ -25,6 +31,9 @@ KMeansDialog::~KMeansDialog()
     delete ui;
 }
 
+///
+/// \brief KMeansDialog::on_buttonBox_accepted
+/// Triggers K-means method of dataset when "Ok" selected
 void KMeansDialog::on_buttonBox_accepted()
 {
     int clusters = cluster_spin_box_->value();
@@ -32,6 +41,9 @@ void KMeansDialog::on_buttonBox_accepted()
     data_->KMeans(clusters, name);
 }
 
+///
+/// \brief KMeansDialog::on_buttonBox_rejected
+/// Closes window when "Cancel" selected.
 void KMeansDialog::on_buttonBox_rejected()
 {
     this->close();
