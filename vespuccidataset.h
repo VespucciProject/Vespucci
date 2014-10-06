@@ -25,12 +25,11 @@
 #include <QVector>
 #include <vector>
 #include <qcustomplot.h>
-#include "univariatemap.h"
 #include "principalcomponentsdata.h"
 #include "plsdata.h"
 #include "vcadata.h"
 #include "vespucciworkspace.h"
-
+#include "mapdata.h"
 
 
 
@@ -80,7 +79,7 @@ public:
     ~VespucciDataset();
     // PRE-PROCESSING FUNCTIONS //
     //general
-    void Undo(QString operation);
+    void Undo();
 
     // map editing
     void CropSpectra(double x_min, double x_max, double y_min, double y_max);
@@ -95,12 +94,12 @@ public:
     //Spectral Pre-processing
 
     void SubtractBackground(mat background, QString filename);
-    void MedianFilter(int window_size);
-    void LinearMovingAverage(int window_size);
+    void MedianFilter(unsigned int window_size);
+    void LinearMovingAverage(unsigned int window_size);
     void Derivatize(unsigned int derivative_order,
                     unsigned int polynomial_order,
                     unsigned int window_size);
-    void SingularValue(int singular_values);
+    void SingularValue(unsigned int singular_values);
     mat spdiags(mat B, QVector<int> d, int m, int n);
 
     void Baseline(QString method, int window_size);
@@ -227,6 +226,12 @@ public:
 
     bool non_spatial();
 
+    ///
+    /// \brief non_spatial_
+    /// True if the dataset has empty x_ and y_
+    bool non_spatial_;
+
+    QString last_operation();
 
 
 private:
@@ -277,6 +282,9 @@ private:
     ///
     QTextStream log_stream_;
 
+    ///
+    /// \brief last_operation_
+    /// Description of the last operatio performed
     QString last_operation_;
 
     ///
@@ -395,10 +403,7 @@ private:
     /// Pointer back to the main window of the app.
     MainWindow *main_window_;
 
-    ///
-    /// \brief non_spatial_
-    /// True if the dataset has empty x_ and y_
-    bool non_spatial_;
+
 };
 
 #endif // VespucciDataset_H

@@ -93,7 +93,6 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
     spectrum_plot_->yAxis->setLabel(dataset->y_axis_description());
     QVector<double> plot_data;
     spectrum_plot_->replot();
-    cout << "If" << endl;
     if (type == "VCA"){
         plot_data = dataset->vertex_components_data()->Endmember(endmember);
     }

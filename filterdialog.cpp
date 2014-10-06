@@ -41,7 +41,6 @@ FilterDialog::FilterDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
 FilterDialog::~FilterDialog()
 {
     delete ui;
-    cout << "FilterDialogDestructor" << endl;
 }
 
 ///
@@ -85,6 +84,8 @@ void FilterDialog::on_buttonBox_accepted()
         return;
     }
     this->close();
+    dataset_.clear(); //let go of pointer to dataset
+
 }
 
 ///
@@ -93,4 +94,5 @@ void FilterDialog::on_buttonBox_accepted()
 void FilterDialog::on_buttonBox_rejected()
 {
     this->close();
+    dataset_.clear(); //let go of pointer to dataset
 }

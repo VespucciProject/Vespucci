@@ -128,6 +128,7 @@ void LoadDataset::on_buttonBox_accepted()
             if (!data->ConstructorCancelled()){
                 workspace->AddDataset(data);
                 workspace->set_directory(file_info.dir().absolutePath());
+
             }
         }
 
@@ -147,6 +148,7 @@ void LoadDataset::on_buttonBox_accepted()
 
     }
     this->close();
+
 }
 
 

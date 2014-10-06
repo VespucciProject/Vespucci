@@ -36,6 +36,7 @@ VespucciWorkspace::VespucciWorkspace()
 
 }
 
+
 ///
 /// \brief VespucciWorkspace::SetPointers
 /// \param main_window
@@ -75,10 +76,8 @@ void VespucciWorkspace::AddDataset(QSharedPointer<VespucciDataset> dataset)
 
 void VespucciWorkspace::RemoveDatasetAt(int i)
 {
-    cout << "VespucciWorkspace::RemoveDatasetAt(" << i << ")" << endl;
     QListWidgetItem *item = dataset_list_widget_->takeItem(i);
     dataset_list_widget_->removeItemWidget(item);
-    cout << datasets_[i]->name().toStdString() << endl;
     datasets_.removeAt(i);
 
 
@@ -237,12 +236,17 @@ QFile* VespucciWorkspace::CreateLogFile(QString dataset_name)
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     QString log_filename = datetime.toString("yyyy-MM-dd-hhmmss");
     log_filename += "_" + dataset_name + ".temp.txt";
-    cout << log_filename.toStdString() << endl;
     QFile *log_file = new QFile(log_filename);
     log_file->open(QIODevice::ReadWrite);
-    cout << log_file->fileName().toStdString() << endl;
-    cout << (log_file->exists() ? "exists" : "!exists") << endl;
     return log_file;
 }
 
+///
+/// \brief VespucciWorkspace::ClearDatasets
+/// Releases all the dataset pointers, which will close all datasets
+void VespucciWorkspace::ClearDatasets()
+{
 
+    for (int i=0; i < datasets_.size(); ++i)
+        datasets_[i].clear();
+}

@@ -50,6 +50,7 @@ void DataExtractorDialog::on_buttonBox_accepted()
                                                     indices));
     workspace->AddDataset(new_dataset);
     this->close();
+    dataset_.clear();
 }
 
 ///
@@ -58,4 +59,5 @@ void DataExtractorDialog::on_buttonBox_accepted()
 void DataExtractorDialog::on_buttonBox_rejected()
 {
     this->close();
+    dataset_.clear();
 }

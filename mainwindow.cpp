@@ -64,6 +64,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
                                          "Are you sure you want to exit?");
 
     if (response == QMessageBox::Yes) {
+        workspace->ClearDatasets();
         event->accept();
         qApp->exit();
     }
@@ -224,7 +225,6 @@ void MainWindow::on_actionSubtract_Background_triggered()
                                          tr("Vespucci Spectrum Files (*.arma)"));
     mat input;
     bool success = input.load(filename.toStdString());
-    cout << "input elements: " << input.n_elem << endl;
     if (!success){
         QMessageBox::warning(this, "File Open Error", "File cannot be opened");
         return;
@@ -627,3 +627,25 @@ VespucciWorkspace* MainWindow::workspace_ptr()
     return workspace;
 }
 
+void MainWindow::on_actionUndo_triggered()
+{
+    int row = dataset_list_widget_->currentRow();
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
+    QString text = tr("Are you sure you want to undo ") + dataset->last_operation()
+            + " on " + dataset->name() + "?";
+    int response =
+            QMessageBox::question(this,
+                          tr("Undo Operation"),
+                          text,
+                          QMessageBox::Ok | QMessageBox::Cancel);
+
+    if (response == QMessageBox::Ok){
+        dataset->Undo();
+        return;
+    }
+    else{
+        return;
+    }
+    dataset.clear(); //should fall out of scope anyway, but let's be safe
+
+}

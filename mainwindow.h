@@ -103,6 +103,8 @@ private slots:
 
     void on_actionVertex_Components_triggered();
 
+    void on_actionUndo_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -124,3 +126,4 @@ private:
 };
 
 #endif // MAINWINDOW_H
+

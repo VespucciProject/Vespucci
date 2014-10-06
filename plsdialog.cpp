@@ -14,6 +14,7 @@ PLSDialog::PLSDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
                              "Images cannot be created from non-spatial or "
                              "non-contiguous datasets.");
         this->close();
+        data_.clear();
     }
 
     image_component_selector_ = this->findChild<QSpinBox *>("componentSpinBox");
@@ -43,6 +44,7 @@ void PLSDialog::on_buttonBox_accepted()
     int components = components_selector_->value();
     data_->PartialLeastSquares(components, image_component, name, gradient_index, recalculate);
     this->close();
+    data_.clear();
 }
 
 ///
@@ -51,4 +53,5 @@ void PLSDialog::on_buttonBox_accepted()
 void PLSDialog::on_buttonBox_rejected()
 {
     this->close();
+    data_.clear();
 }

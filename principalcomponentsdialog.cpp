@@ -38,6 +38,7 @@ PrincipalComponentsDialog::PrincipalComponentsDialog(QWidget *parent, VespucciWo
                              "Images cannot be created from non-spatial or "
                              "non-contiguous datasets.");
         this->close();
+        data_.clear();
     }
     component_selector_ = this->findChild<QSpinBox *>("componentSpinBox");
     color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
@@ -62,6 +63,7 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
     int gradient_index = color_selector_->currentIndex();
     data_->PrincipalComponents(component, name, gradient_index, recalculate);
     this->close();
+    data_.clear();
 }
 
 ///
@@ -70,4 +72,5 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
 void PrincipalComponentsDialog::on_buttonBox_rejected()
 {
     this->close();
+    data_.clear();
 }

@@ -112,13 +112,7 @@ MapData::MapData(QString x_axis_description,
 /// Destructor triggered when this is removed from VespucciDataset list.
 MapData::~MapData()
 {
-
-    delete spectrum_display_;
-
-    delete new_color_scale_;
-
-    delete map_;
-
+    //heap allocated objects are all QObjects!
 }
 
 ///
@@ -391,7 +385,7 @@ bool MapData::saveTiff(const QString &fileName, int width, int height, double sc
 }
 
 ///
-/// \brief MapData::This
+/// \brief MapData::RemoveThis
 ///Triggers the VespucciDataset object to remove this from the list.  Since VespucciDataset
 /// stores MapData objects as shared pointers, and only one object (the map list)
 /// contains this pointer, this removal results in this object being deleted.
@@ -665,6 +659,7 @@ QVector<double> MapData::mid_lines(int i)
 void MapData::UseGlobalColorScale(bool arg1)
 {
     cout << "MapData::UseGlobalColorScale()" << endl;
+    cout << "This function still needs debugged!" << endl;
     if (arg1){
         if (using_global_color_scale_){
             cout << "arg1 && using_global_color_scale_" << endl;

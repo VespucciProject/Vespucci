@@ -53,14 +53,13 @@ VespucciDataset::~VespucciDataset()
 void VespucciDataset::DestroyLogFile()
 {
 
-    cout << "QMessageBox should pop up now" << endl;
     QMessageBox::StandardButton reply =
             QMessageBox::question(main_window_,
                                   "Save log?",
-                                  "Would you like to save the log for this dataset?",
+                                  "Would you like to save the log for " + name_
+                                  + "?",
                                   QMessageBox::Yes|QMessageBox::No);
     QString filename;
-
 
 
     if (reply == QMessageBox::No){
@@ -71,21 +70,23 @@ void VespucciDataset::DestroyLogFile()
         filename = QFileDialog::getSaveFileName(0, QTranslator::tr("Save File"),
                                    *directory_,
                                    QTranslator::tr("Text Files (*.txt)"));
-        cout << "copy()" << endl;
 
         bool success = log_file_->copy(filename);
+        if (!success){
+            bool remove_success = QFile::remove(filename); //delete old file
+            if (!remove_success){
+                QMessageBox::warning(main_window_, "Failure", "Previous file could not be removed");
+            }
+            success = log_file_->copy(filename);
+        }
         //new log file falls out of scope
-        cout << (success ? "success" : "failure") << endl;
         log_file_->remove();
 
-        cout << "MessageBoxen" << endl;
         if (success)
             QMessageBox::information(main_window_, "Success!", "File " + filename + " written successfully");
         else
             QMessageBox::warning(main_window_, "Failure", "File not written successfully.");
     }
-
-    delete log_file_;
     return;
 }
 
@@ -188,12 +189,9 @@ VespucciDataset::VespucciDataset(QString text_filename,
     directory_ = directory;
     flipped_ = swap_spatial;
     int i, j;
-    wall_clock timer;
 
     /*Read the first line to get the wavelength*/
     inputstream.seek(0);
-    cout << "Loading wavelength vector..." << endl;
-    timer.tic();
     QString wavelength_string = inputstream.readLine();
 
     QStringList wavelength_string_list =
@@ -205,8 +203,6 @@ VespucciDataset::VespucciDataset(QString text_filename,
     for(i=0; i<columns; ++i){
         wavelength_(i) = wavelength_string_list.at(i).toDouble();
     }
-    double seconds = timer.toc();
-    cout << "Reading wavelength took " << seconds <<" s." << endl;
     i=0;
     j=0;
 
@@ -218,8 +214,6 @@ VespucciDataset::VespucciDataset(QString text_filename,
     progress.setWindowModality(Qt::WindowModal);
 
     int rows = 0;
-    cout << "Counting rows..." << endl;
-    timer.tic();
     while(inputstream.readLine()!=NULL){
         ++rows;
     }
@@ -229,13 +223,9 @@ VespucciDataset::VespucciDataset(QString text_filename,
     spectra_.set_size(rows, columns);
     x_.set_size(rows);
     y_.set_size(rows);
-    seconds = timer.toc();
-    cout << "Counting rows and resizing took " << seconds << " s." << endl;
-    cout << "Reading spectra, x, and y..." << endl;
 
     progress.setLabelText("Parsing spectra...");
 
-    timer.tic();
     inputstream.seek(0);
     inputstream.readLine(); //discard it to advance to next line
 
@@ -268,12 +258,10 @@ VespucciDataset::VespucciDataset(QString text_filename,
         }
         progress.setValue(i);
     }
-    seconds = timer.toc();
     constructor_canceled_ = false;
     name_ = name;
     x_axis_description_ = x_axis_description;
     y_axis_description_ = y_axis_description;
-    cout << "Reading x, y, and spectra took " << seconds << " s." << endl;
     main_window_ = main_window;
 }
 
@@ -308,15 +296,10 @@ VespucciDataset::VespucciDataset(QString name,
     directory_ = directory;
 
 
-    cout << "VespucciDataset alternative construcutor" << endl;
     spectra_ = original->spectra(indices);
-    cout << "spectra " << spectra_.n_rows << " x " << spectra_.n_cols << endl;
     wavelength_ = original->wavelength();
-    cout << "wavelength " << wavelength_.n_elem << endl;
     x_ = original->x(indices);
-    cout << "x_ " << x_.n_rows << " ";
     y_ = original->y(indices);
-    cout << "y_ " << y_.n_rows << endl;
     name_ = name;
     main_window_ = main_window;
     directory_ = directory;
@@ -330,9 +313,10 @@ VespucciDataset::VespucciDataset(QString name,
 /// \brief VespucciDataset::Undo Swap spectra_ and spectra_old_ to undo an action.
 /// Calling this function again re-does the action that was undid.
 ///
-void VespucciDataset::Undo(QString operation)
+void VespucciDataset::Undo()
 {
-    log_stream_ << "Undo: " << operation << endl << endl;
+    log_stream_ << "Undo: " << last_operation_ << endl << endl;
+    last_operation_ = "Undo";
     mat buffer = spectra_;
     spectra_ = spectra_old_;
     spectra_old_ = buffer;
@@ -371,6 +355,7 @@ void VespucciDataset::CropSpectra(double x_min, double x_max, double y_min, doub
         }
         progress.setValue(i);
     }
+    last_operation_ = "crop";
 }
 
 
@@ -391,6 +376,7 @@ void VespucciDataset::MinMaxNormalize()
             spectra_(i) = spectra_(i) - minimum;
     double maximum = spectra_.max();
     spectra_ = spectra_/maximum;
+    last_operation_ = "min/max normalize";
 }
 
 ///
@@ -409,6 +395,7 @@ void VespucciDataset::UnitAreaNormalize()
             spectra_(i, j) = spectra_(i, j) / row_sum;
         }
     }
+    last_operation_ = "unit area normalize";
 }
 
 ///
@@ -428,7 +415,6 @@ mat VespucciDataset::ZScoreNormCopy()
             normalized_copy(i, j) = (spectra_(i, j) - mean) / standard_deviation;
         }
     }
-
     return normalized_copy;
 }
 
@@ -454,6 +440,8 @@ void VespucciDataset::ZScoreNormalize()
         }
     }
     z_scores_calculated_ = true;
+    last_operation_ = "Z-score normalize";
+
 }
 
 ///
@@ -480,6 +468,7 @@ void VespucciDataset::SubtractBackground(mat background, QString filename)
     else{
         spectra_.each_row() -= background.row(0);
     }
+    last_operation_ = "background correction";
 }
 
 ///
@@ -523,6 +512,7 @@ void VespucciDataset::Baseline(QString method, int window_size)
         }
         spectra_ -= processed;
     }
+    last_operation_ = "baseline correction";
 }
 
 //Filtering functions
@@ -532,7 +522,7 @@ void VespucciDataset::Baseline(QString method, int window_size)
 /// of spectra are not processed. See also VespucciDataset::LinearMovingAverage
 /// \param window_size - an odd number representing the width of the window.
 
-void VespucciDataset::MedianFilter(int window_size)
+void VespucciDataset::MedianFilter(unsigned int window_size)
 {
     log_stream_ << "MedianFilter" << endl;
     log_stream_ << "window_size == " << window_size << endl << endl;
@@ -561,6 +551,7 @@ void VespucciDataset::MedianFilter(int window_size)
         }
     }
     spectra_ = processed;
+    last_operation_ = "median filter";
 }
 
 ///
@@ -569,7 +560,7 @@ void VespucciDataset::MedianFilter(int window_size)
 /// boundaries of spectra are not processed.  See also VespucciDataset::MedianFilter.
 /// \param window_size - an odd number representing the width of the window.
 
-void VespucciDataset::LinearMovingAverage(int window_size)
+void VespucciDataset::LinearMovingAverage(unsigned int window_size)
 {
     log_stream_ << "LinearMovingAverage" << endl;
     log_stream_ << "window_size == " << window_size << endl << endl;
@@ -583,6 +574,7 @@ void VespucciDataset::LinearMovingAverage(int window_size)
         filtered.col(j) = arma_ext::ApplyFilter(buffer.col(j), filter);
     }
     spectra_ = trans(filtered);
+    last_operation_ = "moving average filter";
 }
 
 ///
@@ -593,7 +585,7 @@ void VespucciDataset::LinearMovingAverage(int window_size)
 /// arma_ext::svds.
 /// \param singular_values Number of singular values to use.
 ///
-void VespucciDataset::SingularValue(int singular_values)
+void VespucciDataset::SingularValue(unsigned int singular_values)
 {
     log_stream_ << "SingularValue" << endl;
     log_stream_ << "singular_values == " << singular_values << endl << endl;
@@ -603,6 +595,7 @@ void VespucciDataset::SingularValue(int singular_values)
     mat V;
     arma_ext::svds(spectra_, singular_values, U, s, V);
     spectra_ = -1 * U * diagmat(s) * V.t();
+    last_operation_ = "truncated SVD de-noise";
 }
 
 ///
@@ -627,6 +620,7 @@ void VespucciDataset::Derivatize(unsigned int derivative_order,
                                       derivative_order,
                                       1);
     spectra_ = trans(temp);
+    last_operation_ = "Savitzky-Golay filtering";
 }
 
 // MAPPING FUNCTIONS //
@@ -692,17 +686,14 @@ void VespucciDataset::Univariate(uword min,
     if (value_method == "Bandwidth"){
         double maximum, half_maximum, width/*, region_size*/;
         double start_value, end_value, slope;
-        cout << "set size of baseline matrix" << endl;
         baselines.set_size(size, max-min + 1);
         uword max_index = 0;
         uword left_index = 0;
         uword right_index = 0;
         map_type = "1-Region Univariate (Bandwidth (FWHM))";
         uword columns = spectra_.n_cols;
-        cout << "set size of abcissa" << endl;
         abcissa.set_size(max-min + 1);
         abcissa = wavelength_.subvec(span(min, max));
-        cout << "set size of mid lines matrix" << endl;
         mid_lines.set_size(x_.n_rows, 4);
         for (i = 0; i < size; ++i){
 
@@ -771,12 +762,10 @@ void VespucciDataset::Univariate(uword min,
     else if(value_method == "Area"){
         // Do peak fitting stuff here.
         map_type = "1-Region Univariate (Area)";
-        cout << "set size of abcissa" << endl;
         abcissa.set_size(max - min + 1);
         abcissa = wavelength_.subvec(span(min, max));
         if (integration_method == "Riemann Sum"){
             double start_value, end_value, slope;
-            cout << "set size of baseline matrix" <<endl;
             baselines.set_size(size, abcissa.n_cols);
 
             for (i=0; i<size; ++i){
@@ -963,7 +952,6 @@ void VespucciDataset::BandRatio(uword first_min,
     else{
         // Makes an intensity map
         map_type = "2-Region Band Ratio Map (Intensity)";
-        cout << "line 157" <<endl;
         for (i=0; i<size; ++i){
             first_region = spectra_(i, span(first_min, first_max));
             second_region = spectra_(i, span(second_min, second_max));
@@ -1017,7 +1005,6 @@ void VespucciDataset::PrincipalComponents(int component,
     if (recalculate || !principal_components_calculated_){
 
         component--;
-        cout << "VespucciDataset::PrincipalComponents" << endl;
 
         QMessageBox alert;
         alert.setText("Calculating principal components may take a while.");
@@ -1210,9 +1197,7 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
     QString map_type = "K-means clustering map. Number of clusters = ";
     map_type += QString::number(clusters);
     Col<size_t> assignments;
-    cout << "Kmeans object initialization" << endl;
     mlpack::kmeans::KMeans<> k;
-    cout << "Kmeans data extraction" << endl;
     mat data = trans(spectra_);
     k.Cluster(data, clusters, assignments);
     k_means_data_.set_size(assignments.n_elem, 1);
@@ -1567,7 +1552,6 @@ int VespucciDataset::map_loading_count()
 ///
 void VespucciDataset::RemoveMapAt(unsigned int i)
 {
-
     QListWidgetItem *item = map_list_widget_->takeItem(i);
     map_list_widget_->removeItemWidget(item);
     maps_.removeAt(i); //map falls out of scope and memory freed!
@@ -1886,4 +1870,13 @@ mat* VespucciDataset::y_ptr()
 bool VespucciDataset::non_spatial()
 {
     return non_spatial_;
+}
+
+///
+/// \brief VespucciDataset::last_operation
+/// \return Description of last pre-processing operation performed
+///
+QString VespucciDataset::last_operation()
+{
+    return last_operation_;
 }

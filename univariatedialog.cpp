@@ -38,6 +38,7 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
                              "Images cannot be created from non-spatial or "
                              "non-contiguous datasets.");
         this->close();
+        data_.clear();
     }
     min_box_ = this->findChild<QLineEdit *>("minLineEdit");
     max_box_ = this->findChild<QLineEdit *>("maxLineEdit");
@@ -105,6 +106,7 @@ void UnivariateDialog::on_buttonBox_accepted()
 
     data_->Univariate(min, max, name, value_method, integration_method, color_index);
     this->close();
+    data_.clear();
 }
 
 ///
@@ -129,4 +131,5 @@ void UnivariateDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
 void UnivariateDialog::on_buttonBox_rejected()
 {
     this->close();
+    data_.clear();
 }

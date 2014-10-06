@@ -64,9 +64,7 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionLoad_Workspace"/>
     <addaction name="actionImport_Dataset_from_File"/>
-    <addaction name="actionSave_Workspace"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -105,9 +103,10 @@
      <addaction name="actionAll_Data"/>
      <addaction name="separator"/>
     </widget>
+    <addaction name="actionUndo"/>
+    <addaction name="separator"/>
     <addaction name="menuData_Pre_Processing"/>
     <addaction name="separator"/>
-    <addaction name="actionConcatenate_Datasets"/>
     <addaction name="menuExport_Dataset_Elements"/>
     <addaction name="actionView_Dataset_Elements"/>
     <addaction name="separator"/>
@@ -135,8 +134,6 @@
     <addaction name="actionNew_Univariate_Map"/>
     <addaction name="actionNew_Band_Ratio_Map"/>
     <addaction name="menuNew_Multivariate_Map"/>
-    <addaction name="separator"/>
-    <addaction name="actionDelete_Map"/>
     <addaction name="separator"/>
     <addaction name="actionSet_Global_Color_Scale"/>
    </widget>
@@ -388,6 +385,11 @@
   <action name="actionAnalysis_Wizard">
    <property name="text">
     <string>Analysis Wizard...</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Undo/Redo</string>
    </property>
   </action>
  </widget>

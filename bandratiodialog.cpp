@@ -36,6 +36,7 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
                              "Images cannot be created from non-spatial or "
                              "non-contiguous datasets.");
         this->close();
+        data_.clear();
     }
     spectrum_plot_ = this->findChild<QCustomPlot *>("spectrumPlot");
     first_min_box_ = this->findChild<QLineEdit *>("firstMinLineEdit");
@@ -123,6 +124,7 @@ void BandRatioDialog::on_buttonBox_accepted()
                      integration_method,
                      color_index);
     this->close();
+    data_.clear();
 }
 
 ///
@@ -148,4 +150,5 @@ void BandRatioDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
 void BandRatioDialog::on_buttonBox_rejected()
 {
     this->close();
+    data_.clear();
 }

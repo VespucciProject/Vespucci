@@ -21,7 +21,7 @@
 #define VESPUCCIWORKSPACE_H
 
 #include "vespuccidataset.h"
-#include "univariatemap.h"
+
 #include "arma_ext.h"
 #include <qcustomplot.h>
 #include "mainwindow.h"
@@ -75,6 +75,8 @@ public:
     bool RecalculateGlobalDataRange(QCPRange* new_data_range);
     void RefreshGlobalColorGradient(QCPColorGradient new_gradient);
     void SetGlobalDataRange(QCPRange* new_data_range);
+
+    void ClearDatasets();
 
 private:
     //pointers to main window and necessary widgets

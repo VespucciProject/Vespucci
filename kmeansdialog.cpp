@@ -22,6 +22,7 @@ KMeansDialog::KMeansDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
                              "Images cannot be created from non-spatial or "
                              "non-contiguous datasets.");
         this->close();
+        data_.clear();
     }
     data_index_ = row;
 }
@@ -47,4 +48,5 @@ void KMeansDialog::on_buttonBox_accepted()
 void KMeansDialog::on_buttonBox_rejected()
 {
     this->close();
+    data_.clear();
 }

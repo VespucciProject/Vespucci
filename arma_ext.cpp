@@ -68,9 +68,7 @@ mat arma_ext::spdiags(mat B, ivec d, uword m, uword n)
         return output;
     }
 
-    cout << "superdiagonals=" << endl << find (d >= 0) << endl;
     superdiagonals = d(find (d >= 0));
-    cout << "subdiagonals=" << endl << find (d < 0) << endl;
     subdiagonals = d(find (d < 0));
 
 
@@ -122,19 +120,16 @@ mat arma_ext::spdiags(mat B, ivec d, uword m, uword n)
 ///
 mat arma_ext::orth(mat X)
 {
-    //cout << "orth()" << endl;
     double eps = datum::eps;
     mat U, V;
     vec s;
     svd(U, s, V, X);
-    //cout << "s=" << s << endl;
     double tol;
     tol = std::max(X.n_rows*s(1)*eps, X.n_cols*s(1)*eps);
     uvec q1 = find(s > tol);
     double rank = q1.n_elem;
 
     if (rank > 0){
-        //cout << "end orth" << endl;
         return -1*U.cols(0, rank-1);
     }
     else{
@@ -150,8 +145,8 @@ mat arma_ext::orth(mat X)
 /// This is based on the Matlab/Octave function svds(), a truncated singular
 /// value decomposition. This is designed to only take the kinds of inputs
 /// Vespucci will need (It only works on arma::mat types, and only returns the k
-/// largest singular values (none of that sigma business).
-
+/// largest singular values (none of that sigma business). U and V tolerances
+/// are not defined currently due to difficulties with Armadillo's find() method
 ///
 /// The eigenvalues of this matrix are then found using arma::eigs_sym, a wrapper
 /// for ARPACK.
@@ -179,8 +174,7 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
     uword n = X.n_cols;
     uword p = std::min(m, n); //used below to establish tolerances.
     uword q = std::max(m, n);
-    //cout << "p = " << p << endl;
-    //cout << "k = " << k << endl;
+
     if (k > p){
         if (k > m)
             cerr << "svds: value of k " << k << "is greater than number of rows " << m << endl;
@@ -193,12 +187,6 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
     sp_mat B(m+n, m+n);
     B.submat(span(0, m-1), span(m, m+n-1)) = X; // top right corner
     B.submat(span(m, m+n-1), span(0, m-1)) = X.t(); //bottom left corner
-
-    //mat B_full(B.n_rows, B.n_cols);
-    //for(int i = 0; i < B.n_rows; ++i)
-    //    for (int j = 0; j < B.n_cols; ++j)
-    //        B_full(i,j) = B(i, j); //used to test copying of matrix
-    //B_full.save("B.csv", csv_ascii);
 
     //If, for some reason, a matrix of zeroes is input...
     if (B.n_nonzero == 0){
@@ -216,8 +204,6 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
     //because we're using sigma=0, results of eigs will be centered around 0
     //we throw out the negative ones, then add in 0 eigenvalues if we have to
     bool eigs_success = eigs_sym(eigval, eigvec, B, k*2);
-    //cout << "eigval=" << eigval << endl;
-    //cout << "eigvec=" << eigvec << endl;
 
     double eigval_max = eigval.max();
 
@@ -267,9 +253,7 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
     // norm since if we don't we might end up with too many singular
     // values.
 
-    //cout << "call to find()" << endl;
     uvec query = find((eigval > d_tolerance) /*&& (abs(diag_UU) > uv_tolerance) && (abs(diag_VV) > uv_tolerance)*/);
-    //cout << query << endl;
 
 
     uword number_of_indices = query.n_elem;
@@ -287,7 +271,6 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
 
     V = sqrt(2) * eigvec.rows(m, m+n-1);
     V = V.cols(return_indices);
-    //cout << "return_indices.n_elem=" << return_indices.n_elem << " k=" << k << endl;
     //B may have some eigenvalues that are 0 that needed to be included if the
     //number of non_zero eigenvalues is too small. Will only add eigenvalues in if
     //they exist (obviously).
@@ -302,7 +285,6 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
 
             //necessary number of zero eigenvalues
             vec zero_eigvals = abs(eigval.cols(zero_indices.rows(0, n_zero)));
-            //cout <<"n_zero" << n_zero << endl;
             U.insert_cols(U.n_cols, QWU.cols(0, n_zero));
             s.insert_rows(s.n_rows, zero_eigvals);
             V.insert_cols(V.n_cols, QWV.cols(0, n_zero));
@@ -312,12 +294,9 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
 
     uvec indices = sort_index(s, "descend");
     s = sort(s, "descend");
-    //cout << "s = " << endl << s << endl;
-    //cout << "diagmat(s) = " << endl << diagmat(s) << endl;
 
     U = U.cols(indices);
     V = V.cols(indices);
-    //test for convergence
 
     return eigs_success;
 }
@@ -426,7 +405,6 @@ bool arma_ext::plsregress(mat X, mat Y, int components,
     percent_variance.set_size(2, coefficients.n_cols);
     percent_variance.row(0) = sum(arma::abs(P)%arma::abs(P)) / sum(sum(arma::abs(X)%arma::abs(X)));
     percent_variance.row(1) = sum(arma::abs(Q)%arma::abs(Q)) / sum(sum(arma::abs(Y)%arma::abs(Y)));
-    cout << "end of plsregress" << endl;
     return true;
 
 }
@@ -472,17 +450,13 @@ bool arma_ext::VCA(mat R, uword p,
     svds(R_o*trans(R_o)/N, p, Ud, Sd, Vd);
     Ud.save("Ud.csv", csv_ascii);
     mat x_p = trans(Ud) * R_o;
-    //cout <<"SNR"<<endl;
     double SNR = estimate_snr(R, r_m, x_p);
-    //cout <<"end SNR"<<endl;
     double SNR_th = 15 + 10*log10(p);
 
 //Choose projective projection or projection to p-1 subspace
     mat y;
     if (SNR < SNR_th){
-        //cout << "SNR < SNR_th" << endl;
         uword d = p - 1;
-        //cout << "Ud.n_cols=" << Ud.n_cols << endl;
         Ud = Ud.cols(0, d-1);
 
         projected_data = Ud * x_p.rows(0, d-1) + R_m; //in dimension L
@@ -495,7 +469,6 @@ bool arma_ext::VCA(mat R, uword p,
     }
 
     else{
-        //cout << "SNR !< SNR_th" << endl;
         uword d = p;
         svds(R*trans(R)/N, d, Ud, Sd, Vd); //R_o is a mean centered version...
         x_p = trans(Ud)*R;
@@ -506,7 +479,6 @@ bool arma_ext::VCA(mat R, uword p,
     }
 
     // The VCA algorithm
-    //cout << "VCA Algorithm" << endl;
     colvec w;
     w.set_size(p);
     colvec f;
@@ -521,7 +493,6 @@ bool arma_ext::VCA(mat R, uword p,
     uvec q1;
     A(p-1, 0) = 1;
     for (uword i = 0; i < p; ++i){
-        //cout << "i=" << i << endl;
         w.randu();
         f = w - A*pinv(A)*w;
         sum_squares = sqrt(sum(square(f)));
@@ -530,7 +501,6 @@ bool arma_ext::VCA(mat R, uword p,
         v_max = max(abs(v));
         q1 = find(abs(v) == v_max, 1);
         indices(i) = q1(0);
-        //cout<<"A.col"<<endl;
         A.col(i) = y.col(indices(i)); //same as x.col(indices(i));
     }
     endmember_spectra = projected_data.cols(indices);

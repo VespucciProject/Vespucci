@@ -11,7 +11,6 @@ VCADialog::VCADialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
     ui(new Ui::VCADialog)
 {
-    cout << "VCADialog Constructor" << endl;
     ui->setupUi(this);
     workspace = ws;
     data_ = workspace->DatasetAt(row);
@@ -21,6 +20,7 @@ VCADialog::VCADialog(QWidget *parent, VespucciWorkspace *ws, int row) :
                              "Images cannot be created from non-spatial or "
                              "non-contiguous datasets.");
         this->close();
+        data_.clear();
     }
     components_selector_ = this->findChild<QSpinBox *>("endmembersSpinBox");
     image_component_selector_ = this->findChild<QSpinBox *>("componentSpinBox");
@@ -54,6 +54,7 @@ void VCADialog::on_buttonBox_accepted()
                             gradient_index,
                             recalculate);
     this->close();
+    data_.clear();
 }
 
 ///
@@ -62,4 +63,5 @@ void VCADialog::on_buttonBox_accepted()
 void VCADialog::on_buttonBox_rejected()
 {
     this->close();
+    data_.clear();
 }

@@ -16,7 +16,6 @@ PLSData::PLSData(QSharedPointer<VespucciDataset> parent, QString *directory)
 bool PLSData::Apply(mat spectra, rowvec wavelength, int components)
 {
     mat Y;
-    cout << "PLSData::Apply set size of Y" << endl;
     Y.set_size(wavelength.n_elem, components);
     for (int i = 0; i < components; ++i)
         Y.col(i) = trans(wavelength);

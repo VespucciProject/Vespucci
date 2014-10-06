@@ -297,9 +297,7 @@ void MapViewer::on_actionShow_Spectrum_Viewer_triggered()
 /// Sets the color scale to the global color scale.
 void MapViewer::on_actionCommon_Color_Gradient_toggled(bool arg1)
 {
-    cout << "MapViewer::on_actionCommon_Color_Gradient_toggled()" << endl;
     parent_->UseGlobalColorScale(arg1);
-    cout << "end of function" << endl;
 }
 
 ///

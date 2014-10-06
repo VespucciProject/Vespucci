@@ -76,6 +76,7 @@ void ScaleBarDialog::on_buttonBox_accepted()
                             position,
                             font);
     this->close();
+
 }
 
 ///

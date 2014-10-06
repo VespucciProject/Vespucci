@@ -23,7 +23,6 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
     export_button_->setDisabled(true);
     table_ = this->findChild<QTableView *>("tableView");
 
-    //cout << "populate list" << endl;
     QStringList object_list("Spectral Abcissa");
     object_list << "Spatial Data";
 
@@ -44,10 +43,8 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
         object_list << "K-means Assignments";
     }
 
-    //cout << "assign list" << endl;
     data_selector_->addItems(object_list);
     data_selector_->setCurrentIndex(0);
-    //cout << "end of constructor";
 }
 
 DataViewer::~DataViewer()
@@ -62,8 +59,6 @@ DataViewer::~DataViewer()
 void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
 {
     current_text_ = arg1;
-    //cout << "DataViewer::on_comboBox_currentTextChanged" << endl;
-    //cout << arg1.toStdString();
     if (arg1 == "Spatial Data"){
         VespucciTableModel *table_model = new VespucciTableModel(this, dataset_, "spatial");
         table_->setModel(table_model);
@@ -199,7 +194,6 @@ void DataViewer::on_exportPushButton_clicked()
         return;
 
     QString extension = file_info.suffix();
-    cout << "save" << endl;
     if (extension == "arma")
         success = current_data_->save(filename.toStdString(), arma_binary);
     else if (extension == "csv")

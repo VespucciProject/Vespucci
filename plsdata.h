@@ -2,7 +2,7 @@
 #define PLSDATA_H
 #include "vespuccidataset.h"
 using namespace arma;
-
+class VespucciDataset;
 ///
 /// \brief The PLSData class
 /// A class for performing and storing data related to partial least squares
