@@ -18,7 +18,7 @@
 ***************************************************************************************/
 #include "principalcomponentsdata.h"
 
-PrincipalComponentsData::PrincipalComponentsData(VespucciDataset *parent,
+PrincipalComponentsData::PrincipalComponentsData(QSharedPointer<VespucciDataset> parent,
                                                  QString *directory)
 {
     parent_ = parent;

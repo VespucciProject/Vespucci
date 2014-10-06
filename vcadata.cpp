@@ -1,6 +1,6 @@
 #include "vcadata.h"
 
-VCAData::VCAData(VespucciDataset *parent,
+VCAData::VCAData(QSharedPointer<VespucciDataset> parent,
                  QString *directory)
 {
     parent_ = parent;

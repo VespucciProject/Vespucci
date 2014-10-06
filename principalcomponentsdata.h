@@ -25,7 +25,7 @@ using namespace arma;
 class VespucciDataset;
 class PrincipalComponentsData {
 public:
-    PrincipalComponentsData(VespucciDataset *parent, QString *directory);
+    PrincipalComponentsData(QSharedPointer<VespucciDataset> parent, QString *directory);
 
     void Apply(mat spectra);
 
@@ -43,7 +43,7 @@ private:
     mat score_;
     vec latent_;
     vec tsquared_;
-    VespucciDataset *parent_;
+    QSharedPointer<VespucciDataset> parent_;
     QString *directory_;
 
 };

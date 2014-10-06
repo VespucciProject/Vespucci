@@ -69,7 +69,7 @@ void CropDialog::on_buttonBox_accepted()
     else{
         dataset_->CropSpectra(x_min, x_max, y_min, y_max);
     }
-
+    this->close();
 
 }
 

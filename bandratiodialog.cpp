@@ -118,6 +118,7 @@ void BandRatioDialog::on_buttonBox_accepted()
                      value_method,
                      integration_method,
                      color_index);
+    this->close();
 }
 
 void BandRatioDialog::on_peakComboBox_currentTextChanged(const QString &arg1)

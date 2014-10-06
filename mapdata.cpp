@@ -38,7 +38,7 @@ MapData::MapData(QString x_axis_description,
                  colvec x,
                  colvec y,
                  colvec results,
-                 VespucciDataset *parent,
+                 QSharedPointer<VespucciDataset> parent,
                  QString *directory,
                  QCPColorGradient gradient,
                  int source_index,
@@ -72,7 +72,7 @@ MapData::MapData(QString x_axis_description,
     this->CreateImage(gradient, false, tick_count);
     x_axis_description_ = x_axis_description;
     y_axis_description_ = y_axis_description;
-    dataset_ = parent;
+    dataset_ = QSharedPointer<VespucciDataset>(parent);
     source_index_ = source_index;
     spectrum_display_ = new SpectrumViewer(map_display_,
                                            this,
@@ -391,7 +391,7 @@ bool MapData::saveTiff(const QString &fileName, int width, int height, double sc
 }
 
 ///
-/// \brief MapData::RemoveThis
+/// \brief MapData::This
 ///Triggers the VespucciDataset object to remove this from the list.  Since VespucciDataset
 /// stores MapData objects as shared pointers, and only one object (the map list)
 /// contains this pointer, this removal results in this object being deleted.

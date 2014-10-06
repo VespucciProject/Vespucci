@@ -40,9 +40,9 @@ public:
     SpectrumViewer(MapViewer *parent,
                    MapData *map_data,
                    const QString x_axis_description,
-                   const QString y_axis_description, VespucciDataset *dataset, QSize widget_size, QString directory);
+                   const QString y_axis_description, QSharedPointer<VespucciDataset> dataset, QSize widget_size, QString directory);
     SpectrumViewer(DataViewer *parent,
-                   VespucciDataset *dataset,
+                   QSharedPointer <VespucciDataset> dataset,
                    int endmember,
                    QString directory,
                    QString type);
@@ -68,7 +68,7 @@ private:
     QCustomPlot *spectrum_plot_;
     MapViewer *parent_;
     MapData *map_data_;
-    VespucciDataset *dataset_;
+    QSharedPointer<VespucciDataset> dataset_;
     QSize widget_size_;
     QString directory_;
     int current_index_;

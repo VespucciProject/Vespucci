@@ -45,6 +45,7 @@ void BaselineDialog::on_buttonBox_accepted()
 
     for (int i = 0; i < iterations; ++i)
         dataset_->Baseline(method, window_size);
+    this->close();
 }
 
 void BaselineDialog::on_buttonBox_rejected()

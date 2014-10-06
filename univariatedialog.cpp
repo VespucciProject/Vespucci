@@ -95,7 +95,7 @@ void UnivariateDialog::on_buttonBox_accepted()
     }
 
     data_->Univariate(min, max, name, value_method, integration_method, color_index);
-
+    this->close();
 }
 
 void UnivariateDialog::on_peakComboBox_currentTextChanged(const QString &arg1)

@@ -53,9 +53,30 @@ class VespucciDataset
 {
 public:
     VespucciDataset();
-    VespucciDataset(QString text_filename, MainWindow *main_window, QString *directory, QString name, QString x_axis_description, QString y_axis_description, bool swap_spatial);
-    VespucciDataset(QString binary_filename, MainWindow *main_window, QString *directory, QString name);
-    VespucciDataset(QString name, MainWindow *main_window, QString *directory, VespucciDataset *original, uvec indices);
+    VespucciDataset(QString text_filename,
+                    MainWindow *main_window,
+                    QString *directory,
+                    QFile *log_file,
+                    QString name,
+                    QString x_axis_description,
+                    QString y_axis_description,
+                    bool swap_spatial);
+
+
+    VespucciDataset(QString binary_filename,
+                    MainWindow *main_window,
+                    QString *directory,
+                    QString name,
+                    QFile *log_file);
+
+
+    VespucciDataset(QString name,
+                    MainWindow *main_window,
+                    QString *directory,
+                    QFile *log_file,
+                    QSharedPointer<VespucciDataset> original,
+                    uvec indices);
+
     ~VespucciDataset();
     // PRE-PROCESSING FUNCTIONS //
     //general
@@ -209,6 +230,8 @@ public:
 
 
 private:
+    void DestroyLogFile();
+
     ///
     /// \brief wavelength_
     /// The spectral abcissa of the spectra in spectra_
@@ -242,6 +265,10 @@ private:
     /// The name chosen by the user for this dataset.
     QString name_;
 
+    ///
+    /// \brief log_file_ Pointer to the QFile associated with the log stream
+    /// This is allocated with "new" outside the VespucciDataset object, then
+    /// deallocated with delete inside the VespucciDataset destructor
     QFile *log_file_;
 
 

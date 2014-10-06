@@ -38,7 +38,7 @@ void PLSDialog::on_buttonBox_accepted()
     int gradient_index = color_selector_->currentIndex();
     int components = components_selector_->value();
     data_->PartialLeastSquares(components, image_component, name, gradient_index, recalculate);
-
+    this->close();
 }
 
 void PLSDialog::on_buttonBox_rejected()

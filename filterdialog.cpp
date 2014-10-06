@@ -35,6 +35,7 @@ FilterDialog::FilterDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
 FilterDialog::~FilterDialog()
 {
     delete ui;
+    cout << "FilterDialogDestructor" << endl;
 }
 
 ///
@@ -70,9 +71,11 @@ void FilterDialog::on_buttonBox_accepted()
         break;
     case 3:
         dataset_->SingularValue(window_box_->value());
+        break;
     default:
         return;
     }
+    this->close();
 }
 
 void FilterDialog::on_buttonBox_rejected()

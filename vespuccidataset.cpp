@@ -46,7 +46,14 @@ VespucciDataset::~VespucciDataset()
     for (int i = 0; i < maps_.size(); ++i)
         RemoveMapAt(i);
 
-    log_file_->close();
+    DestroyLogFile();
+
+}
+
+void VespucciDataset::DestroyLogFile()
+{
+
+    cout << "QMessageBox should pop up now" << endl;
     QMessageBox::StandardButton reply =
             QMessageBox::question(main_window_,
                                   "Save log?",
@@ -58,22 +65,29 @@ VespucciDataset::~VespucciDataset()
 
     if (reply == QMessageBox::No){
         log_file_->remove();
+        return;
     }
     else{
         filename = QFileDialog::getSaveFileName(0, QTranslator::tr("Save File"),
                                    *directory_,
                                    QTranslator::tr("Text Files (*.txt)"));
+        cout << "copy()" << endl;
+
+        bool success = log_file_->copy(filename);
+        //new log file falls out of scope
+        cout << (success ? "success" : "failure") << endl;
+        log_file_->remove();
+
+        cout << "MessageBoxen" << endl;
+        if (success)
+            QMessageBox::information(main_window_, "Success!", "File " + filename + " written successfully");
+        else
+            QMessageBox::warning(main_window_, "Failure", "File not written successfully.");
     }
-    bool success = log_file_->copy(filename);
-    if (success)
-        QMessageBox::information(main_window_, "Success!", "File " + filename + " written successfully");
-    else
-        QMessageBox::warning(main_window_, "Failure", "File not written successfully.");
 
     delete log_file_;
-
+    return;
 }
-
 
 ///
 /// \brief VespucciDataset::VespucciDataset
@@ -83,15 +97,14 @@ VespucciDataset::~VespucciDataset()
 /// This constructor loads a previously saved dataset.  The dataset is saved
 /// as an armadillo binary in the same format as the long text.
 ///
-VespucciDataset::VespucciDataset(QString binary_filename, MainWindow *main_window, QString *directory, QString name)
+VespucciDataset::VespucciDataset(QString binary_filename,
+                                 MainWindow *main_window,
+                                 QString *directory,
+                                 QString name,
+                                 QFile *log_file): log_stream_(log_file)
 {
-    //set up temporary filename (UTC date in close to ISO 8601 format)
     QDateTime datetime = QDateTime::currentDateTimeUtc();
-    QString log_filename = datetime.toString("yyyy-MM-dd-hhmmss");
-    log_filename += "_" + name + ".temp.txt";
-    log_file_ = new QFile(name);
-    log_file_->open(QIODevice::ReadWrite | QIODevice::Text);
-    log_stream_(log_file_);
+    log_file_ = log_file;
     log_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
     log_stream_ << "Version 0.4" << endl << endl;
     log_stream_ << "Dataset " << name << "created "
@@ -139,23 +152,26 @@ VespucciDataset::VespucciDataset(QString binary_filename, MainWindow *main_windo
 /// \param main_window the main window of the app
 /// \param directory the working directory
 ///
-VespucciDataset::VespucciDataset(QString text_filename, MainWindow *main_window, QString *directory, QString name, QString x_axis_description, QString y_axis_description, bool swap_spatial)
+VespucciDataset::VespucciDataset(QString text_filename,
+                                 MainWindow *main_window,
+                                 QString *directory,
+                                 QFile *log_file,
+                                 QString name,
+                                 QString x_axis_description,
+                                 QString y_axis_description,
+                                 bool swap_spatial) : log_stream_(log_file)
 {
     //open the text file
     QFile inputfile(text_filename);
     inputfile.open(QIODevice::ReadOnly);
     QTextStream inputstream(&inputfile);
 
-    //set up temporary log filename (UTC date in close to ISO 8601ish format)
     QDateTime datetime = QDateTime::currentDateTimeUtc();
-    QString log_filename = datetime.toString("yyyy-MM-dd-hhmmss");
-    log_filename += "_" + name + ".temp.txt";
-    log_file_ = QFile(name);
-    log_file_.open(QIODevice::ReadWrite | QIODevice::Text);
-    log_stream_ = QTextStream(&log_file_);
+    log_file_ = log_file;
+
     log_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
     log_stream_ << "Version 0.4" << endl << endl;
-    log_stream_ << "Dataset " << name << "created "
+    log_stream_ << "Dataset " << name << " created "
                 << datetime.date().toString("yyyy-MM-dd") << "T"
                 << datetime.time().toString("hh:mm:ss") << "Z" << endl;
     log_stream_ << "Imported from text file " << text_filename << endl << endl;
@@ -267,8 +283,15 @@ VespucciDataset::VespucciDataset(QString text_filename, MainWindow *main_window,
 /// \param wavelength The wavelength_ vector
 /// \param name Name of the dataset that the user sees
 /// Constructor for making a new dataset from a subset of an old one
-VespucciDataset::VespucciDataset(QString name, MainWindow *main_window, QString *directory, VespucciDataset *original, uvec indices)
+VespucciDataset::VespucciDataset(QString name,
+                                 MainWindow *main_window,
+                                 QString *directory,
+                                 QFile *log_file,
+                                 QSharedPointer<VespucciDataset> original,
+                                 uvec indices) : log_stream_(log_file)
+
 {
+    log_file_ = log_file;
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_stream_ << "Dataset " << name << "created "
                 << datetime.date().toString("yyyy-MM-dd") << "T"
@@ -815,14 +838,15 @@ void VespucciDataset::Univariate(uword min,
     QSharedPointer<MapData> map(new MapData(x_axis_description_,
                                             y_axis_description_,
                                             x_, y_, results,
-                                            this, directory_,
+                                            QSharedPointer<VespucciDataset>(this),
+                                            directory_,
                                             this->GetGradient(gradient_index),
                                             maps_.size(),
                                             6,
                                             main_window_));
 
 
-    map.data()->set_name(name, map_type);
+    map->set_name(name, map_type);
 
     if(baselines.n_rows !=0){
         map->set_baseline(abcissa, baselines);
@@ -833,7 +857,7 @@ void VespucciDataset::Univariate(uword min,
     }
 
     this->AddMap(map);
-    maps_.last().data()->ShowMapWindow();
+    maps_.last()->ShowMapWindow();
 }
 
 ///
@@ -950,19 +974,19 @@ void VespucciDataset::BandRatio(uword first_min,
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
                                             x_, y_, results,
-                                            this, directory_,
+                                            QSharedPointer<VespucciDataset>(this), directory_,
                                             this->GetGradient(gradient_index),
                                             maps_.size(),
                                             6,
                                             main_window_));
 
 
-    new_map.data()->set_name(name, map_type);
+    new_map->set_name(name, map_type);
     if (first_baselines.n_rows != 0){
         new_map->set_baselines(first_abcissa, second_abcissa, first_baselines, second_baselines);
     }
     this->AddMap(new_map);
-    maps_.last().data()->ShowMapWindow();
+    maps_.last()->ShowMapWindow();
 }
 
 
@@ -1019,7 +1043,7 @@ void VespucciDataset::PrincipalComponents(int component,
             cout << "call to arma::princomp" << endl;
             wall_clock timer;
             timer.tic();
-            principal_components_data_ = new PrincipalComponentsData(this,
+            principal_components_data_ = new PrincipalComponentsData(QSharedPointer<VespucciDataset>(this),
                                                                      directory_);
             principal_components_data_->Apply(spectra_);
             int seconds = timer.toc();
@@ -1036,14 +1060,14 @@ void VespucciDataset::PrincipalComponents(int component,
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
                                             x_, y_, results,
-                                            this, directory_,
+                                            QSharedPointer<VespucciDataset>(this), directory_,
                                             GetGradient(gradient_index),
                                             maps_.size(),
                                             6,
                                             main_window_));
-    new_map.data()->set_name(name, map_type);
+    new_map->set_name(name, map_type);
     AddMap(new_map);
-    maps_.last().data()->ShowMapWindow();
+    maps_.last()->ShowMapWindow();
 }
 
 
@@ -1075,7 +1099,7 @@ void VespucciDataset::VertexComponents(uword endmembers,
     QString map_type;
     QTextStream(&map_type) << "(Vertex Component " << image_component << ")";
     if (recalculate || !vertex_components_calculated_){
-        vertex_components_data_ = new VCAData(this, directory_);
+        vertex_components_data_ = new VCAData(QSharedPointer<VespucciDataset>(this), directory_);
         vertex_components_data_->Apply(spectra_, endmembers);
         vertex_components_calculated_ = true;
     }
@@ -1086,14 +1110,14 @@ void VespucciDataset::VertexComponents(uword endmembers,
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                                 y_axis_description_,
                                                 x_, y_, results,
-                                                this, directory_,
+                                                QSharedPointer<VespucciDataset>(this), directory_,
                                                 GetGradient(gradient_index),
                                                 maps_.size(),
                                                 6,
                                                 main_window_));
     new_map->set_name(name, map_type);
     AddMap(new_map);
-    maps_.last().data()->ShowMapWindow();
+    maps_.last()->ShowMapWindow();
 }
 
 ///
@@ -1131,7 +1155,7 @@ void VespucciDataset::PartialLeastSquares(uword components,
 
     if (recalculate || !partial_least_squares_calculated_){
         map_type += QString::number(components);
-        partial_least_squares_data_ = new PLSData(this, directory_);
+        partial_least_squares_data_ = new PLSData(QSharedPointer<VespucciDataset>(this), directory_);
         bool success = partial_least_squares_data_->Apply(spectra_, wavelength_, components);
         if (success){
             partial_least_squares_calculated_ = true;
@@ -1156,14 +1180,14 @@ void VespucciDataset::PartialLeastSquares(uword components,
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
                                             x_, y_, results,
-                                            this, directory_,
+                                            QSharedPointer<VespucciDataset>(this), directory_,
                                             this->GetGradient(gradient_index),
                                             maps_.size(),
                                             6,
                                             main_window_));
-    new_map.data()->set_name(name, map_type);
+    new_map->set_name(name, map_type);
     this->AddMap(new_map);
-    maps_.last().data()->ShowMapWindow();
+    maps_.last()->ShowMapWindow();
 }
 
 ///
@@ -1201,7 +1225,7 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
                                             x_, y_, k_means_data_.col(0),
-                                            this, directory_,
+                                            QSharedPointer<VespucciDataset>(this), directory_,
                                             gradient,
                                             maps_.size(),
                                             clusters,
@@ -1209,7 +1233,7 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
     new_map->set_name(name, map_type);
     new_map->SetCrispClusters(true);
     this->AddMap(new_map);
-    maps_.last().data()->ShowMapWindow();
+    maps_.last()->ShowMapWindow();
 }
 
 

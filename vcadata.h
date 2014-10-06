@@ -6,7 +6,7 @@ using namespace arma;
 class VCAData
 {
 public:
-    VCAData(VespucciDataset *parent,
+    VCAData(QSharedPointer<VespucciDataset> parent,
             QString *directory);
     void Apply(mat spectra, int endmembers);
     colvec Results(const uword component);
@@ -22,7 +22,7 @@ private:
     mat projected_data_;
     mat fractional_abundances_;
     uvec indices_;
-    VespucciDataset *parent_;
+    QSharedPointer<VespucciDataset> parent_;
     QString *directory_;
 
 };

@@ -48,7 +48,7 @@ public:
             colvec x,
             colvec y,
             colvec results,
-            VespucciDataset *parent,
+            QSharedPointer<VespucciDataset> parent,
             QString *directory,
             QCPColorGradient gradient,
             int source_index,
@@ -154,7 +154,7 @@ private:
     QString x_axis_description_; //equiv to member of VespucciDataset, passed to SpectraViewer constructor
     QString y_axis_description_; //equiv to member of VespucciDataset, passed to SpectraViewer constructor
 
-    VespucciDataset* dataset_;
+    QSharedPointer<VespucciDataset> dataset_;
     MainWindow *main_window_;
 
     QString name_; //Name, this is displayed in the QListView

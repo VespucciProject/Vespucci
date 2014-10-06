@@ -5,7 +5,7 @@ using namespace arma;
 class PLSData
 {
 public:
-    PLSData(VespucciDataset *parent,
+    PLSData(QSharedPointer<VespucciDataset> parent,
             QString *directory);
 
     bool Apply(mat spectra, rowvec wavelength, int components);
@@ -28,7 +28,7 @@ private:
     mat coefficients_;
     mat percent_variance_;
     mat fitted_;
-    VespucciDataset *parent_;
+    QSharedPointer<VespucciDataset> parent_;
     QString *directory_;
 };
 

@@ -55,9 +55,12 @@ void VespucciWorkspace::AddDataset(QSharedPointer<VespucciDataset> dataset)
 // These functions should be safe because the names list and the object list only update together
 void VespucciWorkspace::RemoveDatasetAt(int i)
 {
+    cout << "VespucciWorkspace::RemoveDatasetAt(" << i << ")" << endl;
     QListWidgetItem *item = dataset_list_widget_->takeItem(i);
     dataset_list_widget_->removeItemWidget(item);
+    cout << datasets_[i]->name().toStdString() << endl;
     datasets_.removeAt(i);
+
 
 }
 
@@ -150,3 +153,24 @@ QCPColorGradient* VespucciWorkspace::global_gradient()
 {
     return &global_gradient_;
 }
+
+///
+/// \brief VespucciWorkspace::CreateLogFile
+/// \param dataset_name
+/// \return
+/// Creates a pointer to a heap-allocated QFile which is open.
+QFile* VespucciWorkspace::CreateLogFile(QString dataset_name)
+{
+    //set up temporary filename (UTC date in close to ISO 8601 format)
+    QDateTime datetime = QDateTime::currentDateTimeUtc();
+    QString log_filename = datetime.toString("yyyy-MM-dd-hhmmss");
+    log_filename += "_" + dataset_name + ".temp.txt";
+    cout << log_filename.toStdString() << endl;
+    QFile *log_file = new QFile(log_filename);
+    log_file->open(QIODevice::ReadWrite);
+    cout << log_file->fileName().toStdString() << endl;
+    cout << (log_file->exists() ? "exists" : "!exists") << endl;
+    return log_file;
+}
+
+

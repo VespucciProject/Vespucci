@@ -1,6 +1,6 @@
 #include "plsdata.h"
 
-PLSData::PLSData(VespucciDataset *parent, QString *directory)
+PLSData::PLSData(QSharedPointer<VespucciDataset> parent, QString *directory)
 {
     parent_ = parent;
     directory_ = directory;

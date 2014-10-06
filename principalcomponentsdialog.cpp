@@ -52,6 +52,7 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
     bool recalculate = recalculate_box_->isChecked();
     int gradient_index = color_selector_->currentIndex();
     data_->PrincipalComponents(component, name, gradient_index, recalculate);
+    this->close();
 }
 
 void PrincipalComponentsDialog::on_buttonBox_rejected()

@@ -104,15 +104,15 @@ void LoadDataset::on_buttonBox_accepted()
 
     if (warning_response == QMessageBox::Yes && file_info.exists()){
         if (file_info.suffix() == "txt"){
-
+            QFile *log_file = workspace->CreateLogFile(name);
             QSharedPointer<VespucciDataset> data(new VespucciDataset(filename,
                                                      workspace->main_window(),
                                                      directory_,
+                                                     log_file,
                                                      name,
                                                      x_description,
                                                      y_description,
                                                      swap));
-            inputfile.close();
             if (!data->ConstructorCancelled()){
                 workspace->AddDataset(data);
                 workspace->set_directory(file_info.dir().absolutePath());
@@ -126,7 +126,7 @@ void LoadDataset::on_buttonBox_accepted()
             //                                         workspace->main_window(),
             //                                         directory_));
             //if (!data->ConstructorCancelled()){
-            //    data.data()->SetName(name);
+            //    data->SetName(name);
             //    workspace->AddDataset(data);
             //    workspace->set_directory(file_info.dir().absolutePath());
             //}
@@ -134,6 +134,7 @@ void LoadDataset::on_buttonBox_accepted()
 
 
     }
+    this->close();
 }
 
 

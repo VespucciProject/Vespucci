@@ -1,7 +1,7 @@
 #include "dataextractordialog.h"
 #include "ui_dataextractordialog.h"
 
-DataExtractorDialog::DataExtractorDialog(QWidget *parent, MapData *map, VespucciDataset *dataset, MainWindow *main_window) :
+DataExtractorDialog::DataExtractorDialog(QWidget *parent, MapData *map, QSharedPointer<VespucciDataset> dataset, MainWindow *main_window) :
     QDialog(parent),
     ui(new Ui::DataExtractorDialog)
 {
@@ -28,12 +28,16 @@ DataExtractorDialog::~DataExtractorDialog()
 
 void DataExtractorDialog::on_buttonBox_accepted()
 {
-
+    QString name = name_line_edit_->text();
     uvec indices = map_->extract_range(lower_box_->value(), upper_box_->value());
-    QSharedPointer<VespucciDataset> new_dataset(new VespucciDataset(name_line_edit_->text(), 
+    QFile *log_file = workspace->CreateLogFile(name);
+
+    QSharedPointer<VespucciDataset> new_dataset(new VespucciDataset(name,
                                                     main_window_, 
                                                     workspace->directory_ptr(),
+                                                    log_file,
                                                     dataset_, 
                                                     indices));
     workspace->AddDataset(new_dataset);
+    this->close();
 }

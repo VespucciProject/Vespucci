@@ -66,7 +66,8 @@ public:
     QCPRange *global_data_range();
     QCPColorGradient *global_gradient();
 
-
+    QFile *CreateLogFile(QString dataset_name);
+    void DestroyLogFile(QFile *log_file);
 
 
     bool RecalculateGlobalDataRange(QCPRange* new_data_range);
@@ -75,21 +76,46 @@ public:
 
 private:
     //pointers to main window and necessary widgets
+
+    ///
+    /// \brief main_window_
+    /// The main window of the program
     MainWindow *main_window_;
-    //QListWidget *map_list_widget_;
+
+
+    ///
+    /// \brief dataset_list_widget_
+    /// The list widget in MainWindow storing all the dataset names
     QListWidget *dataset_list_widget_;
 
-    //QList<VespucciDataset> datasets_;
+    ///
+    /// \brief datasets_
+    /// The container that stores all the heap-allocated dataset objects
     QList<QSharedPointer<VespucciDataset> > datasets_;
+
+    ///
+    /// \brief directory_
+    /// The directory used by all the file dialogs in the program
     QString directory_; //= QDir::homePath();
 
+    ///
+    /// \brief dataset_names_
+    /// A list of dataset names, which is displayed by the list widget in the main window
     QStringList dataset_names_;
-    //QStringList map_names_;
 
+    ///
+    /// \brief dataset_loading_count_
+    /// A count of all datasets created. Used to set name of dataset.
     int dataset_loading_count_;
-    //int map_loading_count_;
 
+    ///
+    /// \brief global_data_range_
+    /// The global datarange
     QCPRange global_data_range_;
+
+    ///
+    /// \brief global_gradient_
+    /// The global color gradient
     QCPColorGradient global_gradient_;
 
 
