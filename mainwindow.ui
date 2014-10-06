@@ -113,6 +113,7 @@
     <addaction name="actionAnalysis_Wizard"/>
     <addaction name="separator"/>
     <addaction name="actionClose_Dataset"/>
+    <addaction name="actionCreate_Plot"/>
    </widget>
    <widget class="QMenu" name="menuMap">
     <property name="title">
@@ -129,7 +130,6 @@
      <addaction name="actionPartial_Least_Squares"/>
      <addaction name="actionVertex_Components"/>
      <addaction name="actionK_Means_Clustering"/>
-     <addaction name="actionAgglomerative_Hierarchical_Clustering"/>
     </widget>
     <addaction name="actionNew_Univariate_Map"/>
     <addaction name="actionNew_Band_Ratio_Map"/>
@@ -366,22 +366,6 @@
     <string>Hotteling's Statistic</string>
    </property>
   </action>
-  <action name="actionPLS_Data">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>PLS Data</string>
-   </property>
-  </action>
-  <action name="actionVCA_Data">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>VCA Data</string>
-   </property>
-  </action>
   <action name="actionAnalysis_Wizard">
    <property name="text">
     <string>Analysis Wizard...</string>
@@ -390,6 +374,11 @@
   <action name="actionUndo">
    <property name="text">
     <string>Undo/Redo</string>
+   </property>
+  </action>
+  <action name="actionCreate_Plot">
+   <property name="text">
+    <string>Create Plot...</string>
    </property>
   </action>
  </widget>

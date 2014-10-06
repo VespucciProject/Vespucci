@@ -77,7 +77,8 @@ SOURCES += main.cpp\
     dataextractordialog.cpp \
     analysiswizard.cpp \
     vespuccidataset.cpp \
-    metadataset.cpp
+    metadataset.cpp \
+    plotviewer.cpp
 
 HEADERS  += mainwindow.h \
     loaddataset.h \
@@ -106,7 +107,8 @@ HEADERS  += mainwindow.h \
     dataextractordialog.h \
     analysiswizard.h \
     vespuccidataset.h \
-    metadataset.h
+    metadataset.h \
+    plotviewer.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
@@ -126,7 +128,8 @@ FORMS    += mainwindow.ui \
     kmeansdialog.ui \
     vcadialog.ui \
     dataextractordialog.ui \
-    analysiswizard.ui
+    analysiswizard.ui \
+    plotviewer.ui
 
 RESOURCES += \
     resources.qrc
