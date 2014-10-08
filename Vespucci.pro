@@ -75,10 +75,11 @@ SOURCES += main.cpp\
     vcadata.cpp \
     vcadialog.cpp \
     dataextractordialog.cpp \
-    analysiswizard.cpp \
     vespuccidataset.cpp \
     metadataset.cpp \
-    plotviewer.cpp
+    plotviewer.cpp \
+    metadatasetdialog.cpp \
+    textimport.cpp
 
 HEADERS  += mainwindow.h \
     loaddataset.h \
@@ -105,10 +106,11 @@ HEADERS  += mainwindow.h \
     vcadata.h \
     vcadialog.h \
     dataextractordialog.h \
-    analysiswizard.h \
     vespuccidataset.h \
     metadataset.h \
-    plotviewer.h
+    plotviewer.h \
+    metadatasetdialog.h \
+    textimport.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
@@ -128,8 +130,8 @@ FORMS    += mainwindow.ui \
     kmeansdialog.ui \
     vcadialog.ui \
     dataextractordialog.ui \
-    analysiswizard.ui \
-    plotviewer.ui
+    plotviewer.ui \
+    metadatasetdialog.ui
 
 RESOURCES += \
     resources.qrc

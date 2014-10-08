@@ -30,6 +30,25 @@
 #include "vcadata.h"
 #include "vespucciworkspace.h"
 #include "mapdata.h"
+#include <cmath>
+#include <fstream>
+#include "mainwindow.h"
+#include "plsdata.h"
+#include <mlpack/methods/kmeans/kmeans.hpp>
+#include "textimport.h"
+
+///
+/// \brief The InputFileFormat enum
+/// Types of files that can be imported
+
+enum InputFileFormat{
+    LongTabDel,
+    LongCSV,
+    WideTabDel,
+    WideCSV,
+    VespucciBinary,
+    Witec,
+};
 
 
 
@@ -43,6 +62,9 @@ class VespucciWorkspace;
 
 using namespace std;
 using namespace arma;
+
+
+
 ///
 /// \brief The VespucciDataset class
 /// This is the main class for dealing with hyperspectral data. This handles the
@@ -59,8 +81,16 @@ public:
                     QString name,
                     QString x_axis_description,
                     QString y_axis_description,
-                    bool swap_spatial);
+                    bool swap_spatial,
+                    InputFileFormat format);
 
+    VespucciDataset(QString vespucci_binary_filename,
+                    MainWindow *main_window,
+                    QString *directory,
+                    QFile *log_file,
+                    QString name,
+                    QString x_axis_description,
+                    QString y_axis_description);
 
     VespucciDataset(QString binary_filename,
                     MainWindow *main_window,
@@ -75,6 +105,11 @@ public:
                     QFile *log_file,
                     QSharedPointer<VespucciDataset> original,
                     uvec indices);
+
+    VespucciDataset(QString name,
+                    MainWindow *main_window,
+                    QString *directory,
+                    QFile *log_file);
 
     ~VespucciDataset();
     // PRE-PROCESSING FUNCTIONS //
@@ -125,7 +160,7 @@ public:
     QCPRange KeyRange();
     QCPRange ValueRange();
 
-
+    bool Save(QString filename);
 
     // IMAGING FUNCTIONS //
 
@@ -195,6 +230,7 @@ public:
     const QString y_axis_description();
 
     void SetName(QString new_name);
+    void SetData(mat spectra, rowvec wavelength, colvec x, colvec y);
 
     //MAP HANDLING FUNCTIONS
     QStringList map_names();
@@ -226,13 +262,14 @@ public:
 
     bool non_spatial();
 
-    ///
-    /// \brief non_spatial_
-    /// True if the dataset has empty x_ and y_
-    bool non_spatial_;
+
 
     QString last_operation();
 
+    ///
+    /// \brief log_stream_ A log of all UI-induced functions called on this dataset
+    ///
+    QTextStream log_stream_;
 
 private:
     void DestroyLogFile();
@@ -277,10 +314,7 @@ private:
     QFile *log_file_;
 
 
-    ///
-    /// \brief log_stream_ A log of all UI-induced functions called on this dataset
-    ///
-    QTextStream log_stream_;
+
 
     ///
     /// \brief last_operation_
@@ -402,6 +436,11 @@ private:
     /// \brief main_window_
     /// Pointer back to the main window of the app.
     MainWindow *main_window_;
+
+    ///
+    /// \brief non_spatial_
+    /// True if the dataset has empty x_ and y_
+    bool non_spatial_;
 
 
 };

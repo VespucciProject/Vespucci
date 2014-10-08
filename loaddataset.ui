@@ -13,272 +13,232 @@
   <property name="windowTitle">
    <string>Load Dataset</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>350</y>
-     <width>341</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QGroupBox" name="groupBox">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>190</y>
-     <width>381</width>
-     <height>151</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Spectra Information</string>
-   </property>
-   <widget class="QWidget" name="formLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>9</x>
-      <y>30</y>
-      <width>361</width>
-      <height>111</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_2">
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>Y-axis Description</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>X-axis Description</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>Y-axis Units</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_9">
-       <property name="text">
-        <string>X-axis Units</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="yDescription">
-       <property name="text">
-        <string>Intensity</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="xDescription">
-       <property name="text">
-        <string>Wavenumber</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QComboBox" name="yUnits">
-       <item>
-        <property name="text">
-         <string>a. u.</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>arb. units</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QComboBox" name="xUnits">
-       <item>
-        <property name="text">
-         <string>cm⁻¹</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>nm</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Å</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="groupBox_2">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>381</width>
-     <height>171</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>File Information</string>
-   </property>
-   <widget class="QWidget" name="formLayoutWidget_3">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>361</width>
-      <height>145</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_3">
-     <property name="fieldGrowthPolicy">
-      <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>File Information</string>
      </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Filename</string>
+     <widget class="QWidget" name="formLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>361</width>
+        <height>141</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout_3">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
        </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="filenameBox">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Load File...</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QPushButton" name="browseButton">
-       <property name="text">
-        <string>Browse...</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>File Size (MB)</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="fileSize">
-       <property name="text">
-        <string>No File Selected</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Data Format</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QComboBox" name="dataFormatBox">
-       <item>
-        <property name="text">
-         <string>Wide Text (Horiba)</string>
-        </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Filename</string>
+         </property>
+        </widget>
        </item>
-       <item>
-        <property name="text">
-         <string>Long Text (Most others)</string>
-        </property>
+       <item row="0" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLineEdit" name="filenameBox">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="browseButton">
+           <property name="text">
+            <string>Browse...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
-       <item>
-        <property name="text">
-         <string>Matlab</string>
-        </property>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>File Size (MB)</string>
+         </property>
+        </widget>
        </item>
-       <item>
-        <property name="text">
-         <string>ENVI (Nicolet)</string>
-        </property>
+       <item row="1" column="1">
+        <widget class="QLabel" name="fileSize">
+         <property name="text">
+          <string>No File Selected</string>
+         </property>
+        </widget>
        </item>
-       <item>
-        <property name="text">
-         <string>ENVI (Standard)</string>
-        </property>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Data Format</string>
+         </property>
+        </widget>
        </item>
-       <item>
-        <property name="text">
-         <string>ENVI (Varian/Agilent)</string>
-        </property>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="dataFormatBox">
+         <item>
+          <property name="text">
+           <string>Wide Text</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Long Text</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Vespucci Dataset</string>
+          </property>
+         </item>
+        </widget>
        </item>
-       <item>
-        <property name="text">
-         <string>Thermo Galactic .spc</string>
-        </property>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Dataset Name</string>
+         </property>
+        </widget>
        </item>
-       <item>
-        <property name="text">
-         <string>Vespucci Dataset</string>
-        </property>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="nameBox">
+         <property name="toolTip">
+          <string>The dataset should have a unique name that is a valid filename on your operating system.</string>
+         </property>
+        </widget>
        </item>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Dataset Name</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLineEdit" name="nameBox">
-       <property name="toolTip">
-        <string>The dataset should have a unique name that is a valid filename on your operating system.</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QCheckBox" name="swapCheckBox">
-       <property name="toolTip">
-        <string>Depending on your settings, your data may have y in the column before x, rather than the traditional x before y.  Enabling this option will take the first column as y and second column as x.  Applies only to text files.</string>
-       </property>
-       <property name="text">
-        <string>Swap x and y?</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
+       <item row="4" column="1">
+        <widget class="QCheckBox" name="swapCheckBox">
+         <property name="toolTip">
+          <string>Depending on your settings, your data may have y in the column before x, rather than the traditional x before y.  Enabling this option will take the first column as y and second column as x.  Applies only to text files.</string>
+         </property>
+         <property name="text">
+          <string>Swap x and y?</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Spectra Information</string>
+     </property>
+     <widget class="QWidget" name="formLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>9</x>
+        <y>30</y>
+        <width>361</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Y-axis Description</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>X-axis Description</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>Y-axis Units</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>X-axis Units</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="yDescription">
+         <property name="text">
+          <string>Intensity</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="xDescription">
+         <property name="text">
+          <string>Wavenumber</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="yUnits">
+         <item>
+          <property name="text">
+           <string>a. u.</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>arb. units</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string/>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="xUnits">
+         <item>
+          <property name="text">
+           <string>cm⁻¹</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>nm</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Å</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+  <zorder>buttonBox</zorder>
+  <zorder>groupBox</zorder>
+  <zorder>groupBox_2</zorder>
+  <zorder>horizontalLayoutWidget</zorder>
  </widget>
  <resources/>
  <connections>

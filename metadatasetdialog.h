@@ -17,29 +17,25 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
-#ifndef PLOTVIEWER_H
-#define PLOTVIEWER_H
+#ifndef METADATASETDIALOG_H
+#define METADATASETDIALOG_H
 
 #include <QDialog>
 
 namespace Ui {
-class PlotViewer;
+class MetaDatasetDialog;
 }
 
-///
-/// \brief The PlotViewer class
-/// For displaying plots that are not maps or spectra (PCA/VCA/PLS Scatterplots,
-/// especially for meta datasets).
-class PlotViewer : public QDialog
+class MetaDatasetDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit PlotViewer(QWidget *parent = 0);
-    ~PlotViewer();
+    explicit MetaDatasetDialog(QWidget *parent = 0);
+    ~MetaDatasetDialog();
 
 private:
-    Ui::PlotViewer *ui;
+    Ui::MetaDatasetDialog *ui;
 };
 
-#endif // PLOTVIEWER_H
+#endif // METADATASETDIALOG_H

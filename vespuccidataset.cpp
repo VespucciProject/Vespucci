@@ -18,12 +18,7 @@
 ***************************************************************************************/
 
 #include "vespuccidataset.h" //VespucciDataset includes all necessary headers.
-#include <cmath>
-#include <fstream>
-#include <QtConcurrent/QtConcurrentRun>
-#include "mainwindow.h"
-#include "plsdata.h"
-#include <mlpack/methods/kmeans/kmeans.hpp>
+
 
 
 using namespace arma;
@@ -34,6 +29,9 @@ VespucciDataset::VespucciDataset()
 
 }
 
+///
+/// \brief VespucciDataset::~VespucciDataset
+/// Destructor deletes everything allocated with new that isn't a smart pointer
 VespucciDataset::~VespucciDataset()
 {
     //make sure principal components stats are deleted properly.
@@ -50,6 +48,21 @@ VespucciDataset::~VespucciDataset()
 
 }
 
+bool VespucciDataset::Save(QString filename)
+{
+    field<mat> dataset(4);
+    dataset(0) = spectra_;
+    dataset(1) = x_;
+    dataset(2) = y_;
+    dataset(3) = wavelength_;
+    bool success = dataset.save(filename.toStdString(), arma_binary);
+    return success;
+
+}
+
+///
+/// \brief VespucciDataset::DestroyLogFile
+/// Deletes log file unless user decides to save it elsewhere
 void VespucciDataset::DestroyLogFile()
 {
 
@@ -92,12 +105,12 @@ void VespucciDataset::DestroyLogFile()
 
 ///
 /// \brief VespucciDataset::VespucciDataset
-/// \param binary_filename file name of the binary
-/// \param main_window the main window
-/// \param directory the working directory
-/// This constructor loads a previously saved dataset.  The dataset is saved
-/// as an armadillo binary in the same format as the long text.
-///
+/// \param binary_filename The filename of the binary input file
+/// \param main_window The main window of the program
+/// \param directory The current working directory
+/// \param name The name of the dataset displayed to the user
+/// \param log_file The log file
+/// Constructor for loading saved spectral/spatial data in armadillo format
 VespucciDataset::VespucciDataset(QString binary_filename,
                                  MainWindow *main_window,
                                  QString *directory,
@@ -146,13 +159,17 @@ VespucciDataset::VespucciDataset(QString binary_filename,
 
 ///
 /// \brief VespucciDataset::VespucciDataset
+/// \param text_filename The filename of the text file from which data is imported
+/// \param main_window The main window of the program
+/// \param directory The current global working directory
+/// \param log_file The log file
+/// \param name The name of the dataset displayed to the user
+/// \param x_axis_description A description of the spectral abcissa
+/// \param y_axis_description A description of the spectral ordinate
+/// \param swap_spatial Whether or not y is located in the first column instead of the second (some Horiba spectrometers do this).
 /// Main function for processing data from text files to create VespucciDataset objects.
 /// Currently written to accept files in "wide" format, will be expanded to deal
 /// with different ASCII formats later with conditionals.
-/// \param inputstream a text stream derived from the input file
-/// \param main_window the main window of the app
-/// \param directory the working directory
-///
 VespucciDataset::VespucciDataset(QString text_filename,
                                  MainWindow *main_window,
                                  QString *directory,
@@ -160,7 +177,8 @@ VespucciDataset::VespucciDataset(QString text_filename,
                                  QString name,
                                  QString x_axis_description,
                                  QString y_axis_description,
-                                 bool swap_spatial) : log_stream_(log_file)
+                                 bool swap_spatial,
+                                 InputFileFormat format) : log_stream_(log_file)
 {
     //open the text file
     QFile inputfile(text_filename);
@@ -188,9 +206,20 @@ VespucciDataset::VespucciDataset(QString text_filename,
     z_scores_calculated_ = false;
     directory_ = directory;
     flipped_ = swap_spatial;
+
+    QProgressDialog progress("Loading Dataset...", "Cancel", 0, 100, NULL);
+    constructor_canceled_ = TextImport::ImportWideText(text_filename,
+                                                       spectra_,
+                                                       wavelength_,
+                                                       x_, y_,
+                                                       swap_spatial,
+                                                       &progress,
+                                                       "\t");
+
+/*
     int i, j;
 
-    /*Read the first line to get the wavelength*/
+
     inputstream.seek(0);
     QString wavelength_string = inputstream.readLine();
 
@@ -258,6 +287,9 @@ VespucciDataset::VespucciDataset(QString text_filename,
         }
         progress.setValue(i);
     }
+
+    */
+
     constructor_canceled_ = false;
     name_ = name;
     x_axis_description_ = x_axis_description;
@@ -267,10 +299,14 @@ VespucciDataset::VespucciDataset(QString text_filename,
 
 ///
 /// \brief VespucciDataset::VespucciDataset
-/// \param spectra The spectra_ matrix
-/// \param wavelength The wavelength_ vector
-/// \param name Name of the dataset that the user sees
-/// Constructor for making a new dataset from a subset of an old one
+/// \param name The name of the dataset displayed to the user
+/// \param main_window The main window of the program
+/// \param directory The current global working directory
+/// \param log_file The log file
+/// \param original The dataset from which this dataset is "extracted"
+/// \param indices The indices of the spectra in the previous dataset that will form this one
+/// This is a constructor to create a new dataset by "extracting" spectra from a
+/// another dataset based on values on an image.
 VespucciDataset::VespucciDataset(QString name,
                                  MainWindow *main_window,
                                  QString *directory,
@@ -303,8 +339,33 @@ VespucciDataset::VespucciDataset(QString name,
     name_ = name;
     main_window_ = main_window;
     directory_ = directory;
+}
 
-
+///
+/// \brief VespucciDataset::VespucciDataset
+/// \param name Dataset name
+/// \param main_window The
+/// \param directory
+/// \param log_file
+/// Constructor to create a dataset without spatial and spectral data set (i.e.
+/// when using MetaDataset).
+VespucciDataset::VespucciDataset(QString name,
+                                 MainWindow *main_window,
+                                 QString *directory,
+                                 QFile *log_file) : log_stream_(log_file)
+{
+    log_file_ = log_file;
+    non_spatial_ = true;
+    map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
+    map_loading_count_ = 0;
+    principal_components_calculated_ = false;
+    partial_least_squares_calculated_ = false;
+    vertex_components_calculated_ = false;
+    z_scores_calculated_ = false;
+    directory_ = directory;
+    name_ = name;
+    main_window_ = main_window;
+    directory_ = directory;
 }
 
 
@@ -1525,7 +1586,20 @@ void VespucciDataset::SetName(QString new_name)
     name_ = new_name;
 }
 
-
+///
+/// \brief VespucciDataset::SetData
+/// \param spectra Spectra
+/// \param wavelength Spectral abcissa
+/// \param x Colvec of horizontal axis spatial data
+/// \param y Colvec of vertical axis spatial data
+/// Set the data of the dataset. Used by the MetaDataset constructor
+void VespucciDataset::SetData(mat spectra, rowvec wavelength, colvec x, colvec y)
+{
+    spectra_ = spectra;
+    wavelength_ = wavelength;
+    x_ = x;
+    y_ = y;
+}
 
 //MAP HANDLING FUNCTIONS
 ///

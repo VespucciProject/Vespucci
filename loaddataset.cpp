@@ -72,6 +72,8 @@ void LoadDataset::on_browseButton_clicked()
 /// constructor.
 void LoadDataset::on_buttonBox_accepted()
 {
+    InputFileFormat format;
+
 
     QCheckBox *swap_check_box = this->findChild<QCheckBox *>("swapCheckBox");
     QLineEdit *filename_line_edit = this->findChild<QLineEdit *>("filenameBox");
@@ -124,7 +126,8 @@ void LoadDataset::on_buttonBox_accepted()
                                                      name,
                                                      x_description,
                                                      y_description,
-                                                     swap));
+                                                     swap,
+                                                     InputFileFormat::WideTabDel));
             if (!data->ConstructorCancelled()){
                 workspace->AddDataset(data);
                 workspace->set_directory(file_info.dir().absolutePath());
