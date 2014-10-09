@@ -39,7 +39,14 @@ void KMeansDialog::on_buttonBox_accepted()
 {
     int clusters = cluster_spin_box_->value();
     QString name = name_line_edit_->text();
-    data_->KMeans(clusters, name);
+    try{
+        data_->KMeans(clusters, name);
+    }
+    catch(exception e){
+        workspace->main_window()->DisplayExceptionWarning(e);
+    }
+    data_.clear();
+    this->close();
 }
 
 ///

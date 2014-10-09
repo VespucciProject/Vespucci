@@ -42,6 +42,16 @@ LoadDataset::LoadDataset(QWidget *parent, VespucciWorkspace *ws) :
     QDialogButtonBox *button_box = this->findChild<QDialogButtonBox *>("buttonBox");
     QPushButton *ok_button = button_box->button(QDialogButtonBox::Ok);
     ok_button->setDisabled(true);
+
+
+    swap_check_box_ = this->findChild<QCheckBox *>("swapCheckBox");
+    filename_line_edit_ = this->findChild<QLineEdit *>("filenameBox");
+    name_box_ = this->findChild<QLineEdit *>("nameBox");
+    y_description_box_ = this->findChild<QLineEdit *>("yDescription");
+    x_description_box_ = this->findChild<QLineEdit *>("xDescription");
+    y_units_box_ = this->findChild<QComboBox *>("yUnits");
+    x_units_box_ = this->findChild<QComboBox *>("xUnits");
+    data_format_box_ = this->findChild<QComboBox *>("dataFormatBox");
 }
 
 LoadDataset::~LoadDataset()
@@ -60,7 +70,7 @@ void LoadDataset::on_browseButton_clicked()
     filename = QFileDialog::getOpenFileName(this, tr("Open Data File"),
                                             workspace->directory(),
                                             tr("Text Files (*.txt);;"
-                                               "SPC Files (*.spc);;"
+                                               //"SPC Files (*.spc);;"
                                                "Vespucci Dataset Files (*.vds);;"));
     filename_line_edit->setText(filename);
 
@@ -74,20 +84,23 @@ void LoadDataset::on_buttonBox_accepted()
 {
     InputFileFormat format;
 
+    const QString data_format_string = data_format_box_->currentText();
+    if (data_format_string == "Vespucci Dataset")
+        format = VespucciBinary;
+    else if (data_format_string == "Wide Text")
+        format = WideTabDel;
+    else if (data_format_string == "Wide Text (CSV)")
+        format = WideCSV;
+    else if (data_format_string == "Long Text")
+        format = LongTabDel;
+    else if (data_format_string == "Long Text (CSV)")
+        format = LongCSV;
 
-    QCheckBox *swap_check_box = this->findChild<QCheckBox *>("swapCheckBox");
-    QLineEdit *filename_line_edit = this->findChild<QLineEdit *>("filenameBox");
-    QLineEdit *name_box = this->findChild<QLineEdit *>("nameBox");
-    QLineEdit *y_description_box = this->findChild<QLineEdit *>("yDescription");
-    QLineEdit *x_description_box = this->findChild<QLineEdit *>("xDescription");
-    QComboBox *y_units_box = this->findChild<QComboBox *>("yUnits");
-    QComboBox *x_units_box = this->findChild<QComboBox *>("xUnits");
+    QString y_description = y_description_box_->text() + " (" + y_units_box->currentText() + ")";
+    QString x_description = x_description_box_->text() + " (" + x_units_box->currentText() + ")";
 
-    QString y_description = y_description_box->text() + " (" + y_units_box->currentText() + ")";
-    QString x_description = x_description_box->text() + " (" + x_units_box->currentText() + ")";
-
-    QString name = name_box->text();
-    QString filename = filename_line_edit->text();
+    QString name = name_box_->text();
+    QString filename = filename_line_edit_->text();
     QFileInfo file_info(filename);
 
     //bool remove_at_position = false;
@@ -116,38 +129,55 @@ void LoadDataset::on_buttonBox_accepted()
         }
     }
 
-    if (warning_response == QMessageBox::Yes && file_info.exists()){
-        if (file_info.suffix() == "txt"){
-            QFile *log_file = workspace->CreateLogFile(name);
-            QSharedPointer<VespucciDataset> data(new VespucciDataset(filename,
-                                                     workspace->main_window(),
-                                                     directory_,
-                                                     log_file,
-                                                     name,
-                                                     x_description,
-                                                     y_description,
-                                                     swap,
-                                                     InputFileFormat::WideTabDel));
-            if (!data->ConstructorCancelled()){
-                workspace->AddDataset(data);
-                workspace->set_directory(file_info.dir().absolutePath());
 
+    if (warning_response == QMessageBox::Yes && file_info.exists()){
+        QFile *log_file = workspace->CreateLogFile(name);
+
+        switch (format){
+
+        case VespucciBinary :
+            try{
+                QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename,
+                                                            workspace->main_window(),
+                                                            directory_,
+                                                            log_file,
+                                                            name,
+                                                            x_description,
+                                                            y_description));
+                if (!dataset->ConstructorCancelled()){
+                    workspace->AddDataset(dataset);
+                    workspace->set_directory(file_info.dir().absolutePath());
+                }
+            }
+            catch(exception e){
+                workspace->main_window()->DisplayExceptionWarning(e);
+                delete log_file;
+                return;
+            }
+            break;
+
+        default :
+            try{
+                QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename,
+                                                         workspace->main_window(),
+                                                         directory_,
+                                                         log_file,
+                                                         name,
+                                                         x_description,
+                                                         y_description,
+                                                         swap,
+                                                         format));
+                if (!dataset->ConstructorCancelled()){
+                    workspace->AddDataset(dataset);
+                    workspace->set_directory(file_info.dir().absolutePath());
+                }
+            }
+            catch(exception e){
+                workspace->main_window()->DisplayExceptionWarning(e);
+                delete log_file;
+                return;
             }
         }
-
-        if (file_info.suffix() == "vds"){
-            QMessageBox::critical(this, "Feature not Implemented", "This file type is not supported yet.");
-            return;
-            //QSharedPointer<VespucciDataset> data(new VespucciDataset(filename,
-            //                                         workspace->main_window(),
-            //                                         directory_));
-            //if (!data->ConstructorCancelled()){
-            //    data->SetName(name);
-            //    workspace->AddDataset(data);
-            //    workspace->set_directory(file_info.dir().absolutePath());
-            //}
-        }
-
 
     }
     this->close();

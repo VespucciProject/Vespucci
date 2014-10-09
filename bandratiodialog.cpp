@@ -114,15 +114,20 @@ void BandRatioDialog::on_buttonBox_accepted()
     QString value_method = value_method_selector_->currentText();
     QString integration_method = integration_method_selector_->currentText();
     int color_index = color_selector_->currentIndex();
+    try{
+        data_->BandRatio(first_min,
+                         first_max,
+                         second_min,
+                         second_max,
+                         name,
+                         value_method,
+                         integration_method,
+                         color_index);
+    }
+    catch(exception e){
+        workspace->main_window()->DisplayExceptionWarning(e);
+    }
 
-    data_->BandRatio(first_min,
-                     first_max,
-                     second_min,
-                     second_max,
-                     name,
-                     value_method,
-                     integration_method,
-                     color_index);
     this->close();
     data_.clear();
 }

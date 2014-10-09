@@ -25,6 +25,7 @@
 #include "arma_ext.h"
 #include <qcustomplot.h>
 #include "mainwindow.h"
+#include "exceptions.h"
 class VespucciDataset;
 class MainWindow;
 

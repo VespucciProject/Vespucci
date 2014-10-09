@@ -42,6 +42,7 @@
 
 using namespace arma;
 
+
 namespace arma_ext
 {
 mat spdiags(mat B, ivec d, uword m, uword n);
@@ -60,6 +61,9 @@ mat sgolayfilt(mat x, uword poly_order, uword window_size, uword deriv_order, uw
 vec ApplyFilter(vec x, mat coefficients, uword window_size);
 vec ApplyFilter(vec x, vec filter);
 vec CreateMovingAverageFilter(uword window_size);
+vec StandardScore(vec X);
+mat StandardScoreMat(mat X);
+
 }
 
 #endif // ARMA_EXT_H

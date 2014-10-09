@@ -79,7 +79,9 @@ SOURCES += main.cpp\
     metadataset.cpp \
     plotviewer.cpp \
     metadatasetdialog.cpp \
-    textimport.cpp
+    textimport.cpp \
+    exceptions.cpp \
+    binaryimport.cpp
 
 HEADERS  += mainwindow.h \
     loaddataset.h \
@@ -110,7 +112,8 @@ HEADERS  += mainwindow.h \
     metadataset.h \
     plotviewer.h \
     metadatasetdialog.h \
-    textimport.h
+    textimport.h \
+    binaryimport.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \

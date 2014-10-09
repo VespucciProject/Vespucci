@@ -67,11 +67,17 @@ void VCADialog::on_buttonBox_accepted()
     QString name = name_box_->text();
     bool recalculate = recalculate_box_->isChecked();
     int gradient_index = color_selector_->currentIndex();
-    data_->VertexComponents(endmembers,
-                            image_component,
-                            name,
-                            gradient_index,
-                            recalculate);
+
+    try{
+        data_->VertexComponents(endmembers,
+                                image_component,
+                                name,
+                                gradient_index,
+                                recalculate);
+    }
+    catch(exception e){
+        workspace->main_window()->DisplayExceptionWarning(e);
+    }
     this->close();
     data_.clear();
 }

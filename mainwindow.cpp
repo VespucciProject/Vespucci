@@ -649,3 +649,15 @@ void MainWindow::on_actionUndo_triggered()
     dataset.clear(); //should fall out of scope anyway, but let's be safe
 
 }
+
+///
+/// \brief MainWindow::DisplayExceptionWarning
+/// \param e
+/// Used to handle exceptions arising from dialogs. Displays a pop-up box describing
+/// the nature of the error. Most exceptions are not critical, but will result in the
+/// action that caused the exception being canceled.
+MainWindow::DisplayExceptionWarning(std::exception e)
+{
+    QString display_text = "The following exception was thrown: " + e.what();
+    QMessageBox::warning(this, "Exception Occurred", display_text);
+}

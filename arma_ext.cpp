@@ -649,6 +649,12 @@ vec arma_ext::ApplyFilter(vec x, mat coefficients, uword window_size)
     return filtered_data;
 }
 
+///
+/// \brief arma_ext::ApplyFilter
+/// \param x The vector to filter
+/// \param filter The filter
+/// \return Filtered data
+/// Applies an FIR filter to x
 vec arma_ext::ApplyFilter(vec x, vec filter)
 {
     uword k = (filter.n_elem - 1)/ 2;
@@ -661,6 +667,11 @@ vec arma_ext::ApplyFilter(vec x, vec filter)
     return out;
 }
 
+///
+/// \brief arma_ext::CreateMovingAverageFilter
+/// \param window_size The window size of the filter.
+/// \return A moving average filter
+/// Create a moving average filter of a certain window size.
 vec arma_ext::CreateMovingAverageFilter(uword window_size)
 {
     double value = 1 / (double) window_size;
@@ -668,3 +679,33 @@ vec arma_ext::CreateMovingAverageFilter(uword window_size)
     filter.fill(value);
     return filter;
 }
+
+///
+/// \brief arma_ext::StandardScore
+/// \param X A signal to be standardized
+/// \return Standardized signal
+///
+vec arma_ext::StandardScore(vec X)
+{
+    vec normalized = X;
+    double mean = arma::mean(normalized);
+    double std_dev = arma::stddev(X);
+    normalized -= mean * ones(normalized.n_elem);
+    normalized /= std_dev;
+    return normalized;
+}
+
+///
+/// \brief arma_ext::StandardScore
+/// \param X
+/// \return A matrix in which each column of X is replaced by its standard score.
+///
+mat arma_ext::StandardScoreMat(mat X)
+{
+    mat normalized = X;
+    for (uword j = 0; j < normalized.n_cols; ++j)
+        normalized.col(j) = StandardScore(normalized.col(j));
+    return normalized;
+}
+
+

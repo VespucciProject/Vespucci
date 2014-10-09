@@ -36,6 +36,7 @@
 #include "plsdata.h"
 #include <mlpack/methods/kmeans/kmeans.hpp>
 #include "textimport.h"
+#include "binaryimport.h"
 
 ///
 /// \brief The InputFileFormat enum
@@ -49,7 +50,6 @@ enum InputFileFormat{
     VespucciBinary,
     Witec,
 };
-
 
 
 class MapData;

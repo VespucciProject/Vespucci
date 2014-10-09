@@ -103,8 +103,12 @@ void UnivariateDialog::on_buttonBox_accepted()
         QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abcissa");
         return;
     }
-
-    data_->Univariate(min, max, name, value_method, integration_method, color_index);
+    try{
+        data_->Univariate(min, max, name, value_method, integration_method, color_index);
+    }
+    catch(exception e){
+        workspace->main_window()->DisplayExceptionWarning(e);
+    }
     this->close();
     data_.clear();
 }

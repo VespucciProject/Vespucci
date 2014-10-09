@@ -57,6 +57,16 @@ private:
     /// \brief directory_
     /// The current working directory
     QString *directory_;
+
+
+    QCheckBox *swap_check_box_;
+    QLineEdit *filename_line_edit_;
+    QLineEdit *name_box_;
+    QLineEdit *y_description_box_;
+    QLineEdit *x_description_box_;
+    QComboBox *y_units_box_;
+    QComboBox *x_units_box_;
+    QComboBox *data_format_box_;
 };
 
 #endif // LOADDATASET_H

@@ -46,6 +46,7 @@ public:
     void RefreshGlobalColorGradient(QCPColorGradient new_gradient);
     void SetGlobalDataRange(QCPRange* new_data_range);
     VespucciWorkspace *workspace_ptr(); //return the workspace
+    void DisplayExceptionWarning(std::exception e);
 
 signals:
     void GlobalGradientChanged(QCPColorGradient gradient);

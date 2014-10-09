@@ -50,12 +50,24 @@ VespucciDataset::~VespucciDataset()
 
 bool VespucciDataset::Save(QString filename)
 {
-    field<mat> dataset(4);
-    dataset(0) = spectra_;
-    dataset(1) = x_;
-    dataset(2) = y_;
-    dataset(3) = wavelength_;
-    bool success = dataset.save(filename.toStdString(), arma_binary);
+    bool success;
+    try{
+        field<mat> dataset(4);
+        dataset(0) = spectra_;
+        dataset(1) = wavelength_;
+        dataset(2) = x_;
+        dataset(3) = y_;
+        success = dataset.save(filename.toStdString(), arma_binary);
+    }
+    catch(exception e){
+        cerr << "See armadillo exception" << endl;
+
+        char str[50];
+        strcat(str, "VespucciDataset::Save: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
     return success;
 
 }
@@ -135,23 +147,22 @@ VespucciDataset::VespucciDataset(QString binary_filename,
     vertex_components_calculated_ = false;
     z_scores_calculated_ = false;
     directory_ = directory;
-
-    mat input_data;
-    input_data.load(binary_filename.toStdString());
-    int cols = input_data.n_cols;
-    int rows = input_data.n_rows;
-    int wavelength_size = cols - 2;
-    int spatial_size = rows - 1;
-    x_.set_size(spatial_size);
-    y_.set_size(spatial_size);
-    wavelength_.set_size(wavelength_size);
-    spectra_.set_size(spatial_size, wavelength_size);
-
-    wavelength_ = input_data(0, span(2, cols));
-    x_ = input_data(span(1, rows), 0);
-    y_ = input_data(span(1, rows), 1);
-    spectra_ = input_data(span(1, rows), span(2, cols));
     main_window_ = main_window;
+
+    try{
+        BinaryImport::ImportVespucciBinary(binary_filename,
+                                           spectra_,
+                                           wavelength_,
+                                           x_, y_);
+    }
+    catch(exception e) {
+        char str[50];
+        strcat(str, "ZScoreNormalize: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+
+    }
+
 }
 
 
@@ -180,11 +191,6 @@ VespucciDataset::VespucciDataset(QString text_filename,
                                  bool swap_spatial,
                                  InputFileFormat format) : log_stream_(log_file)
 {
-    //open the text file
-    QFile inputfile(text_filename);
-    inputfile.open(QIODevice::ReadOnly);
-    QTextStream inputstream(&inputfile);
-
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_file_ = log_file;
 
@@ -208,87 +214,66 @@ VespucciDataset::VespucciDataset(QString text_filename,
     flipped_ = swap_spatial;
 
     QProgressDialog progress("Loading Dataset...", "Cancel", 0, 100, NULL);
-    constructor_canceled_ = TextImport::ImportWideText(text_filename,
-                                                       spectra_,
-                                                       wavelength_,
-                                                       x_, y_,
-                                                       swap_spatial,
-                                                       &progress,
-                                                       "\t");
-
-/*
-    int i, j;
 
 
-    inputstream.seek(0);
-    QString wavelength_string = inputstream.readLine();
 
-    QStringList wavelength_string_list =
-            wavelength_string.split("\t",  QString::SkipEmptyParts);
-
-    int columns = wavelength_string_list.size();
-    wavelength_.set_size(columns);
-
-    for(i=0; i<columns; ++i){
-        wavelength_(i) = wavelength_string_list.at(i).toDouble();
-    }
-    i=0;
-    j=0;
-
-    QString spectra_string;
-
-    QStringList spectra_string_list;
-    QProgressDialog progress("Counting rows...", "Cancel", 0, 100, NULL);
-    progress.setWindowTitle("Loading Dataset");
-    progress.setWindowModality(Qt::WindowModal);
-
-    int rows = 0;
-    while(inputstream.readLine()!=NULL){
-        ++rows;
-    }
-    progress.setValue(1);
-    progress.setRange(0,rows+1);
-
-    spectra_.set_size(rows, columns);
-    x_.set_size(rows);
-    y_.set_size(rows);
-
-    progress.setLabelText("Parsing spectra...");
-
-    inputstream.seek(0);
-    inputstream.readLine(); //discard it to advance to next line
-
-    for(i=0; i<rows; ++i){
-        spectra_string=inputstream.readLine();
-        spectra_string_list =
-                spectra_string.split("\t", QString::SkipEmptyParts);
-
-        if (swap_spatial){
-            y_(i) = spectra_string_list.at(0).toDouble();
-            spectra_string_list.removeAt(0);
-
-            x_(i) = spectra_string_list.at(0).toDouble();
-            spectra_string_list.removeAt(0);
+    switch (format){
+    case WideTabDel :
+        try{
+            constructor_canceled_ = TextImport::ImportWideText(text_filename,
+                                                                   spectra_,
+                                                                   wavelength_,
+                                                                   x_, y_,
+                                                                   swap_spatial,
+                                                                   &progress,
+                                                                   "\t");
         }
-        else{
-            x_(i) = spectra_string_list.at(0).toDouble();
-            spectra_string_list.removeAt(0);
-
-            y_(i) = spectra_string_list.at(0).toDouble();
-            spectra_string_list.removeAt(0);
+        catch(exception e){
+            char str[50];
+            strcat(str, "Text import constructor: ");
+            strcat(str, e.what());
+            throw std::runtime_error(str);
         }
-
-        for (j=0; j<columns; ++j){
-            spectra_(i,j) = spectra_string_list.at(j).toDouble();
+        break;
+    case WideCSV :
+        try{
+            constructor_canceled_ = TextImport::ImportWideText(text_filename,
+                                                               spectra_,
+                                                               wavelength_,
+                                                               x_, y_,
+                                                               swap_spatial,
+                                                               &progress,
+                                                               ",");
         }
-        if (progress.wasCanceled()){
-            constructor_canceled_ = true;
-            return;
+        catch(exception e){
+            char str[50];
+            strcat(str, "Text import constructor: ");
+            strcat(str, e.what());
+            throw std::runtime_error(str);
         }
-        progress.setValue(i);
-    }
+        break;
+    case LongTabDel : case LongCSV :
+        try{
+            constructor_canceled_ = TextImport::ImportLongText(text_filename,
+                                                               spectra_,
+                                                               wavelength_,
+                                                               x_, y_,
+                                                               swap_spatial,
+                                                               &progress);
+        }
+        catch(exception e){
+            char str[50];
+            strcat(str, "Text import constructor: ");
+            strcat(str, e.what());
+            throw std::runtime_error(str);
+        }
+        break;
 
-    */
+    default :
+        throw std::runtime_error("Invalid file format for text import constructor");
+        break;
+
+    }//end of switch statement
 
     constructor_canceled_ = false;
     name_ = name;
@@ -332,10 +317,19 @@ VespucciDataset::VespucciDataset(QString name,
     directory_ = directory;
 
 
-    spectra_ = original->spectra(indices);
-    wavelength_ = original->wavelength();
-    x_ = original->x(indices);
-    y_ = original->y(indices);
+    try{
+        spectra_ = original->spectra(indices);
+        wavelength_ = original->wavelength();
+        x_ = original->x(indices);
+        y_ = original->y(indices);
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "Extraction constructor: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
     name_ = name;
     main_window_ = main_window;
     directory_ = directory;
@@ -376,11 +370,21 @@ VespucciDataset::VespucciDataset(QString name,
 ///
 void VespucciDataset::Undo()
 {
+
+    try{
+        mat buffer = spectra_;
+        spectra_ = spectra_old_;
+        spectra_old_ = buffer;
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "Undo: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
     log_stream_ << "Undo: " << last_operation_ << endl << endl;
     last_operation_ = "Undo";
-    mat buffer = spectra_;
-    spectra_ = spectra_old_;
-    spectra_old_ = buffer;
 }
 
 
@@ -395,28 +399,38 @@ void VespucciDataset::Undo()
 /// to create a new dataset rather than crop an old one.
 void VespucciDataset::CropSpectra(double x_min, double x_max, double y_min, double y_max)
 {
-    log_stream_ << "CropSpectra" << endl;
-    log_stream_ << "x_min == " << x_min << endl;
-    log_stream_ << "x_max == " << x_max << endl;
-    log_stream_ << "y_min == " << y_min << endl;
-    log_stream_ << "y_max == " << y_max << endl << endl;
+
 
 
     int max = x_.n_rows;
     QProgressDialog progress("Cropping...", "Cancel", 0, max);
     progress.setWindowModality(Qt::WindowModal);
 
-    for (int i = 0; i < max; ++i){
-        if ((x_(i) < x_min) || (x_(i) > x_max) || (y_(i) < y_min) || (y_(i) > y_max)){
-            spectra_.shed_row(i);
-            x_.shed_row(i);
-            y_.shed_row(i);
-            --i; //forces repeat of same index after deletion
-            --max;
+    try{
+        for (int i = 0; i < max; ++i){
+            if ((x_(i) < x_min) || (x_(i) > x_max) || (y_(i) < y_min) || (y_(i) > y_max)){
+                spectra_.shed_row(i);
+                x_.shed_row(i);
+                y_.shed_row(i);
+                --i; //forces repeat of same index after deletion
+                --max;
+            }
+            progress.setValue(i);
         }
-        progress.setValue(i);
     }
+    catch(exception e){
+        char str[50];
+        strcat(str, "CropSpectra: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
     last_operation_ = "crop";
+    log_stream_ << "CropSpectra" << endl;
+    log_stream_ << "x_min == " << x_min << endl;
+    log_stream_ << "x_max == " << x_max << endl;
+    log_stream_ << "y_min == " << y_min << endl;
+    log_stream_ << "y_max == " << y_max << endl << endl;
 }
 
 
@@ -428,16 +442,26 @@ void VespucciDataset::CropSpectra(double x_min, double x_max, double y_min, doub
 /// by the maximum of spectra_
 void VespucciDataset::MinMaxNormalize()
 {
-    log_stream_ << "MinMaxNormalize" << endl << endl;
-    spectra_old_ = spectra_;
-    int n_elem = spectra_.n_elem;
-    double minimum = spectra_.min();
-    if (minimum < 0)
-        for (int i = 0; i < n_elem; ++i)
-            spectra_(i) = spectra_(i) - minimum;
-    double maximum = spectra_.max();
-    spectra_ = spectra_/maximum;
+    try{
+        spectra_old_ = spectra_;
+        int n_elem = spectra_.n_elem;
+        double minimum = spectra_.min();
+        if (minimum < 0)
+            for (int i = 0; i < n_elem; ++i)
+                spectra_(i) = spectra_(i) - minimum;
+        double maximum = spectra_.max();
+        spectra_ = spectra_/maximum;
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "MinMaxNormalize: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
     last_operation_ = "min/max normalize";
+    log_stream_ << "MinMaxNormalize" << endl << endl;
+
 }
 
 ///
@@ -449,13 +473,22 @@ void VespucciDataset::UnitAreaNormalize()
     spectra_old_ = spectra_;
     uword num_rows = spectra_.n_rows;
     uword num_cols = spectra_.n_cols;
-    for (uword i = 0; i < num_rows; ++i){
-        rowvec row = spectra_.row(i);
-        double row_sum = sum(row);
-        for (uword j = 0; j < num_cols; ++j){
-            spectra_(i, j) = spectra_(i, j) / row_sum;
+    try{
+        for (uword i = 0; i < num_rows; ++i){
+            rowvec row = spectra_.row(i);
+            double row_sum = sum(row);
+            for (uword j = 0; j < num_cols; ++j){
+                spectra_(i, j) = spectra_(i, j) / row_sum;
+            }
         }
     }
+    catch(exception e){
+        char str[50];
+        strcat(str, "UnitAreaNormalize: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
     last_operation_ = "unit area normalize";
 }
 
@@ -466,17 +499,20 @@ void VespucciDataset::UnitAreaNormalize()
 ///
 mat VespucciDataset::ZScoreNormCopy()
 {
-    uword num_rows = spectra_.n_rows;
-    uword num_cols = spectra_.n_cols;
-    mat normalized_copy(num_rows, num_cols);
-    for (uword j = 0; j < num_cols; ++j){
-        double mean = arma::mean(spectra_.col(j));
-        double standard_deviation = arma::stddev(spectra_.col(j));
-        for (uword i = 0; i < num_rows; ++i){
-            normalized_copy(i, j) = (spectra_(i, j) - mean) / standard_deviation;
-        }
+
+    mat normalized;
+    //mat normalized_copy(num_rows, num_cols);
+    try{
+        normalized = arma_ext::StandardScore(trans(spectra_));
     }
-    return normalized_copy;
+    catch(exception e){
+        char str[50];
+        strcat(str, "ZScoreNormCopy: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+    return trans(normalized);
+
 }
 
 ///
@@ -491,15 +527,19 @@ void VespucciDataset::ZScoreNormalize()
 {
     log_stream_ << "ZScoreNormalize" << endl;
     spectra_old_ = spectra_;
-    uword num_rows = spectra_.n_rows;
-    uword num_cols = spectra_.n_cols;
-    for (uword j = 0; j < num_cols; ++j){
-        double mean = arma::mean(spectra_.col(j));
-        double standard_deviation = arma::stddev(spectra_.col(j));
-        for (uword i = 0; i < num_rows; ++i){
-            spectra_(i, j) = (spectra_(i, j) - mean) / standard_deviation;
-        }
+
+    mat normalized;
+    try{
+        normalized = arma_ext::StandardScore(trans(spectra_));
+        spectra_ = trans(normalized);
     }
+    catch(exception e){
+        char str[50];
+        strcat(str, "ZScoreNormalize: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
     z_scores_calculated_ = true;
     last_operation_ = "Z-score normalize";
 
@@ -527,7 +567,15 @@ void VespucciDataset::SubtractBackground(mat background, QString filename)
         return;
     }
     else{
-        spectra_.each_row() -= background.row(0);
+        try{
+            spectra_.each_row() -= background.row(0);
+        }
+        catch(exception e){
+            char str[50];
+            strcat(str, "SubtractBackground: ");
+            strcat(str, e.what());
+            throw std::runtime_error(str);
+        }
     }
     last_operation_ = "background correction";
 }
@@ -548,31 +596,40 @@ void VespucciDataset::Baseline(QString method, int window_size)
     log_stream_ << "method == " << method << endl;
     log_stream_ << "window_size == " << window_size << endl << endl;
     spectra_old_ = spectra_;
-    if (method == "Median Filter"){
-        uword starting_index = (window_size - 1) / 2;
-        uword ending_index = wavelength_.n_cols - starting_index;
-        uword i, j;
-        uword rows = spectra_.n_rows;
-        uword columns = spectra_.n_cols;
-        rowvec window;
-        mat processed;
-        window.set_size(window_size);
-        processed.set_size(spectra_.n_rows, spectra_.n_cols);
+    try{
+        if (method == "Median Filter"){
+            uword starting_index = (window_size - 1) / 2;
+            uword ending_index = wavelength_.n_cols - starting_index;
+            uword i, j;
+            uword rows = spectra_.n_rows;
+            uword columns = spectra_.n_cols;
+            rowvec window;
+            mat processed;
+            window.set_size(window_size);
+            processed.set_size(spectra_.n_rows, spectra_.n_cols);
 
-        for (i = 0; i < rows; ++i){
-            for (j = 0; j < starting_index; ++j){
-                processed(i, j) = spectra_(i, j);
+            for (i = 0; i < rows; ++i){
+                for (j = 0; j < starting_index; ++j){
+                    processed(i, j) = spectra_(i, j);
+                }
+                for (j = ending_index; j < columns; ++j){
+                    processed(i, j) = spectra_(i, j);
+                }
+                for (j = starting_index; j < ending_index; ++j){
+                    window = spectra_(i, span((j - starting_index), (j+starting_index)));
+                    processed(i, j) = median(window);
+                }
             }
-            for (j = ending_index; j < columns; ++j){
-                processed(i, j) = spectra_(i, j);
-            }
-            for (j = starting_index; j < ending_index; ++j){
-                window = spectra_(i, span((j - starting_index), (j+starting_index)));
-                processed(i, j) = median(window);
-            }
+            spectra_ -= processed;
         }
-        spectra_ -= processed;
     }
+    catch(exception e){
+        char str[50];
+        strcat(str, "Baseline: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
     last_operation_ = "baseline correction";
 }
 
@@ -598,20 +655,28 @@ void VespucciDataset::MedianFilter(unsigned int window_size)
     mat processed;
     window.set_size(window_size);
     processed.set_size(spectra_.n_rows, spectra_.n_cols);
-
-    for (i = 0; i < rows; ++i){
-        for (j = 0; j < starting_index; ++j){
-            processed(i, j) = spectra_(i, j);
+    try{
+        for (i = 0; i < rows; ++i){
+            for (j = 0; j < starting_index; ++j){
+                processed(i, j) = spectra_(i, j);
+            }
+            for (j = ending_index; j < columns; ++j){
+                processed(i, j) = spectra_(i, j);
+            }
+            for (j = starting_index; j < ending_index; ++j){
+                window = spectra_(i, span((j - starting_index), (j+starting_index)));
+                processed(i, j) = median(window);
+            }
         }
-        for (j = ending_index; j < columns; ++j){
-            processed(i, j) = spectra_(i, j);
-        }
-        for (j = starting_index; j < ending_index; ++j){
-            window = spectra_(i, span((j - starting_index), (j+starting_index)));
-            processed(i, j) = median(window);
-        }
+        spectra_ = processed;
     }
-    spectra_ = processed;
+    catch(exception e){
+        char str[50];
+        strcat(str, "MedianFilter: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
     last_operation_ = "median filter";
 }
 
@@ -627,14 +692,23 @@ void VespucciDataset::LinearMovingAverage(unsigned int window_size)
     log_stream_ << "window_size == " << window_size << endl << endl;
 
     spectra_old_ = spectra_;
-    vec filter = arma_ext::CreateMovingAverageFilter(window_size);
-    //because armadillo is column-major, it is faster to filter by columns than rows
-    mat buffer = trans(spectra_);
-    mat filtered(buffer.n_rows, buffer.n_cols);
-    for (uword j = 0; j < buffer.n_cols; ++j){
-        filtered.col(j) = arma_ext::ApplyFilter(buffer.col(j), filter);
+    try{
+        vec filter = arma_ext::CreateMovingAverageFilter(window_size);
+        //because armadillo is column-major, it is faster to filter by columns than rows
+        mat buffer = trans(spectra_);
+        mat filtered(buffer.n_rows, buffer.n_cols);
+        for (uword j = 0; j < buffer.n_cols; ++j){
+            filtered.col(j) = arma_ext::ApplyFilter(buffer.col(j), filter);
+        }
+        spectra_ = trans(filtered);
     }
-    spectra_ = trans(filtered);
+    catch(exception e){
+        char str[50];
+        strcat(str, "LinearMovingAverage: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
     last_operation_ = "moving average filter";
 }
 
@@ -654,8 +728,17 @@ void VespucciDataset::SingularValue(unsigned int singular_values)
     mat U;
     vec s;
     mat V;
-    arma_ext::svds(spectra_, singular_values, U, s, V);
-    spectra_ = -1 * U * diagmat(s) * V.t();
+    try{
+        arma_ext::svds(spectra_, singular_values, U, s, V);
+        spectra_ = -1 * U * diagmat(s) * V.t();
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "SingularValue: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
     last_operation_ = "truncated SVD de-noise";
 }
 
@@ -675,12 +758,21 @@ void VespucciDataset::Derivatize(unsigned int derivative_order,
     log_stream_ << "polynomial_order == " << polynomial_order << endl;
     log_stream_ << "window_size == " << window_size << endl << endl;
     spectra_old_ = spectra_;
-    mat temp = arma_ext::sgolayfilt(trans(spectra_),
-                                      polynomial_order,
-                                      window_size,
-                                      derivative_order,
-                                      1);
-    spectra_ = trans(temp);
+    try{
+        mat temp = arma_ext::sgolayfilt(trans(spectra_),
+                                        polynomial_order,
+                                        window_size,
+                                        derivative_order,
+                                        1);
+        spectra_ = trans(temp);
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "Derivatize: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
     last_operation_ = "Savitzky-Golay filtering";
 }
 
@@ -727,15 +819,6 @@ void VespucciDataset::Univariate(uword min,
     uword size = x_.n_elem;
     uword i;
 
-    log_stream_ << "Univariate" << endl;
-    log_stream_ << "min == " << min << endl;
-    log_stream_ << "max == " << max << endl;
-    log_stream_ << "name == " << name << endl;
-    log_stream_ << "value_method == " << value_method << endl;
-    log_stream_ << "integration_method == " << integration_method << endl;
-    log_stream_ << "gradient_index == " << gradient_index << endl;
-
-
     rowvec region;
     colvec results;
     results.set_size(size);
@@ -744,92 +827,21 @@ void VespucciDataset::Univariate(uword min,
     mat baselines;
     mat mid_lines;
 
-    if (value_method == "Bandwidth"){
-        double maximum, half_maximum, width/*, region_size*/;
-        double start_value, end_value, slope;
-        baselines.set_size(size, max-min + 1);
-        uword max_index = 0;
-        uword left_index = 0;
-        uword right_index = 0;
-        map_type = "1-Region Univariate (Bandwidth (FWHM))";
-        uword columns = spectra_.n_cols;
-        abcissa.set_size(max-min + 1);
-        abcissa = wavelength_.subvec(span(min, max));
-        mid_lines.set_size(x_.n_rows, 4);
-        for (i = 0; i < size; ++i){
-
-            start_value = spectra_(i, min);
-            end_value = spectra_(i, max);
-            slope = (end_value - start_value) / (max - min);
-            uword j;
-            for (j = 0; j <= (max - min); ++j)
-                baselines(i, j) = j*slope + start_value;
-
-
-            //find maximum and half-maximum
-            region = spectra_(i, span(min, max));
-            //region_size = region.n_elem;
-            maximum = region.max();
-
-            //find index of maximum
-            for (j = 0; j < columns; ++j){
-                if (maximum == spectra_(i, j) && j >= min && j <= max){
-                    max_index = j;
-                    break;
-                }
-            }
-
-            int local_max_index = max_index-min;
-            half_maximum = (maximum - baselines(i, local_max_index) / 2.0) +
-                    baselines(i, local_max_index);
-
-            //find index of left limit
-            for (j = max_index; j > 0; --j){
-                if (spectra_(i, j) - half_maximum < 0){
-                    left_index = j;
-                    break;
-                }
-            }
-
-            //find index of right limit
-            for (j = max_index; j < columns; ++j){
-                if (spectra_(i, j) - half_maximum < 0){
-                    right_index = j;
-                    break;
-                }
-            }
-
-            //make sure adjacent points on other side of inflection aren't better
-            if (fabs(spectra_(i, left_index) - half_maximum) <
-                    fabs(spectra_(i, left_index - 1) - half_maximum)){
-                --left_index;
-            }
-            if (fabs(spectra_(i, right_index) - half_maximum) <
-                     fabs(spectra_(i, right_index + 1) - half_maximum)){
-                ++right_index;
-            }
-
-            //record to results.  using fabs because order of wavelength unknown
-            width = fabs(wavelength_(right_index) - wavelength_(left_index));
-            results(i) = width;
-            mid_lines(i, 0) = wavelength_(left_index);
-            mid_lines(i, 1) = spectra_(left_index);
-            mid_lines(i, 2) = wavelength_(right_index);
-            mid_lines(i, 3) = spectra_(right_index);
-        }
-
-    }
-
-    else if(value_method == "Area"){
-        // Do peak fitting stuff here.
-        map_type = "1-Region Univariate (Area)";
-        abcissa.set_size(max - min + 1);
-        abcissa = wavelength_.subvec(span(min, max));
-        if (integration_method == "Riemann Sum"){
+    try{
+        if (value_method == "Bandwidth"){
+            double maximum, half_maximum, width/*, region_size*/;
             double start_value, end_value, slope;
-            baselines.set_size(size, abcissa.n_cols);
+            baselines.set_size(size, max-min + 1);
+            uword max_index = 0;
+            uword left_index = 0;
+            uword right_index = 0;
+            map_type = "1-Region Univariate (Bandwidth (FWHM))";
+            uword columns = spectra_.n_cols;
+            abcissa.set_size(max-min + 1);
+            abcissa = wavelength_.subvec(span(min, max));
+            mid_lines.set_size(x_.n_rows, 4);
+            for (i = 0; i < size; ++i){
 
-            for (i=0; i<size; ++i){
                 start_value = spectra_(i, min);
                 end_value = spectra_(i, max);
                 slope = (end_value - start_value) / (max - min);
@@ -837,52 +849,105 @@ void VespucciDataset::Univariate(uword min,
                 for (j = 0; j <= (max - min); ++j)
                     baselines(i, j) = j*slope + start_value;
 
+
+                //find maximum and half-maximum
                 region = spectra_(i, span(min, max));
-                region -= baselines.row(i);
-                results(i) = sum(region);
+                //region_size = region.n_elem;
+                maximum = region.max();
+
+                //find index of maximum
+                for (j = 0; j < columns; ++j){
+                    if (maximum == spectra_(i, j) && j >= min && j <= max){
+                        max_index = j;
+                        break;
+                    }
+                }
+
+                int local_max_index = max_index-min;
+                half_maximum = (maximum - baselines(i, local_max_index) / 2.0) +
+                        baselines(i, local_max_index);
+
+                //find index of left limit
+                for (j = max_index; j > 0; --j){
+                    if (spectra_(i, j) - half_maximum < 0){
+                        left_index = j;
+                        break;
+                    }
+                }
+
+                //find index of right limit
+                for (j = max_index; j < columns; ++j){
+                    if (spectra_(i, j) - half_maximum < 0){
+                        right_index = j;
+                        break;
+                    }
+                }
+
+                //make sure adjacent points on other side of inflection aren't better
+                if (fabs(spectra_(i, left_index) - half_maximum) <
+                        fabs(spectra_(i, left_index - 1) - half_maximum)){
+                    --left_index;
+                }
+                if (fabs(spectra_(i, right_index) - half_maximum) <
+                        fabs(spectra_(i, right_index + 1) - half_maximum)){
+                    ++right_index;
+                }
+
+                //record to results.  using fabs because order of wavelength unknown
+                width = fabs(wavelength_(right_index) - wavelength_(left_index));
+                results(i) = width;
+                mid_lines(i, 0) = wavelength_(left_index);
+                mid_lines(i, 1) = spectra_(left_index);
+                mid_lines(i, 2) = wavelength_(right_index);
+                mid_lines(i, 3) = spectra_(right_index);
+            }
+
+        }
+
+        else if(value_method == "Area"){
+            // Do peak fitting stuff here.
+            map_type = "1-Region Univariate (Area)";
+            abcissa.set_size(max - min + 1);
+            abcissa = wavelength_.subvec(span(min, max));
+            if (integration_method == "Riemann Sum"){
+                double start_value, end_value, slope;
+                baselines.set_size(size, abcissa.n_cols);
+
+                for (i=0; i<size; ++i){
+                    start_value = spectra_(i, min);
+                    end_value = spectra_(i, max);
+                    slope = (end_value - start_value) / (max - min);
+                    uword j;
+                    for (j = 0; j <= (max - min); ++j)
+                        baselines(i, j) = j*slope + start_value;
+
+                    region = spectra_(i, span(min, max));
+                    region -= baselines.row(i);
+                    results(i) = sum(region);
+                }
             }
         }
-    }
 
-    else if(value_method == "Derivative"){
-        // Do derivative stuff here
-        map_type = "1-Region Univariate (Derivative)";
-    }
-
-    else{
-        // Makes an intensity map
-        map_type = "1-Region Univariate (Intensity)";
-        if (z_scores_calculated_){
-            uword elements = spectra_.n_elem;
-            rowvec region_temp;
-            double peak_height;
-            double peak_height_temp;
-            mat spectra_temp(spectra_.n_rows, spectra_.n_cols);
-            for (i = 0; i < elements; ++i)
-                spectra_temp(i) = fabs(spectra_(i));
-
-            for (i = 0; i < size; ++i){
-                region = spectra_(i, span(min, max));
-                region_temp = spectra_temp(i, span(min, max));
-                peak_height_temp = region_temp.max();
-                peak_height = region.max();
-
-                // If the maxes aren't equal, then we know the peak is negative
-                if (peak_height_temp != peak_height)
-                    peak_height = peak_height_temp * -1.0;
-
-                results(i) = peak_height;
-            }
-
+        else if(value_method == "Derivative"){
+            // Do derivative stuff here
+            map_type = "1-Region Univariate (Derivative)";
         }
+
         else{
+            // Makes an intensity map
+            map_type = "1-Region Univariate (Intensity)";
             for (i=0; i < size; ++i){
                 region = spectra_(i, span(min, max));
                 results(i)=region.max();
             }
 
         }
-
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "Univariate: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
     }
 
     QSharedPointer<MapData> map(new MapData(x_axis_description_,
@@ -905,6 +970,15 @@ void VespucciDataset::Univariate(uword min,
     if(mid_lines.n_rows != 0){
         map->set_fwhm(mid_lines);
     }
+
+
+    log_stream_ << "Univariate" << endl;
+    log_stream_ << "min == " << min << endl;
+    log_stream_ << "max == " << max << endl;
+    log_stream_ << "name == " << name << endl;
+    log_stream_ << "value_method == " << value_method << endl;
+    log_stream_ << "integration_method == " << integration_method << endl;
+    log_stream_ << "gradient_index == " << gradient_index << endl;
 
     this->AddMap(map);
     maps_.last()->ShowMapWindow();
@@ -963,61 +1037,68 @@ void VespucciDataset::BandRatio(uword first_min,
     mat second_baselines;
 
     results.set_size(size);
+    try{
+        if(value_method == "Area"){
+            // Do peak fitting stuff here.
+            map_type = "2-Region Band Ratio Map (Area)";
+            if (integration_method == "Riemann Sum"){
+                double first_start_value, first_end_value, second_start_value,
+                        second_end_value, first_slope, second_slope, first_sum,
+                        second_sum;
+                first_abcissa.set_size(first_max - first_min + 1);
+                second_abcissa.set_size(second_max - second_min + 1);
+                first_abcissa = wavelength_.subvec(span(first_min, first_max));
+                second_abcissa = wavelength_.subvec(span(second_min, second_max));\
+                first_baselines.set_size(size, first_max - first_min + 1);
+                second_baselines.set_size(size, second_max - second_min + 1);
 
-    if(value_method == "Area"){
-        // Do peak fitting stuff here.
-        map_type = "2-Region Band Ratio Map (Area)";
-        if (integration_method == "Riemann Sum"){
-            double first_start_value, first_end_value, second_start_value,
-                    second_end_value, first_slope, second_slope, first_sum,
-                    second_sum;
-            first_abcissa.set_size(first_max - first_min + 1);
-            second_abcissa.set_size(second_max - second_min + 1);
-            first_abcissa = wavelength_.subvec(span(first_min, first_max));
-            second_abcissa = wavelength_.subvec(span(second_min, second_max));\
-            first_baselines.set_size(size, first_max - first_min + 1);
-            second_baselines.set_size(size, second_max - second_min + 1);
+                for (i=0; i<size; ++i){
+                    first_start_value = spectra_(i, first_min);
+                    second_start_value = spectra_(i, second_min);
+                    first_end_value = spectra_(i, first_max);
+                    second_end_value = spectra_(i, second_max);
+                    first_slope = (first_end_value - first_start_value) / (first_max - first_min);
+                    second_slope = (second_end_value - second_start_value) / (second_max - second_min);
+                    uword j;
+                    for (j = 0; j <= (first_max - first_min); ++j)
+                        first_baselines(i, j) = j*first_slope + first_start_value;
+                    for (j = 0; j <= (second_max - second_min); ++j)
+                        second_baselines(i, j) = j*second_slope + second_start_value;
 
-            for (i=0; i<size; ++i){
-                first_start_value = spectra_(i, first_min);
-                second_start_value = spectra_(i, second_min);
-                first_end_value = spectra_(i, first_max);
-                second_end_value = spectra_(i, second_max);
-                first_slope = (first_end_value - first_start_value) / (first_max - first_min);
-                second_slope = (second_end_value - second_start_value) / (second_max - second_min);
-                uword j;
-                for (j = 0; j <= (first_max - first_min); ++j)
-                    first_baselines(i, j) = j*first_slope + first_start_value;
-                for (j = 0; j <= (second_max - second_min); ++j)
-                    second_baselines(i, j) = j*second_slope + second_start_value;
+                    first_region = spectra_(i, span(first_min, first_max));
+                    second_region = spectra_(i, span(second_min, second_max));
 
-                first_region = spectra_(i, span(first_min, first_max));
-                second_region = spectra_(i, span(second_min, second_max));
+                    first_sum = sum(first_region - first_baselines.row(i));
+                    second_sum = sum(second_region - second_baselines.row(i));
 
-                first_sum = sum(first_region - first_baselines.row(i));
-                second_sum = sum(second_region - second_baselines.row(i));
+                    results(i)= first_sum / second_sum;
+                }
 
-                results(i)= first_sum / second_sum;
             }
 
+
         }
 
-
-    }
-
-    else if(value_method == "Derivative"){
-        // Do derivative stuff here
-        map_type = "2-Region Band Ratio Map (Derivative)";
-    }
-
-    else{
-        // Makes an intensity map
-        map_type = "2-Region Band Ratio Map (Intensity)";
-        for (i=0; i<size; ++i){
-            first_region = spectra_(i, span(first_min, first_max));
-            second_region = spectra_(i, span(second_min, second_max));
-            results(i)= first_region.max()/second_region.max();
+        else if(value_method == "Derivative"){
+            // Do derivative stuff here
+            map_type = "2-Region Band Ratio Map (Derivative)";
         }
+
+        else{
+            // Makes an intensity map
+            map_type = "2-Region Band Ratio Map (Intensity)";
+            for (i=0; i<size; ++i){
+                first_region = spectra_(i, span(first_min, first_max));
+                second_region = spectra_(i, span(second_min, second_max));
+                results(i)= first_region.max()/second_region.max();
+            }
+        }
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "BandRatio: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
     }
 
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
@@ -1093,7 +1174,16 @@ void VespucciDataset::PrincipalComponents(int component,
             timer.tic();
             principal_components_data_ = new PrincipalComponentsData(QSharedPointer<VespucciDataset>(this),
                                                                      directory_);
-            principal_components_data_->Apply(spectra_);
+            try{
+                principal_components_data_->Apply(spectra_);
+            }
+            catch(exception e){
+                char str[50];
+                strcat(str, "PrincipalComponents: ");
+                strcat(str, e.what());
+                throw std::runtime_error(str);
+            }
+
             int seconds = timer.toc();
             cout << "call to arma::princomp successful. Took " << seconds << " s" << endl;
             principal_components_calculated_ = true;
@@ -1103,7 +1193,16 @@ void VespucciDataset::PrincipalComponents(int component,
     QString map_type;
     QTextStream(&map_type) << "(Principal Component " << component + 1 << ")";
 
-    colvec results = principal_components_data_->Results(component);
+    colvec results;
+    try{
+        results = principal_components_data_->Results(component);
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "PrincipalComponents: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
 
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
@@ -1146,13 +1245,29 @@ void VespucciDataset::VertexComponents(uword endmembers,
 
     QString map_type;
     QTextStream(&map_type) << "(Vertex Component " << image_component << ")";
-    if (recalculate || !vertex_components_calculated_){
-        vertex_components_data_ = new VCAData(QSharedPointer<VespucciDataset>(this), directory_);
-        vertex_components_data_->Apply(spectra_, endmembers);
-        vertex_components_calculated_ = true;
+    try{
+        if (recalculate || !vertex_components_calculated_){
+            vertex_components_data_ = new VCAData(QSharedPointer<VespucciDataset>(this), directory_);
+            vertex_components_data_->Apply(spectra_, endmembers);
+            vertex_components_calculated_ = true;
+        }
     }
-    colvec results = vertex_components_data_->Results(image_component-1);
-
+    catch(exception e){
+        char str[50];
+        strcat(str, "VertexComponents: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+    colvec results;
+    try{
+        results = vertex_components_data_->Results(image_component-1);
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "VertexComponents: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
     //assume all negative values are actually 0
 
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
@@ -1200,25 +1315,41 @@ void VespucciDataset::PartialLeastSquares(uword components,
 
     image_component--;
     QString map_type = "Partial Least Squares Map number of components = ";
-
-    if (recalculate || !partial_least_squares_calculated_){
-        map_type += QString::number(components);
-        partial_least_squares_data_ = new PLSData(QSharedPointer<VespucciDataset>(this), directory_);
-        bool success = partial_least_squares_data_->Apply(spectra_, wavelength_, components);
-        if (success){
-            partial_least_squares_calculated_ = true;
+    try{
+        if (recalculate || !partial_least_squares_calculated_){
+            map_type += QString::number(components);
+            partial_least_squares_data_ = new PLSData(QSharedPointer<VespucciDataset>(this), directory_);
+            bool success = partial_least_squares_data_->Apply(spectra_, wavelength_, components);
+            if (success){
+                partial_least_squares_calculated_ = true;
+            }
         }
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "PartialLeastSquares: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
     }
 
 
     bool valid;
-    colvec results = partial_least_squares_data_->Results(image_component, valid);
-    if (!valid){
+    colvec results;
+    try{
+        results = partial_least_squares_data_->Results(image_component, valid);
+        if (!valid){
         QMessageBox::warning(main_window_, "Index out of Bounds",
                              "The component number requested is greater than"
                              "the number of components calculated. Map generated"
                              "corresponds to the highest component number"
                              "calculated");
+        }
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "PartialLeastSquares: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
     }
 
 
@@ -1257,15 +1388,27 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
 
     QString map_type = "K-means clustering map. Number of clusters = ";
     map_type += QString::number(clusters);
-    Col<size_t> assignments;
-    mlpack::kmeans::KMeans<> k;
-    mat data = trans(spectra_);
-    k.Cluster(data, clusters, assignments);
-    k_means_data_.set_size(assignments.n_elem, 1);
-    k_means_calculated_ = true;
-    //loop for copying values, adds one so clusters indexed at 1, not 0.
-    for (uword i = 0; i < assignments.n_rows; ++i)
-        k_means_data_(i, 0) = assignments(i) + 1;
+
+    try{
+        Col<size_t> assignments;
+        mlpack::kmeans::KMeans<> k;
+        mat data = trans(spectra_);
+        k.Cluster(data, clusters, assignments);
+        k_means_data_.set_size(assignments.n_elem, 1);
+        k_means_calculated_ = true;
+        k_means_data_ = assignments + ones(assignments.n_elem);
+        //loop for copying values, adds one so clusters indexed at 1, not 0.
+        /*for (uword i = 0; i < assignments.n_rows; ++i)
+            k_means_data_(i, 0) = assignments(i) + 1;
+            */
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "KMeans: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
 
     QCPColorGradient gradient = GetClusterGradient(clusters);
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,

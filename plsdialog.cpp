@@ -42,7 +42,14 @@ void PLSDialog::on_buttonBox_accepted()
     bool recalculate = recalculate_box_->isChecked();
     int gradient_index = color_selector_->currentIndex();
     int components = components_selector_->value();
-    data_->PartialLeastSquares(components, image_component, name, gradient_index, recalculate);
+
+    try{
+        data_->PartialLeastSquares(components, image_component, name, gradient_index, recalculate);
+    }
+    catch(exception e){
+        workspace->main_window()->DisplayExceptionWarning(e);
+    }
+
     this->close();
     data_.clear();
 }
