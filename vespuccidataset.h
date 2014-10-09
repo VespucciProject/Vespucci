@@ -39,17 +39,25 @@
 #include "binaryimport.h"
 
 ///
-/// \brief The InputFileFormat enum
+/// \brief The InputFileFormat namespace
 /// Types of files that can be imported
+///
+namespace InputFileFormat
+{
+///
+/// \brief The Formats enum
+///
+    enum Format{
+        LongTabDel,
+        LongCSV,
+        WideTabDel,
+        WideCSV,
+        VespucciBinary,
+        Witec,
+        Invalid
+    };
+}
 
-enum InputFileFormat{
-    LongTabDel,
-    LongCSV,
-    WideTabDel,
-    WideCSV,
-    VespucciBinary,
-    Witec,
-};
 
 
 class MapData;
@@ -82,7 +90,7 @@ public:
                     QString x_axis_description,
                     QString y_axis_description,
                     bool swap_spatial,
-                    InputFileFormat format);
+                    InputFileFormat::Format format);
 
     VespucciDataset(QString vespucci_binary_filename,
                     MainWindow *main_window,

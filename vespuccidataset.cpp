@@ -123,11 +123,13 @@ void VespucciDataset::DestroyLogFile()
 /// \param name The name of the dataset displayed to the user
 /// \param log_file The log file
 /// Constructor for loading saved spectral/spatial data in armadillo format
-VespucciDataset::VespucciDataset(QString binary_filename,
+VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
                                  MainWindow *main_window,
                                  QString *directory,
+                                 QFile *log_file,
                                  QString name,
-                                 QFile *log_file): log_stream_(log_file)
+                                 QString x_axis_description,
+                                 QString y_axis_description): log_stream_(log_file)
 {
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_file_ = log_file;
@@ -136,7 +138,7 @@ VespucciDataset::VespucciDataset(QString binary_filename,
     log_stream_ << "Dataset " << name << "created "
                 << datetime.date().toString("yyyy-MM-dd") << "T"
                 << datetime.time().toString("hh:mm:ss") << "Z" << endl;
-    log_stream_ << "Imported from binary file " << binary_filename << endl << endl;
+    log_stream_ << "Imported from binary file " << vespucci_binary_filename << endl << endl;
 
     non_spatial_ = false;
     //Set up variables unrelated to hyperspectral data:
@@ -148,9 +150,11 @@ VespucciDataset::VespucciDataset(QString binary_filename,
     z_scores_calculated_ = false;
     directory_ = directory;
     main_window_ = main_window;
+    x_axis_description_ = x_axis_description;
+    y_axis_description_ = y_axis_description;
 
     try{
-        BinaryImport::ImportVespucciBinary(binary_filename,
+        BinaryImport::ImportVespucciBinary(vespucci_binary_filename,
                                            spectra_,
                                            wavelength_,
                                            x_, y_);
@@ -189,7 +193,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
                                  QString x_axis_description,
                                  QString y_axis_description,
                                  bool swap_spatial,
-                                 InputFileFormat format) : log_stream_(log_file)
+                                 InputFileFormat::Format format) : log_stream_(log_file)
 {
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_file_ = log_file;
@@ -218,7 +222,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
 
 
     switch (format){
-    case WideTabDel :
+    case InputFileFormat::WideTabDel :
         try{
             constructor_canceled_ = TextImport::ImportWideText(text_filename,
                                                                    spectra_,
@@ -235,7 +239,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
             throw std::runtime_error(str);
         }
         break;
-    case WideCSV :
+    case InputFileFormat::WideCSV :
         try{
             constructor_canceled_ = TextImport::ImportWideText(text_filename,
                                                                spectra_,
@@ -252,7 +256,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
             throw std::runtime_error(str);
         }
         break;
-    case LongTabDel : case LongCSV :
+    case InputFileFormat::LongTabDel : case InputFileFormat::LongCSV :
         try{
             constructor_canceled_ = TextImport::ImportLongText(text_filename,
                                                                spectra_,

@@ -82,22 +82,24 @@ void LoadDataset::on_browseButton_clicked()
 /// constructor.
 void LoadDataset::on_buttonBox_accepted()
 {
-    InputFileFormat format;
+    InputFileFormat::Format format;
 
     const QString data_format_string = data_format_box_->currentText();
     if (data_format_string == "Vespucci Dataset")
-        format = VespucciBinary;
+        format = InputFileFormat::VespucciBinary;
     else if (data_format_string == "Wide Text")
-        format = WideTabDel;
+        format = InputFileFormat::LongTabDel;
     else if (data_format_string == "Wide Text (CSV)")
-        format = WideCSV;
+        format = InputFileFormat::WideCSV;
     else if (data_format_string == "Long Text")
-        format = LongTabDel;
+        format = InputFileFormat::LongTabDel;
     else if (data_format_string == "Long Text (CSV)")
-        format = LongCSV;
+        format = InputFileFormat::LongCSV;
+    else
+        return;
 
-    QString y_description = y_description_box_->text() + " (" + y_units_box->currentText() + ")";
-    QString x_description = x_description_box_->text() + " (" + x_units_box->currentText() + ")";
+    QString y_description = y_description_box_->text() + " (" + y_units_box_->currentText() + ")";
+    QString x_description = x_description_box_->text() + " (" + x_units_box_->currentText() + ")";
 
     QString name = name_box_->text();
     QString filename = filename_line_edit_->text();
@@ -106,7 +108,7 @@ void LoadDataset::on_buttonBox_accepted()
     //bool remove_at_position = false;
     //int temp_position=0;
     //int position;
-    bool swap = swap_check_box->isChecked();
+    bool swap = swap_check_box_->isChecked();
 
     QStringList names_list = workspace->dataset_names();
     QStringList::iterator i;
@@ -135,7 +137,7 @@ void LoadDataset::on_buttonBox_accepted()
 
         switch (format){
 
-        case VespucciBinary :
+        case InputFileFormat::VespucciBinary :
             try{
                 QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename,
                                                             workspace->main_window(),

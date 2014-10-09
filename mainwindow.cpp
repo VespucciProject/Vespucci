@@ -656,8 +656,11 @@ void MainWindow::on_actionUndo_triggered()
 /// Used to handle exceptions arising from dialogs. Displays a pop-up box describing
 /// the nature of the error. Most exceptions are not critical, but will result in the
 /// action that caused the exception being canceled.
-MainWindow::DisplayExceptionWarning(std::exception e)
+void MainWindow::DisplayExceptionWarning(std::exception e)
 {
-    QString display_text = "The following exception was thrown: " + e.what();
+    char str[50];
+    strcat(str, "The following exception was thrown: ");
+    strcat(str, e.what());
+    QString display_text = QString::fromLocal8Bit(str);
     QMessageBox::warning(this, "Exception Occurred", display_text);
 }

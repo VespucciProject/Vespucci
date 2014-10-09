@@ -80,7 +80,6 @@ SOURCES += main.cpp\
     plotviewer.cpp \
     metadatasetdialog.cpp \
     textimport.cpp \
-    exceptions.cpp \
     binaryimport.cpp
 
 HEADERS  += mainwindow.h \
