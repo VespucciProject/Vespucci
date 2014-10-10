@@ -67,18 +67,38 @@ void FilterDialog::on_buttonBox_accepted()
     switch (method_box_->currentIndex())
     {
     case 0:
-        dataset_->MedianFilter(window_box_->value());
+        try{
+            dataset_->MedianFilter(window_box_->value());
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
         break;
     case 1:
-        dataset_->LinearMovingAverage(window_box_->value());
+        try{
+            dataset_->LinearMovingAverage(window_box_->value());
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
         break;
     case 2:
-        dataset_->Derivatize(derivative_box_->value(),
-                             polynomial_box_->value(),
-                             window_box_->value());
+        try{
+            dataset_->Derivatize(derivative_box_->value(),
+                                 polynomial_box_->value(),
+                                 window_box_->value());
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
         break;
     case 3:
-        dataset_->SingularValue(window_box_->value());
+        try{
+            dataset_->SingularValue(window_box_->value());
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
         break;
     default:
         return;

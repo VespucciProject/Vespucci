@@ -152,6 +152,7 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
     main_window_ = main_window;
     x_axis_description_ = x_axis_description;
     y_axis_description_ = y_axis_description;
+    name_ = name;
 
     try{
         BinaryImport::ImportVespucciBinary(vespucci_binary_filename,
@@ -534,7 +535,7 @@ void VespucciDataset::ZScoreNormalize()
 
     mat normalized;
     try{
-        normalized = arma_ext::StandardScore(trans(spectra_));
+        normalized = arma_ext::StandardScoreMat(trans(spectra_));
         spectra_ = trans(normalized);
     }
     catch(exception e){

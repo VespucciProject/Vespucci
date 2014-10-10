@@ -134,6 +134,5 @@ void UnivariateDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
 /// Close window when "Cancel" clicked.
 void UnivariateDialog::on_buttonBox_rejected()
 {
-    this->close();
-    data_.clear();
+        data_.clear();
 }

@@ -198,17 +198,22 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
     QString item = QInputDialog::getItem(this,
                                          tr("Normalization/Standardization"),
                                          tr("Method:"), methods, 0, false, &ok);
-    if (ok && item == "Min/Max")
-        data->MinMaxNormalize();
+    try{
+        if (ok && item == "Min/Max")
+            data->MinMaxNormalize();
 
-    else if (ok && item == "Unit Area")
-        data->UnitAreaNormalize();
+        else if (ok && item == "Unit Area")
+            data->UnitAreaNormalize();
 
-    else if (ok && item == "Z-score")
-        data->ZScoreNormalize();
+        else if (ok && item == "Z-score")
+            data->ZScoreNormalize();
 
-    else
-        return;
+        else
+            return;
+    }
+    catch(exception e){
+        DisplayExceptionWarning(e);
+    }
 }
 
 ///
@@ -230,7 +235,12 @@ void MainWindow::on_actionSubtract_Background_triggered()
         return;
     }
     else{
-        data->SubtractBackground(input, filename);
+        try{
+            data->SubtractBackground(input, filename);
+        }
+        catch(exception e){
+            DisplayExceptionWarning(e);
+        }
     }
 }
 
@@ -371,30 +381,20 @@ void MainWindow::on_actionAll_Data_triggered()
     bool success;
     int row = dataset_list_widget_->currentRow();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
-    mat output(dataset->spectra());
-    rowvec temp_wavelength(dataset->wavelength());
-    mat addendum(1,2);
-    addendum.zeros();
-    temp_wavelength.insert_cols(0, addendum); //add two 0 entries to wl
-    output.insert_cols(0, dataset->y());  //y at 0
-    output.insert_cols(0, dataset->x()); //x at 0, y at 1
-    output.insert_rows(0, temp_wavelength); //put wl on first line
-
 
     QString filename =
             QFileDialog::getSaveFileName(this,
                                          tr("Save Spectra Matrix"),
                                          workspace->directory(),
-                                         tr("Vespucci Dataset (*.vds);;"
-                                            "Tab-delimited Text (*.txt);;"
-                                            "Comma-separated Variables (*.csv);;"));
-    QFileInfo file_info(filename);
-    if (file_info.suffix() == "vds")
-        success = output.save(filename.toStdString(), arma_binary);
-    else if (file_info.suffix() == "txt")
-        success = output.save(filename.toStdString(), raw_ascii);
-    else
-        success = output.save(filename.toStdString(), csv_ascii);
+                                         tr("Vespucci Dataset (*.vds)"));
+    //exception can be thrown when intializing field
+    try{
+        success = dataset->Save(filename);
+    }
+    catch(exception e){
+        DisplayExceptionWarning(e);
+        success = false;
+    }
 
     if (success)
         QMessageBox::information(this, "File Saved", "File written successfully!");

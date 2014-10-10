@@ -112,6 +112,7 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
 SpectrumViewer::~SpectrumViewer()
 {
     delete ui;
+    dataset_.clear();
 }
 
 ///

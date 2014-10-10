@@ -391,7 +391,14 @@ bool MapData::saveTiff(const QString &fileName, int width, int height, double sc
 /// contains this pointer, this removal results in this object being deleted.
 void MapData::RemoveThis()
 {
-    dataset_->RemoveMapAt(source_index_);
+    try{
+        delete spectrum_display_;
+        dataset_->RemoveMapAt(source_index_);
+    }
+    catch(exception e){
+        main_window_->DisplayExceptionWarning(e);
+    }
+
 }
 
 ///

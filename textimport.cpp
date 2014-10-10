@@ -7,6 +7,18 @@ bool TextImport::ImportWideText(QString filename,
                                 QProgressDialog *progress,
                                 const QString sep)
 {
+    bool comma_decimals;
+    bool valid = CheckFileValidity(filename, comma_decimals);
+    if(!valid){
+        throw std::runtime_error("Non-text or improperly formatted file");
+        return false;
+    }
+
+    if(comma_decimals && sep == ","){
+        throw std::runtime_error("Comma-separated file with commas for decimals");
+        return false;
+    }
+
     QFile inputfile(filename);
     inputfile.open(QIODevice::ReadOnly);
     QTextStream inputstream(&inputfile);
@@ -103,6 +115,11 @@ bool TextImport::ImportLongText(QString filename,
                                 bool swap_spatial,
                                 QProgressDialog *progress)
 {
+    bool comma_decimals;
+    bool valid = CheckFileValidity(filename, comma_decimals);
+    if (!valid)
+        return false;
+
     progress->setWindowTitle("Loading File");
     progress->setWindowModality(Qt::WindowModal);
     progress->setValue(0);
@@ -155,5 +172,53 @@ bool TextImport::ImportLongText(QString filename,
     }
 
     return true;
+
+}
+
+bool TextImport::CheckFileValidity(QString filename, bool &comma_decimals)
+{
+    QFile inputfile(filename);
+    inputfile.open(QIODevice::ReadOnly);
+    QTextStream inputstream(&inputfile);
+    QString line = inputstream.readLine();
+    QStringList tab_list = line.split("\t");
+    QStringList comma_list = line.split(",");
+    bool valid;
+
+    if(tab_list.size() <= 0 && comma_list.size() <= 0){
+        return false;
+    }
+    else if(tab_list.size() > 0 && comma_list.size() > 0){
+        //we probably have a tab delimited file with commas for decimal points
+        //import function will probabably throw exception if comma is separator
+        //and type is wide text, so comma_decimals must be checked
+        comma_decimals = true;
+        return true;
+    }
+    else if(tab_list.size() > 0 && comma_list.size() == 0){
+        comma_decimals = false;
+        for (int i = 0; i < tab_list.size(); ++i){
+            tab_list[i].toDouble(&valid);
+            if(!valid)
+                return false;
+        }
+        return true;
+    }
+    else if(tab_list.size() == 0 && comma_list.size() > 0){
+        comma_decimals = false; //we don't know if this is true or not.
+        //users using instruments that save csv files with local number formatting
+        //in regions where commas are used for decimal places should be super
+        //careful.
+        for (int i = 0; i < comma_list.size(); ++i){
+            comma_list[i].toDouble(&valid);
+            if(!valid)
+                return false;
+        }
+        return true;
+    }
+    else{
+        return false;
+    }
+
 
 }

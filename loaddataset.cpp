@@ -82,13 +82,20 @@ void LoadDataset::on_browseButton_clicked()
 /// constructor.
 void LoadDataset::on_buttonBox_accepted()
 {
-    InputFileFormat::Format format;
+    QString y_description = y_description_box_->text() + " (" + y_units_box_->currentText() + ")";
+    QString x_description = x_description_box_->text() + " (" + x_units_box_->currentText() + ")";
 
+    QString name = name_box_->text();
+    QString filename = filename_line_edit_->text();
+    QFileInfo file_info(filename);
+    QString extension = file_info.suffix();
+
+    InputFileFormat::Format format;
     const QString data_format_string = data_format_box_->currentText();
-    if (data_format_string == "Vespucci Dataset")
+    if (extension == "vds" || (data_format_string == "Vespucci Dataset" && extension != "txt"))
         format = InputFileFormat::VespucciBinary;
     else if (data_format_string == "Wide Text")
-        format = InputFileFormat::LongTabDel;
+        format = InputFileFormat::WideTabDel;
     else if (data_format_string == "Wide Text (CSV)")
         format = InputFileFormat::WideCSV;
     else if (data_format_string == "Long Text")
@@ -98,12 +105,7 @@ void LoadDataset::on_buttonBox_accepted()
     else
         return;
 
-    QString y_description = y_description_box_->text() + " (" + y_units_box_->currentText() + ")";
-    QString x_description = x_description_box_->text() + " (" + x_units_box_->currentText() + ")";
 
-    QString name = name_box_->text();
-    QString filename = filename_line_edit_->text();
-    QFileInfo file_info(filename);
 
     //bool remove_at_position = false;
     //int temp_position=0;
@@ -146,10 +148,8 @@ void LoadDataset::on_buttonBox_accepted()
                                                             name,
                                                             x_description,
                                                             y_description));
-                if (!dataset->ConstructorCancelled()){
                     workspace->AddDataset(dataset);
                     workspace->set_directory(file_info.dir().absolutePath());
-                }
             }
             catch(exception e){
                 workspace->main_window()->DisplayExceptionWarning(e);

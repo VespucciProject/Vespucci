@@ -31,6 +31,8 @@ namespace TextImport
                          colvec &x, colvec &y,
                          bool swap_spatial,
                          QProgressDialog *progress);
+
+    bool CheckFileValidity(QString filename, bool &comma_decimals);
 }
 
 #endif // TEXTIMPORT_H

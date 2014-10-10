@@ -687,6 +687,7 @@ vec arma_ext::CreateMovingAverageFilter(uword window_size)
 ///
 vec arma_ext::StandardScore(vec X)
 {
+    cout << "StandardScore(vec X)" << endl;
     vec normalized = X;
     double mean = arma::mean(normalized);
     double std_dev = arma::stddev(X);
@@ -702,6 +703,7 @@ vec arma_ext::StandardScore(vec X)
 ///
 mat arma_ext::StandardScoreMat(mat X)
 {
+    cout << "StandardScoreMat(mat X)" << endl;
     mat normalized = X;
     for (uword j = 0; j < normalized.n_cols; ++j)
         normalized.col(j) = StandardScore(normalized.col(j));
