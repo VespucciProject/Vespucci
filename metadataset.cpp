@@ -67,13 +67,29 @@ MetaDataset::MetaDataset(QString name,
 
     switch(method_) {
     case VCAEndmembers:
-        endmember_numbers.set_size(1, parent_datasets_.size(), 1);
+        field<uvec> indices_list(parent_datasets_.size());
+        QStringList dataset_lists = endmember_selection.split(";");
+        QStringList buffer;
+        int buffer_int;
+        bool ok;
+        for (int i = 0; i < parent_datasets_.size(); ++i){
+            buffer = dataset_lists.split(",");
+            for (int j = 0; j < buffer.size(); ++j){
+                buffer_int = buffer[j].toUInt(&ok);
+                if(ok){
+                    indices_list(i) << buffer_int;
+                    endmember_numbers_ << buffer_int;
+                    parent_indices_ << i;
+                }
+            }
+        }
+        //fix this
         break;
     case AverageSpectra:
         break;
     case ConcatenateDatasets:
         break;
-    }
+}
 
 
 }
