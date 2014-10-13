@@ -46,6 +46,10 @@ MetaDataset::MetaDataset(QString name,
 {
     parent_datasets_ = parent_datasets;
 
+    if(!ParentsValid())
+        throw std::runtime_error("Improper input to MetaDataset constructor");
+
+
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_stream_ << "Dataset " << name << "created "
                 << datetime.date().toString("yyyy-MM-dd") << "T"
@@ -59,37 +63,127 @@ MetaDataset::MetaDataset(QString name,
 
     method_ = method;
     method_description_ = method_description;
-
-    ///
-    /// \brief endmember_numbers
-    /// Holds endmember number vectors in columns.
-    field<uvec> endmember_numbers;
+    mat spectra;
+    rowvec wavelength = parent_datasets_[0]->wavelength();
 
     switch(method_) {
     case VCAEndmembers:
-        field<uvec> indices_list(parent_datasets_.size());
-        QStringList dataset_lists = endmember_selection.split(";");
-        QStringList buffer;
-        int buffer_int;
-        bool ok;
-        for (int i = 0; i < parent_datasets_.size(); ++i){
-            buffer = dataset_lists.split(",");
-            for (int j = 0; j < buffer.size(); ++j){
-                buffer_int = buffer[j].toUInt(&ok);
-                if(ok){
-                    indices_list(i) << buffer_int;
-                    endmember_numbers_ << buffer_int;
-                    parent_indices_ << i;
-                }
-            }
+        try{
+            spectra = ProcessVCA(endmember_selection);
         }
-        //fix this
+        catch(std::exception e){
+            throw std::runtime_error("MetaDataset::ProcessVCA");
+        }
         break;
     case AverageSpectra:
+        try{
+            spectra = ProcessAverage();
+        }
+        catch(std::exception e){
+            throw std::runtime_error("MetaDataset::ProcessAverage");
+        }
+
         break;
     case ConcatenateDatasets:
+        try{
+            spectra = Concatenate();
+        }
+        catch(std::exception e){
+            throw std::runtime_error("MetaDataset::Concatenate");
+        }
         break;
+    default:
+        throw std::runtime_error("Improper input to MetaDataset");
+    }
+    //we don't preserve spatal data
+    colvec x = ones(spectra.n_rows);
+    colvec y = ones(spectra.n_rows);
+    try{
+        SetData(spectra, wavelength, x, y);
+    }
+    catch(std::exception e){
+        throw std::runtime_error("Failure to set data in MetaDataset constructor");
+    }
 }
 
 
+
+
+mat MetaDataset::ProcessVCA(QString endmember_selection)
+{
+    field<uvec> indices_list(parent_datasets_.size());
+    QStringList dataset_lists = endmember_selection.split(";");
+    QStringList buffer;
+    int buffer_int;
+    bool ok;
+    for (int i = 0; i < parent_datasets_.size(); ++i){
+        buffer = dataset_lists[i].split(",");
+        for (int j = 0; j < buffer.size(); ++j){
+            buffer_int = buffer[j].toUInt(&ok);
+            if(ok){
+                indices_list(i) << buffer_int;
+                endmember_numbers_ << buffer_int;
+                parent_indices_ << i;
+            }
+        }
+    }
+    //size the matrix ahead of time.
+    uword num_rows=0;
+    uword num_cols = parent_datasets_[0]->wavelength().n_cols;
+    //an unsophistated way to count the total number of endmembers
+    for (uword i = 0; i < indices_list.n_elem; ++i)
+        for (uword j = 0; j < indices_list.n_elem; ++j)
+            ++num_rows;
+    mat spectra(num_rows, num_cols);
+    uword start_index = 0;
+    uword end_index = indices_list(0).n_elem - 1;
+    spectra.rows(start_index, end_index) = trans(parent_datasets_[0]->vertex_components_data()->endmember_spectra()->rows(indices_list(0)));
+    for (uword i = 0; i < indices_list.n_elem; ++i){
+        spectra.rows(start_index, end_index) = parent_datasets_[i]->vertex_components_data()->EndmembersAsRows(indices_list(i));
+        start_index += indices_list(i).n_elem;
+        end_index += indices_list(i).n_elem;
+    }
+
+    return spectra;
+
+}
+
+mat MetaDataset::ProcessAverage()
+{
+    mat spectra(parent_datasets_.size(), parent_datasets_[0]->wavelength().n_elem);
+
+    for (int i = 0; i < parent_datasets_.size(); ++i)
+        spectra.row(i) = parent_datasets_[0]->AverageSpectrum(false);
+
+    return spectra;
+}
+
+mat MetaDataset::Concatenate()
+{
+    uword num_rows = 0;
+    for (int i = 0; i < parent_datasets_.size(); ++i)
+        num_rows += parent_datasets_[i]->spectra_ptr()->n_rows;
+    mat spectra(num_rows, parent_datasets_[0]->wavelength_ptr()->n_elem);\
+    uword start_index = 0;
+    uword diff;
+    uword end_index = parent_datasets_[0]->spectra_ptr()->n_rows - 1;
+    for (int i = 0; i < parent_datasets_.size(); ++i){
+        spectra.rows(start_index, end_index) = parent_datasets_[i]->spectra();
+        diff = end_index - start_index;
+        start_index += diff;
+        end_index += diff;
+    }
+
+    return spectra;
+
+}
+
+bool MetaDataset::ParentsValid()
+{
+    uword size = parent_datasets_[0]->wavelength_ptr()->n_elem;
+    for (int i = 0; i<parent_datasets_.size(); ++i)
+        if (parent_datasets_[i]->wavelength_ptr()->n_elem != size)
+            return false;
+
+    return true;
 }

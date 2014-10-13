@@ -74,6 +74,12 @@ private:
     /// \brief method_
     /// Enum of the method used
     VespucciMetaMethod method_;
+
+    mat ProcessVCA(QString endmember_selection);
+    mat ProcessAverage();
+    mat Concatenate();
+
+    bool ParentsValid();
 };
 
 #endif // METADATASET_H

@@ -78,21 +78,58 @@ colvec VCAData::Results(const uword component)
 double VCAData::EndmemberMax(const uword i)
 {
     colvec endmember;
-    if (i >= endmember_spectra_.n_cols)
-        endmember = endmember_spectra_.col(endmember_spectra_.n_cols - 1);
-    else
-        endmember = endmember_spectra_.col(i);
-    double max = endmember.max();
+    double max;
+    try{
+        if (i >= endmember_spectra_.n_cols)
+            endmember = endmember_spectra_.col(endmember_spectra_.n_cols - 1);
+        else
+            endmember = endmember_spectra_.col(i);
+        max = endmember.max();
+    }
+    catch(std::exception e){
+        throw std::runtime_error("VCAData::EndmemberMax");
+    }
+
     return max;
 }
 
+///
+/// \brief VCAData::EndmemberMin
+/// \param i Index of a column of the endmember_spectra_ matrix.
+/// \return The minimum value of the endmember in column i
+///
 double VCAData::EndmemberMin(const uword i)
 {
     colvec endmember;
-    if (i >= endmember_spectra_.n_cols)
-        endmember = endmember_spectra_.col(endmember_spectra_.n_cols - 1);
-    else
-        endmember = endmember_spectra_.col(i);
-    double min = endmember.min();
+    double min;
+    try{
+        if (i >= endmember_spectra_.n_cols)
+            endmember = endmember_spectra_.col(endmember_spectra_.n_cols - 1);
+        else
+            endmember = endmember_spectra_.col(i);
+        min = endmember.min();
+    }
+    catch(std::exception e){
+        throw std::runtime_error("Improper VCAData member function call");
+    }
+
     return min;
+}
+
+///
+/// \brief VCAData::EndmembersAsRows
+/// \param indices A list of indices of desired endmemebrs
+/// \return Endmember spectra in the same format used in the spectra_ matrix
+/// This is used in the MetaDataset constructor to grab specific endmembers.
+mat VCAData::EndmembersAsRows(uvec indices)
+{
+    mat endmembers;
+    try{
+        endmembers = endmember_spectra_.cols(indices);
+    }
+    catch(std::exception e){
+        throw std::runtime_error("VCAData::EndmembersAsRows");
+    }
+
+    return trans(endmembers);
 }

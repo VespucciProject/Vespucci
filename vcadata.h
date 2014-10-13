@@ -33,6 +33,7 @@ public:
     void Apply(mat spectra, int endmembers);
     colvec Results(const uword component);
     QVector<double> Endmember(const uword i);
+    mat EndmembersAsRows(uvec indices);
     mat *endmember_spectra();
     mat *projected_data();
     mat *fractional_abundances();
