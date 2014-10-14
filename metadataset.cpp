@@ -109,6 +109,11 @@ MetaDataset::MetaDataset(QString name,
 
 
 
+///
+/// \brief MetaDataset::ProcessVCA
+/// \param endmember_selection The string entered by the user to select endmember numbers
+/// \return Matrix with chosen endmembers as rows
+///
 mat MetaDataset::ProcessVCA(QString endmember_selection)
 {
     field<uvec> indices_list(parent_datasets_.size());
@@ -148,6 +153,10 @@ mat MetaDataset::ProcessVCA(QString endmember_selection)
 
 }
 
+///
+/// \brief MetaDataset::ProcessAverage
+/// \return
+/// Create a matrix with the average spectrum of each parent dataset on each row
 mat MetaDataset::ProcessAverage()
 {
     mat spectra(parent_datasets_.size(), parent_datasets_[0]->wavelength().n_elem);
@@ -158,6 +167,10 @@ mat MetaDataset::ProcessAverage()
     return spectra;
 }
 
+///
+/// \brief MetaDataset::Concatenate
+/// \return
+/// Create a matrix with one dataset after another
 mat MetaDataset::Concatenate()
 {
     uword num_rows = 0;
@@ -178,6 +191,11 @@ mat MetaDataset::Concatenate()
 
 }
 
+///
+/// \brief MetaDataset::ParentsValid
+/// \return
+/// Checks the validity of the parent datasets to make sure that they have the
+/// same (or at least compatible) spectral resolution.
 bool MetaDataset::ParentsValid()
 {
     uword size = parent_datasets_[0]->wavelength_ptr()->n_elem;

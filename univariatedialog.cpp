@@ -80,10 +80,20 @@ UnivariateDialog::~UnivariateDialog()
 /// Call the appropriate method of the dataset when "Ok" is clicked
 void UnivariateDialog::on_buttonBox_accepted()
 {
+    if (min_box_->text().isEmpty() || max_box_->text().isEmpty()){
+        QMessageBox::warning(this, "Invalid Input!", "You must enter numbers for left and right bounds.");
+        return;
+    }
     double entered_min = min_box_->text().toDouble();
     double entered_max = max_box_->text().toDouble();
-
-    uvec range = data_->FindRange(entered_min, entered_max);
+    uvec range;
+    try{
+        range = data_->FindRange(entered_min, entered_max);
+    }
+    catch (exception e){
+        workspace->main_window()->DisplayExceptionWarning(e);
+        return;
+    }
 
     int min = range[0];
     int max = range[1];

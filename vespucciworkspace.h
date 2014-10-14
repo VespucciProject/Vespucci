@@ -35,6 +35,7 @@ class VespucciWorkspace
 {
 public:
     VespucciWorkspace();
+    ~VespucciWorkspace();
     QStringList dataset_names();
     //QStringList map_names();
 

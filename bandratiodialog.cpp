@@ -86,6 +86,12 @@ BandRatioDialog::~BandRatioDialog()
 /// instantiates the map data
 void BandRatioDialog::on_buttonBox_accepted()
 {
+    if (first_min_box_->text().isEmpty() || first_max_box_->text().isEmpty() || second_min_box_->text().isEmpty() || second_max_box_->text().isEmpty()){
+        QMessageBox::warning(this, "Invalid Input!", "You must enter numbers for left and right bounds.");
+        return;
+    }
+
+
     double first_entered_min = first_min_box_->text().toDouble();
     double second_entered_min = second_min_box_->text().toDouble();
     double first_entered_max = first_max_box_->text().toDouble();
@@ -101,9 +107,15 @@ void BandRatioDialog::on_buttonBox_accepted()
         return;
     }
 
-
-    uvec first_range = data_->FindRange(first_entered_min, first_entered_max);
-    uvec second_range = data_->FindRange(second_entered_min, second_entered_max);
+    uvec first_range;
+    uvec second_range;
+    try{
+        first_range = data_->FindRange(first_entered_min, first_entered_max);
+        second_range = data_->FindRange(second_entered_min, second_entered_max);
+    }
+    catch(exception e){
+        workspace->main_window()->DisplayExceptionWarning(e);
+    }
 
     int first_min = first_range[0];
     int first_max = first_range[1];

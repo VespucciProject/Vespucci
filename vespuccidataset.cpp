@@ -34,6 +34,7 @@ VespucciDataset::VespucciDataset()
 /// Destructor deletes everything allocated with new that isn't a smart pointer
 VespucciDataset::~VespucciDataset()
 {
+    cout << "VespucciDataset Destructor" << endl;
     //make sure principal components stats are deleted properly.
     if (principal_components_calculated_)
         delete principal_components_data_;
@@ -526,7 +527,7 @@ mat VespucciDataset::ZScoreNormCopy()
 /// assuming normality of "population".  Because some values will be negative,
 /// this must be accounted for in Univariate Mapping Functions. Keep in mind that
 /// data is pre-centered by row for all methods (PCA, PLS, etc) that require
-/// centered data, but not necessarily by column, as it is here.
+/// centered data.
 ///
 void VespucciDataset::ZScoreNormalize()
 {

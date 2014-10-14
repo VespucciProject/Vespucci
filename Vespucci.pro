@@ -254,3 +254,6 @@ else:win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libz.a
 
 win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_program_options-mgw48-mt-1_55
 win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_program_options-mgw48-mt-1_55.a
+
+win32: LIBS += -L$$PWD/../../../../QtSDK/lib/gcc/x86_64-w64-mingw32/4.8.2/ -lstdc++
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../QtSDK/lib/gcc/x86_64-w64-mingw32/4.8.2/libstdc++.a

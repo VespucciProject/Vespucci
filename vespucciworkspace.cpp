@@ -36,6 +36,13 @@ VespucciWorkspace::VespucciWorkspace()
 
 }
 
+///
+/// \brief VespucciWorkspace::~VespucciWorkspace
+/// Destructor
+VespucciWorkspace::~VespucciWorkspace()
+{
+    cout << "Workspace destructor" << endl;
+}
 
 ///
 /// \brief VespucciWorkspace::SetPointers
