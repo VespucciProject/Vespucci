@@ -1383,6 +1383,7 @@ void VespucciDataset::PartialLeastSquares(uword components,
 ///
 void VespucciDataset::KMeans(size_t clusters, QString name)
 {
+    return;
     //if dataset is non spatial, just quit
     if(non_spatial_){
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
@@ -1402,11 +1403,12 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
         k.Cluster(data, clusters, assignments);
         k_means_data_.set_size(assignments.n_elem, 1);
         k_means_calculated_ = true;
-        k_means_data_ = assignments + ones(assignments.n_elem);
-        //loop for copying values, adds one so clusters indexed at 1, not 0.
-        /*for (uword i = 0; i < assignments.n_rows; ++i)
-            k_means_data_(i, 0) = assignments(i) + 1;
-            */
+        //assignments += ones(assignments.n_elem);
+        //k_means_data_ = assignments;
+        //The assignemnt operator no longer works in armadillo this is temp kludge
+        for (uword i = 0; i < k_means_data_.n_elem; ++i){
+            k_means_data_(i) = assignments(i) + 1.0;
+        }
     }
     catch(exception e){
         char str[50];
@@ -1429,6 +1431,7 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
     new_map->SetCrispClusters(true);
     this->AddMap(new_map);
     maps_.last()->ShowMapWindow();
+
 }
 
 

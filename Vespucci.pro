@@ -35,12 +35,14 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = vespucci
 TEMPLATE = app
 
-unix: QMAKE_CXXFLAGS += -isystem "/usr/local/include" \
+unix: QMAKE_CXXFLAGS += -std=gnu++11 \
+                        -isystem "/usr/local/include" \
                         -isystem "/usr/local/include/armadillo_bits" \
                         -isystem "/usr/local/include/boost" \
                         -isystem "/usr/include/mlpack"
 
-win32-g++: QMAKE_CXXFLAGS += -isystem "C:/usr/include" \
+win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
+                         -isystem "C:/usr/include" \
                          -isystem "C:/usr/include/boost" \
                          -isystem "C:/usr/include/armadillo_bits" \
                          -isystem "C:/usr/include/mlpack"
@@ -208,11 +210,28 @@ unix: PRE_TARGETDEPS += /usr/local/lib/libarmadillo.so
 INCLUDEPATH += $$PWD/../../../../usr/include
 DEPENDPATH += $$PWD/../../../../usr/include
 
+win32: LIBS += -L$$PWD/../../../../QtSDK/lib/gcc/x86_64-w64-mingw32/4.8.2/ -lgfortran
+INCLUDEPATH += $$PWD/../../../../QtSDK/lib/gcc/x86_64-w64-mingw32/4.8.2/finclude
+DEPENDPATH += $$PWD/../../../../QtSDK/lib/gcc/x86_64-w64-mingw32/4.8.2/finclude
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../QtSDK/lib/gcc/x86_64-w64-mingw32/4.8.2/libgfortran.a
+
+#win32: LIBS += -L$$PWD/../../../../usr/lib/ -lopenblas
+#win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libopenblas.a
+
+#we're using the netlib implementation because I have some issues with openblas right now...
+win32: LIBS += -L$$PWD/../../../../Libraries/armadillo-4.450.4/examples/lib_win64/ -lblas_win64_MT
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../Libraries/armadillo-4.450.4/examples/lib_win64/blas_win64_MT.lib
+win32: LIBS += -L$$PWD/../../../../Libraries/armadillo-4.450.4/examples/lib_win64/ -llapack_win64_MT
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../Libraries/armadillo-4.450.4/examples/lib_win64/lapack_win64_MT.lib
+
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -larpack
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libarpack.a
+
 win32: LIBS += -L$$PWD/../../../../usr/lib/ -larmadillo
 win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libarmadillo.a
 
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -larpack_win64
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libarpack_win64.a
+
 
 
 win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_math_c99-mgw48-mt-1_55
@@ -224,22 +243,6 @@ win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_random-mgw48-mt-
 
 win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_unit_test_framework-mgw48-mt-1_55
 win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_unit_test_framework-mgw48-mt-1_55.a
-
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -lgfortran
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libgfortran.a
-
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -lmlpack
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libmlpack.a
-
-
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -lopenblas
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libopenblas.a
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../usr/lib/ -lqcustomplot
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../usr/lib/ -lqcustomplotd
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libqcustomplot.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libqcustomplotd.a
-
 
 win32: LIBS += -L$$PWD/../../../../usr/lib/ -lxml2
 win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libxml2.a
@@ -257,3 +260,18 @@ win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_program_options-
 
 win32: LIBS += -L$$PWD/../../../../QtSDK/lib/gcc/x86_64-w64-mingw32/4.8.2/ -lstdc++
 win32-g++: PRE_TARGETDEPS += $$PWD/../../../../QtSDK/lib/gcc/x86_64-w64-mingw32/4.8.2/libstdc++.a
+
+win32: LIBS += -L$$PWD/../../../../usr/lib/ -lmlpack
+win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libmlpack.a
+
+
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../usr/lib/ -lqcustomplot
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../usr/lib/ -lqcustomplotd
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libqcustomplot.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libqcustomplotd.a
+
+
+
+
+
