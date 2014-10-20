@@ -171,7 +171,7 @@ void DataViewer::on_plotPushButton_clicked()
         endmember--; //fix indexing from human-intuitve 1 to programmer-intuitive 0
 
         if (ok){
-            spectrum_viewer_ = new SpectrumViewer(this, dataset_, endmember, directory_, tr("VCA"));
+            spectrum_viewer_ = new SpectrumViewer(this, dataset_, endmember, directory_, "VCA");
             spectrum_viewer_->show();
         }
     }

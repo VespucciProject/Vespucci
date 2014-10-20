@@ -28,14 +28,24 @@ void VCAData::Apply(mat spectra, int endmembers)
 /// \param i Index of endmember column
 /// \return Plottable QVector of an endmember
 ///
-QVector<double> VCAData::Endmember(const uword i)
+QVector<double> VCAData::EndmemberQVec(const uword i)
 {
-    std::vector<double> spectrum_std;
-    if (i >= endmember_spectra_.n_cols)
-        spectrum_std = conv_to<std::vector<double> >::from(endmember_spectra_.col(i));
-    else
-        spectrum_std = conv_to<std::vector<double> >::from(endmember_spectra_.col(endmember_spectra_.n_cols - 1));
+    vec spectrum = Endmember(i);
+    std::vector<double> spectrum_std = conv_to<std::vector<double> >::from(spectrum);
     return QVector<double>::fromStdVector(spectrum_std);
+}
+
+///
+/// \brief VCAData::Endmember
+/// \param i
+/// \return
+/// Get a vector corresponding to a single endmember
+vec VCAData::Endmember(const uword i)
+{
+    if (i >= endmember_spectra_.n_cols)
+        return endmember_spectra_.col(endmember_spectra_.n_cols - 1);
+    else
+        return endmember_spectra_.col(i);
 }
 
 ///

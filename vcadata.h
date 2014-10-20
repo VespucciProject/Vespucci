@@ -32,7 +32,8 @@ public:
             QString *directory);
     void Apply(mat spectra, int endmembers);
     colvec Results(const uword component);
-    QVector<double> Endmember(const uword i);
+    QVector<double> EndmemberQVec(const uword i);
+    vec Endmember(const uword i);
     mat EndmembersAsRows(uvec indices);
     mat *endmember_spectra();
     mat *projected_data();
@@ -40,6 +41,7 @@ public:
     int NumberComponents();
     double EndmemberMin(const uword i);
     double EndmemberMax(const uword i);
+
 private:
     ///
     /// \brief endmember_spectra_

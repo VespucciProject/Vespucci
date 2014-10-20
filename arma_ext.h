@@ -63,7 +63,8 @@ vec ApplyFilter(vec x, vec filter);
 vec CreateMovingAverageFilter(uword window_size);
 vec StandardScore(vec X);
 mat StandardScoreMat(mat X);
-
+uword min(uword a, uword b);
+uword max(uword a, uword b);
 }
 
 #endif // ARMA_EXT_H

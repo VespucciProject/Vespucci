@@ -147,7 +147,7 @@ mat arma_ext::orth(mat X)
 /// Vespucci will need (It only works on arma::mat types, and only returns the k
 /// largest singular values (none of that sigma business). U and V tolerances
 /// are not defined currently due to difficulties with Armadillo's find() method
-///
+/// A sparse matrix [0 X; X.t() 0] is formed.
 /// The eigenvalues of this matrix are then found using arma::eigs_sym, a wrapper
 /// for ARPACK.
 /// If X is square, it can be "reconstructed" using X = U*diagmat(s)*V.t(). This
@@ -163,17 +163,13 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
 {
     if (X.n_cols < 2){
         cerr << "svds: X must be 2D matrix" << endl;
-        //throw SVDS_Dimension_X;
         return false;
     }
 
-    //double root_2 = sqrt(2.0);
-    //double tolerance = 1e-10 / root_2; //tolerance for convergence (ARPACK default)
-    double epsilon = datum::eps; //eps in Octave and MATLAB
     uword m = X.n_rows;
     uword n = X.n_cols;
-    uword p = std::min(m, n); //used below to establish tolerances.
-    uword q = std::max(m, n);
+    uword p = arma_ext::min(m, n); //used below to establish tolerances.
+    uword q = arma_ext::max(m, n);
 
     if (k > p){
         if (k > m)
@@ -182,19 +178,17 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
             cerr << "svds: value of k" << k << "is greater than number of columns " << n << endl;
     }
 
-    k = std::min(p, k); //make sure value of k is less than smallest dimension
+    k = arma_ext::min(p, k); //make sure value of k is less than smallest dimension
 
     sp_mat B(m+n, m+n);
     B.submat(span(0, m-1), span(m, m+n-1)) = X; // top right corner
     B.submat(span(m, m+n-1), span(0, m-1)) = X.t(); //bottom left corner
-
     //If, for some reason, a matrix of zeroes is input...
     if (B.n_nonzero == 0){
         U = eye(m, k);
         s = zeros(k, k);
         V = eye(n, k);
         cerr << "svds: input matrix has no non-zero elements" << endl;
-        //throw SVDS_Zeros;
         return false;
     }
 
@@ -203,11 +197,8 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
 
     //because we're using sigma=0, results of eigs will be centered around 0
     //we throw out the negative ones, then add in 0 eigenvalues if we have to
-    bool eigs_success = eigs_sym(eigval, eigvec, B, k*2);
-
-    double eigval_max = eigval.max();
-
-
+    //trying some weird stuff to figure out why arpack call fails
+    bool eigs_success = eigs_sym(eigval, eigvec, B, 2*k);
 
     if (!eigs_success){
         cerr << "svds: arma::eigs_sym did not converge!" << endl;
@@ -215,55 +206,16 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
 
     //Manipulate the results
 
-    //vector of indices of the eigenvalues, sorted in descending order
-    uvec sorted_eigval_indices = sort_index(eigval, "descend");
+    //sort eigvec from largest to smallest:
+    eigvec = eigvec.cols(sort_index(eigval, "descend"));
 
-    //sort eigvec from largest to smallest
-    eigvec = eigvec.cols(sorted_eigval_indices);
+    //the negative eigenvalues are artifacts of how the matrix is constructed
+    //it is possible that there are two 0 eigenvalues. Only the first is taken
+    //The octave and matlab svds routines are a little more precise with this...
+    //It is highly unlikely that a 0 eigenvalue will occur with the types of data
+    //processed by Vespucci
+    uvec return_indices = find(eigval >= 0, k, "first");
 
-    double d_tolerance;
-    //double uv_tolerance; //tolerances for D and U, V
-    if (eigs_success){
-        d_tolerance = q*n*sqrt(epsilon);
-        //uv_tolerance = m*sqrt(sqrt(epsilon));
-    }
-    else{
-        d_tolerance = q*eigval_max*epsilon;
-        //uv_tolerance = m*sqrt(epsilon);
-
-    }
-
-    //cout << "UU" << endl;
-    //mat UU = trans(eigvec.rows(0, m-1)) * eigvec.rows(0, m-1);
-    //vec diag_UU = UU.diag();
-    //cout << "VV" << endl;
-    //mat VV = trans(eigvec.rows(m, m+n-1)) * eigvec.rows(m, m+n-1);
-    //vec diag_VV = VV.diag();
-
-    //cout << "eigvals:" << endl;
-    //cout << eigval << endl;
-    //find all indices that satisfy tolerances
-    //See the Octave documentation for svds:
-    // We wish to exclude all eigenvalues that are less than zero as these
-    // are artifacts of the way the matrix passed to eigs is formed. There
-    // is also the possibility that the value of sigma chosen is exactly
-    // a singular value, and in that case we're dead!! So have to rely on
-    // the warning from eigs. We exclude the singular values which are
-    // less than or equal to zero to within some tolerance scaled by the
-    // norm since if we don't we might end up with too many singular
-    // values.
-
-    uvec query = find((eigval > d_tolerance) /*&& (abs(diag_UU) > uv_tolerance) && (abs(diag_VV) > uv_tolerance)*/);
-
-
-    uword number_of_indices = query.n_elem;
-    int end = std::min(k, number_of_indices) - 1;
-    //cout << "end=" << end;
-    //cout << "query.n_elem=" << query.n_elem << endl;
-
-
-    uvec return_indices = query.subvec(0, end);
-    //cout << "return_indices " << return_indices << endl;
     U = sqrt(2) * (eigvec.rows(0, m-1));
     U = U.cols(return_indices);
 
@@ -271,35 +223,15 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
 
     V = sqrt(2) * eigvec.rows(m, m+n-1);
     V = V.cols(return_indices);
-    //B may have some eigenvalues that are 0 that needed to be included if the
-    //number of non_zero eigenvalues is too small. Will only add eigenvalues in if
-    //they exist (obviously).
-    if (return_indices.n_elem < k){
-        uvec zero_indices = find(abs(eigval) <= d_tolerance);
-        if (zero_indices.n_elem != 0){
-            mat eigvec_sub1 = eigvec.rows(0, m-1);
-            mat eigvec_sub2 = eigvec.rows(m, m+n-1);
-            mat QWU = orth(eigvec_sub1.cols(zero_indices));
-            mat QWV = orth(eigvec_sub2.cols(zero_indices));
-            int n_zero = std::min(QWV.n_cols, std::min(QWU.n_cols, (return_indices.n_elem)));
-
-            //necessary number of zero eigenvalues
-            vec zero_eigvals = abs(eigval.cols(zero_indices.rows(0, n_zero)));
-            U.insert_cols(U.n_cols, QWU.cols(0, n_zero));
-            s.insert_rows(s.n_rows, zero_eigvals);
-            V.insert_cols(V.n_cols, QWV.cols(0, n_zero));
-        }
-    }
-
 
     uvec indices = sort_index(s, "descend");
     s = sort(s, "descend");
 
     U = U.cols(indices);
     V = V.cols(indices);
-
     return eigs_success;
 }
+
 
 ///
 /// \brief arma_ext::plsregress PLS Regression Using SIMPLS algorithm.
@@ -708,3 +640,24 @@ mat arma_ext::StandardScoreMat(mat X)
 }
 
 
+///
+/// \brief arma_ext::max
+/// \param a
+/// \param b
+/// \return
+/// std::max stopped working with uwords for some reason, so I made a max function
+uword arma_ext::max(uword a, uword b)
+{
+    return (a > b ? a : b);
+}
+
+///
+/// \brief arma_ext::min
+/// \param a
+/// \param b
+/// \return
+/// std::min stopped working with uwords for some reason, so I made a min function
+uword arma_ext::min(uword a, uword b)
+{
+    return (a < b ? a : b);
+}

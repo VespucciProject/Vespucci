@@ -49,8 +49,8 @@ LoadDataset::LoadDataset(QWidget *parent, VespucciWorkspace *ws) :
     name_box_ = this->findChild<QLineEdit *>("nameBox");
     y_description_box_ = this->findChild<QLineEdit *>("yDescription");
     x_description_box_ = this->findChild<QLineEdit *>("xDescription");
-    y_units_box_ = this->findChild<QComboBox *>("yUnits");
-    x_units_box_ = this->findChild<QComboBox *>("xUnits");
+    y_units_box_ = this->findChild<QLineEdit *>("yUnits");
+    x_units_box_ = this->findChild<QLineEdit *>("xUnits");
     data_format_box_ = this->findChild<QComboBox *>("dataFormatBox");
 }
 
@@ -82,8 +82,8 @@ void LoadDataset::on_browseButton_clicked()
 /// constructor.
 void LoadDataset::on_buttonBox_accepted()
 {
-    QString y_description = y_description_box_->text() + " (" + y_units_box_->currentText() + ")";
-    QString x_description = x_description_box_->text() + " (" + x_units_box_->currentText() + ")";
+    QString y_description = y_description_box_->text() + " (" + y_units_box_->text() + ")";
+    QString x_description = x_description_box_->text() + " (" + x_units_box_->text() + ")";
 
     QString name = name_box_->text();
     QString filename = filename_line_edit_->text();

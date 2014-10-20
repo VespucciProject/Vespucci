@@ -64,8 +64,8 @@ private:
     QLineEdit *name_box_;
     QLineEdit *y_description_box_;
     QLineEdit *x_description_box_;
-    QComboBox *y_units_box_;
-    QComboBox *x_units_box_;
+    QLineEdit *y_units_box_;
+    QLineEdit *x_units_box_;
     QComboBox *data_format_box_;
 };
 

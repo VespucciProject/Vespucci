@@ -94,7 +94,7 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
     QVector<double> plot_data;
     spectrum_plot_->replot();
     if (type == "VCA"){
-        plot_data = dataset->vertex_components_data()->Endmember(endmember);
+        plot_data = dataset->vertex_components_data()->EndmemberQVec(endmember);
     }
     QVector<double> wavelength = dataset->WavelengthQVector();
     coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
