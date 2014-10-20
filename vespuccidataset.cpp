@@ -498,6 +498,13 @@ void VespucciDataset::UnitAreaNormalize()
     last_operation_ = "unit area normalize";
 }
 
+
+void VespucciDataset::PeakIntensityNormalize(double peak_position)
+{
+    uword index = this->FindRange(peak_position, peak_position + 1.0);
+    
+}
+
 ///
 /// \brief VespucciDataset::ZScoreNormCopy
 /// For when you want to Z-score normalize without changing spectra_
@@ -1449,46 +1456,8 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
 uvec VespucciDataset::FindRange(double start, double end)
 {
     uvec indices(2);
-    uword length = wavelength_.size();
-    uword i;
-    for (i=0; i<length; ++i){
-        if(wavelength_(i)>=start){
-            break;
-        }
-    }
-    if (i==length-1){
-        cerr << "Can't find index of start of range!" << endl;
-        return indices; //in this case, indices contains only zeroes
-    }
-
-    if (fabs(wavelength_(i)-start)>fabs(wavelength_(i-1)-start)){
-        indices(0)=i-1;
-    }
-
-    else{
-        indices(0)= i;
-    }
-    uword it = i;
-    for (i = it; i < length; ++i){
-        if(wavelength_(i)>=end){
-            break;
-        }
-    }
-
-    if(i==length-1){
-        cerr << "Can't find index of upper wavelength limit!" << endl;
-        cerr << "Setting upper limit equal to lower limit (point ROI)" << endl;
-        indices[1]=indices[0];
-        return indices;
-    }
-
-    if (fabs(wavelength_(i)-start)>fabs(wavelength_(i-1)-start)){
-        indices[1] = i-1;
-    }
-
-    else{
-        indices[1] = i;
-    }
+    indices(0) = FindIndex(start);
+    indices(1) = FindIndex(end);
     return indices;
 }
 
@@ -1524,6 +1493,13 @@ QVector<double> VespucciDataset::WavelengthQVector()
             QVector<double>::fromStdVector(wavelength_stdvector);
 
     return wavelength_qvector;
+}
+
+uword VespucciDataset::FindIndex(double abcissa_value)
+{
+    double delta = std::fabs(wavelength_(1) - wavelength_(0));
+    uvec indices = find((abcissa_value - delta) < wavelength_ <= (abcissa_value + delta));
+    return indices(0);
 }
 
 ///

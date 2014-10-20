@@ -193,11 +193,12 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
     int row = dataset_list_widget_->currentRow();
     QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QStringList methods;
-    methods << tr("Min/Max") << tr("Unit Area") << tr("Z-score");
+    methods << tr("Min/Max") << tr("Unit Area") << tr("Z-score") << tr("Peak Intensity");
     bool ok;
     QString item = QInputDialog::getItem(this,
                                          tr("Normalization/Standardization"),
                                          tr("Method:"), methods, 0, false, &ok);
+    double wavelength;
     try{
         if (ok && item == "Min/Max")
             data->MinMaxNormalize();
@@ -207,7 +208,10 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
 
         else if (ok && item == "Z-score")
             data->ZScoreNormalize();
+        else if (ok && item == "Peak Intensity"){
+            wavelength = QInputDialog::getDouble(this, tr("Enter Peak Position"), tr("Position"), 0, 0, data->wavelength().max(), &ok)
 
+        }
         else
             return;
     }

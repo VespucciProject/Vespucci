@@ -133,6 +133,7 @@ public:
     void MinMaxNormalize();
     void ZScoreNormalize();
     void UnitAreaNormalize();
+    void PeakIntensityNormalize(double peak_position);
 
     //Spectral Pre-processing
 
@@ -158,6 +159,7 @@ public:
 
     // Finds the index of spectra_ with x and y values closest to the input //
     int FindIndex(int x_value, int y_value);
+    uword FindIndex(double abcissa_value);
 
     // Returns vector containing start and end index within a range
     uvec FindRange(double start, double end);

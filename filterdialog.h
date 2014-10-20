@@ -59,6 +59,7 @@ private:
     QSpinBox *derivative_box_;
     QSpinBox *polynomial_box_;
     QSpinBox *window_box_;
+    QSpinBox *singular_values_box_;
 };
 
 #endif // FILTERDIALOG_H
