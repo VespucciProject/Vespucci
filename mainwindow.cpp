@@ -208,7 +208,6 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
                                                  tr("Position"), 0, 0,
                                                  data->wavelength().max(), 3, &ok);
             data->PeakIntensityNormalize(wavelength);
-
         }
         else
             return;
