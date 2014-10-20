@@ -7,12 +7,14 @@ Vespucci is distributed under the terms of the GNU General Public License versio
 A copy of this license is provided in LICENSE
 
 Binary Releases:
+-----------------
 Because the members of my group primarily use Windows machines, most releases 
 will only include Windows binaries.  Major releases may include binaries for 
 Windows, Mac OSX, and GNU/Linux (most likely as .deb and .rpm).
 
 A relatively stable Windows development build is availible from Dropbox:
 https://www.dropbox.com/sh/at9zo6udw1oeaao/AADWCdwKD87Z7Fq9Tm6_Wk1fa
+
 This is the binary most often used by my research group.
 
 
@@ -27,24 +29,29 @@ their paths):
 Should do the trick. This does not require elevation as the default install path
 is two directories above the source. You can modify PREFIX to install to a different
 directory if you'd like. If you are not compiling with static Qt, and the Qt linked
-libraries are not in your path, you will have to deploy Qt:
-  
-  windeployqt 
-  macdeployqt
+libraries are not in your path, you will have to deploy Qt (using windeployqt or macdeployqt)
 
 Pre-requisites:
+--------------------
 If you can compile and install MLPACK and have the Qt framework installed,
 then you can compile and install Vespucci. You should have the following
 libraries on your system:
 
 Qt
+
 MLPACK
-ARMADILLO (compiled shared library)
+
+Armadillo (compiled shared or static library)
+
 LAPACK and BLAS (or high speed replacement like OpenBLAS, Accelerate, MKL, etc.)
+
 ARPACK (or ARPACK-ng)
+
 Boost (program_options, unit_test_framework, random, and math (c99))
+
 LibXML2
-QCustomPlot (compiled shared or static library)
+
+Vespucci-QCP (compiled shared or static library, a fork of QCustomPlot https://github.com/dpfoose/Vespucci-QCP)
 
 All of the above packages, with the exception of MLPACK and QCustomPlot, are 
 readily available from most major GNU/Linux repositories. Installation on Mac
