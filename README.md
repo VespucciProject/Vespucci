@@ -1,5 +1,7 @@
-Vespucci
+Vespucci Master Branch
 ========
+Commits to this branch are generally only made at each official release.
+
 Vespucci is a free/libre/open-source, cross-platform tool for spectroscopic
 imaging
 
@@ -24,7 +26,7 @@ Compiling Vespucci from source is easy on Unix-like systems. Assuming you
 have the proper pre-requisites (and Vespucci.pro is properly edited to reflect
 their paths):
 
-  qmake && make && make install
+    qmake && make && make install
 
 Should do the trick. This does not require elevation as the default install path
 is two directories above the source. You can modify PREFIX to install to a different
@@ -37,21 +39,14 @@ If you can compile and install MLPACK and have the Qt framework installed,
 then you can compile and install Vespucci. You should have the following
 libraries on your system:
 
-Qt
-
-MLPACK
-
-Armadillo (compiled shared or static library)
-
-LAPACK and BLAS (or high speed replacement like OpenBLAS, Accelerate, MKL, etc.)
-
-ARPACK (or ARPACK-ng)
-
-Boost (program_options, unit_test_framework, random, and math (c99))
-
-LibXML2
-
-Vespucci-QCP (compiled shared or static library, a fork of QCustomPlot https://github.com/dpfoose/Vespucci-QCP)
+* Qt
+* MLPACK
+* Armadillo (compiled shared or static library)
+* LAPACK and BLAS (or high speed replacement like OpenBLAS, Accelerate, MKL, etc.)
+* ARPACK (or ARPACK-ng)
+* Boost (program_options, unit_test_framework, random, and math (c99))
+* LibXML2
+* Vespucci-QCP (compiled shared or static library, a fork of QCustomPlot https://github.com/dpfoose/Vespucci-QCP)
 
 All of the above packages, with the exception of MLPACK and QCustomPlot, are 
 readily available from most major GNU/Linux repositories. Installation on Mac
