@@ -200,16 +200,14 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
                                          tr("Method:"), methods, 0, false, &ok);
     double wavelength;
     try{
-        if (ok && item == "Min/Max")
-            data->MinMaxNormalize();
-
-        else if (ok && item == "Unit Area")
-            data->UnitAreaNormalize();
-
-        else if (ok && item == "Z-score")
-            data->ZScoreNormalize();
+        if (ok && item == "Min/Max"){data->MinMaxNormalize();}
+        else if (ok && item == "Unit Area"){data->UnitAreaNormalize();}
+        else if (ok && item == "Z-score"){data->ZScoreNormalize();}
         else if (ok && item == "Peak Intensity"){
-            wavelength = QInputDialog::getDouble(this, tr("Enter Peak Position"), tr("Position"), 0, 0, data->wavelength().max(), &ok)
+            wavelength = QInputDialog::getDouble(this, tr("Enter Peak Position"),
+                                                 tr("Position"), 0, 0,
+                                                 data->wavelength().max(), 3, &ok);
+            data->PeakIntensityNormalize(wavelength);
 
         }
         else
