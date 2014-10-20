@@ -501,8 +501,12 @@ void VespucciDataset::UnitAreaNormalize()
 
 void VespucciDataset::PeakIntensityNormalize(double peak_position)
 {
-    uword index = this->FindRange(peak_position, peak_position + 1.0);
-    
+    spectra_old_ = spectra_;
+    uword index = FindIndex(peak_position);
+    for (uword i = 0; i < spectra_.n_rows; ++i){
+        spectra_.row(i) /= spectra_(i, index);
+    }
+    last_operation_ = "peak intensity normalize";
 }
 
 ///
@@ -1452,7 +1456,6 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
 /// \param end the second wavelength in the spectral region of interest
 /// \return
 ///
-
 uvec VespucciDataset::FindRange(double start, double end)
 {
     uvec indices(2);
