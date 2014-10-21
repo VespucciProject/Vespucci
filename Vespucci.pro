@@ -32,6 +32,11 @@ QT       += widgets printsupport
 CONFIG   += static
 mac: CONFIG += app_bundle
 
+# Set the installation directory
+isEmpty(PREFIX) {
+    PREFIX = $$PWD/../../Vespucci-install
+}
+# it is assumed that casual windows users will not use the build system to install
 TARGET = vespucci
 TEMPLATE = app
 

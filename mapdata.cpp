@@ -392,7 +392,7 @@ bool MapData::saveTiff(const QString &fileName, int width, int height, double sc
 void MapData::RemoveThis()
 {
     try{
-        delete spectrum_display_;
+        //delete spectrum_display_; this is a QObject that should take care of itself
         dataset_->RemoveMapAt(source_index_);
     }
     catch(exception e){
