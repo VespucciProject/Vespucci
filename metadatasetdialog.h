@@ -21,6 +21,7 @@
 #define METADATASETDIALOG_H
 
 #include <QDialog>
+#include "vespucciworkspace.h"
 
 namespace Ui {
 class MetaDatasetDialog;
@@ -31,11 +32,20 @@ class MetaDatasetDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit MetaDatasetDialog(QWidget *parent = 0);
+    explicit MetaDatasetDialog(QWidget *parent, VespucciWorkspace * ws);
     ~MetaDatasetDialog();
+
+private slots:
+    void on_buttonBox_rejected();
+
+    void on_buttonBox_accepted();
 
 private:
     Ui::MetaDatasetDialog *ui;
+    QListWidget *dataset_list_widget_;
+    QLineEdit *endmember_selection_box_;
+    QLineEdit *method_selection_box_;
+    VespucciWorkspace *workspace;
 };
 
 #endif // METADATASETDIALOG_H

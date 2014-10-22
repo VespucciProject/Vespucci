@@ -140,7 +140,7 @@ public:
     void SubtractBackground(mat background, QString filename);
     void MedianFilter(unsigned int window_size);
     void LinearMovingAverage(unsigned int window_size);
-    void Derivatize(unsigned int derivative_order,
+    void SavitzkyGolay(unsigned int derivative_order,
                     unsigned int polynomial_order,
                     unsigned int window_size);
     void SingularValue(unsigned int singular_values);
@@ -454,5 +454,5 @@ private:
 
 
 };
-
+Q_DECLARE_METATYPE(QSharedPointer<VespucciDataset>)
 #endif // VespucciDataset_H

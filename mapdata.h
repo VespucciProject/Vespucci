@@ -270,5 +270,5 @@ private:
 
 
 };
-
+Q_DECLARE_METATYPE(QSharedPointer<MapData>)
 #endif // MAPDATA_H

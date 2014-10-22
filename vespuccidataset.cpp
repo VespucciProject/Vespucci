@@ -498,7 +498,10 @@ void VespucciDataset::UnitAreaNormalize()
     last_operation_ = "unit area normalize";
 }
 
-
+///
+/// \brief VespucciDataset::PeakIntensityNormalize
+/// \param peak_position The wavelength value
+///
 void VespucciDataset::PeakIntensityNormalize(double peak_position)
 {
     spectra_old_ = spectra_;
@@ -760,17 +763,17 @@ void VespucciDataset::SingularValue(unsigned int singular_values)
 }
 
 ///
-/// \brief VespucciDataset::Derivatize
+/// \brief VespucciDataset::SavitzkyGolay
 /// Performs derivatization/Savitzky-Golay smoothing
 /// \param derivative_order The order of the derivative.
 /// \param polynomial_order The order of the polynomial
 /// \param window_size The size of the filter window.
 ///
-void VespucciDataset::Derivatize(unsigned int derivative_order,
+void VespucciDataset::SavitzkyGolay(unsigned int derivative_order,
                                  unsigned int polynomial_order,
                                  unsigned int window_size)
 {
-    log_stream_ << "Derivatize (Savitzky-Golay Smoothing)" << endl;
+    log_stream_ << "SavitzkyGolay" << endl;
     log_stream_ << "derivative_order == " << derivative_order << endl;
     log_stream_ << "polynomial_order == " << polynomial_order << endl;
     log_stream_ << "window_size == " << window_size << endl << endl;
@@ -785,7 +788,7 @@ void VespucciDataset::Derivatize(unsigned int derivative_order,
     }
     catch(exception e){
         char str[50];
-        strcat(str, "Derivatize: ");
+        strcat(str, "SavitzkyGolay: ");
         strcat(str, e.what());
         throw std::runtime_error(str);
     }
@@ -1760,7 +1763,6 @@ void VespucciDataset::RemoveMapAt(unsigned int i)
     QListWidgetItem *item = map_list_widget_->takeItem(i);
     map_list_widget_->removeItemWidget(item);
     maps_.removeAt(i); //map falls out of scope and memory freed!
-
 }
 
 

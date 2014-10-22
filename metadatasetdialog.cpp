@@ -20,14 +20,33 @@
 #include "metadatasetdialog.h"
 #include "ui_metadatasetdialog.h"
 
-MetaDatasetDialog::MetaDatasetDialog(QWidget *parent) :
+MetaDatasetDialog::MetaDatasetDialog(QWidget *parent, VespucciWorkspace *ws) :
     QDialog(parent),
     ui(new Ui::MetaDatasetDialog)
 {
     ui->setupUi(this);
+
+    dataset_list_widget_ = this->findChild<QListWidget*>("datasetListWidget");
+    workspace = ws;
+    dataset_list_widget_->addItems(workspace->dataset_names());
+    method_selection_box_ = this->findChild<QComboBox *>("methodComboBox");
+    endmember_selection_box_ = this->findChild<QLineEdit *>("componentLineEdit");
 }
 
 MetaDatasetDialog::~MetaDatasetDialog()
 {
     delete ui;
+}
+
+void MetaDatasetDialog::on_buttonBox_rejected()
+{
+    this->close();
+}
+
+void MetaDatasetDialog::on_buttonBox_accepted()
+{
+    QList<QListWidgetItem *> widget_item_list = dataset_list_widget_->selectedItems();
+    QList<unsigned int> rows;
+    for (int i = 0; i < widget_item_list.size(); ++i){
+    }
 }

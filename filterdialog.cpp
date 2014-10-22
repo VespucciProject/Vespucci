@@ -91,7 +91,7 @@ void FilterDialog::on_buttonBox_accepted()
         break;
     case 2:
         try{
-            dataset_->Derivatize(derivative_box_->value(),
+            dataset_->SavitzkyGolay(derivative_box_->value(),
                                  polynomial_box_->value(),
                                  window_box_->value());
         }
