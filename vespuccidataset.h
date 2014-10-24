@@ -82,6 +82,7 @@ class VespucciDataset
 {
 public:
     VespucciDataset();
+    VespucciDataset(const VespucciDataset &dataset);
     VespucciDataset(QString text_filename,
                     MainWindow *main_window,
                     QString *directory,
@@ -281,6 +282,7 @@ public:
     ///
     QTextStream log_stream_;
 
+
 private:
     void DestroyLogFile();
 
@@ -454,5 +456,6 @@ private:
 
 
 };
-Q_DECLARE_METATYPE(QSharedPointer<VespucciDataset>)
+Q_DECLARE_METATYPE(QSharedPointer<VespucciDataset> *)
+
 #endif // VespucciDataset_H

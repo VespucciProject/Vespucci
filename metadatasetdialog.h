@@ -44,7 +44,7 @@ private:
     Ui::MetaDatasetDialog *ui;
     QListWidget *dataset_list_widget_;
     QLineEdit *endmember_selection_box_;
-    QLineEdit *method_selection_box_;
+    QComboBox *method_selection_box_;
     VespucciWorkspace *workspace;
 };
 

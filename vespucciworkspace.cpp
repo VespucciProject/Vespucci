@@ -52,7 +52,6 @@ VespucciWorkspace::~VespucciWorkspace()
 void VespucciWorkspace::SetPointers(MainWindow *main_window)
 {
     main_window_ = main_window;
-    dataset_list_widget_ = main_window->findChild<QListWidget *>("datasetsListWidget");
 }
 
 
@@ -64,10 +63,10 @@ void VespucciWorkspace::SetPointers(MainWindow *main_window)
 /// Add a dataset to the datasets_ QList
 void VespucciWorkspace::AddDataset(QSharedPointer<VespucciDataset> dataset)
 {
-    QString name = dataset->name();
-    datasets_.append(dataset);
-    dataset_list_widget_->addItem(name);
-    ++dataset_loading_count_;
+    bool success = dataset_list_model_->AddDataset(dataset);
+
+    if (!success)
+        QMessageBox::warning(main_window_, "Fail!", "Adding dataset failed", QMessageBox::Ok);
 }
 
 
@@ -81,13 +80,9 @@ void VespucciWorkspace::AddDataset(QSharedPointer<VespucciDataset> dataset)
 /// Useful when the index is known (as when the list is being iterated)
 /// These functions should be safe because the names list and the object list only update together
 
-void VespucciWorkspace::RemoveDatasetAt(int i)
+void VespucciWorkspace::RemoveDatasetAt(int row, const QModelIndex &parent)
 {
-    QListWidgetItem *item = dataset_list_widget_->takeItem(i);
-    dataset_list_widget_->removeItemWidget(item);
-    datasets_.removeAt(i);
-
-
+    dataset_list_model_->removeRow(row, parent);
 }
 
 
@@ -145,7 +140,7 @@ MainWindow *VespucciWorkspace::main_window()
 ///
 double VespucciWorkspace::GetWavelengthMax(int row)
 {
-    return datasets_[row]->wavelength().max();
+    return datasets_->at(row)->wavelength().max();
 }
 
 ///
@@ -155,7 +150,7 @@ double VespucciWorkspace::GetWavelengthMax(int row)
 ///
 double VespucciWorkspace::GetWavelengthMin(int row)
 {
-    return datasets_[row]->wavelength().min();
+    return datasets_->at(row)->wavelength().min();
 }
 
 
@@ -166,7 +161,8 @@ double VespucciWorkspace::GetWavelengthMin(int row)
 ///
 QSharedPointer<VespucciDataset> VespucciWorkspace::DatasetAt(int i)
 {
-    return datasets_[i];
+    //return datasets_[i];
+    return dataset_list_model_->DatasetAt(i);
 }
 
 ///
@@ -254,6 +250,25 @@ QFile* VespucciWorkspace::CreateLogFile(QString dataset_name)
 void VespucciWorkspace::ClearDatasets()
 {
 
-    for (int i=0; i < datasets_.size(); ++i)
+    for (int i=0; i < datasets_->size(); ++i)
         datasets_[i].clear();
+}
+
+///
+/// \brief VespucciWorkspace::datasets
+/// \return a copy of the list of pointers to datasets
+///
+QList<QSharedPointer<VespucciDataset> > *VespucciWorkspace::datasets()
+{
+    return datasets_;
+}
+
+void VespucciWorkspace::SetListWidgetModel(DatasetListModel *model)
+{
+    dataset_list_model_ = model;
+}
+
+void VespucciWorkspace::SetDatasets(QList<QSharedPointer<VespucciDataset> > *datasets)
+{
+    datasets_ = datasets;
 }

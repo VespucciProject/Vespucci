@@ -29,6 +29,7 @@ VespucciDataset::VespucciDataset()
 
 }
 
+
 ///
 /// \brief VespucciDataset::~VespucciDataset
 /// Destructor deletes everything allocated with new that isn't a smart pointer

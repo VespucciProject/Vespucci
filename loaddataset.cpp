@@ -150,7 +150,7 @@ void LoadDataset::on_buttonBox_accepted()
                                                             y_description));
                     workspace->AddDataset(dataset);
                     workspace->set_directory(file_info.dir().absolutePath());
-                    dataset.clear(); //dataset should be copied to list
+                    //dataset.clear(); //dataset should be copied to list
             }
             catch(exception e){
                 workspace->main_window()->DisplayExceptionWarning(e);

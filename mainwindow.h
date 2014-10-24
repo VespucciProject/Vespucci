@@ -24,7 +24,7 @@
 #include "vespucciworkspace.h"
 class VespucciWorkspace;
 class VespucciDataset;
-
+class DatasetListModel;
 namespace Ui {
 class MainWindow;
 }
@@ -122,8 +122,12 @@ private:
     ///
     /// \brief dataset_list_widget_
     /// The list widget displaying the currently loaded datasets
-    QListWidget *dataset_list_widget_;
+    QListView *dataset_list_view_;
 
+    ///
+    /// \brief dataset_list_model_
+    /// The abstract data model associated with the dataset list widget.
+    DatasetListModel *dataset_list_model_;
 };
 
 #endif // MAINWINDOW_H

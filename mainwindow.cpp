@@ -32,6 +32,7 @@
 #include "plsdialog.h"
 #include "kmeansdialog.h"
 #include "vcadialog.h"
+#include "datasetlistmodel.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -45,7 +46,11 @@ MainWindow::MainWindow(QWidget *parent, VespucciWorkspace *ws) :
     workspace = ws;
     ui->setupUi(this);
     map_list_widget_ = this->findChild<QListWidget *>("mapsListWidget");
-    dataset_list_widget_ = this->findChild<QListWidget *>("datasetsListWidget");
+    dataset_list_view_ = this->findChild<QListView *>("datasetsListView");
+    cout << dataset_list_view_->height() << " = dataset_list_view_ height" << endl;
+    dataset_list_model_ = new DatasetListModel(0, workspace);
+    workspace->SetListWidgetModel(dataset_list_model_);
+    dataset_list_view_->setModel(dataset_list_model_);
 }
 
 MainWindow::~MainWindow()
@@ -118,7 +123,7 @@ void MainWindow::on_actionCiting_Vespucci_triggered()
 ///Triggers univariate dialog.
 void MainWindow::on_actionNew_Univariate_Map_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     UnivariateDialog *univariate_dialog =
             new UnivariateDialog(this, workspace, row);
     univariate_dialog->show();
@@ -129,7 +134,7 @@ void MainWindow::on_actionNew_Univariate_Map_triggered()
 ///Triggers band ratio dialog.
 void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     BandRatioDialog *band_ratio_dialog =
             new BandRatioDialog(this, workspace, row);
     band_ratio_dialog->show();
@@ -141,7 +146,7 @@ void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
 ///Triggers principal components dialog
 void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     PrincipalComponentsDialog *principal_components_dialog =
             new PrincipalComponentsDialog(this, workspace, row);
     principal_components_dialog->show();
@@ -153,7 +158,7 @@ void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
 ///Triggers vertex components dialog
 void MainWindow::on_actionVertex_Components_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     VCADialog *vca_dialog = new VCADialog(this, workspace, row);
     vca_dialog->show();
 }
@@ -165,7 +170,7 @@ void MainWindow::on_actionVertex_Components_triggered()
 ///
 void MainWindow::on_actionPartial_Least_Squares_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     PLSDialog *pls_dialog =
             new PLSDialog(this, workspace, row);
     pls_dialog->show();
@@ -177,7 +182,7 @@ void MainWindow::on_actionPartial_Least_Squares_triggered()
 ///
 void MainWindow::on_actionK_Means_Clustering_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     KMeansDialog *k_means_dialog =
             new KMeansDialog(this, workspace, row);
     k_means_dialog->show();
@@ -190,7 +195,7 @@ void MainWindow::on_actionK_Means_Clustering_triggered()
 ///Normalizes data using Z-scores
 void MainWindow::on_actionNormalize_Standardize_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QStringList methods;
     methods << tr("Min/Max") << tr("Unit Area") << tr("Z-score") << tr("Peak Intensity");
@@ -222,7 +227,7 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
 ///Subtracts a background matrix (a saved armadillo binary matrix) from spectra
 void MainWindow::on_actionSubtract_Background_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QString filename =
             QFileDialog::getOpenFileName(this,
@@ -251,7 +256,7 @@ void MainWindow::on_actionSubtract_Background_triggered()
 void MainWindow::on_actionSpectra_triggered()
 {
     bool success;
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
@@ -282,7 +287,7 @@ void MainWindow::on_actionSpectra_triggered()
 void MainWindow::on_actionAverage_Spectra_triggered()
 {
     bool success;
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
@@ -313,7 +318,7 @@ void MainWindow::on_actionAverage_Spectra_triggered()
 void MainWindow::on_actionAverage_Spectra_with_Abcissa_triggered()
 {
     bool success;
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
@@ -349,7 +354,7 @@ void MainWindow::on_actionAverage_Spectra_with_Abcissa_triggered()
 void MainWindow::on_actionSpectral_Abcissa_triggered()
 {
     bool success;
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
@@ -380,7 +385,7 @@ void MainWindow::on_actionSpectral_Abcissa_triggered()
 void MainWindow::on_actionAll_Data_triggered()
 {
     bool success;
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
@@ -408,7 +413,7 @@ void MainWindow::on_actionAll_Data_triggered()
 /// Triggers dialog to filter data
 void MainWindow::on_actionFilter_Derivatize_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     FilterDialog *filter_dialog = new FilterDialog(this, workspace, row);
     filter_dialog->show();
 }
@@ -418,8 +423,8 @@ void MainWindow::on_actionFilter_Derivatize_triggered()
 /// Closes the dataset. Should force it to go out of scope
 void MainWindow::on_actionClose_Dataset_triggered()
 {
-    int dataset_row = dataset_list_widget_->currentRow();
-    QString name = dataset_list_widget_->currentItem()->text();
+    int dataset_row = dataset_list_view_->currentIndex().row();
+    QString name = dataset_list_view_->currentIndex().data().value<QString>();
     QString text = "Are you sure you want to close the dataset " + name + "?" +
             " The data and all associated maps will be deleted.";
 
@@ -427,7 +432,7 @@ void MainWindow::on_actionClose_Dataset_triggered()
                                          QMessageBox::Ok, QMessageBox::Cancel);
 
     if (response == QMessageBox::Ok)
-        workspace->RemoveDatasetAt(dataset_row);
+        dataset_list_view_->model()->removeRow(dataset_row);
 }
 
 ///
@@ -444,7 +449,7 @@ void MainWindow::on_actionDocumentation_triggered()
 /// Triggers the CropDialog
 void MainWindow::on_actionCrop_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     CropDialog *crop_dialog = new CropDialog(this, workspace, row);
     crop_dialog->show();
 }
@@ -454,7 +459,7 @@ void MainWindow::on_actionCrop_triggered()
 /// Triggers Baseline correction dialog
 void MainWindow::on_actionCorrect_Baseline_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     BaselineDialog *baseline_dialog = new BaselineDialog(this, workspace, row);
     baseline_dialog->show();
 }
@@ -464,7 +469,7 @@ void MainWindow::on_actionCorrect_Baseline_triggered()
 /// Triggers DataViewer
 void MainWindow::on_actionView_Dataset_Elements_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     DataViewer *data_viewer = new DataViewer(0, workspace, row);
     data_viewer->show();
 }
@@ -630,7 +635,7 @@ VespucciWorkspace* MainWindow::workspace_ptr()
 
 void MainWindow::on_actionUndo_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
     QString text = tr("Are you sure you want to undo ") + dataset->last_operation()
             + " on " + dataset->name() + "?";

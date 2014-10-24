@@ -25,9 +25,10 @@
 #include "arma_ext.h"
 #include <qcustomplot.h>
 #include "mainwindow.h"
+#include "datasetlistmodel.h"
 class VespucciDataset;
 class MainWindow;
-
+class DatasetListModel;
 ///
 /// \brief The VespucciWorkspace class
 /// A class which contains all "global variables" (that aren't held in MainWindow)
@@ -46,7 +47,7 @@ public:
     //void AddMap(MapData map);
     //void RemoveMap(QString name);
 
-    void RemoveDatasetAt(int i);
+    void RemoveDatasetAt(int row, const QModelIndex &parent);
     //void RemoveMapAt(int i);
 
 
@@ -79,6 +80,12 @@ public:
 
     void ClearDatasets();
 
+    QList<QSharedPointer<VespucciDataset> > *datasets();
+    void SetListWidgetModel(DatasetListModel *model);
+    void SetDatasets(QList<QSharedPointer<VespucciDataset> > *datasets);
+    void UpdateCount();
+
+
 private:
     //pointers to main window and necessary widgets
 
@@ -93,10 +100,13 @@ private:
     /// The list widget in MainWindow storing all the dataset names
     QListWidget *dataset_list_widget_;
 
+
     ///
-    /// \brief datasets_
-    /// The container that stores all the heap-allocated dataset objects
-    QList<QSharedPointer<VespucciDataset> > datasets_;
+    /// \brief dataset_list_model_
+    /// The model for the dataset list widget.
+    DatasetListModel *dataset_list_model_;
+
+
 
     ///
     /// \brief directory_
@@ -123,6 +133,11 @@ private:
     /// The global color gradient
     QCPColorGradient global_gradient_;
 
+
+    ///
+    /// \brief datasets_
+    /// The container that stores all the heap-allocated dataset objects
+    QList<QSharedPointer<VespucciDataset> > *datasets_;
 
 };
 
