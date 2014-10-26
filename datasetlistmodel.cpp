@@ -9,8 +9,6 @@ DatasetListModel::DatasetListModel(QObject *parent, VespucciWorkspace *ws) :
 
 int DatasetListModel::rowCount(const QModelIndex &parent) const
 {
-    cout << "DatasetListModel::rowCount()" << endl;
-    cout << "datasets_.size() = " << datasets_.size() << endl;
     return datasets_.size();
 }
 
@@ -47,6 +45,7 @@ bool DatasetListModel::AddDataset(QSharedPointer<VespucciDataset> dataset)
     datasets_.append(dataset);
     endInsertRows();
     emit dataChanged(index, index);
+    emit DatasetAdded(index);
     workspace->UpdateCount();
     return true;
 }
@@ -54,4 +53,12 @@ bool DatasetListModel::AddDataset(QSharedPointer<VespucciDataset> dataset)
 QSharedPointer<VespucciDataset> DatasetListModel::DatasetAt(int row)
 {
     return datasets_.at(row);
+}
+
+///
+/// \brief DatasetListModel::ClearMapss
+/// Clears the dataset container. Used when closing the program.
+void DatasetListModel::ClearDatasets()
+{
+    datasets_.clear();
 }

@@ -24,11 +24,6 @@
 using namespace arma;
 using namespace std;
 
-VespucciDataset::VespucciDataset()
-{
-
-}
-
 
 ///
 /// \brief VespucciDataset::~VespucciDataset
@@ -43,10 +38,10 @@ VespucciDataset::~VespucciDataset()
         delete partial_least_squares_data_;
 
     //make sure all maps are delted properly.
-    for (int i = 0; i < maps_.size(); ++i)
-        RemoveMapAt(i);
+    map_list_model_->ClearMaps();
 
     DestroyLogFile();
+    delete map_list_model_;
 
 }
 
@@ -131,7 +126,8 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
                                  QFile *log_file,
                                  QString name,
                                  QString x_axis_description,
-                                 QString y_axis_description): log_stream_(log_file)
+                                 QString y_axis_description)
+    : log_stream_(log_file)
 {
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_file_ = log_file;
@@ -144,7 +140,7 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
 
     non_spatial_ = false;
     //Set up variables unrelated to hyperspectral data:
-    map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
+    map_list_model_ = new MapListModel(main_window, this);
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
     partial_least_squares_calculated_ = false;
@@ -196,7 +192,8 @@ VespucciDataset::VespucciDataset(QString text_filename,
                                  QString x_axis_description,
                                  QString y_axis_description,
                                  bool swap_spatial,
-                                 InputFileFormat::Format format) : log_stream_(log_file)
+                                 InputFileFormat::Format format)
+    : log_stream_(log_file)
 {
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_file_ = log_file;
@@ -211,7 +208,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
 
     non_spatial_ = false;
     //Set up variables unrelated to hyperspectral data:
-    map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
+    map_list_model_ = new MapListModel(main_window, this);
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
     partial_least_squares_calculated_ = false;
@@ -304,10 +301,12 @@ VespucciDataset::VespucciDataset(QString name,
                                  QString *directory,
                                  QFile *log_file,
                                  QSharedPointer<VespucciDataset> original,
-                                 uvec indices) : log_stream_(log_file)
+                                 uvec indices)
+    : log_stream_(log_file)
 
 {
     log_file_ = log_file;
+    map_list_model_ = new MapListModel(main_window, this);
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_stream_ << "Dataset " << name << "created "
                 << datetime.date().toString("yyyy-MM-dd") << "T"
@@ -315,7 +314,6 @@ VespucciDataset::VespucciDataset(QString name,
     log_stream_ << "Created from previous dataset " << original->name() << endl;
 
     non_spatial_ = true;
-    map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
     partial_least_squares_calculated_ = false;
@@ -353,11 +351,12 @@ VespucciDataset::VespucciDataset(QString name,
 VespucciDataset::VespucciDataset(QString name,
                                  MainWindow *main_window,
                                  QString *directory,
-                                 QFile *log_file) : log_stream_(log_file)
+                                 QFile *log_file)
+    : log_stream_(log_file)
 {
+    map_list_model_ = new MapListModel(main_window, this);
     log_file_ = log_file;
     non_spatial_ = true;
-    map_list_widget_ = main_window->findChild<QListWidget *>("mapsListWidget");
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
     partial_least_squares_calculated_ = false;
@@ -970,18 +969,18 @@ void VespucciDataset::Univariate(uword min,
         strcat(str, e.what());
         throw std::runtime_error(str);
     }
-
+    cout << "Initialization of map object" << endl;
     QSharedPointer<MapData> map(new MapData(x_axis_description_,
                                             y_axis_description_,
                                             x_, y_, results,
                                             QSharedPointer<VespucciDataset>(this),
                                             directory_,
                                             this->GetGradient(gradient_index),
-                                            maps_.size(),
+                                            maps_->size(),
                                             6,
                                             main_window_));
 
-
+    cout << "end of initialization" << endl;
     map->set_name(name, map_type);
 
     if(baselines.n_rows !=0){
@@ -1001,8 +1000,8 @@ void VespucciDataset::Univariate(uword min,
     log_stream_ << "integration_method == " << integration_method << endl;
     log_stream_ << "gradient_index == " << gradient_index << endl;
 
-    this->AddMap(map);
-    maps_.last()->ShowMapWindow();
+    map_list_model_->AddMap(map);
+    map->ShowMapWindow();
 }
 
 ///
@@ -1127,7 +1126,7 @@ void VespucciDataset::BandRatio(uword first_min,
                                             x_, y_, results,
                                             QSharedPointer<VespucciDataset>(this), directory_,
                                             this->GetGradient(gradient_index),
-                                            maps_.size(),
+                                            maps_->size(),
                                             6,
                                             main_window_));
 
@@ -1136,8 +1135,8 @@ void VespucciDataset::BandRatio(uword first_min,
     if (first_baselines.n_rows != 0){
         new_map->set_baselines(first_abcissa, second_abcissa, first_baselines, second_baselines);
     }
-    this->AddMap(new_map);
-    maps_.last()->ShowMapWindow();
+    map_list_model_->AddMap(new_map);
+    maps_->last()->ShowMapWindow();
 }
 
 
@@ -1230,12 +1229,12 @@ void VespucciDataset::PrincipalComponents(int component,
                                             x_, y_, results,
                                             QSharedPointer<VespucciDataset>(this), directory_,
                                             GetGradient(gradient_index),
-                                            maps_.size(),
+                                            maps_->size(),
                                             6,
                                             main_window_));
     new_map->set_name(name, map_type);
     AddMap(new_map);
-    maps_.last()->ShowMapWindow();
+    maps_->last()->ShowMapWindow();
 }
 
 
@@ -1296,12 +1295,12 @@ void VespucciDataset::VertexComponents(uword endmembers,
                                                 x_, y_, results,
                                                 QSharedPointer<VespucciDataset>(this), directory_,
                                                 GetGradient(gradient_index),
-                                                maps_.size(),
+                                                maps_->size(),
                                                 6,
                                                 main_window_));
     new_map->set_name(name, map_type);
     AddMap(new_map);
-    maps_.last()->ShowMapWindow();
+    maps_->last()->ShowMapWindow();
 }
 
 ///
@@ -1382,12 +1381,12 @@ void VespucciDataset::PartialLeastSquares(uword components,
                                             x_, y_, results,
                                             QSharedPointer<VespucciDataset>(this), directory_,
                                             this->GetGradient(gradient_index),
-                                            maps_.size(),
+                                            maps_->size(),
                                             6,
                                             main_window_));
     new_map->set_name(name, map_type);
-    this->AddMap(new_map);
-    maps_.last()->ShowMapWindow();
+    map_list_model_->AddMap(new_map);
+    maps_->last()->ShowMapWindow();
 }
 
 ///
@@ -1439,13 +1438,13 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
                                             x_, y_, k_means_data_.col(0),
                                             QSharedPointer<VespucciDataset>(this), directory_,
                                             gradient,
-                                            maps_.size(),
+                                            maps_->size(),
                                             clusters,
                                             main_window_));
     new_map->set_name(name, map_type);
     new_map->SetCrispClusters(true);
-    this->AddMap(new_map);
-    maps_.last()->ShowMapWindow();
+    map_list_model_->AddMap(new_map);
+    maps_->last()->ShowMapWindow();
 
 }
 
@@ -1741,10 +1740,10 @@ void VespucciDataset::SetData(mat spectra, rowvec wavelength, colvec x, colvec y
 /// \brief VespucciDataset::map_names
 /// \return list of names of the maps created from this dataset
 ///
-QStringList VespucciDataset::map_names()
-{
-    return map_names_;
-}
+//QStringList VespucciDataset::map_names()
+//{
+//    return map_names_;
+//}
 
 ///
 /// \brief VespucciDataset::map_loading_count
@@ -1761,9 +1760,8 @@ int VespucciDataset::map_loading_count()
 ///
 void VespucciDataset::RemoveMapAt(unsigned int i)
 {
-    QListWidgetItem *item = map_list_widget_->takeItem(i);
-    map_list_widget_->removeItemWidget(item);
-    maps_.removeAt(i); //map falls out of scope and memory freed!
+    map_list_model_->removeRow(i, QModelIndex());
+
 }
 
 
@@ -1774,12 +1772,7 @@ void VespucciDataset::RemoveMapAt(unsigned int i)
 ///
 void VespucciDataset::AddMap(QSharedPointer<MapData> map)
 {
-    QString name = map->name();
-    maps_.append(map);
-    map_names_.append(name);
-
-    map_list_widget_->addItem(name);
-    ++map_loading_count_;
+    map_list_model_->AddMap(map);
 }
 
 ///
@@ -2087,4 +2080,9 @@ bool VespucciDataset::non_spatial()
 QString VespucciDataset::last_operation()
 {
     return last_operation_;
+}
+
+MapListModel* VespucciDataset::map_list_model()
+{
+    return map_list_model_;
 }

@@ -37,6 +37,7 @@
 #include <mlpack/methods/kmeans/kmeans.hpp>
 #include "textimport.h"
 #include "binaryimport.h"
+#include "maplistmodel.h"
 
 ///
 /// \brief The InputFileFormat namespace
@@ -67,6 +68,7 @@ class VCAData;
 class SpectrumViewer;
 class MainWindow;
 class VespucciWorkspace;
+class MapListModel;
 
 using namespace std;
 using namespace arma;
@@ -81,7 +83,6 @@ using namespace arma;
 class VespucciDataset
 {
 public:
-    VespucciDataset();
     VespucciDataset(const VespucciDataset &dataset);
     VespucciDataset(QString text_filename,
                     MainWindow *main_window,
@@ -282,6 +283,7 @@ public:
     ///
     QTextStream log_stream_;
 
+    MapListModel *map_list_model();
 
 private:
     void DestroyLogFile();
@@ -330,19 +332,21 @@ private:
 
     ///
     /// \brief last_operation_
-    /// Description of the last operatio performed
+    /// Description of the last operation performed
     QString last_operation_;
 
-    ///
-    /// \brief map_list_widget_
-    /// A pointer back to the list widget containing created maps in the main
-    /// window.
-    QListWidget *map_list_widget_;
 
     ///
-    /// \brief maps_
-    /// A list of the maps created from this data set, managed by VespucciDataset class
-    QList<QSharedPointer<MapData> > maps_;
+    /// \brief map_list_model_
+    /// The model that exposes the list of maps.
+    MapListModel *map_list_model_;
+
+    ///
+    /// \brief *maps_
+    /// A list of the maps created from this data set, managed by the MapListModel
+    QList<QSharedPointer<MapData> > *maps_;
+
+
 
     ///
     /// \brief principal_components_data_
@@ -448,6 +452,7 @@ private:
     /// \brief main_window_
     /// Pointer back to the main window of the app.
     MainWindow *main_window_;
+
 
     ///
     /// \brief non_spatial_

@@ -89,7 +89,8 @@ SOURCES += main.cpp\
     metadatasetdialog.cpp \
     textimport.cpp \
     binaryimport.cpp \
-    datasetlistmodel.cpp
+    datasetlistmodel.cpp \
+    maplistmodel.cpp
 
 HEADERS  += mainwindow.h \
     loaddataset.h \
@@ -122,7 +123,8 @@ HEADERS  += mainwindow.h \
     metadatasetdialog.h \
     textimport.h \
     binaryimport.h \
-    datasetlistmodel.h
+    datasetlistmodel.h \
+    maplistmodel.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \

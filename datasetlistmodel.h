@@ -19,9 +19,10 @@ public:
     bool AddDataset(QSharedPointer<VespucciDataset> dataset);
     QSharedPointer<VespucciDataset> DatasetAt(int row);
     QVariant data(const QModelIndex &index, int role) const;
-
+    void ClearDatasets();
 
 signals:
+    void DatasetAdded(const QModelIndex &index);
 
 public slots:
 

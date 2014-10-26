@@ -47,6 +47,8 @@ public:
     void SetGlobalDataRange(QCPRange* new_data_range);
     VespucciWorkspace *workspace_ptr(); //return the workspace
     void DisplayExceptionWarning(std::exception e);
+    QListView *map_list_view();
+    void SetActiveDatasetListRow(int row);
 
 signals:
     void GlobalGradientChanged(QCPColorGradient gradient);
@@ -106,6 +108,10 @@ private slots:
 
     void on_actionUndo_triggered();
 
+    void on_datasetsListView_clicked(const QModelIndex &index);
+
+    void DatasetAdded(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
 
@@ -115,9 +121,10 @@ private:
     VespucciWorkspace *workspace;
 
     ///
-    /// \brief map_list_widget_
-    /// The list widget displaying the currently created maps
-    QListWidget *map_list_widget_;
+    /// \brief map_list_view_
+    /// The list view displaying the currently created for the currently (or most
+    /// recently) selected map.
+    QListView *map_list_view_;
 
     ///
     /// \brief dataset_list_widget_
@@ -128,6 +135,8 @@ private:
     /// \brief dataset_list_model_
     /// The abstract data model associated with the dataset list widget.
     DatasetListModel *dataset_list_model_;
+
+    unsigned int global_map_count_;
 };
 
 #endif // MAINWINDOW_H

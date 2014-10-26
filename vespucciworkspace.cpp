@@ -52,6 +52,7 @@ VespucciWorkspace::~VespucciWorkspace()
 void VespucciWorkspace::SetPointers(MainWindow *main_window)
 {
     main_window_ = main_window;
+    QObject::connect(dataset_list_model_, SIGNAL(DatasetAdded(QModelIndex)), main_window_, SLOT(DatasetAdded(QModelIndex)));
 }
 
 
@@ -246,12 +247,10 @@ QFile* VespucciWorkspace::CreateLogFile(QString dataset_name)
 
 ///
 /// \brief VespucciWorkspace::ClearDatasets
-/// Releases all the dataset pointers, which will close all datasets
+/// Clears the internal container for datasets in the list model
 void VespucciWorkspace::ClearDatasets()
 {
-
-    for (int i=0; i < datasets_->size(); ++i)
-        datasets_[i].clear();
+    dataset_list_model_->ClearDatasets();
 }
 
 ///
@@ -271,4 +270,9 @@ void VespucciWorkspace::SetListWidgetModel(DatasetListModel *model)
 void VespucciWorkspace::SetDatasets(QList<QSharedPointer<VespucciDataset> > *datasets)
 {
     datasets_ = datasets;
+}
+
+unsigned int VespucciWorkspace::UpdateCount()
+{
+    return ++dataset_loading_count_;
 }

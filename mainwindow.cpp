@@ -45,12 +45,13 @@ MainWindow::MainWindow(QWidget *parent, VespucciWorkspace *ws) :
 {
     workspace = ws;
     ui->setupUi(this);
-    map_list_widget_ = this->findChild<QListWidget *>("mapsListWidget");
+    map_list_view_ = this->findChild<QListView *>("mapsListView");
     dataset_list_view_ = this->findChild<QListView *>("datasetsListView");
     cout << dataset_list_view_->height() << " = dataset_list_view_ height" << endl;
     dataset_list_model_ = new DatasetListModel(0, workspace);
     workspace->SetListWidgetModel(dataset_list_model_);
     dataset_list_view_->setModel(dataset_list_model_);
+    global_map_count_ = 0;
 }
 
 MainWindow::~MainWindow()
@@ -69,7 +70,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
                                          "Are you sure you want to exit?");
 
     if (response == QMessageBox::Yes) {
-        workspace->ClearDatasets();
+        dataset_list_model_->ClearDatasets();
         event->accept();
         qApp->exit();
     }
@@ -87,8 +88,10 @@ void MainWindow::on_actionExit_triggered()
                                          "Exit?",
                                          "Are you sure you want to exit?");
 
-    if (response == QMessageBox::Yes)
+    if (response == QMessageBox::Yes) {
+        dataset_list_model_->ClearDatasets();
         qApp->exit();
+    }
 }
 
 ///
@@ -423,7 +426,7 @@ void MainWindow::on_actionFilter_Derivatize_triggered()
 /// Closes the dataset. Should force it to go out of scope
 void MainWindow::on_actionClose_Dataset_triggered()
 {
-    int dataset_row = dataset_list_view_->currentIndex().row();
+    QModelIndex index = dataset_list_view_->currentIndex();
     QString name = dataset_list_view_->currentIndex().data().value<QString>();
     QString text = "Are you sure you want to close the dataset " + name + "?" +
             " The data and all associated maps will be deleted.";
@@ -432,7 +435,7 @@ void MainWindow::on_actionClose_Dataset_triggered()
                                          QMessageBox::Ok, QMessageBox::Cancel);
 
     if (response == QMessageBox::Ok)
-        dataset_list_view_->model()->removeRow(dataset_row);
+        dataset_list_model_->removeRow(index.row(), index);
 }
 
 ///
@@ -594,7 +597,7 @@ QCPColorGradient* MainWindow::global_gradient()
 void MainWindow::RecalculateGlobalDataRange(QCPRange* new_data_range)
 {
     bool changed = false;
-    if (this->map_list_widget_->count() <= 1)
+    if (global_map_count_ <= 1)
         workspace->SetGlobalDataRange(new_data_range);
     else
         changed = workspace->RecalculateGlobalDataRange(new_data_range);
@@ -669,4 +672,27 @@ void MainWindow::DisplayExceptionWarning(std::exception e)
     strcat(str, e.what());
     QString display_text = QString::fromLocal8Bit(str);
     QMessageBox::warning(this, "Exception Occurred", display_text);
+}
+
+void MainWindow::on_datasetsListView_clicked(const QModelIndex &index)
+{
+    QSharedPointer<VespucciDataset> dataset =
+            dataset_list_model_->DatasetAt(index.row());
+    map_list_view_->setModel(dataset->map_list_model());
+}
+
+void MainWindow::SetActiveDatasetListRow(int row)
+{
+    QSharedPointer<VespucciDataset> dataset =
+            dataset_list_model_->DatasetAt(row);
+    map_list_view_->setModel(dataset->map_list_model());
+}
+
+void MainWindow::DatasetAdded(const QModelIndex &index)
+{
+    QSharedPointer<VespucciDataset> dataset =
+            dataset_list_model_->DatasetAt(index.row());
+    map_list_view_->setModel(dataset->map_list_model());
+    map_list_view_->setCurrentIndex(index);
+    ++global_map_count_;
 }

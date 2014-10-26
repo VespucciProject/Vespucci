@@ -37,7 +37,6 @@ enum VespucciMetaMethod{
 class MetaDataset : public VespucciDataset
 {
 public:
-    MetaDataset();
     MetaDataset(QString name, 
                 MainWindow *main_window,
                 QFile *log_file,

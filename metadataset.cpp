@@ -19,9 +19,6 @@
 
 #include "metadataset.h"
 
-MetaDataset::MetaDataset()
-{
-}
 
 ///
 /// \brief MetaDataset::MetaDataset

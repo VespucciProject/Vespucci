@@ -83,7 +83,7 @@ public:
     QList<QSharedPointer<VespucciDataset> > *datasets();
     void SetListWidgetModel(DatasetListModel *model);
     void SetDatasets(QList<QSharedPointer<VespucciDataset> > *datasets);
-    void UpdateCount();
+    unsigned int UpdateCount();
 
 
 private:
@@ -121,7 +121,7 @@ private:
     ///
     /// \brief dataset_loading_count_
     /// A count of all datasets created. Used to set name of dataset.
-    int dataset_loading_count_;
+    unsigned int dataset_loading_count_;
 
     ///
     /// \brief global_data_range_
