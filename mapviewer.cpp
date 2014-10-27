@@ -139,33 +139,6 @@ QCPColorGradient MapViewer::GetGradient(int gradient_number)
     }
 }
 
-///
-/// \brief MapViewer::closeEvent
-/// \param event The QCloseEvent associated with this window closing
-///
-void MapViewer::closeEvent(QCloseEvent * event)
-{
-    // the call to VespucciDataset::RemoveMapAt() results in program crashing
-
-    int response = QMessageBox::question(this,
-                                         "Close Map?",
-                                         "Are you sure you want to close this"
-                                         " map?  Map will be deleted.");
-    if (response == QMessageBox::Yes){
-        parent_->RemoveThis();
-        event->accept();
-    }
-    else{
-        event->ignore();
-    }
-
-
-
-    /*
-    event->ignore();
-    this->showMinimized();
-    */
-}
 
 ///
 /// \brief MapViewer::on_actionInterpolate_triggered

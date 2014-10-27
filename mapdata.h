@@ -98,6 +98,9 @@ public:
     void setGradient(const QCPColorGradient &gradient);
     //Displays the map window
     void ShowMapWindow();
+    void HideMapWindow();
+    bool MapWindowVisible();
+
     void CreateImage(QCPColorGradient color_scheme, bool interpolation, int tick_count);
     void SetMapData(QCPColorMapData *map_data);
 

@@ -112,6 +112,10 @@ private slots:
 
     void DatasetAdded(const QModelIndex &index);
 
+    void on_mapsListView_doubleClicked(const QModelIndex &index);
+
+    void on_actionDelete_Map_triggered();
+
 private:
     Ui::MainWindow *ui;
 

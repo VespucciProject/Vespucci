@@ -45,7 +45,6 @@ public:
     QCPColorGradient GetGradient(int gradient_number);
 
 protected:
-    void closeEvent(QCloseEvent *event);
 
 public:
     MapViewer(QString name, QString *directory, MapData *parent);

@@ -63,7 +63,6 @@ MapData::MapData(QString x_axis_description,
     map_->data()->setValueRange(parent->ValueRange());
     map_->data()->setKeySize(parent->KeySize());
     map_->data()->setValueSize(parent->ValueSize());
-
     for(uword i = 0; i<x.n_elem; ++i){
         map_->data()->setData(x(i), y(i), results(i));
     }
@@ -72,7 +71,7 @@ MapData::MapData(QString x_axis_description,
     this->CreateImage(gradient, false, tick_count);
     x_axis_description_ = x_axis_description;
     y_axis_description_ = y_axis_description;
-    dataset_ = QSharedPointer<VespucciDataset>(parent);
+    dataset_ = parent;
     source_index_ = source_index;
     spectrum_display_ = new SpectrumViewer(map_display_,
                                            this,
@@ -102,7 +101,6 @@ MapData::MapData(QString x_axis_description,
     //by default, window is not resizeable
     map_display_->setFixedSize(map_display_->size());
 
-
 }
 
 
@@ -112,7 +110,8 @@ MapData::MapData(QString x_axis_description,
 /// Destructor triggered when this is removed from VespucciDataset list.
 MapData::~MapData()
 {
-    //heap allocated objects are all QObjects!
+    map_display_->close();
+    spectrum_display_->close();
 }
 
 ///
@@ -175,6 +174,24 @@ void MapData::ShowMapWindow()
     if(!map_display_->isActiveWindow()){
         map_display_->activateWindow();
     }
+}
+
+///
+/// \brief MapData::HideMapWindow
+/// Closes the map window.
+void MapData::HideMapWindow()
+{
+    if(map_display_->isVisible())
+        map_display_->close();
+}
+
+///
+/// \brief MapData::MapWindowVisible
+/// \return Whether or not map window is visible.
+///
+bool MapData::MapWindowVisible()
+{
+    return map_display_->isVisible();
 }
 
 ///

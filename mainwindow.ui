@@ -136,6 +136,7 @@
     <addaction name="menuNew_Multivariate_Map"/>
     <addaction name="separator"/>
     <addaction name="actionSet_Global_Color_Scale"/>
+    <addaction name="actionDelete_Map"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuData"/>
@@ -213,17 +214,6 @@
    </property>
    <property name="text">
     <string>New Band Ratio Map...</string>
-   </property>
-  </action>
-  <action name="actionDelete_Map">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Delete Map</string>
-   </property>
-   <property name="toolTip">
-    <string>Delete the currently selected map</string>
    </property>
   </action>
   <action name="actionCiting_Vespucci">
@@ -379,6 +369,11 @@
   <action name="actionCreate_Plot">
    <property name="text">
     <string>Create Plot...</string>
+   </property>
+  </action>
+  <action name="actionDelete_Map">
+   <property name="text">
+    <string>Delete Map</string>
    </property>
   </action>
  </widget>

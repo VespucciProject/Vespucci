@@ -696,3 +696,20 @@ void MainWindow::DatasetAdded(const QModelIndex &index)
     map_list_view_->setCurrentIndex(index);
     ++global_map_count_;
 }
+
+void MainWindow::on_mapsListView_doubleClicked(const QModelIndex &index)
+{
+    MapListModel *map_list_model = qobject_cast<MapListModel*>(map_list_view_->model());
+    QSharedPointer<MapData> map_data = map_list_model->MapAt(index.row());
+    if (map_data->MapWindowVisible())
+        map_data->HideMapWindow();
+    else
+        map_data->ShowMapWindow();
+}
+
+void MainWindow::on_actionDelete_Map_triggered()
+{
+    MapListModel *map_list_model = qobject_cast<MapListModel*>(map_list_view_->model());
+    QModelIndex index = map_list_view_->currentIndex();
+    map_list_model->removeRow(index.row(), index);
+}

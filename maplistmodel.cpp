@@ -57,7 +57,6 @@ bool MapListModel::removeRow(int row, const QModelIndex &parent)
 
 bool MapListModel::AddMap(QSharedPointer<MapData> map)
 {
-    cout << "MapListModel::AddMap" << endl;
     int row = maps_.size();
     QModelIndex index = createIndex(row, 0);
     beginInsertRows(index, row, row);

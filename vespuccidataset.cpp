@@ -141,6 +141,7 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
     non_spatial_ = false;
     //Set up variables unrelated to hyperspectral data:
     map_list_model_ = new MapListModel(main_window, this);
+
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
     partial_least_squares_calculated_ = false;
@@ -160,7 +161,7 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
     }
     catch(exception e) {
         char str[50];
-        strcat(str, "ZScoreNormalize: ");
+        strcat(str, "BinaryImport: ");
         strcat(str, e.what());
         throw std::runtime_error(str);
 
@@ -969,26 +970,25 @@ void VespucciDataset::Univariate(uword min,
         strcat(str, e.what());
         throw std::runtime_error(str);
     }
-    cout << "Initialization of map object" << endl;
-    QSharedPointer<MapData> map(new MapData(x_axis_description_,
+
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
                                             x_, y_, results,
                                             QSharedPointer<VespucciDataset>(this),
                                             directory_,
                                             this->GetGradient(gradient_index),
-                                            maps_->size(),
+                                            map_list_model_->rowCount(QModelIndex()),
                                             6,
                                             main_window_));
 
-    cout << "end of initialization" << endl;
-    map->set_name(name, map_type);
+    new_map->set_name(name, map_type);
 
     if(baselines.n_rows !=0){
-        map->set_baseline(abcissa, baselines);
+        new_map->set_baseline(abcissa, baselines);
     }
 
     if(mid_lines.n_rows != 0){
-        map->set_fwhm(mid_lines);
+        new_map->set_fwhm(mid_lines);
     }
 
 
@@ -999,9 +999,8 @@ void VespucciDataset::Univariate(uword min,
     log_stream_ << "value_method == " << value_method << endl;
     log_stream_ << "integration_method == " << integration_method << endl;
     log_stream_ << "gradient_index == " << gradient_index << endl;
-
-    map_list_model_->AddMap(map);
-    map->ShowMapWindow();
+    map_list_model_->AddMap(new_map);
+    new_map->ShowMapWindow();
 }
 
 ///
@@ -1126,7 +1125,7 @@ void VespucciDataset::BandRatio(uword first_min,
                                             x_, y_, results,
                                             QSharedPointer<VespucciDataset>(this), directory_,
                                             this->GetGradient(gradient_index),
-                                            maps_->size(),
+                                            map_list_model_->rowCount(QModelIndex()),
                                             6,
                                             main_window_));
 
@@ -1136,7 +1135,7 @@ void VespucciDataset::BandRatio(uword first_min,
         new_map->set_baselines(first_abcissa, second_abcissa, first_baselines, second_baselines);
     }
     map_list_model_->AddMap(new_map);
-    maps_->last()->ShowMapWindow();
+    new_map->ShowMapWindow();
 }
 
 
@@ -1229,12 +1228,12 @@ void VespucciDataset::PrincipalComponents(int component,
                                             x_, y_, results,
                                             QSharedPointer<VespucciDataset>(this), directory_,
                                             GetGradient(gradient_index),
-                                            maps_->size(),
+                                            map_list_model_->rowCount(QModelIndex()),
                                             6,
                                             main_window_));
     new_map->set_name(name, map_type);
     AddMap(new_map);
-    maps_->last()->ShowMapWindow();
+    new_map->ShowMapWindow();
 }
 
 
@@ -1295,12 +1294,12 @@ void VespucciDataset::VertexComponents(uword endmembers,
                                                 x_, y_, results,
                                                 QSharedPointer<VespucciDataset>(this), directory_,
                                                 GetGradient(gradient_index),
-                                                maps_->size(),
+                                                map_list_model_->rowCount(QModelIndex()),
                                                 6,
                                                 main_window_));
     new_map->set_name(name, map_type);
     AddMap(new_map);
-    maps_->last()->ShowMapWindow();
+    new_map->ShowMapWindow();
 }
 
 ///
@@ -1381,12 +1380,12 @@ void VespucciDataset::PartialLeastSquares(uword components,
                                             x_, y_, results,
                                             QSharedPointer<VespucciDataset>(this), directory_,
                                             this->GetGradient(gradient_index),
-                                            maps_->size(),
+                                            map_list_model_->rowCount(QModelIndex()),
                                             6,
                                             main_window_));
     new_map->set_name(name, map_type);
     map_list_model_->AddMap(new_map);
-    maps_->last()->ShowMapWindow();
+    new_map->ShowMapWindow();
 }
 
 ///
@@ -1438,13 +1437,13 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
                                             x_, y_, k_means_data_.col(0),
                                             QSharedPointer<VespucciDataset>(this), directory_,
                                             gradient,
-                                            maps_->size(),
+                                            map_list_model_->rowCount(QModelIndex()),
                                             clusters,
                                             main_window_));
     new_map->set_name(name, map_type);
     new_map->SetCrispClusters(true);
     map_list_model_->AddMap(new_map);
-    maps_->last()->ShowMapWindow();
+    new_map->ShowMapWindow();
 
 }
 
