@@ -42,11 +42,19 @@ TEMPLATE = app
 
 
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
-unix: QMAKE_CXXFLAGS += -std=gnu++11 \
+unix: !macx: QMAKE_CXXFLAGS += -std=gnu++11 \
                         -isystem "/usr/local/include" \
                         -isystem "/usr/local/include/armadillo_bits" \
                         -isystem "/usr/local/include/boost" \
                         -isystem "/usr/include/mlpack"
+macx: QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -std=gnu0x -stdlib=libc+
+
+macx: CONFIG +=c++11
+
+macx: QMAKE_CXXFLAGS += -isystem "/Users/danielfoose/Vespucci/mac_libs/include" \
+                        -isystem "/Users/danielfoose/Vespucci/mac_libs/include/armadillo_bits" \
+                        -isystem "/Users/danielfoose/Vespucci/mac_libs/include/mlpack" \
+                        -isystem "/Users/danielfoose/Vespucci/mac_libs/include/boost"
 win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
                          -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include" \
                          -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/boost" \
@@ -152,74 +160,49 @@ RESOURCES += \
 
 RC_ICONS = "vespuccilogo.ico"
 
-#*nix Libraries
-#Include paths for *nix
-unix: INCLUDEPATH += /usr/include
-unix: DEPENDPATH += /usr/include
-
-#BLAS/LAPACK Libraries
-unix: !macx: LIBS += /usr/lib/openblas-base/libopenblas.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/openblas-base/libopenblas.so
-macx: LIBS += -framework Accelerate
+#*nix (not Mac) Libraries
 
 
-#ARPACK
-unix: LIBS += /usr/local/lib/libarpack.so
-unix: PRE_TARGETDEPS += /usr/local/lib/libarpack.so
+#Mac Libraries
+#include paths
+mac: INCLUDEPATH += $$PWD/../mac_libs/include
+mac: DEPENDPATH += $$PWD/../mac_libs/include
+mac: INCLUDEPATH += $$PWD/../mac_libs/include/libxml2
+mac: DEPENDPATH += $$PWD/../mac_libs/include/libxml2
 
-#MLPACK
-unix: LIBS += -L/usr/local/lib/libmlpack.a
-unix: PRE_TARGETDEPS += /usr/local/lib/libmlpack.a
+mac: LIBS += -L$$PWD/../mac_libs/lib -lmlpack
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libmlpack.dylib
 
-#Boost path for mac (also default nix path, but not used by ubuntu's package manager)
-macx: INCLUDEPATH += /usr/local/include
-macx: DEPENDPATH += /usr/local/include
+mac: LIBS += -L$$PWD/../mac_libs/lib -larmadillo
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libarmadillo.dylib
 
-#Boost math
-unix: !macx: LIBS += /usr/local/lib/x86_64-linux-gnu/libboost_math_c99.so
-unix: !macx: PRE_TARGETDEPS += /usr/local/lib/x86_64-linux-gnu/libboost_math_c99.so
+mac: LIBS += -L$$PWD/../mac_libs/lib -larpack
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libarpack.dylib
 
-macx: LIBS += /usr/local/lib/libboost_math_c99.so
-macx: PRE_TARGETDEPS += /usr/local/lib/libboost_math_c99.so
+mac: LIBS += -framework Accelerate
 
-#Boost program options
-unix: !macx: LIBS += /usr/local/lib/x86_64-linux-gnu/libboost_program_options.so
-unix: !macx: PRE_TARGETDEPS += /usr/local/lib/x86_64-linux-gnu/libboost_program_options.so
+mac: LIBS += -L$$PWD/../mac_libs/lib -lboost_math_c99-mt
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_math_c99-mt.dylib
 
-macx: LIBS += /usr/local/lib/libboost_program_options.so
-macx: PRE_TARGETDEPS += /usr/local/lib/libboost_program_options.so
+mac: LIBS += -L$$PWD/../mac_libs/lib -lboost_program_options-mt
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_program_options-mt.dylib
 
-#Boost random
-unix: !macx: LIBS += /usr/local/lib/x86_64-linux-gnu/libboost_random.so
-unix: !macx: PRE_TARGETDEPS += /usr/local/lib/x86_64-linux-gnu/libboost_random.so
+mac: LIBS += -L$$PWD/../mac_libs/lib -lboost_random-mt
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_random-mt.dylib
 
-macx: LIBS += /usr/local/lib/libboost_random.so
-macx: PRE_TARGETDEPS += /usr/local/lib/libboost_random.so
+mac: LIBS += -L$$PWD/../mac_libs/lib -lboost_unit_test_framework-mt
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_unit_test_framework-mt.dylib
 
-#Boost test
-unix: !macx: LIBS += /usr/local/lib/x86_64-linux-gnu/libboost_unit_test_framework.so
-unix: !macx: PRE_TARGETDEPS += /usr/local/lib/x86_64-linux-gnu/libboost_unit_test_framework.so
+mac:CONFIG(release, debug|release): LIBS += -L$$PWD/../mac_libs/lib/ -lqcustomplot
+else:mac:CONFIG(debug, debug|release): LIBS += -L$$PWD/../mac_libs/lib/ -lqcustomplotd
+mac:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libqcustomplot.dylib
+else:mac:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libqcustomplotd.dylib
 
-macx: LIBS += /usr/local/lib/libboost_unit_test_framework.so
-macx: PRE_TARGETDEPS += /usr/local/lib/libboost_unit_test_framework.so
-
-#LibXML2
-unix: !macx: LIBS += /usr/local/lib/x86_64-linux-gnu/libxml2.so
-unix: !macx: PRE_TARGETDEPS += /usr/local/lib/x86_64-linux-gnu/libxml2.so
-macx: LIBS += -framework libxml2
-
-#QCustomPlot (linking statically for windows)
-unix: LIBS += /usr/local/lib/libqcustomplot1.so
-unix: PRE_TARGETDEPS += /usr/local/lib/libqcustomplot1.so
-
-#Armadillo
-unix: LIBS += /usr/local/lib/libarmadillo.so
-unix: PRE_TARGETDEPS += /usr/local/lib/libarmadillo.so
 
 #Windows Libraries
 #Binaries for windows libraries are included in the MinGW_libs branch of the repository
-INCLUDEPATH += $$PWD/../MinGW_libs/include
-DEPENDPATH += $$PWD/../MinGW_libs/include
+win32: INCLUDEPATH += $$PWD/../MinGW_libs/include
+win32: DEPENDPATH += $$PWD/../MinGW_libs/include
 
 #MLPACK
 win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lmlpack
@@ -279,3 +262,5 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqcust
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqcustomplotd
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplot.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplotd.a
+
+
