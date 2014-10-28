@@ -31,7 +31,7 @@ QT       += core gui
 QT       += widgets printsupport
 CONFIG   += static
 mac: CONFIG += app_bundle
-
+mac: ICON = vespuccilogo.icns
 # Set the installation directory
 isEmpty(PREFIX) {
     PREFIX = $$PWD/../../Vespucci-install
@@ -193,10 +193,7 @@ mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_random-mt.dylib
 mac: LIBS += -L$$PWD/../mac_libs/lib -lboost_unit_test_framework-mt
 mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_unit_test_framework-mt.dylib
 
-mac:CONFIG(release, debug|release): LIBS += -L$$PWD/../mac_libs/lib/ -lqcustomplot
-else:mac:CONFIG(debug, debug|release): LIBS += -L$$PWD/../mac_libs/lib/ -lqcustomplotd
-mac:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libqcustomplot.dylib
-else:mac:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libqcustomplotd.dylib
+macx: LIBS += -L$$PWD/../mac_libs/lib/ -lqcustomplot
 
 
 #Windows Libraries
@@ -262,5 +259,8 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqcust
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqcustomplotd
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplot.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplotd.a
+
+
+
 
 

@@ -60,7 +60,7 @@ void FilterDialog::on_methodComboBox_currentIndexChanged(int index)
         polynomial_box_->setEnabled(true);
     if ((index != 3))
         singular_values_box_->setDisabled(true);
-    if ((index == 3)){
+    if (index == 3){
         singular_values_box_->setEnabled(true);
         window_box_->setDisabled(true);
     }

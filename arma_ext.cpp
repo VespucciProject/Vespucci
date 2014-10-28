@@ -169,7 +169,7 @@ bool arma_ext::svds(mat X, uword k, mat &U, vec &s, mat &V)
     uword m = X.n_rows;
     uword n = X.n_cols;
     uword p = arma_ext::min(m, n); //used below to establish tolerances.
-    uword q = arma_ext::max(m, n);
+    //uword q = arma_ext::max(m, n);
 
     if (k > p){
         if (k > m)
