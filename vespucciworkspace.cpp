@@ -262,17 +262,47 @@ QList<QSharedPointer<VespucciDataset> > *VespucciWorkspace::datasets()
     return datasets_;
 }
 
+///
+/// \brief VespucciWorkspace::SetListWidgetModel
+/// \param model
+/// Set the dataset list model
 void VespucciWorkspace::SetListWidgetModel(DatasetListModel *model)
 {
     dataset_list_model_ = model;
 }
 
+///
+/// \brief VespucciWorkspace::SetDatasets
+/// \param datasets
+/// Set the master list of datasets;
 void VespucciWorkspace::SetDatasets(QList<QSharedPointer<VespucciDataset> > *datasets)
 {
     datasets_ = datasets;
 }
 
+///
+/// \brief VespucciWorkspace::UpdateCount
+/// \return The new count
+/// Increments dataset loading count
 unsigned int VespucciWorkspace::UpdateCount()
 {
     return ++dataset_loading_count_;
+}
+
+///
+/// \brief dataset_list_model
+/// \return The dataset list model
+///
+DatasetListModel* VespucciWorkspace::dataset_list_model()
+{
+    return dataset_list_model_;
+}
+
+void VespucciWorkspace::CleanLogFiles()
+{
+    QDir current_dir(QCoreApplication::applicationDirPath());
+    QStringList filters;
+    filters << "*.txt";
+    foreach (QString filename, current_dir.entryList(filters, QDir::Files))
+        QFile::remove(filename);
 }

@@ -42,7 +42,7 @@ private slots:
 
 private:
     Ui::MetaDatasetDialog *ui;
-    QListWidget *dataset_list_widget_;
+    QListView *dataset_list_view_;
     QLineEdit *endmember_selection_box_;
     QComboBox *method_selection_box_;
     VespucciWorkspace *workspace;

@@ -84,7 +84,8 @@ public:
     void SetListWidgetModel(DatasetListModel *model);
     void SetDatasets(QList<QSharedPointer<VespucciDataset> > *datasets);
     unsigned int UpdateCount();
-
+    DatasetListModel *dataset_list_model();
+    void CleanLogFiles();
 
 private:
     //pointers to main window and necessary widgets

@@ -65,6 +65,8 @@ vec StandardScore(vec X);
 mat StandardScoreMat(mat X);
 uword min(uword a, uword b);
 uword max(uword a, uword b);
+vec MedianFilter(vec X, uword window_size);
+mat MedianFilterMat(mat X, uword window_size);
 }
 
 #endif // ARMA_EXT_H

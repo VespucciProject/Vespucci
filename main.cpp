@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
 
     //A pointer to this goes by "workspace" in every window that needs it
     VespucciWorkspace ws;
+    //Clean up dataset log files from when it crashed last
+    ws.CleanLogFiles();
 
     //Instantiate main window
     MainWindow w(0, &ws);

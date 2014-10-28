@@ -665,31 +665,11 @@ void VespucciDataset::MedianFilter(unsigned int window_size)
 {
     log_stream_ << "MedianFilter" << endl;
     log_stream_ << "window_size == " << window_size << endl << endl;
-
-    spectra_old_ = spectra_;
-    uword starting_index = (window_size - 1) / 2;
-    uword ending_index = wavelength_.n_cols - starting_index;
-    uword i, j;
-    uword rows = spectra_.n_rows;
-    uword columns = spectra_.n_cols;
-    rowvec window;
     mat processed;
-    window.set_size(window_size);
-    processed.set_size(spectra_.n_rows, spectra_.n_cols);
+    spectra_old_ = spectra_;
     try{
-        for (i = 0; i < rows; ++i){
-            for (j = 0; j < starting_index; ++j){
-                processed(i, j) = spectra_(i, j);
-            }
-            for (j = ending_index; j < columns; ++j){
-                processed(i, j) = spectra_(i, j);
-            }
-            for (j = starting_index; j < ending_index; ++j){
-                window = spectra_(i, span((j - starting_index), (j+starting_index)));
-                processed(i, j) = median(window);
-            }
-        }
-        spectra_ = processed;
+        processed = arma_ext::MedianFilterMat(trans(spectra_), window_size);
+        spectra_ = trans(processed);
     }
     catch(exception e){
         char str[50];

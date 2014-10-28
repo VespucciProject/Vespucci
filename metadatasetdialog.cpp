@@ -26,9 +26,9 @@ MetaDatasetDialog::MetaDatasetDialog(QWidget *parent, VespucciWorkspace *ws) :
 {
     ui->setupUi(this);
 
-    dataset_list_widget_ = this->findChild<QListWidget*>("datasetListWidget");
+    dataset_list_view_ = this->findChild<QListView*>("datasetListView");
     workspace = ws;
-    dataset_list_widget_->addItems(workspace->dataset_names());
+    dataset_list_view_->setModel(ws->dataset_list_model());
     method_selection_box_ = this->findChild<QComboBox *>("methodComboBox");
     endmember_selection_box_ = this->findChild<QLineEdit *>("componentLineEdit");
 }
@@ -45,8 +45,5 @@ void MetaDatasetDialog::on_buttonBox_rejected()
 
 void MetaDatasetDialog::on_buttonBox_accepted()
 {
-    QList<QListWidgetItem *> widget_item_list = dataset_list_widget_->selectedItems();
-    QList<unsigned int> rows;
-    for (int i = 0; i < widget_item_list.size(); ++i){
-    }
+
 }

@@ -110,7 +110,7 @@
     <addaction name="menuExport_Dataset_Elements"/>
     <addaction name="actionView_Dataset_Elements"/>
     <addaction name="separator"/>
-    <addaction name="actionAnalysis_Wizard"/>
+    <addaction name="actionNew_Composite_Dataset"/>
     <addaction name="separator"/>
     <addaction name="actionClose_Dataset"/>
     <addaction name="actionCreate_Plot"/>
@@ -144,28 +144,6 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionLoad_Workspace">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Load Workspace...</string>
-   </property>
-   <property name="toolTip">
-    <string>Load a Vespucci workspace saved in HDF5 format</string>
-   </property>
-  </action>
-  <action name="actionSave_Workspace">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Save Workspace</string>
-   </property>
-   <property name="toolTip">
-    <string>Save current workspace (all datasets and created maps) as HDF5 file</string>
-   </property>
-  </action>
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
@@ -193,14 +171,6 @@
    </property>
    <property name="text">
     <string>About Vespucci</string>
-   </property>
-  </action>
-  <action name="actionConcatenate_Datasets">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Concatenate Datasets</string>
    </property>
   </action>
   <action name="actionNew_Univariate_Map">
@@ -242,22 +212,6 @@
     <string>Vertex Components</string>
    </property>
   </action>
-  <action name="actionK_means_Hierarchical_Clustering">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>K-means Clustering</string>
-   </property>
-  </action>
-  <action name="actionAgglomerative_Hierarchical_Clustering">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Agglomerative Hierarchical Clustering</string>
-   </property>
-  </action>
   <action name="actionFilter_Derivatize">
    <property name="text">
     <string>Filter/Derivatize</string>
@@ -284,11 +238,6 @@
   <action name="actionSpectra">
    <property name="text">
     <string>Spectra</string>
-   </property>
-  </action>
-  <action name="actionSpatial_Data">
-   <property name="text">
-    <string>Spatial Data</string>
    </property>
   </action>
   <action name="actionSpectral_Abcissa">
@@ -336,31 +285,6 @@
     <string>K-Means Clustering</string>
    </property>
   </action>
-  <action name="actionLatent">
-   <property name="text">
-    <string>Coefficients</string>
-   </property>
-  </action>
-  <action name="actionProjected_Data">
-   <property name="text">
-    <string>Projected Data</string>
-   </property>
-  </action>
-  <action name="actionEigenvalues_of_Covariance_Matrix">
-   <property name="text">
-    <string>Eigenvalues of Covariance Matrix</string>
-   </property>
-  </action>
-  <action name="actionHotteling_s_Statistic">
-   <property name="text">
-    <string>Hotteling's Statistic</string>
-   </property>
-  </action>
-  <action name="actionAnalysis_Wizard">
-   <property name="text">
-    <string>Analysis Wizard...</string>
-   </property>
-  </action>
   <action name="actionUndo">
    <property name="text">
     <string>Undo/Redo</string>
@@ -374,6 +298,11 @@
   <action name="actionDelete_Map">
    <property name="text">
     <string>Delete Map</string>
+   </property>
+  </action>
+  <action name="actionNew_Composite_Dataset">
+   <property name="text">
+    <string>New Composite Dataset...</string>
    </property>
   </action>
  </widget>

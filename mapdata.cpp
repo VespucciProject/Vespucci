@@ -195,6 +195,24 @@ bool MapData::MapWindowVisible()
 }
 
 ///
+/// \brief MapData::SpectrumViewerVisible
+/// \return Whether or not spectrumviewer is visible
+///
+bool MapData::SpectrumViewerVisible()
+{
+    return spectrum_display_->isVisible();
+}
+
+///
+/// \brief MapData::HideSpectrumViewer
+/// Close the spectrum viewer if it is open
+void MapData::HideSpectrumViewer()
+{
+    if(spectrum_display_->isVisible())
+        spectrum_display_->close();
+}
+
+///
 /// \brief MapData::SetMapData
 /// \param map_data
 /// Sets the data of the map. See QCustomPlot::QCPColorMap::setData().

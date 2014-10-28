@@ -72,7 +72,7 @@ QSharedPointer<MapData> MapListModel::MapAt(int row)
 }
 
 ///
-/// \brief MapListModel::ClearMapss
+/// \brief MapListModel::ClearMaps
 /// Clears the map container. Used when closing the program.
 void MapListModel::ClearMaps()
 {

@@ -324,3 +324,9 @@ void MapViewer::on_actionNew_Dataset_from_Map_triggered()
 {
     parent_->LaunchDataExtractor();
 }
+
+void MapViewer::closeEvent(QCloseEvent *event)
+{
+    if (parent_->SpectrumViewerVisible())
+        parent_->HideSpectrumViewer();
+}
