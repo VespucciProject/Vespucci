@@ -673,8 +673,11 @@ vec arma_ext::MedianFilter(vec X, uword window_size)
 {
     uword k = (window_size - 1) / 2;
     vec filtered = X; //copy the whole thing, then add in the bit we actually filter
-    for (uword i = k; i < X.n_rows - k; ++i)
-        filtered = median(X.rows(i-k, i+k));
+    vec window(window_size);
+    for (uword i = k; i < X.n_rows - k; ++i){
+        window = X.rows(i-k, i+k);
+        filtered = median(window);
+    }
     return filtered;
 }
 
