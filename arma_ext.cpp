@@ -661,3 +661,28 @@ uword arma_ext::min(uword a, uword b)
 {
     return (a < b ? a : b);
 }
+
+///
+/// \brief arma_ext::MedianFilter
+/// \param X
+/// \param window_size
+/// \return
+/// Performs median filtering on a signal X. This just ignores the edges becuause
+/// they will be fairly small and not very interesting.
+vec arma_ext::MedianFilter(vec X, uword window_size)
+{
+    uword k = (window_size - 1) / 2;
+    vec filtered = X; //copy the whole thing, then add in the bit we actually filter
+    for (uword i = k; i < X.n_rows - k; ++i)
+        filtered = median(X.rows(i-k, i+k));
+    return filtered;
+}
+
+mat arma_ext::MedianFilterMat(mat X, uword window_size)
+{
+    mat filtered;
+    filtered.set_size(X.n_rows, X.n_cols);
+    for(uword i = 0; i < X.n_cols; ++i)
+        filtered.col(i) = arma_ext::MedianFilter(X.col(i), window_size);
+    return filtered;
+}

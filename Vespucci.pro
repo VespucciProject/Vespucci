@@ -59,7 +59,8 @@ win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
                          -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include" \
                          -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/boost" \
                          -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/armadillo_bits" \
-                         -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/mlpack"
+                         -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/mlpack" \
+                         -disable-threads
 
 
 
