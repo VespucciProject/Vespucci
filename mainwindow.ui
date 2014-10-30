@@ -111,6 +111,7 @@
     <addaction name="actionView_Dataset_Elements"/>
     <addaction name="separator"/>
     <addaction name="actionNew_Composite_Dataset"/>
+    <addaction name="actionMultivariate_Analysis"/>
     <addaction name="separator"/>
     <addaction name="actionClose_Dataset"/>
     <addaction name="actionCreate_Plot"/>
@@ -303,6 +304,11 @@
   <action name="actionNew_Composite_Dataset">
    <property name="text">
     <string>New Composite Dataset...</string>
+   </property>
+  </action>
+  <action name="actionMultivariate_Analysis">
+   <property name="text">
+    <string>Multivariate Analysis...</string>
    </property>
   </action>
  </widget>

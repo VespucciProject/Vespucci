@@ -1134,7 +1134,7 @@ void VespucciDataset::PrincipalComponents(int component,
 {
     //if dataset is non spatial, just quit
     if(non_spatial_){
-        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available. Please use the analysis dialog.");
         return;
     }
     log_stream_ << "PrincipalComponents" << endl;
@@ -1216,6 +1216,33 @@ void VespucciDataset::PrincipalComponents(int component,
     new_map->ShowMapWindow();
 }
 
+///
+/// \brief VespucciDataset::PrincipalComponents
+/// Perform PCA without creating an image
+void VespucciDataset::PrincipalComponents()
+{
+    log_stream_ << "PrincipalComponents (no image)" << endl;
+    int ok = QMessageBox::question(main_window_, "Principal Components Analysis",
+                                   "Principal Components Analysis may take over "
+                                   "a minute. During this time, Vespucci will "
+                                   "appear to freeze. Would you like to continue?",
+                                   QMessageBox::Yes, QMessageBox::No);
+    if (ok != QMessageBox::Yes)
+        return;
+
+
+    principal_components_data_ =
+            new PrincipalComponentsData(QSharedPointer<VespucciDataset>(this), directory_);
+    try{
+        principal_components_data_->Apply(spectra_);
+        principal_components_calculated_ = true;
+    }catch(exception e){
+        char str[50];
+        strcat(str, "PrincipalComponents: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+}
 
 ///
 /// \brief VespucciDataset::VertexComponents
@@ -1267,7 +1294,6 @@ void VespucciDataset::VertexComponents(uword endmembers,
         strcat(str, e.what());
         throw std::runtime_error(str);
     }
-    //assume all negative values are actually 0
 
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                                 y_axis_description_,
@@ -1280,6 +1306,27 @@ void VespucciDataset::VertexComponents(uword endmembers,
     new_map->set_name(name, map_type);
     AddMap(new_map);
     new_map->ShowMapWindow();
+}
+
+///
+/// \brief VespucciDataset::VertexComponents
+/// \param endmembers
+/// Perform VCA without creating an image
+void VespucciDataset::VertexComponents(uword endmembers)
+{
+    log_stream_ << "VertexComponents (no image)" << endl;
+    log_stream_ << "endmembers == " << endmembers << endl;
+
+    try{
+        vertex_components_data_ = new VCAData(QSharedPointer<VespucciDataset>(this), directory_);
+        vertex_components_data_->Apply(spectra_, endmembers);
+        vertex_components_calculated_ = true;
+    }catch(exception e){
+        char str[50];
+        strcat(str, "VertexComponents: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
 }
 
 ///
@@ -1369,6 +1416,29 @@ void VespucciDataset::PartialLeastSquares(uword components,
 }
 
 ///
+/// \brief VespucciDataset::PartialLeastSquares
+/// \param components
+/// Perform partial least squares without creating an image
+void VespucciDataset::PartialLeastSquares(uword components)
+{
+    log_stream_ << "PartialLeastSqares (no image)" << endl;
+    log_stream_ << "components == " << components << endl;
+
+    try{
+        partial_least_squares_data_ = new PLSData(QSharedPointer<VespucciDataset>(this), directory_);
+        bool success = partial_least_squares_data_->Apply(spectra_, wavelength_, components);
+        if (success){
+            partial_least_squares_calculated_ = true;
+        }
+    }catch(exception e){
+        char str[50];
+        strcat(str, "PartialLeastSquares: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+}
+
+///
 /// \brief VespucciDataset::KMeans
 /// Implements K-means clustering using MLPACK
 /// \param clusters Number of clusters to find
@@ -1376,7 +1446,6 @@ void VespucciDataset::PartialLeastSquares(uword components,
 ///
 void VespucciDataset::KMeans(size_t clusters, QString name)
 {
-    return;
     //if dataset is non spatial, just quit
     if(non_spatial_){
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
@@ -1427,6 +1496,34 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
 
 }
 
+///
+/// \brief VespucciDataset::KMeans
+/// \param clusters
+/// Perform k-Means clustering without creating an image
+void VespucciDataset::KMeans(size_t clusters)
+{
+    log_stream_ << "KMeans (no image)" << endl;
+    log_stream_ << "clusters == " << clusters << endl;
+
+
+    try{
+        Col<size_t> assignments;
+        mlpack::kmeans::KMeans<> k;
+        mat data = trans(spectra_);
+        k.Cluster(data, clusters, assignments);
+        k_means_data_.set_size(assignments.n_elem, 1);
+        k_means_calculated_ = true;
+        for (uword i = 0; i < k_means_data_.n_elem; ++i){
+            k_means_data_(i) = assignments(i) + 1.0;
+        }
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "KMeans: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+}
 
 // HELPER FUNCTIONS //
 

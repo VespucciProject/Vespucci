@@ -33,6 +33,7 @@
 #include "kmeansdialog.h"
 #include "vcadialog.h"
 #include "datasetlistmodel.h"
+#include "analysisdialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -712,4 +713,10 @@ void MainWindow::on_actionDelete_Map_triggered()
     MapListModel *map_list_model = qobject_cast<MapListModel*>(map_list_view_->model());
     QModelIndex index = map_list_view_->currentIndex();
     map_list_model->removeRow(index.row(), index);
+}
+
+void MainWindow::on_actionMultivariate_Analysis_triggered()
+{
+    AnalysisDialog *analysis_dialog = new AnalysisDialog(this, workspace, dataset_list_view_->currentIndex().row());
+    analysis_dialog->show();
 }

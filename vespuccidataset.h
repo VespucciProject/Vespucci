@@ -195,6 +195,7 @@ public:
                              QString name,
                              unsigned int gradient_index, bool recalculate);
 
+
     void PrincipalComponents(int component,
                             QString name,
                             int gradient_index,
@@ -214,6 +215,12 @@ public:
     void Agglomerative(int clusters,
                       QString distance_metric,
                       QString name);
+    //Analysis functions (overloads of imaging functions)
+    void PartialLeastSquares(uword components);
+    void VertexComponents(uword endmembers);
+    void KMeans(size_t clusters);
+    void PrincipalComponents();
+
 
     //MEMBER ACCESS FUNCTIONS:
     rowvec wavelength();

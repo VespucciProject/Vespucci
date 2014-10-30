@@ -116,6 +116,8 @@ private slots:
 
     void on_actionDelete_Map_triggered();
 
+    void on_actionMultivariate_Analysis_triggered();
+
 private:
     Ui::MainWindow *ui;
 

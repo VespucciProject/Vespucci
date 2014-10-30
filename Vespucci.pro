@@ -97,7 +97,8 @@ SOURCES += main.cpp\
     textimport.cpp \
     binaryimport.cpp \
     datasetlistmodel.cpp \
-    maplistmodel.cpp
+    maplistmodel.cpp \
+    analysisdialog.cpp
 
 HEADERS  += mainwindow.h \
     loaddataset.h \
@@ -131,7 +132,8 @@ HEADERS  += mainwindow.h \
     textimport.h \
     binaryimport.h \
     datasetlistmodel.h \
-    maplistmodel.h
+    maplistmodel.h \
+    analysisdialog.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
@@ -152,7 +154,8 @@ FORMS    += mainwindow.ui \
     vcadialog.ui \
     dataextractordialog.ui \
     plotviewer.ui \
-    metadatasetdialog.ui
+    metadatasetdialog.ui \
+    analysisdialog.ui
 
 RESOURCES += \
     resources.qrc
