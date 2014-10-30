@@ -74,15 +74,16 @@ void FilterDialog::on_buttonBox_accepted()
     switch (method_box_->currentIndex())
     {
     case 0:
-        QMessageBox::warning(this, "Error", "There is a bug in the compiler used to build a library used by this program that causes the program to crash...", QMessageBox::Cancel, QMessageBox::Cancel);
-        break;/*
-        try{
+        QMessageBox::warning(this, "Filtering not performed", "There is an error in MedianFilter function.", QMessageBox::Ok, QMessageBox::Ok);
+        return;
+        /*try{
             dataset_->MedianFilter(window_box_->value());
         }
         catch(exception e){
             workspace->main_window()->DisplayExceptionWarning(e);
         }
         break;*/
+
     case 1:
         try{
             dataset_->LinearMovingAverage(window_box_->value());

@@ -49,12 +49,15 @@ BaselineDialog::~BaselineDialog()
 /// correct the baseline of each spectrum.
 void BaselineDialog::on_buttonBox_accepted()
 {
+    QMessageBox::warning(this, "Baseline not performed", "There is an error in MedianFilter function.", QMessageBox::Ok, QMessageBox::Ok);
+/*
     int window_size = window_size_box_->value();
     QString method = method_box_->currentText();
     int iterations = iterations_box_->value();
 
     for (int i = 0; i < iterations; ++i)
         dataset_->Baseline(method, window_size);
+*/
     this->close();
     dataset_.clear();
 }

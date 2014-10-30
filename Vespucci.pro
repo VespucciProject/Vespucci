@@ -56,15 +56,13 @@ macx: QMAKE_CXXFLAGS += -isystem "/Users/danielfoose/Vespucci/mac_libs/include" 
                         -isystem "/Users/danielfoose/Vespucci/mac_libs/include/mlpack" \
                         -isystem "/Users/danielfoose/Vespucci/mac_libs/include/boost"
 win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
+                         -pthread \
                          -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include" \
                          -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/boost" \
                          -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/armadillo_bits" \
-                         -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/mlpack" \
-                         -disable-threads
+                         -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/mlpack"
 
 
-
-CONFIG(release, debug|release): QMAKE_CXXFLAGS += -O3
 
 SOURCES += main.cpp\
         mainwindow.cpp \
