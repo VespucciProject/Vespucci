@@ -23,14 +23,17 @@
    </item>
    <item row="2" column="0">
     <layout class="QFormLayout" name="formLayout">
-     <item row="0" column="0">
+     <property name="fieldGrowthPolicy">
+      <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+     </property>
+     <item row="2" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
         <string>Method</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item row="2" column="1">
       <widget class="QComboBox" name="methodComboBox">
        <item>
         <property name="text">
@@ -42,31 +45,17 @@
          <string>Average Spectra as Samples</string>
         </property>
        </item>
-       <item>
-        <property name="text">
-         <string>VCA Endmembers as Samples (All)</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>VCA Endmembers as Samples (Specific Endmembers)</string>
-        </property>
-       </item>
       </widget>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Component Number(s)</string>
+        <string>Name</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="componentLineEdit">
-       <property name="toolTip">
-        <string>To select the same endmember number for all datasets, enter a single integer value less than the lowest number of endmembers calculated for the above datasets. To select different endmembers from each dataset, enter values separated by commas for each dataset in the order listed above, separated by semi-colons.  E.g.  &quot;1, 2, 4; 2, 3; 1;&quot; to select members 1, 2 and 4 from the first selected dataset, 2 and 3 from the second selected dataset and member 1 from the thrid selected dataset.</string>
-       </property>
-      </widget>
+      <widget class="QLineEdit" name="nameLineEdit"/>
      </item>
     </layout>
    </item>

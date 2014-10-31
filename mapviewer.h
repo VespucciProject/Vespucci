@@ -1,5 +1,5 @@
 /************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
 
     This file is part of Vespucci.
 

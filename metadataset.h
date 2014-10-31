@@ -1,5 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -16,7 +17,6 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-
 #ifndef METADATASET_H
 #define METADATASET_H
 #include "vespuccidataset.h"
@@ -25,7 +25,6 @@
 /// \brief The VespucciMetaMethod enum
 /// Different methods for extracting data for a MetaDataset
 enum VespucciMetaMethod{
-    VCAEndmembers,
     AverageSpectra,
     ConcatenateDatasets
 };
@@ -42,7 +41,6 @@ public:
                 QFile *log_file,
                 QString *directory, 
                 QString method_description,
-                QString endmember_selection,
                 VespucciMetaMethod method,
                 QList<QSharedPointer<VespucciDataset> > parent_datasets);
 private:
@@ -63,18 +61,12 @@ private:
     /// each row originated
     uvec parent_indices_;
 
-    ///
-    /// \brief endmember_numbers_
-    /// A list, of size x_, that indicates the VCA endmember number of each row.
-    /// When method_ != VCAEndmembers, this is undefined.
-    uvec endmember_numbers_;
 
     ///
     /// \brief method_
     /// Enum of the method used
     VespucciMetaMethod method_;
 
-    mat ProcessVCA(QString endmember_selection);
     mat ProcessAverage();
     mat Concatenate();
 

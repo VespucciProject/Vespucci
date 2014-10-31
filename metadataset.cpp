@@ -1,5 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -16,7 +17,6 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-
 #include "metadataset.h"
 
 
@@ -36,7 +36,6 @@ MetaDataset::MetaDataset(QString name,
                          QFile *log_file,
                          QString *directory,
                          QString method_description,
-                         QString endmember_selection,
                          VespucciMetaMethod method,
                          QList<QSharedPointer<VespucciDataset> > parent_datasets)
     : VespucciDataset(name, main_window, directory, log_file)
@@ -64,14 +63,6 @@ MetaDataset::MetaDataset(QString name,
     rowvec wavelength = parent_datasets_[0]->wavelength();
 
     switch(method_) {
-    case VCAEndmembers:
-        try{
-            spectra = ProcessVCA(endmember_selection);
-        }
-        catch(std::exception e){
-            throw std::runtime_error("MetaDataset::ProcessVCA");
-        }
-        break;
     case AverageSpectra:
         try{
             spectra = ProcessAverage();
@@ -103,52 +94,6 @@ MetaDataset::MetaDataset(QString name,
     }
 }
 
-
-
-
-///
-/// \brief MetaDataset::ProcessVCA
-/// \param endmember_selection The string entered by the user to select endmember numbers
-/// \return Matrix with chosen endmembers as rows
-///
-mat MetaDataset::ProcessVCA(QString endmember_selection)
-{
-    field<uvec> indices_list(parent_datasets_.size());
-    QStringList dataset_lists = endmember_selection.split(";");
-    QStringList buffer;
-    int buffer_int;
-    bool ok;
-    for (int i = 0; i < parent_datasets_.size(); ++i){
-        buffer = dataset_lists[i].split(",");
-        for (int j = 0; j < buffer.size(); ++j){
-            buffer_int = buffer[j].toUInt(&ok);
-            if(ok){
-                indices_list(i) << buffer_int;
-                endmember_numbers_ << buffer_int;
-                parent_indices_ << i;
-            }
-        }
-    }
-    //size the matrix ahead of time.
-    uword num_rows=0;
-    uword num_cols = parent_datasets_[0]->wavelength().n_cols;
-    //an unsophistated way to count the total number of endmembers
-    for (uword i = 0; i < indices_list.n_elem; ++i)
-        for (uword j = 0; j < indices_list.n_elem; ++j)
-            ++num_rows;
-    mat spectra(num_rows, num_cols);
-    uword start_index = 0;
-    uword end_index = indices_list(0).n_elem - 1;
-    spectra.rows(start_index, end_index) = trans(parent_datasets_[0]->vertex_components_data()->endmember_spectra()->rows(indices_list(0)));
-    for (uword i = 0; i < indices_list.n_elem; ++i){
-        spectra.rows(start_index, end_index) = parent_datasets_[i]->vertex_components_data()->EndmembersAsRows(indices_list(i));
-        start_index += indices_list(i).n_elem;
-        end_index += indices_list(i).n_elem;
-    }
-
-    return spectra;
-
-}
 
 ///
 /// \brief MetaDataset::ProcessAverage

@@ -1,5 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -16,7 +17,6 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "loaddataset.h"
@@ -34,6 +34,7 @@
 #include "vcadialog.h"
 #include "datasetlistmodel.h"
 #include "analysisdialog.h"
+#include "metadatasetdialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -719,4 +720,10 @@ void MainWindow::on_actionMultivariate_Analysis_triggered()
 {
     AnalysisDialog *analysis_dialog = new AnalysisDialog(this, workspace, dataset_list_view_->currentIndex().row());
     analysis_dialog->show();
+}
+
+void MainWindow::on_actionNew_Composite_Dataset_triggered()
+{
+    MetaDatasetDialog *meta_dialog = new MetaDatasetDialog(this, workspace);
+    meta_dialog->show();
 }
