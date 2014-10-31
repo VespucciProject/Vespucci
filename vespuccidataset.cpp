@@ -1543,6 +1543,16 @@ uvec VespucciDataset::FindRange(double start, double end)
     return indices;
 }
 
+///
+/// \brief VespucciDataset::FindOrigin
+/// \return
+/// Find the point closest to (0,0) in the map.
+uword VespucciDataset::FindOrigin()
+{
+    double delta = std::max(std::abs((x_(1) - x(0))), std::abs((y_(1) - y_(0))));
+    uvec zero_x = find(((0-delta) <= x_) && (0 + delta) >= x_);
+}
+
 /// \brief VespucciDataset::PointSpectrum
 /// \param index
 /// \return

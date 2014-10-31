@@ -166,6 +166,8 @@ public:
     // Returns vector containing start and end index within a range
     uvec FindRange(double start, double end);
 
+    uword FindOrigin();
+
     // These QCustomPlot sizes apply to all maps created from dataset //
     int KeySize();
     int ValueSize();

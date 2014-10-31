@@ -63,7 +63,6 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
     max_box_->setValidator(new QDoubleValidator(min, max, 2, this));
 
 
-
     QVector<double> plot_data = data_->PointSpectrum(0);
     QVector<double> wavelength = data_->WavelengthQVector();
 
