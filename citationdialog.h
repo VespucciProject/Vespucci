@@ -16,7 +16,8 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-*******************************************************************************/#ifndef CITATIONDIALOG_H
+*******************************************************************************/
+#ifndef CITATIONDIALOG_H
 #define CITATIONDIALOG_H
 
 #include <QDialog>

@@ -16,7 +16,8 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-*******************************************************************************/#ifndef LOADDATASET_H
+*******************************************************************************/
+#ifndef LOADDATASET_H
 #define LOADDATASET_H
 
 #include <QDialog>

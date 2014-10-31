@@ -49,6 +49,11 @@ private:
     Ui::UnivariateDialog *ui;
 
     ///
+    /// \brief range_label_
+    /// Displays the range of the spectral abcissa.
+    QLabel *range_label_;
+
+    ///
     /// \brief workspace
     /// The current workspace
     VespucciWorkspace *workspace;

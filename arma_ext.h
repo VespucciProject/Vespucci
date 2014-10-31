@@ -16,7 +16,8 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-*******************************************************************************/#ifndef ARMA_EXT_H
+*******************************************************************************/
+#ifndef ARMA_EXT_H
 #define ARMA_EXT_H
 #include <QApplication>
 #include <QVector>

@@ -51,12 +51,18 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
 
     integration_method_selector_ = this->findChild<QComboBox *>("integrationComboBox");
     integration_method_label_ = this->findChild<QLabel *>("integrationLabel");
+    range_label_ = this->findChild<QLabel *>("rangeLabel");
 
     double min = workspace->GetWavelengthMin(row);
     double max = workspace->GetWavelengthMax(row);
 
+    QString label_text = QString::number(min) + "–" + QString::number(max);
+    range_label_->setText(label_text);
+
     min_box_->setValidator(new QDoubleValidator(min, max, 2, this));
     max_box_->setValidator(new QDoubleValidator(min, max, 2, this));
+
+
 
     QVector<double> plot_data = data_->PointSpectrum(0);
     QVector<double> wavelength = data_->WavelengthQVector();

@@ -16,7 +16,8 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-*******************************************************************************/#ifndef CROPDIALOG_H
+*******************************************************************************/
+#ifndef CROPDIALOG_H
 #define CROPDIALOG_H
 
 #include <QDialog>
