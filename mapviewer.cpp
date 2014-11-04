@@ -329,4 +329,5 @@ void MapViewer::closeEvent(QCloseEvent *event)
 {
     if (parent_->SpectrumViewerVisible())
         parent_->HideSpectrumViewer();
+    event->accept();
 }

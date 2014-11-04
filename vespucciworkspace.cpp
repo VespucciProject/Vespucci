@@ -20,9 +20,6 @@
 #include "vespucciworkspace.h"
 #include <iostream>
 
-//VespucciWorkspace and MainWindow objects hold information about each other
-//This might not be the best idea...
-
 ///
 /// \brief VespucciWorkspace::VespucciWorkspace
 /// Constructor

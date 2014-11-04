@@ -10,8 +10,13 @@
     <height>101</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>New Dataset from Image</string>
   </property>
   <layout class="QFormLayout" name="formLayout">
    <item row="1" column="1">
@@ -36,6 +41,11 @@
    </item>
    <item row="3" column="1">
     <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>

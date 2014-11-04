@@ -27,15 +27,6 @@ PLSDialog::PLSDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     ui->setupUi(this);
     workspace = ws;
     data_ = workspace->DatasetAt(row);
-    if(data_->non_spatial()){
-        QMessageBox::warning(this,
-                             "Non-spatial or Non-contiguous Dataset",
-                             "Images cannot be created from non-spatial or "
-                             "non-contiguous datasets.");
-        this->close();
-        data_.clear();
-    }
-
     image_component_selector_ = this->findChild<QSpinBox *>("componentSpinBox");
     components_selector_ = this->findChild<QSpinBox *>("componentsToCalculatespinBox");
     color_selector_ = this->findChild<QComboBox *>("gradientComboBox");

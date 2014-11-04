@@ -49,6 +49,7 @@ public:
     void DisplayExceptionWarning(std::exception e);
     QListView *map_list_view();
     void SetActiveDatasetListRow(int row);
+    bool DatasetMappable(int row);
 
 signals:
     void GlobalGradientChanged(QCPColorGradient gradient);
@@ -119,6 +120,8 @@ private slots:
     void on_actionMultivariate_Analysis_triggered();
 
     void on_actionNew_Composite_Dataset_triggered();
+
+    void on_actionReject_Clipped_Spectra_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -10,8 +10,13 @@
     <height>168</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
-   <string>Vertex Component Analysis</string>
+   <string>Vertex Component Analysis Image</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">

@@ -10,8 +10,13 @@
     <height>300</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>New Composite Dataset</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -61,6 +66,11 @@
    </item>
    <item row="3" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -70,7 +80,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QListView" name="datasetsListView"/>
+    <widget class="QListView" name="datasetListView"/>
    </item>
   </layout>
  </widget>

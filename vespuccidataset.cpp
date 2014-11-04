@@ -654,6 +654,31 @@ void VespucciDataset::Baseline(QString method, int window_size)
     last_operation_ = "baseline correction";
 }
 
+///
+/// \brief VespucciDataset::RemoveClippedSpectra
+/// \param threshold
+/// Removes spectra with a maximum value at or above the threshold
+void VespucciDataset::RemoveClippedSpectra(double threshold)
+{
+    spectra_old_ = spectra_;
+    vec spectra_max = max(spectra_, 1);
+    uvec clipped_indices = find(spectra_max >= threshold);
+
+    for (uword i = 0; i < clipped_indices.n_elem; ++i){
+        try{
+        spectra_.shed_row(clipped_indices(i));
+        }catch(exception e){
+            char str[50];
+            strcat(str, "RemoveClippedSpectra: ");
+            strcat(str, e.what());
+            throw std::runtime_error(str);
+        }
+    }
+
+    if (spectra_.n_rows != spectra_old_.n_rows)
+        non_spatial_ = true;
+}
+
 //Filtering functions
 ///
 /// \brief VespucciDataset::MedianFilter
@@ -1546,11 +1571,18 @@ uvec VespucciDataset::FindRange(double start, double end)
 ///
 /// \brief VespucciDataset::FindOrigin
 /// \return
-/// Find the point closest to (0,0) in the map.
+/// Find the point closest to (0,0) in the map. If the function fails, find the
+/// index in the middle of the spatial data.
 uword VespucciDataset::FindOrigin()
 {
     double delta = std::max(std::abs((x_(1) - x(0))), std::abs((y_(1) - y_(0))));
     uvec zero_x = find(((0-delta) <= x_) && (0 + delta) >= x_);
+    vec sub_y = y_.elem(zero_x);
+    uvec zero_y = find(((0-delta) <= sub_y) && ((0+delta) >= sub_y));
+
+    // If for some reason this doesn't work, also find the point halfway down.
+    uword mid = ((x_.n_rows % 2 == 0) ? x_.n_rows : (2*(x_.n_rows + 1)) / 2);
+    return (zero_y.n_rows > 0 ? zero_y(0) : mid);
 }
 
 /// \brief VespucciDataset::PointSpectrum

@@ -35,14 +35,6 @@ KMeansDialog::KMeansDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     cluster_spin_box_ = this->findChild<QSpinBox *>("clustersSpinBox");
     workspace = ws;
     data_ = workspace->DatasetAt(row);
-    if(data_->non_spatial()){
-        QMessageBox::warning(this,
-                             "Non-spatial or Non-contiguous Dataset",
-                             "Images cannot be created from non-spatial or "
-                             "non-contiguous datasets.");
-        this->close();
-        data_.clear();
-    }
     data_index_ = row;
 }
 

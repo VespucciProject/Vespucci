@@ -28,52 +28,63 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
 {
     ui->setupUi(this);
 
-
     workspace = ws;
     data_ = workspace->DatasetAt(row);
-    if(data_->non_spatial()){
-        QMessageBox::warning(this,
-                             "Non-spatial or Non-contiguous Dataset",
-                             "Images cannot be created from non-spatial or "
-                             "non-contiguous datasets.");
-        this->close();
-        data_.clear();
-    }
+
     spectrum_plot_ = this->findChild<QCustomPlot *>("spectrumPlot");
     first_min_box_ = this->findChild<QLineEdit *>("firstMinLineEdit");
     first_max_box_ = this->findChild<QLineEdit *>("firstMaxLineEdit");
     second_min_box_ = this->findChild<QLineEdit *>("secondMinLineEdit");
     second_max_box_ = this->findChild<QLineEdit *>("secondMaxLineEdit");
-
     name_box_ = this->findChild<QLineEdit *>("nameLineEdit");
     color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
     value_method_selector_ = this->findChild<QComboBox *>("peakComboBox");
     integration_method_selector_ = this->findChild<QComboBox *>("integrationComboBox");
     integration_method_label_ = this->findChild<QLabel *>("integrationLabel");
+    range_label_ = this->findChild<QLabel *>("rangeLabel");
 
     data_index_ = row;
+
+    first_min_line_ = new QCPItemStraightLine(spectrum_plot_);
+    first_max_line_ = new QCPItemStraightLine(spectrum_plot_);
+    second_min_line_ = new QCPItemStraightLine(spectrum_plot_);
+    second_max_line_ = new QCPItemStraightLine(spectrum_plot_);
+
+    first_min_line_->point1->setCoords(0, 0);
+    first_min_line_->point2->setCoords(0, 1);
+    first_max_line_->point1->setCoords(0, 0);
+    first_max_line_->point2->setCoords(0, 1);
+    second_min_line_->point1->setCoords(0, 0);
+    second_min_line_->point2->setCoords(0, 1);
+    second_max_line_->point1->setCoords(0, 0);
+    second_max_line_->point2->setCoords(0, 1);
+
+    second_min_line_->setPen(QPen(Qt::GlobalColor::red));
+    second_max_line_->setPen(QPen(Qt::GlobalColor::red));
 
     double min = workspace->GetWavelengthMin(row);
     double max = workspace->GetWavelengthMax(row);
 
     QDoubleValidator *validator = new QDoubleValidator(min, max, 2, this);
 
+
+    QString label_text = QString::number(min) + "–" + QString::number(max);
+    range_label_->setText(label_text);
+
+    uword origin = data_->FindOrigin();
+
+    QVector<double> plot_data = data_->PointSpectrum(origin);
+    QVector<double> wavelength = data_->WavelengthQVector();
+
     first_min_box_->setValidator(validator);
     first_max_box_->setValidator(validator);
     second_min_box_->setValidator(validator);
     second_max_box_->setValidator(validator);
-
-    QVector<double> plot_data = data_->PointSpectrum(0);
-    QVector<double> wavelength = data_->WavelengthQVector();
-
     spectrum_plot_->addGraph();
     spectrum_plot_->graph(0)->addData(wavelength, plot_data);
-
-
-    spectrum_plot_->xAxis->setRange(data_->WavelengthRange());
-    spectrum_plot_->yAxis->setRange(data_->PointSpectrumRange(0));
-
+    spectrum_plot_->rescaleAxes();
     spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
+    spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
 }
 
 BandRatioDialog::~BandRatioDialog()
@@ -169,4 +180,54 @@ void BandRatioDialog::on_buttonBox_rejected()
 {
     this->close();
     data_.clear();
+}
+
+void BandRatioDialog::on_firstMinLineEdit_textChanged(const QString &arg1)
+{
+    bool ok;
+    double value = arg1.toDouble(&ok);
+    if (!ok)
+        return;
+    first_min_line_->point1->setCoords(value, 0);
+    first_min_line_->point2->setCoords(value, 1);
+    if (!spectrum_plot_->hasItem(first_min_line_))
+        spectrum_plot_->addItem(first_min_line_);
+    spectrum_plot_->repaint();
+}
+
+void BandRatioDialog::on_firstMaxLineEdit_textChanged(const QString &arg1)
+{
+    bool ok;
+    double value = arg1.toDouble(&ok);
+    if (!ok)
+        return;
+    first_max_line_->point1->setCoords(value, 0);
+    first_max_line_->point2->setCoords(value, 1);
+    if (!spectrum_plot_->hasItem(first_max_line_))
+        spectrum_plot_->addItem(first_max_line_);
+    spectrum_plot_->repaint();
+}
+
+void BandRatioDialog::on_secondMinLineEdit_textChanged(const QString &arg1)
+{
+    bool ok;
+    double value = arg1.toDouble(&ok);
+    if (!ok)
+        return;
+    second_min_line_->point1->setCoords(value, 0);
+    second_min_line_->point2->setCoords(value, 1);
+    if (!spectrum_plot_->hasItem(second_min_line_))
+        spectrum_plot_->addItem(second_min_line_);
+}
+
+void BandRatioDialog::on_secondMaxLineEdit_textChanged(const QString &arg1)
+{
+    bool ok;
+    double value = arg1.toDouble(&ok);
+    if (!ok)
+        return;
+    second_max_line_->point1->setCoords(value, 0);
+    second_max_line_->point2->setCoords(value, 1);
+    if (!spectrum_plot_->hasItem(second_max_line_))
+        spectrum_plot_->addItem(second_max_line_);
 }

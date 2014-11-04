@@ -33,14 +33,6 @@ PrincipalComponentsDialog::PrincipalComponentsDialog(QWidget *parent, VespucciWo
     ui->setupUi(this);
     workspace = ws;
     data_ = workspace->DatasetAt(row);
-    if(data_->non_spatial()){
-        QMessageBox::warning(this,
-                             "Non-spatial or Non-contiguous Dataset",
-                             "Images cannot be created from non-spatial or "
-                             "non-contiguous datasets.");
-        this->close();
-        data_.clear();
-    }
     component_selector_ = this->findChild<QSpinBox *>("componentSpinBox");
     color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
     recalculate_box_ = this->findChild<QCheckBox *>("recalculateCheckBox");

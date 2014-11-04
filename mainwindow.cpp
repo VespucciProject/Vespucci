@@ -49,7 +49,6 @@ MainWindow::MainWindow(QWidget *parent, VespucciWorkspace *ws) :
     ui->setupUi(this);
     map_list_view_ = this->findChild<QListView *>("mapsListView");
     dataset_list_view_ = this->findChild<QListView *>("datasetsListView");
-    cout << dataset_list_view_->height() << " = dataset_list_view_ height" << endl;
     dataset_list_model_ = new DatasetListModel(0, workspace);
     workspace->SetListWidgetModel(dataset_list_model_);
     dataset_list_view_->setModel(dataset_list_model_);
@@ -129,9 +128,11 @@ void MainWindow::on_actionCiting_Vespucci_triggered()
 void MainWindow::on_actionNew_Univariate_Map_triggered()
 {
     int row = dataset_list_view_->currentIndex().row();
-    UnivariateDialog *univariate_dialog =
-            new UnivariateDialog(this, workspace, row);
-    univariate_dialog->show();
+    if (DatasetMappable(row)){
+        UnivariateDialog *univariate_dialog =
+                new UnivariateDialog(this, workspace, row);
+        univariate_dialog->show();
+    }
 }
 
 ///
@@ -140,9 +141,11 @@ void MainWindow::on_actionNew_Univariate_Map_triggered()
 void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
 {
     int row = dataset_list_view_->currentIndex().row();
-    BandRatioDialog *band_ratio_dialog =
-            new BandRatioDialog(this, workspace, row);
-    band_ratio_dialog->show();
+    if(DatasetMappable(row)){
+        BandRatioDialog *band_ratio_dialog =
+                new BandRatioDialog(this, workspace, row);
+        band_ratio_dialog->show();
+    }
 
 }
 
@@ -152,9 +155,12 @@ void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
 void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
 {
     int row = dataset_list_view_->currentIndex().row();
-    PrincipalComponentsDialog *principal_components_dialog =
-            new PrincipalComponentsDialog(this, workspace, row);
-    principal_components_dialog->show();
+    if (DatasetMappable(row)){
+        PrincipalComponentsDialog *principal_components_dialog =
+                new PrincipalComponentsDialog(this, workspace, row);
+        principal_components_dialog->show();
+    }
+
 }
 
 
@@ -164,8 +170,11 @@ void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
 void MainWindow::on_actionVertex_Components_triggered()
 {
     int row = dataset_list_view_->currentIndex().row();
-    VCADialog *vca_dialog = new VCADialog(this, workspace, row);
-    vca_dialog->show();
+    if (DatasetMappable(row)){
+        VCADialog *vca_dialog = new VCADialog(this, workspace, row);
+        vca_dialog->show();
+    }
+
 }
 
 
@@ -176,9 +185,12 @@ void MainWindow::on_actionVertex_Components_triggered()
 void MainWindow::on_actionPartial_Least_Squares_triggered()
 {
     int row = dataset_list_view_->currentIndex().row();
-    PLSDialog *pls_dialog =
-            new PLSDialog(this, workspace, row);
-    pls_dialog->show();
+    if (DatasetMappable(row)){
+        PLSDialog *pls_dialog =
+                new PLSDialog(this, workspace, row);
+        pls_dialog->show();
+    }
+
 }
 
 ///
@@ -188,9 +200,12 @@ void MainWindow::on_actionPartial_Least_Squares_triggered()
 void MainWindow::on_actionK_Means_Clustering_triggered()
 {
     int row = dataset_list_view_->currentIndex().row();
-    KMeansDialog *k_means_dialog =
-            new KMeansDialog(this, workspace, row);
-    k_means_dialog->show();
+    if (DatasetMappable(row)){
+        KMeansDialog *k_means_dialog =
+                new KMeansDialog(this, workspace, row);
+        k_means_dialog->show();
+    }
+
 
 }
 
@@ -683,6 +698,10 @@ void MainWindow::on_datasetsListView_clicked(const QModelIndex &index)
     map_list_view_->setModel(dataset->map_list_model());
 }
 
+///
+/// \brief MainWindow::SetActiveDatasetListRow
+/// \param row
+/// Change the row that is active in the dataset list view
 void MainWindow::SetActiveDatasetListRow(int row)
 {
     QSharedPointer<VespucciDataset> dataset =
@@ -690,6 +709,23 @@ void MainWindow::SetActiveDatasetListRow(int row)
     map_list_view_->setModel(dataset->map_list_model());
 }
 
+bool MainWindow::DatasetMappable(int row)
+{
+    QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
+    if(data->non_spatial()){
+        QMessageBox::warning(this,
+                             "Non-spatial or Non-contiguous Dataset",
+                             "Images cannot be created from non-spatial or "
+                             "non-contiguous datasets.");
+        data.clear();
+        return false;
+    }
+}
+
+///
+/// \brief MainWindow::DatasetAdded
+/// \param index
+/// Slot corresponding to the signal from the list model that a dataset has been added.
 void MainWindow::DatasetAdded(const QModelIndex &index)
 {
     QSharedPointer<VespucciDataset> dataset =
@@ -699,6 +735,10 @@ void MainWindow::DatasetAdded(const QModelIndex &index)
     ++global_map_count_;
 }
 
+///
+/// \brief MainWindow::on_mapsListView_doubleClicked
+/// \param index
+/// Opens or closes a map when it is double clicked.
 void MainWindow::on_mapsListView_doubleClicked(const QModelIndex &index)
 {
     MapListModel *map_list_model = qobject_cast<MapListModel*>(map_list_view_->model());
@@ -726,4 +766,14 @@ void MainWindow::on_actionNew_Composite_Dataset_triggered()
 {
     MetaDatasetDialog *meta_dialog = new MetaDatasetDialog(this, workspace);
     meta_dialog->show();
+}
+
+
+
+void MainWindow::on_actionReject_Clipped_Spectra_triggered()
+{
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(dataset_list_view_->currentIndex().row());
+    double threshold = QInputDialog::getDouble(this, "Reject Clipped Spectra", "Threshold", 64000.00);
+    dataset->RemoveClippedSpectra(threshold);
+    dataset.clear();
 }

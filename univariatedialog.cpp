@@ -33,6 +33,8 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
     ui->setupUi(this);
     workspace = ws;
     data_ = workspace->DatasetAt(row);
+
+
     if(data_->non_spatial()){
         QMessageBox::warning(this,
                              "Non-spatial or Non-contiguous Dataset",
@@ -53,6 +55,14 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
     integration_method_label_ = this->findChild<QLabel *>("integrationLabel");
     range_label_ = this->findChild<QLabel *>("rangeLabel");
 
+    min_line_ = new QCPItemStraightLine(spectrum_plot_);
+    min_line_->point1->setCoords(0, 0);
+    min_line_->point2->setCoords(0, 1);
+    max_line_ = new QCPItemStraightLine(spectrum_plot_);
+    max_line_->point1->setCoords(0, 0);
+    max_line_->point2->setCoords(0, 1);
+
+
     double min = workspace->GetWavelengthMin(row);
     double max = workspace->GetWavelengthMax(row);
 
@@ -62,17 +72,16 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
     min_box_->setValidator(new QDoubleValidator(min, max, 2, this));
     max_box_->setValidator(new QDoubleValidator(min, max, 2, this));
 
+    uword origin = data_->FindOrigin();
 
-    QVector<double> plot_data = data_->PointSpectrum(0);
+    QVector<double> plot_data = data_->PointSpectrum(origin);
     QVector<double> wavelength = data_->WavelengthQVector();
 
     spectrum_plot_->addGraph();
     spectrum_plot_->graph(0)->addData(wavelength, plot_data);
-
-
-    spectrum_plot_->xAxis->setRange(data_->WavelengthRange());
-    spectrum_plot_->yAxis->setRange(data_->PointSpectrumRange(0));
+    spectrum_plot_->rescaleAxes();
     spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
+    spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
 
 }
 
@@ -151,4 +160,31 @@ void UnivariateDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
 void UnivariateDialog::on_buttonBox_rejected()
 {
         data_.clear();
+}
+
+void UnivariateDialog::on_minLineEdit_textChanged(const QString &arg1)
+{
+    bool ok;
+    double value = arg1.toDouble(&ok);
+    if (!ok)
+        return;
+
+    min_line_->point1->setCoords(value, 0);
+    min_line_->point2->setCoords(value, 1);
+    if(!spectrum_plot_->hasItem(min_line_))
+        spectrum_plot_->addItem(min_line_);
+}
+
+void UnivariateDialog::on_maxLineEdit_textChanged(const QString &arg1)
+{
+    bool ok;
+    double value = arg1.toDouble(&ok);
+    if (!ok)
+        return;
+
+    max_line_->point1->setCoords(value, 0);
+    max_line_->point2->setCoords(value, 1);
+
+    if(!spectrum_plot_->hasItem(max_line_))
+        spectrum_plot_->addItem(max_line_);
 }

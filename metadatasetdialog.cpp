@@ -25,12 +25,17 @@ MetaDatasetDialog::MetaDatasetDialog(QWidget *parent, VespucciWorkspace *ws) :
     ui(new Ui::MetaDatasetDialog)
 {
     ui->setupUi(this);
-
-    dataset_list_view_ = findChild<QListView*>("datasetListView");
+    cout << "MetaDatasetDialog Constructor" << endl;
+    dataset_list_view_ = this->findChild<QListView*>("datasetListView");
+    cout << "height of list view: " << dataset_list_view_->height();
     workspace = ws;
+    cout << "get model" << endl;
     dataset_list_model_ = ws->dataset_list_model();
+    cout << "set model" << endl;
     dataset_list_view_->setModel(dataset_list_model_);
+    cout << "set selection model" << endl;
     dataset_list_view_->setSelectionMode(QAbstractItemView::MultiSelection);
+    cout << "find boxen" << endl;
     method_selection_box_ = findChild<QComboBox *>("methodComboBox");
     name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
 }
@@ -57,9 +62,15 @@ void MetaDatasetDialog::on_buttonBox_accepted()
     VespucciMetaMethod method;
     switch(method_selection_box_->currentIndex()){
     case 0:
+        cout << method_description.toStdString() << endl;
+        cout << "0" << endl;
         method = ConcatenateDatasets;
+        break;
     case 1: default:
+        cout << method_description.toStdString() << endl;
+        cout << "1 or default" << endl;
         method = AverageSpectra;
+        break;
     }
 
     QString name = name_line_edit_->text();

@@ -45,6 +45,10 @@ private slots:
 
     void on_buttonBox_rejected();
 
+    void on_minLineEdit_textChanged(const QString &arg1);
+
+    void on_maxLineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::UnivariateDialog *ui;
 
@@ -108,6 +112,16 @@ private:
     /// \brief data_index_
     /// Index of current dataset in relevant lists
     int data_index_;
+
+    ///
+    /// \brief min_line_
+    /// The line drawn on the spectrum corresponding to the left bound
+    QCPItemStraightLine *min_line_;
+
+    ///
+    /// \brief max_line_
+    /// The line drawn on the spectrum corresponding to the right bound
+    QCPItemStraightLine *max_line_;
 
     ///
     /// \brief data_

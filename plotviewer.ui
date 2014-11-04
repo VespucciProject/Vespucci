@@ -10,8 +10,13 @@
     <height>300</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Plot</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">

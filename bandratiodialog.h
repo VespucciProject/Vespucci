@@ -46,6 +46,14 @@ private slots:
 
     void on_buttonBox_rejected();
 
+    void on_firstMinLineEdit_textChanged(const QString &arg1);
+
+    void on_firstMaxLineEdit_textChanged(const QString &arg1);
+
+    void on_secondMinLineEdit_textChanged(const QString &arg1);
+
+    void on_secondMaxLineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::BandRatioDialog *ui;
 
@@ -108,6 +116,28 @@ private:
     /// \brief data_index_
     /// Index of the VespucciDataset object in the various lists
     int data_index_;
+
+    ///
+    /// \brief range_label_
+    /// Displays the valid range
+    QLabel *range_label_;
+
+    ///
+    /// \brief first_min_line_
+    ///
+    QCPItemStraightLine *first_min_line_;
+    ///
+    /// \brief first_max_line_
+    ///
+    QCPItemStraightLine *first_max_line_;
+    ///
+    /// \brief second_min_line_
+    ///
+    QCPItemStraightLine *second_min_line_;
+    ///
+    /// \brief second_max_line_
+    ///
+    QCPItemStraightLine *second_max_line_;
 
     ///
     /// \brief data_

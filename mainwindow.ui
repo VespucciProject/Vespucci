@@ -16,6 +16,11 @@
     <height>300</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Vespucci</string>
   </property>
@@ -90,6 +95,7 @@
      <addaction name="actionSubtract_Background"/>
      <addaction name="actionCorrect_Baseline"/>
      <addaction name="actionCrop"/>
+     <addaction name="actionReject_Clipped_Spectra"/>
     </widget>
     <widget class="QMenu" name="menuExport_Dataset_Elements">
      <property name="title">
@@ -309,6 +315,11 @@
   <action name="actionMultivariate_Analysis">
    <property name="text">
     <string>Multivariate Analysis...</string>
+   </property>
+  </action>
+  <action name="actionReject_Clipped_Spectra">
+   <property name="text">
+    <string>Reject Clipped Spectra</string>
    </property>
   </action>
  </widget>

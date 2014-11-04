@@ -58,12 +58,15 @@ MetaDataset::MetaDataset(QString name,
     log_stream_ << endl;
 
     method_ = method;
+    cout << "MetaDatasetConstructor" << endl;
+    cout << "method = " << method << endl;
     method_description_ = method_description;
     mat spectra;
     rowvec wavelength = parent_datasets_[0]->wavelength();
 
     switch(method_) {
     case AverageSpectra:
+        cout << "case AverageSpectra" << endl;
         try{
             spectra = ProcessAverage();
         }
@@ -73,6 +76,7 @@ MetaDataset::MetaDataset(QString name,
 
         break;
     case ConcatenateDatasets:
+        cout << "case ConcatenateDatasets" << endl;
         try{
             spectra = Concatenate();
         }
