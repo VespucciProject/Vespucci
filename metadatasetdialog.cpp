@@ -25,17 +25,11 @@ MetaDatasetDialog::MetaDatasetDialog(QWidget *parent, VespucciWorkspace *ws) :
     ui(new Ui::MetaDatasetDialog)
 {
     ui->setupUi(this);
-    cout << "MetaDatasetDialog Constructor" << endl;
     dataset_list_view_ = this->findChild<QListView*>("datasetListView");
-    cout << "height of list view: " << dataset_list_view_->height();
     workspace = ws;
-    cout << "get model" << endl;
     dataset_list_model_ = ws->dataset_list_model();
-    cout << "set model" << endl;
     dataset_list_view_->setModel(dataset_list_model_);
-    cout << "set selection model" << endl;
     dataset_list_view_->setSelectionMode(QAbstractItemView::MultiSelection);
-    cout << "find boxen" << endl;
     method_selection_box_ = findChild<QComboBox *>("methodComboBox");
     name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
 }
