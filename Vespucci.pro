@@ -98,7 +98,8 @@ SOURCES += main.cpp\
     binaryimport.cpp \
     datasetlistmodel.cpp \
     maplistmodel.cpp \
-    analysisdialog.cpp
+    analysisdialog.cpp \
+    univariatedata.cpp
 
 HEADERS  += mainwindow.h \
     loaddataset.h \
@@ -133,7 +134,8 @@ HEADERS  += mainwindow.h \
     binaryimport.h \
     datasetlistmodel.h \
     maplistmodel.h \
-    analysisdialog.h
+    analysisdialog.h \
+    univariatedata.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \

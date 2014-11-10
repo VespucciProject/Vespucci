@@ -538,11 +538,7 @@ mat VespucciDataset::ZScoreNormCopy()
 
 ///
 /// \brief VespucciDataset::ZScoreNormalize
-/// Computes a Z score for every entry based on the distribution of its column,
-/// assuming normality of "population".  Because some values will be negative,
-/// this must be accounted for in Univariate Mapping Functions. Keep in mind that
-/// data is pre-centered by row for all methods (PCA, PLS, etc) that require
-/// centered data.
+/// Normalizes each row using the score of the normal distribution
 ///
 void VespucciDataset::ZScoreNormalize()
 {
@@ -619,29 +615,8 @@ void VespucciDataset::Baseline(QString method, int window_size)
     spectra_old_ = spectra_;
     try{
         if (method == "Median Filter"){
-            uword starting_index = (window_size - 1) / 2;
-            uword ending_index = wavelength_.n_cols - starting_index;
-            uword i, j;
-            uword rows = spectra_.n_rows;
-            uword columns = spectra_.n_cols;
-            rowvec window;
-            mat processed;
-            window.set_size(window_size);
-            processed.set_size(spectra_.n_rows, spectra_.n_cols);
-
-            for (i = 0; i < rows; ++i){
-                for (j = 0; j < starting_index; ++j){
-                    processed(i, j) = spectra_(i, j);
-                }
-                for (j = ending_index; j < columns; ++j){
-                    processed(i, j) = spectra_(i, j);
-                }
-                for (j = starting_index; j < ending_index; ++j){
-                    window = spectra_(i, span((j - starting_index), (j+starting_index)));
-                    processed(i, j) = median(window);
-                }
-            }
-            spectra_ -= processed;
+            mat processed = arma_ext::MedianFilterMat(trans(spectra_), window_size);
+            spectra_ -= trans(processed);
         }
     }
     catch(exception e){
@@ -830,10 +805,10 @@ void VespucciDataset::SavitzkyGolay(unsigned int derivative_order,
 /// \param value_method method of determining peak (intensity, derivative, or area)
 /// \param gradient_index index of color scheme in master list (GetGradient());
 ///
-void VespucciDataset::Univariate(uword min,
-                                 uword max,
+void VespucciDataset::Univariate(double min,
+                                 double max,
                                  QString name,
-                                 QString value_method,
+                                 Univariate::Method method,
                                  QString integration_method,
                                  uword gradient_index)
 {
@@ -842,143 +817,14 @@ void VespucciDataset::Univariate(uword min,
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
         return;
     }
-    uword size = x_.n_elem;
-    uword i;
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this)));
+    univariate_datas_.append(univariate_data);
 
-    rowvec region;
-    colvec results;
-    results.set_size(size);
-    QString map_type;
-    rowvec abcissa;
-    mat baselines;
-    mat mid_lines;
-
-    try{
-        if (value_method == "Bandwidth"){
-            double maximum, half_maximum, width/*, region_size*/;
-            double start_value, end_value, slope;
-            baselines.set_size(size, max-min + 1);
-            uword max_index = 0;
-            uword left_index = 0;
-            uword right_index = 0;
-            map_type = "1-Region Univariate (Bandwidth (FWHM))";
-            uword columns = spectra_.n_cols;
-            abcissa.set_size(max-min + 1);
-            abcissa = wavelength_.subvec(span(min, max));
-            mid_lines.set_size(x_.n_rows, 4);
-            for (i = 0; i < size; ++i){
-
-                start_value = spectra_(i, min);
-                end_value = spectra_(i, max);
-                slope = (end_value - start_value) / (max - min);
-                uword j;
-                for (j = 0; j <= (max - min); ++j)
-                    baselines(i, j) = j*slope + start_value;
-
-
-                //find maximum and half-maximum
-                region = spectra_(i, span(min, max));
-                //region_size = region.n_elem;
-                maximum = region.max();
-
-                //find index of maximum
-                for (j = 0; j < columns; ++j){
-                    if (maximum == spectra_(i, j) && j >= min && j <= max){
-                        max_index = j;
-                        break;
-                    }
-                }
-
-                int local_max_index = max_index-min;
-                half_maximum = (maximum - baselines(i, local_max_index) / 2.0) +
-                        baselines(i, local_max_index);
-
-                //find index of left limit
-                for (j = max_index; j > 0; --j){
-                    if (spectra_(i, j) - half_maximum < 0){
-                        left_index = j;
-                        break;
-                    }
-                }
-
-                //find index of right limit
-                for (j = max_index; j < columns; ++j){
-                    if (spectra_(i, j) - half_maximum < 0){
-                        right_index = j;
-                        break;
-                    }
-                }
-
-                //make sure adjacent points on other side of inflection aren't better
-                if (fabs(spectra_(i, left_index) - half_maximum) <
-                        fabs(spectra_(i, left_index - 1) - half_maximum)){
-                    --left_index;
-                }
-                if (fabs(spectra_(i, right_index) - half_maximum) <
-                        fabs(spectra_(i, right_index + 1) - half_maximum)){
-                    ++right_index;
-                }
-
-                //record to results.  using fabs because order of wavelength unknown
-                width = fabs(wavelength_(right_index) - wavelength_(left_index));
-                results(i) = width;
-                mid_lines(i, 0) = wavelength_(left_index);
-                mid_lines(i, 1) = spectra_(left_index);
-                mid_lines(i, 2) = wavelength_(right_index);
-                mid_lines(i, 3) = spectra_(right_index);
-            }
-
-        }
-
-        else if(value_method == "Area"){
-            // Do peak fitting stuff here.
-            map_type = "1-Region Univariate (Area)";
-            abcissa.set_size(max - min + 1);
-            abcissa = wavelength_.subvec(span(min, max));
-            if (integration_method == "Riemann Sum"){
-                double start_value, end_value, slope;
-                baselines.set_size(size, abcissa.n_cols);
-
-                for (i=0; i<size; ++i){
-                    start_value = spectra_(i, min);
-                    end_value = spectra_(i, max);
-                    slope = (end_value - start_value) / (max - min);
-                    uword j;
-                    for (j = 0; j <= (max - min); ++j)
-                        baselines(i, j) = j*slope + start_value;
-
-                    region = spectra_(i, span(min, max));
-                    region -= baselines.row(i);
-                    results(i) = sum(region);
-                }
-            }
-        }
-
-        else if(value_method == "Derivative"){
-            // Do derivative stuff here
-            map_type = "1-Region Univariate (Derivative)";
-        }
-
-        else{
-            // Makes an intensity map
-            map_type = "1-Region Univariate (Intensity)";
-            for (i=0; i < size; ++i){
-                region = spectra_(i, span(min, max));
-                results(i)=region.max();
-            }
-
-        }
-    }
-    catch(exception e){
-        char str[50];
-        strcat(str, "Univariate: ");
-        strcat(str, e.what());
-        throw std::runtime_error(str);
-    }
+    univariate_data->Apply(min, max, method);
 
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
-                                            x_, y_, results,
+                                            x_, y_, univariate_data->results(),
                                             QSharedPointer<VespucciDataset>(this),
                                             directory_,
                                             this->GetGradient(gradient_index),
@@ -986,27 +832,32 @@ void VespucciDataset::Univariate(uword min,
                                             6,
                                             main_window_));
 
-    new_map->set_name(name, map_type);
+    new_map->set_name(name, univariate_data->MethodDescription());
 
-    if(baselines.n_rows !=0){
-        new_map->set_baseline(abcissa, baselines);
+    uvec boundaries;
+    if(method == Univariate::Area || method == Univariate::FWHM){
+        boundaries = univariate_data->Boundaries();
+        new_map->set_baseline(wavelength_.subvec(boundaries(0), boundaries(1)),
+                              univariate_data->Baselines(0));
     }
 
-    if(mid_lines.n_rows != 0){
-        new_map->set_fwhm(mid_lines);
-    }
+    /*if(method == Univariate::FWHM){
+        boundaries = univariate_data->Boundaries();
+        new_map->set_fwhm(univariate_data->Midlines());
+    }*/
 
 
     log_stream_ << "Univariate" << endl;
     log_stream_ << "min == " << min << endl;
     log_stream_ << "max == " << max << endl;
     log_stream_ << "name == " << name << endl;
-    log_stream_ << "value_method == " << value_method << endl;
+    log_stream_ << "method == " << (method == Univariate::Area ? "Area" : (method == Univariate::FWHM ? "Bandwidth" : "Intensity")) << endl;
     log_stream_ << "integration_method == " << integration_method << endl;
     log_stream_ << "gradient_index == " << gradient_index << endl;
     map_list_model_->AddMap(new_map);
     new_map->ShowMapWindow();
 }
+
 
 ///
 /// \brief VespucciDataset::BandRatio
@@ -1021,14 +872,11 @@ void VespucciDataset::Univariate(uword min,
 /// \param value_method how the maxima are to be determined (area, derivative, or intensity)
 /// \param gradient_index index of gradient in the master list (GetGradient())
 ///
-void VespucciDataset::BandRatio(uword first_min,
-                        uword first_max,
-                        uword second_min,
-                        uword second_max,
-                        QString name,
-                        QString value_method,
-                        QString integration_method,
-                        unsigned int gradient_index)
+void VespucciDataset::BandRatio(double first_min, double first_max,
+                                double second_min, double second_max,
+                                QString name,
+                                Univariate::Method method,
+                                unsigned int gradient_index)
 {
 
     //if dataset is non spatial, just quit
@@ -1036,7 +884,6 @@ void VespucciDataset::BandRatio(uword first_min,
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
         return;
     }
-    QString map_type;
 
     log_stream_ << "BandRatio" << endl;
     log_stream_ << "first_min == " << first_min << endl;
@@ -1044,90 +891,20 @@ void VespucciDataset::BandRatio(uword first_min,
     log_stream_ << "second_min == " << second_min << endl;
     log_stream_ << "second_max == " << second_max << endl;
     log_stream_ << "name == " << name << endl;
-    log_stream_ << "value_method == " << value_method << endl;
-    log_stream_ << "integration_method == " << integration_method << endl;
+    log_stream_ << "value_method == " << (method == Univariate::Area ? "Area Ratio" : "Intensity Ratio") << endl;
+    //log_stream_ << "integration_method == " << integration_method << endl;
     log_stream_ << "gradient_index == " << gradient_index << endl << endl;
 
-    uword size = x_.n_elem;
-    uword i;
 
-    rowvec first_region;
-    rowvec second_region;
-    colvec results;
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this)));
+    univariate_datas_.append(univariate_data);
 
-    rowvec first_abcissa;
-    rowvec second_abcissa;
-    mat first_baselines;
-    mat second_baselines;
+    univariate_data->Apply(first_min, first_max, second_min, second_max, method);
 
-    results.set_size(size);
-    try{
-        if(value_method == "Area"){
-            // Do peak fitting stuff here.
-            map_type = "2-Region Band Ratio Map (Area)";
-            if (integration_method == "Riemann Sum"){
-                double first_start_value, first_end_value, second_start_value,
-                        second_end_value, first_slope, second_slope, first_sum,
-                        second_sum;
-                first_abcissa.set_size(first_max - first_min + 1);
-                second_abcissa.set_size(second_max - second_min + 1);
-                first_abcissa = wavelength_.subvec(span(first_min, first_max));
-                second_abcissa = wavelength_.subvec(span(second_min, second_max));\
-                first_baselines.set_size(size, first_max - first_min + 1);
-                second_baselines.set_size(size, second_max - second_min + 1);
-
-                for (i=0; i<size; ++i){
-                    first_start_value = spectra_(i, first_min);
-                    second_start_value = spectra_(i, second_min);
-                    first_end_value = spectra_(i, first_max);
-                    second_end_value = spectra_(i, second_max);
-                    first_slope = (first_end_value - first_start_value) / (first_max - first_min);
-                    second_slope = (second_end_value - second_start_value) / (second_max - second_min);
-                    uword j;
-                    for (j = 0; j <= (first_max - first_min); ++j)
-                        first_baselines(i, j) = j*first_slope + first_start_value;
-                    for (j = 0; j <= (second_max - second_min); ++j)
-                        second_baselines(i, j) = j*second_slope + second_start_value;
-
-                    first_region = spectra_(i, span(first_min, first_max));
-                    second_region = spectra_(i, span(second_min, second_max));
-
-                    first_sum = sum(first_region - first_baselines.row(i));
-                    second_sum = sum(second_region - second_baselines.row(i));
-
-                    results(i)= first_sum / second_sum;
-                }
-
-            }
-
-
-        }
-
-        else if(value_method == "Derivative"){
-            // Do derivative stuff here
-            map_type = "2-Region Band Ratio Map (Derivative)";
-        }
-
-        else{
-            // Makes an intensity map
-            map_type = "2-Region Band Ratio Map (Intensity)";
-            for (i=0; i<size; ++i){
-                first_region = spectra_(i, span(first_min, first_max));
-                second_region = spectra_(i, span(second_min, second_max));
-                results(i)= first_region.max()/second_region.max();
-            }
-        }
-    }
-    catch(exception e){
-        char str[50];
-        strcat(str, "BandRatio: ");
-        strcat(str, e.what());
-        throw std::runtime_error(str);
-    }
 
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
-                                            x_, y_, results,
+                                            x_, y_, univariate_data->results(),
                                             QSharedPointer<VespucciDataset>(this), directory_,
                                             this->GetGradient(gradient_index),
                                             map_list_model_->rowCount(QModelIndex()),
@@ -1135,10 +912,16 @@ void VespucciDataset::BandRatio(uword first_min,
                                             main_window_));
 
 
-    new_map->set_name(name, map_type);
-    if (first_baselines.n_rows != 0){
-        new_map->set_baselines(first_abcissa, second_abcissa, first_baselines, second_baselines);
+    new_map->set_name(name, univariate_data->MethodDescription());
+    uvec boundaries = univariate_data->Boundaries();
+
+    if (method == Univariate::AreaRatio){
+        new_map->set_baselines(wavelength_.subvec(boundaries(0), boundaries(1)),
+                               wavelength_.subvec(boundaries(2), boundaries(3)),
+                               univariate_data->Baselines(0),
+                               univariate_data->Baselines(1));
     }
+
     map_list_model_->AddMap(new_map);
     new_map->ShowMapWindow();
 }

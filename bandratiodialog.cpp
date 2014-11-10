@@ -119,36 +119,28 @@ void BandRatioDialog::on_buttonBox_accepted()
         return;
     }
 
-    uvec first_range;
-    uvec second_range;
-    try{
-        first_range = data_->FindRange(first_entered_min, first_entered_max);
-        second_range = data_->FindRange(second_entered_min, second_entered_max);
-    }
-    catch(exception e){
-        workspace->main_window()->DisplayExceptionWarning(e);
-    }
 
-    int first_min = first_range[0];
-    int first_max = first_range[1];
-    int second_min = second_range[0];
-    int second_max = second_range[1];
 
     QString name = name_box_->text();
     QString value_method = value_method_selector_->currentText();
-    QString integration_method = integration_method_selector_->currentText();
-    int color_index = color_selector_->currentIndex();
+    //QString integration_method = integration_method_selector_->currentText();
+
+    Univariate::Method method;
+    if (value_method == "Area")
+        method = Univariate::AreaRatio;
+    else
+        method = Univariate::IntensityRatio;
+
+    int gradient_index = color_selector_->currentIndex();
     try{
-        data_->BandRatio(first_min,
-                         first_max,
-                         second_min,
-                         second_max,
+        data_->BandRatio(first_entered_min,
+                         first_entered_max,
+                         second_entered_min,
+                         second_entered_max,
                          name,
-                         value_method,
-                         integration_method,
-                         color_index);
-    }
-    catch(exception e){
+                         method,
+                         gradient_index);
+    }catch(exception e){
         workspace->main_window()->DisplayExceptionWarning(e);
     }
 

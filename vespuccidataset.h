@@ -38,6 +38,7 @@
 #include "textimport.h"
 #include "binaryimport.h"
 #include "maplistmodel.h"
+#include "univariatedata.h"
 
 ///
 /// \brief The InputFileFormat namespace
@@ -183,19 +184,19 @@ public:
 
     // IMAGING FUNCTIONS //
 
-    void Univariate(uword min,
-                    uword max,
+    void Univariate(double min,
+                    double max,
                     QString name,
-                    QString value_method,
+                    Univariate::Method method,
                     QString integration_method,
                     uword gradient_index);
 
-    void BandRatio(uword first_min,
-                   uword first_max,
-                   uword second_min,
-                   uword second_max,
+    void BandRatio(double first_min,
+                   double first_max,
+                   double second_min,
+                   double second_max,
                    QString name,
-                   QString value_method, QString integration_method,
+                   Univariate::Method method,
                    unsigned int gradient_index);
 
     void PartialLeastSquares(uword components, uword image_component,
@@ -473,6 +474,7 @@ private:
     /// True if the dataset has empty x_ and y_
     bool non_spatial_;
 
+    QList<QSharedPointer<UnivariateData> > univariate_datas_;
 
 };
 Q_DECLARE_METATYPE(QSharedPointer<VespucciDataset> *)

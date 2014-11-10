@@ -75,15 +75,13 @@ void FilterDialog::on_buttonBox_accepted()
     switch (method_box_->currentIndex())
     {
     case 0:
-        QMessageBox::warning(this, "Filtering not performed", "There is an error in MedianFilter function.", QMessageBox::Ok, QMessageBox::Ok);
-        return;
-        /*try{
+        try{
             dataset_->MedianFilter(window_box_->value());
         }
         catch(exception e){
             workspace->main_window()->DisplayExceptionWarning(e);
         }
-        break;*/
+        break;
 
     case 1:
         try{

@@ -51,6 +51,25 @@ uword min(uword a, uword b);
 uword max(uword a, uword b);
 vec MedianFilter(vec X, uword window_size);
 mat MedianFilterMat(mat X, uword window_size);
+
+//Peak determination
+double IntegratePeak(vec X, uword min_index, uword max_index, double abcissa_step, vec &baseline);
+vec IntegratePeakMat(mat X, vec abcissa, double &min, double &max, mat &baselines);
+mat IntegratePeaksMat(mat X, vec abcissa,
+                      double &first_min, double &first_max,
+                      double &second_min, double &second_max,
+                      mat &first_baselines, mat &second_baselines);
+
+double FindPeakMax(vec X, uword min_index, uword max_index, uword &position);
+vec FindPeakMaxMat(mat X, vec abcissa, double &min, double &max, vec &positions, uvec boundaries);
+mat FindPeakMaxesMat(mat X, vec abcissa,
+                     double &first_min, double &first_max,
+                     double &second_min, double &second_max,
+                     mat positions, uvec boundaries);
+
+double FindBandwidth(vec X, uword min_index, uword max_index, vec &midline, vec &baseline, double abcissa_step);
+vec FindBandwidthMat(mat X, vec abcissa, double &min, double &max, mat &midlines, mat &baselines, uvec &boundaries);
+
 }
 
 #endif // ARMA_EXT_H

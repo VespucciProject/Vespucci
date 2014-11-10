@@ -720,6 +720,7 @@ bool MainWindow::DatasetMappable(int row)
         data.clear();
         return false;
     }
+    return true;
 }
 
 ///
