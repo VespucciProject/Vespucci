@@ -808,7 +808,7 @@ void VespucciDataset::SavitzkyGolay(unsigned int derivative_order,
 void VespucciDataset::Univariate(double min,
                                  double max,
                                  QString name,
-                                 Univariate::Method method,
+                                 UnivariateData::Method method,
                                  QString integration_method,
                                  uword gradient_index)
 {
@@ -835,13 +835,12 @@ void VespucciDataset::Univariate(double min,
     new_map->set_name(name, univariate_data->MethodDescription());
 
     uvec boundaries;
-    if(method == Univariate::Area || method == Univariate::FWHM){
+    if(method == UnivariateData::Method::Area || method == UnivariateData::Method::FWHM){
         boundaries = univariate_data->Boundaries();
         new_map->set_baseline(wavelength_.subvec(boundaries(0), boundaries(1)),
                               univariate_data->Baselines(0));
     }
-
-    /*if(method == Univariate::FWHM){
+    /*if(method == UnivariateData::Method::FWHM){
         boundaries = univariate_data->Boundaries();
         new_map->set_fwhm(univariate_data->Midlines());
     }*/
@@ -851,7 +850,7 @@ void VespucciDataset::Univariate(double min,
     log_stream_ << "min == " << min << endl;
     log_stream_ << "max == " << max << endl;
     log_stream_ << "name == " << name << endl;
-    log_stream_ << "method == " << (method == Univariate::Area ? "Area" : (method == Univariate::FWHM ? "Bandwidth" : "Intensity")) << endl;
+    log_stream_ << "method == " << (method == UnivariateData::Method::Area ? "Area" : (method == UnivariateData::Method::FWHM ? "Bandwidth" : "Intensity")) << endl;
     log_stream_ << "integration_method == " << integration_method << endl;
     log_stream_ << "gradient_index == " << gradient_index << endl;
     map_list_model_->AddMap(new_map);
@@ -875,7 +874,7 @@ void VespucciDataset::Univariate(double min,
 void VespucciDataset::BandRatio(double first_min, double first_max,
                                 double second_min, double second_max,
                                 QString name,
-                                Univariate::Method method,
+                                UnivariateData::Method method,
                                 unsigned int gradient_index)
 {
 
@@ -891,7 +890,7 @@ void VespucciDataset::BandRatio(double first_min, double first_max,
     log_stream_ << "second_min == " << second_min << endl;
     log_stream_ << "second_max == " << second_max << endl;
     log_stream_ << "name == " << name << endl;
-    log_stream_ << "value_method == " << (method == Univariate::Area ? "Area Ratio" : "Intensity Ratio") << endl;
+    log_stream_ << "value_method == " << (method == UnivariateData::Method::Area ? "Area Ratio" : "Intensity Ratio") << endl;
     //log_stream_ << "integration_method == " << integration_method << endl;
     log_stream_ << "gradient_index == " << gradient_index << endl << endl;
 
@@ -915,7 +914,7 @@ void VespucciDataset::BandRatio(double first_min, double first_max,
     new_map->set_name(name, univariate_data->MethodDescription());
     uvec boundaries = univariate_data->Boundaries();
 
-    if (method == Univariate::AreaRatio){
+    if (method == UnivariateData::Method::AreaRatio){
         new_map->set_baselines(wavelength_.subvec(boundaries(0), boundaries(1)),
                                wavelength_.subvec(boundaries(2), boundaries(3)),
                                univariate_data->Baselines(0),

@@ -125,11 +125,11 @@ void BandRatioDialog::on_buttonBox_accepted()
     QString value_method = value_method_selector_->currentText();
     //QString integration_method = integration_method_selector_->currentText();
 
-    Univariate::Method method;
+    UnivariateData::Method method;
     if (value_method == "Area")
-        method = Univariate::AreaRatio;
+        method = UnivariateData::Method::AreaRatio;
     else
-        method = Univariate::IntensityRatio;
+        method = UnivariateData::Method::IntensityRatio;
 
     int gradient_index = color_selector_->currentIndex();
     try{

@@ -1,29 +1,22 @@
 #ifndef UNIVARIATEDATA_H
 #define UNIVARIATEDATA_H
 #include "vespuccidataset.h"
-namespace Univariate{
-    enum Method{
-        Intensity,
-        Area,
-        FWHM,
-        AreaRatio,
-        IntensityRatio
-    };
-}
+
 class VespucciDataset;
 class UnivariateData
 {
 public:
+    enum class Method{Intensity, Area, FWHM, AreaRatio, IntensityRatio};
     UnivariateData(QSharedPointer<VespucciDataset> parent);
     void Apply(double left_bound,
           double right_bound,
-          Univariate::Method method);
+          UnivariateData::Method method);
 
     void Apply(double first_left_bound,
           double first_right_bound,
           double second_left_bound,
           double second_right_bound,
-          Univariate::Method method);
+          UnivariateData::Method method);
 
     vec results();
     bool band_ratio();

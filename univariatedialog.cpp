@@ -105,13 +105,13 @@ void UnivariateDialog::on_buttonBox_accepted()
     QString name = name_box_->text();
     QString value_method = value_method_selector_->currentText();
 
-    Univariate::Method method;
+    UnivariateData::Method method;
     if (value_method == "Area")
-        method = Univariate::Area;
+        method = UnivariateData::Method::Area;
     else if (value_method == "Bandwidth")
-        method = Univariate::FWHM;
+        method = UnivariateData::Method::FWHM;
     else
-        method = Univariate::Intensity;
+        method = UnivariateData::Method::Intensity;
 
     QString integration_method = integration_method_selector_->currentText();
 

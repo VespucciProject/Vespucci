@@ -187,7 +187,7 @@ public:
     void Univariate(double min,
                     double max,
                     QString name,
-                    Univariate::Method method,
+                    UnivariateData::Method method,
                     QString integration_method,
                     uword gradient_index);
 
@@ -196,7 +196,7 @@ public:
                    double second_min,
                    double second_max,
                    QString name,
-                   Univariate::Method method,
+                   UnivariateData::Method method,
                    unsigned int gradient_index);
 
     void PartialLeastSquares(uword components, uword image_component,

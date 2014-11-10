@@ -14,7 +14,7 @@ UnivariateData::UnivariateData(QSharedPointer<VespucciDataset> parent) : baselin
 /// are adjusted by the determination functions.
 void UnivariateData::Apply(double left_bound,
                       double right_bound,
-                      Univariate::Method method)
+                      UnivariateData::Method method)
 {
     left_bound_ = left_bound;
     right_bound_ = right_bound;
@@ -22,7 +22,7 @@ void UnivariateData::Apply(double left_bound,
     vec positions;
     mat baselines;
     switch (method_){
-    case Univariate::Area :
+    case UnivariateData::Method::Area :
         results_ = arma_ext::IntegratePeakMat(trans(parent_->spectra()),
                                               trans(parent_->wavelength()),
                                               left_bound_, right_bound_,
@@ -30,7 +30,7 @@ void UnivariateData::Apply(double left_bound,
         baselines_(0) = baselines;
         method_description_ = "Univariate Area";
         break;
-    case Univariate::FWHM :
+    case UnivariateData::Method::FWHM :
         results_ = arma_ext::FindBandwidthMat(trans(parent_->spectra()),
                                              trans(parent_->wavelength()),
                                              left_bound_, right_bound_,
@@ -38,7 +38,7 @@ void UnivariateData::Apply(double left_bound,
         baselines_(0) = baselines;
         method_description_ = "Univariate Bandwidth";
         break;
-    case Univariate::Intensity : default :
+    case UnivariateData::Method::Intensity : default :
         results_ = arma_ext::FindPeakMaxMat(trans(parent_->spectra()),
                                             trans(parent_->wavelength()),
                                             left_bound, right_bound, positions);
@@ -54,7 +54,7 @@ void UnivariateData::Apply(double first_left_bound,
                            double first_right_bound,
                            double second_left_bound,
                            double second_right_bound,
-                           Univariate::Method method)
+                           UnivariateData::Method method)
 {
     first_left_bound_ = first_left_bound;
     second_left_bound_ = second_left_bound;
@@ -65,7 +65,7 @@ void UnivariateData::Apply(double first_left_bound,
     mat first_baselines;
     mat second_baselines;
     switch (method_){
-    case Univariate::AreaRatio:
+    case UnivariateData::Method::AreaRatio:
         results = arma_ext::IntegratePeaksMat(trans(parent_->spectra),
                                                trans(parent_->wavelength()),
                                                first_left_bound_, first_right_bound_,
@@ -75,7 +75,7 @@ void UnivariateData::Apply(double first_left_bound,
         baselines_(1) = second_baselines;
         method_description_ = "Band Ratio Area";
         break;
-    case Univariate::IntensityRatio: default:
+    case UnivariateData::Method::IntensityRatio: default:
         results = arma_ext::FindPeakMaxesMat(trans(parent_->spectra()),
                                               trans(parent_->wavelength()),
                                               first_left_bound_, first_right_bound_,
