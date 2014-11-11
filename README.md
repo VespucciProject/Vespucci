@@ -1,6 +1,6 @@
-Vespucci Development Branch
+Vespucci Master Branch
 ========
-This branch is the active branch and is **probably not stable**.
+This branch is usually stable. Commits are made on releases.
 
 Vespucci is a free/libre/open-source, cross-platform tool for spectroscopic
 imaging
