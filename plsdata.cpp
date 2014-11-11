@@ -1,15 +1,40 @@
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
+
+    This file is part of Vespucci.
+
+    Vespucci is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Vespucci is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
+*******************************************************************************/
 #include "plsdata.h"
 
-PLSData::PLSData(SpecMap *parent, QString *directory)
+PLSData::PLSData(QSharedPointer<VespucciDataset> parent, QString *directory)
 {
     parent_ = parent;
     directory_ = directory;
 }
 
+///
+/// \brief PLSData::Apply
+/// \param spectra Input matrix
+/// \param wavelength Spectral abcissa
+/// \param components Number of components to calculate
+/// \return
+/// Performs PLS analysis on a copy of the spectra matrix (transposed).
 bool PLSData::Apply(mat spectra, rowvec wavelength, int components)
 {
     mat Y;
-    cout << "PLSData::Apply set size of Y" << endl;
     Y.set_size(wavelength.n_elem, components);
     for (int i = 0; i < components; ++i)
         Y.col(i) = trans(wavelength);
@@ -57,7 +82,7 @@ int PLSData::NumberComponents()
     return coefficients_.n_cols;
 }
 
-colvec PLSData::Results(int i, bool &valid)
+colvec PLSData::Results(const uword i, bool &valid)
 {
     if (coefficients_.n_cols < i){
         valid = false;

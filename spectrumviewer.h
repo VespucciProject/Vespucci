@@ -1,5 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -24,14 +25,16 @@
 #include "dataviewer.h"
 class MapViewer;
 class MapData;
-class SpecMap;
+class VespucciDataset;
 class DataViewer;
 
 namespace Ui {
 class SpectrumViewer;
 }
 
-
+///
+/// \brief The SpectrumViewer class
+/// A class for displaying spectra
 class SpectrumViewer : public QDialog
 {
     Q_OBJECT
@@ -40,9 +43,9 @@ public:
     SpectrumViewer(MapViewer *parent,
                    MapData *map_data,
                    const QString x_axis_description,
-                   const QString y_axis_description, SpecMap *dataset, QSize widget_size, QString directory);
+                   const QString y_axis_description, QSharedPointer<VespucciDataset> dataset, QSize widget_size, QString directory);
     SpectrumViewer(DataViewer *parent,
-                   SpecMap *dataset,
+                   QSharedPointer <VespucciDataset> dataset,
                    int endmember,
                    QString directory,
                    QString type);
@@ -65,17 +68,68 @@ private slots:
 
 private:
     Ui::SpectrumViewer *ui;
+
+    ///
+    /// \brief spectrum_plot_
+    /// The widget containing the plot
     QCustomPlot *spectrum_plot_;
+
+    ///
+    /// \brief parent_
+    /// The window displaying an associated map (if one exists)
     MapViewer *parent_;
+
+    /// The MapData object containing the image data (if one exists)
     MapData *map_data_;
-    SpecMap *dataset_;
+
+    ///
+    /// \brief dataset_
+    /// The current dataset
+    QSharedPointer<VespucciDataset> dataset_;
+
+    ///
+    /// \brief widget_size_
+    /// This size of the current widget
     QSize widget_size_;
+
+    ///
+    /// \brief directory_
+    /// The working directory
     QString directory_;
+
+    ///
+    /// \brief current_index_
+    /// The current index (in the dataset) of the displayed spectrum
     int current_index_;
+
+    ///
+    /// \brief current_x_
+    /// Current x position on the image
     double current_x_;
+
+    ///
+    /// \brief current_y_
+    /// Current y position on the image
     double current_y_;
+
+    ///
+    /// \brief current_z_
+    /// Current value at the image
+    double current_z_;
+
+    ///
+    /// \brief coordinate_label_
+    /// A label that displays spatial position
     QLabel *coordinate_label_;
+
+    ///
+    /// \brief value_label_
+    /// A label that displays current data value
     QLabel *value_label_;
+
+    ///
+    /// \brief linked_to_map_
+    /// Whether or not there are associated MapData and MapViewer objects
     bool linked_to_map_;
 };
 

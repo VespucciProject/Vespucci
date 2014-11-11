@@ -15,46 +15,59 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 
-#Vespucci Qt Profile
-#The configuration settings for Windows are very specific to my configuration
-#and very likely will have to be changed. Compiling on Windows is not recommended
-#as binary releases for Windows will occur frequently (this is what we use in our
-#research group). It took me about a week just to compile all the libraries on
-#MinGW and
+################################################################################
+##############                Vespucci Qt Profile                 ##############
+################################################################################
+# The configuration for windows assumes that you have downloaded the compiled
+# windows libraries from the MinGW_libs branch of the Vespucci repository.
+# To use these libraries, you must be using 64-bit MinGW-w64 toolkit, with SEH
+# for exception handling. All libraries must be compiled in such a manner.
 
-#Configuration settings for unix systems are based either on the Ubuntu package
-#manager or the install scripts of the library when the package is not availible
-#from the repository
+# Configuration settings for unix systems are based either on the Ubuntu package
+# manager or the install scripts of the library when the package is not availible
+# from the repository. I do not regularly compile on
 
 QT       += core gui
 QT       += widgets printsupport
 CONFIG   += static
 mac: CONFIG += app_bundle
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
+mac: ICON = vespuccilogo.icns
+# Set the installation directory
+isEmpty(PREFIX) {
+    PREFIX = $$PWD/../../Vespucci-install
+}
+# it is assumed that casual windows users will not use the build system to install
 TARGET = vespucci
 TEMPLATE = app
 
-unix: QMAKE_CXXFLAGS += -isystem "/usr/include" \
-                        -isystem "/usr/include/armadillo_bits" \
-                        -isystem "/usr/include/boost" \
+
+#Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
+unix: !macx: QMAKE_CXXFLAGS += -std=gnu++11 \
+                        -isystem "/usr/local/include" \
+                        -isystem "/usr/local/include/armadillo_bits" \
+                        -isystem "/usr/local/include/boost" \
                         -isystem "/usr/include/mlpack"
+macx: QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -std=gnu0x -stdlib=libc+
 
-win32-g++: QMAKE_CXXFLAGS += -isystem "C:/usr/include" \
-                         -isystem "C:/usr/include/boost" \
-                         -isystem "C:/usr/include/armadillo_bits" \
-                         -isystem "C:/usr/include/mlpack"
+macx: CONFIG +=c++11
+
+macx: QMAKE_CXXFLAGS += -isystem "/Users/danielfoose/Vespucci/mac_libs/include" \
+                        -isystem "/Users/danielfoose/Vespucci/mac_libs/include/armadillo_bits" \
+                        -isystem "/Users/danielfoose/Vespucci/mac_libs/include/mlpack" \
+                        -isystem "/Users/danielfoose/Vespucci/mac_libs/include/boost"
+win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
+                         -pthread \
+                         -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include" \
+                         -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/boost" \
+                         -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/armadillo_bits" \
+                         -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/mlpack"
 
 
-
-CONFIG(release, debug|release): QMAKE_CXXFLAGS += -O3
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    specmap.cpp \
     loaddataset.cpp \
     mapdata.cpp \
-    univariatemap.cpp \
     vespucciworkspace.cpp \
     aboutdialog.cpp \
     citationdialog.cpp \
@@ -75,13 +88,22 @@ SOURCES += main.cpp\
     plsdialog.cpp \
     kmeansdialog.cpp \
     vcadata.cpp \
-    vcadialog.cpp
+    vcadialog.cpp \
+    dataextractordialog.cpp \
+    vespuccidataset.cpp \
+    metadataset.cpp \
+    plotviewer.cpp \
+    metadatasetdialog.cpp \
+    textimport.cpp \
+    binaryimport.cpp \
+    datasetlistmodel.cpp \
+    maplistmodel.cpp \
+    analysisdialog.cpp \
+    univariatedata.cpp
 
 HEADERS  += mainwindow.h \
-    specmap.h \
     loaddataset.h \
     mapdata.h \
-    univariatemap.h \
     vespucciworkspace.h \
     aboutdialog.h \
     citationdialog.h \
@@ -102,7 +124,19 @@ HEADERS  += mainwindow.h \
     plsdialog.h \
     kmeansdialog.h \
     vcadata.h \
-    vcadialog.h
+    vcadialog.h \
+    dataextractordialog.h \
+    vespuccidataset.h \
+    metadataset.h \
+    plotviewer.h \
+    metadatasetdialog.h \
+    textimport.h \
+    binaryimport.h \
+    datasetlistmodel.h \
+    maplistmodel.h \
+    analysisdialog.h \
+    univariatedata.h \
+    enums.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
@@ -120,124 +154,118 @@ FORMS    += mainwindow.ui \
     cropdialog.ui \
     plsdialog.ui \
     kmeansdialog.ui \
-    vcadialog.ui
+    vcadialog.ui \
+    dataextractordialog.ui \
+    plotviewer.ui \
+    metadatasetdialog.ui \
+    analysisdialog.ui
 
 RESOURCES += \
     resources.qrc
 
 RC_ICONS = "vespuccilogo.ico"
 
-#*nix Libraries
-#Include paths for *nix
-unix: INCLUDEPATH += /usr/include
-unix: DEPENDPATH += /usr/include
-
-#BLAS/LAPACK Libraries
-unix: !macx: LIBS += /usr/lib/openblas-base/libopenblas.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/openblas-base/libopenblas.so
-macx: LIBS += -framework Accelerate
+#*nix (not Mac) Libraries
 
 
-#ARPACK
-unix: LIBS += /usr/lib/libarpack.so
-unix: PRE_TARGETDEPS += /usr/lib/libarpack.so
+#Mac Libraries
+#include paths
+mac: INCLUDEPATH += $$PWD/../mac_libs/include
+mac: DEPENDPATH += $$PWD/../mac_libs/include
+mac: INCLUDEPATH += $$PWD/../mac_libs/include/libxml2
+mac: DEPENDPATH += $$PWD/../mac_libs/include/libxml2
 
-#MLPACK
-unix: LIBS += -L/usr/lib/libmlpack.a
-unix: PRE_TARGETDEPS += /usr/lib/libmlpack.a
+mac: LIBS += -L$$PWD/../mac_libs/lib -lmlpack
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libmlpack.dylib
 
-#Boost path for mac (also default nix path, but not used by ubuntu's package manager)
-macx: INCLUDEPATH += /usr/local/include
-macx: DEPENDPATH += /usr/local/include
+mac: LIBS += -L$$PWD/../mac_libs/lib -larmadillo
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libarmadillo.dylib
 
-#Boost math
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.so
+mac: LIBS += -L$$PWD/../mac_libs/lib -larpack
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libarpack.dylib
 
-macx: LIBS += /usr/local/lib/libboost_math_c99.so
-macx: PRE_TARGETDEPS += /usr/local/lib/libboost_math_c99.so
+mac: LIBS += -framework Accelerate
 
-#Boost program options
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_program_options.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_program_options.so
+mac: LIBS += -L$$PWD/../mac_libs/lib -lboost_math_c99-mt
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_math_c99-mt.dylib
 
-macx: LIBS += /usr/local/lib/libboost_program_options.so
-macx: PRE_TARGETDEPS += /usr/local/lib/libboost_program_options.so
+mac: LIBS += -L$$PWD/../mac_libs/lib -lboost_program_options-mt
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_program_options-mt.dylib
 
-#Boost random
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_random.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_random.so
+mac: LIBS += -L$$PWD/../mac_libs/lib -lboost_random-mt
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_random-mt.dylib
 
-macx: LIBS += /usr/local/lib/libboost_random.so
-macx: PRE_TARGETDEPS += /usr/local/lib/libboost_random.so
+mac: LIBS += -L$$PWD/../mac_libs/lib -lboost_unit_test_framework-mt
+mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_unit_test_framework-mt.dylib
 
-#Boost test
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.so
+macx: LIBS += -L$$PWD/../mac_libs/lib/ -lqcustomplot
 
-macx: LIBS += /usr/local/lib/libboost_unit_test_framework.so
-macx: PRE_TARGETDEPS += /usr/local/lib/libboost_unit_test_framework.so
-
-#LibXML2
-unix: !macx: LIBS += /usr/lib/x86_64-linux-gnu/libxml2.so
-unix: !macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libxml2.so
-macx: LIBS += -framework libxml2
-
-#QCustomPlot (linking statically for windows)
-unix: LIBS += /usr/lib/libqcustomplot1.so
-unix: PRE_TARGETDEPS += /usr/lib/libqcustomplot1.so
-
-#Armadillo
-unix: LIBS += /usr/lib/libarmadillo.so
-unix: PRE_TARGETDEPS += /usr/lib/libarmadillo.so
 
 #Windows Libraries
-INCLUDEPATH += $$PWD/../../../../usr/include
-DEPENDPATH += $$PWD/../../../../usr/include
+#Binaries for windows libraries are included in the MinGW_libs branch of the repository
+win32: INCLUDEPATH += $$PWD/../MinGW_libs/include
+win32: DEPENDPATH += $$PWD/../MinGW_libs/include
 
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -larmadillo
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libarmadillo.a
+#MLPACK
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lmlpack
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libmlpack.a
 
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -larpack_win64
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libarpack_win64.a
+#Armadillo
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -larmadillo
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libarmadillo.a
+
+#ARPACK-NG
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -larpack
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libarpack.a
+
+#OpenBLAS (linked dynamically because arpack links it dynamically)
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -llibopenblas
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libopenblas.dll.a
+
+#Libgfortran
+win32: LIBS += -L$$PWD/../MinGW_libs/usr/lib/ -lgfortran
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libgfortran.a
+
+#Boost random (C99)
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lboost_math_c99-mgw48-mt-1_55
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libboost_math_c99-mgw48-mt-1_55.a
+
+#Boost mat
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lboost_random-mgw48-mt-1_55
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libboost_random-mgw48-mt-1_55.a
+
+#Boost test
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lboost_unit_test_framework-mgw48-mt-1_55
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libboost_unit_test_framework-mgw48-mt-1_55.a
+
+#Boost program_options
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lboost_program_options-mgw48-mt-1_55
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libboost_program_options-mgw48-mt-1_55.a
+
+#LibXML2
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lxml2
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libxml2.a
+
+#LibICONV
+win32: LIBS += -L$$PWD/../MinGW_libsusr/lib/ -liconv
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libiconv.a
+
+#Zlib
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lz
+else:win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libz.a
+
+#The standard C++ library (linked dynmically by openblas)
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lstdc++
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libstdc++.dll.a
 
 
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_math_c99-mgw48-mt-1_55
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_math_c99-mgw48-mt-1_55.a
+#QCustomPlot
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqcustomplot
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqcustomplotd
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplot.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplotd.a
 
 
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_random-mgw48-mt-1_55
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_random-mgw48-mt-1_55.a
-
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_unit_test_framework-mgw48-mt-1_55
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_unit_test_framework-mgw48-mt-1_55.a
-
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -lgfortran
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libgfortran.a
-
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -lmlpack
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libmlpack.a
 
 
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -lopenblas
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libopenblas.a
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../usr/lib/ -lqcustomplot
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../usr/lib/ -lqcustomplotd
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libqcustomplot.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libqcustomplotd.a
-
-
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -lxml2
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libxml2.a
-
-
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -liconv
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libiconv.a
-
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -lz
-else:win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libz.a
-
-
-win32: LIBS += -L$$PWD/../../../../usr/lib/ -lboost_program_options-mgw48-mt-1_55
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_program_options-mgw48-mt-1_55.a

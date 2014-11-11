@@ -1,5 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -19,6 +20,12 @@
 #include "baselinedialog.h"
 #include "ui_baselinedialog.h"
 
+///
+/// \brief BaselineDialog::BaselineDialog
+/// \param parent Parent widget, required for QDialog
+/// \param ws The current workspace
+/// \param row The currently selected row in the dataset list widget
+///
 BaselineDialog::BaselineDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
     ui(new Ui::BaselineDialog)
@@ -37,6 +44,10 @@ BaselineDialog::~BaselineDialog()
     delete ui;
 }
 
+///
+/// \brief BaselineDialog::on_buttonBox_accepted
+/// When the user clicks "Ok", the baseline method of the dataset is called to
+/// correct the baseline of each spectrum.
 void BaselineDialog::on_buttonBox_accepted()
 {
     int window_size = window_size_box_->value();
@@ -45,9 +56,16 @@ void BaselineDialog::on_buttonBox_accepted()
 
     for (int i = 0; i < iterations; ++i)
         dataset_->Baseline(method, window_size);
+
+    this->close();
+    dataset_.clear();
 }
 
+///
+/// \brief BaselineDialog::on_buttonBox_rejected
+/// Window closes when user clicks "Cancel"
 void BaselineDialog::on_buttonBox_rejected()
 {
     this->close();
+    dataset_.clear();
 }

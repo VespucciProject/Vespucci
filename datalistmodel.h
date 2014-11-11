@@ -8,7 +8,7 @@ class DataListModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit DataListModel(QObject *parent = 0);
-    DataListModel(QList<SpecMap> *datasets, QObject *parent);
+    DataListModel(QList<VespucciDataset> *datasets, QObject *parent);
 
 signals:
 

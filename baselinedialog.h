@@ -1,5 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -22,11 +23,14 @@
 #include <QDialog>
 #include "vespucciworkspace.h"
 class VespucciWorkspace;
-class SpecMap;
+class VespucciDataset;
 namespace Ui {
 class BaselineDialog;
 }
 
+///
+/// \brief The BaselineDialog class
+/// The dialog that allows the user to baseline-correct the data.
 class BaselineDialog : public QDialog
 {
     Q_OBJECT
@@ -42,10 +46,30 @@ private slots:
 
 private:
     Ui::BaselineDialog *ui;
-    QSharedPointer<SpecMap> dataset_;
+
+    ///
+    /// \brief dataset_
+    /// Current dataset
+    QSharedPointer<VespucciDataset> dataset_;
+
+    ///
+    /// \brief workspace
+    /// Current workspace
     VespucciWorkspace *workspace;
+
+    ///
+    /// \brief iterations_box_
+    /// Number of iterations to perform filtering to find baseline
     QSpinBox *iterations_box_;
+
+    ///
+    /// \brief method_box_
+    /// User chooses the method here
     QComboBox *method_box_;
+
+    ///
+    /// \brief window_size_box_
+    /// User chooses the window size (if using filtering to find baseline) here.
     QSpinBox *window_size_box_;
 };
 

@@ -1,5 +1,6 @@
-/************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,22 +16,36 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
+*******************************************************************************/
 #include "principalcomponentsdata.h"
 
-PrincipalComponentsData::PrincipalComponentsData(SpecMap *parent,
+///
+/// \brief PrincipalComponentsData::PrincipalComponentsData
+/// \param parent Dataset
+/// \param directory global directory
+///
+PrincipalComponentsData::PrincipalComponentsData(QSharedPointer<VespucciDataset> parent,
                                                  QString *directory)
 {
     parent_ = parent;
     directory_ = directory;
 }
 
+///
+/// \brief PrincipalComponentsData::Apply
+/// \param spectra
+/// Perform analysis using arma::princomp
 void PrincipalComponentsData::Apply(mat spectra)
 {
     princomp(coeff_, score_, latent_, tsquared_, spectra);
 
 }
 
+///
+/// \brief PrincipalComponentsData::Results
+/// \param component
+/// \return
+/// Return the score for a particular column
 colvec PrincipalComponentsData::Results(int component)
 {
     return score_.col(component);

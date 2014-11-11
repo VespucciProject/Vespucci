@@ -16,6 +16,11 @@
     <height>300</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Vespucci</string>
   </property>
@@ -25,16 +30,6 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="1">
-     <widget class="QListWidget" name="datasetsListWidget"/>
-    </item>
-    <item row="1" column="3">
-     <widget class="QListWidget" name="mapsListWidget">
-      <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustIgnored</enum>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="1">
      <widget class="QLabel" name="label">
       <property name="text">
@@ -46,6 +41,16 @@
      <widget class="QLabel" name="label_2">
       <property name="text">
        <string>Maps</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QListView" name="datasetsListView"/>
+    </item>
+    <item row="1" column="3">
+     <widget class="QListView" name="mapsListView">
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustIgnored</enum>
       </property>
      </widget>
     </item>
@@ -64,9 +69,7 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionLoad_Workspace"/>
     <addaction name="actionImport_Dataset_from_File"/>
-    <addaction name="actionSave_Workspace"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -92,39 +95,32 @@
      <addaction name="actionSubtract_Background"/>
      <addaction name="actionCorrect_Baseline"/>
      <addaction name="actionCrop"/>
+     <addaction name="actionReject_Clipped_Spectra"/>
     </widget>
     <widget class="QMenu" name="menuExport_Dataset_Elements">
      <property name="title">
       <string>Export Dataset Elements</string>
      </property>
-     <widget class="QMenu" name="menuPCA_Data">
-      <property name="title">
-       <string>PCA Data</string>
-      </property>
-      <addaction name="actionLatent"/>
-      <addaction name="actionProjected_Data"/>
-      <addaction name="actionEigenvalues_of_Covariance_Matrix"/>
-      <addaction name="actionHotteling_s_Statistic"/>
-     </widget>
      <addaction name="actionSpectra"/>
      <addaction name="actionAverage_Spectra"/>
      <addaction name="actionAverage_Spectra_with_Abcissa"/>
-     <addaction name="actionSpatial_Data"/>
      <addaction name="actionSpectral_Abcissa"/>
      <addaction name="separator"/>
      <addaction name="actionAll_Data"/>
      <addaction name="separator"/>
-     <addaction name="menuPCA_Data"/>
-     <addaction name="actionPLS_Data"/>
-     <addaction name="actionVCA_Data"/>
     </widget>
+    <addaction name="actionUndo"/>
+    <addaction name="separator"/>
     <addaction name="menuData_Pre_Processing"/>
     <addaction name="separator"/>
-    <addaction name="actionConcatenate_Datasets"/>
     <addaction name="menuExport_Dataset_Elements"/>
     <addaction name="actionView_Dataset_Elements"/>
     <addaction name="separator"/>
+    <addaction name="actionNew_Composite_Dataset"/>
+    <addaction name="actionMultivariate_Analysis"/>
+    <addaction name="separator"/>
     <addaction name="actionClose_Dataset"/>
+    <addaction name="actionCreate_Plot"/>
    </widget>
    <widget class="QMenu" name="menuMap">
     <property name="title">
@@ -141,15 +137,13 @@
      <addaction name="actionPartial_Least_Squares"/>
      <addaction name="actionVertex_Components"/>
      <addaction name="actionK_Means_Clustering"/>
-     <addaction name="actionAgglomerative_Hierarchical_Clustering"/>
     </widget>
     <addaction name="actionNew_Univariate_Map"/>
     <addaction name="actionNew_Band_Ratio_Map"/>
     <addaction name="menuNew_Multivariate_Map"/>
     <addaction name="separator"/>
-    <addaction name="actionDelete_Map"/>
-    <addaction name="separator"/>
     <addaction name="actionSet_Global_Color_Scale"/>
+    <addaction name="actionDelete_Map"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuData"/>
@@ -157,28 +151,6 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionLoad_Workspace">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Load Workspace...</string>
-   </property>
-   <property name="toolTip">
-    <string>Load a Vespucci workspace saved in HDF5 format</string>
-   </property>
-  </action>
-  <action name="actionSave_Workspace">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Save Workspace</string>
-   </property>
-   <property name="toolTip">
-    <string>Save current workspace (all datasets and created maps) as HDF5 file</string>
-   </property>
-  </action>
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
@@ -208,14 +180,6 @@
     <string>About Vespucci</string>
    </property>
   </action>
-  <action name="actionConcatenate_Datasets">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Concatenate Datasets</string>
-   </property>
-  </action>
   <action name="actionNew_Univariate_Map">
    <property name="text">
     <string>New Univariate Map...</string>
@@ -227,17 +191,6 @@
    </property>
    <property name="text">
     <string>New Band Ratio Map...</string>
-   </property>
-  </action>
-  <action name="actionDelete_Map">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Delete Map</string>
-   </property>
-   <property name="toolTip">
-    <string>Delete the currently selected map</string>
    </property>
   </action>
   <action name="actionCiting_Vespucci">
@@ -266,22 +219,6 @@
     <string>Vertex Components</string>
    </property>
   </action>
-  <action name="actionK_means_Hierarchical_Clustering">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>K-means Clustering</string>
-   </property>
-  </action>
-  <action name="actionAgglomerative_Hierarchical_Clustering">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Agglomerative Hierarchical Clustering</string>
-   </property>
-  </action>
   <action name="actionFilter_Derivatize">
    <property name="text">
     <string>Filter/Derivatize</string>
@@ -308,11 +245,6 @@
   <action name="actionSpectra">
    <property name="text">
     <string>Spectra</string>
-   </property>
-  </action>
-  <action name="actionSpatial_Data">
-   <property name="text">
-    <string>Spatial Data</string>
    </property>
   </action>
   <action name="actionSpectral_Abcissa">
@@ -360,40 +292,34 @@
     <string>K-Means Clustering</string>
    </property>
   </action>
-  <action name="actionLatent">
+  <action name="actionUndo">
    <property name="text">
-    <string>Coefficients</string>
+    <string>Undo/Redo</string>
    </property>
   </action>
-  <action name="actionProjected_Data">
+  <action name="actionCreate_Plot">
    <property name="text">
-    <string>Projected Data</string>
+    <string>Create Plot...</string>
    </property>
   </action>
-  <action name="actionEigenvalues_of_Covariance_Matrix">
+  <action name="actionDelete_Map">
    <property name="text">
-    <string>Eigenvalues of Covariance Matrix</string>
+    <string>Delete Map</string>
    </property>
   </action>
-  <action name="actionHotteling_s_Statistic">
+  <action name="actionNew_Composite_Dataset">
    <property name="text">
-    <string>Hotteling's Statistic</string>
+    <string>New Composite Dataset...</string>
    </property>
   </action>
-  <action name="actionPLS_Data">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
+  <action name="actionMultivariate_Analysis">
    <property name="text">
-    <string>PLS Data</string>
+    <string>Multivariate Analysis...</string>
    </property>
   </action>
-  <action name="actionVCA_Data">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
+  <action name="actionReject_Clipped_Spectra">
    <property name="text">
-    <string>VCA Data</string>
+    <string>Reject Clipped Spectra</string>
    </property>
   </action>
  </widget>

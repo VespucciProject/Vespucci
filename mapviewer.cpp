@@ -1,5 +1,6 @@
-/************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,12 +16,17 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
-
+*******************************************************************************/
 #include "mapviewer.h"
 #include "ui_mapviewer.h"
 
 
+///
+/// \brief MapViewer::MapViewer
+/// \param name Name of this map
+/// \param directory Working directory for this window
+/// \param parent MapData associated with this image
+/// Constructor for this object
 MapViewer::MapViewer(QString name, QString *directory, MapData *parent):
     QMainWindow(0),
     ui(new Ui::MapViewer)
@@ -81,7 +87,11 @@ MapViewer::~MapViewer()
     delete ui;
 }
 
-
+///
+/// \brief MapViewer::GetGradient
+/// \param gradient_number index of color gradient
+/// \return Color gradient
+///
 QCPColorGradient MapViewer::GetGradient(int gradient_number)
 {
     switch (gradient_number)
@@ -129,41 +139,27 @@ QCPColorGradient MapViewer::GetGradient(int gradient_number)
     }
 }
 
-void MapViewer::closeEvent(QCloseEvent * event)
-{
-    // the call to SpecMap::RemoveMapAt() results in program crashing
 
-    int response = QMessageBox::question(this,
-                                         "Close Map?",
-                                         "Are you sure you want to close this"
-                                         " map?  Map will be deleted.");
-    if (response == QMessageBox::Yes){
-        parent_->RemoveThis();
-        event->accept();
-    }
-    else{
-        event->ignore();
-    }
-
-
-
-    /*
-    event->ignore();
-    this->showMinimized();
-    */
-}
-
+///
+/// \brief MapViewer::on_actionInterpolate_triggered
+/// see MapViewer::on_actionInterpolate_toggled
 void MapViewer::on_actionInterpolate_triggered()
 {
     //see on_actionInterpolate_toggled
 }
 
+///
+/// \brief MapViewer::on_actionInterpolate_toggled
+/// \param arg1
+/// Turns interpolation of the QCustomPlot object on and off
 void MapViewer::on_actionInterpolate_toggled(bool arg1)
 {
     parent_->setInterpolate(arg1);
 }
 
-
+///
+/// \brief MapViewer::on_actionSave_Image_As_triggered
+/// Save the current view of the QCustomPlot object
 void MapViewer::on_actionSave_Image_As_triggered()
 {
     QString path = *directory_;
@@ -221,16 +217,27 @@ void MapViewer::on_actionSave_Image_As_triggered()
 
 }
 
+///
+/// \brief MapViewer::on_actionShow_Axes_toggled
+/// \param arg1 Whether or not the Show Axes option is selected
+/// Toggles whether or not the axes of the map are visible
 void MapViewer::on_actionShow_Axes_toggled(bool arg1)
 {
     parent_->ShowAxes(arg1);
 }
 
+///
+/// \brief MapViewer::on_actionShow_Color_Scale_toggled
+/// \param arg1 Whether or not the Show Color Scale option is selected
+/// toggles whether or not the color scale is visible
 void MapViewer::on_actionShow_Color_Scale_toggled(bool arg1)
 {
     parent_->ShowColorScale(arg1);
 }
 
+///
+/// \brief MapViewer::on_actionSet_Color_Scheme_triggered
+/// Opens a dialog to select a new color scheme
 void MapViewer::on_actionSet_Color_Scheme_triggered()
 {
     QString color_name = QInputDialog::getItem(this, "Select Color Scheme", "Choose Scheme", color_list_);
@@ -239,6 +246,9 @@ void MapViewer::on_actionSet_Color_Scheme_triggered()
     parent_->setGradient(new_gradient);
 }
 
+///
+/// \brief MapViewer::on_actionAdd_Scale_Bar_triggered
+/// Launches a ScaleBarDialog to create a scale bar on the map
 void MapViewer::on_actionAdd_Scale_Bar_triggered()
 {
     //widget will delete itself
@@ -246,40 +256,78 @@ void MapViewer::on_actionAdd_Scale_Bar_triggered()
     scale_bar_dialog->show();
 }
 
-
+///
+/// \brief MapViewer::on_actionShow_Spectrum_Viewer_triggered
+/// Makes the spectrum viewer visible
 void MapViewer::on_actionShow_Spectrum_Viewer_triggered()
 {
     parent_->ShowSpectrumViewer(true);
 }
 
+///
+/// \brief MapViewer::on_actionCommon_Color_Gradient_toggled
+/// \param arg1 Whether or not Common Color Gradient option is selected.
+/// Sets the color scale to the global color scale.
 void MapViewer::on_actionCommon_Color_Gradient_toggled(bool arg1)
 {
-    cout << "MapViewer::on_actionCommon_Color_Gradient_toggled()" << endl;
     parent_->UseGlobalColorScale(arg1);
-    cout << "end of function" << endl;
 }
 
+///
+/// \brief MapViewer::GlobalDataRangeChanged
+/// \param new_range The new global color range
+/// Sets the range to the global color range. Associated with a signal in MainWindow
 void MapViewer::GlobalDataRangeChanged(QCPRange new_range)
 {
     parent_->SetDataRange(new_range);
 }
 
+///
+/// \brief MapViewer::GlobalGradientChanged
+/// \param new_gradient
+/// Sets the new global color gradient when the global gradient is changed
 void MapViewer::GlobalGradientChanged(QCPColorGradient new_gradient)
 {
     parent_->setGradient(new_gradient);
 }
 
+///
+/// \brief MapViewer::on_actionLock_Size_toggled
+/// \param arg1 Whether or not the Lock Size option is selected
+/// Locks the size of the MapDisplay window
 void MapViewer::on_actionLock_Size_toggled(bool arg1)
 {
     parent_->LockMapDisplaySize(arg1);
 }
 
+///
+/// \brief MapViewer::on_actionReset_Size_triggered
+/// Resets the size to its original.
 void MapViewer::on_actionReset_Size_triggered()
 {
     parent_->ResetMapWidgetSize();
 }
 
+///
+/// \brief MapViewer::on_actionReproportion_triggered
+/// Changes the size of the window so that it has the same width/height ratio as
+/// it had on instantiation.
 void MapViewer::on_actionReproportion_triggered()
 {
     parent_->RescaleMapWidget();
+}
+
+///
+/// \brief MapViewer::on_actionNew_Dataset_from_Map_triggered
+/// Launches the data extractor from the MapData object.
+void MapViewer::on_actionNew_Dataset_from_Map_triggered()
+{
+    parent_->LaunchDataExtractor();
+}
+
+void MapViewer::closeEvent(QCloseEvent *event)
+{
+    if (parent_->SpectrumViewerVisible())
+        parent_->HideSpectrumViewer();
+    event->accept();
 }

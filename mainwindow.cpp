@@ -1,5 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -16,7 +17,6 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "loaddataset.h"
@@ -32,6 +32,9 @@
 #include "plsdialog.h"
 #include "kmeansdialog.h"
 #include "vcadialog.h"
+#include "datasetlistmodel.h"
+#include "analysisdialog.h"
+#include "metadatasetdialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -44,8 +47,12 @@ MainWindow::MainWindow(QWidget *parent, VespucciWorkspace *ws) :
 {
     workspace = ws;
     ui->setupUi(this);
-    map_list_widget_ = this->findChild<QListWidget *>("mapsListWidget");
-    dataset_list_widget_ = this->findChild<QListWidget *>("datasetsListWidget");
+    map_list_view_ = this->findChild<QListView *>("mapsListView");
+    dataset_list_view_ = this->findChild<QListView *>("datasetsListView");
+    dataset_list_model_ = new DatasetListModel(0, workspace);
+    workspace->SetListWidgetModel(dataset_list_model_);
+    dataset_list_view_->setModel(dataset_list_model_);
+    global_map_count_ = 0;
 }
 
 MainWindow::~MainWindow()
@@ -64,6 +71,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
                                          "Are you sure you want to exit?");
 
     if (response == QMessageBox::Yes) {
+        dataset_list_model_->ClearDatasets();
         event->accept();
         qApp->exit();
     }
@@ -81,8 +89,10 @@ void MainWindow::on_actionExit_triggered()
                                          "Exit?",
                                          "Are you sure you want to exit?");
 
-    if (response == QMessageBox::Yes)
+    if (response == QMessageBox::Yes) {
+        dataset_list_model_->ClearDatasets();
         qApp->exit();
+    }
 }
 
 ///
@@ -117,10 +127,12 @@ void MainWindow::on_actionCiting_Vespucci_triggered()
 ///Triggers univariate dialog.
 void MainWindow::on_actionNew_Univariate_Map_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
-    UnivariateDialog *univariate_dialog =
-            new UnivariateDialog(this, workspace, row);
-    univariate_dialog->show();
+    int row = dataset_list_view_->currentIndex().row();
+    if (DatasetMappable(row)){
+        UnivariateDialog *univariate_dialog =
+                new UnivariateDialog(this, workspace, row);
+        univariate_dialog->show();
+    }
 }
 
 ///
@@ -128,10 +140,12 @@ void MainWindow::on_actionNew_Univariate_Map_triggered()
 ///Triggers band ratio dialog.
 void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
-    BandRatioDialog *band_ratio_dialog =
-            new BandRatioDialog(this, workspace, row);
-    band_ratio_dialog->show();
+    int row = dataset_list_view_->currentIndex().row();
+    if(DatasetMappable(row)){
+        BandRatioDialog *band_ratio_dialog =
+                new BandRatioDialog(this, workspace, row);
+        band_ratio_dialog->show();
+    }
 
 }
 
@@ -140,10 +154,13 @@ void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
 ///Triggers principal components dialog
 void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
-    PrincipalComponentsDialog *principal_components_dialog =
-            new PrincipalComponentsDialog(this, workspace, row);
-    principal_components_dialog->show();
+    int row = dataset_list_view_->currentIndex().row();
+    if (DatasetMappable(row)){
+        PrincipalComponentsDialog *principal_components_dialog =
+                new PrincipalComponentsDialog(this, workspace, row);
+        principal_components_dialog->show();
+    }
+
 }
 
 
@@ -152,9 +169,12 @@ void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
 ///Triggers vertex components dialog
 void MainWindow::on_actionVertex_Components_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
-    VCADialog *vca_dialog = new VCADialog(this, workspace, row);
-    vca_dialog->show();
+    int row = dataset_list_view_->currentIndex().row();
+    if (DatasetMappable(row)){
+        VCADialog *vca_dialog = new VCADialog(this, workspace, row);
+        vca_dialog->show();
+    }
+
 }
 
 
@@ -164,10 +184,13 @@ void MainWindow::on_actionVertex_Components_triggered()
 ///
 void MainWindow::on_actionPartial_Least_Squares_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
-    PLSDialog *pls_dialog =
-            new PLSDialog(this, workspace, row);
-    pls_dialog->show();
+    int row = dataset_list_view_->currentIndex().row();
+    if (DatasetMappable(row)){
+        PLSDialog *pls_dialog =
+                new PLSDialog(this, workspace, row);
+        pls_dialog->show();
+    }
+
 }
 
 ///
@@ -176,10 +199,13 @@ void MainWindow::on_actionPartial_Least_Squares_triggered()
 ///
 void MainWindow::on_actionK_Means_Clustering_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
-    KMeansDialog *k_means_dialog =
-            new KMeansDialog(this, workspace, row);
-    k_means_dialog->show();
+    int row = dataset_list_view_->currentIndex().row();
+    if (DatasetMappable(row)){
+        KMeansDialog *k_means_dialog =
+                new KMeansDialog(this, workspace, row);
+        k_means_dialog->show();
+    }
+
 
 }
 
@@ -189,25 +215,31 @@ void MainWindow::on_actionK_Means_Clustering_triggered()
 ///Normalizes data using Z-scores
 void MainWindow::on_actionNormalize_Standardize_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> data = workspace->DatasetAt(row);
+    int row = dataset_list_view_->currentIndex().row();
+    QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QStringList methods;
-    methods << tr("Min/Max") << tr("Unit Area") << tr("Z-score");
+    methods << tr("Min/Max") << tr("Unit Area") << tr("Z-score") << tr("Peak Intensity");
     bool ok;
     QString item = QInputDialog::getItem(this,
                                          tr("Normalization/Standardization"),
                                          tr("Method:"), methods, 0, false, &ok);
-    if (ok && item == "Min/Max")
-        data->MinMaxNormalize();
-
-    else if (ok && item == "Unit Area")
-        data->UnitAreaNormalize();
-
-    else if (ok && item == "Z-score")
-        data->ZScoreNormalize();
-
-    else
-        return;
+    double wavelength;
+    try{
+        if (ok && item == "Min/Max"){data->MinMaxNormalize();}
+        else if (ok && item == "Unit Area"){data->UnitAreaNormalize();}
+        else if (ok && item == "Z-score"){data->ZScoreNormalize();}
+        else if (ok && item == "Peak Intensity"){
+            wavelength = QInputDialog::getDouble(this, tr("Enter Peak Position"),
+                                                 tr("Position"), 0, 0,
+                                                 data->wavelength().max(), 3, &ok);
+            data->PeakIntensityNormalize(wavelength);
+        }
+        else
+            return;
+    }
+    catch(exception e){
+        DisplayExceptionWarning(e);
+    }
 }
 
 ///
@@ -215,8 +247,8 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
 ///Subtracts a background matrix (a saved armadillo binary matrix) from spectra
 void MainWindow::on_actionSubtract_Background_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> data = workspace->DatasetAt(row);
+    int row = dataset_list_view_->currentIndex().row();
+    QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QString filename =
             QFileDialog::getOpenFileName(this,
                                          tr("Select Background File"),
@@ -229,7 +261,12 @@ void MainWindow::on_actionSubtract_Background_triggered()
         return;
     }
     else{
-        data->SubtractBackground(input);
+        try{
+            data->SubtractBackground(input, filename);
+        }
+        catch(exception e){
+            DisplayExceptionWarning(e);
+        }
     }
 }
 
@@ -239,8 +276,8 @@ void MainWindow::on_actionSubtract_Background_triggered()
 void MainWindow::on_actionSpectra_triggered()
 {
     bool success;
-    int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
+    int row = dataset_list_view_->currentIndex().row();
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
@@ -264,11 +301,14 @@ void MainWindow::on_actionSpectra_triggered()
         QMessageBox::warning(this, "File Not Saved", "Could not save file.");
 }
 
+///
+/// \brief MainWindow::on_actionAverage_Spectra_triggered
+/// Saves an average spectrum of the selected dataset
 void MainWindow::on_actionAverage_Spectra_triggered()
 {
     bool success;
-    int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
+    int row = dataset_list_view_->currentIndex().row();
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
@@ -290,14 +330,16 @@ void MainWindow::on_actionAverage_Spectra_triggered()
         QMessageBox::information(this, "File Saved", "File written successfully!");
     else
         QMessageBox::warning(this, "File Not Saved", "Could not save file.");
-
 }
 
+///
+/// \brief MainWindow::on_actionAverage_Spectra_with_Abcissa_triggered
+/// Saves average spectrum (with abcissa above).
 void MainWindow::on_actionAverage_Spectra_with_Abcissa_triggered()
 {
     bool success;
-    int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
+    int row = dataset_list_view_->currentIndex().row();
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
@@ -326,42 +368,14 @@ void MainWindow::on_actionAverage_Spectra_with_Abcissa_triggered()
         QMessageBox::warning(this, "File Not Saved", "Could not save file.");
 }
 
-void MainWindow::on_actionSpatial_Data_triggered()
-{
-    bool success;
-    int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
-    mat output(dataset->x().t());
-    output.insert_cols(1, dataset->y().t());
-    output = output.t();
-
-    QString filename =
-            QFileDialog::getSaveFileName(this,
-                                         tr("Save Spectra Matrix"),
-                                         workspace->directory(),
-                                         tr("Vespucci Binary (*.arma);;"
-                                            "Comma-separated Values (*.csv);;"
-                                            "Tab-separated Txt (*.txt);;"));
-    QFileInfo file_info(filename);
-
-    if (file_info.suffix() == "arma")
-        success = output.save(filename.toStdString(), arma_binary);
-    else if (file_info.suffix() == "csv")
-        success = output.save(filename.toStdString(), csv_ascii);
-    else
-        success = output.save(filename.toStdString(), raw_ascii);
-
-    if (success)
-        QMessageBox::information(this, "File Saved", "File written successfully!");
-    else
-        QMessageBox::warning(this, "File Not Saved", "Could not save file.");
-}
-
+///
+/// \brief MainWindow::on_actionSpectral_Abcissa_triggered
+/// Saves the spectral abcissa
 void MainWindow::on_actionSpectral_Abcissa_triggered()
 {
     bool success;
-    int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
+    int row = dataset_list_view_->currentIndex().row();
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
@@ -385,35 +399,28 @@ void MainWindow::on_actionSpectral_Abcissa_triggered()
         QMessageBox::warning(this, "File Not Saved", "Could not save file.");
 }
 
+///
+/// \brief MainWindow::on_actionAll_Data_triggered
+/// Saves a matrix containing all spatial and spectral data
 void MainWindow::on_actionAll_Data_triggered()
 {
     bool success;
-    int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
-    mat output(dataset->spectra());
-    rowvec temp_wavelength(dataset->wavelength());
-    mat addendum(1,2);
-    addendum.zeros();
-    temp_wavelength.insert_cols(0, addendum); //add two 0 entries to wl
-    output.insert_cols(0, dataset->y());  //y at 0
-    output.insert_cols(0, dataset->x()); //x at 0, y at 1
-    output.insert_rows(0, temp_wavelength); //put wl on first line
-
+    int row = dataset_list_view_->currentIndex().row();
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
                                          tr("Save Spectra Matrix"),
                                          workspace->directory(),
-                                         tr("Vespucci Dataset (*.vds);;"
-                                            "Tab-delimited Text (*.txt);;"
-                                            "Comma-separated Variables (*.csv);;"));
-    QFileInfo file_info(filename);
-    if (file_info.suffix() == "vds")
-        success = output.save(filename.toStdString(), arma_binary);
-    else if (file_info.suffix() == "txt")
-        success = output.save(filename.toStdString(), raw_ascii);
-    else
-        success = output.save(filename.toStdString(), csv_ascii);
+                                         tr("Vespucci Dataset (*.vds)"));
+    //exception can be thrown when intializing field
+    try{
+        success = dataset->Save(filename);
+    }
+    catch(exception e){
+        DisplayExceptionWarning(e);
+        success = false;
+    }
 
     if (success)
         QMessageBox::information(this, "File Saved", "File written successfully!");
@@ -421,40 +428,23 @@ void MainWindow::on_actionAll_Data_triggered()
         QMessageBox::warning(this, "File Not Saved", "Could not save file.");
 }
 
-void MainWindow::on_actionPrincipal_Component_Statistics_triggered()
-{/*
-    bool success;
-    int row = dataset_list_widget_->currentRow();
-    QSharedPointer<SpecMap> dataset = workspace->DatasetAt(row);
-
-    if (dataset->principal_components_calculated()){
-        QString filename =
-                QFileDialog::getSaveFileName(this,
-                                             tr("Save Spectra Matrix"),
-                                             workspace->directory(),
-                                             tr("Comma-separated Variables (*.csv);;"
-                                                "Tab-delimited Text (*.txt);;"));
-        QFileInfo file_info(filename);
-        if (file_info.suffix() == "txt")
-            success = dataset->principal_components_data()->tsquared()->save(filename.toStdString(), raw_ascii);
-        else
-            success = dataset->principal_components_data()->tsquared()->save(filename.toStdString(), csv_ascii);
-    }
-    */
-
-}
-
+///
+/// \brief MainWindow::on_actionFilter_Derivatize_triggered
+/// Triggers dialog to filter data
 void MainWindow::on_actionFilter_Derivatize_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     FilterDialog *filter_dialog = new FilterDialog(this, workspace, row);
     filter_dialog->show();
 }
 
+///
+/// \brief MainWindow::on_actionClose_Dataset_triggered
+/// Closes the dataset. Should force it to go out of scope
 void MainWindow::on_actionClose_Dataset_triggered()
 {
-    int dataset_row = dataset_list_widget_->currentRow();
-    QString name = dataset_list_widget_->currentItem()->text();
+    QModelIndex index = dataset_list_view_->currentIndex();
+    QString name = dataset_list_view_->currentIndex().data().value<QString>();
     QString text = "Are you sure you want to close the dataset " + name + "?" +
             " The data and all associated maps will be deleted.";
 
@@ -462,38 +452,54 @@ void MainWindow::on_actionClose_Dataset_triggered()
                                          QMessageBox::Ok, QMessageBox::Cancel);
 
     if (response == QMessageBox::Ok)
-        workspace->RemoveDatasetAt(dataset_row);
+        dataset_list_model_->removeRow(index.row(), index);
 }
 
+///
+/// \brief MainWindow::on_actionDocumentation_triggered
+/// Triggers the window that takes you to the website
 void MainWindow::on_actionDocumentation_triggered()
 {
     QUrl website_url("http://dpfoose.github.io/Vespucci/");
     QDesktopServices::openUrl(website_url);
 }
 
+///
+/// \brief MainWindow::on_actionCrop_triggered
+/// Triggers the CropDialog
 void MainWindow::on_actionCrop_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     CropDialog *crop_dialog = new CropDialog(this, workspace, row);
     crop_dialog->show();
 }
 
+///
+/// \brief MainWindow::on_actionCorrect_Baseline_triggered
+/// Triggers Baseline correction dialog
 void MainWindow::on_actionCorrect_Baseline_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     BaselineDialog *baseline_dialog = new BaselineDialog(this, workspace, row);
     baseline_dialog->show();
 }
 
+///
+/// \brief MainWindow::on_actionView_Dataset_Elements_triggered
+/// Triggers DataViewer
 void MainWindow::on_actionView_Dataset_Elements_triggered()
 {
-    int row = dataset_list_widget_->currentRow();
+    int row = dataset_list_view_->currentIndex().row();
     DataViewer *data_viewer = new DataViewer(0, workspace, row);
     data_viewer->show();
 }
 
+///
+/// \brief MainWindow::on_actionSet_Global_Color_Scale_triggered
+/// Set the global color scale.
 void MainWindow::on_actionSet_Global_Color_Scale_triggered()
 {
+    //populate a list
     QStringList color_list;
     color_list  << "ColorBrewerBlueGreen"
                 << "ColorBrewerBluePurple"
@@ -583,21 +589,32 @@ void MainWindow::on_actionSet_Global_Color_Scale_triggered()
     workspace->RefreshGlobalColorGradient(gradient);
 }
 
-
+///
+/// \brief MainWindow::global_data_range
+/// \return
+/// Return the global data range (to MapViewer widgets)
 QCPRange* MainWindow::global_data_range()
 {
     return workspace->global_data_range();
 }
 
+///
+/// \brief MainWindow::global_gradient
+/// \return
+/// Return the global color gradient (to MapViewer widgets)
 QCPColorGradient* MainWindow::global_gradient()
 {
     return workspace->global_gradient();
 }
 
+///
+/// \brief MainWindow::RecalculateGlobalDataRange
+/// \param new_data_range
+/// Recalculate the global data range based on previous range and the new data
 void MainWindow::RecalculateGlobalDataRange(QCPRange* new_data_range)
 {
-    bool changed;
-    if (this->map_list_widget_->count() <= 1)
+    bool changed = false;
+    if (global_map_count_ <= 1)
         workspace->SetGlobalDataRange(new_data_range);
     else
         changed = workspace->RecalculateGlobalDataRange(new_data_range);
@@ -607,18 +624,157 @@ void MainWindow::RecalculateGlobalDataRange(QCPRange* new_data_range)
     }
 }
 
+///
+/// \brief MainWindow::RefreshGlobalColorGradient
+/// \param new_gradient
+/// Change the global color gradient and update it for all objects using it
 void MainWindow::RefreshGlobalColorGradient(QCPColorGradient new_gradient)
 {
     workspace->RefreshGlobalColorGradient(new_gradient);
     emit GlobalGradientChanged(new_gradient);
 }
 
+///
+/// \brief MainWindow::SetGlobalDataRange
+/// \param new_data_range
+/// Set the global data range and update it for all objects using it
 void MainWindow::SetGlobalDataRange(QCPRange* new_data_range)
 {
     workspace->SetGlobalDataRange(new_data_range);
     emit GlobalDataRangeChanged(*new_data_range);
 }
 
+///
+/// \brief MainWindow::workspace_ptr
+/// \return
+/// Very kludgy way of getting the workspace variable to window variables.
+VespucciWorkspace* MainWindow::workspace_ptr()
+{
+    return workspace;
+}
+
+void MainWindow::on_actionUndo_triggered()
+{
+    int row = dataset_list_view_->currentIndex().row();
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
+    QString text = tr("Are you sure you want to undo ") + dataset->last_operation()
+            + " on " + dataset->name() + "?";
+    int response =
+            QMessageBox::question(this,
+                          tr("Undo Operation"),
+                          text,
+                          QMessageBox::Ok | QMessageBox::Cancel);
+
+    if (response == QMessageBox::Ok){
+        dataset->Undo();
+        return;
+    }
+    else{
+        return;
+    }
+    dataset.clear(); //should fall out of scope anyway, but let's be safe
+
+}
+
+///
+/// \brief MainWindow::DisplayExceptionWarning
+/// \param e
+/// Used to handle exceptions arising from dialogs. Displays a pop-up box describing
+/// the nature of the error. Most exceptions are not critical, but will result in the
+/// action that caused the exception being canceled.
+void MainWindow::DisplayExceptionWarning(std::exception e)
+{
+    char str[50];
+    strcat(str, "The following exception was thrown: ");
+    strcat(str, e.what());
+    QString display_text = QString::fromLocal8Bit(str);
+    QMessageBox::warning(this, "Exception Occurred", display_text);
+}
+
+void MainWindow::on_datasetsListView_clicked(const QModelIndex &index)
+{
+    QSharedPointer<VespucciDataset> dataset =
+            dataset_list_model_->DatasetAt(index.row());
+    map_list_view_->setModel(dataset->map_list_model());
+}
+
+///
+/// \brief MainWindow::SetActiveDatasetListRow
+/// \param row
+/// Change the row that is active in the dataset list view
+void MainWindow::SetActiveDatasetListRow(int row)
+{
+    QSharedPointer<VespucciDataset> dataset =
+            dataset_list_model_->DatasetAt(row);
+    map_list_view_->setModel(dataset->map_list_model());
+}
+
+bool MainWindow::DatasetMappable(int row)
+{
+    QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
+    if(data->non_spatial()){
+        QMessageBox::warning(this,
+                             "Non-spatial or Non-contiguous Dataset",
+                             "Images cannot be created from non-spatial or "
+                             "non-contiguous datasets.");
+        data.clear();
+        return false;
+    }
+    return true;
+}
+
+///
+/// \brief MainWindow::DatasetAdded
+/// \param index
+/// Slot corresponding to the signal from the list model that a dataset has been added.
+void MainWindow::DatasetAdded(const QModelIndex &index)
+{
+    QSharedPointer<VespucciDataset> dataset =
+            dataset_list_model_->DatasetAt(index.row());
+    map_list_view_->setModel(dataset->map_list_model());
+    map_list_view_->setCurrentIndex(index);
+    ++global_map_count_;
+}
+
+///
+/// \brief MainWindow::on_mapsListView_doubleClicked
+/// \param index
+/// Opens or closes a map when it is double clicked.
+void MainWindow::on_mapsListView_doubleClicked(const QModelIndex &index)
+{
+    MapListModel *map_list_model = qobject_cast<MapListModel*>(map_list_view_->model());
+    QSharedPointer<MapData> map_data = map_list_model->MapAt(index.row());
+    if (map_data->MapWindowVisible())
+        map_data->HideMapWindow();
+    else
+        map_data->ShowMapWindow();
+}
+
+void MainWindow::on_actionDelete_Map_triggered()
+{
+    MapListModel *map_list_model = qobject_cast<MapListModel*>(map_list_view_->model());
+    QModelIndex index = map_list_view_->currentIndex();
+    map_list_model->removeRow(index.row(), index);
+}
+
+void MainWindow::on_actionMultivariate_Analysis_triggered()
+{
+    AnalysisDialog *analysis_dialog = new AnalysisDialog(this, workspace, dataset_list_view_->currentIndex().row());
+    analysis_dialog->show();
+}
+
+void MainWindow::on_actionNew_Composite_Dataset_triggered()
+{
+    MetaDatasetDialog *meta_dialog = new MetaDatasetDialog(this, workspace);
+    meta_dialog->show();
+}
 
 
 
+void MainWindow::on_actionReject_Clipped_Spectra_triggered()
+{
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(dataset_list_view_->currentIndex().row());
+    double threshold = QInputDialog::getDouble(this, "Reject Clipped Spectra", "Threshold", 64000.00);
+    dataset->RemoveClippedSpectra(threshold);
+    dataset.clear();
+}

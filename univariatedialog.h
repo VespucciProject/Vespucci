@@ -1,5 +1,6 @@
-/************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,7 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
+*******************************************************************************/
 #ifndef UNIVARIATEDIALOG_H
 #define UNIVARIATEDIALOG_H
 
@@ -26,6 +27,9 @@ namespace Ui {
 class UnivariateDialog;
 }
 
+///
+/// \brief The UnivariateDialog class
+/// Class allowing user to create univariate images
 class UnivariateDialog : public QDialog
 {
     Q_OBJECT
@@ -41,26 +45,88 @@ private slots:
 
     void on_buttonBox_rejected();
 
+    void on_minLineEdit_textChanged(const QString &arg1);
+
+    void on_maxLineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::UnivariateDialog *ui;
+
+    ///
+    /// \brief range_label_
+    /// Displays the range of the spectral abcissa.
+    QLabel *range_label_;
+
+    ///
+    /// \brief workspace
+    /// The current workspace
     VespucciWorkspace *workspace;
+
+    ///
+    /// \brief spectrum_plot_
+    /// The plot displaying a spectrum
     QCustomPlot *spectrum_plot_;
+
+    ///
+    /// \brief min_box_
+    /// The user enters her desired minimum value here.
     QLineEdit *min_box_;
+
+    ///
+    /// \brief max_box_
+    /// The user enters her desired maximum value here.
     QLineEdit *max_box_;
+
+    ///
+    /// \brief name_box_
+    /// The user enters the name of the dataset her
     QLineEdit *name_box_;
+
+    ///
+    /// \brief color_selector_
+    /// User selects desired color scheme here
     QComboBox *color_selector_;
+
+    ///
+    /// \brief value_method_selector_
+    /// User selects value determination method here
     QComboBox *value_method_selector_;
+
+    ///
+    /// \brief negative_box_
+    /// User selects whether or not the dataset has "negative peaks". This may
+    /// be deprecated soon
     QCheckBox *negative_box_;
 
-
+    ///
+    /// \brief integration_method_selector_
+    /// User selects integration method here
     QComboBox *integration_method_selector_;
+
+    ///
+    /// \brief integration_method_label_
+    /// Displays the integration method
     QLabel *integration_method_label_;
 
-    //index of the SpecMap object in the various lists
+    ///
+    /// \brief data_index_
+    /// Index of current dataset in relevant lists
     int data_index_;
 
-    //Pointer to the SpecMap object at data_index_
-    QSharedPointer<SpecMap> data_;
+    ///
+    /// \brief min_line_
+    /// The line drawn on the spectrum corresponding to the left bound
+    QCPItemStraightLine *min_line_;
+
+    ///
+    /// \brief max_line_
+    /// The line drawn on the spectrum corresponding to the right bound
+    QCPItemStraightLine *max_line_;
+
+    ///
+    /// \brief data_
+    /// The current dataset
+    QSharedPointer<VespucciDataset> data_;
 };
 
 #endif // UNIVARIATEDIALOG_H

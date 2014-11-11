@@ -1,5 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -19,6 +20,11 @@
 #include "scalebardialog.h"
 #include "ui_scalebardialog.h"
 
+///
+/// \brief ScaleBarDialog::ScaleBarDialog
+/// \param parent See QWidget
+/// \param map_data MapData associated with the MapViewer that launches this dialog
+///
 ScaleBarDialog::ScaleBarDialog(QWidget *parent, MapData *map_data) :
     QDialog(parent),
     ui(new Ui::ScaleBarDialog)
@@ -40,11 +46,17 @@ ScaleBarDialog::~ScaleBarDialog()
     delete ui;
 }
 
+///
+/// \brief ScaleBarDialog::on_colorPushButton_clicked
+/// Opens a QColorDialog for the user to select a color
 void ScaleBarDialog::on_colorPushButton_clicked()
 {
     color_ = QColorDialog::getColor(color_, this, "Select Color");
 }
 
+///
+/// \brief ScaleBarDialog::on_buttonBox_accepted
+/// Draw the scale bar when user clicks "Ok"
 void ScaleBarDialog::on_buttonBox_accepted()
 {
     QMessageBox::information(this, "Scale Bar", "Click on the map to show the scale bar.");
@@ -64,8 +76,13 @@ void ScaleBarDialog::on_buttonBox_accepted()
                             color_,
                             position,
                             font);
+    this->close();
+
 }
 
+///
+/// \brief ScaleBarDialog::on_buttonBox_rejected
+/// Close the window when user clicks "Cancel"
 void ScaleBarDialog::on_buttonBox_rejected()
 {
     this->close();

@@ -1,6 +1,25 @@
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
+
+    This file is part of Vespucci.
+
+    Vespucci is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Vespucci is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
+*******************************************************************************/
 #include "vcadata.h"
 
-VCAData::VCAData(SpecMap *parent,
+VCAData::VCAData(QSharedPointer<VespucciDataset> parent,
                  QString *directory)
 {
     parent_ = parent;
@@ -15,7 +34,7 @@ VCAData::VCAData(SpecMap *parent,
 ///
 void VCAData::Apply(mat spectra, int endmembers)
 {
-    arma_ext::VCA(spectra,
+    arma_ext::VCA(trans(spectra),
                   endmembers,
                   indices_,
                   endmember_spectra_,
@@ -28,12 +47,24 @@ void VCAData::Apply(mat spectra, int endmembers)
 /// \param i Index of endmember column
 /// \return Plottable QVector of an endmember
 ///
-QVector<double> VCAData::Endmember(int i)
+QVector<double> VCAData::EndmemberQVec(const uword i)
+{
+    vec spectrum = Endmember(i);
+    std::vector<double> spectrum_std = conv_to<std::vector<double> >::from(spectrum);
+    return QVector<double>::fromStdVector(spectrum_std);
+}
+
+///
+/// \brief VCAData::Endmember
+/// \param i
+/// \return
+/// Get a vector corresponding to a single endmember
+vec VCAData::Endmember(const uword i)
 {
     if (i >= endmember_spectra_.n_cols)
-        i = endmember_spectra_.n_cols - 1;
-    std::vector<double> spectrum_std = conv_to<std::vector<double> >::from(endmember_spectra_.col(i));
-    return QVector<double>::fromStdVector(spectrum_std);
+        return endmember_spectra_.col(endmember_spectra_.n_cols - 1);
+    else
+        return endmember_spectra_.col(i);
 }
 
 ///
@@ -68,27 +99,66 @@ int VCAData::NumberComponents()
     return endmember_spectra_.n_cols;
 }
 
-colvec VCAData::Results(int component)
+colvec VCAData::Results(const uword component)
 {
     return fractional_abundances_.col(component);
 }
 
-double VCAData::EndmemberMax(int i)
+double VCAData::EndmemberMax(const uword i)
 {
-    cout << "EndmemberMax" << endl;
-    if (i >= endmember_spectra_.n_cols)
-        i = endmember_spectra_.n_cols - 1;
-    colvec endmember = endmember_spectra_.col(i);
-    double max = endmember.max();
+    colvec endmember;
+    double max;
+    try{
+        if (i >= endmember_spectra_.n_cols)
+            endmember = endmember_spectra_.col(endmember_spectra_.n_cols - 1);
+        else
+            endmember = endmember_spectra_.col(i);
+        max = endmember.max();
+    }
+    catch(std::exception e){
+        throw std::runtime_error("VCAData::EndmemberMax");
+    }
+
     return max;
 }
 
-double VCAData::EndmemberMin(int i)
+///
+/// \brief VCAData::EndmemberMin
+/// \param i Index of a column of the endmember_spectra_ matrix.
+/// \return The minimum value of the endmember in column i
+///
+double VCAData::EndmemberMin(const uword i)
 {
-    cout << "EndmemberMin" << endl;
-    if (i >= endmember_spectra_.n_cols)
-        i = endmember_spectra_.n_cols - 1;
-    colvec endmember = endmember_spectra_.col(i);
-    double min = endmember.min();
+    colvec endmember;
+    double min;
+    try{
+        if (i >= endmember_spectra_.n_cols)
+            endmember = endmember_spectra_.col(endmember_spectra_.n_cols - 1);
+        else
+            endmember = endmember_spectra_.col(i);
+        min = endmember.min();
+    }
+    catch(std::exception e){
+        throw std::runtime_error("Improper VCAData member function call");
+    }
+
     return min;
+}
+
+///
+/// \brief VCAData::EndmembersAsRows
+/// \param indices A list of indices of desired endmemebrs
+/// \return Endmember spectra in the same format used in the spectra_ matrix
+/// This is used in the MetaDataset constructor to grab specific endmembers.
+mat VCAData::EndmembersAsRows(uvec indices)
+{
+    mat endmembers;
+    try{
+        endmembers = endmember_spectra_.cols(indices);
+    }
+    catch(std::exception e){
+        throw std::runtime_error("VCAData::EndmembersAsRows");
+    }
+
+    return trans(endmembers);
 }

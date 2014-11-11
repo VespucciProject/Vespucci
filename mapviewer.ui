@@ -10,6 +10,11 @@
     <height>400</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Map Viewer</string>
   </property>
@@ -26,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>500</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMap">
@@ -53,8 +58,15 @@
     <addaction name="separator"/>
     <addaction name="actionShow_Spectrum_Viewer"/>
    </widget>
+   <widget class="QMenu" name="menuData">
+    <property name="title">
+     <string>Data</string>
+    </property>
+    <addaction name="actionNew_Dataset_from_Map"/>
+   </widget>
    <addaction name="menuMap"/>
    <addaction name="menuDisplay"/>
+   <addaction name="menuData"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSave_Image_As">
@@ -143,6 +155,11 @@
   <action name="actionReset_Size">
    <property name="text">
     <string>Reset Size</string>
+   </property>
+  </action>
+  <action name="actionNew_Dataset_from_Map">
+   <property name="text">
+    <string>New Dataset from Map...</string>
    </property>
   </action>
  </widget>

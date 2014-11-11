@@ -1,5 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,34 +16,63 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-*******************************************************************************/
-#ifndef VESPUCCITABLEMODEL_H
+*******************************************************************************/#ifndef VESPUCCITABLEMODEL_H
 #define VESPUCCITABLEMODEL_H
 
 #include <QAbstractTableModel>
 #include "vespucciworkspace.h"
-#include "specmap.h"
-class SpecMap;
+#include "vespuccidataset.h"
+class VespucciDataset;
+
+///
+/// \brief The VespucciTableModel class
+/// The QAbstractTableModel that handles armadillo objects for the DataViewer
+/// class.
 class VespucciTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
     explicit VespucciTableModel(QObject *parent, mat *input_data);
-    VespucciTableModel(QObject *parent, QSharedPointer<SpecMap> dataset, QString type);
+    VespucciTableModel(QObject *parent, QSharedPointer<VespucciDataset> dataset, QString type);
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
+    mat* GetData();
 
 signals:
 
 public slots:
 
 private:
+    ///
+    /// \brief rows_
+    /// Number of rows of the current object displayed
     int rows_;
+
+    ///
+    /// \brief cols_
+    /// Number of columns of the current object being displayed
     int cols_;
+
+    ///
+    /// \brief data_
+    /// Pointer to the object being displayed
     mat *data_;
-    QSharedPointer<SpecMap> dataset_;
+
+    ///
+    /// \brief dataset_
+    /// Dataset containing the object being displayed
+    QSharedPointer<VespucciDataset> dataset_;
+
+    ///
+    /// \brief composite_
+    /// Whether or not current display is a composite of multiple objects from
+    /// the dataset
     bool composite_;
+
+    ///
+    /// \brief spatial_only_
+    /// Whether or not the current data object only contains spatial data
     bool spatial_only_;
 
 };

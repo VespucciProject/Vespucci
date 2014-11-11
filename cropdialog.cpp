@@ -1,5 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -19,6 +20,12 @@
 #include "cropdialog.h"
 #include "ui_cropdialog.h"
 
+///
+/// \brief CropDialog::CropDialog
+/// \param parent Parent QWidget
+/// \param ws The current workspace
+/// \param row Currently selected row
+///
 CropDialog::CropDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
     ui(new Ui::CropDialog)
@@ -53,6 +60,10 @@ CropDialog::~CropDialog()
     delete ui;
 }
 
+
+///
+/// \brief CropDialog::on_buttonBox_accepted
+/// Calls crop method of the dataset when user clicks "Ok".
 void CropDialog::on_buttonBox_accepted()
 {
 
@@ -69,11 +80,16 @@ void CropDialog::on_buttonBox_accepted()
     else{
         dataset_->CropSpectra(x_min, x_max, y_min, y_max);
     }
-
+    this->close();
+    dataset_.clear();
 
 }
 
+///
+/// \brief CropDialog::on_buttonBox_rejected
+/// Closes window when user clicks "Cancel"
 void CropDialog::on_buttonBox_rejected()
 {
     this->close();
+    dataset_.clear();
 }

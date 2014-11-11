@@ -1,5 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -19,6 +20,12 @@
 #include "filterdialog.h"
 #include "ui_filterdialog.h"
 
+///
+/// \brief FilterDialog::FilterDialog
+/// \param parent Parent QWidget
+/// \param ws Current workspace
+/// \param row Row of current dataset
+///
 FilterDialog::FilterDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
     ui(new Ui::FilterDialog)
@@ -30,6 +37,7 @@ FilterDialog::FilterDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     derivative_box_ = this->findChild<QSpinBox *>("derivativeSpinBox");
     polynomial_box_ = this->findChild<QSpinBox *>("polynomialSpinBox");
     window_box_ = this->findChild<QSpinBox *>("windowSpinBox");
+    singular_values_box_ = this->findChild<QSpinBox *>("singularValuesSpinBox");
 }
 
 FilterDialog::~FilterDialog()
@@ -43,42 +51,77 @@ FilterDialog::~FilterDialog()
 ///enables and disables appropriate options based on method selected
 void FilterDialog::on_methodComboBox_currentIndexChanged(int index)
 {
-    if ((index!=2) && (index!=3) &&(derivative_box_->isEnabled()))
+    if ((index!=2) && (derivative_box_->isEnabled()))
         derivative_box_->setEnabled(false);
-    if ((index == 2 || index == 3) && (!derivative_box_->isEnabled()))
+    if ((index == 2) && (!derivative_box_->isEnabled()))
         derivative_box_->setEnabled(true);
-    if ((index != 2) && (index != 3) && (polynomial_box_->isEnabled()))
+    if ((index != 2) && (polynomial_box_->isEnabled()))
         polynomial_box_->setEnabled(false);
-    if ((index == 2 || index == 3)&&(!polynomial_box_->isEnabled()))
+    if ((index == 2)&&(!polynomial_box_->isEnabled()))
         polynomial_box_->setEnabled(true);
+    if ((index != 3))
+        singular_values_box_->setDisabled(true);
+    if (index == 3){
+        singular_values_box_->setEnabled(true);
+        window_box_->setDisabled(true);
+    }
 }
 
+///
+/// \brief FilterDialog::on_buttonBox_accepted
+/// Trigger relevant filtering method when "Ok" is selected
 void FilterDialog::on_buttonBox_accepted()
 {
     switch (method_box_->currentIndex())
     {
     case 0:
-        dataset_->MedianFilter(window_box_->value());
+        try{
+            dataset_->MedianFilter(window_box_->value());
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
         break;
+
     case 1:
-        dataset_->LinearMovingAverage(window_box_->value());
+        try{
+            dataset_->LinearMovingAverage(window_box_->value());
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
         break;
     case 2:
-        dataset_->Derivatize(derivative_box_->value(),
-                             polynomial_box_->value(),
-                             window_box_->value());
+        try{
+            dataset_->SavitzkyGolay(derivative_box_->value(),
+                                 polynomial_box_->value(),
+                                 window_box_->value());
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
         break;
     case 3:
-        dataset_->SavitzkyGolay(polynomial_box_->value(), window_box_->value());
+        try{
+            dataset_->SingularValue(singular_values_box_->value());
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
         break;
-    case 4:
-        dataset_->SingularValue(5);
     default:
         return;
     }
+    this->close();
+    dataset_.clear(); //let go of pointer to dataset
+
 }
 
+///
+/// \brief FilterDialog::on_buttonBox_rejected
+/// Close window when "Cancel" selected.
 void FilterDialog::on_buttonBox_rejected()
 {
     this->close();
+    dataset_.clear(); //let go of pointer to dataset
 }

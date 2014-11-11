@@ -1,5 +1,6 @@
-/************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,10 +16,14 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
+*******************************************************************************/
 #include "citationdialog.h"
 #include "ui_citationdialog.h"
 
+///
+/// \brief CitationDialog::CitationDialog
+/// \param parent Parent QWidget, common for all QDialogs
+///
 CitationDialog::CitationDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::CitationDialog)
@@ -31,6 +36,9 @@ CitationDialog::~CitationDialog()
     delete ui;
 }
 
+///
+/// \brief CitationDialog::on_pushButton_clicked
+/// Window closes when user clicks "Close"
 void CitationDialog::on_pushButton_clicked()
 {
     this->close();

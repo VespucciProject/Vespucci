@@ -1,5 +1,6 @@
-/************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,8 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
-
+*******************************************************************************/
 #include "mapdata.h"
 
 ///
@@ -26,7 +26,7 @@
 /// \param x Vector of horizontal coordinates map points
 /// \param y Vector of vertical coordinates for map points
 /// \param results Vector of results at x and y
-/// \param parent The SpecMap object storing the map data.
+/// \param parent The VespucciDataset object storing the map data.
 /// \param directory The current working directory on the filesystem
 /// \param gradient The initially-chosen color gradient.
 /// \param source_index The index of this object in parent.
@@ -38,19 +38,21 @@ MapData::MapData(QString x_axis_description,
                  colvec x,
                  colvec y,
                  colvec results,
-                 SpecMap *parent,
+                 QSharedPointer<VespucciDataset> parent,
                  QString *directory,
                  QCPColorGradient gradient,
                  int source_index,
                  int tick_count,
                  MainWindow *main_window)
 {
+    results_ = results;
     name_ = parent->name();
     directory_ = directory;
     main_window_ = main_window;
     univariate_area_ = false;
     band_ratio_area_ = false;
     univariate_bandwidth_ = false;
+    crisp_clusters_ = false;
     using_global_color_scale_ = false;
     map_display_ = new MapViewer(name_, directory_, this);
     map_qcp_ = map_display_->findChild<QCustomPlot *>("mapView");
@@ -61,8 +63,7 @@ MapData::MapData(QString x_axis_description,
     map_->data()->setValueRange(parent->ValueRange());
     map_->data()->setKeySize(parent->KeySize());
     map_->data()->setValueSize(parent->ValueSize());
-
-    for(unsigned int i = 0; i<x.n_elem; ++i){
+    for(uword i = 0; i<x.n_elem; ++i){
         map_->data()->setData(x(i), y(i), results(i));
     }
     map_->rescaleDataRange();
@@ -100,23 +101,17 @@ MapData::MapData(QString x_axis_description,
     //by default, window is not resizeable
     map_display_->setFixedSize(map_display_->size());
 
-
 }
 
 
 ///
 /// \brief MapData::~MapData
 ///Deletes everything the new keyword is used on in this object.
-/// Destructor triggered when this is removed from SpecMap list.
+/// Destructor triggered when this is removed from VespucciDataset list.
 MapData::~MapData()
 {
-
-    delete spectrum_display_;
-
-    delete new_color_scale_;
-
-    delete map_;
-
+    map_display_->close();
+    spectrum_display_->close();
 }
 
 ///
@@ -140,7 +135,7 @@ QString MapData::type()
 ///
 /// \brief MapData::source_index
 /// \return
-/// Sets the index of the map in the list of maps in the SpecMap object.
+/// Sets the index of the map in the list of maps in the VespucciDataset object.
 int MapData::source_index()
 {
     return source_index_;
@@ -179,6 +174,42 @@ void MapData::ShowMapWindow()
     if(!map_display_->isActiveWindow()){
         map_display_->activateWindow();
     }
+}
+
+///
+/// \brief MapData::HideMapWindow
+/// Closes the map window.
+void MapData::HideMapWindow()
+{
+    if(map_display_->isVisible())
+        map_display_->close();
+}
+
+///
+/// \brief MapData::MapWindowVisible
+/// \return Whether or not map window is visible.
+///
+bool MapData::MapWindowVisible()
+{
+    return map_display_->isVisible();
+}
+
+///
+/// \brief MapData::SpectrumViewerVisible
+/// \return Whether or not spectrumviewer is visible
+///
+bool MapData::SpectrumViewerVisible()
+{
+    return spectrum_display_->isVisible();
+}
+
+///
+/// \brief MapData::HideSpectrumViewer
+/// Close the spectrum viewer if it is open
+void MapData::HideSpectrumViewer()
+{
+    if(spectrum_display_->isVisible())
+        spectrum_display_->close();
 }
 
 ///
@@ -390,12 +421,19 @@ bool MapData::saveTiff(const QString &fileName, int width, int height, double sc
 
 ///
 /// \brief MapData::RemoveThis
-///Triggers the SpecMap object to remove this from the list.  Since SpecMap
+///Triggers the VespucciDataset object to remove this from the list.  Since VespucciDataset
 /// stores MapData objects as shared pointers, and only one object (the map list)
 /// contains this pointer, this removal results in this object being deleted.
 void MapData::RemoveThis()
 {
-    dataset_->RemoveMapAt(source_index_);
+    try{
+        //delete spectrum_display_; this is a QObject that should take care of itself
+        dataset_->RemoveMapAt(source_index_);
+    }
+    catch(exception e){
+        main_window_->DisplayExceptionWarning(e);
+    }
+
 }
 
 ///
@@ -618,7 +656,7 @@ QVector<double> MapData::second_abcissa()
 
 ///
 /// \brief MapData::second_baseline
-/// \param i index of SpecMap obejct (and also second_baseline_) of the spectrum in question.
+/// \param i index of VespucciDataset obejct (and also second_baseline_) of the spectrum in question.
 /// \return A QVector representing the second baseline for a two-peak map.
 ///
 QVector<double> MapData::second_baseline(int i)
@@ -630,7 +668,7 @@ QVector<double> MapData::second_baseline(int i)
 
 ///
 /// \brief MapData::mid_line
-/// \param i The row in the SpecMap object (and therefore also in mid_lines_)
+/// \param i The row in the VespucciDataset object (and therefore also in mid_lines_)
 /// corresponding the the spectrum in question.
 /// \return A QVector for a line drawn from one edge of the peak in question to
 /// the other at the half-maximum of the peak.
@@ -645,7 +683,7 @@ QVector<double> MapData::mid_line(int i)
 
 ///
 /// \brief MapData::mid_lines
-/// \param i The row in the specmap object (and therefore also in mid_lines_)
+/// \param i The row in the VespucciDataset object (and therefore also in mid_lines_)
 /// that contains the spectrum in question.
 /// \return Returns a QVector for two lines that extend from one edge of two peaks to
 /// the other with a vertical position equal to the half maximum of the peak.
@@ -663,6 +701,7 @@ QVector<double> MapData::mid_lines(int i)
 void MapData::UseGlobalColorScale(bool arg1)
 {
     cout << "MapData::UseGlobalColorScale()" << endl;
+    cout << "This function still needs debugged!" << endl;
     if (arg1){
         if (using_global_color_scale_){
             cout << "arg1 && using_global_color_scale_" << endl;
@@ -749,5 +788,62 @@ void MapData::ResetMapWidgetSize()
 {
     map_qcp_->resize(initial_map_size_);
     map_display_->resize(initial_map_size_.width() + 50, initial_map_size_.height() + 50);
+    return;
+}
+
+///
+/// \brief MapData::data_range
+/// \return the data range of the map
+///
+QCPRange MapData::dataRange()
+{
+    return map_->dataRange();
+}
+
+///
+/// \brief MapData::extract_range
+/// \param lower
+/// \param upper
+/// \return
+/// Finds the rows that fall within a range of values
+uvec MapData::extract_range(double lower, double upper)
+{
+    uvec indices;
+    //my hunch is that it is faster to evaluate only one expression. Setting
+    //the two values equal will be useful for k-means maps.
+    if (lower == upper)
+        indices = find (results_ == lower);
+    else
+        indices = find (results_ <= upper && results_ >= lower);
+    return indices;
+}
+
+///
+/// \brief MapData::LaunchDataExtractor
+/// Launch the data extractor dialog
+void MapData::LaunchDataExtractor()
+{
+    DataExtractorDialog *data_extractor =
+            new DataExtractorDialog(map_display_, this, dataset_, main_window_);
+    data_extractor->show();
+}
+
+///
+/// \brief MapData::crisp_clusters
+/// \return
+/// Return whether or not this map was created with a crisp clustering method
+bool MapData::crisp_clusters()
+{
+    return crisp_clusters_;
+}
+
+///
+/// \brief MapData::SetCrispClusters
+/// \param arg1
+/// Set whether or not this is a cluster map (which is associated with different
+/// color scale legend than maps with wider data ranges).
+void MapData::SetCrispClusters(bool arg1)
+{
+    crisp_clusters_ = arg1;
     return;
 }

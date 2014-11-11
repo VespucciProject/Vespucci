@@ -1,5 +1,5 @@
 /************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
 
     This file is part of Vespucci.
 
@@ -23,9 +23,11 @@
 #include <QMainWindow>
 #include "mapdata.h"
 #include "scalebardialog.h"
+#include "dataextractordialog.h"
 
 class ScaleBarDialog;
 class MapData;
+class DataExtractorDialog;
 class SpectrumViewer;
 
 
@@ -33,6 +35,9 @@ namespace Ui {
 class MapViewer;
 }
 
+///
+/// \brief The MapViewer class
+/// Displays the image created by MapData
 class MapViewer : public QMainWindow
 {
     Q_OBJECT
@@ -41,7 +46,6 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event);
-
 public:
     MapViewer(QString name, QString *directory, MapData *parent);
     ~MapViewer();
@@ -75,16 +79,33 @@ private slots:
 
     void on_actionReproportion_triggered();
 
+    void on_actionNew_Dataset_from_Map_triggered();
+
 private:
     Ui::MapViewer *ui;
+    ///
+    /// \brief name_
+    /// The map name, displayed in the title bar
     QString name_;
+
+    ///
+    /// \brief directory_
+    /// The global working directory
     QString *directory_;
 
+    ///
+    /// \brief qcp_
+    /// The QCustomPlot object located within this window
     QCustomPlot *qcp_;
 
-    //QCPColorMap *color_map_;
+    ///
+    /// \brief parent_
+    /// The MapData object that creates this display
     MapData *parent_;
 
+    ///
+    /// \brief color_list_
+    /// A list of names of color shemes which
     QStringList color_list_;
 
 

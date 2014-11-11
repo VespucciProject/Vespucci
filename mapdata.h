@@ -1,5 +1,6 @@
-/************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,8 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
-
+*******************************************************************************/
 #ifndef MAPDATA_H
 #define MAPDATA_H
 
@@ -25,19 +25,24 @@
 #include <qcustomplot.h>
 #include "mapviewer.h"
 #include "spectrumviewer.h"
-#include "specmap.h"
+#include "vespuccidataset.h"
 #include "mainwindow.h"
+#include "vespucciworkspace.h"
 
 using namespace std;
 using namespace arma;
 
-// This a class for processed map data.  All other map classes are subclasses.
-// Includes data (in QCPData formats), descriptive information, and statistics.
+
 class MapViewer;
-class SpecMap;
+class VespucciDataset;
 class PrincipalComponentsData;
 class SpectrumViewer;
 class MainWindow;
+class VespucciWorkspace;
+
+///
+/// \brief The MapData class
+/// Class for processed map data. Images are created from this data.
 class MapData
 {
 public:
@@ -46,7 +51,7 @@ public:
             colvec x,
             colvec y,
             colvec results,
-            SpecMap *parent,
+            QSharedPointer<VespucciDataset> parent,
             QString *directory,
             QCPColorGradient gradient,
             int source_index,
@@ -88,10 +93,16 @@ public:
     void setKeyRange(const QCPRange& range);
     void setValueRange(const QCPRange& range);
     //void setData(double key, double value, double z);
+    QCPRange dataRange();
 
     void setGradient(const QCPColorGradient &gradient);
     //Displays the map window
     void ShowMapWindow();
+    void HideMapWindow();
+    bool MapWindowVisible();
+    bool SpectrumViewerVisible();
+    void HideSpectrumViewer();
+
     void CreateImage(QCPColorGradient color_scheme, bool interpolation, int tick_count);
     void SetMapData(QCPColorMapData *map_data);
 
@@ -142,41 +153,105 @@ public:
     void LockMapDisplaySize(bool lock);
     void ResetMapWidgetSize();
 
+    uvec extract_range(double lower, double upper);
+    colvec results_;
+    void LaunchDataExtractor();
+    bool crisp_clusters();
+    void SetCrispClusters(bool arg1);
 private:
-    QString x_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
-    QString y_axis_description_; //equiv to member of SpecMap, passed to SpectraViewer constructor
+    ///
+    /// \brief x_axis_description_
+    /// The x-axis description for the spectra in this map (see VespucciDataset::x_axis_description_)
+    QString x_axis_description_; //equiv to member of VespucciDataset, passed to SpectraViewer constructor
 
-    SpecMap* dataset_;
+    ///
+    /// \brief y_axis_description_
+    /// The y-axis description for the spectra in this map (see VespucciDataset::y_axis_description_)
+    QString y_axis_description_; //equiv to member of VespucciDataset, passed to SpectraViewer constructor
+
+    ///
+    /// \brief dataset_
+    /// The current dataset
+    QSharedPointer<VespucciDataset> dataset_;
+
+    ///
+    /// \brief main_window_
+    /// The main window
     MainWindow *main_window_;
 
-    QString name_; //Name, this is displayed in the QListView
-    QString type_; //Short description of type.  set by subclass constructor.
-    int source_index_; //List index of this
+    ///
+    /// \brief name_
+    /// Name of the map
+    QString name_;
 
-    //QCPColorMapData map_data_;
+    ///
+    /// \brief type_
+    /// Short description of the type, set by constructor
+    QString type_;
 
+    ///
+    /// \brief source_index_
+    /// Index of this in the map list of the dataset
+    int source_index_;
 
-    //MapViewer *map_display_;  //pointer to the window generated when constructed
+    ///
+    /// \brief map_display_
+    /// Pointer the window that displays the image
     MapViewer *map_display_;
+
+    ///
+    /// \brief spectrum_display_
+    /// Pointer to the window that displays spectra when the image is clicked
     SpectrumViewer *spectrum_display_; //pointer to the spectrum viewer window (not automatically opened).
 
-    QCustomPlot *map_qcp_; //pointer to the QCustomPlot widget in MapViewer
-    QCPColorMap *map_; //pointer to QCPColorMap object within the QCustomPlot widget
+    ///
+    /// \brief map_qcp_
+    /// Pointer to the widget that displays the image
+    QCustomPlot *map_qcp_;
 
-    //QCPColorMap map_;
-    //QCPColorMapData map_data_;
+    ///
+    /// \brief map_
+    /// Pointer to the QCPColorMap object within the QCustomPlot widget
+    QCPColorMap *map_;
 
-    QCustomPlot *spectrum_qcp_; //pointer to the QCustomPlot widget in SpectrumViewer
+    ///
+    /// \brief spectrum_qcp_
+    /// Pointer to the QCustomPlot widget in the SpectrumViewer
+    QCustomPlot *spectrum_qcp_;
 
-    int key_size_; //size of x (number of unique x values)
+    ///
+    /// \brief key_size_
+    /// Number of unique x values
+    int key_size_;
+
+    ///
+    /// \brief value_size_
+    /// Number of unique y values
     int value_size_; //size of y (number of unique y values)
 
+    ///
+    /// \brief gradient_
+    /// Current color gradient
     QCPColorGradient gradient_;
+
+    ///
+    /// \brief global_color_scale_
+    /// The global color scale
     QSharedPointer<QCPColorScale> global_color_scale_;
+
+    ///
+    /// \brief new_color_scale_
+    /// Pointer to the global color scale (kept in the main window)
     QCPColorScale *new_color_scale_;
 
+    ///
+    /// \brief directory_
+    /// The global working directory
     QString *directory_;
 
+    ///
+    /// \brief color_scale_
+    /// The color scale displayed on the map viewer
     QCPLayoutElement *color_scale_; //this color scale is not changed!
 
     //stuff related to baselines and such
@@ -190,10 +265,15 @@ private:
     bool band_ratio_area_;
     bool univariate_bandwidth_;
     bool using_global_color_scale_;
+    bool k_means_;
+    bool principal_components_;
+    bool vertex_components_;
+    bool partial_least_squares_;
+    bool crisp_clusters_;
 
     QSize initial_map_size_;
 
 
 };
-
+Q_DECLARE_METATYPE(QSharedPointer<MapData>)
 #endif // MAPDATA_H

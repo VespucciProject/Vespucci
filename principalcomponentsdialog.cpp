@@ -1,5 +1,6 @@
-/************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,21 +16,27 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
+*******************************************************************************/
 #include "principalcomponentsdialog.h"
 #include "ui_principalcomponentsdialog.h"
 
+///
+/// \brief PrincipalComponentsDialog::PrincipalComponentsDialog
+/// \param parent see QWidget
+/// \param ws Current workspace
+/// \param row Currently selected row
+///
 PrincipalComponentsDialog::PrincipalComponentsDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
     ui(new Ui::PrincipalComponentsDialog)
 {
     ui->setupUi(this);
     workspace = ws;
+    data_ = workspace->DatasetAt(row);
     component_selector_ = this->findChild<QSpinBox *>("componentSpinBox");
     color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
     recalculate_box_ = this->findChild<QCheckBox *>("recalculateCheckBox");
     name_box_ = this->findChild<QLineEdit*>("nameLineEdit");
-    data_ = workspace->DatasetAt(row);
     data_index_ = row;
 }
 
@@ -38,17 +45,30 @@ PrincipalComponentsDialog::~PrincipalComponentsDialog()
     delete ui;
 }
 
+///
+/// \brief PrincipalComponentsDialog::on_buttonBox_accepted
+/// Trigger appropriate method of dataset when user clicks "Ok"
 void PrincipalComponentsDialog::on_buttonBox_accepted()
 {
     int component = component_selector_->value();
-    bool negative_scores = true;
     QString name = name_box_->text();
     bool recalculate = recalculate_box_->isChecked();
     int gradient_index = color_selector_->currentIndex();
-    data_->PrincipalComponents(component, negative_scores, name, gradient_index, recalculate);
+    try{
+        data_->PrincipalComponents(component, name, gradient_index, recalculate);
+    }
+    catch(exception e){
+        workspace->main_window()->DisplayExceptionWarning(e);
+    }
+    this->close();
+    data_.clear();
 }
 
+///
+/// \brief PrincipalComponentsDialog::on_buttonBox_rejected
+/// Close window when user selects "Cancel"
 void PrincipalComponentsDialog::on_buttonBox_rejected()
 {
     this->close();
+    data_.clear();
 }

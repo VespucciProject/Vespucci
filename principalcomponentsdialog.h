@@ -1,5 +1,6 @@
-/************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,7 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
+*******************************************************************************/
 #ifndef PRINCIPALCOMPONENTSDIALOG_H
 #define PRINCIPALCOMPONENTSDIALOG_H
 
@@ -27,6 +28,9 @@ namespace Ui {
 class PrincipalComponentsDialog;
 }
 
+///
+/// \brief The PrincipalComponentsDialog class
+/// Dialog for performing principal components analysis
 class PrincipalComponentsDialog : public QDialog
 {
     Q_OBJECT
@@ -42,18 +46,41 @@ private slots:
 
 private:
     Ui::PrincipalComponentsDialog *ui;
+
+    ///
+    /// \brief workspace
+    /// The current dataset
     VespucciWorkspace *workspace;
+
+    ///
+    /// \brief component_selector_
+    /// Which component to use for the image
     QSpinBox *component_selector_;
+
+    ///
+    /// \brief color_selector_
+    /// User selects color gradient here
     QComboBox *color_selector_;
-    QCheckBox *negative_score_box_;
+
+    ///
+    /// \brief name_box_
+    /// User sets map name here
     QLineEdit *name_box_;
+
+    ///
+    /// \brief recalculate_box_
+    /// User selects whether or not to recalculate the analysis
     QCheckBox *recalculate_box_;
 
-    //index of the SpecMap object in the various lists
+    ///
+    /// \brief data_index_
+    /// Index of current dataset in relevant lists
     int data_index_;
 
-    //Pointer to the SpecMap object at data_index_
-    QSharedPointer<SpecMap> data_;
+    ///
+    /// \brief data_
+    /// Current dataset
+    QSharedPointer<VespucciDataset> data_;
 };
 
 #endif // PRINCIPALCOMPONENTSDIALOG_H

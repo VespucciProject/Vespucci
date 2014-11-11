@@ -1,5 +1,6 @@
-/************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,7 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
+*******************************************************************************/
 #ifndef LOADDATASET_H
 #define LOADDATASET_H
 
@@ -26,6 +27,9 @@ namespace Ui {
 class LoadDataset;
 }
 
+///
+/// \brief The LoadDataset class
+/// Dialog that allows the user to import files into the program
 class LoadDataset : public QDialog
 {
     Q_OBJECT
@@ -45,8 +49,25 @@ private slots:
 
 private:
     Ui::LoadDataset *ui;
+    ///
+    /// \brief workspace
+    /// The current workspace
     VespucciWorkspace *workspace;
+
+    ///
+    /// \brief directory_
+    /// The current working directory
     QString *directory_;
+
+
+    QCheckBox *swap_check_box_;
+    QLineEdit *filename_line_edit_;
+    QLineEdit *name_box_;
+    QLineEdit *y_description_box_;
+    QLineEdit *x_description_box_;
+    QLineEdit *y_units_box_;
+    QLineEdit *x_units_box_;
+    QComboBox *data_format_box_;
 };
 
 #endif // LOADDATASET_H

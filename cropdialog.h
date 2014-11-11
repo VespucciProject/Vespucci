@@ -1,5 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -21,12 +22,16 @@
 
 #include <QDialog>
 #include "vespucciworkspace.h"
-#include "specmap.h"
+#include "vespuccidataset.h"
 
 namespace Ui {
 class CropDialog;
 }
 
+///
+/// \brief The CropDialog class
+/// A dialog that allows the user to "Crop" the dataset (delete all spectra that
+/// are outside of a chosen spatial range).
 class CropDialog : public QDialog
 {
     Q_OBJECT
@@ -49,7 +54,7 @@ private:
     QDoubleSpinBox *y_max_box_;
 
     VespucciWorkspace *workspace;
-    QSharedPointer<SpecMap> dataset_;
+    QSharedPointer<VespucciDataset> dataset_;
 };
 
 #endif // CROPDIALOG_H

@@ -1,5 +1,6 @@
-/************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,7 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
+*******************************************************************************/
 
 #ifndef BANDRATIODIALOG_H
 #define BANDRATIODIALOG_H
@@ -27,6 +28,9 @@ namespace Ui {
 class BandRatioDialog;
 }
 
+///
+/// \brief The BandRatioDialog class
+/// The dialog that allows the user to create a band-ratio map
 class BandRatioDialog : public QDialog
 {
     Q_OBJECT
@@ -42,27 +46,103 @@ private slots:
 
     void on_buttonBox_rejected();
 
+    void on_firstMinLineEdit_textChanged(const QString &arg1);
+
+    void on_firstMaxLineEdit_textChanged(const QString &arg1);
+
+    void on_secondMinLineEdit_textChanged(const QString &arg1);
+
+    void on_secondMaxLineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::BandRatioDialog *ui;
 
+    ///
+    /// \brief workspace
+    /// Pointer to the workspace (which contains dataset list)
     VespucciWorkspace *workspace;
+
+    ///
+    /// \brief spectrum_plot_
+    /// Pointer to the plot inside this window that displays a preview of the data
     QCustomPlot *spectrum_plot_;
+
+    ///
+    /// \brief first_min_box_
+    /// User enteres first minimum here
     QLineEdit *first_min_box_;
+
+    ///
+    /// \brief first_max_box_
+    /// User enters first maximum here
     QLineEdit *first_max_box_;
+
+    ///
+    /// \brief second_min_box_
+    /// User enters second minimum here
     QLineEdit *second_min_box_;
+
+    ///
+    /// \brief second_max_box_
+    /// User enteres second maximum here
     QLineEdit *second_max_box_;
 
+    ///
+    /// \brief name_box_
+    /// User enters map name here
     QLineEdit *name_box_;
+
+    ///
+    /// \brief color_selector_
+    /// User selects the color scheme here
     QComboBox *color_selector_;
+
+    ///
+    /// \brief value_method_selector_
+    /// User selects the value determination method here
     QComboBox *value_method_selector_;
+
+    ///
+    /// \brief integration_method_selector_
+    /// User selects the integration method here
     QComboBox *integration_method_selector_;
+
+    ///
+    /// \brief integration_method_label_
+    /// A label displaying the integration method
     QLabel *integration_method_label_;
 
-    //index of the SpecMap object in the various lists
+    ///
+    /// \brief data_index_
+    /// Index of the VespucciDataset object in the various lists
     int data_index_;
 
-    //Pointer to the SpecMap object at data_index_
-    QSharedPointer<SpecMap> data_;
+    ///
+    /// \brief range_label_
+    /// Displays the valid range
+    QLabel *range_label_;
+
+    ///
+    /// \brief first_min_line_
+    ///
+    QCPItemStraightLine *first_min_line_;
+    ///
+    /// \brief first_max_line_
+    ///
+    QCPItemStraightLine *first_max_line_;
+    ///
+    /// \brief second_min_line_
+    ///
+    QCPItemStraightLine *second_min_line_;
+    ///
+    /// \brief second_max_line_
+    ///
+    QCPItemStraightLine *second_max_line_;
+
+    ///
+    /// \brief data_
+    /// Points to the dataset we're working with.
+    QSharedPointer<VespucciDataset> data_;
 };
 
 #endif // BANDRATIODIALOG_H

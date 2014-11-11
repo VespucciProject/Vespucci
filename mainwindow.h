@@ -1,5 +1,6 @@
-/************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,20 +16,23 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
-
+*******************************************************************************/
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
 #include "vespucciworkspace.h"
 class VespucciWorkspace;
-class SpecMap;
-
+class VespucciDataset;
+class DatasetListModel;
 namespace Ui {
 class MainWindow;
 }
 
+///
+/// \brief The MainWindow class
+/// The main window of the program, this is where the user performs most
+/// operations
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -41,6 +45,11 @@ public:
     void RecalculateGlobalDataRange(QCPRange* new_data_range);
     void RefreshGlobalColorGradient(QCPColorGradient new_gradient);
     void SetGlobalDataRange(QCPRange* new_data_range);
+    VespucciWorkspace *workspace_ptr(); //return the workspace
+    void DisplayExceptionWarning(std::exception e);
+    QListView *map_list_view();
+    void SetActiveDatasetListRow(int row);
+    bool DatasetMappable(int row);
 
 signals:
     void GlobalGradientChanged(QCPColorGradient gradient);
@@ -74,13 +83,9 @@ private slots:
 
     void on_actionAverage_Spectra_with_Abcissa_triggered();
 
-    void on_actionSpatial_Data_triggered();
-
     void on_actionSpectral_Abcissa_triggered();
 
     void on_actionAll_Data_triggered();
-
-    void on_actionPrincipal_Component_Statistics_triggered();
 
     void on_actionFilter_Derivatize_triggered();
 
@@ -102,12 +107,48 @@ private slots:
 
     void on_actionVertex_Components_triggered();
 
+    void on_actionUndo_triggered();
+
+    void on_datasetsListView_clicked(const QModelIndex &index);
+
+    void DatasetAdded(const QModelIndex &index);
+
+    void on_mapsListView_doubleClicked(const QModelIndex &index);
+
+    void on_actionDelete_Map_triggered();
+
+    void on_actionMultivariate_Analysis_triggered();
+
+    void on_actionNew_Composite_Dataset_triggered();
+
+    void on_actionReject_Clipped_Spectra_triggered();
+
 private:
     Ui::MainWindow *ui;
-    VespucciWorkspace *workspace;
-    QListWidget *map_list_widget_;
-    QListWidget *dataset_list_widget_;
 
+    ///
+    /// \brief workspace
+    /// The current workspace
+    VespucciWorkspace *workspace;
+
+    ///
+    /// \brief map_list_view_
+    /// The list view displaying the currently created for the currently (or most
+    /// recently) selected map.
+    QListView *map_list_view_;
+
+    ///
+    /// \brief dataset_list_widget_
+    /// The list widget displaying the currently loaded datasets
+    QListView *dataset_list_view_;
+
+    ///
+    /// \brief dataset_list_model_
+    /// The abstract data model associated with the dataset list widget.
+    DatasetListModel *dataset_list_model_;
+
+    unsigned int global_map_count_;
 };
 
 #endif // MAINWINDOW_H
+

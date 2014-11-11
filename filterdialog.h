@@ -1,5 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -21,14 +22,18 @@
 
 #include <QDialog>
 #include "vespucciworkspace.h"
-#include "specmap.h"
+#include "vespuccidataset.h"
 
 class VespucciWorkspace;
-class SpecMap;
+class VespucciDataset;
 namespace Ui {
 class FilterDialog;
 }
 
+///
+/// \brief The FilterDialog class
+/// This dialog allows the user to apply filtering, smoothing or derivatization
+/// to the dataset.
 class FilterDialog : public QDialog
 {
     Q_OBJECT
@@ -49,12 +54,13 @@ private slots:
 private:
     Ui::FilterDialog *ui;
     VespucciWorkspace *workspace;
-    QSharedPointer<SpecMap> dataset_;
+    QSharedPointer<VespucciDataset> dataset_;
 
     QComboBox *method_box_;
     QSpinBox *derivative_box_;
     QSpinBox *polynomial_box_;
     QSpinBox *window_box_;
+    QSpinBox *singular_values_box_;
 };
 
 #endif // FILTERDIALOG_H

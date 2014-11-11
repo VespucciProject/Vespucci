@@ -1,5 +1,6 @@
-/************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,17 +16,20 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
+*******************************************************************************/
 #ifndef PRINCIPALCOMPONENTSDATA_H
 #define PRINCIPALCOMPONENTSDATA_H
 
-#include "specmap.h"
+#include "vespuccidataset.h"
 using namespace arma;
 
-class SpecMap;
+class VespucciDataset;\
+///
+/// \brief The PrincipalComponentsData class
+/// A class for performing and storing data from principal components analysis
 class PrincipalComponentsData {
 public:
-    PrincipalComponentsData(SpecMap *parent, QString *directory);
+    PrincipalComponentsData(QSharedPointer<VespucciDataset> parent, QString *directory);
 
     void Apply(mat spectra);
 
@@ -39,11 +43,34 @@ public:
     mat *coeff();
 
 private:
+    ///
+    /// \brief coeff_
+    /// Principal components coefficients
     mat coeff_;
+
+    ///
+    /// \brief score_
+    /// Projected data
     mat score_;
+
+    ///
+    /// \brief latent_
+    /// Eigenvalues of the covariance matrix of spectra_
     vec latent_;
+
+    ///
+    /// \brief tsquared_
+    /// Hotteling's statistic for each sample
     vec tsquared_;
-    SpecMap *parent_;
+
+    ///
+    /// \brief parent_
+    /// The current dataset
+    QSharedPointer<VespucciDataset> parent_;
+
+    ///
+    /// \brief directory_
+    /// Global working directory
     QString *directory_;
 
 };

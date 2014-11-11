@@ -1,5 +1,6 @@
-/************************************************************************************
-    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+/*******************************************************************************
+    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -15,7 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-***************************************************************************************/
+*******************************************************************************/
 #include "spectrumviewer.h"
 #include "ui_spectrumviewer.h"
 
@@ -34,7 +35,7 @@ SpectrumViewer::SpectrumViewer(MapViewer *parent,
                                MapData *map_data,
                                const QString x_axis_description,
                                const QString y_axis_description,
-                               SpecMap *dataset,
+                               QSharedPointer<VespucciDataset> dataset,
                                QSize widget_size,
                                QString directory) :
     QDialog(parent),
@@ -79,7 +80,7 @@ SpectrumViewer::SpectrumViewer(MapViewer *parent,
 /// \param directory
 ///
 SpectrumViewer::SpectrumViewer(DataViewer *parent,
-                               SpecMap *dataset,
+                               QSharedPointer<VespucciDataset> dataset,
                                int endmember,
                                QString directory,
                                QString type) :
@@ -93,9 +94,8 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
     spectrum_plot_->yAxis->setLabel(dataset->y_axis_description());
     QVector<double> plot_data;
     spectrum_plot_->replot();
-    cout << "If" << endl;
     if (type == "VCA"){
-        plot_data = dataset->vertex_components_data()->Endmember(endmember);
+        plot_data = dataset->vertex_components_data()->EndmemberQVec(endmember);
     }
     QVector<double> wavelength = dataset->WavelengthQVector();
     coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
@@ -115,6 +115,11 @@ SpectrumViewer::~SpectrumViewer()
     delete ui;
 }
 
+///
+/// \brief SpectrumViewer::SetPlot
+/// \param wavelength
+/// \param intensity
+/// Set the plot of the spectrum viewer
 void SpectrumViewer::SetPlot(QVector<double> wavelength,
                              QVector<double> intensity)
 {
@@ -123,6 +128,13 @@ void SpectrumViewer::SetPlot(QVector<double> wavelength,
     spectrum_plot_->replot();
 }
 
+///
+/// \brief SpectrumViewer::SetSecondPlot
+/// \param first_abcissa
+/// \param second_abcissa
+/// \param first_intensities
+/// \param second_intensities
+/// Set other plots (baselines)
 void SpectrumViewer::SetSecondPlot(QVector<double> first_abcissa, QVector<double> second_abcissa,
                                    QVector<double> first_intensities, QVector<double> second_intensities)
 {
@@ -143,6 +155,11 @@ void SpectrumViewer::SetSecondPlot(QVector<double> first_abcissa, QVector<double
     spectrum_plot_->replot();
 }
 
+///
+/// \brief SpectrumViewer::SetSecondPlot
+/// \param abcissa
+/// \param intensities
+/// Set the second plot.
 void SpectrumViewer::SetSecondPlot(QVector<double> abcissa, QVector<double> intensities)
 {
     if (spectrum_plot_->graphCount() <= 1){
@@ -156,84 +173,39 @@ void SpectrumViewer::SetSecondPlot(QVector<double> abcissa, QVector<double> inte
     spectrum_plot_->replot();
 }
 
+///
+/// \brief SpectrumViewer::MapClicked
+/// \param plottable The QCPColorMap
+/// \param event The QMouseEvent
+/// A slot which receives the locations
 void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *event)
 {
-    unsigned int i;
-    double x = (double) event->x();
-    double y = (double) widget_size_.height() - (double) event->y();
-
-    x /= widget_size_.width();
-    y /= widget_size_.height();
-
-    QCPRange key_range = dataset_->KeyRange();
-    QCPRange value_range = dataset_->ValueRange();
-    double key_span = key_range.upper - key_range.lower;
-    double value_span = value_range.upper - value_range.lower;
-
-    double x_position = x * key_span + key_range.lower;
-    double y_position = y * value_span + value_range.lower;
-
-
-    //find nearest x value
-    colvec x_values = dataset_->x();
-    colvec y_values = dataset_->y();
-
-    double x_diff = x_position - x_values(0);
-    double y_diff = y_position - y_values(0);
-    double x_diff_buf, y_diff_buf, x_value, y_value;
-
-    for (i = 0; i < x_values.n_rows; ++i){
-        x_diff_buf = x_position - x_values(i);
-        if ((x_diff < 0 && x_diff_buf >= 0) || (x_diff >= 0 && x_diff_buf < 0))
-            break;
-    }
-
-    if (fabs(x_diff_buf) > fabs(x_position - x_values(i-1)))
-        x_value = x_values(i-1);
+    QCPColorMap *color_map = qobject_cast<QCPColorMap*>(plottable);
+    current_x_ = color_map->keyAxis()->pixelToCoord(event->x());
+    current_y_ = color_map->valueAxis()->pixelToCoord(event->y());
+    current_z_ = color_map->data()->data(current_x_, current_y_);
+    arma::uvec row = arma::find(map_data_->results_ == current_z_);
+    if (row.n_elem == 0)
+        return;
     else
-        x_value = x_values(i);
-
-    for (i = 0; i < y_values.n_rows; ++i){
-        y_diff_buf = y_position - y_values(i);
-        if ((y_diff < 0 && y_diff_buf >= 0) || (y_diff >= 0 && y_diff_buf < 0))
-            break;
-    }
-
-    if (fabs(y_diff_buf) > fabs(y_position - y_values(i-1)))
-        y_value = y_values(i-1);
-    else
-        y_value = y_values(i);
-
-    QVector<int> x_indices;
-    for (i = 0; i < x_values.n_elem; ++i){
-        if (x_values(i) == x_value)
-            x_indices.append(i);
-    }
-    for (i = 0; i < (unsigned int) x_indices.size(); ++i){
-        if (y_values(x_indices[i]) == y_value)
-            break;
-    }
-    current_index_ = x_indices[i];
+        current_index_ = row(0);
 
     QVector<double> wavelength = dataset_->WavelengthQVector();
     QVector<double> intensities = dataset_->PointSpectrum(current_index_);
-
-    current_x_ = x_value;
-    current_y_ = y_value;
+    double x_value = dataset_->x(current_index_);
+    double y_value = dataset_->y(current_index_);
 
     coordinate_label_->setText("(" +
-                               QString::number(current_x_) +
+                               QString::number(x_value) +
                                ", " +
-                               QString::number(current_y_) +
+                               QString::number(y_value) +
                                ")");
-    value_label_->setText(QString::number(map_data_->results_at_position(current_x_, current_y_)));
+    value_label_->setText(QString::number(current_z_));
     SetPlot(wavelength, intensities);
     if (map_data_->univariate_area())
         SetSecondPlot(map_data_->first_abcissa(), map_data_->first_baseline(current_index_));
     if (map_data_->univariate_bandwidth()){
         SetSecondPlot(map_data_->first_abcissa(), map_data_->first_baseline(current_index_));
-        QCPItemLine *mid_line;
-        QVector<double> mid_line_vec;
         if (spectrum_plot_->itemCount() == 0){
             QCPItemLine *mid_line = new QCPItemLine(spectrum_plot_);
             QVector<double> mid_line_vec = map_data_->mid_line(current_index_);
@@ -254,6 +226,9 @@ void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *ev
 
 }
 
+///
+/// \brief SpectrumViewer::on_pushButton_clicked
+/// Exports the data or a picture of the plot
 void SpectrumViewer::on_pushButton_clicked()
 {
     if (!linked_to_map_){
@@ -276,6 +251,10 @@ void SpectrumViewer::on_pushButton_clicked()
         else
             success = spectrum_plot_->savePng(filename);
         //PNG is default because everyone can open them
+        if(success)
+            QMessageBox::information(this, "Success!", "File " + filename + " written successfully");
+        else
+            QMessageBox::warning(this, "File Save Failed", "File " + filename + " was not written successfully");
         return; //don't do any of the other stuff
     }
 
