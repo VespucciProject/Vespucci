@@ -54,18 +54,18 @@ mat MedianFilterMat(mat X, uword window_size);
 
 //Peak determination
 double IntegratePeak(vec X, uword min_index, uword max_index, double abcissa_step, vec &baseline);
-vec IntegratePeakMat(mat X, vec abcissa, double &min, double &max, mat &baselines);
+vec IntegratePeakMat(mat X, vec abcissa, double &min, double &max, mat &baselines, uvec &boundaries);
 mat IntegratePeaksMat(mat X, vec abcissa,
                       double &first_min, double &first_max,
                       double &second_min, double &second_max,
-                      mat &first_baselines, mat &second_baselines);
+                      mat &first_baselines, mat &second_baselines, uvec &boundaries);
 
 double FindPeakMax(vec X, uword min_index, uword max_index, uword &position);
-vec FindPeakMaxMat(mat X, vec abcissa, double &min, double &max, vec &positions, uvec boundaries);
+vec FindPeakMaxMat(mat X, vec abcissa, double &min, double &max, vec &positions);
 mat FindPeakMaxesMat(mat X, vec abcissa,
                      double &first_min, double &first_max,
                      double &second_min, double &second_max,
-                     mat positions, uvec boundaries);
+                     mat positions);
 
 double FindBandwidth(vec X, uword min_index, uword max_index, vec &midline, vec &baseline, double abcissa_step);
 vec FindBandwidthMat(mat X, vec abcissa, double &min, double &max, mat &midlines, mat &baselines, uvec &boundaries);

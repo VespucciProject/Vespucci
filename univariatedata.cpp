@@ -14,34 +14,33 @@ UnivariateData::UnivariateData(QSharedPointer<VespucciDataset> parent) : baselin
 /// are adjusted by the determination functions.
 void UnivariateData::Apply(double left_bound,
                       double right_bound,
-                      UnivariateData::Method method)
+                      UnivariateMethod::Method method)
 {
     left_bound_ = left_bound;
     right_bound_ = right_bound;
     method_ = method;
     vec positions;
-    mat baselines;
     switch (method_){
-    case UnivariateData::Method::Area :
+    case UnivariateMethod::Area :
         results_ = arma_ext::IntegratePeakMat(trans(parent_->spectra()),
                                               trans(parent_->wavelength()),
                                               left_bound_, right_bound_,
-                                              baselines, boundaries_);
-        baselines_(0) = baselines;
+                                              first_baselines_, boundaries_);
+
         method_description_ = "Univariate Area";
         break;
-    case UnivariateData::Method::FWHM :
+    case UnivariateMethod::FWHM :
         results_ = arma_ext::FindBandwidthMat(trans(parent_->spectra()),
                                              trans(parent_->wavelength()),
                                              left_bound_, right_bound_,
-                                             midlines_, baselines, boundaries_);
-        baselines_(0) = baselines;
+                                             midlines_, first_baselines_, boundaries_);
         method_description_ = "Univariate Bandwidth";
         break;
-    case UnivariateData::Method::Intensity : default :
+    case UnivariateMethod::Intensity : default :
         results_ = arma_ext::FindPeakMaxMat(trans(parent_->spectra()),
                                             trans(parent_->wavelength()),
-                                            left_bound, right_bound, positions);
+                                            left_bound, right_bound,
+                                            positions);
         positions_.set_size(positions.n_elem, 1);
         positions_.col(0) = positions;
         method_description_ = "Univariate Intensity";
@@ -54,7 +53,7 @@ void UnivariateData::Apply(double first_left_bound,
                            double first_right_bound,
                            double second_left_bound,
                            double second_right_bound,
-                           UnivariateData::Method method)
+                           UnivariateMethod::Method method)
 {
     first_left_bound_ = first_left_bound;
     second_left_bound_ = second_left_bound;
@@ -62,26 +61,24 @@ void UnivariateData::Apply(double first_left_bound,
     second_right_bound_ = second_right_bound;
     method_ = method;
     mat results;
-    mat first_baselines;
-    mat second_baselines;
     switch (method_){
-    case UnivariateData::Method::AreaRatio:
-        results = arma_ext::IntegratePeaksMat(trans(parent_->spectra),
+    case UnivariateMethod::AreaRatio:
+        results = arma_ext::IntegratePeaksMat(trans(parent_->spectra()),
                                                trans(parent_->wavelength()),
                                                first_left_bound_, first_right_bound_,
                                                second_left_bound_, second_right_bound_,
-                                               first_baselines, second_baselines, boundaries_);
-        baselines_(0) = first_baselines;
-        baselines_(1) = second_baselines;
+                                               first_baselines_, second_baselines_,
+                                               boundaries_);
+
         method_description_ = "Band Ratio Area";
         break;
-    case UnivariateData::Method::IntensityRatio: default:
+    case UnivariateMethod::IntensityRatio: default:
         results = arma_ext::FindPeakMaxesMat(trans(parent_->spectra()),
                                               trans(parent_->wavelength()),
                                               first_left_bound_, first_right_bound_,
                                               second_left_bound_, second_right_bound_,
-                                              positions_, boundaries_);
-        method_description_ = "Band Ratio Intensities";
+                                              positions_);
+        method_description_ = "Band Ratio Intensity";
         break;
     }
 
@@ -135,9 +132,14 @@ QString UnivariateData::MethodDescription()
     return method_description_;
 }
 
-mat UnivariateData::Baselines(uword index)
+mat UnivariateData::first_baselines()
 {
-    return baselines_(index);
+    return first_baselines_.t();
+}
+
+mat UnivariateData::second_baselines()
+{
+    return second_baselines_.t();
 }
 
 mat UnivariateData::Midlines()

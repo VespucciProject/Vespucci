@@ -62,6 +62,7 @@ namespace InputFileFormat
 
 
 
+
 class MapData;
 class PrincipalComponentsData;
 class PLSData;
@@ -70,6 +71,7 @@ class SpectrumViewer;
 class MainWindow;
 class VespucciWorkspace;
 class MapListModel;
+class UnivariateData;
 
 using namespace std;
 using namespace arma;
@@ -187,7 +189,7 @@ public:
     void Univariate(double min,
                     double max,
                     QString name,
-                    UnivariateData::Method method,
+                    UnivariateMethod::Method method,
                     QString integration_method,
                     uword gradient_index);
 
@@ -196,7 +198,7 @@ public:
                    double second_min,
                    double second_max,
                    QString name,
-                   UnivariateData::Method method,
+                   UnivariateMethod::Method method,
                    unsigned int gradient_index);
 
     void PartialLeastSquares(uword components, uword image_component,

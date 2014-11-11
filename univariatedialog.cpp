@@ -104,19 +104,18 @@ void UnivariateDialog::on_buttonBox_accepted()
 
     QString name = name_box_->text();
     QString value_method = value_method_selector_->currentText();
-
-    UnivariateData::Method method;
+    cout << "Method selection" << endl;
+    UnivariateMethod::Method method;
     if (value_method == "Area")
-        method = UnivariateData::Method::Area;
+        method = UnivariateMethod::Area;
     else if (value_method == "Bandwidth")
-        method = UnivariateData::Method::FWHM;
+        method = UnivariateMethod::FWHM;
     else
-        method = UnivariateData::Method::Intensity;
+        method = UnivariateMethod::Intensity;
 
     QString integration_method = integration_method_selector_->currentText();
-
     int gradient_index = color_selector_->currentIndex();
-
+/*
     if (entered_min < workspace->GetWavelengthMin(data_index_)){
         QMessageBox::warning(this, "Invalid Input!", "You have entered a left bound that is smaller than the smallest number on the spectral abcissa");
         return;
@@ -126,6 +125,7 @@ void UnivariateDialog::on_buttonBox_accepted()
         QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abcissa");
         return;
     }
+*/
     try{
         data_->Univariate(entered_min, entered_max, name, method, integration_method, gradient_index);
     }

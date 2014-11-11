@@ -732,7 +732,7 @@ double arma_ext::IntegratePeak(vec X, uword min_index, uword max_index, double a
 /// \return
 /// Finds the index of specified start and end values, then calls IntegratePeak
 /// on each column of the matrix
-vec arma_ext::IntegratePeakMat(mat X, vec abcissa, double &min, double &max, mat &baselines)
+vec arma_ext::IntegratePeakMat(mat X, vec abcissa, double &min, double &max, mat &baselines, uvec &boundaries)
 {
     double delta = std::abs(abcissa(1) - abcissa(0));
     uvec left_bound = find(((min-delta) <= abcissa) && (abcissa <= (min+delta)));
@@ -742,7 +742,7 @@ vec arma_ext::IntegratePeakMat(mat X, vec abcissa, double &min, double &max, mat
     uword max_index = right_bound(0);
     min = abcissa(min_index);
     max = abcissa(max_index);
-
+    boundaries << min_index << endr << max_index;
     vec results(X.n_cols);
     baselines.set_size(X.col(0).subvec(min_index, max_index).n_elem, X.n_cols);
     vec baseline(baselines.n_cols);
@@ -766,7 +766,7 @@ vec arma_ext::IntegratePeakMat(mat X, vec abcissa, double &min, double &max, mat
 /// \param second_baselines
 /// \return
 /// Performs two peak integrations
-mat arma_ext::IntegratePeaksMat(mat X, vec abcissa, double &first_min, double &first_max, double &second_min, double &second_max, mat &first_baselines, mat &second_baselines)
+mat arma_ext::IntegratePeaksMat(mat X, vec abcissa, double &first_min, double &first_max, double &second_min, double &second_max, mat &first_baselines, mat &second_baselines, uvec &boundaries)
 {
     double delta = std::abs(abcissa(1) - abcissa(0));
     uvec first_left_bound = find(((first_min-delta) <= abcissa) && (abcissa <= (first_min+delta)));
@@ -784,6 +784,8 @@ mat arma_ext::IntegratePeaksMat(mat X, vec abcissa, double &first_min, double &f
     second_min = abcissa(second_min_index);
     second_max = abcissa(second_max_index);
 
+    boundaries << first_min_index << endr << first_max_index <<
+                  second_min_index << endr << second_max_index;
 
     first_baselines.set_size(X.col(0).subvec(first_min_index, first_max_index).n_elem, X.n_cols);
     vec first_baseline(first_baselines.n_cols);
@@ -832,7 +834,7 @@ double arma_ext::FindPeakMax(vec X, uword min_index, uword max_index, uword &pos
 /// \return
 /// Iterates FindPeakMat over the columns of a matrix. Finds the indices of specified
 /// min and max inputs
-vec arma_ext::FindPeakMaxMat(mat X, vec abcissa, double &min, double &max, vec &positions, uvec boundaries)
+vec arma_ext::FindPeakMaxMat(mat X, vec abcissa, double &min, double &max, vec &positions)
 {
     double delta = std::abs(abcissa(1) - abcissa(0));
     uvec left_bound = find(((min-delta) <= abcissa) && (abcissa <= (min+delta)));
@@ -840,7 +842,6 @@ vec arma_ext::FindPeakMaxMat(mat X, vec abcissa, double &min, double &max, vec &
 
     uword min_index = left_bound(0);
     uword max_index = right_bound(0);
-    boundaries << min_index << endr << max_index;
 
     min = abcissa(min_index);
     max = abcissa(max_index);
@@ -867,7 +868,7 @@ vec arma_ext::FindPeakMaxMat(mat X, vec abcissa, double &min, double &max, vec &
 /// \param positions
 /// \return
 /// Finds two peaks in the manner of FindPeakMaxMat
-mat arma_ext::FindPeakMaxesMat(mat X, vec abcissa, double &first_min, double &first_max, double &second_min, double &second_max, mat positions, uvec boundaries)
+mat arma_ext::FindPeakMaxesMat(mat X, vec abcissa, double &first_min, double &first_max, double &second_min, double &second_max, mat positions)
 {
     double delta = std::abs(abcissa(1) - abcissa(0));
     uvec first_left_bound = find(((first_min-delta) <= abcissa) && (abcissa <= (first_min+delta)));
@@ -879,9 +880,6 @@ mat arma_ext::FindPeakMaxesMat(mat X, vec abcissa, double &first_min, double &fi
     uword first_max_index = first_right_bound(0);
     uword second_min_index = second_left_bound(0);
     uword second_max_index = second_right_bound(0);
-
-    boundaries << first_min_index << endr << first_max_index << endr <<
-                  second_min_index << endr << second_max_index;
 
     first_min = abcissa(first_min_index);
     first_max = abcissa(first_max_index);

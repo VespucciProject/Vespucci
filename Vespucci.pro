@@ -135,7 +135,8 @@ HEADERS  += mainwindow.h \
     datasetlistmodel.h \
     maplistmodel.h \
     analysisdialog.h \
-    univariatedata.h
+    univariatedata.h \
+    enums.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \

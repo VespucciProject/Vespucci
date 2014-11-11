@@ -28,6 +28,7 @@
 #include <qcustomplot.h>
 #include "mainwindow.h"
 #include "datasetlistmodel.h"
+
 class VespucciDataset;
 class MainWindow;
 class DatasetListModel;
