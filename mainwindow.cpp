@@ -218,12 +218,13 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QStringList methods;
-    methods << tr("Min/Max") << tr("Unit Area") << tr("Z-score") << tr("Peak Intensity");
+    methods << tr("Min/Max") << tr("Unit Area") << tr("Z-score") << tr("Peak Intensity") << tr("Scale Spectra");
     bool ok;
     QString item = QInputDialog::getItem(this,
                                          tr("Normalization/Standardization"),
                                          tr("Method:"), methods, 0, false, &ok);
     double wavelength;
+    double scaling_factor;
     try{
         if (ok && item == "Min/Max"){data->MinMaxNormalize();}
         else if (ok && item == "Unit Area"){data->UnitAreaNormalize();}
@@ -233,6 +234,11 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
                                                  tr("Position"), 0, 0,
                                                  data->wavelength().max(), 3, &ok);
             data->PeakIntensityNormalize(wavelength);
+        }
+        else if (ok && item == "Scale Spectra"){
+            scaling_factor = QInputDialog::getDouble(this, tr("Enter Scaling Factor"),
+                                                     tr("Factor"), 1, -100, 100, 2, &ok);
+            data->Scale(scaling_factor);
         }
         else
             return;
