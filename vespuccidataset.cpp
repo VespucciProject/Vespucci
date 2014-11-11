@@ -777,6 +777,23 @@ void VespucciDataset::SavitzkyGolay(unsigned int derivative_order,
     last_operation_ = "Savitzky-Golay filtering";
 }
 
+void VespucciDataset::Scale(double scaling_factor)
+{
+    log_stream_ << "Scale" << endl;
+    log_stream_ << "scaling_factor = " << scaling_factor << endl;
+    spectra_old_ = spectra_;
+    try{
+        spectra_ = spectra_ * scaling_factor;
+    }catch(exception e){
+     char str[50];
+     strcat(str, "Scale(): ");
+     strcat(str, e.what());
+     throw std::runtime_error(str);
+    }
+
+    last_operation_ = "Scaling";
+}
+
 // MAPPING FUNCTIONS //
 
 ///

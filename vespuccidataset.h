@@ -151,6 +151,7 @@ public:
     void SingularValue(unsigned int singular_values);
     void Baseline(QString method, int window_size);
     void RemoveClippedSpectra(double threshold);
+    void Scale(double scaling_factor);
 
 
 
@@ -476,6 +477,9 @@ private:
     /// True if the dataset has empty x_ and y_
     bool non_spatial_;
 
+    ///
+    /// \brief univariate_datas_
+    /// Container for UnivariateData objects allocated on heap.
     QList<QSharedPointer<UnivariateData> > univariate_datas_;
 
 };
