@@ -36,7 +36,7 @@ MetaDataset::MetaDataset(QString name,
                          QFile *log_file,
                          QString *directory,
                          QString method_description,
-                         VespucciMetaMethod method,
+                         MetaMethod::Method method,
                          QList<QSharedPointer<VespucciDataset> > parent_datasets)
     : VespucciDataset(name, main_window, directory, log_file)
 {
@@ -63,7 +63,7 @@ MetaDataset::MetaDataset(QString name,
     rowvec wavelength = parent_datasets_[0]->wavelength();
 
     switch(method_) {
-    case AverageSpectra:
+    case MetaMethod::AverageSpectra :
         try{
             spectra = ProcessAverage();
         }
@@ -72,7 +72,7 @@ MetaDataset::MetaDataset(QString name,
         }
 
         break;
-    case ConcatenateDatasets:
+    case MetaMethod::ConcatenateDatasets :
         try{
             spectra = Concatenate();
         }

@@ -21,13 +21,7 @@
 #define METADATASET_H
 #include "vespuccidataset.h"
 
-///
-/// \brief The VespucciMetaMethod enum
-/// Different methods for extracting data for a MetaDataset
-enum VespucciMetaMethod{
-    AverageSpectra,
-    ConcatenateDatasets
-};
+
 
 ///
 /// \brief The MetaDataset class
@@ -41,7 +35,7 @@ public:
                 QFile *log_file,
                 QString *directory, 
                 QString method_description,
-                VespucciMetaMethod method,
+                MetaMethod::Method method,
                 QList<QSharedPointer<VespucciDataset> > parent_datasets);
 private:
     ///
@@ -65,7 +59,7 @@ private:
     ///
     /// \brief method_
     /// Enum of the method used
-    VespucciMetaMethod method_;
+    MetaMethod::Method method_;
 
     mat ProcessAverage();
     mat Concatenate();

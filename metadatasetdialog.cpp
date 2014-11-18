@@ -53,17 +53,17 @@ void MetaDatasetDialog::on_buttonBox_accepted()
     }
 
     QString method_description = method_selection_box_->currentText();
-    VespucciMetaMethod method;
+    MetaMethod::Method method;
     switch(method_selection_box_->currentIndex()){
     case 0:
         cout << method_description.toStdString() << endl;
         cout << "0" << endl;
-        method = ConcatenateDatasets;
+        method = MetaMethod::ConcatenateDatasets;
         break;
     case 1: default:
         cout << method_description.toStdString() << endl;
         cout << "1 or default" << endl;
-        method = AverageSpectra;
+        method = MetaMethod::AverageSpectra;
         break;
     }
 
