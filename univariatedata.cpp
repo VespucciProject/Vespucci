@@ -81,7 +81,6 @@ void UnivariateData::Apply(double first_left_bound,
         method_description_ = "Band Ratio Intensity";
         break;
     }
-
     results_ = results.col(0) / results.col(1);
 }
 
