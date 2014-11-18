@@ -166,7 +166,50 @@ RESOURCES += \
 RC_ICONS = "vespuccilogo.ico"
 
 #*nix (not Mac) Libraries
+unix:!macx: INCLUDEPATH += /usr/local/include
+unix:!macx: DEPENDPATH += /usr/local/include
+unix:!macx: INCLUDEPATH += /opt/OpenBLAS/include
+unix:!macx: DEPENDPATH += /opt/OpenBLAS/include
+unix:!macx: INCLUDEPATH += /usr/include
+unix:!macx: DEPENDPATH += /usr/include
+unix:!macx: INCLUDEPATH += /usr/include/libxml2
+unix:!macx: DEPENDPATH += /usr/include/libxml2
 
+unix:!macx: LIBS += -L/usr/local/lib -lmlpack
+unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libmlpack.so
+
+unix:!macx: LIBS += -L/usr/local/lib/ -larmadillo
+unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libarmadillo.so
+
+unix:!macx: LIBS += -L/usr/local/lib -larpack
+unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
+
+unix:!macx: LIBS += -L/opt/OpenBLAS/lib -lopenblas
+unix:!macx: PRE_TARGETDEPS += /opt/OpenBLAS/lib/libopenblas.so
+
+unix:!macx: LIBS += -L/usr/lib -llapack
+unix:!macx: PRE_TARGETDEPS += /usr/lib/liblapack.a
+
+unix:!macx: LIBS += -L/usr/lib/x86_64-linux-gnu -lxml2
+unix:!macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libxml2.a
+
+unix:!macx: LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_math_c99
+unix:!macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.a
+
+unix:!macx: LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_program_options
+unix:!macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_program_options.a
+
+unix:!macx: LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_random
+unix:!macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_random.a
+
+unix:!macx: LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_unit_test_framework
+unix:!macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.a
+
+unix:!macx: LIBS += -L/usr/local/lib/ -lqcustomplot
+unix:!macx:CONFIG(release, debug|release): LIBS += -L/usr/local/lib/ -lqcustomplot
+else:unix:!macx:CONFIG(debug, debug|release): LIBS += -L/usr/local/lib/ -lqcustomplotd
+unix:!macx:CONFIG(release, debug|release): PRE_TARGETDEPS += /usr/local/liblibqcustomplot.so
+unix:!macx:CONFIG(debug, debug|release): PRE_TARGETDEPS += /usr/local/lib/libqcustomplotd.so
 
 #Mac Libraries
 #include paths
