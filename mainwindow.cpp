@@ -35,6 +35,7 @@
 #include "datasetlistmodel.h"
 #include "analysisdialog.h"
 #include "metadatasetdialog.h"
+#include "rangedialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -230,9 +231,22 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
         else if (ok && item == "Unit Area"){data->UnitAreaNormalize();}
         else if (ok && item == "Z-score"){data->ZScoreNormalize();}
         else if (ok && item == "Peak Intensity"){
+            double min;
+            double max;
+
+            RangeDialog *range_dialog = new RangeDialog(this, min, max);
+            if(range_dialog->is_accepted()){
+                range_dialog->GetRange(min, max);
+                data->PeakIntensityNormalize(min, max);
+            }
+            else{
+                ok = false;
+                return;
+            }
             wavelength = QInputDialog::getDouble(this, tr("Enter Peak Position"),
                                                  tr("Position"), 0, 0,
                                                  data->wavelength().max(), 3, &ok);
+
             data->PeakIntensityNormalize(wavelength);
         }
         else if (ok && item == "Scale Spectra"){

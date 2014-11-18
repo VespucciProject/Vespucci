@@ -768,7 +768,6 @@ vec arma_ext::IntegratePeakMat(mat X, vec abcissa, double &min, double &max, mat
 /// Performs two peak integrations
 mat arma_ext::IntegratePeaksMat(mat X, vec abcissa, double &first_min, double &first_max, double &second_min, double &second_max, mat &first_baselines, mat &second_baselines, uvec &boundaries)
 {
-    cout << "IntegratePeaksMat" << endl;
     double delta = std::abs(abcissa(1) - abcissa(0));
     uvec first_left_bound = find(((first_min-delta) <= abcissa) && (abcissa <= (first_min+delta)));
     uvec first_right_bound = find(((first_max-delta) <= abcissa) && (abcissa <= (first_max+delta)));
@@ -780,13 +779,11 @@ mat arma_ext::IntegratePeaksMat(mat X, vec abcissa, double &first_min, double &f
     uword second_min_index = second_left_bound(0);
     uword second_max_index = second_right_bound(0);
 
-    cout << "subvecs" << endl;
     first_min = abcissa(first_min_index);
     first_max = abcissa(first_max_index);
     second_min = abcissa(second_min_index);
     second_max = abcissa(second_max_index);
 
-    cout << "push back boundaries" << endl;
     boundaries.set_size(4);
     boundaries(0) = first_min_index;
     boundaries(1) = first_max_index;
@@ -797,20 +794,16 @@ mat arma_ext::IntegratePeaksMat(mat X, vec abcissa, double &first_min, double &f
     boundaries << first_min_index << endr << first_max_index <<
                   second_min_index << endr << second_max_index;
     */
-    cout << "set sizes, initialize vecs" << endl;
     first_baselines.set_size(X.col(0).subvec(first_min_index, first_max_index).n_elem, X.n_cols);
     vec first_baseline(first_baselines.n_cols);
     second_baselines.set_size(X.col(0).subvec(second_min_index, second_max_index).n_elem, X.n_cols);
     vec second_baseline(second_baselines.n_cols);
 
-    cout << "initialize results" << endl;
     mat results (X.n_cols, 2);
-    cout << "integrate first peaks" << endl;
     for (uword i = 0; i < X.n_cols; ++i){
         results(i, 0) = IntegratePeak(X.col(i), first_min_index, first_max_index, delta, first_baseline);
         first_baselines.col(i) = first_baseline;
     }
-    cout << "integrate second peaks" << endl;
     for (uword i = 0; i < X.n_cols; ++i){
         results(i, 1) = IntegratePeak(X.col(i), second_min_index, second_max_index, delta, second_baseline);
         second_baselines.col(i) = second_baseline;

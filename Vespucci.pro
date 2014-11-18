@@ -99,7 +99,8 @@ SOURCES += main.cpp\
     datasetlistmodel.cpp \
     maplistmodel.cpp \
     analysisdialog.cpp \
-    univariatedata.cpp
+    univariatedata.cpp \
+    rangedialog.cpp
 
 HEADERS  += mainwindow.h \
     loaddataset.h \
@@ -136,7 +137,8 @@ HEADERS  += mainwindow.h \
     maplistmodel.h \
     analysisdialog.h \
     univariatedata.h \
-    enums.h
+    enums.h \
+    rangedialog.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
@@ -158,7 +160,8 @@ FORMS    += mainwindow.ui \
     dataextractordialog.ui \
     plotviewer.ui \
     metadatasetdialog.ui \
-    analysisdialog.ui
+    analysisdialog.ui \
+    rangedialog.ui
 
 RESOURCES += \
     resources.qrc

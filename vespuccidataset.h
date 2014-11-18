@@ -139,6 +139,7 @@ public:
     void ZScoreNormalize();
     void UnitAreaNormalize();
     void PeakIntensityNormalize(double peak_position);
+    void PeakIntensityNormalize(double left_bound, double right_bound);
 
     //Spectral Pre-processing
 
