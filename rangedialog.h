@@ -7,7 +7,9 @@
 namespace Ui {
 class RangeDialog;
 }
-
+///
+/// \brief The RangeDialog class
+///
 class RangeDialog : public QDialog
 {
     Q_OBJECT
@@ -18,6 +20,10 @@ public:
     bool is_accepted();
     void GetRange(double &min, double &max);
 
+signals:
+    void DialogAccepted(double min, double max);
+
+
 private slots:
     void on_buttonBox_accepted();
 
@@ -26,8 +32,8 @@ private:
     QDoubleSpinBox *min_box_;
     QDoubleSpinBox *max_box_;
     QLabel *range_label_;
-    double *min_;
-    double *max_;
+    double min_;
+    double max_;
 
     bool is_accepted_;
 };

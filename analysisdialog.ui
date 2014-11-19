@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>93</height>
+    <height>97</height>
    </rect>
   </property>
   <property name="font">
@@ -84,7 +84,7 @@
       <number>20</number>
      </property>
      <property name="singleStep">
-      <number>2</number>
+      <number>1</number>
      </property>
      <property name="value">
       <number>5</number>

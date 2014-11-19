@@ -22,9 +22,11 @@
 
 #include <QMainWindow>
 #include "vespucciworkspace.h"
+#include "rangedialog.h"
 class VespucciWorkspace;
 class VespucciDataset;
 class DatasetListModel;
+class RangeDialog;
 namespace Ui {
 class MainWindow;
 }
@@ -58,6 +60,8 @@ signals:
 
 protected:
     void closeEvent(QCloseEvent *event);
+public slots:
+    void RangeDialogAccepted(double min, double max);
 private slots:
     void on_actionExit_triggered();
 

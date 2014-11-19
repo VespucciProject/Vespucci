@@ -1,6 +1,12 @@
 #include "rangedialog.h"
 #include "ui_rangedialog.h"
 
+///
+/// \brief RangeDialog::RangeDialog
+/// \param parent
+/// \param min
+/// \param max
+///
 RangeDialog::RangeDialog(QWidget *parent, double min, double max) :
     QDialog(parent),
     ui(new Ui::RangeDialog)
@@ -29,9 +35,17 @@ void RangeDialog::on_buttonBox_accepted()
     min_ = min_box_->value();
     max_ = max_box_->value();
     is_accepted_ = true;
+    emit DialogAccepted(min_, max_);
 }
 
 void RangeDialog::GetRange(double &min, double &max){
     min = min_;
     max = max_;
 }
+
+bool RangeDialog::is_accepted()
+{
+    return is_accepted_;
+}
+
+

@@ -501,20 +501,6 @@ void VespucciDataset::UnitAreaNormalize()
 
 ///
 /// \brief VespucciDataset::PeakIntensityNormalize
-/// \param peak_position The wavelength value
-///
-void VespucciDataset::PeakIntensityNormalize(double peak_position)
-{
-    spectra_old_ = spectra_;
-    uword index = FindIndex(peak_position);
-    for (uword i = 0; i < spectra_.n_rows; ++i){
-        spectra_.row(i) /= spectra_(i, index);
-    }
-    last_operation_ = "peak intensity normalize";
-}
-
-///
-/// \brief VespucciDataset::PeakIntensityNormalize
 /// \param left_bound
 /// \param right_bound
 ///

@@ -80,31 +80,31 @@ bool TextImport::ImportWideText(QString filename,
 
     inputstream.seek(0);
     inputstream.readLine(); //discard it to advance to next line
-
+    bool ok = true;
     for(i=0; i<rows; ++i){
         spectra_string=inputstream.readLine();
         spectra_string_list =
                 spectra_string.split(sep, QString::SkipEmptyParts);
 
         if (swap_spatial){
-            y(i) = spectra_string_list.at(0).toDouble();
+            y(i) = spectra_string_list.at(0).toDouble(&ok);
             spectra_string_list.removeAt(0);
 
-            x(i) = spectra_string_list.at(0).toDouble();
+            x(i) = spectra_string_list.at(0).toDouble(&ok);
             spectra_string_list.removeAt(0);
         }
         else{
-            x(i) = spectra_string_list.at(0).toDouble();
+            x(i) = spectra_string_list.at(0).toDouble(&ok);
             spectra_string_list.removeAt(0);
 
-            y(i) = spectra_string_list.at(0).toDouble();
+            y(i) = spectra_string_list.at(0).toDouble(&ok);
             spectra_string_list.removeAt(0);
         }
 
         for (j=0; j<columns; ++j){
-            spectra(i,j) = spectra_string_list.at(j).toDouble();
+            spectra(i,j) = spectra_string_list.at(j).toDouble(&ok);
         }
-        if (progress->wasCanceled()){
+        if (progress->wasCanceled() || !ok){
             return false;
         }
         else{
@@ -144,7 +144,15 @@ bool TextImport::ImportLongText(QString filename,
     progress->setValue(0);
     mat all_data;
     //should be able to detect whether csv or tab-delimited
-    all_data.load(filename.toStdString());
+    try{
+        all_data.load(filename.toStdString());
+    }
+    catch(exception e)
+    {
+        cerr << "Exception thrown in TextImport::ImportLongText" << endl;
+        return false;
+    }
+
     vec all_x;
     vec all_y;
     vec all_wavelength = all_data.col(2);
