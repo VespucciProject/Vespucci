@@ -639,17 +639,20 @@ void VespucciDataset::RemoveClippedSpectra(double threshold)
 {
     spectra_old_ = spectra_;
     vec spectra_max = max(spectra_, 1);
-    uvec clipped_indices = find(spectra_max >= threshold);
+    uvec valid_indices = find(spectra_max < threshold);
+    if (valid_indices.n_elem == 0)
+        return;
 
-    for (uword i = 0; i < clipped_indices.n_elem; ++i){
-        try{
-        spectra_.shed_row(clipped_indices(i));
-        }catch(exception e){
-            char str[50];
-            strcat(str, "RemoveClippedSpectra: ");
-            strcat(str, e.what());
-            throw std::runtime_error(str);
-        }
+    try{
+        spectra_ = spectra_.rows(valid_indices);
+        x_ = x_.rows(valid_indices);
+        y_ = y_.rows(valid_indices);
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "RemoveClipped Spectra: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
     }
 
     if (spectra_.n_rows != spectra_old_.n_rows)

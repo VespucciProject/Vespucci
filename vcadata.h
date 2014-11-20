@@ -38,6 +38,7 @@ public:
     mat *endmember_spectra();
     mat *projected_data();
     mat *fractional_abundances();
+    mat *indices();
     int NumberComponents();
     double EndmemberMin(const uword i);
     double EndmemberMax(const uword i);
@@ -61,6 +62,11 @@ private:
     /// \brief indices_
     /// Indices of endmembers
     uvec indices_;
+
+    ///
+    /// \brief indices_mat_
+    /// For VespucciTableModel
+    mat indices_mat_;
 
     ///
     /// \brief parent_

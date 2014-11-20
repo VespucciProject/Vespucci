@@ -101,11 +101,9 @@ MetaDataset::MetaDataset(QString name,
 /// Create a matrix with the average spectrum of each parent dataset on each row
 mat MetaDataset::ProcessAverage()
 {
-    mat spectra(parent_datasets_.size(), parent_datasets_[0]->wavelength().n_elem);
-
+    mat spectra;
     for (int i = 0; i < parent_datasets_.size(); ++i)
-        spectra.row(i) = parent_datasets_[0]->AverageSpectrum(false);
-
+        spectra.insert_rows(spectra.n_rows, parent_datasets_[i]->AverageSpectrum(false));
     return spectra;
 }
 
@@ -115,20 +113,10 @@ mat MetaDataset::ProcessAverage()
 /// Create a matrix with one dataset after another
 mat MetaDataset::Concatenate()
 {
-    uword num_rows = 0;
-    for (int i = 0; i < parent_datasets_.size(); ++i)
-        num_rows += parent_datasets_[i]->spectra_ptr()->n_rows;
-    mat spectra(num_rows, parent_datasets_[0]->wavelength_ptr()->n_elem);\
-    uword start_index = 0;
-    uword diff;
-    uword end_index = parent_datasets_[0]->spectra_ptr()->n_rows - 1;
+    mat spectra;
     for (int i = 0; i < parent_datasets_.size(); ++i){
-        spectra.rows(start_index, end_index) = parent_datasets_[i]->spectra();
-        diff = end_index - start_index;
-        start_index += diff;
-        end_index += diff;
+        spectra.insert_rows(spectra.n_rows, parent_datasets_[i]->spectra());
     }
-
     return spectra;
 
 }

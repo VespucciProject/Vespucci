@@ -40,6 +40,9 @@ void VCAData::Apply(mat spectra, int endmembers)
                   endmember_spectra_,
                   projected_data_,
                   fractional_abundances_);
+    indices_mat_.set_size(indices_.n_elem, 1);
+    for (uword i = 0; i < indices_.n_elem; ++i)
+        indices_mat_(i, 0) = indices_(i);
 }
 
 ///
@@ -161,4 +164,9 @@ mat VCAData::EndmembersAsRows(uvec indices)
     }
 
     return trans(endmembers);
+}
+
+mat *VCAData::indices()
+{
+    return &indices_mat_;
 }

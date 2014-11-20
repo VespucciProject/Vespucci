@@ -69,7 +69,16 @@ void MetaDatasetDialog::on_buttonBox_accepted()
 
     QString name = name_line_edit_->text();
     QFile *log_file = workspace->CreateLogFile(name);
-
-    QSharedPointer<MetaDataset> new_dataset(new MetaDataset(name, workspace->main_window(), log_file, workspace->directory_ptr(), method_description, method, parent_datasets));
+    QSharedPointer<MetaDataset> new_dataset;
+    try{
+        new_dataset = QSharedPointer<MetaDataset>(new MetaDataset(name, workspace->main_window(), log_file, workspace->directory_ptr(), method_description, method, parent_datasets));
+    }
+    catch(exception e){
+        cerr << "Exception thrown" << endl;
+        cerr << e.what() << endl;
+        QMessageBox::warning(this, "Exception Occured", "An exception was thrown in the MetaDataset constructor");
+        return;
+    }
     workspace->AddDataset(new_dataset);
+
 }

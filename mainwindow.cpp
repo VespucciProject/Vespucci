@@ -782,7 +782,12 @@ void MainWindow::on_actionReject_Clipped_Spectra_triggered()
 {
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(dataset_list_view_->currentIndex().row());
     double threshold = QInputDialog::getDouble(this, "Reject Clipped Spectra", "Threshold", 64000.00);
-    dataset->RemoveClippedSpectra(threshold);
+    try{
+        dataset->RemoveClippedSpectra(threshold);
+    }
+    catch(exception e){
+        DisplayExceptionWarning(e);
+    }
     dataset.clear();
 }
 
