@@ -38,9 +38,20 @@ CropDialog::CropDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     x_max_box_ = this->findChild<QDoubleSpinBox*>("xMaxDoubleSpinBox");
     y_min_box_ = this->findChild<QDoubleSpinBox*>("yMinDoubleSpinBox");
     y_max_box_ = this->findChild<QDoubleSpinBox*>("yMaxDoubleSpinBox");
+    cout << "found spatial minen und maxen boxen" << endl;
+    wl_min_box_ = this->findChild<QDoubleSpinBox*>("wlMinDoubleSpinBox");
+    wl_max_box_ = this->findChild<QDoubleSpinBox*>("wlMaxDoubleSpinBox");
+
+    double wl_min = dataset_->wavelength().min();
+    double wl_max = dataset_->wavelength().max();
 
     QCPRange key_range = dataset_->KeyRange();
     QCPRange value_range = dataset_->ValueRange();
+
+    wl_min_box_->setMinimum(wl_min);
+    wl_min_box_->setMaximum(wl_max);
+    wl_max_box_->setMinimum(wl_min);
+    wl_max_box_->setMaximum(wl_max);
 
     x_min_box_->setMinimum(key_range.lower);
     x_min_box_->setMaximum(key_range.upper);
@@ -71,6 +82,8 @@ void CropDialog::on_buttonBox_accepted()
     double x_max = x_max_box_->value();
     double y_min = y_min_box_->value();
     double y_max = y_max_box_->value();
+    double wl_min = wl_min_box_->value();
+    double wl_max = wl_max_box_->value();
 
     if ((x_max - x_min) <= 0 || (y_max - y_min <= 0)){
         QMessageBox::warning(this, "Error", "Minimum is larger than maximum!");
@@ -78,7 +91,7 @@ void CropDialog::on_buttonBox_accepted()
     }
 
     else{
-        dataset_->CropSpectra(x_min, x_max, y_min, y_max);
+        dataset_->CropSpectra(x_min, x_max, y_min, y_max, wl_min, wl_max);
     }
     this->close();
     dataset_.clear();

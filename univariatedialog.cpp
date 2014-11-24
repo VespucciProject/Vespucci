@@ -46,6 +46,7 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
     min_box_ = this->findChild<QLineEdit *>("minLineEdit");
     max_box_ = this->findChild<QLineEdit *>("maxLineEdit");
     name_box_ = this->findChild<QLineEdit *>("nameLineEdit");
+    file_name_box_ = this->findChild<QLineEdit *>("filenameLineEdit");
     spectrum_plot_ = this->findChild<QCustomPlot *>("spectrumPlot");
     value_method_selector_ = this->findChild<QComboBox *>("peakComboBox");
     color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
@@ -62,9 +63,8 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
     max_line_->point1->setCoords(0, 0);
     max_line_->point2->setCoords(0, 1);
 
-
-    double min = workspace->GetWavelengthMin(row);
-    double max = workspace->GetWavelengthMax(row);
+    double min = data_->wavelength_ptr()->min();
+    double max = data_->wavelength_ptr()->max();
 
     QString label_text = QString::number(min) + "–" + QString::number(max);
     range_label_->setText(label_text);
@@ -110,6 +110,8 @@ void UnivariateDialog::on_buttonBox_accepted()
         method = UnivariateMethod::Area;
     else if (value_method == "Bandwidth")
         method = UnivariateMethod::FWHM;
+    else if (value_method == "Correlation")
+        method = UnivariateMethod::Correlation;
     else
         method = UnivariateMethod::Intensity;
 
@@ -126,11 +128,23 @@ void UnivariateDialog::on_buttonBox_accepted()
         return;
     }
 */
-    try{
-        data_->Univariate(entered_min, entered_max, name, method, integration_method, gradient_index);
+    if (method != UnivariateMethod::Correlation){
+        try{
+            data_->Univariate(entered_min, entered_max, name, method, integration_method, gradient_index);
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
     }
-    catch(exception e){
-        workspace->main_window()->DisplayExceptionWarning(e);
+    else{
+        vec control;
+        try{
+            control.load(file_name_box_->text().toStdString());
+            data_->CorrelationMap(control, name, gradient_index);
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
     }
     this->close();
     data_.clear();
@@ -185,4 +199,16 @@ void UnivariateDialog::on_maxLineEdit_textChanged(const QString &arg1)
 
     if(!spectrum_plot_->hasItem(max_line_))
         spectrum_plot_->addItem(max_line_);
+}
+
+void UnivariateDialog::on_browseButton_clicked()
+{
+    QString filename =
+            QFileDialog::getOpenFileName(this,
+                                         "Select Spectrum File",
+                                         workspace->directory(),
+                                         "Vespucci Spectrum Files (*.arma);;"
+                                         "Comma-separated Variables (*.csv);;"
+                                         "Tab-delimited Text (*.txt)");
+    file_name_box_->setText(filename);
 }

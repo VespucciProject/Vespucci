@@ -8,6 +8,7 @@ class UnivariateData
 {
 public:
     UnivariateData(QSharedPointer<VespucciDataset> parent);
+    UnivariateData(QSharedPointer<VespucciDataset> parent, vec control);
     void Apply(double left_bound,
           double right_bound,
           UnivariateMethod::Method method);
@@ -41,6 +42,11 @@ private:
     /// \brief results_
     /// The results which are turned into an image
     vec results_;
+
+    ///
+    /// \brief control_
+    /// Control correlation is calculated for.
+    vec control_;
 
     ///
     /// \brief method_

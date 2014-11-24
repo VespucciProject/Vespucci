@@ -319,7 +319,7 @@ void MainWindow::on_actionAverage_Spectra_triggered()
 
     QString filename =
             QFileDialog::getSaveFileName(this,
-                                         tr("Save Spectra Matrix"),
+                                         tr("Save Average Spectrum"),
                                          workspace->directory(),
                                          tr("Vespucci Binary (*.arma);;"
                                             "Comma-separated Values (*.csv);;"
@@ -662,8 +662,15 @@ VespucciWorkspace* MainWindow::workspace_ptr()
 
 void MainWindow::on_actionUndo_triggered()
 {
+
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
+
+    if (!dataset->Undoable()){
+        dataset.clear();
+        return;
+    }
+
     QString text = tr("Are you sure you want to undo ") + dataset->last_operation()
             + " on " + dataset->name() + "?";
     int response =

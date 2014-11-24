@@ -404,33 +404,38 @@ void VespucciDataset::Undo()
 /// \param y_max value of y above which spectra are deleted
 /// Removes all data points outside of the range. Cannot be undone. It is preferable
 /// to create a new dataset rather than crop an old one.
-void VespucciDataset::CropSpectra(double x_min, double x_max, double y_min, double y_max)
+void VespucciDataset::CropSpectra(double x_min, double x_max,
+                                  double y_min, double y_max,
+                                  double wl_min, double wl_max)
 {
-
-
-
-    int max = x_.n_rows;
-    QProgressDialog progress("Cropping...", "Cancel", 0, max);
-    progress.setWindowModality(Qt::WindowModal);
-
+    spectra_old_ = spectra_;
+    uvec valid_indices = find ((x_ > x_min) && (x_ < x_max));
     try{
-        for (int i = 0; i < max; ++i){
-            if ((x_(i) < x_min) || (x_(i) > x_max) || (y_(i) < y_min) || (y_(i) > y_max)){
-                spectra_.shed_row(i);
-                x_.shed_row(i);
-                y_.shed_row(i);
-                --i; //forces repeat of same index after deletion
-                --max;
-            }
-            progress.setValue(i);
-        }
-    }
-    catch(exception e){
+        spectra_ = spectra_.rows(valid_indices);
+        y_ = y_.rows(valid_indices);
+        x_ = x_.rows(valid_indices);
+        valid_indices = find((y_ > y_min) && (y_ < y_max));
+        y_ = y_.rows(valid_indices);
+        x_ = x_.rows(valid_indices);
+        spectra_ = spectra_.rows(valid_indices);
+    }catch(exception e){
         char str[50];
         strcat(str, "CropSpectra: ");
         strcat(str, e.what());
         throw std::runtime_error(str);
     }
+    valid_indices = find(wavelength_ > wl_min && wavelength_ < wl_max);
+    try{
+        spectra_ = spectra_.cols(valid_indices);
+        wavelength_ = wavelength_.cols(valid_indices);
+
+    }catch(exception e){
+        char str[50];
+        strcat(str, "CropSpectra: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
 
     last_operation_ = "crop";
     log_stream_ << "CropSpectra" << endl;
@@ -879,6 +884,42 @@ void VespucciDataset::Univariate(double min,
     new_map->ShowMapWindow();
 }
 
+///
+/// \brief VespucciDataset::CorrelationMap
+/// \param control The "control" vector to which all spectra are compared
+/// \param name The name of the image
+/// \param gradient_index The index of the color gradient in the global list
+///
+void VespucciDataset::CorrelationMap(vec control, QString name, uword gradient_index)
+{
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), control));
+    univariate_data->Apply(0, 0, UnivariateMethod::Correlation);
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, univariate_data->results(),
+                                            QSharedPointer<VespucciDataset>(this),
+                                            directory_,
+                                            this->GetGradient(gradient_index),
+                                            map_list_model_->rowCount(QModelIndex()),
+                                            6,
+                                            main_window_));
+
+    new_map->set_name(name, univariate_data->MethodDescription());
+
+
+    log_stream_ << "Univariate" << endl;
+    log_stream_ << "name == " << name << endl;
+    log_stream_ << "method == Correlation" << endl;
+    log_stream_ << "gradient_index == " << gradient_index << endl;
+    univariate_datas_.append(univariate_data);
+    map_list_model_->AddMap(new_map);
+    new_map->ShowMapWindow();
+}
 
 ///
 /// \brief VespucciDataset::BandRatio
@@ -1397,17 +1438,23 @@ QVector<double> VespucciDataset::PointSpectrum(const uword index)
 {
     //perform bounds check.
     std::vector<double> spectrum_stdvector;
-    if (index > spectra_.n_rows){
-        spectrum_stdvector =
-                conv_to< std::vector<double> >::from(spectra_.row(spectra_.n_rows - 1));
-    }
-    else{
-         spectrum_stdvector =
-                 conv_to< std::vector<double> >::from(spectra_.row(index));
-    }
+    QVector<double> spectrum_qvector;
+    cout << "index  = " << index << endl;
+    try{
+        if (index > spectra_.n_rows){
+            spectrum_stdvector =
+                    conv_to< std::vector<double> >::from(spectra_.row(spectra_.n_rows - 1));
+        }
+        else{
+             spectrum_stdvector =
+                     conv_to< std::vector<double> >::from(spectra_.row(index));
+        }
 
-    QVector<double> spectrum_qvector =
-            QVector<double>::fromStdVector(spectrum_stdvector);
+        spectrum_qvector = QVector<double>::fromStdVector(spectrum_stdvector);
+    }
+    catch(exception e){
+        main_window_->DisplayExceptionWarning(e);
+    }
 
     return spectrum_qvector;
 }
@@ -1829,7 +1876,7 @@ mat VespucciDataset::AverageSpectrum(bool stats)
         spec_stddev = stddev(spectra_, 0);
         spec_mean.insert_rows(1, spec_stddev);
     }
-    return spec_mean;
+    return spec_mean.t();
 }
 
 
@@ -1957,6 +2004,15 @@ mat *VespucciDataset::k_means_data()
 mat* VespucciDataset::spectra_ptr()
 {
     return &spectra_;
+}
+
+
+
+
+bool VespucciDataset::Undoable()
+{
+    return (spectra_old_.n_elem > 0 ? true : false);
+
 }
 
 ///

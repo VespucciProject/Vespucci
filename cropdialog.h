@@ -52,6 +52,8 @@ private:
     QDoubleSpinBox *x_max_box_;
     QDoubleSpinBox *y_min_box_;
     QDoubleSpinBox *y_max_box_;
+    QDoubleSpinBox *wl_max_box_;
+    QDoubleSpinBox *wl_min_box_;
 
     VespucciWorkspace *workspace;
     QSharedPointer<VespucciDataset> dataset_;

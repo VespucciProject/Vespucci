@@ -69,7 +69,7 @@ mat FindPeakMaxesMat(mat X, vec abcissa,
 
 double FindBandwidth(vec X, uword min_index, uword max_index, vec &midline, vec &baseline, double abcissa_step);
 vec FindBandwidthMat(mat X, vec abcissa, double &min, double &max, mat &midlines, mat &baselines, uvec &boundaries);
-
+vec CorrelationMat(mat X, vec control);
 }
 
 #endif // ARMA_EXT_H

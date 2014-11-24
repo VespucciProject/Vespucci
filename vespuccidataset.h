@@ -130,7 +130,7 @@ public:
     void Undo();
 
     // map editing
-    void CropSpectra(double x_min, double x_max, double y_min, double y_max);
+    void CropSpectra(double x_min, double x_max, double y_min, double y_max, double wl_min, double wl_max);
 
     // Normalization functions
 
@@ -194,7 +194,9 @@ public:
                     UnivariateMethod::Method method,
                     QString integration_method,
                     uword gradient_index);
-
+    void CorrelationMap(vec control,
+                        QString name,
+                        uword gradient_index);
     void BandRatio(double first_min,
                    double first_max,
                    double second_min,
@@ -290,9 +292,9 @@ public:
     mat *y_ptr();
     mat *wavelength_ptr();
     mat *spectra_ptr();
-
+    mat *spectra_old_ptr(bool *ok);
     bool non_spatial();
-
+    bool Undoable();
 
 
     QString last_operation();

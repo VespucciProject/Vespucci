@@ -5,6 +5,12 @@ UnivariateData::UnivariateData(QSharedPointer<VespucciDataset> parent) : baselin
     parent_ = parent;
 }
 
+UnivariateData::UnivariateData(QSharedPointer<VespucciDataset> parent, vec control)
+{
+    control_ = control;
+    parent_ = parent;
+}
+
 ///
 /// \brief UnivariateData::Apply
 /// \param left_bound Approximate start of peak
@@ -35,6 +41,9 @@ void UnivariateData::Apply(double left_bound,
                                              left_bound_, right_bound_,
                                              midlines_, first_baselines_, boundaries_);
         method_description_ = "Univariate Bandwidth";
+        break;
+    case UnivariateMethod::Correlation :
+        results_ = arma_ext::CorrelationMat(trans(parent_->spectra()), control_);
         break;
     case UnivariateMethod::Intensity : default :
         results_ = arma_ext::FindPeakMaxMat(trans(parent_->spectra()),

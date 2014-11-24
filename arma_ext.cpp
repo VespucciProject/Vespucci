@@ -918,8 +918,8 @@ double arma_ext::FindBandwidth(vec X, uword min_index, uword max_index, vec &mid
 {
    vec region = X.subvec(min_index, max_index);
    uword size = region.n_elem;
-   double maximum, half_maximum, width;
-   double start_value, end_value, slope;
+   double maximum, half_maximum;
+   double start_value, end_value;
    midline.set_size(size);
    max_index = 0;
    uword left_index = 0;
@@ -999,5 +999,15 @@ vec arma_ext::FindBandwidthMat(mat X, vec abcissa, double &min, double &max, mat
         baselines.row(i) = baseline;
     }
 
+    return results;
+}
+
+vec arma_ext::CorrelationMat(mat X, vec control)
+{
+    vec results;
+    results.set_size(X.n_cols);
+    for(uword i = 0; i < X.n_cols; ++i){
+        results(i) = as_scalar(cor(control, X.col(i)));
+    }
     return results;
 }

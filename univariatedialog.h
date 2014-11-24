@@ -49,6 +49,8 @@ private slots:
 
     void on_maxLineEdit_textChanged(const QString &arg1);
 
+    void on_browseButton_clicked();
+
 private:
     Ui::UnivariateDialog *ui;
 
@@ -81,6 +83,11 @@ private:
     /// \brief name_box_
     /// The user enters the name of the dataset her
     QLineEdit *name_box_;
+
+    ///
+    /// \brief file_name_box_
+    /// The user enteres the filename of the "control" spectrum for correlation map here.
+    QLineEdit *file_name_box_;
 
     ///
     /// \brief color_selector_
