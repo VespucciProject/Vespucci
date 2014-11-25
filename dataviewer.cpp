@@ -50,7 +50,7 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
                     << "PCA t² Values";
     }
     if (dataset_->vertex_components_calculated()){
-        object_list << "VCA Coefficients" << "VCA Endmembers" << "VCA Pure Components";
+        object_list << "VCA Coefficients" << "VCA Endmembers" << "VCA Pure Pixel Indices";
         vca_endmembers_ = dataset_->vertex_components_data()->NumberComponents();
     }
     if (dataset_->partial_least_squares_calculated()){
@@ -125,6 +125,13 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
         export_button_->setDisabled(false);
         plot_button_->setDisabled(false);
     }
+    else if (arg1 == "VCA Pure Pixel Indices"){
+        current_data_ = dataset_->vertex_components_data()->indices();
+        table_->setModel(new VespucciTableModel(this, current_data_));
+        export_button_->setDisabled(false);
+        plot_button_->setDisabled(false);
+    }
+
     else if (arg1 == "K-means Assignments"){
         current_data_ = dataset_->k_means_data();
         table_->setModel(new VespucciTableModel(this, current_data_));

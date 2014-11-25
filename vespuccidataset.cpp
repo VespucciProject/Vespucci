@@ -2069,12 +2069,12 @@ bool VespucciDataset::meta()
 /// \brief VespucciDataset::SetParentDatasetIndices
 /// \param parent_dataset_indices
 /// Set the parent_dataset_indices_ variable. Used by the MetaDataset constructor.
-void VespucciDataset::SetParentDatasetIndices(vec parent_dataset_indices)
+void VespucciDataset::SetParentDatasetIndices(mat parent_dataset_indices)
 {
     parent_dataset_indices_ = parent_dataset_indices;
 }
 
-vec *VespucciDataset::parent_dataset_indices()
+mat *VespucciDataset::parent_dataset_indices()
 {
     return &parent_dataset_indices_;
 }

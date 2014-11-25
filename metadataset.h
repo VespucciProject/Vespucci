@@ -61,6 +61,7 @@ private:
     /// \brief parents_
     /// A list of the origin of each dataset
     vec parents_;
+    mat parent_coordinates_;
 
 
     ///

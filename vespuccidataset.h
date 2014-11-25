@@ -295,8 +295,8 @@ public:
     mat *spectra_old_ptr(bool *ok);
     bool non_spatial();
     bool meta();
-    void SetParentDatasetIndices(vec parent_dataset_indices);
-    vec *parent_dataset_indices();
+    void SetParentDatasetIndices(mat parent_dataset_indices);
+    mat *parent_dataset_indices();
     bool Undoable();
 
 
@@ -396,7 +396,8 @@ private:
     ///
     /// \brief parent_dataset_indices_
     /// The index of the parent dataset, if this is a MetaDataset and this is set.
-    vec parent_dataset_indices_;
+    /// This is a 3-column matrix. 0 == dataset number, 1 = x, 2 = y.
+    mat parent_dataset_indices_;
 
     ///
     /// \brief map_loading_count_
