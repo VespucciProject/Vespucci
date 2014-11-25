@@ -139,6 +139,7 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
     log_stream_ << "Imported from binary file " << vespucci_binary_filename << endl << endl;
 
     non_spatial_ = false;
+    meta_ = false;
     //Set up variables unrelated to hyperspectral data:
     map_list_model_ = new MapListModel(main_window, this);
 
@@ -208,6 +209,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
 
 
     non_spatial_ = false;
+    meta_ = false;
     //Set up variables unrelated to hyperspectral data:
     map_list_model_ = new MapListModel(main_window, this);
     map_loading_count_ = 0;
@@ -315,6 +317,7 @@ VespucciDataset::VespucciDataset(QString name,
     log_stream_ << "Created from previous dataset " << original->name() << endl;
 
     non_spatial_ = true;
+    meta_ = original->meta();
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
     partial_least_squares_calculated_ = false;
@@ -358,6 +361,7 @@ VespucciDataset::VespucciDataset(QString name,
     map_list_model_ = new MapListModel(main_window, this);
     log_file_ = log_file;
     non_spatial_ = true;
+    meta_ = true;
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
     partial_least_squares_calculated_ = false;
@@ -442,7 +446,9 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
     log_stream_ << "x_min == " << x_min << endl;
     log_stream_ << "x_max == " << x_max << endl;
     log_stream_ << "y_min == " << y_min << endl;
-    log_stream_ << "y_max == " << y_max << endl << endl;
+    log_stream_ << "y_max == " << y_max << endl;
+    log_stream_ << "wl_min == " << wl_min << endl;
+    log_stream_ << "wl_max == " << wl_max << endl << endl;
 }
 
 
@@ -2049,6 +2055,15 @@ mat* VespucciDataset::y_ptr()
 bool VespucciDataset::non_spatial()
 {
     return non_spatial_;
+}
+
+///
+/// \brief VespucciDataset::meta
+/// \return
+/// Whether or not this is an instance of MetaDataset
+bool VespucciDataset::meta()
+{
+    return meta_;
 }
 
 ///

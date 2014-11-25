@@ -42,8 +42,10 @@ MetaDataset::MetaDataset(QString name,
 {
     parent_datasets_ = parent_datasets;
 
-    if(!ParentsValid())
+    if(!ParentsValid()){
         throw std::runtime_error("Improper input to MetaDataset constructor");
+        cerr << "Improper input to MetaDataset constructor" << endl;
+    }
 
 
     QDateTime datetime = QDateTime::currentDateTimeUtc();
@@ -61,11 +63,12 @@ MetaDataset::MetaDataset(QString name,
     method_description_ = method_description;
     mat spectra;
     rowvec wavelength = parent_datasets_[0]->wavelength();
-
+    vec x;
+    vec y;
     switch(method_) {
     case MetaMethod::AverageSpectra :
         try{
-            spectra = ProcessAverage();
+            spectra = ProcessAverage(x, y);
         }
         catch(std::exception e){
             throw std::runtime_error("MetaDataset::ProcessAverage");
@@ -74,7 +77,7 @@ MetaDataset::MetaDataset(QString name,
         break;
     case MetaMethod::ConcatenateDatasets :
         try{
-            spectra = Concatenate();
+            spectra = Concatenate(x, y);
         }
         catch(std::exception e){
             throw std::runtime_error("MetaDataset::Concatenate");
@@ -83,9 +86,7 @@ MetaDataset::MetaDataset(QString name,
     default:
         throw std::runtime_error("Improper input to MetaDataset");
     }
-    //we don't preserve spatal data
-    colvec x = ones(spectra.n_rows);
-    colvec y = ones(spectra.n_rows);
+
     try{
         SetData(spectra, wavelength, x, y);
     }
@@ -94,16 +95,20 @@ MetaDataset::MetaDataset(QString name,
     }
 }
 
-
 ///
 /// \brief MetaDataset::ProcessAverage
 /// \return
 /// Create a matrix with the average spectrum of each parent dataset on each row
-mat MetaDataset::ProcessAverage()
+mat MetaDataset::ProcessAverage(vec &x, vec &y)
 {
     mat spectra;
-    for (int i = 0; i < parent_datasets_.size(); ++i)
+    vec parent(1);
+    for (int i = 0; i < parent_datasets_.size(); ++i){
         spectra.insert_rows(spectra.n_rows, parent_datasets_[i]->AverageSpectrum(false));
+        parent(0) = i + 1;
+        x.insert_rows(x.n_rows, parent);
+        y.insert_rows(y.n_rows, parent);
+    }
     return spectra;
 }
 
@@ -111,12 +116,19 @@ mat MetaDataset::ProcessAverage()
 /// \brief MetaDataset::Concatenate
 /// \return
 /// Create a matrix with one dataset after another
-mat MetaDataset::Concatenate()
+mat MetaDataset::Concatenate(vec &x, vec &y)
 {
     mat spectra;
+    vec indices;
+    cout << "Concatenate()" << endl;
     for (int i = 0; i < parent_datasets_.size(); ++i){
         spectra.insert_rows(spectra.n_rows, parent_datasets_[i]->spectra());
+        x.insert_rows(x.n_rows, parent_datasets_[i]->x());
+        y.insert_rows(y.n_rows, parent_datasets_[i]->y());
+        indices = (i+1)*ones(parent_datasets_[i]->x().n_elem);
+        parents_.insert_rows(parents_.n_rows, indices);
     }
+
     return spectra;
 
 }
@@ -134,4 +146,9 @@ bool MetaDataset::ParentsValid()
             return false;
 
     return true;
+}
+
+vec *MetaDataset::parents()
+{
+    return &parents_;
 }

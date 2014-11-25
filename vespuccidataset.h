@@ -294,6 +294,7 @@ public:
     mat *spectra_ptr();
     mat *spectra_old_ptr(bool *ok);
     bool non_spatial();
+    bool meta();
     bool Undoable();
 
 
@@ -479,6 +480,11 @@ private:
     /// \brief non_spatial_
     /// True if the dataset has empty x_ and y_
     bool non_spatial_;
+
+    ///
+    /// \brief meta_
+    /// Whether or not this dataset is a MetaDataset
+    bool meta_;
 
     ///
     /// \brief univariate_datas_

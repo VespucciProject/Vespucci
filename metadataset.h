@@ -37,10 +37,12 @@ public:
                 QString method_description,
                 MetaMethod::Method method,
                 QList<QSharedPointer<VespucciDataset> > parent_datasets);
+    vec *parents();
+
 private:
     ///
     /// \brief parent_datasets_
-    /// Pointers to the dataset that this dataset is constructed from
+    /// Pointers to the datasets that this dataset is constructed from
     QList<QSharedPointer<VespucciDataset> > parent_datasets_;
 
     ///
@@ -55,14 +57,19 @@ private:
     /// each row originated
     uvec parent_indices_;
 
+    ///
+    /// \brief parents_
+    /// A list of the origin of each dataset
+    vec parents_;
+
 
     ///
     /// \brief method_
     /// Enum of the method used
     MetaMethod::Method method_;
 
-    mat ProcessAverage();
-    mat Concatenate();
+    mat ProcessAverage(vec &x, vec &y);
+    mat Concatenate(vec &x, vec &y);
 
     bool ParentsValid();
 };

@@ -23,7 +23,7 @@
 #include "vespuccidataset.h"
 using namespace arma;
 
-class VespucciDataset;\
+class VespucciDataset;
 ///
 /// \brief The PrincipalComponentsData class
 /// A class for performing and storing data from principal components analysis

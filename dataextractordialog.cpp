@@ -61,14 +61,20 @@ void DataExtractorDialog::on_buttonBox_accepted()
     QString name = name_line_edit_->text();
     uvec indices = map_->extract_range(lower_box_->value(), upper_box_->value());
     QFile *log_file = workspace->CreateLogFile(name);
+    QSharedPointer<VespucciDataset> new_dataset;
+    try{
+        new_dataset = QSharedPointer<VespucciDataset>(new VespucciDataset(name,
+                                                      main_window_,
+                                                      workspace->directory_ptr(),
+                                                      log_file,
+                                                      dataset_,
+                                                      indices));
+        workspace->AddDataset(new_dataset);
+    }
+    catch(exception e){
+        main_window_->DisplayExceptionWarning(e);
+    }
 
-    QSharedPointer<VespucciDataset> new_dataset(new VespucciDataset(name,
-                                                    main_window_, 
-                                                    workspace->directory_ptr(),
-                                                    log_file,
-                                                    dataset_, 
-                                                    indices));
-    workspace->AddDataset(new_dataset);
     this->close();
     dataset_.clear();
 }
