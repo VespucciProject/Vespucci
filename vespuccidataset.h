@@ -295,6 +295,8 @@ public:
     mat *spectra_old_ptr(bool *ok);
     bool non_spatial();
     bool meta();
+    void SetParentDatasetIndices(vec parent_dataset_indices);
+    vec *parent_dataset_indices();
     bool Undoable();
 
 
@@ -392,21 +394,9 @@ private:
     mat k_means_data_;
 
     ///
-    /// \brief radical_components_
-    /// A matrix consisting of the independent components calculated by RADICAL
-    /// Y=WX where X is spectra_
-    mat radical_components_;
-
-    ///
-    /// \brief radical_unmixing_
-    /// An unmixing matrix from RADICAL Y=WX W is the matrix.
-    ///
-    mat radical_unmixing_;
-
-    ///
-    /// \brief map_names_
-    /// A list of map names
-    QStringList map_names_;
+    /// \brief parent_dataset_indices_
+    /// The index of the parent dataset, if this is a MetaDataset and this is set.
+    vec parent_dataset_indices_;
 
     ///
     /// \brief map_loading_count_

@@ -668,6 +668,7 @@ void MainWindow::on_actionUndo_triggered()
 
     if (!dataset->Undoable()){
         dataset.clear();
+        QMessageBox::information(this, "Nothing to Undo", "There are no actions to undo");
         return;
     }
 

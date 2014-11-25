@@ -61,6 +61,9 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
     if (dataset_->k_means_calculated()){
         object_list << "K-means Assignments";
     }
+    if (dataset_->meta()){
+        object_list << "Parent dataset indices";
+    }
 
     data_selector_->addItems(object_list);
     data_selector_->setCurrentIndex(0);
@@ -160,6 +163,12 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
     }
     else if (arg1 == "PLS Coefficients"){
         current_data_ = dataset_->partial_least_squares_data()->coefficients();
+        table_->setModel(new VespucciTableModel(this, current_data_));
+        export_button_->setDisabled(false);
+        plot_button_->setDisabled(true);
+    }
+    else if (arg1 == "Parent dataset indices"){
+        current_data_ = dataset_->parent_dataset_indices();
         table_->setModel(new VespucciTableModel(this, current_data_));
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);

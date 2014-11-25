@@ -89,6 +89,7 @@ MetaDataset::MetaDataset(QString name,
 
     try{
         SetData(spectra, wavelength, x, y);
+        SetParentDatasetIndices(parents_);
     }
     catch(std::exception e){
         throw std::runtime_error("Failure to set data in MetaDataset constructor");
@@ -108,6 +109,7 @@ mat MetaDataset::ProcessAverage(vec &x, vec &y)
         parent(0) = i + 1;
         x.insert_rows(x.n_rows, parent);
         y.insert_rows(y.n_rows, parent);
+        parents_.insert_rows(parents_.n_rows, parent);
     }
     return spectra;
 }

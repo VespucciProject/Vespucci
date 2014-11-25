@@ -2018,7 +2018,6 @@ mat* VespucciDataset::spectra_ptr()
 bool VespucciDataset::Undoable()
 {
     return (spectra_old_.n_elem > 0 ? true : false);
-
 }
 
 ///
@@ -2064,6 +2063,20 @@ bool VespucciDataset::non_spatial()
 bool VespucciDataset::meta()
 {
     return meta_;
+}
+
+///
+/// \brief VespucciDataset::SetParentDatasetIndices
+/// \param parent_dataset_indices
+/// Set the parent_dataset_indices_ variable. Used by the MetaDataset constructor.
+void VespucciDataset::SetParentDatasetIndices(vec parent_dataset_indices)
+{
+    parent_dataset_indices_ = parent_dataset_indices;
+}
+
+vec *VespucciDataset::parent_dataset_indices()
+{
+    return &parent_dataset_indices_;
 }
 
 ///
