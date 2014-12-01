@@ -38,7 +38,6 @@ CropDialog::CropDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     x_max_box_ = this->findChild<QDoubleSpinBox*>("xMaxDoubleSpinBox");
     y_min_box_ = this->findChild<QDoubleSpinBox*>("yMinDoubleSpinBox");
     y_max_box_ = this->findChild<QDoubleSpinBox*>("yMaxDoubleSpinBox");
-    cout << "found spatial minen und maxen boxen" << endl;
     wl_min_box_ = this->findChild<QDoubleSpinBox*>("wlMinDoubleSpinBox");
     wl_max_box_ = this->findChild<QDoubleSpinBox*>("wlMaxDoubleSpinBox");
 

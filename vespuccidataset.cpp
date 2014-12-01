@@ -575,6 +575,26 @@ void VespucciDataset::ZScoreNormalize()
 
 }
 
+void VespucciDataset::AbsoluteValue()
+{
+    log_stream_ << "AbsoluteValue" << endl;
+    spectra_old_ = spectra_;
+
+    try{
+        spectra_ = arma::abs(spectra_);
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "AbsoluteValue: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
+    last_operation_ = "Absolute value";
+
+}
+
+
 ///
 /// \brief VespucciDataset::SubtractBackground
 /// Subtracts a known background spectrum. This can be extracted from a control

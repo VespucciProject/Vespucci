@@ -28,6 +28,8 @@
 #include "vespuccidataset.h"
 #include "mainwindow.h"
 #include "vespucciworkspace.h"
+#include "statsdialog.h"
+
 
 using namespace std;
 using namespace arma;
@@ -37,6 +39,7 @@ class MapViewer;
 class VespucciDataset;
 class PrincipalComponentsData;
 class SpectrumViewer;
+class StatsViewer;
 class MainWindow;
 class VespucciWorkspace;
 
@@ -142,6 +145,9 @@ public:
                   int height = 0,
                   double scale = 1.0,
                   int quality = 0);
+
+    void ExportText();
+    void ShowStatsDialog();
 
     void DrawScaleBar(double width, double height, QString units, QColor color, QString position, QFont font);
 

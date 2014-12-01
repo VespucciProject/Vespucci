@@ -213,13 +213,13 @@ void MainWindow::on_actionK_Means_Clustering_triggered()
 
 ///
 /// \brief MainWindow::on_actionNormalize_Standardize_triggered
-///Normalizes data using Z-scores
+///
 void MainWindow::on_actionNormalize_Standardize_triggered()
 {
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QStringList methods;
-    methods << tr("Min/Max") << tr("Unit Area") << tr("Z-score") << tr("Peak Intensity") << tr("Scale Spectra");
+    methods << "Min/Max" << "Unit Area" << "Z-score" << "Peak Intensity" << "Scale Spectra" << "Absolute Value";
     bool ok;
     QString item = QInputDialog::getItem(this,
                                          tr("Normalization/Standardization"),
@@ -241,6 +241,7 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
                                                      tr("Factor"), 1, -100, 100, 2, &ok);
             data->Scale(scaling_factor);
         }
+        else if (ok && item == "Absolute Value"){data->AbsoluteValue();}
         else
             return;
     }

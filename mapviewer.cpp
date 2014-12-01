@@ -331,3 +331,14 @@ void MapViewer::closeEvent(QCloseEvent *event)
         parent_->HideSpectrumViewer();
     event->accept();
 }
+
+void MapViewer::on_actionStats_triggered()
+{
+    parent_->ShowStatsDialog();
+}
+
+void MapViewer::on_actionExport_Values_triggered()
+{
+    parent_->ExportText();
+}
+

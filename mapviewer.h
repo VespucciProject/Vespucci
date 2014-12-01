@@ -81,6 +81,10 @@ private slots:
 
     void on_actionNew_Dataset_from_Map_triggered();
 
+    void on_actionStats_triggered();
+
+    void on_actionExport_Values_triggered();
+
 private:
     Ui::MapViewer *ui;
     ///
@@ -112,3 +116,4 @@ private:
 };
 
 #endif // MAPVIEWER_H
+

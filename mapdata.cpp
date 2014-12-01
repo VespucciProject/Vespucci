@@ -419,6 +419,38 @@ bool MapData::saveTiff(const QString &fileName, int width, int height, double sc
     return success;
 }
 
+void MapData::ExportText()
+{
+    mat values;
+    values.insert_cols(0, dataset_->x());
+    values.insert_cols(values.n_cols, dataset_->y());
+    values.insert_cols(values.n_cols, results_);
+    QString filename =
+            QFileDialog::getSaveFileName(map_display_,
+                                         "Export Data",
+                                         *directory_,
+                                         "Tab-delimited Text (*.txt);;"
+                                         "Comma-separated Values (*.csv);;");
+    QFileInfo file_info(filename);
+    QString extension = file_info.suffix();
+
+    try{
+        if (extension == "csv")
+            values.save(filename.toStdString(), csv_ascii);
+        else
+            values.save(filename.toStdString(), raw_ascii);
+    }
+    catch(exception e){
+        main_window_->DisplayExceptionWarning(e);
+    }
+}
+
+void MapData::ShowStatsDialog()
+{
+    StatsDialog *stats_dialog = new StatsDialog(map_display_, results_);
+    stats_dialog->show();
+}
+
 ///
 /// \brief MapData::RemoveThis
 ///Triggers the VespucciDataset object to remove this from the list.  Since VespucciDataset

@@ -31,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>500</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMap">
@@ -63,6 +63,8 @@
      <string>Data</string>
     </property>
     <addaction name="actionNew_Dataset_from_Map"/>
+    <addaction name="actionStats"/>
+    <addaction name="actionExport_Values"/>
    </widget>
    <addaction name="menuMap"/>
    <addaction name="menuDisplay"/>
@@ -160,6 +162,16 @@
   <action name="actionNew_Dataset_from_Map">
    <property name="text">
     <string>New Dataset from Map...</string>
+   </property>
+  </action>
+  <action name="actionStats">
+   <property name="text">
+    <string>Stats</string>
+   </property>
+  </action>
+  <action name="actionExport_Values">
+   <property name="text">
+    <string>Export Values...</string>
    </property>
   </action>
  </widget>

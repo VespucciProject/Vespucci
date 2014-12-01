@@ -137,6 +137,7 @@ public:
     mat ZScoreNormCopy();
     void MinMaxNormalize();
     void ZScoreNormalize();
+    void AbsoluteValue();
     void UnitAreaNormalize();
     void PeakIntensityNormalize(double peak_position);
     void PeakIntensityNormalize(double left_bound, double right_bound);
