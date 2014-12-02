@@ -127,6 +127,8 @@ private slots:
 
     void on_actionReject_Clipped_Spectra_triggered();
 
+    void on_actionSpectra_as_Columns_triggered();
+
 private:
     Ui::MainWindow *ui;
 

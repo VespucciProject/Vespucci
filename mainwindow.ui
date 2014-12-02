@@ -102,6 +102,7 @@
       <string>Export Dataset Elements</string>
      </property>
      <addaction name="actionSpectra"/>
+     <addaction name="actionSpectra_as_Columns"/>
      <addaction name="actionAverage_Spectra"/>
      <addaction name="actionAverage_Spectra_with_Abcissa"/>
      <addaction name="actionSpectral_Abcissa"/>
@@ -320,6 +321,11 @@
   <action name="actionReject_Clipped_Spectra">
    <property name="text">
     <string>Reject Clipped Spectra</string>
+   </property>
+  </action>
+  <action name="actionSpectra_as_Columns">
+   <property name="text">
+    <string>Spectra (as Columns)</string>
    </property>
   </action>
  </widget>

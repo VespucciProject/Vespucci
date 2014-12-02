@@ -310,6 +310,37 @@ void MainWindow::on_actionSpectra_triggered()
 }
 
 ///
+/// \brief MainWindow::on_actionSpectra_as_Columns_triggered
+/// Saves a transpose of spectra_
+void MainWindow::on_actionSpectra_as_Columns_triggered()
+{
+    bool success;
+    int row = dataset_list_view_->currentIndex().row();
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
+
+    QString filename =
+            QFileDialog::getSaveFileName(this,
+                                         tr("Save Spectra Matrix"),
+                                         workspace->directory(),
+                                         tr("Vespucci Binary (*.arma);;"
+                                            "Comma-separated Values (*.csv);;"
+                                            "Tab-separated Txt (*.txt);;"));
+    QFileInfo file_info(filename);
+
+    if (file_info.suffix() == "arma")
+        success = trans(dataset->spectra()).save(filename.toStdString(), arma_binary);
+    else if (file_info.suffix() == "csv")
+        success = trans(dataset->spectra()).save(filename.toStdString(), csv_ascii);
+    else
+        success = trans(dataset->spectra()).save(filename.toStdString(), raw_ascii);
+
+    if (success)
+        QMessageBox::information(this, "File Saved", "File written successfully!");
+    else
+        QMessageBox::warning(this, "File Not Saved", "Could not save file.");
+}
+
+///
 /// \brief MainWindow::on_actionAverage_Spectra_triggered
 /// Saves an average spectrum of the selected dataset
 void MainWindow::on_actionAverage_Spectra_triggered()
@@ -812,3 +843,5 @@ void MainWindow::RangeDialogAccepted(double min, double max)
         DisplayExceptionWarning(e);
     }
 }
+
+
