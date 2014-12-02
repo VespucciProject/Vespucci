@@ -326,13 +326,14 @@ void MainWindow::on_actionSpectra_as_Columns_triggered()
                                             "Comma-separated Values (*.csv);;"
                                             "Tab-separated Txt (*.txt);;"));
     QFileInfo file_info(filename);
+    mat output = dataset->spectra().t();
 
     if (file_info.suffix() == "arma")
-        success = trans(dataset->spectra()).save(filename.toStdString(), arma_binary);
+        success = output.save(filename.toStdString(), arma_binary);
     else if (file_info.suffix() == "csv")
-        success = trans(dataset->spectra()).save(filename.toStdString(), csv_ascii);
+        success = output.save(filename.toStdString(), csv_ascii);
     else
-        success = trans(dataset->spectra()).save(filename.toStdString(), raw_ascii);
+        success = output.save(filename.toStdString(), raw_ascii);
 
     if (success)
         QMessageBox::information(this, "File Saved", "File written successfully!");
