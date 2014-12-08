@@ -703,11 +703,11 @@ mat arma_ext::MedianFilterMat(mat X, uword window_size)
 /// \param X
 /// \param min_index
 /// \param max_index
-/// \param abcissa_step
+/// \param abscissa_step
 /// \param baseline
 /// \return
 /// Takes a Riemann sum under a peak defined by certain indices
-double arma_ext::IntegratePeak(vec X, uword min_index, uword max_index, double abcissa_step, vec &baseline)
+double arma_ext::IntegratePeak(vec X, uword min_index, uword max_index, double abscissa_step, vec &baseline)
 {
     vec region = X.subvec(min_index, max_index);
 
@@ -716,8 +716,8 @@ double arma_ext::IntegratePeak(vec X, uword min_index, uword max_index, double a
 
     baseline = linspace(start, end, region.n_elem);
 
-    double baseline_area = sum(baseline) / abcissa_step;
-    double region_area = sum(region) / abcissa_step;
+    double baseline_area = sum(baseline) / abscissa_step;
+    double region_area = sum(region) / abscissa_step;
 
     return region_area - baseline_area;
 }
@@ -725,23 +725,23 @@ double arma_ext::IntegratePeak(vec X, uword min_index, uword max_index, double a
 ///
 /// \brief arma_ext::IntegratePeakMat
 /// \param X
-/// \param abcissa
+/// \param abscissa
 /// \param min
 /// \param max
 /// \param baselines
 /// \return
 /// Finds the index of specified start and end values, then calls IntegratePeak
 /// on each column of the matrix
-vec arma_ext::IntegratePeakMat(mat X, vec abcissa, double &min, double &max, mat &baselines, uvec &boundaries)
+vec arma_ext::IntegratePeakMat(mat X, vec abscissa, double &min, double &max, mat &baselines, uvec &boundaries)
 {
-    double delta = std::abs(abcissa(1) - abcissa(0));
-    uvec left_bound = find(((min-delta) <= abcissa) && (abcissa <= (min+delta)));
-    uvec right_bound = find(((max-delta) <= abcissa) && (abcissa <= (max+delta)));
+    double delta = std::abs(abscissa(1) - abscissa(0));
+    uvec left_bound = find(((min-delta) <= abscissa) && (abscissa <= (min+delta)));
+    uvec right_bound = find(((max-delta) <= abscissa) && (abscissa <= (max+delta)));
 
     uword min_index = left_bound(0);
     uword max_index = right_bound(0);
-    min = abcissa(min_index);
-    max = abcissa(max_index);
+    min = abscissa(min_index);
+    max = abscissa(max_index);
     boundaries << min_index << endr << max_index;
     vec results(X.n_cols);
     baselines.set_size(X.col(0).subvec(min_index, max_index).n_elem, X.n_cols);
@@ -757,7 +757,7 @@ vec arma_ext::IntegratePeakMat(mat X, vec abcissa, double &min, double &max, mat
 ///
 /// \brief arma_ext::IntegratePeaksMat
 /// \param X
-/// \param abcissa
+/// \param abscissa
 /// \param first_min
 /// \param first_max
 /// \param second_min
@@ -766,23 +766,23 @@ vec arma_ext::IntegratePeakMat(mat X, vec abcissa, double &min, double &max, mat
 /// \param second_baselines
 /// \return
 /// Performs two peak integrations
-mat arma_ext::IntegratePeaksMat(mat X, vec abcissa, double &first_min, double &first_max, double &second_min, double &second_max, mat &first_baselines, mat &second_baselines, uvec &boundaries)
+mat arma_ext::IntegratePeaksMat(mat X, vec abscissa, double &first_min, double &first_max, double &second_min, double &second_max, mat &first_baselines, mat &second_baselines, uvec &boundaries)
 {
-    double delta = std::abs(abcissa(1) - abcissa(0));
-    uvec first_left_bound = find(((first_min-delta) <= abcissa) && (abcissa <= (first_min+delta)));
-    uvec first_right_bound = find(((first_max-delta) <= abcissa) && (abcissa <= (first_max+delta)));
-    uvec second_left_bound = find(((second_min-delta) <= abcissa) && (abcissa <= (second_min+delta)));
-    uvec second_right_bound = find(((second_max-delta) <= abcissa) && (abcissa <= (second_max+delta)));
+    double delta = std::abs(abscissa(1) - abscissa(0));
+    uvec first_left_bound = find(((first_min-delta) <= abscissa) && (abscissa <= (first_min+delta)));
+    uvec first_right_bound = find(((first_max-delta) <= abscissa) && (abscissa <= (first_max+delta)));
+    uvec second_left_bound = find(((second_min-delta) <= abscissa) && (abscissa <= (second_min+delta)));
+    uvec second_right_bound = find(((second_max-delta) <= abscissa) && (abscissa <= (second_max+delta)));
 
     uword first_min_index = first_left_bound(0);
     uword first_max_index = first_right_bound(0);
     uword second_min_index = second_left_bound(0);
     uword second_max_index = second_right_bound(0);
 
-    first_min = abcissa(first_min_index);
-    first_max = abcissa(first_max_index);
-    second_min = abcissa(second_min_index);
-    second_max = abcissa(second_max_index);
+    first_min = abscissa(first_min_index);
+    first_max = abscissa(first_max_index);
+    second_min = abscissa(second_min_index);
+    second_max = abscissa(second_max_index);
 
     boundaries.set_size(4);
     boundaries(0) = first_min_index;
@@ -831,31 +831,31 @@ double arma_ext::FindPeakMax(vec X, uword min_index, uword max_index, uword &pos
 ///
 /// \brief arma_ext::FindPeakMaxMat
 /// \param X
-/// \param abcissa
+/// \param abscissa
 /// \param min
 /// \param max
 /// \param positions
 /// \return
 /// Iterates FindPeakMat over the columns of a matrix. Finds the indices of specified
 /// min and max inputs
-vec arma_ext::FindPeakMaxMat(mat X, vec abcissa, double &min, double &max, vec &positions)
+vec arma_ext::FindPeakMaxMat(mat X, vec abscissa, double &min, double &max, vec &positions)
 {
-    double delta = std::abs(abcissa(1) - abcissa(0));
-    uvec left_bound = find(((min-delta) <= abcissa) && (abcissa <= (min+delta)));
-    uvec right_bound = find(((max-delta) <= abcissa) && (abcissa <= (max+delta)));
+    double delta = std::abs(abscissa(1) - abscissa(0));
+    uvec left_bound = find(((min-delta) <= abscissa) && (abscissa <= (min+delta)));
+    uvec right_bound = find(((max-delta) <= abscissa) && (abscissa <= (max+delta)));
 
     uword min_index = left_bound(0);
     uword max_index = right_bound(0);
 
-    min = abcissa(min_index);
-    max = abcissa(max_index);
+    min = abscissa(min_index);
+    max = abscissa(max_index);
 
     vec results(X.n_cols);
     uword position;
     positions.set_size(X.n_cols);
     for (uword i = 0; i < X.n_cols; ++i){
         results(i) = FindPeakMax(X.col(i), min_index, max_index, position);
-        positions(i) = abcissa(position);
+        positions(i) = abscissa(position);
     }
 
     return results;
@@ -864,7 +864,7 @@ vec arma_ext::FindPeakMaxMat(mat X, vec abcissa, double &min, double &max, vec &
 ///
 /// \brief arma_ext::FindPeakMaxesMat
 /// \param X
-/// \param abcissa
+/// \param abscissa
 /// \param first_min
 /// \param first_max
 /// \param second_min
@@ -872,23 +872,23 @@ vec arma_ext::FindPeakMaxMat(mat X, vec abcissa, double &min, double &max, vec &
 /// \param positions
 /// \return
 /// Finds two peaks in the manner of FindPeakMaxMat
-mat arma_ext::FindPeakMaxesMat(mat X, vec abcissa, double &first_min, double &first_max, double &second_min, double &second_max, mat positions)
+mat arma_ext::FindPeakMaxesMat(mat X, vec abscissa, double &first_min, double &first_max, double &second_min, double &second_max, mat positions)
 {
-    double delta = std::abs(abcissa(1) - abcissa(0));
-    uvec first_left_bound = find(((first_min-delta) <= abcissa) && (abcissa <= (first_min+delta)));
-    uvec first_right_bound = find(((first_max-delta) <= abcissa) && (abcissa <= (first_max+delta)));
-    uvec second_left_bound = find(((second_min-delta) <= abcissa) && (abcissa <= (second_min+delta)));
-    uvec second_right_bound = find(((second_max-delta) <= abcissa) && (abcissa <= (second_max+delta)));
+    double delta = std::abs(abscissa(1) - abscissa(0));
+    uvec first_left_bound = find(((first_min-delta) <= abscissa) && (abscissa <= (first_min+delta)));
+    uvec first_right_bound = find(((first_max-delta) <= abscissa) && (abscissa <= (first_max+delta)));
+    uvec second_left_bound = find(((second_min-delta) <= abscissa) && (abscissa <= (second_min+delta)));
+    uvec second_right_bound = find(((second_max-delta) <= abscissa) && (abscissa <= (second_max+delta)));
 
     uword first_min_index = first_left_bound(0);
     uword first_max_index = first_right_bound(0);
     uword second_min_index = second_left_bound(0);
     uword second_max_index = second_right_bound(0);
 
-    first_min = abcissa(first_min_index);
-    first_max = abcissa(first_max_index);
-    second_min = abcissa(second_min_index);
-    second_max = abcissa(second_max_index);
+    first_min = abscissa(first_min_index);
+    first_max = abscissa(first_max_index);
+    second_min = abscissa(second_min_index);
+    second_max = abscissa(second_max_index);
 
     positions.set_size(X.n_cols, 2);
     mat results(X.n_cols, 2);
@@ -897,8 +897,8 @@ mat arma_ext::FindPeakMaxesMat(mat X, vec abcissa, double &first_min, double &fi
     for (uword i = 0; i < X.n_cols; ++i){
         results(i, 0) = FindPeakMax(X.col(i), first_min_index, first_max_index, first_position);
         results(i, 1) = FindPeakMax(X.col(i), second_min_index, second_max_index, second_position);
-        positions(i, 0) = abcissa(first_position);
-        positions(i, 1) = abcissa(second_position);
+        positions(i, 0) = abscissa(first_position);
+        positions(i, 1) = abscissa(second_position);
     }
 
     return results;
@@ -911,10 +911,10 @@ mat arma_ext::FindPeakMaxesMat(mat X, vec abcissa, double &first_min, double &fi
 /// \param min_index
 /// \param max_index
 /// \param midline
-/// \param abcissa_step
+/// \param abscissa_step
 /// \return
 /// Finds the full-width at half maximum of a peak bound by min_index and max_index
-double arma_ext::FindBandwidth(vec X, uword min_index, uword max_index, vec &midline, vec &baseline, double abcissa_step)
+double arma_ext::FindBandwidth(vec X, uword min_index, uword max_index, vec &midline, vec &baseline, double abscissa_step)
 {
    vec region = X.subvec(min_index, max_index);
    uword size = region.n_elem;
@@ -961,33 +961,33 @@ double arma_ext::FindBandwidth(vec X, uword min_index, uword max_index, vec &mid
    }
 
    double region_size = region.subvec(left_index, right_index).n_elem;
-   return abcissa_step * region_size;
+   return abscissa_step * region_size;
 }
 
 ///
 /// \brief arma_ext::FindBandwidthMat
 /// \param X
-/// \param abcissa
+/// \param abscissa
 /// \param min
 /// \param max
 /// \param midlines
 /// \param baselines
 /// \return
 /// Finds the bandwidth of every column of a matrix.
-vec arma_ext::FindBandwidthMat(mat X, vec abcissa, double &min, double &max, mat &midlines, mat &baselines, uvec &boundaries)
+vec arma_ext::FindBandwidthMat(mat X, vec abscissa, double &min, double &max, mat &midlines, mat &baselines, uvec &boundaries)
 {
-    double delta = std::abs(abcissa(1) - abcissa(0));
-    uvec left_bound = find(((min-delta) <= abcissa) && (abcissa <= (min+delta)));
-    uvec right_bound = find(((max-delta) <= abcissa) && (abcissa <= (max+delta)));
+    double delta = std::abs(abscissa(1) - abscissa(0));
+    uvec left_bound = find(((min-delta) <= abscissa) && (abscissa <= (min+delta)));
+    uvec right_bound = find(((max-delta) <= abscissa) && (abscissa <= (max+delta)));
 
     uword min_index = left_bound(0);
     uword max_index = right_bound(0);
     boundaries << min_index << endr << max_index;
 
-    min = abcissa(min_index);
-    max = abcissa(max_index);
+    min = abscissa(min_index);
+    max = abscissa(max_index);
 
-    uword size = abcissa.subvec(min_index, max_index).n_elem;
+    uword size = abscissa.subvec(min_index, max_index).n_elem;
     vec results(X.n_cols);
     midlines.set_size(X.n_cols, size);
     baselines.set_size(X.n_cols, size);
@@ -1010,4 +1010,67 @@ vec arma_ext::CorrelationMat(mat X, vec control)
         results(i) = as_scalar(cor(control, X.col(i)));
     }
     return results;
+}
+
+int arma_ext::HySime(mat y,
+                     mat n,
+                     mat Rn,
+                     mat &Ek)
+{
+    cout << "HySime()" << endl;
+    if (n.n_rows != y.n_rows || n.n_cols  != y.n_cols){
+        cerr << "HySime: Empty noise matrix or its size does not agree with size of y" << endl;
+        throw(std::runtime_error("HySime: Empty noise matrix or does not agree with size of y"));
+    }
+
+    if (Rn.n_rows != Rn.n_cols || Rn.n_rows != y.n_rows){
+        cerr << "Bad noise correlation matrix" << endl;
+        Rn = n*n.t() / y.n_cols;
+    }
+
+    mat x = y - n;
+
+    mat Ry = y*y.t() / y.n_cols;
+    mat Rx = x*x.t() / y.n_cols;
+    mat E, D, V;
+    vec dx;
+    svd(E, dx, V, Rx);
+    D = diagmat(dx);
+
+    Rn = Rn + sum(Rx.diag())/y.n_rows/10000*eye(y.n_rows, y.n_rows);
+
+    mat P = E.t() * Ry * E;
+    vec Py = P.diag();
+
+    P = E.t() * Rn * E;
+    vec Pn = P.diag();
+
+    vec cost_F = -Py + 2 * Pn;
+    uvec negatives = find (cost_F < 0);
+    int kf = negatives.n_elem;
+    uvec sorted_cols = sort_index(cost_F);
+    Ek = E.cols(sorted_cols);
+    return kf;
+
+}
+
+
+void arma_ext::EstimateAdditiveNoise(mat &noise, mat &noise_correlation, mat sample)
+{
+    double small = 1e-6;
+    noise = zeros(sample.n_rows, sample.n_cols);
+    mat RR = sample * sample.t();
+    mat RRi = inv(RR + small*eye(sample.n_rows, sample.n_rows));
+    mat XX, RRa, beta;
+    for (uword i = 0; i < sample.n_rows; ++i){
+        XX = RRi - (RRi.col(i) * RRi.row(i))/RRi(i, i);
+        RRa = RR.col(i);
+        RRa(i) = 0;
+        beta = XX * RRa;
+        beta(i) = 0;
+        noise.row(i) = sample.row(i) - beta.t() * sample;
+    }
+
+    mat nn = noise * noise.t() / sample.n_rows;
+    noise_correlation = diagmat(nn.diag());
 }

@@ -105,7 +105,7 @@
      <addaction name="actionSpectra_as_Columns"/>
      <addaction name="actionAverage_Spectra"/>
      <addaction name="actionAverage_Spectra_with_Abcissa"/>
-     <addaction name="actionSpectral_Abcissa"/>
+     <addaction name="actionSpectral_Abscissa"/>
      <addaction name="separator"/>
      <addaction name="actionAll_Data"/>
      <addaction name="separator"/>
@@ -248,9 +248,12 @@
     <string>Spectra</string>
    </property>
   </action>
-  <action name="actionSpectral_Abcissa">
+  <action name="actionSpectral_Abscissa">
    <property name="text">
-    <string>Spectral Abcissa</string>
+    <string>Spectral Abscissa</string>
+   </property>
+   <property name="toolTip">
+    <string>Spectral Abscissa</string>
    </property>
   </action>
   <action name="actionAll_Data">

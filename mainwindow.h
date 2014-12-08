@@ -85,9 +85,9 @@ private slots:
 
     void on_actionAverage_Spectra_triggered();
 
-    void on_actionAverage_Spectra_with_Abcissa_triggered();
+    void on_actionAverage_Spectra_with_abscissa_triggered();
 
-    void on_actionSpectral_Abcissa_triggered();
+    void on_actionSpectral_abscissa_triggered();
 
     void on_actionAll_Data_triggered();
 

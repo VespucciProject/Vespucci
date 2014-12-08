@@ -43,6 +43,8 @@ private slots:
 
     void on_buttonBox_rejected();
 
+    void on_predictionCheckBox_clicked(bool checked);
+
 private:
     Ui::KMeansDialog *ui;
     ///
@@ -54,6 +56,11 @@ private:
     /// \brief cluster_spin_box_
     /// User selects the number of clusters to compute here
     QSpinBox *cluster_spin_box_;
+
+    ///
+    /// \brief prediction_box_
+    /// User selects whether or not to allow prediction of dimensionality
+    QCheckBox *prediction_box_;
 
     ///
     /// \brief name_line_edit_

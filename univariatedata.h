@@ -88,7 +88,7 @@ private:
 
     ///
     /// \brief positions_
-    /// The position in abcissa units of the maximum of the peaks
+    /// The position in abscissa units of the maximum of the peaks
     mat positions_;
 
     QSharedPointer<VespucciDataset> parent_;

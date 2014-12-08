@@ -43,6 +43,8 @@ private slots:
 
     void on_buttonBox_rejected();
 
+    void on_predictionCheckBox_clicked(bool checked);
+
 private:
     Ui::PLSDialog *ui;
     ///
@@ -74,6 +76,13 @@ private:
     /// \brief recalculate_box_
     /// Whether or not to repeat PLS analysis
     QCheckBox *recalculate_box_;
+
+
+    ///
+    /// \brief prediction_box_
+    /// User selects whether or not to allow prediction of dimensionality
+    QCheckBox *prediction_box_;
+
 
     ///
     /// \brief data_index_

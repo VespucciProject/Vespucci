@@ -134,7 +134,7 @@ MainWindow *VespucciWorkspace::main_window()
 ///
 /// \brief VespucciWorkspace::GetWavelengthMax
 /// \param row Index of the dataset
-/// \return Maximum of the spectral abcissa
+/// \return Maximum of the spectral abscissa
 ///
 double VespucciWorkspace::GetWavelengthMax(int row)
 {
@@ -144,7 +144,7 @@ double VespucciWorkspace::GetWavelengthMax(int row)
 ///
 /// \brief VespucciWorkspace::GetWavelengthMin
 /// \param row Index of the dataset
-/// \return  Minimum of the spectral abcissa
+/// \return  Minimum of the spectral abscissa
 ///
 double VespucciWorkspace::GetWavelengthMin(int row)
 {

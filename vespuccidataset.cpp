@@ -180,7 +180,7 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
 /// \param directory The current global working directory
 /// \param log_file The log file
 /// \param name The name of the dataset displayed to the user
-/// \param x_axis_description A description of the spectral abcissa
+/// \param x_axis_description A description of the spectral abscissa
 /// \param y_axis_description A description of the spectral ordinate
 /// \param swap_spatial Whether or not y is located in the first column instead of the second (some Horiba spectrometers do this).
 /// Main function for processing data from text files to create VespucciDataset objects.
@@ -830,6 +830,18 @@ void VespucciDataset::Scale(double scaling_factor)
     last_operation_ = "Scaling";
 }
 
+///
+/// \brief VespucciDataset::HySime
+/// \return Dimensionality predicted by HySime algorithm
+///
+int VespucciDataset::HySime()
+{
+    mat noise, noise_correlation, subspace;
+    arma_ext::EstimateAdditiveNoise(noise, noise_correlation, trans(spectra_));
+    int k = arma_ext::HySime(trans(spectra_), noise, noise_correlation, subspace);
+    return k;
+}
+
 // MAPPING FUNCTIONS //
 
 ///
@@ -1165,6 +1177,12 @@ void VespucciDataset::VertexComponents(uword endmembers,
     log_stream_ << "gradient_index == " << gradient_index;
     log_stream_ << "recalculate == " << (recalculate ? "true" : "false") << endl << endl;
 
+    if(endmembers == 0){
+        log_stream_ << "Endmember count predicted using HySime algorithm: ";
+        endmembers = this->HySime();
+        log_stream_ << endmembers << endl;
+    }
+
     QString map_type;
     QTextStream(&map_type) << "(Vertex Component " << image_component << ")";
     try{
@@ -1213,6 +1231,12 @@ void VespucciDataset::VertexComponents(uword endmembers)
     log_stream_ << "VertexComponents (no image)" << endl;
     log_stream_ << "endmembers == " << endmembers << endl;
 
+    if(endmembers == 0){
+        log_stream_ << "Endmember count predicted using HySime algorithm: ";
+        endmembers = this->HySime();
+        log_stream_ << endmembers << endl;
+    }
+
     try{
         vertex_components_data_ = new VCAData(QSharedPointer<VespucciDataset>(this), directory_);
         vertex_components_data_->Apply(spectra_, endmembers);
@@ -1224,6 +1248,7 @@ void VespucciDataset::VertexComponents(uword endmembers)
         throw std::runtime_error(str);
     }
 }
+
 
 ///
 /// \brief VespucciDataset::PartialLeastSquares
@@ -1254,6 +1279,14 @@ void VespucciDataset::PartialLeastSquares(uword components,
     log_stream_ << "gradient_index == " << gradient_index << endl;
     log_stream_ << "recalculate == " << (recalculate ? "true" : "false") << endl << endl;
 
+    if(components == 0){
+        log_stream_ << "Component count predicted using HySime algorithm: ";
+        components = this->HySime();
+        log_stream_ << components << endl;
+        if (image_component > components){
+            image_component = components;
+        }
+    }
 
     image_component--;
     QString map_type = "Partial Least Squares Map number of components = ";
@@ -1320,6 +1353,13 @@ void VespucciDataset::PartialLeastSquares(uword components)
     log_stream_ << "PartialLeastSqares (no image)" << endl;
     log_stream_ << "components == " << components << endl;
 
+    if(components == 0){
+        log_stream_ << "Component count predicted using HySime algorithm: ";
+        components = this->HySime();
+        log_stream_ << components << endl;
+    }
+
+
     try{
         partial_least_squares_data_ = new PLSData(QSharedPointer<VespucciDataset>(this), directory_);
         bool success = partial_least_squares_data_->Apply(spectra_, wavelength_, components);
@@ -1350,6 +1390,13 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
     log_stream_ << "KMeans" << endl;
     log_stream_ << "clusters == " << clusters << endl;
     log_stream_ << "name == " << name << endl << endl;
+
+    if(clusters == 0){
+        log_stream_ << "Cluster count predicted using HySime algorithm: ";
+        clusters = this->HySime();
+        log_stream_ << clusters << endl;
+    }
+
 
     QString map_type = "K-means clustering map. Number of clusters = ";
     map_type += QString::number(clusters);
@@ -1401,6 +1448,11 @@ void VespucciDataset::KMeans(size_t clusters)
     log_stream_ << "KMeans (no image)" << endl;
     log_stream_ << "clusters == " << clusters << endl;
 
+    if(clusters == 0){
+        log_stream_ << "Cluster count predicted using HySime algorithm: ";
+        clusters = this->HySime();
+        log_stream_ << clusters << endl;
+    }
 
     try{
         Col<size_t> assignments;
@@ -1496,10 +1548,10 @@ QVector<double> VespucciDataset::WavelengthQVector()
     return wavelength_qvector;
 }
 
-uword VespucciDataset::FindIndex(double abcissa_value)
+uword VespucciDataset::FindIndex(double abscissa_value)
 {
     double delta = std::fabs(wavelength_(1) - wavelength_(0));
-    uvec indices = find((abcissa_value - delta) < wavelength_ <= (abcissa_value + delta));
+    uvec indices = find((abscissa_value - delta) < wavelength_ <= (abscissa_value + delta));
     return indices(0);
 }
 
@@ -1718,7 +1770,7 @@ void VespucciDataset::SetName(QString new_name)
 ///
 /// \brief VespucciDataset::SetData
 /// \param spectra Spectra
-/// \param wavelength Spectral abcissa
+/// \param wavelength Spectral abscissa
 /// \param x Colvec of horizontal axis spatial data
 /// \param y Colvec of vertical axis spatial data
 /// Set the data of the dataset. Used by the MetaDataset constructor
@@ -1910,7 +1962,7 @@ mat VespucciDataset::AverageSpectrum(bool stats)
 ///
 /// \brief VespucciDataset::x_axis_description
 /// The x_axis_description is printed on the spectrum viewer.
-/// \return Spectral abcissa description.
+/// \return Spectral abscissa description.
 ///
 const QString VespucciDataset::x_axis_description()
 {
@@ -1919,7 +1971,7 @@ const QString VespucciDataset::x_axis_description()
 
 ///
 /// \brief VespucciDataset::SetXDescription
-/// Sets the value of the spectral abcissa description.
+/// Sets the value of the spectral abscissa description.
 /// \param description
 ///
 void VespucciDataset::SetXDescription(QString description)

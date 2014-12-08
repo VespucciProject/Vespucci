@@ -155,6 +155,8 @@ public:
     void RemoveClippedSpectra(double threshold);
     void Scale(double scaling_factor);
 
+    int HySime();
+
 
 
 
@@ -172,7 +174,7 @@ public:
 
     // Finds the index of spectra_ with x and y values closest to the input //
     int FindIndex(int x_value, int y_value);
-    uword FindIndex(double abcissa_value);
+    uword FindIndex(double abscissa_value);
 
     // Returns vector containing start and end index within a range
     uvec FindRange(double start, double end);
@@ -315,7 +317,7 @@ private:
 
     ///
     /// \brief wavelength_
-    /// The spectral abcissa of the spectra in spectra_
+    /// The spectral abscissa of the spectra in spectra_
     rowvec wavelength_;
 
     ///
@@ -407,8 +409,8 @@ private:
 
     ///
     /// \brief x_axis_description_
-    /// Spectral abcissa legend
-    QString x_axis_description_; //abcissa legend
+    /// Spectral abscissa legend
+    QString x_axis_description_; //abscissa legend
 
     ///
     /// \brief y_axis_description_

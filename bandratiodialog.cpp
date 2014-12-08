@@ -110,12 +110,12 @@ void BandRatioDialog::on_buttonBox_accepted()
     double second_entered_max = second_max_box_->text().toDouble();
 
     if (first_entered_min < workspace->GetWavelengthMin(data_index_) || second_entered_min < workspace->GetWavelengthMin(data_index_)){
-        QMessageBox::warning(this, "Invalid Input!", "You have entered a left bound that is smaller than the smallest number on the spectral abcissa");
+        QMessageBox::warning(this, "Invalid Input!", "You have entered a left bound that is smaller than the smallest number on the spectral abscissa");
         return;
     }
 
     if (first_entered_max > workspace->GetWavelengthMax(data_index_) || second_entered_max > workspace->GetWavelengthMax(data_index_)){
-        QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abcissa");
+        QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abscissa");
         return;
     }
 

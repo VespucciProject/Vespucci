@@ -21,7 +21,7 @@
 
 ///
 /// \brief MapData::MapData
-/// \param x_axis_description Description of the spectral abcissa
+/// \param x_axis_description Description of the spectral abscissa
 /// \param y_axis_description Description of the spectral ordinate
 /// \param x Vector of horizontal coordinates map points
 /// \param y Vector of vertical coordinates for map points
@@ -579,28 +579,28 @@ void MapData::ShowSpectrumViewer(bool enabled)
 
 ///
 /// \brief MapData::set_baseline
-/// \param abcissa
+/// \param abscissa
 /// \param baseline
 /// Sets a single baseline of this object.
-void MapData::set_baseline(rowvec abcissa, mat baseline)
+void MapData::set_baseline(rowvec abscissa, mat baseline)
 {
-    first_abcissa_ = abcissa;
+    first_abscissa_ = abscissa;
     first_baseline_ = baseline;
     univariate_area_ = true;
 }
 
 ///
 /// \brief MapData::set_baselines
-/// \param first_abcissa
-/// \param second_abcissa
+/// \param first_abscissa
+/// \param second_abscissa
 /// \param first_baseline
 /// \param second_baseline
 /// Sets the baselines of this object
-void MapData::set_baselines(rowvec first_abcissa, rowvec second_abcissa,
+void MapData::set_baselines(rowvec first_abscissa, rowvec second_abscissa,
                             mat first_baseline, mat second_baseline)
 {
-    first_abcissa_ = first_abcissa;
-    second_abcissa_ = second_abcissa;
+    first_abscissa_ = first_abscissa;
+    second_abscissa_ = second_abscissa;
     first_baseline_ = first_baseline;
     second_baseline_ = second_baseline;
     band_ratio_area_ = true;
@@ -655,13 +655,13 @@ double MapData::results_at_position(double x, double y)
 }
 
 ///
-/// \brief MapData::first_abcissa
-/// \return The abcissa for the first baseline
+/// \brief MapData::first_abscissa
+/// \return The abscissa for the first baseline
 ///
-QVector<double> MapData::first_abcissa()
+QVector<double> MapData::first_abscissa()
 {
-    std::vector<double> abcissa = conv_to<std::vector<double> >::from(first_abcissa_);
-    return QVector<double>::fromStdVector(abcissa);
+    std::vector<double> abscissa = conv_to<std::vector<double> >::from(first_abscissa_);
+    return QVector<double>::fromStdVector(abscissa);
 }
 
 ///
@@ -677,13 +677,13 @@ QVector<double> MapData::first_baseline(int i)
 }
 
 ///
-/// \brief MapData::second_abcissa
-/// \return The abcissa for the second baseline
+/// \brief MapData::second_abscissa
+/// \return The abscissa for the second baseline
 ///
-QVector<double> MapData::second_abcissa()
+QVector<double> MapData::second_abscissa()
 {
-    std::vector<double> abcissa = conv_to<std::vector<double> >::from(second_abcissa_);
-    return QVector<double>::fromStdVector(abcissa);
+    std::vector<double> abscissa = conv_to<std::vector<double> >::from(second_abscissa_);
+    return QVector<double>::fromStdVector(abscissa);
 }
 
 ///

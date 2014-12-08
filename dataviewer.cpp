@@ -42,7 +42,7 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
     export_button_->setDisabled(true);
     table_ = this->findChild<QTableView *>("tableView");
 
-    QStringList object_list("Spectral Abcissa");
+    QStringList object_list("Spectral abscissa");
     object_list << "Spatial Data";
 
     if (dataset_->principal_components_calculated()){
@@ -88,7 +88,7 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
         export_button_->setDisabled(true);
         plot_button_->setDisabled(true);
     }
-    else if (arg1 == "Spectral Abcissa"){
+    else if (arg1 == "Spectral abscissa"){
         VespucciTableModel *table_model = new VespucciTableModel(this, dataset_->wavelength_ptr());
         current_data_ = table_model->GetData();
         table_->setModel(table_model);

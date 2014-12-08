@@ -28,7 +28,7 @@ PLSData::PLSData(QSharedPointer<VespucciDataset> parent, QString *directory)
 ///
 /// \brief PLSData::Apply
 /// \param spectra Input matrix
-/// \param wavelength Spectral abcissa
+/// \param wavelength Spectral abscissa
 /// \param components Number of components to calculate
 /// \return
 /// Performs PLS analysis on a copy of the spectra matrix (transposed).

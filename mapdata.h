@@ -68,8 +68,8 @@ public:
 
     void set_type(QString type);
     void set_name(QString name, QString type);
-    void set_baseline(rowvec abcissa, mat baseline);
-    void set_baselines(rowvec first_abcissa, rowvec second_abcissa,
+    void set_baseline(rowvec abscissa, mat baseline);
+    void set_baselines(rowvec first_abscissa, rowvec second_abscissa,
                        mat first_baseline, mat second_baseline);
     void set_fwhm(mat mid_lines);
 
@@ -79,8 +79,8 @@ public:
 
     QVector<double> first_baseline(int i);
     QVector<double> second_baseline(int i);
-    QVector<double> first_abcissa();
-    QVector<double> second_abcissa();
+    QVector<double> first_abscissa();
+    QVector<double> second_abscissa();
     QVector<double> half_max(int i);
     QVector<double> mid_line(int i);
     QVector<double> mid_lines(int i);
@@ -263,8 +263,8 @@ private:
     //stuff related to baselines and such
     mat first_baseline_;
     mat second_baseline_;
-    rowvec first_abcissa_;
-    rowvec second_abcissa_;
+    rowvec first_abscissa_;
+    rowvec second_abscissa_;
     mat mid_lines_;
 
     bool univariate_area_;

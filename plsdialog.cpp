@@ -31,6 +31,7 @@ PLSDialog::PLSDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     components_selector_ = this->findChild<QSpinBox *>("componentsToCalculatespinBox");
     color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
     recalculate_box_ = this->findChild<QCheckBox *>("recalculateCheckBox");
+    prediction_box_ = this->findChild<QCheckBox *>("predictionCheckBox");
     name_box_ = this->findChild<QLineEdit*>("nameLineEdit");
     data_index_ = row;
 
@@ -47,7 +48,13 @@ PLSDialog::~PLSDialog()
 /// the user has entered when the user clicks "Ok"
 void PLSDialog::on_buttonBox_accepted()
 {
-    int image_component = image_component_selector_->value();
+    int image_component;
+    if (prediction_box_->isChecked())
+        image_component = 0;
+    else
+        image_component = image_component_selector_->value();
+
+
     QString name = name_box_->text();
     bool recalculate = recalculate_box_->isChecked();
     int gradient_index = color_selector_->currentIndex();
@@ -71,4 +78,9 @@ void PLSDialog::on_buttonBox_rejected()
 {
     this->close();
     data_.clear();
+}
+
+void PLSDialog::on_predictionCheckBox_clicked(bool checked)
+{
+    components_selector_->setVisible(!checked);
 }

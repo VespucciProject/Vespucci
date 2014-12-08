@@ -53,23 +53,26 @@ vec MedianFilter(vec X, uword window_size);
 mat MedianFilterMat(mat X, uword window_size);
 
 //Peak determination
-double IntegratePeak(vec X, uword min_index, uword max_index, double abcissa_step, vec &baseline);
-vec IntegratePeakMat(mat X, vec abcissa, double &min, double &max, mat &baselines, uvec &boundaries);
-mat IntegratePeaksMat(mat X, vec abcissa,
+double IntegratePeak(vec X, uword min_index, uword max_index, double abscissa_step, vec &baseline);
+vec IntegratePeakMat(mat X, vec abscissa, double &min, double &max, mat &baselines, uvec &boundaries);
+mat IntegratePeaksMat(mat X, vec abscissa,
                       double &first_min, double &first_max,
                       double &second_min, double &second_max,
                       mat &first_baselines, mat &second_baselines, uvec &boundaries);
 
 double FindPeakMax(vec X, uword min_index, uword max_index, uword &position);
-vec FindPeakMaxMat(mat X, vec abcissa, double &min, double &max, vec &positions);
-mat FindPeakMaxesMat(mat X, vec abcissa,
+vec FindPeakMaxMat(mat X, vec abscissa, double &min, double &max, vec &positions);
+mat FindPeakMaxesMat(mat X, vec abscissa,
                      double &first_min, double &first_max,
                      double &second_min, double &second_max,
                      mat positions);
 
-double FindBandwidth(vec X, uword min_index, uword max_index, vec &midline, vec &baseline, double abcissa_step);
-vec FindBandwidthMat(mat X, vec abcissa, double &min, double &max, mat &midlines, mat &baselines, uvec &boundaries);
+double FindBandwidth(vec X, uword min_index, uword max_index, vec &midline, vec &baseline, double abscissa_step);
+vec FindBandwidthMat(mat X, vec abscissa, double &min, double &max, mat &midlines, mat &baselines, uvec &boundaries);
 vec CorrelationMat(mat X, vec control);
+
+int HySime(mat y, mat n, mat Rn, mat &Ek);
+void EstimateAdditiveNoise(mat &noise, mat &noise_correlation, mat sample);
 }
 
 #endif // ARMA_EXT_H

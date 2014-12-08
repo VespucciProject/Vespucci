@@ -192,7 +192,7 @@ bool TextImport::ImportLongText(QString filename,
     }
     if (progress->wasCanceled())
         return false;
-    //must reverse spectra and abcissa if they were read in backward
+    //must reverse spectra and abscissa if they were read in backward
     if (max_to_min){
         wavelength = fliplr(wavelength);
         spectra = fliplr(spectra);

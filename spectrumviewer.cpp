@@ -130,26 +130,26 @@ void SpectrumViewer::SetPlot(QVector<double> wavelength,
 
 ///
 /// \brief SpectrumViewer::SetSecondPlot
-/// \param first_abcissa
-/// \param second_abcissa
+/// \param first_abscissa
+/// \param second_abscissa
 /// \param first_intensities
 /// \param second_intensities
 /// Set other plots (baselines)
-void SpectrumViewer::SetSecondPlot(QVector<double> first_abcissa, QVector<double> second_abcissa,
+void SpectrumViewer::SetSecondPlot(QVector<double> first_abscissa, QVector<double> second_abscissa,
                                    QVector<double> first_intensities, QVector<double> second_intensities)
 {
     if (spectrum_plot_->graphCount() <= 2){
         spectrum_plot_->addGraph(spectrum_plot_->graph(0)->keyAxis(), spectrum_plot_->graph(0)->valueAxis());
-        spectrum_plot_->graph(1)->addData(first_abcissa, first_intensities);
+        spectrum_plot_->graph(1)->addData(first_abscissa, first_intensities);
         spectrum_plot_->addGraph(spectrum_plot_->graph(0)->keyAxis(), spectrum_plot_->graph(0)->valueAxis());
-        spectrum_plot_->graph(2)->addData(second_abcissa, second_intensities);
+        spectrum_plot_->graph(2)->addData(second_abscissa, second_intensities);
     }
 
-    spectrum_plot_->graph(1)->setData(first_abcissa, first_intensities);
+    spectrum_plot_->graph(1)->setData(first_abscissa, first_intensities);
     spectrum_plot_->graph(1)->setPen(QPen(QColor("red")));
     spectrum_plot_->graph(1)->setVisible(true);
 
-    spectrum_plot_->graph(2)->setData(second_abcissa, second_intensities);
+    spectrum_plot_->graph(2)->setData(second_abscissa, second_intensities);
     spectrum_plot_->graph(2)->setPen(QPen(QColor("red")));
     spectrum_plot_->graph(2)->setVisible(true);
     spectrum_plot_->replot();
@@ -157,17 +157,17 @@ void SpectrumViewer::SetSecondPlot(QVector<double> first_abcissa, QVector<double
 
 ///
 /// \brief SpectrumViewer::SetSecondPlot
-/// \param abcissa
+/// \param abscissa
 /// \param intensities
 /// Set the second plot.
-void SpectrumViewer::SetSecondPlot(QVector<double> abcissa, QVector<double> intensities)
+void SpectrumViewer::SetSecondPlot(QVector<double> abscissa, QVector<double> intensities)
 {
     if (spectrum_plot_->graphCount() <= 1){
         spectrum_plot_->addGraph(spectrum_plot_->graph(0)->keyAxis(), spectrum_plot_->graph(0)->valueAxis());
-        spectrum_plot_->graph(1)->addData(abcissa, intensities);
+        spectrum_plot_->graph(1)->addData(abscissa, intensities);
     }
 
-    spectrum_plot_->graph(1)->setData(abcissa, intensities);
+    spectrum_plot_->graph(1)->setData(abscissa, intensities);
     spectrum_plot_->graph(1)->setPen(QPen(QColor("red")));
     spectrum_plot_->graph(1)->setVisible(true);
     spectrum_plot_->replot();
@@ -203,9 +203,9 @@ void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *ev
     value_label_->setText(QString::number(current_z_));
     SetPlot(wavelength, intensities);
     if (map_data_->univariate_area())
-        SetSecondPlot(map_data_->first_abcissa(), map_data_->first_baseline(current_index_));
+        SetSecondPlot(map_data_->first_abscissa(), map_data_->first_baseline(current_index_));
     if (map_data_->univariate_bandwidth()){
-        SetSecondPlot(map_data_->first_abcissa(), map_data_->first_baseline(current_index_));
+        SetSecondPlot(map_data_->first_abscissa(), map_data_->first_baseline(current_index_));
         if (spectrum_plot_->itemCount() == 0){
             QCPItemLine *mid_line = new QCPItemLine(spectrum_plot_);
             QVector<double> mid_line_vec = map_data_->mid_line(current_index_);
@@ -217,8 +217,8 @@ void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *ev
 
     }
     if (map_data_->band_ratio_area()){
-        SetSecondPlot(map_data_->first_abcissa(),
-                      map_data_->second_abcissa(),
+        SetSecondPlot(map_data_->first_abscissa(),
+                      map_data_->second_abscissa(),
                       map_data_->first_baseline(current_index_),
                       map_data_->second_baseline(current_index_));
     }

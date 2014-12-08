@@ -42,12 +42,19 @@ private slots:
 
     void on_buttonBox_accepted();
 
+    void on_predictionCheckBox_clicked(bool checked);
+
 private:
     Ui::AnalysisDialog *ui;
     QComboBox *method_selection_box_;
     QSpinBox *components_box_;
     QSharedPointer<VespucciDataset> dataset_;
     VespucciWorkspace *workspace;
+
+    ///
+    /// \brief prediction_box_
+    /// User selects whether or not to allow prediction of dimensionality
+    QCheckBox *prediction_box_;
 };
 
 #endif // ANALYSISDIALOG_H

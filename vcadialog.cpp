@@ -37,6 +37,7 @@ VCADialog::VCADialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     image_component_selector_ = this->findChild<QSpinBox *>("componentSpinBox");
     color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
     recalculate_box_ = this->findChild<QCheckBox *>("recalculateCheckBox");
+    prediction_box_ = this->findChild<QCheckBox *>("predictionCheckBox");
     name_box_ = this->findChild<QLineEdit*>("nameLineEdit");
     data_index_ = row;
 }
@@ -51,10 +52,13 @@ VCADialog::~VCADialog()
 /// Calls appropriate dataset method when "Ok" is clicked.
 void VCADialog::on_buttonBox_accepted()
 {
+    int endmembers;
+    if (prediction_box_->isChecked())
+        endmembers = 0;
+    else
+        endmembers = components_selector_->value();
+
     int image_component = image_component_selector_->value();
-    int endmembers = components_selector_->value();
-    if (image_component > endmembers)
-        image_component = endmembers;
 
     QString name = name_box_->text();
     bool recalculate = recalculate_box_->isChecked();
@@ -81,4 +85,10 @@ void VCADialog::on_buttonBox_rejected()
 {
     this->close();
     data_.clear();
+}
+
+void VCADialog::on_predictionCheckBox_clicked(bool checked)
+{
+    components_selector_->setEnabled(!checked);
+
 }

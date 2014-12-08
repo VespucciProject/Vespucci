@@ -56,7 +56,7 @@ private:
 
     ///
     /// \brief range_label_
-    /// Displays the range of the spectral abcissa.
+    /// Displays the range of the spectral abscissa.
     QLabel *range_label_;
 
     ///

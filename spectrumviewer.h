@@ -50,7 +50,7 @@ public:
                    QString directory,
                    QString type);
 
-    SpectrumViewer(QVector<double> abcissa,
+    SpectrumViewer(QVector<double> abscissa,
                    QVector<double> intensities,
                    const QString x_axis_description,
                    const QString y_axis_description);
@@ -59,8 +59,8 @@ public:
     void SetPlot(QVector<double> wavelength,
                  QVector<double> intensity);
 
-    void SetSecondPlot(QVector<double> abcissa, QVector<double> intensities);
-    void SetSecondPlot(QVector<double> first_abcissa, QVector<double> second_abcissa,
+    void SetSecondPlot(QVector<double> abscissa, QVector<double> intensities);
+    void SetSecondPlot(QVector<double> first_abscissa, QVector<double> second_abscissa,
                        QVector<double> first_intensities, QVector<double> second_intensities);
 private slots:
     void MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *event);

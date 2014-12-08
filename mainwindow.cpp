@@ -373,9 +373,9 @@ void MainWindow::on_actionAverage_Spectra_triggered()
 }
 
 ///
-/// \brief MainWindow::on_actionAverage_Spectra_with_Abcissa_triggered
-/// Saves average spectrum (with abcissa above).
-void MainWindow::on_actionAverage_Spectra_with_Abcissa_triggered()
+/// \brief MainWindow::on_actionAverage_Spectra_with_abscissa_triggered
+/// Saves average spectrum (with abscissa above).
+void MainWindow::on_actionAverage_Spectra_with_abscissa_triggered()
 {
     bool success;
     int row = dataset_list_view_->currentIndex().row();
@@ -409,9 +409,9 @@ void MainWindow::on_actionAverage_Spectra_with_Abcissa_triggered()
 }
 
 ///
-/// \brief MainWindow::on_actionSpectral_Abcissa_triggered
-/// Saves the spectral abcissa
-void MainWindow::on_actionSpectral_Abcissa_triggered()
+/// \brief MainWindow::on_actionSpectral_abscissa_triggered
+/// Saves the spectral abscissa
+void MainWindow::on_actionSpectral_abscissa_triggered()
 {
     bool success;
     int row = dataset_list_view_->currentIndex().row();
