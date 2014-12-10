@@ -46,11 +46,13 @@ public:
 private slots:
     void on_comboBox_currentTextChanged(const QString &arg1);
 
-    void on_plotPushButton_clicked();
+    void on_plotToolButton_clicked();
 
-    void on_exportPushButton_clicked();
+    void on_exportToolButton_clicked();
 
-    void on_newDatasetPushButton_clicked();
+    void on_extractToolButton_clicked();
+
+    void on_statsToolButton_clicked();
 
 private:
     Ui::DataViewer *ui;
@@ -95,17 +97,22 @@ private:
     ///
     /// \brief export_button_
     /// The user clicks this to open a file dialog to save the current data
-    QPushButton *export_button_;
+    QToolButton *export_button_;
 
     ///
     /// \brief plot_button_
     /// Opens a plot of the selected spectrum
-    QPushButton *plot_button_;
+    QToolButton *plot_button_;
 
     ///
     /// \brief extract_button_
     /// The user clicks this to create a new dataset from current data
-    QPushButton *extract_button_;
+    QToolButton *extract_button_;
+
+    ///
+    /// \brief stats_button_
+    /// The user clicks this to view the statistics of the sample
+    QToolButton *stats_button_;
 
     ///
     /// \brief spectrum_viewer_
@@ -128,6 +135,8 @@ private:
 };
 
 #endif // DATAVIEWER_H
+
+
 
 
 

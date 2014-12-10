@@ -21,6 +21,8 @@ StatsDialog::StatsDialog(QWidget *parent, vec data) :
     mean_line_edit_->setText(QString::number(mean(data)));
 }
 
+
+
 StatsDialog::~StatsDialog()
 {
     delete ui;

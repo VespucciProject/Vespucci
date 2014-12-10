@@ -35,10 +35,11 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
     workspace = ws;
     dataset_ = workspace->DatasetAt(row);
     directory_ = workspace->directory();
-    export_button_ = this->findChild<QPushButton *>("exportPushButton");
-    plot_button_ = this->findChild<QPushButton *>("plotPushButton");
+    export_button_ = this->findChild<QToolButton *>("exportToolButton");
+    plot_button_ = this->findChild<QToolButton *>("plotToolButton");
     data_selector_ = this->findChild<QComboBox *>("comboBox");
-    extract_button_ = this->findChild<QPushButton *>("newDatasetPushButton");
+    extract_button_ = this->findChild<QToolButton *>("extractToolButton");
+    stats_button_ = this->findChild<QToolButton *>("statsToolButton");
     plot_button_->setDisabled(true);
     export_button_->setDisabled(true);
     extract_button_->setDisabled(true);
@@ -136,6 +137,7 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
         export_button_->setDisabled(true);
         plot_button_->setDisabled(true);
         extract_button_->setDisabled(true);
+        stats_button_->setDisabled(true);
     }
     else if (data_objects_.contains(arg1)){
         current_data_ = data_objects_[arg1];
@@ -143,10 +145,14 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
         table_->setModel(table_model);
         export_button_->setDisabled(false);
 
-        if (current_data_->n_rows == dataset_->spectra_ptr()->n_rows)
+        if (current_data_->n_rows == dataset_->spectra_ptr()->n_rows){
             extract_button_->setDisabled(false);
-        else
+            stats_button_->setDisabled(false);
+        }
+        else{
             extract_button_->setDisabled(true);
+            stats_button_->setDisabled(true);
+        }
 
 
         if (arg1 == "VCA Endmembers")
@@ -161,6 +167,7 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
         table_->setModel(table_model);
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
+        stats_button_->setDisabled(true);
     }
 
     table_->resizeColumnsToContents();
@@ -168,9 +175,9 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
 }
 
 ///
-/// \brief DataViewer::on_plotPushButton_clicked
+/// \brief DataViewer::on_plotToolButton_clicked
 /// Triggers a dialog that allows the plotting of data
-void DataViewer::on_plotPushButton_clicked()
+void DataViewer::on_plotToolButton_clicked()
 {
     if (current_text_ == "VCA Endmembers"){
         bool ok;
@@ -188,9 +195,9 @@ void DataViewer::on_plotPushButton_clicked()
 }
 
 ///
-/// \brief DataViewer::on_exportPushButton_clicked
+/// \brief DataViewer::on_exportToolButton_clicked
 /// Triggers a save dialog to save the current dataset
-void DataViewer::on_exportPushButton_clicked()
+void DataViewer::on_exportToolButton_clicked()
 {
     QString filename = QFileDialog::getSaveFileName(this,
                                                     tr("Export As..."),
@@ -308,7 +315,7 @@ void DataViewer::RefreshComboBox()
     }
 }
 
-void DataViewer::on_newDatasetPushButton_clicked()
+void DataViewer::on_extractToolButton_clicked()
 {
     int column_number;
     vec column;
@@ -334,3 +341,28 @@ void DataViewer::on_newDatasetPushButton_clicked()
 }
 
 
+void DataViewer::on_statsToolButton_clicked()
+{
+    vec column;
+    int column_number;
+
+    if (current_data_->n_cols == 0){
+        return;
+    }
+    else if (current_data_->n_cols > 1){
+             column_number = QInputDialog::getInt(this,
+                                                  "Select Column",
+                                                  "Column number",
+                                                  1, 1,
+                                                  current_data_->n_cols);
+             column = current_data_->col(column_number - 1);
+
+    }
+    else{
+        column = current_data_->col(0);
+    }
+
+    StatsDialog *stats_dialog = new StatsDialog(this, column);
+    stats_dialog->show();
+
+}
