@@ -48,14 +48,31 @@ private slots:
     
     void on_buttonBox_rejected();
 
+    void on_methodComboBox_currentIndexChanged(const QString &arg1);
+
+    void on_browsePushButton_clicked();
+
 private:
     Ui::DataExtractorDialog *ui;
 
     vec condition_;
+
+    ///
+    /// \brief method_combo_box_
+    /// User selects method (value-based or index-based) here.
+    QComboBox *method_combo_box_;
+
+
     ///
     /// \brief name_line_edit_
     /// User sets the dataset name here
     QLineEdit *name_line_edit_;
+
+    ///
+    /// \brief name_line_edit_
+    /// User sets the dataset name here
+    QLineEdit *filename_line_edit_;
+
 
     ///
     /// \brief lower_box_

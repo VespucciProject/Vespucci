@@ -64,8 +64,10 @@ DataExtractorDialog::DataExtractorDialog(QWidget *parent,
     main_window_ = main_window;
     workspace = main_window->workspace_ptr();
     name_line_edit_ = this->findChild<QLineEdit*>("nameLineEdit");
+    filename_line_edit_ = this->findChild<QLineEdit *>("filenameLineEdit");
     upper_box_ = this->findChild<QDoubleSpinBox*>("upperDoubleSpinBox");
     lower_box_ = this->findChild<QDoubleSpinBox*>("lowerDoubleSpinBox");
+    method_combo_box_ = this->findChild<QComboBox *>("methodComboBox");
     dataset_ = dataset;
 
     data_range_.lower = data.min();
@@ -89,10 +91,25 @@ DataExtractorDialog::~DataExtractorDialog()
 /// Calls constructor for new dataset object when user clicks "Ok"
 void DataExtractorDialog::on_buttonBox_accepted()
 {
+    uvec indices;
     QString name = name_line_edit_->text();
-    double upper = upper_box_->value();
-    double lower = lower_box_->value();
-    uvec indices = arma::find(condition_ >= lower && condition_ <= upper);
+    mat index_mat;
+
+    if (method_combo_box_->currentText() == "Index File"){
+        string filename = filename_line_edit_->text().toStdString();
+        uword index;
+        index_mat.load(filename);
+        indices.set_size(index_mat.n_elem);
+        for (uword i = 0; i < index_mat.n_elem; ++i){
+            index = index_mat(i);
+            indices(i) = index;
+        }
+    }
+    else{
+        double upper = upper_box_->value();
+        double lower = lower_box_->value();
+        indices = arma::find(condition_ >= lower && condition_ <= upper);
+    }
 
     QFile *log_file = workspace->CreateLogFile(name);
     QSharedPointer<VespucciDataset> new_dataset;
@@ -120,4 +137,30 @@ void DataExtractorDialog::on_buttonBox_rejected()
 {
     this->close();
     dataset_.clear();
+}
+
+void DataExtractorDialog::on_methodComboBox_currentIndexChanged(const QString &arg1)
+{
+    if (arg1 == "Index File"){
+        upper_box_->setDisabled(true);
+        lower_box_->setDisabled(true);
+        filename_line_edit_->setDisabled(false);
+    }
+    else{
+        upper_box_->setDisabled(false);
+        lower_box_->setDisabled(false);
+        filename_line_edit_->setDisabled(true);
+    }
+}
+
+void DataExtractorDialog::on_browsePushButton_clicked()
+{
+    QString filename =
+            QFileDialog::getOpenFileName(this,
+                                         "Select Index File",
+                                         workspace->directory(),
+                                         "Tab-delimited Text Files (*.txt);; "
+                                         "Comma Separated Variables (*.csv);; "
+                                         "Armadillo Binary (*.arma)");
+    filename_line_edit_->setText(filename);
 }
