@@ -26,6 +26,7 @@
 #include "vespuccidataset.h"
 class VespucciDataset;
 class VespucciWorkspace;
+class UnivariateData;
 namespace Ui {
 class DataViewer;
 class VespucciTableModel;
@@ -49,8 +50,12 @@ private slots:
 
     void on_exportPushButton_clicked();
 
+    void on_newDatasetPushButton_clicked();
+
 private:
     Ui::DataViewer *ui;
+
+    QMap<QString, mat*> data_objects_;
 
     ///
     /// \brief current_text_
@@ -98,6 +103,11 @@ private:
     QPushButton *plot_button_;
 
     ///
+    /// \brief extract_button_
+    /// The user clicks this to create a new dataset from current data
+    QPushButton *extract_button_;
+
+    ///
     /// \brief spectrum_viewer_
     /// The plot window
     SpectrumViewer *spectrum_viewer_;
@@ -107,6 +117,17 @@ private:
     /// Number of plottable VCA endmembers
     int vca_endmembers_;
 
+    bool principal_components_calculated_;
+    bool vertex_components_calculated_;
+    bool k_means_calculated_;
+    bool partial_least_squares_calculated_;
+    int univariate_count_;
+
+    void RefreshComboBox();
+
 };
 
 #endif // DATAVIEWER_H
+
+
+

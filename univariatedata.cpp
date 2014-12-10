@@ -1,14 +1,16 @@
 #include "univariatedata.h"
 
-UnivariateData::UnivariateData(QSharedPointer<VespucciDataset> parent) : baselines_(2)
+UnivariateData::UnivariateData(QSharedPointer<VespucciDataset> parent, QString name) : baselines_(2)
 {
     parent_ = parent;
+    name_ = name;
 }
 
-UnivariateData::UnivariateData(QSharedPointer<VespucciDataset> parent, vec control)
+UnivariateData::UnivariateData(QSharedPointer<VespucciDataset> parent, QString name, vec control)
 {
     control_ = control;
     parent_ = parent;
+    name_ = name;
 }
 
 ///
@@ -99,6 +101,10 @@ vec UnivariateData::results()
     return results_;
 }
 
+vec *UnivariateData::results_ptr()
+{
+    return &results_;
+}
 
 bool UnivariateData::band_ratio()
 {
@@ -158,4 +164,14 @@ mat UnivariateData::Midlines()
 uvec UnivariateData::Boundaries()
 {
     return boundaries_;
+}
+
+void UnivariateData::SetName(QString name)
+{
+    name_ = name;
+}
+
+QString UnivariateData::name()
+{
+    return name_;
 }

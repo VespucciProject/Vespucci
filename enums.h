@@ -15,4 +15,25 @@ namespace MetaMethod{
 enum Method{AverageSpectra, ConcatenateDatasets};
 }
 
+
+///
+/// \brief The InputFileFormat namespace
+/// Types of files that can be imported
+///
+namespace InputFileFormat
+{
+///
+/// \brief The Formats enum
+///
+    enum Format{
+        LongTabDel,
+        LongCSV,
+        WideTabDel,
+        WideCSV,
+        VespucciBinary,
+        Witec,
+        Invalid
+    };
+}
+
 #endif // ENUMS_H

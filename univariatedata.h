@@ -7,8 +7,8 @@
 class UnivariateData
 {
 public:
-    UnivariateData(QSharedPointer<VespucciDataset> parent);
-    UnivariateData(QSharedPointer<VespucciDataset> parent, vec control);
+    UnivariateData(QSharedPointer<VespucciDataset> parent, QString name);
+    UnivariateData(QSharedPointer<VespucciDataset> parent, QString name, vec control);
     void Apply(double left_bound,
           double right_bound,
           UnivariateMethod::Method method);
@@ -20,6 +20,7 @@ public:
           UnivariateMethod::Method method);
 
     vec results();
+    vec *results_ptr();
     bool band_ratio();
     double left_bound();
     double right_bound();
@@ -34,6 +35,9 @@ public:
     uvec MidlineBoundaries();
     mat first_baselines();
     mat second_baselines();
+
+    QString name();
+    void SetName(QString name);
 
 private:
     QString method_description_;
@@ -92,6 +96,9 @@ private:
     mat positions_;
 
     QSharedPointer<VespucciDataset> parent_;
+
+
+    QString name_;
 
     uvec boundaries_;
 };

@@ -40,25 +40,7 @@
 #include "maplistmodel.h"
 #include "univariatedata.h"
 
-///
-/// \brief The InputFileFormat namespace
-/// Types of files that can be imported
-///
-namespace InputFileFormat
-{
-///
-/// \brief The Formats enum
-///
-    enum Format{
-        LongTabDel,
-        LongCSV,
-        WideTabDel,
-        WideCSV,
-        VespucciBinary,
-        Witec,
-        Invalid
-    };
-}
+
 
 
 
@@ -197,9 +179,18 @@ public:
                     UnivariateMethod::Method method,
                     QString integration_method,
                     uword gradient_index);
+
+    void Univariate(double min,
+                    double max,
+                    QString name,
+                    UnivariateMethod::Method method,
+                    QString integration_method);
+
+
     void CorrelationMap(vec control,
                         QString name,
                         uword gradient_index);
+
     void BandRatio(double first_min,
                    double first_max,
                    double second_min,
@@ -207,6 +198,13 @@ public:
                    QString name,
                    UnivariateMethod::Method method,
                    unsigned int gradient_index);
+
+    void BandRatio(double first_min,
+                   double first_max,
+                   double second_min,
+                   double second_max,
+                   QString name,
+                   UnivariateMethod::Method method);
 
     void PartialLeastSquares(uword components, uword image_component,
                              QString name,
@@ -262,6 +260,7 @@ public:
     VCAData *vertex_components_data();
     PLSData *partial_least_squares_data();
     mat *k_means_data();
+    QList<QSharedPointer<UnivariateData> > univariate_datas();
     const QString x_axis_description();
     const QString y_axis_description();
 
@@ -302,6 +301,7 @@ public:
     mat *parent_dataset_indices();
     bool Undoable();
 
+    int UnivariateCount();
 
     QString last_operation();
 

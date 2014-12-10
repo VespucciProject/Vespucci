@@ -36,6 +36,7 @@
 #include "analysisdialog.h"
 #include "metadatasetdialog.h"
 #include "rangedialog.h"
+#include "univariateanalysisdialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -216,6 +217,8 @@ void MainWindow::on_actionK_Means_Clustering_triggered()
 ///
 void MainWindow::on_actionNormalize_Standardize_triggered()
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QStringList methods;
@@ -255,6 +258,8 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
 ///Subtracts a background matrix (a saved armadillo binary matrix) from spectra
 void MainWindow::on_actionSubtract_Background_triggered()
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QString filename =
@@ -283,10 +288,12 @@ void MainWindow::on_actionSubtract_Background_triggered()
 ///Saves the spectra matrix of selected dataset as binary, csv, or raw ascii.
 void MainWindow::on_actionSpectra_triggered()
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
+
     bool success;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
-
     QString filename =
             QFileDialog::getSaveFileName(this,
                                          tr("Save Spectra Matrix"),
@@ -314,6 +321,8 @@ void MainWindow::on_actionSpectra_triggered()
 /// Saves a transpose of spectra_
 void MainWindow::on_actionSpectra_as_Columns_triggered()
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
     bool success;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
@@ -346,6 +355,8 @@ void MainWindow::on_actionSpectra_as_Columns_triggered()
 /// Saves an average spectrum of the selected dataset
 void MainWindow::on_actionAverage_Spectra_triggered()
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
     bool success;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
@@ -373,10 +384,12 @@ void MainWindow::on_actionAverage_Spectra_triggered()
 }
 
 ///
-/// \brief MainWindow::on_actionAverage_Spectra_with_abscissa_triggered
+/// \brief MainWindow::on_actionAverage_Spectra_with_Abscissa_triggered
 /// Saves average spectrum (with abscissa above).
-void MainWindow::on_actionAverage_Spectra_with_abscissa_triggered()
+void MainWindow::on_actionAverage_Spectra_with_Abscissa_triggered()
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
     bool success;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
@@ -390,10 +403,14 @@ void MainWindow::on_actionAverage_Spectra_with_abscissa_triggered()
                                             "Tab-separated Txt (*.txt);;"));
     QFileInfo file_info(filename);
 
-    rowvec wavelength = dataset->wavelength();
+    vec wavelength = dataset->wavelength().t();
     mat output(wavelength);
-    output.insert_rows(1, dataset->AverageSpectrum(true));
-    output = output.t();
+    try{
+        output.insert_cols(1, dataset->AverageSpectrum(true));
+    }
+    catch(exception e){
+        DisplayExceptionWarning(e);
+    }
 
     if (file_info.suffix() == "arma")
         success = output.save(filename.toStdString(), arma_binary);
@@ -409,10 +426,12 @@ void MainWindow::on_actionAverage_Spectra_with_abscissa_triggered()
 }
 
 ///
-/// \brief MainWindow::on_actionSpectral_abscissa_triggered
+/// \brief MainWindow::on_actionSpectral_Abscissa_triggered
 /// Saves the spectral abscissa
-void MainWindow::on_actionSpectral_abscissa_triggered()
+void MainWindow::on_actionSpectral_Abscissa_triggered()
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
     bool success;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
@@ -444,6 +463,8 @@ void MainWindow::on_actionSpectral_abscissa_triggered()
 /// Saves a matrix containing all spatial and spectral data
 void MainWindow::on_actionAll_Data_triggered()
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
     bool success;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
@@ -695,7 +716,8 @@ VespucciWorkspace* MainWindow::workspace_ptr()
 
 void MainWindow::on_actionUndo_triggered()
 {
-
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
@@ -741,6 +763,9 @@ void MainWindow::DisplayExceptionWarning(std::exception e)
 
 void MainWindow::on_datasetsListView_clicked(const QModelIndex &index)
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
+
     QSharedPointer<VespucciDataset> dataset =
             dataset_list_model_->DatasetAt(index.row());
     map_list_view_->setModel(dataset->map_list_model());
@@ -752,6 +777,8 @@ void MainWindow::on_datasetsListView_clicked(const QModelIndex &index)
 /// Change the row that is active in the dataset list view
 void MainWindow::SetActiveDatasetListRow(int row)
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
     QSharedPointer<VespucciDataset> dataset =
             dataset_list_model_->DatasetAt(row);
     map_list_view_->setModel(dataset->map_list_model());
@@ -759,6 +786,8 @@ void MainWindow::SetActiveDatasetListRow(int row)
 
 bool MainWindow::DatasetMappable(int row)
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return false;
     QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     if(data->non_spatial()){
         QMessageBox::warning(this,
@@ -777,6 +806,8 @@ bool MainWindow::DatasetMappable(int row)
 /// Slot corresponding to the signal from the list model that a dataset has been added.
 void MainWindow::DatasetAdded(const QModelIndex &index)
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
     QSharedPointer<VespucciDataset> dataset =
             dataset_list_model_->DatasetAt(index.row());
     map_list_view_->setModel(dataset->map_list_model());
@@ -821,6 +852,8 @@ void MainWindow::on_actionNew_Composite_Dataset_triggered()
 
 void MainWindow::on_actionReject_Clipped_Spectra_triggered()
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(dataset_list_view_->currentIndex().row());
     double threshold = QInputDialog::getDouble(this, "Reject Clipped Spectra", "Threshold", 64000.00);
     try{
@@ -835,6 +868,8 @@ void MainWindow::on_actionReject_Clipped_Spectra_triggered()
 
 void MainWindow::RangeDialogAccepted(double min, double max)
 {
+    if (dataset_list_view_->model()->rowCount() < 1)
+        return;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     try{
@@ -846,3 +881,10 @@ void MainWindow::RangeDialogAccepted(double min, double max)
 }
 
 
+
+void MainWindow::on_actionUnivariate_Analysis_triggered()
+{
+    int row = dataset_list_view_->currentIndex().row();
+    UnivariateAnalysisDialog *analysis_dialog = new UnivariateAnalysisDialog(this, workspace, row);
+    analysis_dialog->show();
+}

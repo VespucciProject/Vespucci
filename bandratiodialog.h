@@ -87,6 +87,12 @@ private:
     /// User enteres second maximum here
     QLineEdit *second_max_box_;
 
+
+    ///
+    /// \brief integration_method_selector_
+    /// User selects the integration method here
+    QComboBox *integration_method_selector_;
+
     ///
     /// \brief name_box_
     /// User enters map name here
@@ -102,10 +108,6 @@ private:
     /// User selects the value determination method here
     QComboBox *value_method_selector_;
 
-    ///
-    /// \brief integration_method_selector_
-    /// User selects the integration method here
-    QComboBox *integration_method_selector_;
 
     ///
     /// \brief integration_method_label_

@@ -104,7 +104,7 @@
      <addaction name="actionSpectra"/>
      <addaction name="actionSpectra_as_Columns"/>
      <addaction name="actionAverage_Spectra"/>
-     <addaction name="actionAverage_Spectra_with_Abcissa"/>
+     <addaction name="actionAverage_Spectra_with_Abscissa"/>
      <addaction name="actionSpectral_Abscissa"/>
      <addaction name="separator"/>
      <addaction name="actionAll_Data"/>
@@ -118,6 +118,7 @@
     <addaction name="actionView_Dataset_Elements"/>
     <addaction name="separator"/>
     <addaction name="actionNew_Composite_Dataset"/>
+    <addaction name="actionUnivariate_Analysis"/>
     <addaction name="actionMultivariate_Analysis"/>
     <addaction name="separator"/>
     <addaction name="actionClose_Dataset"/>
@@ -266,9 +267,12 @@
     <string>Average Spectra</string>
    </property>
   </action>
-  <action name="actionAverage_Spectra_with_Abcissa">
+  <action name="actionAverage_Spectra_with_Abscissa">
    <property name="text">
-    <string>Average Spectra (with Abcissa)</string>
+    <string>Average Spectra (with Abscissa)</string>
+   </property>
+   <property name="toolTip">
+    <string>Average Spectra (with Abscissa)</string>
    </property>
   </action>
   <action name="actionClose_Dataset">
@@ -329,6 +333,11 @@
   <action name="actionSpectra_as_Columns">
    <property name="text">
     <string>Spectra (as Columns)</string>
+   </property>
+  </action>
+  <action name="actionUnivariate_Analysis">
+   <property name="text">
+    <string>Univariate Analysis...</string>
    </property>
   </action>
  </widget>

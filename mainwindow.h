@@ -27,6 +27,7 @@ class VespucciWorkspace;
 class VespucciDataset;
 class DatasetListModel;
 class RangeDialog;
+class UnivariateAnalysisDialog;
 namespace Ui {
 class MainWindow;
 }
@@ -85,9 +86,9 @@ private slots:
 
     void on_actionAverage_Spectra_triggered();
 
-    void on_actionAverage_Spectra_with_abscissa_triggered();
+    void on_actionAverage_Spectra_with_Abscissa_triggered();
 
-    void on_actionSpectral_abscissa_triggered();
+    void on_actionSpectral_Abscissa_triggered();
 
     void on_actionAll_Data_triggered();
 
@@ -129,6 +130,8 @@ private slots:
 
     void on_actionSpectra_as_Columns_triggered();
 
+    void on_actionUnivariate_Analysis_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -157,4 +160,6 @@ private:
 };
 
 #endif // MAINWINDOW_H
+
+
 

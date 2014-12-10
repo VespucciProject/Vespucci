@@ -101,7 +101,8 @@ SOURCES += main.cpp\
     analysisdialog.cpp \
     univariatedata.cpp \
     rangedialog.cpp \
-    statsdialog.cpp
+    statsdialog.cpp \
+    univariateanalysisdialog.cpp
 
 HEADERS  += mainwindow.h \
     loaddataset.h \
@@ -140,7 +141,8 @@ HEADERS  += mainwindow.h \
     univariatedata.h \
     enums.h \
     rangedialog.h \
-    statsdialog.h
+    statsdialog.h \
+    univariateanalysisdialog.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
@@ -164,7 +166,8 @@ FORMS    += mainwindow.ui \
     metadatasetdialog.ui \
     analysisdialog.ui \
     rangedialog.ui \
-    statsdialog.ui
+    statsdialog.ui \
+    univariateanalysisdialog.ui
 
 RESOURCES += \
     resources.qrc

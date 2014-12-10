@@ -39,7 +39,8 @@ class DataExtractorDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit DataExtractorDialog(QWidget *parent, MapData *map, QSharedPointer<VespucciDataset> dataset, MainWindow *main_window);
+    DataExtractorDialog(QWidget *parent, MapData *map, QSharedPointer<VespucciDataset> dataset, MainWindow *main_window);
+    DataExtractorDialog(QWidget *parent, vec data, QSharedPointer<VespucciDataset> dataset, MainWindow *main_window, QString name);
     ~DataExtractorDialog();
 
 private slots:
@@ -50,6 +51,7 @@ private slots:
 private:
     Ui::DataExtractorDialog *ui;
 
+    vec condition_;
     ///
     /// \brief name_line_edit_
     /// User sets the dataset name here

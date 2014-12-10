@@ -39,6 +39,7 @@ DataExtractorDialog::DataExtractorDialog(QWidget *parent, MapData *map, QSharedP
     upper_box_ = this->findChild<QDoubleSpinBox*>("upperDoubleSpinBox");
     lower_box_ = this->findChild<QDoubleSpinBox*>("lowerDoubleSpinBox");
     map_ = map;
+    condition_ = map_->results_;
     dataset_ = dataset;
     data_range_ = map->dataRange();
     upper_box_->setValue(data_range_.upper);
@@ -46,6 +47,36 @@ DataExtractorDialog::DataExtractorDialog(QWidget *parent, MapData *map, QSharedP
     upper_box_->setRange(data_range_.lower, data_range_.upper);
     lower_box_->setRange(data_range_.lower, data_range_.upper);
     name_line_edit_->setText(dataset_->name() + "-" + map_->name());
+}
+
+DataExtractorDialog::DataExtractorDialog(QWidget *parent,
+                                         vec data,
+                                         QSharedPointer<VespucciDataset> dataset,
+                                         MainWindow *main_window,
+                                         QString name) :
+    QDialog(parent),
+    ui(new Ui::DataExtractorDialog)
+{
+    ui->setupUi(this);
+
+    condition_ = data;
+
+    main_window_ = main_window;
+    workspace = main_window->workspace_ptr();
+    name_line_edit_ = this->findChild<QLineEdit*>("nameLineEdit");
+    upper_box_ = this->findChild<QDoubleSpinBox*>("upperDoubleSpinBox");
+    lower_box_ = this->findChild<QDoubleSpinBox*>("lowerDoubleSpinBox");
+    dataset_ = dataset;
+
+    data_range_.lower = data.min();
+    data_range_.upper = data.max();
+
+    upper_box_->setValue(data_range_.upper);
+    lower_box_->setValue(data_range_.lower);
+    upper_box_->setRange(data_range_.lower, data_range_.upper);
+    lower_box_->setRange(data_range_.lower, data_range_.upper);
+
+    name_line_edit_->setText(dataset_->name() + "-" + name);
 }
 
 DataExtractorDialog::~DataExtractorDialog()
@@ -59,7 +90,10 @@ DataExtractorDialog::~DataExtractorDialog()
 void DataExtractorDialog::on_buttonBox_accepted()
 {
     QString name = name_line_edit_->text();
-    uvec indices = map_->extract_range(lower_box_->value(), upper_box_->value());
+    double upper = upper_box_->value();
+    double lower = lower_box_->value();
+    uvec indices = arma::find(condition_ >= lower && condition_ <= upper);
+
     QFile *log_file = workspace->CreateLogFile(name);
     QSharedPointer<VespucciDataset> new_dataset;
     try{

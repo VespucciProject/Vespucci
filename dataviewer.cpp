@@ -38,32 +38,79 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
     export_button_ = this->findChild<QPushButton *>("exportPushButton");
     plot_button_ = this->findChild<QPushButton *>("plotPushButton");
     data_selector_ = this->findChild<QComboBox *>("comboBox");
+    extract_button_ = this->findChild<QPushButton *>("newDatasetPushButton");
     plot_button_->setDisabled(true);
     export_button_->setDisabled(true);
-    table_ = this->findChild<QTableView *>("tableView");
+    extract_button_->setDisabled(true);
+    table_ = this->findChild<QTableView *>("tableView");  
 
-    QStringList object_list("Spectral abscissa");
-    object_list << "Spatial Data";
+    mat *matrix;
+    matrix = dataset_->wavelength_ptr();
+    data_objects_.insert("Spectral Abscissa", matrix);
+    matrix = dataset_->x_ptr();
+    data_objects_.insert("Spatial Data", matrix);
 
-    if (dataset_->principal_components_calculated()){
-        object_list << "PCA Coefficents" << "Eigenvalues of Covariance Matrix"
-                    << "PCA t² Values";
+    partial_least_squares_calculated_ = dataset_->partial_least_squares_calculated();
+    vertex_components_calculated_ = dataset_->vertex_components_calculated();
+    k_means_calculated_ = dataset_->k_means_calculated();
+    univariate_count_ = dataset_->UnivariateCount();
+    principal_components_calculated_ = dataset_->principal_components_calculated();
+
+    if (univariate_count_ > 0){
+        QList<QSharedPointer<UnivariateData> > univariate_data_list = dataset_->univariate_datas();
+        for (int i = 0; i < univariate_data_list.size(); ++i){
+            matrix = (mat *) univariate_data_list[i]->results_ptr();
+            data_objects_.insert(univariate_data_list[i]->name(), matrix);
+        }
     }
-    if (dataset_->vertex_components_calculated()){
-        object_list << "VCA Coefficients" << "VCA Endmembers" << "VCA Pure Pixel Indices";
+
+    if (principal_components_calculated_){
+        matrix = dataset_->principal_components_data()->coeff();
+        data_objects_.insert("PCA Coefficients", matrix);
+        matrix = (mat *) dataset_->principal_components_data()->tsquared();
+        data_objects_.insert("PCA t² Values", matrix);
+        matrix = (mat *) dataset_->principal_components_data()->latent();
+        data_objects_.insert("PCA Eigenvalues of Covariance Matrix", matrix);
+    }
+
+    if (vertex_components_calculated_){
+        matrix = dataset_->vertex_components_data()->endmember_spectra();
+        data_objects_.insert("VCA Endmembers", matrix);
+        matrix = dataset_->vertex_components_data()->fractional_abundances();
+        data_objects_.insert("VCA Fractional Abundances", matrix);
+        matrix = dataset_->vertex_components_data()->indices();
+        data_objects_.insert("VCA Pure Pixel Indices", matrix);
+
         vca_endmembers_ = dataset_->vertex_components_data()->NumberComponents();
     }
-    if (dataset_->partial_least_squares_calculated()){
-        object_list << "PLS Variance" << "PLS Predictor Loading"
-                    << "PLS Response Loading" << "PLS Predictor Scores"
-                    << "PLS Response Scores" << "PLS Coefficients";
+
+    if (partial_least_squares_calculated_){
+        matrix = dataset_->partial_least_squares_data()->percent_variance();
+        data_objects_.insert("PLS Variance", matrix);
+        matrix = dataset_->partial_least_squares_data()->X_loadings();
+        data_objects_.insert("PLS Predictor Loadings", matrix);
+        matrix = dataset_->partial_least_squares_data()->Y_loadings();
+        data_objects_.insert("PLS Response Loadings", matrix);
+        matrix = dataset_->partial_least_squares_data()->X_scores();
+        data_objects_.insert("PLS Predictor Scores", matrix);
+        matrix = dataset_->partial_least_squares_data()->Y_scores();
+        data_objects_.insert("PLS Response Scores", matrix);
+        matrix = dataset_->partial_least_squares_data()->coefficients();
+        data_objects_.insert("PLS Coefficients", matrix);
+
     }
-    if (dataset_->k_means_calculated()){
-        object_list << "K-means Assignments";
+
+    if (k_means_calculated_){
+        matrix = dataset_->k_means_data();
+        data_objects_.insert("k-Means Assignments", matrix);
     }
+
     if (dataset_->meta()){
-        object_list << "Parent dataset indices";
+        matrix = dataset_->parent_dataset_indices();
+        data_objects_.insert("Parent Dataset Indices", matrix);
     }
+
+    QStringList object_list(data_objects_.keys());
 
     data_selector_->addItems(object_list);
     data_selector_->setCurrentIndex(0);
@@ -80,6 +127,7 @@ DataViewer::~DataViewer()
 /// Changes the table model when a user changes the selected data object
 void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
 {
+    RefreshComboBox();
     current_text_ = arg1;
     if (arg1 == "Spatial Data"){
         VespucciTableModel *table_model = new VespucciTableModel(this, dataset_, "spatial");
@@ -87,102 +135,29 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
         current_data_ = table_model->GetData();
         export_button_->setDisabled(true);
         plot_button_->setDisabled(true);
+        extract_button_->setDisabled(true);
     }
-    else if (arg1 == "Spectral abscissa"){
-        VespucciTableModel *table_model = new VespucciTableModel(this, dataset_->wavelength_ptr());
-        current_data_ = table_model->GetData();
+    else if (data_objects_.contains(arg1)){
+        current_data_ = data_objects_[arg1];
+        VespucciTableModel *table_model = new VespucciTableModel(this, current_data_);
         table_->setModel(table_model);
         export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
-    }
-    else if (arg1 == "PCA Coefficients"){
-        current_data_ = dataset_->principal_components_data()->coeff();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
-    }
-    else if (arg1 == "Eigenvalues of Covariance Matrix"){
-        current_data_ = (mat*) dataset_->principal_components_data()->latent();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
-    }
-    else if (arg1 == "PCA t² Values"){
-        current_data_ = (mat*) dataset_->principal_components_data()->tsquared();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
-    }
-    else if (arg1 == "VCA Coefficients"){
-        current_data_ = dataset_->vertex_components_data()->fractional_abundances();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
-    }
-    else if (arg1 == "VCA Endmembers"){
-        current_data_ = dataset_->vertex_components_data()->endmember_spectra();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(false);
-    }
-    else if (arg1 == "VCA Pure Pixel Indices"){
-        current_data_ = dataset_->vertex_components_data()->indices();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(false);
-    }
 
-    else if (arg1 == "K-means Assignments"){
-        current_data_ = dataset_->k_means_data();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
-    }
-    else if (arg1 == "PLS Variance"){
-        current_data_ = dataset_->partial_least_squares_data()->percent_variance();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
-    }
-    else if (arg1 == "PLS Predictor Loading"){
-        current_data_ = dataset_->partial_least_squares_data()->X_loadings();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
-    }
-    else if (arg1 == "PLS Response Loading"){
-        current_data_ = dataset_->partial_least_squares_data()->Y_loadings();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
-    }
-    else if (arg1 == "PLS Predictor Scores"){
-        current_data_ = dataset_->partial_least_squares_data()->X_scores();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
-    }
-    else if (arg1 == "PLS Response Scores"){
-        current_data_ = dataset_->partial_least_squares_data()->Y_scores();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
-    }
-    else if (arg1 == "PLS Coefficients"){
-        current_data_ = dataset_->partial_least_squares_data()->coefficients();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
-    }
-    else if (arg1 == "Parent dataset indices"){
-        current_data_ = dataset_->parent_dataset_indices();
-        table_->setModel(new VespucciTableModel(this, current_data_));
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
+        if (current_data_->n_rows == dataset_->spectra_ptr()->n_rows)
+            extract_button_->setDisabled(false);
+        else
+            extract_button_->setDisabled(true);
+
+
+        if (arg1 == "VCA Endmembers")
+            plot_button_->setDisabled(false);
+        else
+            plot_button_->setDisabled(true);
+
     }
     else{
-        VespucciTableModel *table_model = new VespucciTableModel(this, dataset_->wavelength_ptr());
-        current_data_ = table_model->GetData();
+        current_data_ = data_objects_["Spectral Abscissa"];
+        VespucciTableModel *table_model = new VespucciTableModel(this, current_data_);
         table_->setModel(table_model);
         export_button_->setDisabled(false);
         plot_button_->setDisabled(true);
@@ -243,3 +218,119 @@ void DataViewer::on_exportPushButton_clicked()
 
     return;
 }
+
+void DataViewer::RefreshComboBox()
+{
+    mat *matrix;
+
+    if (univariate_count_ != dataset_->UnivariateCount()){
+        univariate_count_ = dataset_->UnivariateCount();
+        QList<QSharedPointer<UnivariateData> > univariate_data_list = dataset_->univariate_datas();
+
+        for (int i = 0; i < univariate_data_list.size(); ++i){
+            matrix = (mat *) univariate_data_list[i]->results_ptr();
+            if (!data_objects_.values().contains(matrix)){
+                data_objects_.insertMulti(univariate_data_list[i]->name(), matrix);
+                data_selector_->addItem(univariate_data_list[i]->name());
+            }
+        }
+    }
+
+    if (dataset_->principal_components_calculated() && !principal_components_calculated_){
+        principal_components_calculated_ = true;
+
+        matrix = dataset_->principal_components_data()->coeff();
+        data_objects_.insert("PCA Coefficients", matrix);
+        data_selector_->addItem("PCA Cofficients");
+
+        matrix = (mat *) dataset_->principal_components_data()->tsquared();
+        data_objects_.insert("PCA t² Values", matrix);
+        data_selector_->addItem("PCA t² Values");
+
+        matrix = (mat *) dataset_->principal_components_data()->latent();
+        data_objects_.insert("PCA Eigenvalues of Covariance Matrix", matrix);
+        data_selector_->addItem("PCA Eigenvalues of Covariance Matrix");
+    }
+
+    if (dataset_->vertex_components_calculated() && !vertex_components_calculated_){
+        vertex_components_calculated_ = true;
+
+        matrix = dataset_->vertex_components_data()->endmember_spectra();
+        data_objects_.insert("VCA Endmembers", matrix);
+        data_selector_->addItem("VCA Endmembers");
+
+        matrix = dataset_->vertex_components_data()->fractional_abundances();
+        data_objects_.insert("VCA Fractional Abundances", matrix);
+        data_selector_->addItem("VCA Fractional Abundances");
+
+        matrix = dataset_->vertex_components_data()->indices();
+        data_objects_.insert("VCA Pure Pixel Indices", matrix);
+        data_selector_->addItem("VCA Pure Pixel Indices");
+
+        vca_endmembers_ = dataset_->vertex_components_data()->NumberComponents();
+    }
+
+    if (dataset_->partial_least_squares_calculated() && !partial_least_squares_calculated_){
+        partial_least_squares_calculated_ = true;
+
+        matrix = dataset_->partial_least_squares_data()->percent_variance();
+        data_objects_.insert("PLS Variance", matrix);
+        data_selector_->addItem("PLS Variance");
+
+        matrix = dataset_->partial_least_squares_data()->X_loadings();
+        data_objects_.insert("PLS Predictor Loadings", matrix);
+        data_selector_->addItem("PLS Predictor Loadings");
+
+        matrix = dataset_->partial_least_squares_data()->Y_loadings();
+        data_selector_->addItem("PLS Response Loadings");
+        data_objects_.insert("PLS Response Loadings", matrix);
+
+
+        matrix = dataset_->partial_least_squares_data()->X_scores();
+        data_objects_.insert("PLS Predictor Scores", matrix);
+        data_selector_->addItem("PLS Predictor Scores");
+
+        matrix = dataset_->partial_least_squares_data()->Y_scores();
+        data_objects_.insert("PLS Response Scores", matrix);
+        data_selector_->addItem("PLS Response Scores");
+
+
+        matrix = dataset_->partial_least_squares_data()->coefficients();
+        data_objects_.insert("PLS Coefficients", matrix);
+        data_selector_->addItem("PLS Coefficients");
+
+    }
+
+    if (dataset_->k_means_calculated() && !k_means_calculated_){
+        matrix = dataset_->k_means_data();
+        data_objects_.insert("k-Means Assignments", matrix);
+        data_selector_->addItem("k-Means Assignments");
+    }
+}
+
+void DataViewer::on_newDatasetPushButton_clicked()
+{
+    int column_number;
+    vec column;
+    if (current_data_->n_cols != 1){
+        column_number = QInputDialog::getInt(this,
+                                             "Select Column",
+                                             "Column number",
+                                             1, 1,
+                                             current_data_->n_cols);
+        column = current_data_->col(column_number - 1);
+
+    }
+    else{
+        column = current_data_->col(0);
+    }
+    DataExtractorDialog *extractor_dialog =
+            new DataExtractorDialog(this,
+                                    column,
+                                    dataset_,
+                                    workspace->main_window(),
+                                    data_selector_->currentText());
+    extractor_dialog->show();
+}
+
+
