@@ -34,6 +34,7 @@ KMeansDialog::KMeansDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     name_line_edit_ = this->findChild<QLineEdit *>("nameLineEdit");
     cluster_spin_box_ = this->findChild<QSpinBox *>("clustersSpinBox");
     prediction_box_ = this->findChild<QCheckBox *>("predictionCheckBox");
+    metric_combo_box_ = this->findChild<QComboBox *>("metricComboBox");
     workspace = ws;
     data_ = workspace->DatasetAt(row);
     data_index_ = row;
@@ -49,6 +50,7 @@ KMeansDialog::~KMeansDialog()
 /// Triggers K-means method of dataset when "Ok" selected
 void KMeansDialog::on_buttonBox_accepted()
 {
+    QString metric_text = metric_combo_box_->currentText();
     int clusters;
     if (prediction_box_->isChecked())
         clusters = 0;
@@ -57,11 +59,13 @@ void KMeansDialog::on_buttonBox_accepted()
 
     QString name = name_line_edit_->text();
     try{
-        data_->KMeans(clusters, name);
+        data_->KMeans(clusters, metric_text, name);
     }
     catch(exception e){
         workspace->main_window()->DisplayExceptionWarning(e);
     }
+
+
     data_.clear();
     this->close();
 }

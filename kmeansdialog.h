@@ -68,6 +68,11 @@ private:
     QLineEdit *name_line_edit_;
 
     ///
+    /// \brief metric_combo_box_
+    /// Selector for distance metric
+    QComboBox *metric_combo_box_;
+
+    ///
     /// \brief data_index_
     /// Index of the selected dataset in the master lists
     int data_index_;

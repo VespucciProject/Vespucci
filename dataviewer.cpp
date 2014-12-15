@@ -50,6 +50,8 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
     data_objects_.insert("Spectral Abscissa", matrix);
     matrix = dataset_->x_ptr();
     data_objects_.insert("Spatial Data", matrix);
+    matrix = dataset_->indices_ptr();
+    data_objects_.insert("Indices", matrix);
 
     partial_least_squares_calculated_ = dataset_->partial_least_squares_calculated();
     vertex_components_calculated_ = dataset_->vertex_components_calculated();
@@ -108,7 +110,7 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
 
     if (dataset_->meta()){
         matrix = dataset_->parent_dataset_indices();
-        data_objects_.insert("Parent Dataset Indices", matrix);
+        data_objects_.insert("Parent Dataset Coordinates", matrix);
     }
 
     QStringList object_list(data_objects_.keys());

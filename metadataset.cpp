@@ -94,6 +94,13 @@ MetaDataset::MetaDataset(QString name,
     catch(std::exception e){
         throw std::runtime_error("Failure to set data in MetaDataset constructor");
     }
+    vec indices_temp(spectra.n_rows);
+    for (uword i = 0; i < indices_temp.n_elem; ++i){
+        indices_temp(i) = i;
+    }
+    SetIndices(indices_temp);
+
+
 }
 
 ///
@@ -138,7 +145,6 @@ mat MetaDataset::Concatenate(vec &x, vec &y)
         indices_buf.col(2) = y;
         parent_coordinates_.insert_rows(parent_coordinates_.n_rows, indices_buf);
     }
-
     return spectra;
 
 }

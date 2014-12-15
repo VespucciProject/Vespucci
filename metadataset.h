@@ -37,6 +37,9 @@ public:
                 QString method_description,
                 MetaMethod::Method method,
                 QList<QSharedPointer<VespucciDataset> > parent_datasets);
+
+
+
     vec *parents();
 
 private:

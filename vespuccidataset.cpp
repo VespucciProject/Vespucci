@@ -154,12 +154,16 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
     x_axis_description_ = x_axis_description;
     y_axis_description_ = y_axis_description;
     name_ = name;
-
+    vec indices_temp;
     try{
         BinaryImport::ImportVespucciBinary(vespucci_binary_filename,
                                            spectra_,
                                            wavelength_,
                                            x_, y_);
+        indices_.set_size(x_.n_elem);
+        for (uword i = 0; i < indices_.n_elem; ++i)
+            indices_(i) = i;
+
     }
     catch(exception e) {
         char str[50];
@@ -223,7 +227,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
     flipped_ = swap_spatial;
 
     QProgressDialog progress("Loading Dataset...", "Cancel", 0, 100, NULL);
-
+    vec indices_temp;
 
 
     switch (format){
@@ -236,6 +240,10 @@ VespucciDataset::VespucciDataset(QString text_filename,
                                                                    swap_spatial,
                                                                    &progress,
                                                                    "\t");
+            indices_.set_size(x_.n_elem);
+            for (uword i = 0; i < indices_.n_elem; ++i)
+                indices_(i) = i;
+
         }
         catch(exception e){
             char str[50];
@@ -253,6 +261,10 @@ VespucciDataset::VespucciDataset(QString text_filename,
                                                                swap_spatial,
                                                                &progress,
                                                                ",");
+            indices_.set_size(x_.n_elem);
+            for (uword i = 0; i < indices_.n_elem; ++i)
+                indices_(i) = i;
+
         }
         catch(exception e){
             char str[50];
@@ -269,6 +281,9 @@ VespucciDataset::VespucciDataset(QString text_filename,
                                                                x_, y_,
                                                                swap_spatial,
                                                                &progress);
+            indices_.set_size(x_.n_elem);
+            for (uword i = 0; i < indices_.n_elem; ++i)
+                indices_(i) = i;
         }
         catch(exception e){
             char str[50];
@@ -327,13 +342,15 @@ VespucciDataset::VespucciDataset(QString name,
     k_means_calculated_ = false;
     z_scores_calculated_ = false;
     directory_ = directory;
-
+    vec parent_indices;
 
     try{
         spectra_ = original->spectra(indices);
         wavelength_ = original->wavelength();
         x_ = original->x(indices);
         y_ = original->y(indices);
+        parent_indices = original->indices();
+        indices_ = parent_indices(indices);
     }
     catch(exception e){
         char str[50];
@@ -1427,14 +1444,112 @@ void VespucciDataset::PartialLeastSquares(uword components)
     }
 }
 
+
 ///
 /// \brief VespucciDataset::KMeans
 /// Implements K-means clustering using MLPACK
 /// \param clusters Number of clusters to find
+/// \param metric Distance metric
 /// \param name Name of map in workspace.
 ///
-void VespucciDataset::KMeans(size_t clusters, QString name)
+void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
 {
+    if (metric_text == "Euclidean"){
+        mlpack::kmeans::KMeans<mlpack::metric::EuclideanDistance> k;
+        try{
+            Col<size_t> assignments;
+            mat data = trans(spectra_);
+            k.Cluster(data, clusters, assignments);
+            k_means_data_.set_size(assignments.n_elem, 1);
+            k_means_calculated_ = true;
+            //assignments += ones(assignments.n_elem);
+            //k_means_data_ = assignments;
+            //The assignment operator no longer works in armadillo this is temp kludge
+            for (uword i = 0; i < k_means_data_.n_elem; ++i){
+                k_means_data_(i) = assignments(i) + 1.0;
+            }
+        }
+        catch(exception e){
+            char str[50];
+            strcat(str, "KMeans: ");
+            strcat(str, e.what());
+            throw std::runtime_error(str);
+        }
+
+    }
+
+    else if (metric_text == "Manhattan"){
+        mlpack::kmeans::KMeans<mlpack::metric::ManhattanDistance> k;
+        try{
+            Col<size_t> assignments;
+            mat data = trans(spectra_);
+            k.Cluster(data, clusters, assignments);
+            k_means_data_.set_size(assignments.n_elem, 1);
+            k_means_calculated_ = true;
+            //assignments += ones(assignments.n_elem);
+            //k_means_data_ = assignments;
+            //The assignment operator no longer works in armadillo this is temp kludge
+            for (uword i = 0; i < k_means_data_.n_elem; ++i){
+                k_means_data_(i) = assignments(i) + 1.0;
+            }
+        }
+        catch(exception e){
+            char str[50];
+            strcat(str, "KMeans: ");
+            strcat(str, e.what());
+            throw std::runtime_error(str);
+        }
+
+    }
+
+    else if (metric_text == "Chebyshev"){
+        mlpack::kmeans::KMeans<mlpack::metric::ChebyshevDistance> k;
+        try{
+            Col<size_t> assignments;
+            mat data = trans(spectra_);
+            k.Cluster(data, clusters, assignments);
+            k_means_data_.set_size(assignments.n_elem, 1);
+            k_means_calculated_ = true;
+            //assignments += ones(assignments.n_elem);
+            //k_means_data_ = assignments;
+            //The assignment operator no longer works in armadillo this is temp kludge
+            for (uword i = 0; i < k_means_data_.n_elem; ++i){
+                k_means_data_(i) = assignments(i) + 1.0;
+            }
+        }
+        catch(exception e){
+            char str[50];
+            strcat(str, "KMeans: ");
+            strcat(str, e.what());
+            throw std::runtime_error(str);
+        }
+
+    }
+
+    else{
+        mlpack::kmeans::KMeans<mlpack::metric::SquaredEuclideanDistance> k;
+        try{
+            Col<size_t> assignments;
+            mat data = trans(spectra_);
+            k.Cluster(data, clusters, assignments);
+            k_means_data_.set_size(assignments.n_elem, 1);
+            k_means_calculated_ = true;
+            //assignments += ones(assignments.n_elem);
+            //k_means_data_ = assignments;
+            //The assignment operator no longer works in armadillo this is temp kludge
+            for (uword i = 0; i < k_means_data_.n_elem; ++i){
+                k_means_data_(i) = assignments(i) + 1.0;
+            }
+        }
+        catch(exception e){
+            char str[50];
+            strcat(str, "KMeans: ");
+            strcat(str, e.what());
+            throw std::runtime_error(str);
+        }
+
+    }
+
     //if dataset is non spatial, just quit
     if(non_spatial_){
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
@@ -1453,27 +1568,6 @@ void VespucciDataset::KMeans(size_t clusters, QString name)
 
     QString map_type = "K-means clustering map. Number of clusters = ";
     map_type += QString::number(clusters);
-
-    try{
-        Col<size_t> assignments;
-        mlpack::kmeans::KMeans<> k;
-        mat data = trans(spectra_);
-        k.Cluster(data, clusters, assignments);
-        k_means_data_.set_size(assignments.n_elem, 1);
-        k_means_calculated_ = true;
-        //assignments += ones(assignments.n_elem);
-        //k_means_data_ = assignments;
-        //The assignemnt operator no longer works in armadillo this is temp kludge
-        for (uword i = 0; i < k_means_data_.n_elem; ++i){
-            k_means_data_(i) = assignments(i) + 1.0;
-        }
-    }
-    catch(exception e){
-        char str[50];
-        strcat(str, "KMeans: ");
-        strcat(str, e.what());
-        throw std::runtime_error(str);
-    }
 
 
     QCPColorGradient gradient = GetClusterGradient(clusters);
@@ -1734,6 +1828,33 @@ rowvec VespucciDataset::wavelength(uvec indices)
 colvec VespucciDataset::x()
 {
     return x_;
+}
+
+///
+/// \brief VespucciDataset::indices
+/// \return The indices_ vector
+///
+vec VespucciDataset::indices()
+{
+    return indices_;
+}
+
+///
+/// \brief VespucciDataset::indices_ptr
+/// \return A pointer to the indices_ vector
+///
+mat *VespucciDataset::indices_ptr()
+{
+    return (mat *) &indices_;
+}
+
+///
+/// \brief VespucciDataset::SetIndices
+/// \param indices A new indices_ vector
+///
+void VespucciDataset::SetIndices(vec indices)
+{
+    indices_ = indices;
 }
 
 ///

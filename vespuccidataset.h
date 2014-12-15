@@ -218,9 +218,8 @@ public:
 
     void VertexComponents(uword endmembers, uword image_component,
                           QString name, unsigned gradient_index, bool recalculate);
-
-    void KMeans(size_t clusters,
-               QString name);
+    void KMeans(size_t clusters, QString metric_text,
+                QString name);
 
     void IndependentComponents(int image_component,
                                QString name,
@@ -249,6 +248,8 @@ public:
     mat spectra(uvec indices);
     mat spectra();
     const QString name();
+    vec indices();
+    mat *indices_ptr();
 
     bool principal_components_calculated();
     bool vertex_components_calculated();
@@ -266,6 +267,8 @@ public:
 
     void SetName(QString new_name);
     void SetData(mat spectra, rowvec wavelength, colvec x, colvec y);
+
+    void SetIndices(vec indices);
 
     //MAP HANDLING FUNCTIONS
     QStringList map_names();
@@ -421,6 +424,11 @@ private:
     /// \brief directory_
     /// Pointer back to the string in the workspace containing the working path
     QString *directory_;
+
+    ///
+    /// \brief indices_
+    /// The indices established on dataset import.
+    vec indices_;
 
     ///
     /// \brief z_scores_calculated_
