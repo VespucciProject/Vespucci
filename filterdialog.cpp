@@ -38,6 +38,7 @@ FilterDialog::FilterDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     polynomial_box_ = this->findChild<QSpinBox *>("polynomialSpinBox");
     window_box_ = this->findChild<QSpinBox *>("windowSpinBox");
     singular_values_box_ = this->findChild<QSpinBox *>("singularValuesSpinBox");
+    epsilon_box_ = this->findChild<QDoubleSpinBox *>("epsilonSpinBox");
 }
 
 FilterDialog::~FilterDialog()
@@ -51,10 +52,18 @@ FilterDialog::~FilterDialog()
 ///enables and disables appropriate options based on method selected
 void FilterDialog::on_methodComboBox_currentIndexChanged(int index)
 {
+    if ((index != 4) && epsilon_box_->isEnabled())
+        epsilon_box_->setEnabled(false);
+    if ((index == 4) && !epsilon_box_->isEnabled())
+        epsilon_box_->setEnabled(true);
+    if (((index == 0) || (index == 1))  && !window_box_->isEnabled())
+        window_box_->setEnabled(true);
     if ((index!=2) && (derivative_box_->isEnabled()))
         derivative_box_->setEnabled(false);
     if ((index == 2) && (!derivative_box_->isEnabled()))
         derivative_box_->setEnabled(true);
+    if ((index == 2) && (!window_box_->isEnabled()))
+        window_box_->setEnabled(true);
     if ((index != 2) && (polynomial_box_->isEnabled()))
         polynomial_box_->setEnabled(false);
     if ((index == 2)&&(!polynomial_box_->isEnabled()))
@@ -104,6 +113,14 @@ void FilterDialog::on_buttonBox_accepted()
     case 3:
         try{
             dataset_->SingularValue(singular_values_box_->value());
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
+        break;
+    case 4:
+        try{
+            dataset_->QUIC_SVD(epsilon_box_->value());
         }
         catch(exception e){
             workspace->main_window()->DisplayExceptionWarning(e);

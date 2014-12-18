@@ -29,10 +29,27 @@
    <item row="1" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QDoubleSpinBox" name="lowerDoubleSpinBox"/>
+      <widget class="QDoubleSpinBox" name="lowerDoubleSpinBox">
+       <property name="decimals">
+        <number>5</number>
+       </property>
+       <property name="maximum">
+        <double>1000000000.000000000000000</double>
+       </property>
+      </widget>
      </item>
      <item>
-      <widget class="QDoubleSpinBox" name="upperDoubleSpinBox"/>
+      <widget class="QDoubleSpinBox" name="upperDoubleSpinBox">
+       <property name="decimals">
+        <number>5</number>
+       </property>
+       <property name="minimum">
+        <double>-1000000000.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>1000000000.000000000000000</double>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

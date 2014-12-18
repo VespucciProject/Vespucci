@@ -123,6 +123,10 @@ public:
     void SetDataRange(QCPRange new_range);
     void RemoveThis();
 
+    bool savePdf(const QString &fileName,
+                 int width,
+                 int height);
+
     bool savePng(const QString & fileName,
                  int width = 0,
                  int height = 0,

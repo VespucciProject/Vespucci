@@ -159,8 +159,6 @@ void DataExtractorDialog::on_browsePushButton_clicked()
             QFileDialog::getOpenFileName(this,
                                          "Select Index File",
                                          workspace->directory(),
-                                         "Tab-delimited Text Files (*.txt);; "
-                                         "Comma Separated Variables (*.csv);; "
-                                         "Armadillo Binary (*.arma)");
+                                         "Data Files (*.txt *.csv *.arma)");
     filename_line_edit_->setText(filename);
 }

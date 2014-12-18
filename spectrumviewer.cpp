@@ -276,6 +276,7 @@ void SpectrumViewer::on_pushButton_clicked()
                                             "Armadillo binary (*.arma);;"));
     bool success;
     QFileInfo file_info(filename);
+
     QString extension = file_info.suffix();
 
     int width = spectrum_plot_->width();

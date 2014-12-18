@@ -20,6 +20,7 @@
 #ifndef VespucciDataset_H
 #define VespucciDataset_H
 #include "arma_ext.h"
+
 #include <QTextStream>
 #include <iostream>
 #include <QVector>
@@ -34,11 +35,12 @@
 #include <fstream>
 #include "mainwindow.h"
 #include "plsdata.h"
-#include <mlpack/methods/kmeans/kmeans.hpp>
 #include "textimport.h"
 #include "binaryimport.h"
 #include "maplistmodel.h"
 #include "univariatedata.h"
+
+
 
 
 
@@ -133,6 +135,7 @@ public:
                     unsigned int polynomial_order,
                     unsigned int window_size);
     void SingularValue(unsigned int singular_values);
+    void QUIC_SVD(double epsilon);
     void Baseline(QString method, int window_size);
     void RemoveClippedSpectra(double threshold);
     void Scale(double scaling_factor);

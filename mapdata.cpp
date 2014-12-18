@@ -362,6 +362,21 @@ bool MapData::saveBmp(const QString &fileName, int width, int height, double sca
     return success;
 }
 
+
+///
+/// \brief MapData::savePDF
+/// \param fileName
+/// \param width
+/// \param height
+/// \param scale
+/// \return
+/// Saves the map as a PDF. See QCustomPlot::saveBmp.
+bool MapData::savePdf(const QString &fileName, int width, int height)
+{
+    bool success = map_qcp_->savePdf(fileName, true, width, height, "Vespucci", this->name());
+    return success;
+}
+
 ///
 /// \brief MapData::savePng
 /// \param fileName

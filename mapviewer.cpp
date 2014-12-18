@@ -170,6 +170,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
                                          tr("Save File"),
                                          path,
                                          tr("Tagged Image File Format (*.tif);; "
+                                            "Portable Document Format (*.pdf);; "
                                             "Windows Bitmap (*.bmp);; "
                                             "Portable Network Graphics (*.png);; "
                                             "JPEG (*.jpg)"));
@@ -182,7 +183,8 @@ void MapViewer::on_actionSave_Image_As_triggered()
 
     if (extension == "bmp")
         parent_->saveBmp(filename, 0, 0, 1.0);
-
+    else if (extension == "pdf")
+        parent_->savePdf(filename, 0, 0);
     else if (extension == "png"){
         bool ok;
         int quality = QInputDialog::getInt(this, "Enter Quality",

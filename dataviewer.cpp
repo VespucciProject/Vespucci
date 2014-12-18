@@ -211,7 +211,7 @@ void DataViewer::on_exportToolButton_clicked()
     bool success = false;
     if (filename.isEmpty())
         return;
-
+    workspace->set_directory(file_info.dir().path());
     QString extension = file_info.suffix();
     if (extension == "arma")
         success = current_data_->save(filename.toStdString(), arma_binary);

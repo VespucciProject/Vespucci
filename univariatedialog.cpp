@@ -138,6 +138,8 @@ void UnivariateDialog::on_buttonBox_accepted()
     }
     else{
         vec control;
+        QFileInfo file_info(file_name_box_->text());
+        workspace->set_directory(file_info.dir().path());
         try{
             control.load(file_name_box_->text().toStdString());
             data_->CorrelationMap(control, name, gradient_index);

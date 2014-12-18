@@ -266,11 +266,32 @@ void MainWindow::on_actionSubtract_Background_triggered()
             QFileDialog::getOpenFileName(this,
                                          tr("Select Background File"),
                                          workspace->directory(),
-                                         tr("Vespucci Spectrum Files (*.arma)"));
+                                         "Vespucci Spectrum Files (*.arma *.txt *.csv)");
     mat input;
+    QFileInfo file_info(filename);
+    workspace->set_directory(file_info.dir().path());
     bool success = input.load(filename.toStdString());
+    //We take spectra inputs as row-major
+    if (input.n_cols < input.n_rows){
+        try{
+            input = input.t();
+        }catch(exception e){
+            DisplayExceptionWarning(e);
+        }
+    }
+    //The first row is probably an abscissa.
+    if (input.n_rows > 2){
+        success = false;
+    }
+    if (input.n_rows == 2){
+        try{
+            input.shed_row(0);
+        }catch(exception e){
+            DisplayExceptionWarning(e);
+        }
+    }
     if (!success){
-        QMessageBox::warning(this, "File Open Error", "File cannot be opened");
+        QMessageBox::warning(this, "File Open Error", "File cannot be opened or contains improper data.");
         return;
     }
     else{
@@ -302,6 +323,7 @@ void MainWindow::on_actionSpectra_triggered()
                                             "Comma-separated Values (*.csv);;"
                                             "Tab-separated Txt (*.txt);;"));
     QFileInfo file_info(filename);
+    workspace->set_directory(file_info.dir().path());
 
     if (file_info.suffix() == "arma")
         success = dataset->spectra().save(filename.toStdString(), arma_binary);
@@ -335,6 +357,7 @@ void MainWindow::on_actionSpectra_as_Columns_triggered()
                                             "Comma-separated Values (*.csv);;"
                                             "Tab-separated Txt (*.txt);;"));
     QFileInfo file_info(filename);
+    workspace->set_directory(file_info.dir().path());
     mat output = dataset->spectra().t();
 
     if (file_info.suffix() == "arma")
@@ -369,6 +392,7 @@ void MainWindow::on_actionAverage_Spectra_triggered()
                                             "Comma-separated Values (*.csv);;"
                                             "Tab-separated Txt (*.txt);;"));
     QFileInfo file_info(filename);
+    workspace->set_directory(file_info.dir().path());
 
     if (file_info.suffix() == "arma")
         success = dataset->AverageSpectrum(false).save(filename.toStdString(), arma_binary);
@@ -402,6 +426,8 @@ void MainWindow::on_actionAverage_Spectra_with_Abscissa_triggered()
                                             "Comma-separated Values (*.csv);;"
                                             "Tab-separated Txt (*.txt);;"));
     QFileInfo file_info(filename);
+    workspace->set_directory(file_info.dir().path());
+
 
     vec wavelength = dataset->wavelength().t();
     mat output(wavelength);
@@ -444,6 +470,8 @@ void MainWindow::on_actionSpectral_Abscissa_triggered()
                                             "Comma-separated Values (*.csv);;"
                                             "Tab-separated Txt (*.txt);;"));
     QFileInfo file_info(filename);
+    workspace->set_directory(file_info.dir().path());
+
 
     if (file_info.suffix() == "arma")
         success = dataset->wavelength().save(filename.toStdString(), arma_binary);
@@ -474,6 +502,10 @@ void MainWindow::on_actionAll_Data_triggered()
                                          tr("Save Spectra Matrix"),
                                          workspace->directory(),
                                          tr("Vespucci Dataset (*.vds)"));
+
+    QFileInfo file_info(filename);
+    workspace->set_directory(file_info.dir().path());
+
     //exception can be thrown when intializing field
     try{
         success = dataset->Save(filename);

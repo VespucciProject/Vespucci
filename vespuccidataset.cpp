@@ -18,7 +18,8 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "vespuccidataset.h" //VespucciDataset includes all necessary headers.
-
+#include <mlpack/methods/kmeans/kmeans.hpp>
+#include <mlpack/methods/quic_svd/quic_svd.hpp>
 
 
 using namespace arma;
@@ -91,8 +92,7 @@ void VespucciDataset::DestroyLogFile()
     else{
         filename = QFileDialog::getSaveFileName(0, QTranslator::tr("Save File"),
                                    *directory_,
-                                   QTranslator::tr("Text Files (*.txt)"));
-
+                                   QTranslator::tr("Text Files (*.txt)"));        
         bool success = log_file_->copy(filename);
         if (!success){
             bool remove_success = QFile::remove(filename); //delete old file
@@ -798,6 +798,28 @@ void VespucciDataset::SingularValue(unsigned int singular_values)
     }
 
     last_operation_ = "truncated SVD de-noise";
+}
+
+
+///
+/// \brief VespucciDataset::QUIC_SVD
+/// \param epsilon Error tolerance fraction for calculated subspace
+/// Use the QUIC-SVD algorithm to denoise the spectra by finding a lower-rank approximation
+/// of the matrix.
+void VespucciDataset::QUIC_SVD(double epsilon)
+{
+    log_stream_ << "QUIC_SVD" << endl;
+    log_stream_ << "epsilon == " << epsilon << endl << endl;
+    mat u, sigma, v, copy;
+    cout << "Call QUIC_SVD" << endl;
+    mlpack::svd::QUIC_SVD svd_obj(spectra_, u, v, sigma, epsilon, 0.1);
+    cout << "create copy" << endl;
+    copy = u * sigma * v.t();
+    last_operation_ = "truncated SVD de-noise";
+    cout << "Copy operations" << endl;
+    spectra_old_ = spectra_;
+    spectra_ = copy;
+
 }
 
 ///
