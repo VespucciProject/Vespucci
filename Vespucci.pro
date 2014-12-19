@@ -257,6 +257,8 @@ macx: LIBS += -L$$PWD/../mac_libs/lib/ -lqcustomplot
 #Binaries for windows libraries are included in the MinGW_libs branch of the repository
 win32: INCLUDEPATH += $$PWD/../MinGW_libs/include
 win32: DEPENDPATH += $$PWD/../MinGW_libs/include
+win32: INCLUDEPATH += $$PWD/../MinGW_libs/boost/
+win32: DEPENDPATH += $$PWD/../MinGW_libs/boost/
 
 #MLPACK
 win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lmlpack
@@ -275,31 +277,31 @@ win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -llibopenblas
 win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libopenblas.dll.a
 
 #Libgfortran
-win32: LIBS += -L$$PWD/../MinGW_libs/usr/lib/ -lgfortran
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lgfortran
 win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libgfortran.a
 
 #Boost random (C99)
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lboost_math_c99-mgw48-mt-1_55
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libboost_math_c99-mgw48-mt-1_55.a
+win32: LIBS += -L$$PWD/../MinGW_libs/boost/stage/lib/ -lboost_math_c99-mgw49-mt-1_57
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/boost/stage/lib/libboost_math_c99-mgw49-mt-1_57.a
 
-#Boost mat
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lboost_random-mgw48-mt-1_55
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libboost_random-mgw48-mt-1_55.a
+#Boost math
+win32: LIBS += -L$$PWD/../MinGW_libs/boost/stage/lib/ -lboost_math_c99-mgw49-mt-1_57
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/boost/stage/lib/libboost_math_c99-mgw49-mt-1_57.a
 
 #Boost test
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lboost_unit_test_framework-mgw48-mt-1_55
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libboost_unit_test_framework-mgw48-mt-1_55.a
+win32: LIBS += -L$$PWD/../MinGW_libs/boost/stage/lib/ -lboost_unit_test_framework-mgw49-mt-1_57
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/boost/stage/lib/libboost_unit_test_framework-mgw49-mt-1_57.a
 
 #Boost program_options
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lboost_program_options-mgw48-mt-1_55
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libboost_program_options-mgw48-mt-1_55.a
+win32: LIBS += -L$$PWD/../MinGW_libs/boost/stage/lib/ -lboost_program_options-mgw49-mt-1_57
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/boost/stage/lib/libboost_program_options-mgw49-mt-1_57.a
 
 #LibXML2
 win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lxml2
 win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libxml2.a
 
 #LibICONV
-win32: LIBS += -L$$PWD/../MinGW_libsusr/lib/ -liconv
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -liconv
 win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libiconv.a
 
 #Zlib
@@ -316,8 +318,5 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqcust
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqcustomplotd
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplot.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplotd.a
-
-
-
 
 
