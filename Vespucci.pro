@@ -42,7 +42,8 @@ TEMPLATE = app
 
 
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
-unix: !macx: QMAKE_CXXFLAGS += -std=gnu++11 \
+unix: !macx: QMAKE_CXXFLAGS += -std=c++11 \
+                        -static-libstdc++ \
                         -isystem "/usr/local/include" \
                         -isystem "/usr/local/include/armadillo_bits" \
                         -isystem "/usr/local/include/boost" \
@@ -57,10 +58,10 @@ macx: QMAKE_CXXFLAGS += -isystem "/Users/danielfoose/Vespucci/mac_libs/include" 
                         -isystem "/Users/danielfoose/Vespucci/mac_libs/include/boost"
 win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
                          -pthread \
-                         -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include" \
-                         -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/boost" \
-                         -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/armadillo_bits" \
-                         -isystem "C:/Projects/Vespucci/branches/MinGW_libs/include/mlpack"
+                         -isystem "C:/Projects/Vespucci/MinGW_libs/include" \
+                         -isystem "C:/Projects/Vespucci/MinGW_libs/boost/boost" \
+                         -isystem "C:/Projects/Vespucci/MinGW_libs/include/armadillo_bits" \
+                         -isystem "C:/Projects/Vespucci/MinGW_libs/include/mlpack"
 
 
 
@@ -310,8 +311,7 @@ else:win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libz.a
 
 #The standard C++ library (linked dynmically by openblas)
 win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lstdc++
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libstdc++.dll.a
-
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libstdc++.a
 
 #QCustomPlot
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqcustomplot
