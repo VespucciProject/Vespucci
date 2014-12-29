@@ -318,8 +318,9 @@ public:
 
     MapListModel *map_list_model();
 
-private:
     void DestroyLogFile();
+
+private:
 
     ///
     /// \brief wavelength_

@@ -31,17 +31,19 @@ using namespace std;
 /// Destructor deletes everything allocated with new that isn't a smart pointer
 VespucciDataset::~VespucciDataset()
 {
-    cout << "VespucciDataset Destructor" << endl;
-    //make sure principal components stats are deleted properly.
+    //Delete heap-allocated objects that are not stored in smart pointers
     if (principal_components_calculated_)
         delete principal_components_data_;
     if (partial_least_squares_calculated_)
         delete partial_least_squares_data_;
+    if (vertex_components_calculated_)
+        delete vertex_components_data_;
 
     //make sure all maps are delted properly.
     map_list_model_->ClearMaps();
 
-    DestroyLogFile();
+    //This will be called for each dataset in the list model when it is removed.
+    //DestroyLogFile();
     delete map_list_model_;
 
 }
@@ -75,7 +77,6 @@ bool VespucciDataset::Save(QString filename)
 /// Deletes log file unless user decides to save it elsewhere
 void VespucciDataset::DestroyLogFile()
 {
-
     QMessageBox::StandardButton reply =
             QMessageBox::question(main_window_,
                                   "Save log?",
@@ -498,24 +499,6 @@ void VespucciDataset::MinMaxNormalize()
         strcat(str, e.what());
         throw std::runtime_error(str);
     }
-    /*
-    try{
-        spectra_old_ = spectra_;
-        int n_elem = spectra_.n_elem;
-        double minimum = spectra_.min();
-        if (minimum < 0)
-            for (int i = 0; i < n_elem; ++i)
-                spectra_(i) = spectra_(i) - minimum;
-        double maximum = spectra_.max();
-        spectra_ = spectra_/maximum;
-    }
-    catch(exception e){
-        char str[50];
-        strcat(str, "MinMaxNormalize: ");
-        strcat(str, e.what());
-        throw std::runtime_error(str);
-    }
-    */
     last_operation_ = "min/max normalize";
     log_stream_ << "MinMaxNormalize" << endl << endl;
 

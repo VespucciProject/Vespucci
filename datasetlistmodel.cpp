@@ -49,7 +49,9 @@ QVariant DatasetListModel::data(const QModelIndex &index, int role) const
 
 bool DatasetListModel::removeRow(int row, const QModelIndex &parent)
 {
+    cout << "DatasetListModel::removeRow()" << endl;
     beginRemoveRows(parent, row, row);
+    datasets_.at(row)->DestroyLogFile();
     datasets_.removeAt(row);
     endRemoveRows();
     emit dataChanged(parent, parent);
@@ -79,5 +81,8 @@ QSharedPointer<VespucciDataset> DatasetListModel::DatasetAt(int row)
 /// Clears the dataset container. Used when closing the program.
 void DatasetListModel::ClearDatasets()
 {
-    datasets_.clear();
+    //This is done instead of datasets_.clear() to make sure that the log file
+    //destructor is called for every dataset.
+    while (datasets_.size() > 0)
+        removeRow(0, QModelIndex());
 }
