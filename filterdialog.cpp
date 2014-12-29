@@ -81,6 +81,7 @@ void FilterDialog::on_methodComboBox_currentIndexChanged(int index)
 /// Trigger relevant filtering method when "Ok" is selected
 void FilterDialog::on_buttonBox_accepted()
 {
+    int SVD_rank;
     switch (method_box_->currentIndex())
     {
     case 0:
@@ -120,11 +121,16 @@ void FilterDialog::on_buttonBox_accepted()
         break;
     case 4:
         try{
-            dataset_->QUIC_SVD(epsilon_box_->value());
+            SVD_rank = dataset_->QUIC_SVD(epsilon_box_->value());
         }
         catch(exception e){
             workspace->main_window()->DisplayExceptionWarning(e);
+            break;
         }
+        QMessageBox::information(this,
+                                 "QUIC_SVD",
+                                 "The rank of the approximation is " +
+                                 QString::number(SVD_rank) + ".");
         break;
     default:
         return;

@@ -475,12 +475,30 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
 
 ///
 /// \brief VespucciDataset::MinMaxNormalize
-///normalizes data so that smallest value is 0 and highest is 1 through the
-/// entire spectra_ matrix.  If the minimum of spectra_ is negative, it subtracts
-/// this minimum from all points.  The entire spectra_ matrix is then divided
-/// by the maximum of spectra_
+/// Normalizes each column of spectra_ so that the highest value is 1 and lowest
+/// value is 0.
 void VespucciDataset::MinMaxNormalize()
 {
+    try{
+        spectra_old_ = spectra_;
+        rowvec row_buffer;
+        rowvec extrema_buffer;
+        for (uword i = 0; i < spectra_.n_rows; ++i){
+            row_buffer = spectra_.row(i);
+            extrema_buffer = row_buffer.min()*ones<rowvec>(spectra_.n_cols);
+            row_buffer -= extrema_buffer;
+            extrema_buffer = row_buffer.max()*ones<rowvec>(spectra_.n_cols);
+            row_buffer /= extrema_buffer;
+            spectra_.row(i) = row_buffer;
+        }
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "MinMaxNormalize: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+    /*
     try{
         spectra_old_ = spectra_;
         int n_elem = spectra_.n_elem;
@@ -497,7 +515,7 @@ void VespucciDataset::MinMaxNormalize()
         strcat(str, e.what());
         throw std::runtime_error(str);
     }
-
+    */
     last_operation_ = "min/max normalize";
     log_stream_ << "MinMaxNormalize" << endl << endl;
 
@@ -806,19 +824,23 @@ void VespucciDataset::SingularValue(unsigned int singular_values)
 /// \param epsilon Error tolerance fraction for calculated subspace
 /// Use the QUIC-SVD algorithm to denoise the spectra by finding a lower-rank approximation
 /// of the matrix.
-void VespucciDataset::QUIC_SVD(double epsilon)
+int VespucciDataset::QUIC_SVD(double epsilon)
 {
+    int SVD_rank;
     log_stream_ << "QUIC_SVD" << endl;
     log_stream_ << "epsilon == " << epsilon << endl << endl;
     mat u, sigma, v, copy;
     cout << "Call QUIC_SVD" << endl;
     mlpack::svd::QUIC_SVD svd_obj(spectra_, u, v, sigma, epsilon, 0.1);
     cout << "create copy" << endl;
+    SVD_rank = u.n_cols;
+    log_stream_ << "rank of approximation = " << SVD_rank << endl;
     copy = u * sigma * v.t();
     last_operation_ = "truncated SVD de-noise";
     cout << "Copy operations" << endl;
     spectra_old_ = spectra_;
     spectra_ = copy;
+    return SVD_rank;
 
 }
 

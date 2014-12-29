@@ -135,7 +135,7 @@ public:
                     unsigned int polynomial_order,
                     unsigned int window_size);
     void SingularValue(unsigned int singular_values);
-    void QUIC_SVD(double epsilon);
+    int QUIC_SVD(double epsilon);
     void Baseline(QString method, int window_size);
     void RemoveClippedSpectra(double threshold);
     void Scale(double scaling_factor);
