@@ -1284,6 +1284,21 @@ void VespucciDataset::VertexComponents(uword endmembers,
 
     if(endmembers == 0){
         log_stream_ << "Endmember count predicted using HySime algorithm: ";
+        QMessageBox alert;
+        alert.setText("The HySime algorithm will take a long time.");
+        alert.setInformativeText("OK to continue");
+
+        alert.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        alert.setWindowTitle("Principal Components Analysis");
+        alert.setIcon(QMessageBox::Question);
+
+        int ret = alert.exec();
+
+
+        if (ret == QMessageBox::Cancel){
+            return;
+        }
+
         endmembers = this->HySime();
         log_stream_ << endmembers << endl;
     }
@@ -1338,6 +1353,20 @@ void VespucciDataset::VertexComponents(uword endmembers)
 
     if(endmembers == 0){
         log_stream_ << "Endmember count predicted using HySime algorithm: ";
+        QMessageBox alert;
+        alert.setText("The HySime algorithm will take a long time.");
+        alert.setInformativeText("OK to continue");
+
+        alert.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        alert.setWindowTitle("Principal Components Analysis");
+        alert.setIcon(QMessageBox::Question);
+
+        int ret = alert.exec();
+
+
+        if (ret == QMessageBox::Cancel){
+            return;
+        }
         endmembers = this->HySime();
         log_stream_ << endmembers << endl;
     }
