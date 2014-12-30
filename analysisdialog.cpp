@@ -53,6 +53,12 @@ void AnalysisDialog::on_buttonBox_rejected()
 
 void AnalysisDialog::on_buttonBox_accepted()
 {
+    int components;
+    if (prediction_box_->isChecked())
+        components = 0;
+    else
+        components = components_box_->value();
+
     switch(method_selection_box_->currentIndex()){
     case 0:
         try{
@@ -64,7 +70,7 @@ void AnalysisDialog::on_buttonBox_accepted()
         break;
     case 1:
         try{
-            dataset_->PartialLeastSquares(components_box_->value());
+            dataset_->PartialLeastSquares(components);
         }catch(exception e){
             workspace->main_window()->DisplayExceptionWarning(e);
         }
@@ -72,7 +78,7 @@ void AnalysisDialog::on_buttonBox_accepted()
         break;
     case 2:
         try{
-            dataset_->VertexComponents(components_box_->value());
+            dataset_->VertexComponents(components);
         }catch(exception e){
             workspace->main_window()->DisplayExceptionWarning(e);
         }
@@ -80,7 +86,7 @@ void AnalysisDialog::on_buttonBox_accepted()
         break;
     case 3:
         try{
-            dataset_->KMeans(components_box_->value());
+            dataset_->KMeans(components);
         }catch(exception e){
             workspace->main_window()->DisplayExceptionWarning(e);
         }

@@ -884,9 +884,17 @@ void VespucciDataset::Scale(double scaling_factor)
 ///
 int VespucciDataset::HySime()
 {
+    cout << "VespucciDataset::HySime" << endl;
+    wall_clock timer;
     mat noise, noise_correlation, subspace;
+    cout << "call EstimateAdditiveNoise" << endl;
+    timer.tic();
     arma_ext::EstimateAdditiveNoise(noise, noise_correlation, trans(spectra_));
+    cout << "took " << timer.toc() << " seconds." << endl;
+    cout << "Call HySime" << endl;
+    timer.tic();
     int k = arma_ext::HySime(trans(spectra_), noise, noise_correlation, subspace);
+    cout << "Took " << timer.toc() << " seconds." << endl;
     return k;
 }
 
@@ -1481,6 +1489,12 @@ void VespucciDataset::PartialLeastSquares(uword components)
 ///
 void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
 {
+    if(clusters == 0){
+        log_stream_ << "Cluster count predicted using HySime algorithm: ";
+        clusters = this->HySime();
+        log_stream_ << clusters << endl;
+    }
+
     if (metric_text == "Euclidean"){
         mlpack::kmeans::KMeans<mlpack::metric::EuclideanDistance> k;
         try{

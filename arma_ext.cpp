@@ -1017,7 +1017,7 @@ int arma_ext::HySime(mat y,
                      mat Rn,
                      mat &Ek)
 {
-    cout << "HySime()" << endl;
+    cout << "arma_ext::HySime()" << endl;
     if (n.n_rows != y.n_rows || n.n_cols  != y.n_cols){
         cerr << "HySime: Empty noise matrix or its size does not agree with size of y" << endl;
         throw(std::runtime_error("HySime: Empty noise matrix or does not agree with size of y"));
@@ -1070,7 +1070,6 @@ void arma_ext::EstimateAdditiveNoise(mat &noise, mat &noise_correlation, mat sam
         beta(i) = 0;
         noise.row(i) = sample.row(i) - beta.t() * sample;
     }
-
     mat nn = noise * noise.t() / sample.n_rows;
     noise_correlation = diagmat(nn.diag());
 }
