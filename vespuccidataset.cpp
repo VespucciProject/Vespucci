@@ -435,33 +435,36 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
                                   double wl_min, double wl_max)
 {
     spectra_old_ = spectra_;
-    uvec valid_indices = find ((x_ > x_min) && (x_ < x_max));
-    try{
-        spectra_ = spectra_.cols(valid_indices);
-        y_ = y_.rows(valid_indices);
-        x_ = x_.rows(valid_indices);
-        valid_indices = find((y_ > y_min) && (y_ < y_max));
-        y_ = y_.rows(valid_indices);
-        x_ = x_.rows(valid_indices);
-        spectra_ = spectra_.cols(valid_indices);
-    }catch(exception e){
-        char str[50];
-        strcat(str, "CropSpectra: ");
-        strcat(str, e.what());
-        throw std::runtime_error(str);
+    if (!isnan(x_min) && !isnan(x_max) && !isnan(y_min) && !isnan(y_max)){
+        uvec valid_indices = find ((x_ > x_min) && (x_ < x_max));
+        try{
+            spectra_ = spectra_.cols(valid_indices);
+            y_ = y_.rows(valid_indices);
+            x_ = x_.rows(valid_indices);
+            valid_indices = find((y_ > y_min) && (y_ < y_max));
+            y_ = y_.rows(valid_indices);
+            x_ = x_.rows(valid_indices);
+            spectra_ = spectra_.cols(valid_indices);
+        }catch(exception e){
+            char str[50];
+            strcat(str, "CropSpectra: ");
+            strcat(str, e.what());
+            throw std::runtime_error(str);
+        }
     }
-    valid_indices = find(wavelength_ > wl_min && wavelength_ < wl_max);
-    try{
-        spectra_ = spectra_.rows(valid_indices);
-        wavelength_ = wavelength_.rows(valid_indices);
+    if (!isnan(wl_min) && !isnan(wl_max)){
+        uvec valid_indices = find(wavelength_ > wl_min && wavelength_ < wl_max);
+        try{
+            spectra_ = spectra_.rows(valid_indices);
+            wavelength_ = wavelength_.rows(valid_indices);
 
-    }catch(exception e){
-        char str[50];
-        strcat(str, "CropSpectra: ");
-        strcat(str, e.what());
-        throw std::runtime_error(str);
+        }catch(exception e){
+            char str[50];
+            strcat(str, "CropSpectra: ");
+            strcat(str, e.what());
+            throw std::runtime_error(str);
+        }
     }
-
 
     last_operation_ = "crop";
     log_stream_ << "CropSpectra" << endl;

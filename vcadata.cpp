@@ -34,7 +34,7 @@ VCAData::VCAData(QSharedPointer<VespucciDataset> parent,
 ///
 void VCAData::Apply(mat spectra, int endmembers)
 {
-    arma_ext::VCA(trans(spectra),
+    arma_ext::VCA(spectra,
                   endmembers,
                   indices_,
                   endmember_spectra_,

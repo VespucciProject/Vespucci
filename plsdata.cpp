@@ -37,8 +37,8 @@ bool PLSData::Apply(mat spectra, vec wavelength, int components)
     mat Y;
     Y.set_size(wavelength.n_elem, components);
     for (int i = 0; i < components; ++i)
-        Y.col(i) = trans(wavelength);
-    bool success = arma_ext::plsregress(trans(spectra), Y, components,
+        Y.col(i) = wavelength;
+    bool success = arma_ext::plsregress(spectra, Y, components,
                                         X_loadings_, Y_loadings_,
                                         X_scores_, Y_scores_,
                                         coefficients_, percent_variance_,

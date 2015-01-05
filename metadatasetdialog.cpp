@@ -48,6 +48,9 @@ void MetaDatasetDialog::on_buttonBox_accepted()
 {
     QList<QSharedPointer<VespucciDataset> > parent_datasets;
     QModelIndexList selected_indices = dataset_list_view_->selectionModel()->selectedRows();
+    if (selected_indices.size() <= 0){
+        return;
+    }
     for (int i = 0; i < selected_indices.size(); ++i){
         parent_datasets.append(dataset_list_model_->DatasetAt(selected_indices[i].row()));
     }
