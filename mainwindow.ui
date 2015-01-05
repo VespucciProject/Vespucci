@@ -102,7 +102,6 @@
       <string>Export Dataset Elements</string>
      </property>
      <addaction name="actionSpectra"/>
-     <addaction name="actionSpectra_as_Columns"/>
      <addaction name="actionAverage_Spectra"/>
      <addaction name="actionAverage_Spectra_with_Abscissa"/>
      <addaction name="actionSpectral_Abscissa"/>

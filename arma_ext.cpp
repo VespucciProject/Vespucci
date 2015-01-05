@@ -1054,7 +1054,13 @@ int arma_ext::HySime(mat y,
 
 }
 
-
+///
+/// \brief arma_ext::EstimateAdditiveNoise
+/// \param noise
+/// \param noise_correlation
+/// \param sample
+/// The slow additive noise estimator from the HySime paper. I'm looking into
+/// faster ones.
 void arma_ext::EstimateAdditiveNoise(mat &noise, mat &noise_correlation, mat sample)
 {
     double small = 1e-6;
@@ -1073,3 +1079,6 @@ void arma_ext::EstimateAdditiveNoise(mat &noise, mat &noise_correlation, mat sam
     mat nn = noise * noise.t() / sample.n_rows;
     noise_correlation = diagmat(nn.diag());
 }
+
+
+

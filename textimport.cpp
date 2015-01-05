@@ -20,12 +20,13 @@
 #include <textimport.h>
 bool TextImport::ImportWideText(QString filename,
                                 mat &spectra,
-                                rowvec &wavelength,
-                                colvec &x, colvec &y,
+                                vec &wavelength,
+                                vec &x, vec &y,
                                 bool swap_spatial,
                                 QProgressDialog *progress,
                                 const QString sep)
 {
+    cout << "ImportWideText" << endl;
     bool comma_decimals;
     bool valid = CheckFileValidity(filename, comma_decimals);
     if(!valid){
@@ -50,10 +51,10 @@ bool TextImport::ImportWideText(QString filename,
     QStringList wavelength_string_list =
             wavelength_string.split(sep,  QString::SkipEmptyParts);
 
-    int columns = wavelength_string_list.size();
-    wavelength.set_size(columns);
-
-    for(i=0; i<columns; ++i){
+    int rows = wavelength_string_list.size();
+    wavelength.set_size(rows);
+    cout << "Wavelength work" << endl;
+    for(i=0; i<rows; ++i){
         wavelength(i) = wavelength_string_list.at(i).toDouble();
     }
     i=0;
@@ -65,50 +66,53 @@ bool TextImport::ImportWideText(QString filename,
     progress->setWindowTitle("Loading Dataset");
     progress->setWindowModality(Qt::WindowModal);
 
-    int rows = 0;
+    int spectra_count = 0;
     while(inputstream.readLine()!=NULL){
-        ++rows;
+        ++spectra_count;
     }
     progress->setValue(1);
-    progress->setRange(0,rows+1);
+    progress->setRange(0,spectra_count+1);
 
-    spectra.set_size(rows, columns);
-    x.set_size(rows);
-    y.set_size(rows);
+    spectra.set_size(rows, spectra_count);
+    x.set_size(spectra_count);
+    y.set_size(spectra_count);
 
     progress->setLabelText("Parsing spectra...");
 
     inputstream.seek(0);
     inputstream.readLine(); //discard it to advance to next line
     bool ok = true;
-    for(i=0; i<rows; ++i){
+    //iterate through each row of the input file, loading spatial and spectral values
+    for(j=0; j<spectra_count; ++j){
         spectra_string=inputstream.readLine();
         spectra_string_list =
                 spectra_string.split(sep, QString::SkipEmptyParts);
 
         if (swap_spatial){
-            y(i) = spectra_string_list.at(0).toDouble(&ok);
+            y(j) = spectra_string_list.at(0).toDouble(&ok);
             spectra_string_list.removeAt(0);
 
-            x(i) = spectra_string_list.at(0).toDouble(&ok);
+            x(j) = spectra_string_list.at(0).toDouble(&ok);
             spectra_string_list.removeAt(0);
         }
         else{
-            x(i) = spectra_string_list.at(0).toDouble(&ok);
+            x(j) = spectra_string_list.at(0).toDouble(&ok);
             spectra_string_list.removeAt(0);
 
-            y(i) = spectra_string_list.at(0).toDouble(&ok);
+            y(j) = spectra_string_list.at(0).toDouble(&ok);
             spectra_string_list.removeAt(0);
         }
 
-        for (j=0; j<columns; ++j){
-            spectra(i,j) = spectra_string_list.at(j).toDouble(&ok);
+        // Load each spectrum from the working row of the text file
+        // to the working column of spectra matrix
+        for (i=0; i<rows; ++i){
+            spectra(i,j) = spectra_string_list.at(i).toDouble(&ok);
         }
         if (progress->wasCanceled() || !ok){
             return false;
         }
         else{
-            progress->setValue(i);
+            progress->setValue(j);
         }
     }
 
@@ -127,10 +131,13 @@ bool TextImport::ImportWideText(QString filename,
 /// \return
 /// Unlike wide text files, long text files don't have blank space before the
 /// spatial data, so we can import this directly.
+/// These text files are in this format:
+/// x y wl intensity
+///
 bool TextImport::ImportLongText(QString filename,
                                 mat &spectra,
-                                rowvec &wavelength,
-                                colvec &x, colvec &y,
+                                vec &wavelength,
+                                vec &x, vec &y,
                                 bool swap_spatial,
                                 QProgressDialog *progress)
 {
@@ -170,32 +177,41 @@ bool TextImport::ImportLongText(QString filename,
     progress->setWindowTitle("Parsing File");
     progress->setValue(0);
     double wavelength_max = all_wavelength.max();
+
+
     bool max_to_min = (all_wavelength(1) < all_wavelength(0) ? true : false);
+
+    //This is the location of the maximum of each copy of the wavelength vector
+    //The size of this vector is the number of spectra.
     uvec max_indices = find(all_wavelength == wavelength_max);
-    wavelength.set_size(max_indices.n_elem);
-    wavelength = all_wavelength.cols(0, max_indices.n_elem - 1);
-    uword num_rows = all_wavelength.n_elem / wavelength.n_elem;
-    uword num_cols = wavelength.n_elem;
-    spectra.set_size(num_rows, num_cols);
+
+    x.set_size(max_indices.n_elem);
+    y.set_size(max_indices.n_elem);
     x = all_x.elem(max_indices);
     y = all_y.elem(max_indices);
+    uword abscissa_size = all_data.n_rows / max_indices.n_elem;
+    wavelength.set_size(abscissa_size);
+    wavelength = all_wavelength.subvec(0, abscissa_size - 1);
+
+    spectra.set_size(wavelength.n_elem, x.n_elem);
+
     uword range_start = 0;
-    uword range_end = num_cols - 1;
+    uword range_end = x.n_elem - 1;
 
     //Reading by columns because armadillo matrices are stored in column-major
     //format
-    progress->setMaximum(num_cols);
-    for (uword i=0; i<num_cols; ++i){
-        spectra.row(i) = trans(all_spectra.rows(range_start, range_end));
-        range_start += num_cols;
-        range_end += num_cols;
+    progress->setMaximum(spectra.n_cols);
+    for (uword i = 0; i < spectra.n_cols; ++i){
+        spectra.col(i) = all_spectra.rows(range_start, range_end);
+        range_start += spectra.n_rows;
+        range_end += spectra.n_rows;
     }
     if (progress->wasCanceled())
         return false;
     //must reverse spectra and abscissa if they were read in backward
     if (max_to_min){
-        wavelength = fliplr(wavelength);
-        spectra = fliplr(spectra);
+        spectra = flipud(spectra);
+        wavelength = flipud(wavelength);
     }
 
     return true;

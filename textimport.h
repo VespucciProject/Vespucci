@@ -29,16 +29,16 @@ namespace TextImport
 {
     bool ImportWideText(QString filename,
                         mat &spectra,
-                        rowvec &wavelength,
-                        colvec &x, colvec &y,
+                        vec &wavelength,
+                        vec &x, vec &y,
                         bool swap_spatial,
                         QProgressDialog *progress,
                         const QString sep);
 
     bool ImportLongText(QString filename,
                         mat &spectra,
-                        rowvec &wavelength,
-                        colvec &x, colvec &y,
+                        vec &wavelength,
+                        vec &x, vec &y,
                         bool swap_spatial,
                         QProgressDialog *progress);
 
@@ -46,8 +46,8 @@ namespace TextImport
                          QString y_filename,
                          QString spectra_filename,
                          mat &spectra,
-                         rowvec &wavelength,
-                         colvec &x, colvec &y,
+                         vec &wavelength,
+                         vec &x, vec &y,
                          bool swap_spatial,
                          QProgressDialog *progress);
 

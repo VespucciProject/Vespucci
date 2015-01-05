@@ -20,8 +20,8 @@
 #include "binaryimport.h"
 bool BinaryImport::ImportVespucciBinary(QString filename,
                                         mat &spectra,
-                                        rowvec &wavelength,
-                                        colvec &x, colvec &y)
+                                        vec &wavelength,
+                                        vec &x, vec &y)
 {
     field<mat> input_data;
     bool success = input_data.load(filename.toStdString());

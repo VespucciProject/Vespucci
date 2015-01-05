@@ -437,13 +437,13 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
     spectra_old_ = spectra_;
     uvec valid_indices = find ((x_ > x_min) && (x_ < x_max));
     try{
-        spectra_ = spectra_.rows(valid_indices);
+        spectra_ = spectra_.cols(valid_indices);
         y_ = y_.rows(valid_indices);
         x_ = x_.rows(valid_indices);
         valid_indices = find((y_ > y_min) && (y_ < y_max));
         y_ = y_.rows(valid_indices);
         x_ = x_.rows(valid_indices);
-        spectra_ = spectra_.rows(valid_indices);
+        spectra_ = spectra_.cols(valid_indices);
     }catch(exception e){
         char str[50];
         strcat(str, "CropSpectra: ");
@@ -452,8 +452,8 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
     }
     valid_indices = find(wavelength_ > wl_min && wavelength_ < wl_max);
     try{
-        spectra_ = spectra_.cols(valid_indices);
-        wavelength_ = wavelength_.cols(valid_indices);
+        spectra_ = spectra_.rows(valid_indices);
+        wavelength_ = wavelength_.rows(valid_indices);
 
     }catch(exception e){
         char str[50];
@@ -482,15 +482,15 @@ void VespucciDataset::MinMaxNormalize()
 {
     try{
         spectra_old_ = spectra_;
-        rowvec row_buffer;
-        rowvec extrema_buffer;
-        for (uword i = 0; i < spectra_.n_rows; ++i){
-            row_buffer = spectra_.row(i);
-            extrema_buffer = row_buffer.min()*ones<rowvec>(spectra_.n_cols);
-            row_buffer -= extrema_buffer;
-            extrema_buffer = row_buffer.max()*ones<rowvec>(spectra_.n_cols);
-            row_buffer /= extrema_buffer;
-            spectra_.row(i) = row_buffer;
+        vec spectrum_buffer;
+        vec extrema_buffer;
+        for (uword i = 0; i < spectra_.n_cols; ++i){
+            spectrum_buffer = spectra_.col(i);
+            extrema_buffer = spectrum_buffer.min()*ones<vec>(spectra_.n_rows);
+            spectrum_buffer -= extrema_buffer;
+            extrema_buffer = spectrum_buffer.max()*ones<vec>(spectra_.n_rows);
+            spectrum_buffer /= extrema_buffer;
+            spectra_.col(i) = spectrum_buffer;
         }
     }
     catch(exception e){
@@ -504,6 +504,23 @@ void VespucciDataset::MinMaxNormalize()
 
 }
 
+void VespucciDataset::VectorNormalize()
+{
+    log_stream_ << "Vector Normalization" << endl << endl;
+    spectra_old_ = spectra_;
+    try{
+        spectra_ = normalise(spectra_old_);
+        spectra_ = spectra_;
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "VectorNormalize()");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+    last_operation_ = "vector normalize";
+}
+
 ///
 /// \brief VespucciDataset::UnitAreaNormalize
 ///normalizes the spectral data so that the area under each point spectrum is 1
@@ -513,12 +530,13 @@ void VespucciDataset::UnitAreaNormalize()
     spectra_old_ = spectra_;
     uword num_rows = spectra_.n_rows;
     uword num_cols = spectra_.n_cols;
+
     try{
-        for (uword i = 0; i < num_rows; ++i){
-            rowvec row = spectra_.row(i);
-            double row_sum = sum(row);
-            for (uword j = 0; j < num_cols; ++j){
-                spectra_(i, j) = spectra_(i, j) / row_sum;
+        for (uword j = 0; j < num_cols; ++j){
+            vec spectrum = spectra_.row(j);
+            double spectrum_sum = sum(spectrum);
+            for (uword i = 0; i < num_rows; ++i){
+                spectra_(i, j) = spectra_(i, j) / spectrum_sum;
             }
         }
     }
@@ -541,9 +559,9 @@ void VespucciDataset::PeakIntensityNormalize(double left_bound, double right_bou
 {
     spectra_old_ = spectra_;
     vec positions;
-    vec peak_maxes = arma_ext::FindPeakMaxMat(trans(spectra_), trans(wavelength_), left_bound, right_bound, positions);
-    for (uword i = 0; i < spectra_.n_rows; ++i){
-        spectra_.row(i) /= peak_maxes(i);
+    vec peak_maxes = arma_ext::FindPeakMaxMat(spectra_, wavelength_, left_bound, right_bound, positions);
+    for (uword j = 0; j < spectra_.n_cols; ++j){
+        spectra_.col(j) /= peak_maxes(j);
     }
     last_operation_ = "Peak intensity normalize";
 }
@@ -559,7 +577,7 @@ mat VespucciDataset::ZScoreNormCopy()
     mat normalized;
     //mat normalized_copy(num_rows, num_cols);
     try{
-        normalized = arma_ext::StandardScore(trans(spectra_));
+        normalized = arma_ext::StandardScore(spectra_);
     }
     catch(exception e){
         char str[50];
@@ -582,7 +600,7 @@ void VespucciDataset::ZScoreNormalize()
 
     mat normalized;
     try{
-        normalized = arma_ext::StandardScoreMat(trans(spectra_));
+        normalized = arma_ext::StandardScoreMat(spectra_);
         spectra_ = trans(normalized);
     }
     catch(exception e){
@@ -630,7 +648,7 @@ void VespucciDataset::SubtractBackground(mat background, QString filename)
     log_stream_ << "SubtractBackground" << endl;
     log_stream_ << "filename == " << filename << endl << endl;
     spectra_old_ = spectra_;
-    if (background.n_cols != spectra_.n_cols){
+    if (background.n_rows != spectra_.n_rows){
         QMessageBox::warning(0,
                              "Improper Dimensions!",
                              "The background spectrum has a different number of"
@@ -640,7 +658,7 @@ void VespucciDataset::SubtractBackground(mat background, QString filename)
     }
     else{
         try{
-            spectra_.each_row() -= background.row(0);
+            spectra_.each_col() -= background.col(0);
         }
         catch(exception e){
             char str[50];
@@ -670,8 +688,8 @@ void VespucciDataset::Baseline(QString method, int window_size)
     spectra_old_ = spectra_;
     try{
         if (method == "Median Filter"){
-            mat processed = arma_ext::MedianFilterMat(trans(spectra_), window_size);
-            spectra_ -= trans(processed);
+            mat processed = arma_ext::MedianFilterMat(spectra_, window_size);
+            spectra_ -= processed;
         }
     }
     catch(exception e){
@@ -726,8 +744,8 @@ void VespucciDataset::MedianFilter(unsigned int window_size)
     mat processed;
     spectra_old_ = spectra_;
     try{
-        processed = arma_ext::MedianFilterMat(trans(spectra_), window_size);
-        spectra_ = trans(processed);
+        processed = arma_ext::MedianFilterMat(spectra_, window_size);
+        spectra_ = processed;
     }
     catch(exception e){
         char str[50];
@@ -753,13 +771,9 @@ void VespucciDataset::LinearMovingAverage(unsigned int window_size)
     spectra_old_ = spectra_;
     try{
         vec filter = arma_ext::CreateMovingAverageFilter(window_size);
-        //because armadillo is column-major, it is faster to filter by columns than rows
-        mat buffer = trans(spectra_);
-        mat filtered(buffer.n_rows, buffer.n_cols);
-        for (uword j = 0; j < buffer.n_cols; ++j){
-            filtered.col(j) = arma_ext::ApplyFilter(buffer.col(j), filter);
+        for (uword j = 0; j < spectra_.n_cols; ++j){
+            spectra_.col(j) = arma_ext::ApplyFilter(spectra_.col(j), filter);
         }
-        spectra_ = trans(filtered);
     }
     catch(exception e){
         char str[50];
@@ -844,7 +858,7 @@ void VespucciDataset::SavitzkyGolay(unsigned int derivative_order,
     log_stream_ << "window_size == " << window_size << endl << endl;
     spectra_old_ = spectra_;
     try{
-        mat temp = arma_ext::sgolayfilt(trans(spectra_),
+        mat temp = arma_ext::sgolayfilt(spectra_,
                                         polynomial_order,
                                         window_size,
                                         derivative_order,
@@ -889,11 +903,11 @@ int VespucciDataset::HySime()
     mat noise, noise_correlation, subspace;
     cout << "call EstimateAdditiveNoise" << endl;
     timer.tic();
-    arma_ext::EstimateAdditiveNoise(noise, noise_correlation, trans(spectra_));
+    arma_ext::EstimateAdditiveNoise(noise, noise_correlation, spectra_);
     cout << "took " << timer.toc() << " seconds." << endl;
     cout << "Call HySime" << endl;
     timer.tic();
-    int k = arma_ext::HySime(trans(spectra_), noise, noise_correlation, subspace);
+    int k = arma_ext::HySime(spectra_, noise, noise_correlation, subspace);
     cout << "Took " << timer.toc() << " seconds." << endl;
     return k;
 }
@@ -1528,7 +1542,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
         mlpack::kmeans::KMeans<mlpack::metric::EuclideanDistance> k;
         try{
             Col<size_t> assignments;
-            mat data = trans(spectra_);
+            mat data = spectra_;
             k.Cluster(data, clusters, assignments);
             k_means_data_.set_size(assignments.n_elem, 1);
             k_means_calculated_ = true;
@@ -1552,7 +1566,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
         mlpack::kmeans::KMeans<mlpack::metric::ManhattanDistance> k;
         try{
             Col<size_t> assignments;
-            mat data = trans(spectra_);
+            mat data = spectra_;
             k.Cluster(data, clusters, assignments);
             k_means_data_.set_size(assignments.n_elem, 1);
             k_means_calculated_ = true;
@@ -1576,7 +1590,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
         mlpack::kmeans::KMeans<mlpack::metric::ChebyshevDistance> k;
         try{
             Col<size_t> assignments;
-            mat data = trans(spectra_);
+            mat data = spectra_;
             k.Cluster(data, clusters, assignments);
             k_means_data_.set_size(assignments.n_elem, 1);
             k_means_calculated_ = true;
@@ -1600,7 +1614,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
         mlpack::kmeans::KMeans<mlpack::metric::SquaredEuclideanDistance> k;
         try{
             Col<size_t> assignments;
-            mat data = trans(spectra_);
+            mat data = spectra_;
             k.Cluster(data, clusters, assignments);
             k_means_data_.set_size(assignments.n_elem, 1);
             k_means_calculated_ = true;
@@ -1674,7 +1688,7 @@ void VespucciDataset::KMeans(size_t clusters)
     try{
         Col<size_t> assignments;
         mlpack::kmeans::KMeans<> k;
-        mat data = trans(spectra_);
+        mat data = spectra_;
         k.Cluster(data, clusters, assignments);
         k_means_data_.set_size(assignments.n_elem, 1);
         k_means_calculated_ = true;
@@ -1736,13 +1750,13 @@ QVector<double> VespucciDataset::PointSpectrum(const uword index)
     QVector<double> spectrum_qvector;
     cout << "index  = " << index << endl;
     try{
-        if (index > spectra_.n_rows){
+        if (index > spectra_.n_cols){
             spectrum_stdvector =
-                    conv_to< std::vector<double> >::from(spectra_.row(spectra_.n_rows - 1));
+                    conv_to< std::vector<double> >::from(spectra_.col(spectra_.n_cols - 1));
         }
         else{
              spectrum_stdvector =
-                     conv_to< std::vector<double> >::from(spectra_.row(index));
+                     conv_to< std::vector<double> >::from(spectra_.col(index));
         }
 
         spectrum_qvector = QVector<double>::fromStdVector(spectrum_stdvector);
@@ -1881,14 +1895,14 @@ int VespucciDataset::ValueSize()
 /// \brief VespucciDataset::wavelength
 /// \return member wavelength_ (spectrum key values)
 ///
-rowvec VespucciDataset::wavelength()
+vec VespucciDataset::wavelength()
 {
     return wavelength_;
 }
 
-rowvec VespucciDataset::wavelength(uvec indices)
+vec VespucciDataset::wavelength(uvec indices)
 {
-    return wavelength_.cols(indices);
+    return wavelength_.rows(indices);
 }
 
 ///
@@ -1990,7 +2004,7 @@ mat VespucciDataset::spectra()
 ///
 mat VespucciDataset::spectra(uvec indices)
 {
-    return spectra_.rows(indices);
+    return spectra_.cols(indices);
 }
 
 ///
@@ -2018,7 +2032,7 @@ void VespucciDataset::SetName(QString new_name)
 /// \param x Colvec of horizontal axis spatial data
 /// \param y Colvec of vertical axis spatial data
 /// Set the data of the dataset. Used by the MetaDataset constructor
-void VespucciDataset::SetData(mat spectra, rowvec wavelength, colvec x, colvec y)
+void VespucciDataset::SetData(mat spectra, vec wavelength, colvec x, colvec y)
 {
     spectra_ = spectra;
     wavelength_ = wavelength;
@@ -2080,12 +2094,12 @@ QCPRange VespucciDataset::WavelengthRange()
 
 ///
 /// \brief VespucciDataset::PointSpectrumRange
-/// \param i row of spectra_ containing desired spectrum
+/// \param i col of spectra_ containing desired spectrum
 /// \return the range of y values for the point spectra at i
 ///
 QCPRange VespucciDataset::PointSpectrumRange(int i)
 {
-    rowvec row = spectra_.row(i);
+    vec row = spectra_.col(i);
     double min = row.min();
     double max = row.max();
 
@@ -2190,15 +2204,14 @@ bool VespucciDataset::ConstructorCancelled()
 ///
 mat VespucciDataset::AverageSpectrum(bool stats)
 {
-    mat spec_mean = mean(spectra_, 0);
-    rowvec spec_stddev;
-    spec_mean = mean(spectra_, 0);
+    mat spec_mean = mean(spectra_, 1);
+    vec spec_stddev;
     //insert stddevs on next line if requested
     if (stats){
-        spec_stddev = stddev(spectra_, 0);
-        spec_mean.insert_rows(1, spec_stddev);
+        spec_stddev = stddev(spectra_, 1);
+        spec_mean.insert_cols(1, spec_stddev);
     }
-    return spec_mean.t();
+    return spec_mean;
 }
 
 

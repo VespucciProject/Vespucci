@@ -30,26 +30,26 @@ void UnivariateData::Apply(double left_bound,
     vec positions;
     switch (method_){
     case UnivariateMethod::Area :
-        results_ = arma_ext::IntegratePeakMat(trans(parent_->spectra()),
-                                              trans(parent_->wavelength()),
+        results_ = arma_ext::IntegratePeakMat(parent_->spectra(),
+                                              parent_->wavelength(),
                                               left_bound_, right_bound_,
                                               first_baselines_, boundaries_);
 
         method_description_ = "Univariate Area";
         break;
     case UnivariateMethod::FWHM :
-        results_ = arma_ext::FindBandwidthMat(trans(parent_->spectra()),
-                                             trans(parent_->wavelength()),
-                                             left_bound_, right_bound_,
-                                             midlines_, first_baselines_, boundaries_);
+        results_ = arma_ext::FindBandwidthMat(parent_->spectra(),
+                                              parent_->wavelength(),
+                                              left_bound_, right_bound_,
+                                              midlines_, first_baselines_, boundaries_);
         method_description_ = "Univariate Bandwidth";
         break;
     case UnivariateMethod::Correlation :
-        results_ = arma_ext::CorrelationMat(trans(parent_->spectra()), control_);
+        results_ = arma_ext::CorrelationMat(parent_->spectra(), control_);
         break;
     case UnivariateMethod::Intensity : default :
-        results_ = arma_ext::FindPeakMaxMat(trans(parent_->spectra()),
-                                            trans(parent_->wavelength()),
+        results_ = arma_ext::FindPeakMaxMat(parent_->spectra(),
+                                            parent_->wavelength(),
                                             left_bound, right_bound,
                                             positions);
         positions_.set_size(positions.n_elem, 1);
@@ -74,21 +74,21 @@ void UnivariateData::Apply(double first_left_bound,
     mat results;
     switch (method_){
     case UnivariateMethod::AreaRatio:
-        results = arma_ext::IntegratePeaksMat(trans(parent_->spectra()),
-                                               trans(parent_->wavelength()),
-                                               first_left_bound_, first_right_bound_,
-                                               second_left_bound_, second_right_bound_,
-                                               first_baselines_, second_baselines_,
-                                               boundaries_);
+        results = arma_ext::IntegratePeaksMat(parent_->spectra(),
+                                              parent_->wavelength(),
+                                              first_left_bound_, first_right_bound_,
+                                              second_left_bound_, second_right_bound_,
+                                              first_baselines_, second_baselines_,
+                                              boundaries_);
 
         method_description_ = "Band Ratio Area";
         break;
     case UnivariateMethod::IntensityRatio: default:
-        results = arma_ext::FindPeakMaxesMat(trans(parent_->spectra()),
-                                              trans(parent_->wavelength()),
-                                              first_left_bound_, first_right_bound_,
-                                              second_left_bound_, second_right_bound_,
-                                              positions_);
+        results = arma_ext::FindPeakMaxesMat(parent_->spectra(),
+                                             parent_->wavelength(),
+                                             first_left_bound_, first_right_bound_,
+                                             second_left_bound_, second_right_bound_,
+                                             positions_);
         method_description_ = "Band Ratio Intensity";
         break;
     }
@@ -148,12 +148,12 @@ QString UnivariateData::MethodDescription()
 
 mat UnivariateData::first_baselines()
 {
-    return first_baselines_.t();
+    return first_baselines_;
 }
 
 mat UnivariateData::second_baselines()
 {
-    return second_baselines_.t();
+    return second_baselines_;
 }
 
 mat UnivariateData::Midlines()

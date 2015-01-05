@@ -28,8 +28,8 @@ namespace BinaryImport
 {
     bool ImportVespucciBinary(QString filename,
                               mat &spectra,
-                              rowvec &wavelength,
-                              colvec &x, colvec &y);
+                              vec &wavelength,
+                              vec &x, colvec &y);
 }
 
 #endif // BINARYIMPORT_H

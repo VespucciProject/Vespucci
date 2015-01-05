@@ -120,6 +120,7 @@ public:
 
     mat ZScoreNormCopy();
     void MinMaxNormalize();
+    void VectorNormalize();
     void ZScoreNormalize();
     void AbsoluteValue();
     void UnitAreaNormalize();
@@ -240,14 +241,14 @@ public:
 
 
     //MEMBER ACCESS FUNCTIONS:
-    rowvec wavelength();
+    vec wavelength();
     colvec x();
     colvec y();
     colvec x(uvec indices);
     colvec y(uvec indices);
     double x(uword index);
     double y(uword index);
-    rowvec wavelength(uvec indices);
+    vec wavelength(uvec indices);
     mat spectra(uvec indices);
     mat spectra();
     const QString name();
@@ -269,7 +270,7 @@ public:
     const QString y_axis_description();
 
     void SetName(QString new_name);
-    void SetData(mat spectra, rowvec wavelength, colvec x, colvec y);
+    void SetData(mat spectra, vec wavelength, colvec x, colvec y);
 
     void SetIndices(vec indices);
 
@@ -325,7 +326,7 @@ private:
     ///
     /// \brief wavelength_
     /// The spectral abscissa of the spectra in spectra_
-    rowvec wavelength_;
+    vec wavelength_;
 
     ///
     /// \brief x_
