@@ -33,7 +33,7 @@ bool BinaryImport::ImportVespucciBinary(QString filename,
         mat ym = input_data(3);
 
         //field subview doesn't properly convert to vec forms
-        wavelength = wl.row(0);
+        wavelength = wl;
         x = xm.col(0);
         y = ym.col(0);
     }

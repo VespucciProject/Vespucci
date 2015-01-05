@@ -155,7 +155,6 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
     x_axis_description_ = x_axis_description;
     y_axis_description_ = y_axis_description;
     name_ = name;
-    vec indices_temp;
     try{
         BinaryImport::ImportVespucciBinary(vespucci_binary_filename,
                                            spectra_,
@@ -861,12 +860,11 @@ void VespucciDataset::SavitzkyGolay(unsigned int derivative_order,
     log_stream_ << "window_size == " << window_size << endl << endl;
     spectra_old_ = spectra_;
     try{
-        mat temp = arma_ext::sgolayfilt(spectra_,
+        spectra_ = arma_ext::sgolayfilt(spectra_,
                                         polynomial_order,
                                         window_size,
                                         derivative_order,
                                         1);
-        spectra_ = trans(temp);
     }
     catch(exception e){
         char str[50];
@@ -1331,6 +1329,7 @@ void VespucciDataset::VertexComponents(uword endmembers,
     }
     catch(exception e){
         char str[50];
+        cout << "VespucciDataset::VertexComponents()" << endl;
         strcat(str, "VertexComponents: ");
         strcat(str, e.what());
         throw std::runtime_error(str);
@@ -1393,6 +1392,7 @@ void VespucciDataset::VertexComponents(uword endmembers)
         vertex_components_data_->Apply(spectra_, endmembers);
         vertex_components_calculated_ = true;
     }catch(exception e){
+        cerr << "VespucciDataset::VertexComponents()" << endl;
         char str[50];
         strcat(str, "VertexComponents: ");
         strcat(str, e.what());
