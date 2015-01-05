@@ -342,7 +342,6 @@ bool arma_ext::VCA(mat R, uword p,
          mat &projected_data, mat &fractional_abundances)
 {
 //Initializations
-    cout << "initializations" << endl;
     uword L = R.n_rows;
     uword N = R.n_cols;
     if (L == 0 || N == 0){
@@ -356,21 +355,18 @@ bool arma_ext::VCA(mat R, uword p,
         p = (L < 5? 5: L-1);
     }
 //Estimations of SNR
-    cout << "snr estimation" << endl;
     mat r_m = mean(R, 1);
     mat R_m = repmat(r_m, 1, N); //the mean of each spectral band
     mat R_o = R - R_m; //mean-center the data
     mat Ud;
     vec Sd;
     mat Vd;
-    //cout << "p = " << p << endl;
     svds(R_o*trans(R_o)/N, p, Ud, Sd, Vd);
     mat x_p = trans(Ud) * R_o;
     double SNR = estimate_snr(R, r_m, x_p);
     double SNR_th = 15 + 10*log10(p);
 
 //Choose projective projection or projection to p-1 subspace
-    cout << "projection selection" << endl;
     mat y;
     if (SNR < SNR_th){
         uword d = p - 1;
@@ -395,7 +391,6 @@ bool arma_ext::VCA(mat R, uword p,
 
 
     // The VCA algorithm
-    cout << "VCA algorithm" << endl;
     vec w;
     w.set_size(p);
     vec f;
@@ -410,7 +405,6 @@ bool arma_ext::VCA(mat R, uword p,
     double sum_squares;
     uvec q1;
     A(p-1, 0) = 1;
-    cout << "Iteration" << endl;
     for (uword i = 0; i < p; ++i){
         w.randu();
         f = w - A*pinv(A)*w;
@@ -422,7 +416,6 @@ bool arma_ext::VCA(mat R, uword p,
         indices(i) = q1(0);
         A.col(i) = y.col(indices(i)); //same as x.col(indices(i));
     }
-    cout << "find spectra" << endl;
     endmember_spectra = projected_data.cols(indices);
     fractional_abundances = trans(pinv(endmember_spectra) * projected_data);
     return true;
