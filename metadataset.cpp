@@ -94,7 +94,7 @@ MetaDataset::MetaDataset(QString name,
     catch(std::exception e){
         throw std::runtime_error("Failure to set data in MetaDataset constructor");
     }
-    vec indices_temp(spectra.n_rows);
+    vec indices_temp(spectra.n_cols);
     for (uword i = 0; i < indices_temp.n_elem; ++i){
         indices_temp(i) = i;
     }
@@ -113,7 +113,7 @@ mat MetaDataset::ProcessAverage(vec &x, vec &y)
     vec parent(1);
     mat indices_buf(1, 3);
     for (int i = 0; i < parent_datasets_.size(); ++i){
-        spectra.insert_rows(spectra.n_rows, parent_datasets_[i]->AverageSpectrum(false));
+        spectra.insert_cols(spectra.n_cols, parent_datasets_[i]->AverageSpectrum(false));
         parent(0) = i + 1;
         indices_buf(0, 0) = i + 1;
         indices_buf(0, 1) = 0;
@@ -137,13 +137,13 @@ mat MetaDataset::Concatenate(vec &x, vec &y)
     cout << "Concatenate()" << endl;
     for (int i = 0; i < parent_datasets_.size(); ++i){
         spectra.insert_cols(spectra.n_cols, parent_datasets_[i]->spectra());
-        x = parent_datasets_[i]->x();
-        y = parent_datasets_[i]->y();
         indices_buf.set_size(parent_datasets_[i]->x().n_rows, 3);
         indices_buf.col(0) = (i+1)*ones(indices_buf.n_rows);
-        indices_buf.col(1) = x;
-        indices_buf.col(2) = y;
+        indices_buf.col(1) = parent_datasets_[i]->x();
+        indices_buf.col(2) = parent_datasets_[i]->y();
         parent_coordinates_.insert_rows(parent_coordinates_.n_rows, indices_buf);
+        x.insert_rows(x.n_rows, indices_buf.col(1));
+        y.insert_rows(y.n_rows, indices_buf.col(2));
     }
     return spectra;
 
