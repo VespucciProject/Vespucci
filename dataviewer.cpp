@@ -131,7 +131,9 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
         table_->setModel(table_model);
         export_button_->setDisabled(false);
 
-        if (current_data_->n_rows == dataset_->spectra_ptr()->n_rows){
+        if (current_data_->n_cols == dataset_->spectra_ptr()->n_cols 
+                || current_data_->n_rows == dataset_->spectra_ptr()->n_cols){
+            cout << "DataViewer.cpp line 136" << endl;
             extract_button_->setDisabled(false);
             stats_button_->setDisabled(false);
         }

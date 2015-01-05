@@ -136,7 +136,7 @@ mat MetaDataset::Concatenate(vec &x, vec &y)
     indices_buf.set_size(1, 3);
     cout << "Concatenate()" << endl;
     for (int i = 0; i < parent_datasets_.size(); ++i){
-        spectra.insert_rows(spectra.n_rows, parent_datasets_[i]->spectra());
+        spectra.insert_cols(spectra.n_cols, parent_datasets_[i]->spectra());
         x = parent_datasets_[i]->x();
         y = parent_datasets_[i]->y();
         indices_buf.set_size(parent_datasets_[i]->x().n_rows, 3);

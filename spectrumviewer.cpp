@@ -282,8 +282,7 @@ void SpectrumViewer::on_pushButton_clicked()
     int width = spectrum_plot_->width();
     int height = spectrum_plot_->height();
     double scale = 1.0;
-
-    vec spectrum = dataset_->spectra().row(current_index_);
+    vec spectrum = dataset_->spectra_ptr()->col(current_index_);
     vec wavelength = dataset_->wavelength();
     mat results;
     results.insert_rows(0, wavelength);

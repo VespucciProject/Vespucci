@@ -686,7 +686,7 @@ QVector<double> MapData::first_abscissa()
 ///
 QVector<double> MapData::first_baseline(int i)
 {
-    vec baseline_r = first_baseline_.row(i);
+    vec baseline_r = first_baseline_.col(i);
     std::vector<double> baseline = conv_to<std::vector<double> >::from(baseline_r);
     return QVector<double>::fromStdVector(baseline);
 }
@@ -708,7 +708,7 @@ QVector<double> MapData::second_abscissa()
 ///
 QVector<double> MapData::second_baseline(int i)
 {
-    vec baseline_r = second_baseline_.row(i);
+    vec baseline_r = second_baseline_.col(i);
     std::vector<double> baseline = conv_to<std::vector<double> >::from(baseline_r);
     return QVector<double>::fromStdVector(baseline);
 }
@@ -737,7 +737,7 @@ QVector<double> MapData::mid_line(int i)
 ///  Used to visualize the FWHM.
 QVector<double> MapData::mid_lines(int i)
 {
-    std::vector<double> lines = conv_to<std::vector<double> >::from(mid_lines_.row(i));
+    std::vector<double> lines = conv_to<std::vector<double> >::from(mid_lines_.col(i));
     return QVector<double>::fromStdVector(lines);
 }
 
