@@ -67,16 +67,6 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
         }
     }
 
-    /* Removing access to pca data objects until I can work something out
-    if (principal_components_calculated_){
-        matrix = dataset_->principal_components_data()->coeff();
-        data_objects_.insert("PCA Coefficients", matrix);
-        matrix = (mat *) dataset_->principal_components_data()->tsquared();
-        data_objects_.insert("PCA t² Values", matrix);
-        matrix = (mat *) dataset_->principal_components_data()->latent();
-        data_objects_.insert("PCA Eigenvalues of Covariance Matrix", matrix);
-    }
-    */
 
     if (vertex_components_calculated_){
         matrix = dataset_->vertex_components_data()->endmember_spectra();
