@@ -53,7 +53,6 @@ bool TextImport::ImportWideText(QString filename,
 
     int rows = wavelength_string_list.size();
     wavelength.set_size(rows);
-    cout << "Wavelength work" << endl;
     for(i=0; i<rows; ++i){
         wavelength(i) = wavelength_string_list.at(i).toDouble();
     }
@@ -141,6 +140,7 @@ bool TextImport::ImportLongText(QString filename,
                                 bool swap_spatial,
                                 QProgressDialog *progress)
 {
+    cout << "ImportLongText" << endl;
     bool comma_decimals;
     bool valid = CheckFileValidity(filename, comma_decimals);
     if (!valid)
@@ -183,6 +183,8 @@ bool TextImport::ImportLongText(QString filename,
 
     //This is the location of the maximum of each copy of the wavelength vector
     //The size of this vector is the number of spectra.
+
+    cout << "find max_indices" << endl;
     uvec max_indices = find(all_wavelength == wavelength_max);
 
     x.set_size(max_indices.n_elem);
@@ -191,6 +193,7 @@ bool TextImport::ImportLongText(QString filename,
     y = all_y.elem(max_indices);
     uword abscissa_size = all_data.n_rows / max_indices.n_elem;
     wavelength.set_size(abscissa_size);
+    cout << "get wavelength" << endl;
     wavelength = all_wavelength.subvec(0, abscissa_size - 1);
 
     spectra.set_size(wavelength.n_elem, x.n_elem);
@@ -201,6 +204,7 @@ bool TextImport::ImportLongText(QString filename,
     //Reading by columns because armadillo matrices are stored in column-major
     //format
     progress->setMaximum(spectra.n_cols);
+    cout << "loop" << endl;
     for (uword i = 0; i < spectra.n_cols; ++i){
         spectra.col(i) = all_spectra.rows(range_start, range_end);
         range_start += spectra.n_rows;
