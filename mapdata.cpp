@@ -597,7 +597,7 @@ void MapData::ShowSpectrumViewer(bool enabled)
 /// \param abscissa
 /// \param baseline
 /// Sets a single baseline of this object.
-void MapData::set_baseline(rowvec abscissa, mat baseline)
+void MapData::set_baseline(vec abscissa, mat baseline)
 {
     first_abscissa_ = abscissa;
     first_baseline_ = baseline;
@@ -611,7 +611,7 @@ void MapData::set_baseline(rowvec abscissa, mat baseline)
 /// \param first_baseline
 /// \param second_baseline
 /// Sets the baselines of this object
-void MapData::set_baselines(rowvec first_abscissa, rowvec second_abscissa,
+void MapData::set_baselines(vec first_abscissa, vec second_abscissa,
                             mat first_baseline, mat second_baseline)
 {
     first_abscissa_ = first_abscissa;
@@ -686,7 +686,7 @@ QVector<double> MapData::first_abscissa()
 ///
 QVector<double> MapData::first_baseline(int i)
 {
-    rowvec baseline_r = first_baseline_.row(i);
+    vec baseline_r = first_baseline_.row(i);
     std::vector<double> baseline = conv_to<std::vector<double> >::from(baseline_r);
     return QVector<double>::fromStdVector(baseline);
 }
@@ -708,7 +708,7 @@ QVector<double> MapData::second_abscissa()
 ///
 QVector<double> MapData::second_baseline(int i)
 {
-    rowvec baseline_r = second_baseline_.row(i);
+    vec baseline_r = second_baseline_.row(i);
     std::vector<double> baseline = conv_to<std::vector<double> >::from(baseline_r);
     return QVector<double>::fromStdVector(baseline);
 }

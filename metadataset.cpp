@@ -62,7 +62,7 @@ MetaDataset::MetaDataset(QString name,
     method_ = method;
     method_description_ = method_description;
     mat spectra;
-    rowvec wavelength = parent_datasets_[0]->wavelength();
+    vec wavelength = parent_datasets_[0]->wavelength();
     vec x;
     vec y;
     switch(method_) {

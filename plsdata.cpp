@@ -32,7 +32,7 @@ PLSData::PLSData(QSharedPointer<VespucciDataset> parent, QString *directory)
 /// \param components Number of components to calculate
 /// \return
 /// Performs PLS analysis on a copy of the spectra matrix (transposed).
-bool PLSData::Apply(mat spectra, rowvec wavelength, int components)
+bool PLSData::Apply(mat spectra, vec wavelength, int components)
 {
     mat Y;
     Y.set_size(wavelength.n_elem, components);

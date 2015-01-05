@@ -921,3 +921,80 @@ void MainWindow::on_actionUnivariate_Analysis_triggered()
     UnivariateAnalysisDialog *analysis_dialog = new UnivariateAnalysisDialog(this, workspace, row);
     analysis_dialog->show();
 }
+
+void MainWindow::on_actionLarge_Matrices_triggered()
+{
+    QSharedPointer<VespucciDataset> data =
+            workspace->DatasetAt(dataset_list_view_->currentIndex().row());
+    QMap<QString, mat*> data_objects;
+    mat *matrix;
+
+    if (data->principal_components_calculated()){
+        matrix = data->principal_components_data()->score();
+        data_objects.insert("PCA Projected Data", matrix);
+        matrix = data->principal_components_data()->coeff();
+        data_objects.insert("PCA Coefficients", matrix);
+        matrix = (mat *) data->principal_components_data()->tsquared();
+        data_objects.insert("PCA t² Values", matrix);
+        matrix = (mat *) data->principal_components_data()->latent();
+        data_objects.insert("PCA Eigenvalues of Covariance Matrix", matrix);
+    }
+
+    if (data->partial_least_squares_calculated()){
+        matrix = data->partial_least_squares_data()->percent_variance();
+        data_objects.insert("PLS Variance", matrix);
+        matrix = data->partial_least_squares_data()->X_loadings();
+        data_objects.insert("PLS Predictor Loadings", matrix);
+        matrix = data->partial_least_squares_data()->Y_loadings();
+        data_objects.insert("PLS Response Loadings", matrix);
+        matrix = data->partial_least_squares_data()->X_scores();
+        data_objects.insert("PLS Predictor Scores", matrix);
+        matrix = data->partial_least_squares_data()->Y_scores();
+        data_objects.insert("PLS Response Scores", matrix);
+        matrix = data->partial_least_squares_data()->coefficients();
+        data_objects.insert("PLS Coefficients", matrix);
+
+    }
+
+    if (data->k_means_calculated()){
+        matrix = data->k_means_data();
+        data_objects.insert("k-Means Assignments", matrix);
+    }
+    QStringList data_list = data_objects.keys();
+    bool ok;
+    QString input = QInputDialog::getItem(this,
+                                          "Save Large Data Element",
+                                          "Element",
+                                          data_list, 0, false,
+                                          &ok, 0, Qt::ImhNone);
+    if (ok){
+        matrix = data_objects.value(input);
+        QString filename =
+                QFileDialog::getSaveFileName(this, "Save file as...",
+                                             workspace->directory(),
+                                             "Comma-separated variable (*.csv);;"
+                                             "Tab-delimited Text (*.txt);;"
+                                             "Armadillo Binary (*.arma)");
+        QFileInfo file_info(filename);
+        QString extension = file_info.suffix();
+
+        if (extension.toLower() == "arma")
+            ok = matrix->save(filename.toStdString(), arma_binary);
+        else if (extension.toLower() == "txt")
+            ok = matrix->save(filename.toStdString(), raw_ascii);
+        else
+            ok = matrix->save(filename.toStdString(), csv_ascii);
+
+        if (!ok)
+            QMessageBox::warning(this, "File Not Saved", "The file was not saved successfully");
+        else
+            QMessageBox::information(this,
+                                     "File Saved", "File " +
+                                     filename + " saved successfully!");
+        data.clear();
+
+    }
+    else{
+        data.clear();
+    }
+}

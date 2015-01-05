@@ -32,7 +32,7 @@ public:
     PLSData(QSharedPointer<VespucciDataset> parent,
             QString *directory);
 
-    bool Apply(mat spectra, rowvec wavelength, int components);
+    bool Apply(mat spectra, vec wavelength, int components);
 
     mat *X_loadings();
     mat *Y_loadings();

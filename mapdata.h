@@ -68,8 +68,8 @@ public:
 
     void set_type(QString type);
     void set_name(QString name, QString type);
-    void set_baseline(rowvec abscissa, mat baseline);
-    void set_baselines(rowvec first_abscissa, rowvec second_abscissa,
+    void set_baseline(vec abscissa, mat baseline);
+    void set_baselines(vec first_abscissa, vec second_abscissa,
                        mat first_baseline, mat second_baseline);
     void set_fwhm(mat mid_lines);
 
@@ -267,8 +267,8 @@ private:
     //stuff related to baselines and such
     mat first_baseline_;
     mat second_baseline_;
-    rowvec first_abscissa_;
-    rowvec second_abscissa_;
+    vec first_abscissa_;
+    vec second_abscissa_;
     mat mid_lines_;
 
     bool univariate_area_;

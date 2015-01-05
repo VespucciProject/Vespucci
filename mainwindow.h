@@ -132,6 +132,8 @@ private slots:
 
     void on_actionUnivariate_Analysis_triggered();
 
+    void on_actionLarge_Matrices_triggered();
+
 private:
     Ui::MainWindow *ui;
 

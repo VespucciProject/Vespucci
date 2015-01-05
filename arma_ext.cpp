@@ -397,7 +397,7 @@ bool arma_ext::VCA(mat R, uword p,
     colvec w;
     w.set_size(p);
     colvec f;
-    rowvec v;
+    vec v;
     indices.set_size(p);
     //there are no fill functions for uvecs
     for (uword i = 0; i < p; ++i)

@@ -108,6 +108,7 @@
      <addaction name="separator"/>
      <addaction name="actionAll_Data"/>
      <addaction name="separator"/>
+     <addaction name="actionLarge_Matrices"/>
     </widget>
     <addaction name="actionUndo"/>
     <addaction name="separator"/>
@@ -337,6 +338,11 @@
   <action name="actionUnivariate_Analysis">
    <property name="text">
     <string>Univariate Analysis...</string>
+   </property>
+  </action>
+  <action name="actionLarge_Matrices">
+   <property name="text">
+    <string>Large Matrices...</string>
    </property>
   </action>
  </widget>

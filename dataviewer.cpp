@@ -67,6 +67,7 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
         }
     }
 
+    /* Removing access to pca data objects until I can work something out
     if (principal_components_calculated_){
         matrix = dataset_->principal_components_data()->coeff();
         data_objects_.insert("PCA Coefficients", matrix);
@@ -75,6 +76,7 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
         matrix = (mat *) dataset_->principal_components_data()->latent();
         data_objects_.insert("PCA Eigenvalues of Covariance Matrix", matrix);
     }
+    */
 
     if (vertex_components_calculated_){
         matrix = dataset_->vertex_components_data()->endmember_spectra();
@@ -90,14 +92,6 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
     if (partial_least_squares_calculated_){
         matrix = dataset_->partial_least_squares_data()->percent_variance();
         data_objects_.insert("PLS Variance", matrix);
-        matrix = dataset_->partial_least_squares_data()->X_loadings();
-        data_objects_.insert("PLS Predictor Loadings", matrix);
-        matrix = dataset_->partial_least_squares_data()->Y_loadings();
-        data_objects_.insert("PLS Response Loadings", matrix);
-        matrix = dataset_->partial_least_squares_data()->X_scores();
-        data_objects_.insert("PLS Predictor Scores", matrix);
-        matrix = dataset_->partial_least_squares_data()->Y_scores();
-        data_objects_.insert("PLS Response Scores", matrix);
         matrix = dataset_->partial_least_squares_data()->coefficients();
         data_objects_.insert("PLS Coefficients", matrix);
 

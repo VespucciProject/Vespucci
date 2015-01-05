@@ -38,6 +38,9 @@ PrincipalComponentsData::PrincipalComponentsData(QSharedPointer<VespucciDataset>
 void PrincipalComponentsData::Apply(mat spectra)
 {
     princomp(coeff_, score_, latent_, tsquared_, spectra);
+    coeff_.save("coeff.csv", csv_ascii);
+    score_.save("score.csv", csv_ascii);
+    latent_.save("latent.csv", csv_ascii);
 
 }
 
