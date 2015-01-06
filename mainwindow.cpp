@@ -430,7 +430,7 @@ void MainWindow::on_actionAverage_Spectra_with_Abscissa_triggered()
     workspace->set_directory(file_info.dir().path());
 
 
-    vec wavelength = dataset->wavelength().t();
+    vec wavelength = dataset->wavelength();
     mat output(wavelength);
     try{
         output.insert_cols(1, dataset->AverageSpectrum(true));

@@ -2211,7 +2211,7 @@ mat VespucciDataset::AverageSpectrum(bool stats)
     vec spec_stddev;
     //insert stddevs on next line if requested
     if (stats){
-        spec_stddev = stddev(spectra_, 1);
+        spec_stddev = stddev(spectra_, 0, 1);
         spec_mean.insert_cols(1, spec_stddev);
     }
     return spec_mean;
