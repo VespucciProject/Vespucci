@@ -438,11 +438,11 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
         uvec valid_indices = find ((x_ > x_min) && (x_ < x_max));
         try{
             spectra_ = spectra_.cols(valid_indices);
-            y_ = y_.rows(valid_indices);
-            x_ = x_.rows(valid_indices);
+            y_ = y_.cols(valid_indices);
+            x_ = x_.cols(valid_indices);
             valid_indices = find((y_ > y_min) && (y_ < y_max));
-            y_ = y_.rows(valid_indices);
-            x_ = x_.rows(valid_indices);
+            y_ = y_.cols(valid_indices);
+            x_ = x_.cols(valid_indices);
             spectra_ = spectra_.cols(valid_indices);
         }catch(exception e){
             char str[50];
