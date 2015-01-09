@@ -602,8 +602,7 @@ void VespucciDataset::ZScoreNormalize()
 
     mat normalized;
     try{
-        normalized = arma_ext::StandardScoreMat(spectra_);
-        spectra_ = trans(normalized);
+        spectra_ = arma_ext::StandardScoreMat(spectra_);
     }
     catch(exception e){
         char str[50];
