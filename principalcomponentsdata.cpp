@@ -38,6 +38,9 @@ PrincipalComponentsData::PrincipalComponentsData(QSharedPointer<VespucciDataset>
 void PrincipalComponentsData::Apply(mat spectra)
 {
     princomp(coeff_, score_, latent_, tsquared_, spectra);
+    double eigenvalue_sum = sum(latent_);
+    percent_variance_ = latent_ / eigenvalue_sum;
+    percent_variance_ /= 0.01;
 }
 
 ///
@@ -68,4 +71,9 @@ vec* PrincipalComponentsData::latent()
 mat* PrincipalComponentsData::score()
 {
     return &score_;
+}
+
+vec* PrincipalComponentsData::percent_variance()
+{
+    return &percent_variance_;
 }

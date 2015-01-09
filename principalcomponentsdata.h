@@ -41,6 +41,7 @@ public:
     mat *score();
     vec *latent();
     mat *coeff();
+    vec *percent_variance();
 
 private:
     ///
@@ -52,6 +53,11 @@ private:
     /// \brief score_
     /// Projected data
     mat score_;
+
+    ///
+    /// \brief percent_variance_
+    /// Percentage of variance accounted for by each component
+    vec percent_variance_;
 
     ///
     /// \brief latent_

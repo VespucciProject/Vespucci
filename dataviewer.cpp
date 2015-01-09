@@ -67,6 +67,12 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
         }
     }
 
+    if (principal_components_calculated_){
+        matrix = (mat *) dataset_->principal_components_data()->latent();
+        data_objects_.insert("PCA Eigenvalues of Covariance Matrix", matrix);
+        matrix = (mat *) dataset_->principal_components_data()->percent_variance();
+        data_objects_.insert("PCA Percent Variance", matrix);
+    }
 
     if (vertex_components_calculated_){
         matrix = dataset_->vertex_components_data()->endmember_spectra();
