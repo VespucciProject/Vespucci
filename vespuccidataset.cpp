@@ -146,6 +146,7 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
 
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
+    mlpack_pca_calculated_ = false;
     partial_least_squares_calculated_ = false;
     vertex_components_calculated_ = false;
     k_means_calculated_ = false;
@@ -219,6 +220,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
     map_list_model_ = new MapListModel(main_window, this);
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
+    mlpack_pca_calculated_ = false;
     partial_least_squares_calculated_ = false;
     vertex_components_calculated_ = false;
     k_means_calculated_ = false;
@@ -337,6 +339,7 @@ VespucciDataset::VespucciDataset(QString name,
     meta_ = original->meta();
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
+    mlpack_pca_calculated_ = false;
     partial_least_squares_calculated_ = false;
     vertex_components_calculated_ = false;
     k_means_calculated_ = false;
@@ -384,6 +387,7 @@ VespucciDataset::VespucciDataset(QString name,
     meta_ = true;
     map_loading_count_ = 0;
     principal_components_calculated_ = false;
+    mlpack_pca_calculated_ = false;
     partial_least_squares_calculated_ = false;
     vertex_components_calculated_ = false;
     k_means_calculated_ = false;
@@ -435,12 +439,12 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
 {
     spectra_old_ = spectra_;
     if (!isnan(x_min) && !isnan(x_max) && !isnan(y_min) && !isnan(y_max)){
-        uvec valid_indices = find ((x_ > x_min) && (x_ < x_max));
+        uvec valid_indices = find ((x_ >= x_min) && (x_ <= x_max));
         try{
             spectra_ = spectra_.cols(valid_indices);
             y_ = y_.rows(valid_indices);
             x_ = x_.rows(valid_indices);
-            valid_indices = find((y_ > y_min) && (y_ < y_max));
+            valid_indices = find((y_ >= y_min) && (y_ <= y_max));
             y_ = y_.rows(valid_indices);
             x_ = x_.rows(valid_indices);
             spectra_ = spectra_.cols(valid_indices);
@@ -452,7 +456,7 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
         }
     }
     if (!isnan(wl_min) && !isnan(wl_max)){
-        uvec valid_indices = find(wavelength_ > wl_min && wavelength_ < wl_max);
+        uvec valid_indices = find(wavelength_ >= wl_min && wavelength_ <= wl_max);
         try{
             spectra_ = spectra_.rows(valid_indices);
             wavelength_ = wavelength_.rows(valid_indices);
@@ -1241,6 +1245,25 @@ void VespucciDataset::PrincipalComponents(int component,
     new_map->set_name(name, map_type);
     AddMap(new_map);
     new_map->ShowMapWindow();
+}
+
+///
+/// \brief VespucciDataset::PrincipalComponents
+/// \param scaleData
+/// \param recalculate
+/// Perform PCA using MLPACK's implementation. This is designed for dimensionality
+/// reduction, not classification, so there is no corresponding imaging function
+void VespucciDataset::PrincipalComponents(bool scaleData)
+{
+    mlpack_pca_data_ = new MLPACKPCAData(scaleData);
+    try{
+        mlpack_pca_data_->Apply(spectra_);
+    }
+    catch(exception e){
+        throw std::runtime_error("VespucciDataset::PrincipalComponents");
+    }
+
+    mlpack_pca_calculated_ = true;
 }
 
 ///
@@ -2267,6 +2290,11 @@ bool VespucciDataset::principal_components_calculated()
     return principal_components_calculated_;
 }
 
+bool VespucciDataset::mlpack_pca_calculated()
+{
+    return mlpack_pca_calculated_;
+}
+
 ///
 /// \brief VespucciDataset::vertex_components_calculated
 /// Accessor for vertex_components_calculated_. The VCA dialog requests this to
@@ -2307,6 +2335,11 @@ bool VespucciDataset::k_means_calculated()
 PrincipalComponentsData* VespucciDataset::principal_components_data()
 {
     return principal_components_data_;
+}
+
+MLPACKPCAData *VespucciDataset::mlpack_pca_data()
+{
+    return mlpack_pca_data_;
 }
 
 ///

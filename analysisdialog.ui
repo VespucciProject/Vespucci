@@ -35,6 +35,11 @@
      </item>
      <item>
       <property name="text">
+       <string>Principal Components Analysis (MLPACK)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>Partial Least Squares Discriminant Analysis</string>
       </property>
      </item>

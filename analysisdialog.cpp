@@ -70,7 +70,7 @@ void AnalysisDialog::on_buttonBox_accepted()
         break;
     case 1:
         try{
-            dataset_->PartialLeastSquares(components);
+            dataset_->PrincipalComponents(true);
         }catch(exception e){
             workspace->main_window()->DisplayExceptionWarning(e);
         }
@@ -78,13 +78,21 @@ void AnalysisDialog::on_buttonBox_accepted()
         break;
     case 2:
         try{
-            dataset_->VertexComponents(components);
+            dataset_->PartialLeastSquares(components);
         }catch(exception e){
             workspace->main_window()->DisplayExceptionWarning(e);
         }
 
         break;
     case 3:
+        try{
+            dataset_->VertexComponents(components);
+        }catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
+
+        break;
+    case 4:
         try{
             dataset_->KMeans(components);
         }catch(exception e){

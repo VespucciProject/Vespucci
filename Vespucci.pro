@@ -103,7 +103,8 @@ SOURCES += main.cpp\
     univariatedata.cpp \
     rangedialog.cpp \
     statsdialog.cpp \
-    univariateanalysisdialog.cpp
+    univariateanalysisdialog.cpp \
+    mlpackpcadata.cpp
 
 HEADERS  += mainwindow.h \
     loaddataset.h \
@@ -143,7 +144,8 @@ HEADERS  += mainwindow.h \
     enums.h \
     rangedialog.h \
     statsdialog.h \
-    univariateanalysisdialog.h
+    univariateanalysisdialog.h \
+    mlpackpcadata.h
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \

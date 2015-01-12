@@ -940,6 +940,17 @@ void MainWindow::on_actionLarge_Matrices_triggered()
         data_objects.insert("PCA Eigenvalues of Covariance Matrix", matrix);
     }
 
+    if (data->mlpack_pca_calculated()){
+        matrix = data->mlpack_pca_data()->transformed_data();
+        data_objects.insert("MLPACK PCA Projection", matrix);
+        matrix = data->mlpack_pca_data()->eigvec();
+        data_objects.insert("MLPACK PCA Loadings", matrix);
+        matrix = (mat *) data->mlpack_pca_data()->eigval();
+        data_objects.insert("MLPACK PCA Eigenvalues", matrix);
+        matrix = (mat *) data->mlpack_pca_data()->percent_variance();
+        data_objects.insert("MLPACK PCA Variance", matrix);
+    }
+
     if (data->partial_least_squares_calculated()){
         matrix = data->partial_least_squares_data()->percent_variance();
         data_objects.insert("PLS Variance", matrix);

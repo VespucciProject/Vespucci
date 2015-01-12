@@ -39,7 +39,7 @@
 #include "binaryimport.h"
 #include "maplistmodel.h"
 #include "univariatedata.h"
-
+#include "mlpackpcadata.h"
 
 
 
@@ -49,6 +49,7 @@
 
 class MapData;
 class PrincipalComponentsData;
+class MLPACKPCAData;
 class PLSData;
 class VCAData;
 class SpectrumViewer;
@@ -216,9 +217,11 @@ public:
 
 
     void PrincipalComponents(int component,
-                            QString name,
-                            int gradient_index,
+                             QString name,
+                             int gradient_index,
                              bool recalculate);
+
+    void PrincipalComponents(bool scaleData);
 
     void VertexComponents(uword endmembers, uword image_component,
                           QString name, unsigned gradient_index, bool recalculate);
@@ -256,12 +259,14 @@ public:
     mat *indices_ptr();
 
     bool principal_components_calculated();
+    bool mlpack_pca_calculated();
     bool vertex_components_calculated();
     bool partial_least_squares_calculated();
     bool k_means_calculated();
     bool radical_calculated();
 
     PrincipalComponentsData *principal_components_data();
+    MLPACKPCAData *mlpack_pca_data();
     VCAData *vertex_components_data();
     PLSData *partial_least_squares_data();
     mat *k_means_data();
@@ -388,6 +393,8 @@ private:
     /// A pointer to a container holding all PCA data and stats.
     PrincipalComponentsData *principal_components_data_;
 
+    MLPACKPCAData *mlpack_pca_data_;
+
     ///
     /// \brief partial_least_squares_data_
     /// A pointer to a container holding all PLS data and stats
@@ -446,6 +453,8 @@ private:
     /// \brief principal_components_calculated_
     /// Whether or not PCA has been performed
     bool principal_components_calculated_;
+
+    bool mlpack_pca_calculated_;
 
     ///
     /// \brief partial_least_squares_calculated_
