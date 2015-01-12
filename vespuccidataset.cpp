@@ -528,6 +528,24 @@ void VespucciDataset::VectorNormalize()
 }
 
 ///
+/// \brief VespucciDataset::MeanCenter
+/// Subtract the mean of all spectra in the dataset at each wavelength from each
+/// wavelength (i.e. in preparation for PCA)
+void VespucciDataset::MeanCenter()
+{
+    log_stream_ << "Mean Centering" << endl << endl;
+    spectra_old_ = spectra_;
+    try{
+        vec mean_intensity = mean(spectra_, 1);
+        spectra_.each_col() -= mean_intensity;
+    }
+    catch(exception e){
+        throw std::runtime_error("MeanCenter");
+    }
+    last_operation_ = "mean centering";
+}
+
+///
 /// \brief VespucciDataset::UnitAreaNormalize
 ///normalizes the spectral data so that the area under each point spectrum is 1
 void VespucciDataset::UnitAreaNormalize()

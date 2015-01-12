@@ -122,6 +122,7 @@ public:
     mat ZScoreNormCopy();
     void MinMaxNormalize();
     void VectorNormalize();
+    void MeanCenter();
     void ZScoreNormalize();
     void AbsoluteValue();
     void UnitAreaNormalize();
