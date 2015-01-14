@@ -927,11 +927,11 @@ void VespucciDataset::ShedSpectrum(const uword index)
     log_stream_ << "index = " << index << "x = " << x_(index) << " y = " << y_(index) << endl;
     spectra_old_ = spectra_;
     cout << "spectra columns = " << spectra_.n_cols;
-    spectra_.shed_col(index);
     try{
-        //spectra_.shed_col(index);
+        spectra_.shed_col(index);
         x_.shed_row(index);
         y_.shed_row(index);
+        indices_.shed_row(index);
     }
     catch(exception e){
         cout << e.what();

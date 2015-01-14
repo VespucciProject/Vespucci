@@ -73,4 +73,5 @@ void SpectrumSelectionDialog::on_pushButton_clicked()
             main_window_->DisplayExceptionWarning(e);
         }
     }
+
 }
