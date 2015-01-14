@@ -134,6 +134,8 @@ private slots:
 
     void on_actionLarge_Matrices_triggered();
 
+    void on_actionView_Edit_Spectra_triggered();
+
 private:
     Ui::MainWindow *ui;
 

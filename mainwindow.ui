@@ -96,6 +96,7 @@
      <addaction name="actionCorrect_Baseline"/>
      <addaction name="actionCrop"/>
      <addaction name="actionReject_Clipped_Spectra"/>
+     <addaction name="actionView_Edit_Spectra"/>
     </widget>
     <widget class="QMenu" name="menuExport_Dataset_Elements">
      <property name="title">
@@ -343,6 +344,11 @@
   <action name="actionLarge_Matrices">
    <property name="text">
     <string>Large Matrices...</string>
+   </property>
+  </action>
+  <action name="actionView_Edit_Spectra">
+   <property name="text">
+    <string>View/Edit Spectra</string>
    </property>
   </action>
  </widget>

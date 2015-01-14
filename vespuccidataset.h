@@ -142,13 +142,8 @@ public:
     void Baseline(QString method, int window_size);
     void RemoveClippedSpectra(double threshold);
     void Scale(double scaling_factor);
-
+    void ShedSpectrum(const uword index);
     int HySime();
-
-
-
-
-    mat spdiags(mat B, QVector<int> d, int m, int n);
 
 
 

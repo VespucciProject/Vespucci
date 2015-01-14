@@ -23,6 +23,8 @@
 #include <QDialog>
 #include "mapviewer.h"
 #include "dataviewer.h"
+#include "spectrumselectiondialog.h"
+class SpectrumSelectionDialog;
 class MapViewer;
 class MapData;
 class VespucciDataset;
@@ -44,16 +46,16 @@ public:
                    MapData *map_data,
                    const QString x_axis_description,
                    const QString y_axis_description, QSharedPointer<VespucciDataset> dataset, QSize widget_size, QString directory);
+
+
     SpectrumViewer(DataViewer *parent,
                    QSharedPointer <VespucciDataset> dataset,
                    int endmember,
                    QString directory,
                    QString type);
 
-    SpectrumViewer(QVector<double> abscissa,
-                   QVector<double> intensities,
-                   const QString x_axis_description,
-                   const QString y_axis_description);
+    SpectrumViewer(SpectrumSelectionDialog *parent,
+                   QSharedPointer<VespucciDataset> dataset);
 
     ~SpectrumViewer();
     void SetPlot(QVector<double> wavelength,
@@ -65,6 +67,7 @@ public:
 private slots:
     void MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *event);
     void on_pushButton_clicked();
+    void SpectrumChanged(QVector<double> &wavelength, QVector<double> &intensity);
 
 private:
     Ui::SpectrumViewer *ui;

@@ -104,7 +104,10 @@ SOURCES += main.cpp\
     rangedialog.cpp \
     statsdialog.cpp \
     univariateanalysisdialog.cpp \
-    mlpackpcadata.cpp
+    mlpackpcadata.cpp \
+    spectratablemodel.cpp \
+    spectrumselectiondialog.cpp
+
 
 HEADERS  += mainwindow.h \
     loaddataset.h \
@@ -145,7 +148,10 @@ HEADERS  += mainwindow.h \
     rangedialog.h \
     statsdialog.h \
     univariateanalysisdialog.h \
-    mlpackpcadata.h
+    mlpackpcadata.h \
+    spectratablemodel.h \
+    spectrumselectiondialog.h
+
 
 FORMS    += mainwindow.ui \
     loaddataset.ui \
@@ -170,7 +176,8 @@ FORMS    += mainwindow.ui \
     analysisdialog.ui \
     rangedialog.ui \
     statsdialog.ui \
-    univariateanalysisdialog.ui
+    univariateanalysisdialog.ui \
+    spectrumselectiondialog.ui
 
 RESOURCES += \
     resources.qrc

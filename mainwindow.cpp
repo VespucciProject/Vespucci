@@ -37,6 +37,7 @@
 #include "metadatasetdialog.h"
 #include "rangedialog.h"
 #include "univariateanalysisdialog.h"
+#include "spectrumselectiondialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -1009,4 +1010,14 @@ void MainWindow::on_actionLarge_Matrices_triggered()
     else{
         data.clear();
     }
+}
+
+void MainWindow::on_actionView_Edit_Spectra_triggered()
+{
+    QSharedPointer<VespucciDataset> data =
+            workspace->DatasetAt(dataset_list_view_->currentIndex().row());
+    SpectrumSelectionDialog *spectrum_selector =
+            new SpectrumSelectionDialog(0, this, data);
+    cout << "show dialog" << endl;
+    spectrum_selector->show();
 }

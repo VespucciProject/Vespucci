@@ -68,7 +68,6 @@ SpectrumViewer::SpectrumViewer(MapViewer *parent,
 
     spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
     spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
-
 }
 
 ///
@@ -87,6 +86,10 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
     QDialog(parent),
     ui(new Ui::SpectrumViewer)
 {
+    coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
+    value_label_ = this->findChild<QLabel *>("valueLabel");
+    coordinate_label_->setVisible(false);
+    value_label_->setVisible(false);
     ui->setupUi(this);
     spectrum_plot_ = this->findChild<QCustomPlot *>("spectrum");
     spectrum_plot_->addGraph();
@@ -109,6 +112,45 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
     spectrum_plot_->rescaleAxes();
 }
 
+SpectrumViewer::SpectrumViewer(SpectrumSelectionDialog *parent,
+                               QSharedPointer<VespucciDataset> dataset):
+    QDialog(parent),
+    ui(new Ui::SpectrumViewer)
+{
+    ui->setupUi(this);
+    cout << "alternative SpectrumViewer constructor" << endl;
+    dataset_ = dataset;
+
+    cout << "find labels " << endl;
+    coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
+    value_label_ = this->findChild<QLabel *>("valueLabel");
+    cout << "edit labels" << endl;
+    coordinate_label_->setVisible(false);
+    value_label_->setVisible(false);
+
+    cout << "find plot" << endl;
+    spectrum_plot_ = this->findChild<QCustomPlot *>("spectrum");
+
+    cout << "set labels" << endl;
+    spectrum_plot_->addGraph();
+    spectrum_plot_->xAxis->setLabel(dataset->x_axis_description());
+    spectrum_plot_->yAxis->setLabel(dataset->y_axis_description());
+
+    cout << "set data" << endl;
+    QVector<double> wavelength = dataset->WavelengthQVector();
+    QVector<double> plot_data = dataset->PointSpectrum(0);
+    spectrum_plot_->graph(0)->addData(wavelength, plot_data);
+    dataset_ = dataset;
+
+    spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
+    spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
+    spectrum_plot_->rescaleAxes();
+    cout << "end of constructor" << endl;
+}
+
+\
+
+
 
 SpectrumViewer::~SpectrumViewer()
 {
@@ -123,6 +165,7 @@ SpectrumViewer::~SpectrumViewer()
 void SpectrumViewer::SetPlot(QVector<double> wavelength,
                              QVector<double> intensity)
 {
+    cout << "SetPlot" << endl;
     spectrum_plot_->graph(0)->setData(wavelength, intensity);
     spectrum_plot_->rescaleAxes();
     spectrum_plot_->replot();
@@ -322,4 +365,9 @@ void SpectrumViewer::on_pushButton_clicked()
 
 
 
+}
+
+void SpectrumViewer::SpectrumChanged(QVector<double> &wavelength, QVector<double> &intensity)
+{
+    SetPlot(wavelength, intensity);
 }

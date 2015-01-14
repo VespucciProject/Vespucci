@@ -732,13 +732,14 @@ void VespucciDataset::Baseline(QString method, int window_size)
 void VespucciDataset::RemoveClippedSpectra(double threshold)
 {
     spectra_old_ = spectra_;
-    vec spectra_max = max(spectra_, 1);
+    rowvec spectra_max = max(spectra_, 0);
+
     uvec valid_indices = find(spectra_max < threshold);
     if (valid_indices.n_elem == 0)
         return;
 
     try{
-        spectra_ = spectra_.rows(valid_indices);
+        spectra_ = spectra_.cols(valid_indices);
         x_ = x_.rows(valid_indices);
         y_ = y_.rows(valid_indices);
     }
@@ -912,6 +913,32 @@ void VespucciDataset::Scale(double scaling_factor)
     }
 
     last_operation_ = "Scaling";
+}
+
+///
+/// \brief VespucciDataset::ShedSpectrum
+/// \param index Index of spectrum to shed.
+/// Removes a spectrum from the dataset
+void VespucciDataset::ShedSpectrum(const uword index)
+{
+    cout << "VespucciDataset::ShedSpectrum" << endl;
+    cout << "index = " << index << "x = " << x_(index) << " y = " << y_(index) << endl;
+    log_stream_ << "Shed Spectrum" << endl;
+    log_stream_ << "index = " << index << "x = " << x_(index) << " y = " << y_(index) << endl;
+    spectra_old_ = spectra_;
+    cout << "spectra columns = " << spectra_.n_cols;
+    spectra_.shed_col(index);
+    try{
+        //spectra_.shed_col(index);
+        x_.shed_row(index);
+        y_.shed_row(index);
+    }
+    catch(exception e){
+        cout << e.what();
+        std::runtime_error exc("VespucciDataset::ShedSpectrum");
+        main_window_->DisplayExceptionWarning(exc);
+    }
+    cout << "spectra_ columns (post) = " << spectra_.n_cols;
 }
 
 ///
@@ -1805,8 +1832,11 @@ QVector<double> VespucciDataset::PointSpectrum(const uword index)
         spectrum_qvector = QVector<double>::fromStdVector(spectrum_stdvector);
     }
     catch(exception e){
+        cerr << "exception thrown!" << endl;
         main_window_->DisplayExceptionWarning(e);
     }
+
+    cout << "end of PointSpectrum" << endl;
 
     return spectrum_qvector;
 }
