@@ -275,20 +275,20 @@ void MainWindow::on_actionSubtract_Background_triggered()
     workspace->set_directory(file_info.dir().path());
     bool success = input.load(filename.toStdString());
     //We take spectra inputs as row-major
-    if (input.n_cols < input.n_rows){
+    if (input.n_rows < input.n_cols){
         try{
             input = input.t();
         }catch(exception e){
             DisplayExceptionWarning(e);
         }
     }
-    //The first row is probably an abscissa.
-    if (input.n_rows > 2){
+    //The first column is probably an abscissa.
+    if (input.n_cols > 2){
         success = false;
     }
-    if (input.n_rows == 2){
+    if (input.n_cols == 2){
         try{
-            input.shed_row(0);
+            input.shed_col(0);
         }catch(exception e){
             DisplayExceptionWarning(e);
         }
