@@ -6,6 +6,7 @@
 #include "spectratablemodel.h"
 class MainWindow;
 class SpectraTableModel;
+class VespucciWorkspace;
 
 namespace Ui {
 class SpectrumSelectionDialog;
@@ -25,6 +26,8 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_pushButton_2_clicked();
+
 private:
     Ui::SpectrumSelectionDialog *ui;
     SpectraTableModel *table_model_;
@@ -32,6 +35,7 @@ private:
     QSharedPointer<VespucciDataset> dataset_;
     SpectrumViewer *spectrum_viewer_;
     MainWindow *main_window_;
+    VespucciWorkspace *workspace;
 };
 
 #endif // SPECTRUMSELECTIONDIALOG_H

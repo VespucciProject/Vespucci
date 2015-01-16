@@ -72,6 +72,22 @@ bool VespucciDataset::Save(QString filename)
 
 }
 
+bool VespucciDataset::SaveSpectrum(QString filename, uword column, file_type type)
+{
+    std::string filename_stdstring = filename.toStdString();
+    vec spectrum;
+    bool success;
+    try{
+        spectrum = spectra_.col(column);
+        success = spectrum.save(filename_stdstring, type);
+    }
+    catch(exception e){
+        main_window_->DisplayExceptionWarning(e);
+    }
+    return success;
+
+}
+
 ///
 /// \brief VespucciDataset::DestroyLogFile
 /// Deletes log file unless user decides to save it elsewhere

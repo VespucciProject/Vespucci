@@ -171,6 +171,7 @@ public:
     QCPRange ValueRange();
 
     bool Save(QString filename);
+    bool SaveSpectrum(QString filename, uword column, file_type type);
 
     // IMAGING FUNCTIONS //
 

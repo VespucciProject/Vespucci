@@ -18,6 +18,7 @@ SpectrumSelectionDialog::SpectrumSelectionDialog(QWidget *parent, MainWindow *ma
     table_view_ = this->findChild<QTableView *>("tableView");
     cout << "set model" << endl;
     table_view_->setModel(table_model_);
+    workspace = main_window->workspace_ptr();
 
 
 }
@@ -73,5 +74,34 @@ void SpectrumSelectionDialog::on_pushButton_clicked()
             main_window_->DisplayExceptionWarning(e);
         }
     }
+
+}
+
+void SpectrumSelectionDialog::on_pushButton_2_clicked()
+{
+    int row = table_view_->currentIndex().row();
+    QString filename =
+            QFileDialog::getSaveFileName(this, "Save Spectrum",
+                                         workspace->directory(),
+                                         "Comma-separated variables (*.csv);; "
+                                         "Tab-delimited text (*.txt);; "
+                                         "Armadillo binary (*.arma)");
+    QFileInfo file_info(filename);
+    QString extension = file_info.suffix();
+    bool success;
+    file_type type;
+
+    if (extension.toLower() == "arma")
+        type = arma_binary;
+    if (extension.toLower() == "txt")
+        type = raw_ascii;
+    else
+        type = csv_ascii;
+
+    success = dataset_->SaveSpectrum(filename, row, type);
+    if (success)
+        QMessageBox::information(main_window_, "File Saved", filename + " saved successfully");
+    else
+        QMessageBox::warning(main_window_, "File not saved", "File not saved successfully");
 
 }
