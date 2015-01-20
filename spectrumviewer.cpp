@@ -86,11 +86,12 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
     QDialog(parent),
     ui(new Ui::SpectrumViewer)
 {
+    ui->setupUi(this);
+    dataset_ = dataset;
     coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
     value_label_ = this->findChild<QLabel *>("valueLabel");
     coordinate_label_->setVisible(false);
     value_label_->setVisible(false);
-    ui->setupUi(this);
     spectrum_plot_ = this->findChild<QCustomPlot *>("spectrum");
     spectrum_plot_->addGraph();
     spectrum_plot_->xAxis->setLabel(dataset->x_axis_description());
@@ -98,13 +99,12 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
     QVector<double> plot_data;
     spectrum_plot_->replot();
     if (type == "VCA"){
-        plot_data = dataset->vertex_components_data()->EndmemberQVec(endmember);
+        plot_data = dataset_->vertex_components_data()->EndmemberQVec(endmember);
     }
     QVector<double> wavelength = dataset->WavelengthQVector();
     coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
     value_label_ = this->findChild<QLabel *>("valueLabel");
     spectrum_plot_->graph(0)->addData(wavelength, plot_data);
-    dataset_ = dataset;
     directory_ = directory;
 
     spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
