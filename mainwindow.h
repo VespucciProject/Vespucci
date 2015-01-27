@@ -136,6 +136,8 @@ private slots:
 
     void on_actionView_Edit_Spectra_triggered();
 
+    void on_actionBooleanize_Clamp_triggered();
+
 private:
     Ui::MainWindow *ui;
 

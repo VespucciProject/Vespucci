@@ -97,6 +97,7 @@
      <addaction name="actionCrop"/>
      <addaction name="actionReject_Clipped_Spectra"/>
      <addaction name="actionView_Edit_Spectra"/>
+     <addaction name="actionBooleanize_Clamp"/>
     </widget>
     <widget class="QMenu" name="menuExport_Dataset_Elements">
      <property name="title">
@@ -349,6 +350,11 @@
   <action name="actionView_Edit_Spectra">
    <property name="text">
     <string>View/Edit Spectra</string>
+   </property>
+  </action>
+  <action name="actionBooleanize_Clamp">
+   <property name="text">
+    <string>Booleanize/Clamp</string>
    </property>
   </action>
  </widget>

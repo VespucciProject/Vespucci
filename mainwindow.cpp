@@ -38,6 +38,7 @@
 #include "rangedialog.h"
 #include "univariateanalysisdialog.h"
 #include "spectrumselectiondialog.h"
+#include "booleanizedialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -1018,6 +1019,11 @@ void MainWindow::on_actionView_Edit_Spectra_triggered()
             workspace->DatasetAt(dataset_list_view_->currentIndex().row());
     SpectrumSelectionDialog *spectrum_selector =
             new SpectrumSelectionDialog(0, this, data);
-    cout << "show dialog" << endl;
     spectrum_selector->show();
+}
+
+void MainWindow::on_actionBooleanize_Clamp_triggered()
+{
+    BooleanizeDialog *booleanize_dialog = new BooleanizeDialog(this, workspace, dataset_list_view_->currentIndex().row());
+    booleanize_dialog->show();
 }

@@ -83,6 +83,7 @@ bool VespucciDataset::SaveSpectrum(QString filename, uword column, file_type typ
     }
     catch(exception e){
         main_window_->DisplayExceptionWarning(e);
+        success = false;
     }
     return success;
 
@@ -604,6 +605,66 @@ void VespucciDataset::PeakIntensityNormalize(double left_bound, double right_bou
         spectra_.col(j) /= peak_maxes(j);
     }
     last_operation_ = "Peak intensity normalize";
+}
+
+///
+/// \brief VespucciDataset::Booleanize
+/// \param min
+/// \param max
+/// \param keep_inside
+/// \param oneify
+///
+void VespucciDataset::Booleanize(double min, double max, bool keep_inside, bool oneify)
+{
+    spectra_old_ = spectra_;
+    last_operation_ = "Booleanize";
+    log_stream_
+            << "Booleanize" << endl << "min = " << min << endl <<"max = "
+            << max << endl
+            << (keep_inside ? "keep values in range" : "zero values in range")
+            << endl
+            << (oneify ? "set non-zero to one" : "retain magnitudes of retained values") << endl;
+
+    //set all values on the outside (or inside) of the range to zero
+    try{
+        if (keep_inside)
+            spectra_.elem(find(spectra_ <= min && spectra_ >= max) ).zeros();
+        else
+            spectra_.elem(find(spectra_ >= min && spectra_ <= max) ).zeros();
+
+
+        //set all non-zero values equal to one
+        if (oneify)
+            spectra_.elem( find(spectra_) ).ones();
+
+    }
+    catch (exception e){
+        cerr << e.what();
+        runtime_error f("Booleanize");
+        main_window_->DisplayExceptionWarning(f);
+    }
+
+}
+
+///
+/// \brief VespucciDataset::Clamp
+/// \param min
+/// \param max
+///
+void VespucciDataset::Clamp(double min, double max)
+{
+    spectra_old_ = spectra_;
+    last_operation_ = "Clamp";
+    log_stream_ << "Clamp" << endl << "min = "<< min << endl << "max = " << max << endl;
+
+    try{
+        spectra_ = clamp(spectra_, min, max);
+    }
+    catch(exception e){
+        cerr << e.what();
+        runtime_error f("Clamp");
+        main_window_->DisplayExceptionWarning(f);
+    }
 }
 
 ///
