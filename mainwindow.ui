@@ -98,6 +98,7 @@
      <addaction name="actionReject_Clipped_Spectra"/>
      <addaction name="actionView_Edit_Spectra"/>
      <addaction name="actionBooleanize_Clamp"/>
+     <addaction name="actionRemove_Vectors_of_Zeros"/>
     </widget>
     <widget class="QMenu" name="menuExport_Dataset_Elements">
      <property name="title">
@@ -355,6 +356,11 @@
   <action name="actionBooleanize_Clamp">
    <property name="text">
     <string>Booleanize/Clamp</string>
+   </property>
+  </action>
+  <action name="actionRemove_Vectors_of_Zeros">
+   <property name="text">
+    <string>Remove Vectors of Zeros</string>
    </property>
   </action>
  </widget>

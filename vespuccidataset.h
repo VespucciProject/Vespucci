@@ -130,6 +130,8 @@ public:
     void PeakIntensityNormalize(double left_bound, double right_bound);
     void Booleanize(double min, double max, bool keep_inside, bool oneify);
     void Clamp(double min, double max);
+    void ShedZeroSpectra();
+    void ShedZeroWavelengths();
 
     //Spectral Pre-processing
 
@@ -332,15 +334,20 @@ private:
     /// The spectral abscissa of the spectra in spectra_
     vec wavelength_;
 
+    vec wavelength_old_;
+
     ///
     /// \brief x_
     /// The spatial horizontal position
     colvec x_;
 
+    colvec x_old_;
     ///
     /// \brief y_
     /// The spatial vertical position
     colvec y_;
+
+    colvec y_old_;
 
     ///
     /// \brief spectra_

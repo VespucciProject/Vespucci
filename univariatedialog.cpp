@@ -62,9 +62,15 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
     max_line_ = new QCPItemStraightLine(spectrum_plot_);
     max_line_->point1->setCoords(0, 0);
     max_line_->point2->setCoords(0, 1);
-
-    double min = data_->wavelength_ptr()->min();
-    double max = data_->wavelength_ptr()->max();
+    double min, max;
+    try{
+        min = data_->wavelength_ptr()->min();
+        max = data_->wavelength_ptr()->max();
+    }
+    catch(exception e){
+        cerr << e.what();
+        workspace->main_window()->DisplayExceptionWarning(e);
+    }
 
     QString label_text = QString::number(min) + "–" + QString::number(max);
     range_label_->setText(label_text);
@@ -73,9 +79,15 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
     max_box_->setValidator(new QDoubleValidator(min, max, 2, this));
 
     uword origin = data_->FindOrigin();
+    QVector<double> plot_data, wavelength;
 
-    QVector<double> plot_data = data_->PointSpectrum(origin);
-    QVector<double> wavelength = data_->WavelengthQVector();
+    try{
+        plot_data = data_->PointSpectrum(origin);
+        wavelength = data_->WavelengthQVector();
+    }
+    catch(exception e){
+        workspace->main_window()->DisplayExceptionWarning(e);
+    }
 
     spectrum_plot_->addGraph();
     spectrum_plot_->graph(0)->addData(wavelength, plot_data);

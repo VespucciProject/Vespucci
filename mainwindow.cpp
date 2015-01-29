@@ -1027,3 +1027,37 @@ void MainWindow::on_actionBooleanize_Clamp_triggered()
     BooleanizeDialog *booleanize_dialog = new BooleanizeDialog(this, workspace, dataset_list_view_->currentIndex().row());
     booleanize_dialog->show();
 }
+
+void MainWindow::on_actionRemove_Vectors_of_Zeros_triggered()
+{
+    QStringList items;
+    bool ok;
+    items << "Remove columns of zeros (removes spectra)" << "Remove rows of zeros (removes wavelengths)";
+    QString input = QInputDialog::getItem(this, "Select dimension", "Behavior", items, 0, false, &ok);
+    if(!ok){
+        return;
+    }
+    else{
+        QSharedPointer<VespucciDataset> data = dataset_list_model_->DatasetAt(dataset_list_view_->currentIndex().row());
+        if (input == "Remove columns of zeros (removes spectra)"){
+            try{
+                data->ShedZeroSpectra();
+            }
+            catch(std::exception e){
+                DisplayExceptionWarning(e);
+            }
+        }
+        else if (input == "Remove rows of zeros (removes wavelengths)"){
+            try{
+                data->ShedZeroWavelengths();
+            }
+            catch(std::exception e){
+                DisplayExceptionWarning(e);
+            }
+        }
+        else{
+            QMessageBox::warning(this, "Invalid Entry", "Invalid response to QInputDialog::getItem()");
+        }
+        data.clear();
+    }
+}

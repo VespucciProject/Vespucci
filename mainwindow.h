@@ -138,6 +138,8 @@ private slots:
 
     void on_actionBooleanize_Clamp_triggered();
 
+    void on_actionRemove_Vectors_of_Zeros_triggered();
+
 private:
     Ui::MainWindow *ui;
 
