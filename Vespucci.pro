@@ -107,7 +107,8 @@ SOURCES += main.cpp\
     mlpackpcadata.cpp \
     spectratablemodel.cpp \
     spectrumselectiondialog.cpp \
-    booleanizedialog.cpp
+    booleanizedialog.cpp \
+    plotmakerdialog.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -152,7 +153,8 @@ HEADERS  += mainwindow.h \
     mlpackpcadata.h \
     spectratablemodel.h \
     spectrumselectiondialog.h \
-    booleanizedialog.h
+    booleanizedialog.h \
+    plotmakerdialog.h
 
 
 FORMS    += mainwindow.ui \
@@ -180,7 +182,8 @@ FORMS    += mainwindow.ui \
     statsdialog.ui \
     univariateanalysisdialog.ui \
     spectrumselectiondialog.ui \
-    booleanizedialog.ui
+    booleanizedialog.ui \
+    plotmakerdialog.ui
 
 RESOURCES += \
     resources.qrc

@@ -653,15 +653,9 @@ uword arma_ext::min(uword a, uword b)
 /// they will be fairly small and not very interesting.
 vec arma_ext::MedianFilter(vec X, uword window_size)
 {
-    cout << "MedianFilter" << endl;
     uword k = (window_size - 1) / 2;
-    cout << "k = " << k << endl;
     vec filtered = X; //copy the whole thing, then add in the bit we actually filter
-    cout << "X.n_rows = " << X.n_rows << endl;
     vec buffer;
-    cout << "elements in filtered" << filtered.n_elem;
-    cout << "k = " << k << endl;
-    cout << "X.n_rows - k = " << X.n_rows - k << endl;
     uvec sorted;
     //The armadillo median function results in a crash on some mingw compilers
     //This method might not be as fast, but it always works.
@@ -1077,6 +1071,9 @@ void arma_ext::EstimateAdditiveNoise(mat &noise, mat &noise_correlation, mat sam
     mat nn = noise * noise.t() / sample.n_rows;
     noise_correlation = diagmat(nn.diag());
 }
+
+
+
 
 
 

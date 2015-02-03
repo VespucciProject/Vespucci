@@ -47,6 +47,7 @@ void UnivariateData::Apply(double left_bound,
     case UnivariateMethod::Correlation :
         results_ = arma_ext::CorrelationMat(parent_->spectra(), control_);
         break;
+    case UnivariateMethod::SignalNoise :
     case UnivariateMethod::Intensity : default :
         results_ = arma_ext::FindPeakMaxMat(parent_->spectra(),
                                             parent_->wavelength(),

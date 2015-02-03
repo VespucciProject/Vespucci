@@ -83,35 +83,35 @@ bool TextImport::ImportWideText(QString filename,
     bool ok = true;
     //iterate through each row of the input file, loading spatial and spectral values
     for(j=0; j<spectra_count; ++j){
-        spectra_string=inputstream.readLine();
+        spectra_string = inputstream.readLine();
         spectra_string_list =
                 spectra_string.split(sep, QString::SkipEmptyParts);
+        //ignore whitespace or lines with less than 3 entries
+        if (spectra_string_list.size() >= 3){
+            if (swap_spatial){
+                y(j) = spectra_string_list.at(0).toDouble(&ok);
+                spectra_string_list.removeAt(0);
 
-        if (swap_spatial){
-            y(j) = spectra_string_list.at(0).toDouble(&ok);
-            spectra_string_list.removeAt(0);
+                x(j) = spectra_string_list.at(0).toDouble(&ok);
+                spectra_string_list.removeAt(0);
+            }
+            else{
+                x(j) = spectra_string_list.at(0).toDouble(&ok);
+                spectra_string_list.removeAt(0);
 
-            x(j) = spectra_string_list.at(0).toDouble(&ok);
-            spectra_string_list.removeAt(0);
-        }
-        else{
-            x(j) = spectra_string_list.at(0).toDouble(&ok);
-            spectra_string_list.removeAt(0);
+                y(j) = spectra_string_list.at(0).toDouble(&ok);
+                spectra_string_list.removeAt(0);
+            }
 
-            y(j) = spectra_string_list.at(0).toDouble(&ok);
-            spectra_string_list.removeAt(0);
-        }
+            // Load each spectrum from the working row of the text file
+            // to the working column of spectra matrix
+            for (i=0; i<rows; ++i)
+                spectra(i,j) = spectra_string_list.at(i).toDouble(&ok);
+            if (progress->wasCanceled() || !ok)
+                return false;
+            else
+                progress->setValue(j);
 
-        // Load each spectrum from the working row of the text file
-        // to the working column of spectra matrix
-        for (i=0; i<rows; ++i){
-            spectra(i,j) = spectra_string_list.at(i).toDouble(&ok);
-        }
-        if (progress->wasCanceled() || !ok){
-            return false;
-        }
-        else{
-            progress->setValue(j);
         }
     }
 

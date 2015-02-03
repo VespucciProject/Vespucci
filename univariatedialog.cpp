@@ -70,6 +70,8 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
     catch(exception e){
         cerr << e.what();
         workspace->main_window()->DisplayExceptionWarning(e);
+        min = 0;
+        max = 0;
     }
 
     QString label_text = QString::number(min) + "–" + QString::number(max);

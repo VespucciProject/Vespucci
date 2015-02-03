@@ -37,7 +37,7 @@ PrincipalComponentsData::PrincipalComponentsData(QSharedPointer<VespucciDataset>
 /// Perform analysis using arma::princomp
 void PrincipalComponentsData::Apply(mat spectra)
 {
-    princomp(coeff_, score_, latent_, tsquared_, spectra);
+    princomp(coeff_, score_, latent_, tsquared_, spectra.t());
     double eigenvalue_sum = sum(latent_);
     percent_variance_ = latent_ / eigenvalue_sum;
     percent_variance_ /= 0.01;
@@ -50,7 +50,7 @@ void PrincipalComponentsData::Apply(mat spectra)
 /// Return the score for a particular column
 colvec PrincipalComponentsData::Results(int component)
 {
-    return coeff_.col(component);
+    return score_.col(component);
 }
 
 vec* PrincipalComponentsData::tsquared()

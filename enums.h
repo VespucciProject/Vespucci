@@ -5,7 +5,7 @@ namespace UnivariateMethod{
 ///
 /// \brief The Method enum
 /// Univariate methods
-enum Method{Intensity, Area, FWHM, AreaRatio, IntensityRatio, Correlation};
+enum Method{Intensity, Area, FWHM, AreaRatio, IntensityRatio, Correlation, SignalNoise};
 }
 
 namespace MetaMethod{

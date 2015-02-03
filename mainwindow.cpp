@@ -934,13 +934,15 @@ void MainWindow::on_actionLarge_Matrices_triggered()
 
     if (data->principal_components_calculated()){
         matrix = data->principal_components_data()->score();
-        data_objects.insert("PCA Projected Data", matrix);
+        data_objects.insert("PCA Projected Data (Scores)", matrix);
         matrix = data->principal_components_data()->coeff();
-        data_objects.insert("PCA Coefficients", matrix);
+        data_objects.insert("PCA Coefficients (Loadings)", matrix);
         matrix = (mat *) data->principal_components_data()->tsquared();
-        data_objects.insert("PCA t² Values", matrix);
+        data_objects.insert("PCA Hotelling t² Values", matrix);
         matrix = (mat *) data->principal_components_data()->latent();
         data_objects.insert("PCA Eigenvalues of Covariance Matrix", matrix);
+        matrix = (mat *) data->principal_components_data()->percent_variance();
+        data_objects.insert("PCA Percent Variance", matrix);
     }
 
     if (data->mlpack_pca_calculated()){
