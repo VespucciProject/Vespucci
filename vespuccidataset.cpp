@@ -737,7 +737,6 @@ void VespucciDataset::ShedZeroWavelengths()
     x_old_ = x_;
     y_old_ = y_;
     wavelength_old_ = wavelength_;
-    rowvec zerovec = zeros(spectra_.n_cols).t();
     vec current_row;
     uvec indices, indices_buffer;
     for (uword i = 0; i < spectra_.n_rows; ++i){

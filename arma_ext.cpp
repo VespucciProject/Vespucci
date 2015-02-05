@@ -16,7 +16,44 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
+
+
+    This file incorporates a port of peakfinder, originally written in MATLAB,
+    as arma_ext::peakfinder().
+
+    peakfinder is covered under the following copyright and permission notice:
+
+    Copyright (c) 2013, Nathanael C. Yoder
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are
+    met:
+
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in
+          the documentation and/or other materials provided with the distribution
+        * Neither the name of the  nor the names
+          of its contributors may be used to endorse or promote products derived
+          from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+
 *******************************************************************************/
+
+
 #include "arma_ext.h"
 
 ///
@@ -1077,3 +1114,113 @@ void arma_ext::EstimateAdditiveNoise(mat &noise, mat &noise_correlation, mat sam
 
 
 
+
+///
+/// \brief arma_ext::FindPeaks an implementation of the peakfinder MATLAB routine
+/// \param X A vector representing a spectrum
+/// \param dX A first-derivative spectrum of X
+/// \param sel The amount above surrounding data for a peak to be identified
+/// \param threshold A threshold value which peaks must be larger than to be
+/// maxima
+/// \param poly_order The polynomial order of the Savitzky-Golay filter used for
+/// derivatization
+/// \param window_size The window size of the Savitzky-Golay filter used for
+/// derivatization
+/// \param peak_locations A vector containing one and zeros corresponding to
+/// whether or not a peak center exists at that wavelength
+/// \param peak_magnitudes A vector containing values at peak centers.
+/// \return
+///
+vec arma_ext::FindPeaks(vec X,
+                        vec dX,
+                        double sel,
+                        double threshold,
+                        vec &peak_magnitudes)
+{
+    vec peak_locations = zeros(X.n_rows);
+    peak_magnitudes = zeros(X.n_rows);
+    if (sel <= 0){
+        sel = (X.max() - X.min() ) / 4.0;
+    }
+    dX.elem( find(dX == 0) ).fill(-datum::eps); //to find first of repeated values
+    double minimum_magnitude = X.min();
+    double left_min = X(0);
+    uword length = X.n_elem;
+    uword temporary_location = 0;
+    //Find where derivative changes sign:
+    uvec indices = find( (dX.subvec(0, length - 2) % dX.subvec(1, length - 1) )< 0);
+    mat X_extrema = X.elem(indices);
+    length = X_extrema.n_elem;
+    double temporary_magnitude = minimum_magnitude;
+    bool peak_found = false;
+    uword ii;
+    if (X(1) >= X(2))
+        ii = 0;
+    else
+        ii = 1;
+    //pre-allocate maximum number of maxima
+    uword max_peaks = ceil(length / 2.0);
+    peak_magnitudes = zeros(max_peaks);
+
+    //This loop finds the peak locations
+    while (ii < length){
+        ++ii; //increment ii
+        //reset peak finding if we had a peak earlier and the next peak is
+        //bigger than the last or the left minimum was small enough to reset
+        if (peak_found){
+            temporary_magnitude = minimum_magnitude;
+            peak_found = false;
+        }
+        if ( (X(ii) > temporary_magnitude) && (X(ii) > left_min + sel) ){
+                temporary_location = ii;
+                temporary_magnitude = X(ii);
+        }
+
+        ++ii; //move into the valley
+        //come down at least sel from peak
+        if (!peak_found && (temporary_magnitude > sel + X(ii) ) ){
+            peak_found = true;
+            left_min = X(ii);
+            peak_locations(ii) = temporary_location;
+            peak_magnitudes(ii) = temporary_magnitude;
+        }
+        else
+            left_min = X(ii);
+    }
+    //remove all peaks below the threshold
+    indices = find(peak_magnitudes <= threshold);
+    peak_magnitudes.elem(indices).zeros();
+    peak_locations.elem(indices).zeros();
+    return peak_locations;
+}
+
+
+///
+/// \brief arma_ext::FindPeaksMat Performs FindPeaks on a spectra matrix
+/// \param x
+/// \param sel
+/// \param threshold
+/// \param poly_order
+/// \param window_size
+/// \param peak_locations
+/// \param peak_magnitudes
+/// \return
+///
+mat arma_ext::FindPeaksMat(mat X, double sel, double threshold, uword poly_order, uword window_size, mat &peak_magnitudes)
+{
+    mat peak_locations(X.n_rows, X.n_cols);
+    peak_magnitudes.set_size(X.n_rows, X.n_cols);
+    mat derivatized = arma_ext::sgolayfilt(X, poly_order, window_size, 1, 1);
+    vec current_spectrum;
+    vec current_derivative;
+    vec current_magnitudes;
+    vec current_peaks;
+    for (uword i = 0; i < X.n_cols; ++i){
+        current_spectrum = X.col(i);
+        current_derivative = derivatized.col(i);
+        current_peaks = arma_ext::FindPeaks(current_spectrum, current_derivative, sel, threshold, current_magnitudes);
+        peak_locations.col(i) = current_peaks;
+        peak_magnitudes.col(i) = current_magnitudes;
+    }
+    return peak_locations;
+}

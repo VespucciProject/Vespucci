@@ -52,6 +52,19 @@ uword max(uword a, uword b);
 vec MedianFilter(vec X, uword window_size);
 mat MedianFilterMat(mat X, uword window_size);
 
+//Peak detection
+vec FindPeaks(vec X, vec dX,
+              double sel,
+              double threshold,
+              vec &peak_magnitudes);
+
+mat FindPeaksMat(mat X,
+                 double sel,
+                 double threshold,
+                 uword poly_order, uword window_size,
+                 mat &peak_magnitudes);
+
+
 //Peak determination
 double IntegratePeak(vec X, uword min_index, uword max_index, double abscissa_step, vec &baseline);
 vec IntegratePeakMat(mat X, vec abscissa, double &min, double &max, mat &baselines, uvec &boundaries);

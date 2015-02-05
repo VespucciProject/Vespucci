@@ -363,6 +363,12 @@ private:
     mat spectra_old_;
 
     ///
+    /// \brief baselines_
+    /// If spectra is baseline corrected, this matrix is the baseline of each
+    /// spectrum.
+    mat baselines_;
+
+    ///
     /// \brief name_
     /// The name chosen by the user for this dataset.
     QString name_;
