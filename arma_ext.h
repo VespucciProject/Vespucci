@@ -73,14 +73,15 @@ mat FindPeaksMat(mat X,
                  mat &peak_magnitudes);
 
 vec cwt(vec X, std::string wavelet, uword qscale);
-vec cwt_spdbc(vec X, std::string wavelet, uword qscale);
+vec cwt_spdbc(vec X, std::string wavelet, uword qscale, double threshold, std::string threshold_method, uword window_size, uvec &peak_positions, vec &baseline);
+mat cwt_spdbc_Mat(mat X, std::string wavelet, uword qscale, double threshold, std::string threshold_method, uword window_size, field<uvec> &peak_positions, mat &baselines);
 
 vec EstimateBaseline(vec X,
                      umat peaks,
                      uword window_size);
 umat FindPeakPositions(vec X, vec dX,
                        double threshold,
-                       string threshold_method,
+                       std::string threshold_method,
                        vec &peak_magnitudes);
 
 

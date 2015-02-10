@@ -1369,7 +1369,7 @@ vec arma_ext::cwt(vec X, std::string wavelet, uword qscale)
 /// "ratio" - ratio of largest magnitude (0 to 1)
 umat arma_ext::FindPeakPositions(vec X, vec dX,
                                  double threshold,
-                                 string threshold_method,
+                                 std::string threshold_method,
                                  vec &peak_magnitudes)
 {
     //threshold can be arbitrary or calculated
@@ -1492,7 +1492,7 @@ vec arma_ext::EstimateBaseline(vec X,
                                umat peaks,
                                uword window_size)
 {
-    if (window_size % 2 != 0){
+    if (window_size % 2 == 0){
         window_size--;
         cerr << "invalid window_size, using one less" << endl;
     }
@@ -1527,7 +1527,7 @@ vec arma_ext::EstimateBaseline(vec X,
         cout << "Exception! (peak exclusion)" << endl;
         cout << "size of peaks = " << peaks.n_rows << " " << peaks.n_cols << endl;
         cout << "i = " << i << endl;
-        throw runtime_error(e.what());
+        throw std::runtime_error(e.what());
     }
 
     //apply local minimum filtering to baseline
@@ -1540,12 +1540,66 @@ vec arma_ext::EstimateBaseline(vec X,
             buffer = baseline.subvec(i-k, i+k);
             filtered(i) = buffer.min();
         }
+        //fill edges with first and last values
+        for (uword i = 0; i < k; ++i){
+            filtered(i) = filtered(k);
+        }
+        for (uword i = filtered.n_rows - k; i < filtered.n_elem; ++i){
+            filtered(i) = filtered(filtered.n_rows - k - 2);
+        }
     }catch(std::exception e){
         cout << "Exception! (filtering)" << endl;
         cout << "i = " << i << endl;
-        throw runtime_error(e.what());
+        throw std::runtime_error(e.what());
     }
 
     return filtered;
 
+
+}
+
+
+vec arma_ext::cwt_spdbc(vec X, std::string wavelet, uword qscale, double threshold, std::string threshold_method, uword window_size, uvec &peak_positions, vec &baseline)
+{
+    umat peaks;
+    vec peak_magnitudes;
+    vec X_transform = arma_ext::cwt(X, wavelet, qscale);
+    vec dX_transform = arma_ext::diff(X, 1);
+    dX_transform.insert_rows(0, 1, true); //buffer so that X and dX have same
+    //number of elements and dX(i) is the derivative of X at i.
+    peaks = arma_ext::FindPeakPositions(X_transform, dX_transform,
+                                        threshold,
+                                        threshold_method,
+                                        peak_magnitudes);
+    peak_positions = peaks.col(0);
+    baseline = arma_ext::EstimateBaseline(X, peaks, window_size);
+    return X - baseline;
+
+}
+
+
+mat arma_ext::cwt_spdbc_Mat(mat X, std::string wavelet, uword qscale,
+                            double threshold, std::string threshold_method,
+                            uword window_size, field<uvec> &peak_positions,
+                            mat &baselines)
+{
+    baselines.set_size(X.n_rows, X.n_cols);
+    vec baseline;
+    vec spectrum;
+    vec current_corrected;
+    mat corrected;
+    uvec current_peakpos;
+    peak_positions.set_size(X.n_cols);
+    for (uword i = 0; i < X.n_cols; ++i){
+        spectrum = X.col(i);
+        current_corrected = arma_ext::cwt_spdbc(spectrum, wavelet,
+                                               qscale, threshold,
+                                               threshold_method, window_size,
+                                               current_peakpos, baseline);
+
+        peak_positions(i) = current_peakpos;
+        baselines.col(i) = baseline;
+        corrected.col(i) = current_corrected;
+    }
+    return corrected;
 }
