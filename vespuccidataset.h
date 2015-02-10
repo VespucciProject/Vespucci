@@ -40,7 +40,7 @@
 #include "maplistmodel.h"
 #include "univariatedata.h"
 #include "mlpackpcadata.h"
-
+#include "analysisresults.h"
 
 
 
@@ -57,6 +57,7 @@ class MainWindow;
 class VespucciWorkspace;
 class MapListModel;
 class UnivariateData;
+class AnalysisResults;
 
 using namespace std;
 using namespace arma;
@@ -143,7 +144,7 @@ public:
                     unsigned int window_size);
     void SingularValue(unsigned int singular_values);
     int QUIC_SVD(double epsilon);
-    void Baseline(QString method, int window_size);
+    void Baseline(QString method, int parameter);
     void RemoveClippedSpectra(double threshold);
     void Scale(double scaling_factor);
     void ShedSpectrum(const uword index);
@@ -242,6 +243,8 @@ public:
     void VertexComponents(uword endmembers);
     void KMeans(size_t clusters);
     void PrincipalComponents();
+    void FindPeaks(double sel, double threshold,
+                   uword poly_order, uword window_size);
 
 
     //MEMBER ACCESS FUNCTIONS:
@@ -324,6 +327,9 @@ public:
     QTextStream log_stream_;
 
     MapListModel *map_list_model();
+
+    QStringList AnalysisResultsList();
+    mat *AnalysisResult(QString key);
 
     void DestroyLogFile();
 
@@ -518,6 +524,11 @@ private:
     /// \brief univariate_datas_
     /// Container for UnivariateData objects allocated on heap.
     QList<QSharedPointer<UnivariateData> > univariate_datas_;
+
+    ///
+    /// \brief analysis_results_
+    /// A container for various analyses indexed by name
+    QMap<QString, QSharedPointer<AnalysisResults> > analysis_results_;
 
 };
 Q_DECLARE_METATYPE(QSharedPointer<VespucciDataset> *)

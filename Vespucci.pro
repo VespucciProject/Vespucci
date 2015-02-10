@@ -108,7 +108,8 @@ SOURCES += main.cpp\
     spectratablemodel.cpp \
     spectrumselectiondialog.cpp \
     booleanizedialog.cpp \
-    plotmakerdialog.cpp
+    plotmakerdialog.cpp \
+    analysisresults.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -154,7 +155,8 @@ HEADERS  += mainwindow.h \
     spectratablemodel.h \
     spectrumselectiondialog.h \
     booleanizedialog.h \
-    plotmakerdialog.h
+    plotmakerdialog.h \
+    analysisresults.h
 
 
 FORMS    += mainwindow.ui \

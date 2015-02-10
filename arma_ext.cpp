@@ -691,6 +691,7 @@ uword arma_ext::min(uword a, uword b)
 vec arma_ext::MedianFilter(vec X, uword window_size)
 {
     uword k = (window_size - 1) / 2;
+
     vec filtered = X; //copy the whole thing, then add in the bit we actually filter
     vec buffer;
     uvec sorted;
@@ -1137,61 +1138,73 @@ vec arma_ext::FindPeaks(vec X,
                         double threshold,
                         vec &peak_magnitudes)
 {
-    vec peak_locations = zeros(X.n_rows);
-    peak_magnitudes = zeros(X.n_rows);
-    if (sel <= 0){
-        sel = (X.max() - X.min() ) / 4.0;
-    }
+    uvec peak_indices;
+    uvec peak_locations;
+    peak_magnitudes = zeros(X.n_rows, 1);
+
     dX.elem( find(dX == 0) ).fill(-datum::eps); //to find first of repeated values
     double minimum_magnitude = X.min();
     double left_min = X(0);
     uword length = X.n_elem;
     uword temporary_location = 0;
+
     //Find where derivative changes sign:
-    uvec indices = find( (dX.subvec(0, length - 2) % dX.subvec(1, length - 1) )< 0);
-    mat X_extrema = X.elem(indices);
+    uvec extrema_indices = find( (dX.subvec(0, length - 2) % dX.subvec(1, length - 1) )< 0);
+    vec X_extrema = X.elem(extrema_indices);
     length = X_extrema.n_elem;
     double temporary_magnitude = minimum_magnitude;
     bool peak_found = false;
     uword ii;
     if (X(1) >= X(2))
-        ii = 0;
-    else
         ii = 1;
-    //pre-allocate maximum number of maxima
-    uword max_peaks = ceil(length / 2.0);
-    peak_magnitudes = zeros(max_peaks);
+    else
+        ii = 2;
 
     //This loop finds the peak locations
     while (ii < length){
-        ++ii; //increment ii
         //reset peak finding if we had a peak earlier and the next peak is
         //bigger than the last or the left minimum was small enough to reset
         if (peak_found){
             temporary_magnitude = minimum_magnitude;
             peak_found = false;
         }
-        if ( (X(ii) > temporary_magnitude) && (X(ii) > left_min + sel) ){
-                temporary_location = ii;
-                temporary_magnitude = X(ii);
+
+        if ( (X_extrema(ii) > temporary_magnitude) && (X_extrema(ii) > left_min + sel) ){
+            cout << "temporary_location = " << ii << endl;
+            temporary_magnitude = X_extrema(ii);
         }
 
         ++ii; //move into the valley
-        //come down at least sel from peak
-        if (!peak_found && (temporary_magnitude > sel + X(ii) ) ){
-            peak_found = true;
-            left_min = X(ii);
-            peak_locations(ii) = temporary_location;
-            peak_magnitudes(ii) = temporary_magnitude;
+        if (ii >= length){
+            break;
         }
-        else
-            left_min = X(ii);
+        //come down at least sel from peak
+        if (!peak_found && (temporary_magnitude > sel + X_extrema(ii) ) ){
+            peak_found = true;
+            cout << "peak found!" << endl;
+            left_min = X_extrema(ii);
+            peak_locations << temporary_location;
+        }
+        else if(X(ii) < left_min)
+            left_min = X_extrema(ii);
+
+        ++ii;
+
+
     }
     //remove all peaks below the threshold
-    indices = find(peak_magnitudes <= threshold);
+
+    vec results = zeros(X.n_elem, 1);
+    peak_indices = extrema_indices.elem(peak_locations);
+    results.elem(peak_indices).ones();
+    peak_magnitudes.elem(peak_indices) = X(peak_indices);
+
+
+
+    uvec indices = find(peak_magnitudes <= threshold);
     peak_magnitudes.elem(indices).zeros();
-    peak_locations.elem(indices).zeros();
-    return peak_locations;
+    results.elem(indices).zeros();
+    return results;
 }
 
 
@@ -1208,9 +1221,37 @@ vec arma_ext::FindPeaks(vec X,
 ///
 mat arma_ext::FindPeaksMat(mat X, double sel, double threshold, uword poly_order, uword window_size, mat &peak_magnitudes)
 {
-    mat peak_locations(X.n_rows, X.n_cols);
+    mat peak_locations(X.n_rows, X.n_cols); //value that gets returned
     peak_magnitudes.set_size(X.n_rows, X.n_cols);
+
+    //calculate a smoothed first derivative:
     mat derivatized = arma_ext::sgolayfilt(X, poly_order, window_size, 1, 1);
+    vec thresh(X.n_cols);
+    vec sels(X.n_cols);
+    if (std::isnan(sel)){
+        for (uword i = 0; i < X.n_cols; ++i){
+            sels(i) = (X.col(i).max() - X.col(i).min() ) / 16.0;
+        }
+    }
+    else{
+        sels.fill(sel);
+    }
+
+    if (std::isnan(threshold)){
+        uword k = (X.n_rows % 2 == 0 ? (X.n_rows / 2) : (X.n_rows + 1 / 2 ));
+        vec buffer(X.n_rows);
+        uvec sorted;
+        //we calculate median this way due to a problem with my MinGW compiler that
+        //causes crashes when arma::median is called.
+        for (uword i = 0; i < X.n_cols; ++i){
+            buffer = arma_ext::diff(X, 1); //use arithmetic derivative, rather than smoothed derivative
+            sorted = stable_sort_index(buffer);
+            thresh(i) = buffer(sorted(k));
+        }
+    }
+    else{
+        thresh.fill(threshold);
+    }
     vec current_spectrum;
     vec current_derivative;
     vec current_magnitudes;
@@ -1218,9 +1259,293 @@ mat arma_ext::FindPeaksMat(mat X, double sel, double threshold, uword poly_order
     for (uword i = 0; i < X.n_cols; ++i){
         current_spectrum = X.col(i);
         current_derivative = derivatized.col(i);
-        current_peaks = arma_ext::FindPeaks(current_spectrum, current_derivative, sel, threshold, current_magnitudes);
+        current_peaks = arma_ext::FindPeaks(current_spectrum, current_derivative, sels(i), thresh(i), current_magnitudes);
         peak_locations.col(i) = current_peaks;
         peak_magnitudes.col(i) = current_magnitudes;
     }
     return peak_locations;
+}
+
+///
+/// \brief arma_ext::diff
+/// \param X A vector represetnign a signal
+/// \param deriv_order The derivative order to calculate
+/// \return The deriv_order-th derivative of X, a vector with deriv_order fewer
+/// elements than X.
+///
+/// Perform arithmetic differentiation of a vector.
+///
+vec arma_ext::diff(vec X, uword deriv_order)
+{
+    cout << "deriv_order = " << deriv_order << endl;
+    vec return_value;
+    if (deriv_order == 0){
+        cout << "deriv_order == 0 !" << endl;
+        return_value = X;
+    }
+
+    else if (deriv_order > 0){ //perform first derivative of input
+        vec offset = X;
+        offset.insert_rows(0, 1);
+        offset(0) = 0;
+        offset.shed_row(offset.n_rows - 1);
+        vec difference;
+        difference = X - offset;
+        difference.shed_row(0); //difference will have one less element
+        return_value = diff(difference, deriv_order - 1);
+    }
+
+    return return_value;
+}
+
+///
+/// \brief arma_ext::cwt
+/// \param X A vector (in this function, it must be real, because Vespucci is only
+/// handling real-valued data).
+/// \param wavelet A string describing wavelet type. See below.
+/// \param qscale A parameter related to scale in the traditional sense. A higher
+/// value is a better reproduction of the original, but decays faster. 128 seems
+/// to be an ok value.
+/// \return A vector of CWT coefficients.
+/// Calculate a vector of CWT coefficients using a Fast Fourier Transform (FFT).
+/// Peaks in the CWT will correspond to peaks in the spectrum. A higher value of
+/// qscale will result in a higher number of peaks represented in the CWT, but
+/// with the CWT valid for a lower number of points (within the range of Raman
+/// spectra, this concern is not particulary important, as a higher scale will
+/// also create a noisier cwt.
+vec arma_ext::cwt(vec X, std::string wavelet, uword qscale)
+{
+
+    uword n = X.n_rows;
+    uword k = n/2; //will be truncated if odd
+    cx_vec X_hat = fft(X);
+    vec X_i = join_vert(linspace(0, k, 1+k), linspace(-k+1, -1.0, k-1));
+    X_i = X_i * (2 * datum::pi/n);
+
+    vec omega = (n * X_i) / qscale;
+
+    vec window; //the wavelet
+    if (wavelet == "gaus")
+        window = exp(-pow(omega,2) / 2);
+    //else if (wavelet == "haar")
+    //    ;
+    else //if (wavelet == 'mexh')
+        window = pow(omega, 2) % exp(-1 * pow(omega,2) / 2);
+
+    //normalize window to the scale
+    window = window / std::sqrt(qscale);
+
+    //multiply the window by the fft of the vector, then take the ifft of that
+    cx_vec w = ifft(window % X_hat);
+
+    return real(w); //return real part of the ifft
+
+}
+
+
+
+///
+/// \brief arma_ext::FindPeakPositions
+/// \param X
+/// \param dX A buffered first derivative (same size of X with value of X(i) equal
+/// to the derivative of X at i. Taken as a parameter incase a smoothed derivative is to be used
+/// \param threshold A value for threshold of significance. Depending on type
+/// \param threshold_method Describes the method to be used (see below)
+/// \return A umat in which each row represents a peak. The first column contains
+/// indices of peak centers, the second column contains the left bound of the peak
+/// and the third column contains the right bound of the peak. A matrix of this
+/// format is the expected input for arma_ext::EstimateBaseline. The peak determination
+/// may be carried out on a transformed spectra (such as heavy S-G smoothing, kernel
+/// convolution or CWT) then EstimateBaseline called with these peak centers and
+/// the original spectrum. EstimateBaseline will then exclude the larger peaks
+/// from the baseline. Since EstimateBaseline uses a local minimum filter, smaller
+/// peaks will be retained while preventing wider peaks from being cut into by the
+/// filter.
+///
+/// threshold_method can be the following:
+/// "magnitude" - a minimum peak-height threshold, arbitrary double
+/// "count" - maximum number of peaks found, largest magnitude first (1 to many)
+/// "countpercentage" - largest percentage of all peaks found (0 to 1)
+/// "ratio" - ratio of largest magnitude (0 to 1)
+umat arma_ext::FindPeakPositions(vec X, vec dX,
+                                 double threshold,
+                                 string threshold_method,
+                                 vec &peak_magnitudes)
+{
+    //threshold can be arbitrary or calculated
+    cout << "FindPeakPositions" << endl;
+
+    vec d2X = arma_ext::diff(dX, 1);
+    d2X.insert_rows(0, 1, true);
+    if (threshold_method == "count" && threshold <= 0){
+        throw std::runtime_error("Invalid threshold value for given method");
+    }
+    if ((threshold_method == "countpercentage" || threshold_method == "ratio") && threshold > 1){
+        throw std::runtime_error("Invalid threshold value for given method");
+    }
+
+    //find where first derivative changes sign
+    uvec extrema_indices = find( (dX.subvec(0, X.n_rows - 2) % dX.subvec(1, X.n_rows - 1) )< 0);
+    vec d2X_extrema = d2X(extrema_indices);
+    uvec maxima_indices = find(d2X_extrema < 0); //the indices in d2X_extrema, X_extrema and extrema_indices that correspond to maxima
+    cout << "d2X_extrema.min() = " << d2X_extrema.min() << endl;
+    cout << "maxima_indices.n_elem = " << maxima_indices.n_elem << endl;
+    umat results(maxima_indices.n_elem, 3);
+    uvec buffer(3);
+    peak_magnitudes.set_size(maxima_indices.n_elem); //each maximum corresponds to a magnitude
+
+    //we have the indices of the maxima, now we need to find magnitudes and positions
+    //of the minima associated with each maximum
+    uword center_index = 0;
+    uword left_index = 0;
+    uword right_index = 0;
+
+    //find peak edges for each center and the magnitude of the peaks
+    uword i;
+    try{
+        for (i = 0; i < maxima_indices.n_elem; ++i){
+
+            if(maxima_indices(i) == 0){
+                //no left index (at beginning)
+                center_index = extrema_indices(maxima_indices(i)); //index of the center of peak
+                right_index = extrema_indices(maxima_indices(i) + 1); //index of right edge
+                left_index = center_index; //left edge is same as center
+            }
+
+            else if(maxima_indices(i) + 1 >= extrema_indices.n_elem){
+                //no right_index (we're at the end)
+                center_index = extrema_indices(maxima_indices(i)); //index of the center of peak
+                left_index = extrema_indices(maxima_indices(i) - 1); //index of left edge
+                right_index = center_index;
+            }
+
+            else{
+                //normal
+                center_index = extrema_indices(maxima_indices(i)); //index of the center of peak
+                left_index = extrema_indices(maxima_indices(i) - 1); //index of left edge
+                right_index = extrema_indices(maxima_indices(i) + 1); //index of right edge
+            }
+
+            //if left_index == right_index, average is the same as difference...
+            peak_magnitudes(i) = (2.0*X(center_index) - X(left_index) - X(right_index))/2.0;
+            buffer(0) = center_index;
+            buffer(1) = left_index;
+            buffer(2) = right_index;
+            results.row(i) = buffer.t();
+        }
+    }catch(std::exception e){
+        cout << "Exception!" << endl;
+        cout << e.what() << endl;
+        cout << "iterator index = " << i << endl;
+        cout << "maxima index = " << maxima_indices(i) << endl;
+        cout << "extrema_indices.n_rows = " << extrema_indices.n_rows << endl;
+        cout << "center_index = " << center_index << endl;
+        cout << "left_index = " << left_index << endl;
+        cout << "right_index = " << right_index << endl;
+        throw std::runtime_error(e.what());
+    }
+
+    //Fix thresholds//
+    //sort with largest first:
+    uvec sorted_peak_indices = stable_sort_index(peak_magnitudes, "descend");
+    peak_magnitudes = peak_magnitudes.rows(sorted_peak_indices);
+    results = results.rows(sorted_peak_indices);
+
+    if (threshold_method == "magnitude"){
+        uvec indices = find(peak_magnitudes > threshold);
+        peak_magnitudes = peak_magnitudes.rows(indices);
+        return results.rows(indices);
+    }
+    else if (threshold_method == "count"){
+        uword uthresh = (std::ceil(threshold) < results.n_rows - 1 ? std::ceil(threshold) : results.n_rows - 1);
+        peak_magnitudes = peak_magnitudes.rows(0, uthresh);
+        return results.rows(0, uthresh);
+    }
+    else if (threshold_method == "ratio"){
+        if (threshold == 1){
+            peak_magnitudes = peak_magnitudes.row(0);
+            return results.row(0);
+        }
+        else{
+            double cutoff = peak_magnitudes(0) * threshold;
+            uvec indices = find(peak_magnitudes > cutoff);
+            peak_magnitudes = peak_magnitudes.rows(indices);
+            return results.rows(indices);
+        }
+    }
+    else{ //(threshold_method == "countpercentage")
+        uword count = std::floor(threshold*results.n_rows);
+        peak_magnitudes = peak_magnitudes.rows(0, count);
+        return results.rows(0, count);
+    }
+
+}
+
+///
+/// \brief EstimateBaseline
+/// \param X Signal
+/// \param peaks Positions of peaks to exclude from spectrum to calculate baseline
+/// \param window_size Size of local minimum filter applied to baseline
+/// \return
+///
+vec arma_ext::EstimateBaseline(vec X,
+                               umat peaks,
+                               uword window_size)
+{
+    if (window_size % 2 != 0){
+        window_size--;
+        cerr << "invalid window_size, using one less" << endl;
+    }
+
+    vec baseline = X;
+    uword start, end, center, size;
+    //linearize across bases of peaks
+    uword i;
+    try{
+        for (i = 0; i < peaks.n_rows; ++i){
+            center = peaks(i, 0);
+            start = peaks(i, 1);
+            end = peaks(i, 2);
+            //cut accross in a straight line when peak is on edge of spectrum
+            size = end - start;
+
+            //linearize baseline across base of peak
+            // if the start or end of the peak is the center, take a flat line
+            // from the minimum
+            if (start == center){
+                baseline.subvec(start, end-1) = X(end) * ones(size);
+            }
+            else if (end == center){
+                baseline.subvec(start, end-1) = X(start) * ones(size);
+            }
+            else{
+                baseline.subvec(start, end-1) = linspace(X(start), X(end), size);
+            }
+
+        }
+    }catch(std::exception e){
+        cout << "Exception! (peak exclusion)" << endl;
+        cout << "size of peaks = " << peaks.n_rows << " " << peaks.n_cols << endl;
+        cout << "i = " << i << endl;
+        throw runtime_error(e.what());
+    }
+
+    //apply local minimum filtering to baseline
+
+    uword k = (window_size - 1) / 2; //mid-point of window
+    vec buffer;
+    vec filtered(baseline.n_elem);
+    try{
+        for (uword i = k; i < (X.n_rows - k); ++i){
+            buffer = baseline.subvec(i-k, i+k);
+            filtered(i) = buffer.min();
+        }
+    }catch(std::exception e){
+        cout << "Exception! (filtering)" << endl;
+        cout << "i = " << i << endl;
+        throw runtime_error(e.what());
+    }
+
+    return filtered;
+
 }

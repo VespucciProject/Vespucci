@@ -103,9 +103,6 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
         data_objects_.insert("Parent Dataset Coordinates", matrix);
     }
 
-    QStringList object_list(data_objects_.keys());
-
-    data_selector_->addItems(object_list);
     data_selector_->setCurrentIndex(0);
 }
 

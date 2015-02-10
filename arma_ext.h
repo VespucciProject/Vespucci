@@ -32,6 +32,9 @@ namespace arma_ext
 mat spdiags(mat B, ivec d, uword m, uword n);
 bool svds(mat X, uword k, mat &U, vec &s, mat &V);
 mat orth(mat X);
+vec diff(vec X, uword deriv_order);
+
+
 bool plsregress(mat X, mat Y, int components,
                 mat &X_loadings, mat &Y_loadings,
                 mat &X_scores, mat &Y_scores,
@@ -52,17 +55,33 @@ uword max(uword a, uword b);
 vec MedianFilter(vec X, uword window_size);
 mat MedianFilterMat(mat X, uword window_size);
 
-//Peak detection
+//Peak detection (SPF)
 vec FindPeaks(vec X, vec dX,
               double sel,
               double threshold,
               vec &peak_magnitudes);
+
+uvec FindPeakPositions(vec X, vec dX,
+                       double sel,
+                       double threshold,
+                       uvec &local_minima);
 
 mat FindPeaksMat(mat X,
                  double sel,
                  double threshold,
                  uword poly_order, uword window_size,
                  mat &peak_magnitudes);
+
+vec cwt(vec X, std::string wavelet, uword qscale);
+vec cwt_spdbc(vec X, std::string wavelet, uword qscale);
+
+vec EstimateBaseline(vec X,
+                     umat peaks,
+                     uword window_size);
+umat FindPeakPositions(vec X, vec dX,
+                       double threshold,
+                       string threshold_method,
+                       vec &peak_magnitudes);
 
 
 //Peak determination

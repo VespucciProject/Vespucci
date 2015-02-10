@@ -976,6 +976,14 @@ void MainWindow::on_actionLarge_Matrices_triggered()
         matrix = data->k_means_data();
         data_objects.insert("k-Means Assignments", matrix);
     }
+
+    if (data->AnalysisResultsList().size() > 0){
+        QStringList keys = data->AnalysisResultsList();
+        for (int i = 0; i < keys.size(); ++i){
+            data_objects.insert(keys[i], data->AnalysisResult(keys[i]));
+        }
+    }
+
     QStringList data_list = data_objects.keys();
     bool ok;
     QString input = QInputDialog::getItem(this,

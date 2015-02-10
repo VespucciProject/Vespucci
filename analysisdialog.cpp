@@ -100,6 +100,12 @@ void AnalysisDialog::on_buttonBox_accepted()
         }
 
         break;
+    case 5:
+        try{
+            dataset_->FindPeaks(nan(""), std::nan(""), 5, 7);
+        }catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
     default:
         break;
     }

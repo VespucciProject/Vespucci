@@ -876,18 +876,18 @@ void VespucciDataset::SubtractBackground(mat background, QString filename)
 /// \param method
 /// \param window_size
 ///
-void VespucciDataset::Baseline(QString method, int window_size)
+void VespucciDataset::Baseline(QString method, int parameter)
 {
     log_stream_ << "Baseline" << endl;
     log_stream_ << "method == " << method << endl;
-    log_stream_ << "window_size == " << window_size << endl;
+    log_stream_ << "parameter == " << parameter << endl;
     x_old_ = x_;
     y_old_ = y_;
     wavelength_old_ = wavelength_;
     spectra_old_ = spectra_;
     try{
         if (method == "Median Filter"){
-            mat processed = arma_ext::MedianFilterMat(spectra_, window_size);
+            mat processed = arma_ext::MedianFilterMat(spectra_, parameter);
             spectra_ -= processed;
         }
     }
@@ -1537,6 +1537,41 @@ void VespucciDataset::PrincipalComponents()
         strcat(str, e.what());
         throw std::runtime_error(str);
     }
+}
+
+///
+/// \brief VespucciDataset::FindPeaks
+/// \param sel The amount above the surrounding data for a peak to be identified
+/// \param threshold A value which peaks must be larger than to be maxima
+/// \param poly_order Polynomial order for Savitzky-Golay derivatization
+/// \param window_size Window size for Savitzky-Golay derivatization
+///
+void VespucciDataset::FindPeaks(double sel, double threshold, uword poly_order, uword window_size)
+{
+    log_stream_ << "FindPeaks" << endl;
+    log_stream_ << "sel = " << sel << endl;
+    log_stream_ << "threshold = " << threshold << endl;
+    log_stream_ << "poly_order = " << poly_order << endl;
+    log_stream_ << "window_size = " << window_size << endl;
+
+    mat peak_magnitudes;
+    mat peak_positions;
+
+
+    try{
+        peak_positions =
+                arma_ext::FindPeaksMat(spectra_,
+                                       sel, threshold,
+                                       poly_order, window_size,
+                                       peak_magnitudes);
+    }catch(exception e){
+        cerr << e.what();
+        throw std::runtime_error("FindPeaks");
+    }
+    QSharedPointer<AnalysisResults> peak_mag(new AnalysisResults(peak_magnitudes));
+    QSharedPointer<AnalysisResults> peak_pos(new AnalysisResults(peak_positions));
+    analysis_results_.insert(analysis_results_.end(), "Peak Positions", peak_pos);
+    analysis_results_.insert(analysis_results_.end(), "Peak Magnitudes", peak_mag);
 }
 
 ///
@@ -2728,4 +2763,23 @@ QString VespucciDataset::last_operation()
 MapListModel* VespucciDataset::map_list_model()
 {
     return map_list_model_;
+}
+
+///
+/// \brief VespucciDataset::AnalysisResultsList
+/// \return
+/// Interface to analysis_results_
+QStringList VespucciDataset::AnalysisResultsList()
+{
+    return analysis_results_.keys();
+}
+
+///
+/// \brief VespucciDataset::AnalysisResult
+/// \param key
+/// \return
+/// Interface to analysis_results_
+mat *VespucciDataset::AnalysisResult(QString key)
+{
+    return analysis_results_.value(key)->value_ptr();
 }
