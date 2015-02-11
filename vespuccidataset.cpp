@@ -887,8 +887,22 @@ void VespucciDataset::Baseline(QString method, int parameter)
     spectra_old_ = spectra_;
     try{
         if (method == "Median Filter"){
-            mat processed = arma_ext::MedianFilterMat(spectra_, parameter);
-            spectra_ -= processed;
+            baselines_ = arma_ext::MedianFilterMat(spectra_, parameter);
+
+            spectra_ -= baselines_;
+        }
+        else if(method == "CWT-SPDBC"){
+            field<uvec> peak_positions;
+            spectra_ = arma_ext::cwt_spdbc_Mat(spectra_, "mexh", 128, 100, "count", 15, peak_positions, baselines_);
+            mat peak_populations = zeros(spectra_.n_rows, spectra_.n_cols);
+            //set peak_populations matrix to ones;
+            for (uword i = 0; i<peak_positions.n_elem; ++i){
+                peak_populations.elem(peak_positions(i)) = ones(peak_positions(i).n_elem);
+            }
+            QSharedPointer<AnalysisResults> results(new AnalysisResults(peak_populations));
+            QSharedPointer<AnalysisResults> bl(new AnalysisResults(baselines_));
+            analysis_results_.insert("CWT-SPDBC Peak Centers", results);
+            analysis_results_.insert("CWT-SPDBC Baselines", bl);
         }
     }
     catch(exception e){

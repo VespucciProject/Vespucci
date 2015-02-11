@@ -1277,10 +1277,8 @@ mat arma_ext::FindPeaksMat(mat X, double sel, double threshold, uword poly_order
 ///
 vec arma_ext::diff(vec X, uword deriv_order)
 {
-    cout << "deriv_order = " << deriv_order << endl;
     vec return_value;
     if (deriv_order == 0){
-        cout << "deriv_order == 0 !" << endl;
         return_value = X;
     }
 
@@ -1373,7 +1371,6 @@ umat arma_ext::FindPeakPositions(vec X, vec dX,
                                  vec &peak_magnitudes)
 {
     //threshold can be arbitrary or calculated
-    cout << "FindPeakPositions" << endl;
 
     vec d2X = arma_ext::diff(dX, 1);
     d2X.insert_rows(0, 1, true);
@@ -1388,8 +1385,6 @@ umat arma_ext::FindPeakPositions(vec X, vec dX,
     uvec extrema_indices = find( (dX.subvec(0, X.n_rows - 2) % dX.subvec(1, X.n_rows - 1) )< 0);
     vec d2X_extrema = d2X(extrema_indices);
     uvec maxima_indices = find(d2X_extrema < 0); //the indices in d2X_extrema, X_extrema and extrema_indices that correspond to maxima
-    cout << "d2X_extrema.min() = " << d2X_extrema.min() << endl;
-    cout << "maxima_indices.n_elem = " << maxima_indices.n_elem << endl;
     umat results(maxima_indices.n_elem, 3);
     uvec buffer(3);
     peak_magnitudes.set_size(maxima_indices.n_elem); //each maximum corresponds to a magnitude
@@ -1563,16 +1558,23 @@ vec arma_ext::cwt_spdbc(vec X, std::string wavelet, uword qscale, double thresho
 {
     umat peaks;
     vec peak_magnitudes;
-    vec X_transform = arma_ext::cwt(X, wavelet, qscale);
-    vec dX_transform = arma_ext::diff(X, 1);
-    dX_transform.insert_rows(0, 1, true); //buffer so that X and dX have same
-    //number of elements and dX(i) is the derivative of X at i.
-    peaks = arma_ext::FindPeakPositions(X_transform, dX_transform,
-                                        threshold,
-                                        threshold_method,
-                                        peak_magnitudes);
-    peak_positions = peaks.col(0);
-    baseline = arma_ext::EstimateBaseline(X, peaks, window_size);
+    try{
+        vec X_transform = arma_ext::cwt(X, wavelet, qscale);
+        vec dX_transform = arma_ext::diff(X, 1);
+        dX_transform.insert_rows(0, 1, true); //buffer so that X and dX have same
+        //number of elements and dX(i) is the derivative of X at i.
+        peaks = arma_ext::FindPeakPositions(X_transform, dX_transform,
+                                            threshold,
+                                            threshold_method,
+                                            peak_magnitudes);
+        peak_positions = peaks.col(0);
+        baseline = arma_ext::EstimateBaseline(X, peaks, window_size);
+    }catch(std::exception e){
+        cerr << endl << "exception! cwt_spdbc" << endl;
+        cerr << e.what();
+        throw(e);
+    }
+
     return X - baseline;
 
 }
@@ -1587,19 +1589,28 @@ mat arma_ext::cwt_spdbc_Mat(mat X, std::string wavelet, uword qscale,
     vec baseline;
     vec spectrum;
     vec current_corrected;
-    mat corrected;
+    mat corrected(X.n_rows, X.n_cols);
     uvec current_peakpos;
     peak_positions.set_size(X.n_cols);
-    for (uword i = 0; i < X.n_cols; ++i){
-        spectrum = X.col(i);
-        current_corrected = arma_ext::cwt_spdbc(spectrum, wavelet,
-                                               qscale, threshold,
-                                               threshold_method, window_size,
-                                               current_peakpos, baseline);
+    uword i;
+    try{
+        for (i = 0; i < X.n_cols; ++i){
+            spectrum = X.col(i);
+            current_corrected = arma_ext::cwt_spdbc(spectrum, wavelet,
+                                                   qscale, threshold,
+                                                   threshold_method, window_size,
+                                                   current_peakpos, baseline);
 
-        peak_positions(i) = current_peakpos;
-        baselines.col(i) = baseline;
-        corrected.col(i) = current_corrected;
+            peak_positions(i) = current_peakpos;
+            baselines.col(i) = baseline;
+            corrected.col(i) = current_corrected;
+        }
+    }catch(std::exception e){
+        cerr << endl << "exception! cwt_spdbc_Mat" << endl;
+        cerr << "i = " << i << endl;
+        cerr << e.what();
+        throw(e);
     }
+
     return corrected;
 }
