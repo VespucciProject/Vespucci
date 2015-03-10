@@ -17,42 +17,42 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "GUI/mainwindow.h"
-#include <QApplication>
-#include "Data/Dataset/vespuccidataset.h"
-#include <QTextStream>
-#include <QFileDevice>
-#include <QFile>
-#include <qcustomplot.h>
-#include <fstream>
-#include "Data/Imaging/mapdata.h"
+#ifndef MAPLISTMODEL_H
+#define MAPLISTMODEL_H
+
+#include <QAbstractListModel>
 #include "Global/vespucciworkspace.h"
 
+class VespucciWorkspace;
+class MapData;
+class VespucciDataset;
+
 ///
-/// \brief main
-/// \param argc
-/// \param argv
-/// \return
-/// Typical boilerplate C++ main() stuff. Instantiates workspace and main window.
-int main(int argc, char *argv[])
+/// \brief The MapListModel class Exposes the UI to the contents of the master map list
+///
+class MapListModel : public QAbstractListModel
 {
-    //Launch QApplication instance
-    QApplication a(argc, argv);
+    Q_OBJECT
+public:
+    MapListModel(QObject *parent, VespucciDataset *dataset);
+    MapListModel();
+    int rowCount(const QModelIndex &parent) const;
+    bool removeRow(int row, const QModelIndex &parent);
+    bool AddMap(QSharedPointer<MapData> map);
+    QSharedPointer<MapData> MapAt(int row);
+    QVariant data(const QModelIndex &index, int role) const;
+    void ClearMaps();
 
-    //A pointer to this goes by "workspace" in every window that needs it
-    VespucciWorkspace ws;
-    //Clean up dataset log files from when it crashed last
-    ws.CleanLogFiles();
+signals:
 
-    //Instantiate main window
-    MainWindow w(0, &ws);
+public slots:
 
-    //This "finishes construction" on ws, for the parts that come from w
-    ws.SetPointers(&w);
+private:
+    //This view displays the names of maps stored
+    ///
+    /// \brief maps_ The master map list in the VespucciDataset object
+    QList<QSharedPointer<MapData> > maps_;
+    VespucciDataset *dataset_;
+};
 
-    //show main window
-    w.show();
-    return a.exec();
-}
-
-
+#endif // MAPLISTMODEL_H

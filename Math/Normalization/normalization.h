@@ -17,42 +17,18 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "GUI/mainwindow.h"
-#include <QApplication>
-#include "Data/Dataset/vespuccidataset.h"
-#include <QTextStream>
-#include <QFileDevice>
-#include <QFile>
-#include <qcustomplot.h>
-#include <fstream>
-#include "Data/Imaging/mapdata.h"
-#include "Global/vespucciworkspace.h"
-
-///
-/// \brief main
-/// \param argc
-/// \param argv
-/// \return
-/// Typical boilerplate C++ main() stuff. Instantiates workspace and main window.
-int main(int argc, char *argv[])
+#ifndef NORMALIZATION_H
+#define NORMALIZATION_H
+#include <mlpack/core.hpp>
+namespace Vespucci
 {
-    //Launch QApplication instance
-    QApplication a(argc, argv);
-
-    //A pointer to this goes by "workspace" in every window that needs it
-    VespucciWorkspace ws;
-    //Clean up dataset log files from when it crashed last
-    ws.CleanLogFiles();
-
-    //Instantiate main window
-    MainWindow w(0, &ws);
-
-    //This "finishes construction" on ws, for the parts that come from w
-    ws.SetPointers(&w);
-
-    //show main window
-    w.show();
-    return a.exec();
+    namespace Math
+    {
+        namespace Normalization
+        {
+            arma::vec StandardScore(arma::vec X);
+            arma::mat StandardScoreMat(arma::mat X);
+        }
+    }
 }
-
-
+#endif //NORMALIZATION_H

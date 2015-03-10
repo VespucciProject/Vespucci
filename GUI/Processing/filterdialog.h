@@ -17,42 +17,51 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "GUI/mainwindow.h"
-#include <QApplication>
-#include "Data/Dataset/vespuccidataset.h"
-#include <QTextStream>
-#include <QFileDevice>
-#include <QFile>
-#include <qcustomplot.h>
-#include <fstream>
-#include "Data/Imaging/mapdata.h"
+#ifndef FILTERDIALOG_H
+#define FILTERDIALOG_H
+
+#include <QDialog>
 #include "Global/vespucciworkspace.h"
+#include "Data/Dataset/vespuccidataset.h"
 
-///
-/// \brief main
-/// \param argc
-/// \param argv
-/// \return
-/// Typical boilerplate C++ main() stuff. Instantiates workspace and main window.
-int main(int argc, char *argv[])
-{
-    //Launch QApplication instance
-    QApplication a(argc, argv);
-
-    //A pointer to this goes by "workspace" in every window that needs it
-    VespucciWorkspace ws;
-    //Clean up dataset log files from when it crashed last
-    ws.CleanLogFiles();
-
-    //Instantiate main window
-    MainWindow w(0, &ws);
-
-    //This "finishes construction" on ws, for the parts that come from w
-    ws.SetPointers(&w);
-
-    //show main window
-    w.show();
-    return a.exec();
+class VespucciWorkspace;
+class VespucciDataset;
+namespace Ui {
+class FilterDialog;
 }
 
+///
+/// \brief The FilterDialog class
+/// This dialog allows the user to apply filtering, smoothing or derivatization
+/// to the dataset.
+class FilterDialog : public QDialog
+{
+    Q_OBJECT
 
+public:
+    explicit FilterDialog(QWidget *parent, VespucciWorkspace *ws, int row);
+    ~FilterDialog();
+
+private slots:
+
+
+    void on_methodComboBox_currentIndexChanged(int index);
+
+    void on_buttonBox_accepted();
+
+    void on_buttonBox_rejected();
+
+private:
+    Ui::FilterDialog *ui;
+    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciDataset> dataset_;
+
+    QComboBox *method_box_;
+    QSpinBox *derivative_box_;
+    QSpinBox *polynomial_box_;
+    QSpinBox *window_box_;
+    QSpinBox *singular_values_box_;
+    QDoubleSpinBox *epsilon_box_;
+};
+
+#endif // FILTERDIALOG_H

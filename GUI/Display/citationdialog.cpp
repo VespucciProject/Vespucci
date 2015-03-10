@@ -17,42 +17,29 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "GUI/mainwindow.h"
-#include <QApplication>
-#include "Data/Dataset/vespuccidataset.h"
-#include <QTextStream>
-#include <QFileDevice>
-#include <QFile>
-#include <qcustomplot.h>
-#include <fstream>
-#include "Data/Imaging/mapdata.h"
-#include "Global/vespucciworkspace.h"
+#include "GUI/Display/citationdialog.h"
+#include "GUI/Display/ui_citationdialog.h"
 
 ///
-/// \brief main
-/// \param argc
-/// \param argv
-/// \return
-/// Typical boilerplate C++ main() stuff. Instantiates workspace and main window.
-int main(int argc, char *argv[])
+/// \brief CitationDialog::CitationDialog
+/// \param parent Parent QWidget, common for all QDialogs
+///
+CitationDialog::CitationDialog(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::CitationDialog)
 {
-    //Launch QApplication instance
-    QApplication a(argc, argv);
-
-    //A pointer to this goes by "workspace" in every window that needs it
-    VespucciWorkspace ws;
-    //Clean up dataset log files from when it crashed last
-    ws.CleanLogFiles();
-
-    //Instantiate main window
-    MainWindow w(0, &ws);
-
-    //This "finishes construction" on ws, for the parts that come from w
-    ws.SetPointers(&w);
-
-    //show main window
-    w.show();
-    return a.exec();
+    ui->setupUi(this);
 }
 
+CitationDialog::~CitationDialog()
+{
+    delete ui;
+}
 
+///
+/// \brief CitationDialog::on_pushButton_clicked
+/// Window closes when user clicks "Close"
+void CitationDialog::on_pushButton_clicked()
+{
+    this->close();
+}

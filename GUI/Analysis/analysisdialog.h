@@ -1,6 +1,5 @@
 /*******************************************************************************
     Copyright (C) 2014 Wright State University - All Rights Reserved
-    Daniel P. Foose - Author
 
     This file is part of Vespucci.
 
@@ -17,42 +16,45 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "GUI/mainwindow.h"
-#include <QApplication>
-#include "Data/Dataset/vespuccidataset.h"
-#include <QTextStream>
-#include <QFileDevice>
-#include <QFile>
-#include <qcustomplot.h>
-#include <fstream>
-#include "Data/Imaging/mapdata.h"
+
+#ifndef ANALYSISDIALOG_H
+#define ANALYSISDIALOG_H
+
+#include <QDialog>
 #include "Global/vespucciworkspace.h"
 
-///
-/// \brief main
-/// \param argc
-/// \param argv
-/// \return
-/// Typical boilerplate C++ main() stuff. Instantiates workspace and main window.
-int main(int argc, char *argv[])
-{
-    //Launch QApplication instance
-    QApplication a(argc, argv);
-
-    //A pointer to this goes by "workspace" in every window that needs it
-    VespucciWorkspace ws;
-    //Clean up dataset log files from when it crashed last
-    ws.CleanLogFiles();
-
-    //Instantiate main window
-    MainWindow w(0, &ws);
-
-    //This "finishes construction" on ws, for the parts that come from w
-    ws.SetPointers(&w);
-
-    //show main window
-    w.show();
-    return a.exec();
+namespace Ui {
+class AnalysisDialog;
 }
 
+class AnalysisDialog : public QDialog
+{
+    Q_OBJECT
 
+public:
+    explicit AnalysisDialog(QWidget *parent, VespucciWorkspace *ws, int row);
+    ~AnalysisDialog();
+
+private slots:
+    void on_comboBox_currentIndexChanged(int index);
+
+    void on_buttonBox_rejected();
+
+    void on_buttonBox_accepted();
+
+    void on_predictionCheckBox_clicked(bool checked);
+
+private:
+    Ui::AnalysisDialog *ui;
+    QComboBox *method_selection_box_;
+    QSpinBox *components_box_;
+    QSharedPointer<VespucciDataset> dataset_;
+    VespucciWorkspace *workspace;
+
+    ///
+    /// \brief prediction_box_
+    /// User selects whether or not to allow prediction of dimensionality
+    QCheckBox *prediction_box_;
+};
+
+#endif // ANALYSISDIALOG_H

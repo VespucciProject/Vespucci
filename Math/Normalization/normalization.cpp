@@ -17,42 +17,35 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "GUI/mainwindow.h"
-#include <QApplication>
-#include "Data/Dataset/vespuccidataset.h"
-#include <QTextStream>
-#include <QFileDevice>
-#include <QFile>
-#include <qcustomplot.h>
-#include <fstream>
-#include "Data/Imaging/mapdata.h"
-#include "Global/vespucciworkspace.h"
+
+
+
+#include <Math/Normalization/normalization.h>
 
 ///
-/// \brief main
-/// \param argc
-/// \param argv
-/// \return
-/// Typical boilerplate C++ main() stuff. Instantiates workspace and main window.
-int main(int argc, char *argv[])
+/// \brief Vespucci::Math::Normalization::StandardScore
+/// \param X A signal to be standardized
+/// \return Standardized signal
+///
+arma::vec Vespucci::Math::Normalization::StandardScore(arma::vec X)
 {
-    //Launch QApplication instance
-    QApplication a(argc, argv);
-
-    //A pointer to this goes by "workspace" in every window that needs it
-    VespucciWorkspace ws;
-    //Clean up dataset log files from when it crashed last
-    ws.CleanLogFiles();
-
-    //Instantiate main window
-    MainWindow w(0, &ws);
-
-    //This "finishes construction" on ws, for the parts that come from w
-    ws.SetPointers(&w);
-
-    //show main window
-    w.show();
-    return a.exec();
+    arma::vec normalized = X;
+    double mean = arma::mean(normalized);
+    double std_dev = arma::stddev(X);
+    normalized -= mean * ones(normalized.n_elem);
+    normalized /= std_dev;
+    return normalized;
 }
 
-
+///
+/// \brief Vespucci::Math::Normalization::StandardScore
+/// \param X
+/// \return A arma::matrix in which each column of X is replaced by its standard score.
+///
+arma::mat Vespucci::Math::Normalization::StandardScoreMat(arma::mat X)
+{
+    arma::mat normalized = X;
+    for (arma::uword j = 0; j < normalized.n_cols; ++j)
+        normalized.col(j) = StandardScore(normalized.col(j));
+    return normalized;
+}

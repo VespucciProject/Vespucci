@@ -17,42 +17,32 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "GUI/mainwindow.h"
-#include <QApplication>
-#include "Data/Dataset/vespuccidataset.h"
-#include <QTextStream>
-#include <QFileDevice>
-#include <QFile>
-#include <qcustomplot.h>
-#include <fstream>
-#include "Data/Imaging/mapdata.h"
-#include "Global/vespucciworkspace.h"
+#include<Math/Smoothing/smoothing.h>
 
 ///
-/// \brief main
-/// \param argc
-/// \param argv
+/// \brief Vespucci::Math::WhittakerSmooth
+/// \param x
+/// \param lambda
+/// \param penalty_order
 /// \return
-/// Typical boilerplate C++ main() stuff. Instantiates workspace and main window.
-int main(int argc, char *argv[])
+/// This may be re-written to use a sparse Cholesky decomposition if such a function
+/// comes to exist in armadillo or MLPACK
+arma::vec Vespucci::Math::Smoothing::WhittakerSmooth(arma::vec x, double lambda, arma::uword penalty_order)
 {
-    //Launch QApplication instance
-    QApplication a(argc, argv);
 
-    //A pointer to this goes by "workspace" in every window that needs it
-    VespucciWorkspace ws;
-    //Clean up dataset log files from when it crashed last
-    ws.CleanLogFiles();
+    arma::uword m = x.n_elem;
+    arma::mat E = eye(m, m);
+    arma::mat D = Vespucci::Math::diff(E, penalty_order);
+    arma::vec filtered = solve(E + lambda*D.t()*D, x);
 
-    //Instantiate main window
-    MainWindow w(0, &ws);
-
-    //This "finishes construction" on ws, for the parts that come from w
-    ws.SetPointers(&w);
-
-    //show main window
-    w.show();
-    return a.exec();
+    //This is a version that would work if chol() could take a sparse input.
+    /*
+    arma::uword m = x.n_elem;
+    arma::sp_mat E = speye(m, m);
+    arma::sp_mat D = Vespucci::Math::diff(E, penalty_order);
+    arma::sp_mat F = E + lambda*D.t()*D;
+    arma::mat C = chol(F);
+    arma::vec z = solve(C, solve(C, x));
+    */
+    return filtered;
 }
-
-
