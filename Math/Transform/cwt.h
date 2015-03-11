@@ -19,12 +19,12 @@
 *******************************************************************************/
 #ifndef CWT_H
 #define CWT_H
-#include <mlpack/core.hpp>
+#include <Math/Accessory/accessory.h>
+
 namespace Vespucci
 {
     namespace Math
     {
-
         namespace Transform
         {
             arma::mat cwt(arma::vec X, std::string wavelet, arma::uvec scales);
@@ -33,9 +33,11 @@ namespace Vespucci
             arma::mat cwt_spdbc_mat(arma::mat X, std::string wavelet, arma::uword qscale, double threshold, std::string threshold_method, arma::uword window_size, arma::field<arma::umat> &peak_positions, arma::mat &baselines);
             arma::field<arma::mat> cwt_multi_mat(arma::mat X, std::string wavelet, arma::uvec scales);
             arma::field<arma::mat> cwt_multi(arma::mat X, std::string wavelet, arma::uvec scales);
-
+            arma::mat cwtPeakAnalysis(arma::mat X,
+                                      std::string wavelet, arma::uword qscale,
+                                      double threshold, std::string threshold_method,
+                                      arma::mat &transform);
         }
-
     }
 }
 #endif //CWT_H

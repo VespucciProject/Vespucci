@@ -23,6 +23,7 @@
 #include "GUI/Display/aboutdialog.h"
 #include "GUI/Display/citationdialog.h"
 #include "GUI/Analysis/univariatedialog.h"
+#include "GUI/Analysis/univariateanalysisdialog.h"
 #include "GUI/Analysis/bandratiodialog.h"
 #include "GUI/Analysis/principalcomponentsdialog.h"
 #include "GUI/Processing/filterdialog.h"

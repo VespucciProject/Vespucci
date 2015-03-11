@@ -31,7 +31,7 @@ arma::vec Vespucci::Math::Smoothing::WhittakerSmooth(arma::vec x, double lambda,
 {
 
     arma::uword m = x.n_elem;
-    arma::mat E = eye(m, m);
+    arma::mat E = arma::eye(m, m);
     arma::mat D = Vespucci::Math::diff(E, penalty_order);
     arma::vec filtered = solve(E + lambda*D.t()*D, x);
 

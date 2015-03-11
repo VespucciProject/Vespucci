@@ -38,14 +38,14 @@ arma::vec Vespucci::Math::Smoothing::MedianFilter(arma::vec X, arma::uword windo
     try{
         //sort the window then pick the middle value
         for (arma::uword i = k; i < (X.n_rows - k); ++i){
-            buffer = X.subarma::vec(i-k, i+k);
+            buffer = X.subvec(i-k, i+k);
             sorted = stable_sort_index(buffer);
             filtered(i) = buffer(sorted(k));
             //filtered(i) = median(buffer);
         }
 
     }catch(std::exception e){
-        cout << e.what();
+        std::cout << e.what();
     }
 
     return filtered;

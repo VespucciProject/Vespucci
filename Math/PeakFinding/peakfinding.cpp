@@ -19,7 +19,7 @@
 *******************************************************************************/
 
 #include <Math/PeakFinding/peakfinding.h>
-
+#include <Math/Smoothing/smoothing.h>
 
 ///
 /// \brief Vespucci::Math::PeakFinding::FindPeaks an implementation of the peakfinder arma::matLAB routine
@@ -32,7 +32,7 @@
 /// derivatization
 /// \param window_size The window size of the Savitzky-Golay filter used for
 /// derivatization
-/// \param peak_locations A vector containing one and zeros corresponding to
+/// \param peak_locations A vector containing one and arma::zeros corresponding to
 /// whether or not a peak center exists at that wavelength
 /// \param peak_magnitudes A vector containing values at peak centers.
 /// \return
@@ -45,16 +45,16 @@ arma::vec Vespucci::Math::PeakFinding::FindPeaks(arma::vec X,
 {
     arma::uvec peak_indices;
     arma::uvec peak_locations;
-    peak_magnitudes = zeros(X.n_rows, 1);
+    peak_magnitudes = arma::zeros(X.n_rows, 1);
 
-    dX.elem( find(dX == 0) ).fill(-datum::eps); //to find first of repeated values
+    dX.elem( find(dX == 0) ).fill(-arma::datum::eps); //to find first of repeated values
     double minimum_magnitude = X.min();
     double left_min = X(0);
     arma::uword length = X.n_elem;
     arma::uword temporary_location = 0;
 
     //Find where derivative changes sign:
-    arma::uvec extrema_indices = find( (dX.subarma::vec(0, length - 2) % dX.subarma::vec(1, length - 1) )< 0);
+    arma::uvec extrema_indices = find( (dX.subvec(0, length - 2) % dX.subvec(1, length - 1) )< 0);
     arma::vec X_extrema = X.elem(extrema_indices);
     length = X_extrema.n_elem;
     double temporary_magnitude = minimum_magnitude;
@@ -75,7 +75,7 @@ arma::vec Vespucci::Math::PeakFinding::FindPeaks(arma::vec X,
         }
 
         if ( (X_extrema(ii) > temporary_magnitude) && (X_extrema(ii) > left_min + sel) ){
-            cout << "temporary_location = " << ii << endl;
+            std::cout << "temporary_location = " << ii << std::endl;
             temporary_magnitude = X_extrema(ii);
         }
 
@@ -86,7 +86,7 @@ arma::vec Vespucci::Math::PeakFinding::FindPeaks(arma::vec X,
         //come down at least sel from peak
         if (!peak_found && (temporary_magnitude > sel + X_extrema(ii) ) ){
             peak_found = true;
-            cout << "peak found!" << endl;
+            std::cout << "peak found!" << std::endl;
             left_min = X_extrema(ii);
             peak_locations << temporary_location;
         }
@@ -99,7 +99,7 @@ arma::vec Vespucci::Math::PeakFinding::FindPeaks(arma::vec X,
     }
     //remove all peaks below the threshold
 
-    arma::vec results = zeros(X.n_elem, 1);
+    arma::vec results = arma::zeros(X.n_elem, 1);
     peak_indices = extrema_indices.elem(peak_locations);
     results.elem(peak_indices).ones();
     peak_magnitudes.elem(peak_indices) = X(peak_indices);
@@ -211,7 +211,7 @@ arma::umat Vespucci::Math::PeakFinding::FindPeakPositions(arma::vec X, arma::vec
     }
 
     //find where first derivative changes sign
-    arma::uvec extrema_indices = find( (dX.subarma::vec(0, X.n_rows - 2) % dX.subarma::vec(1, X.n_rows - 1) )< 0);
+    arma::uvec extrema_indices = find( (dX.subvec(0, X.n_rows - 2) % dX.subvec(1, X.n_rows - 1) )< 0);
     arma::vec d2X_extrema = d2X(extrema_indices);
     arma::uvec maxima_indices = find(d2X_extrema < 0); //the indices in d2X_extrema, X_extrema and extrema_indices that correspond to maxima
     arma::umat results(maxima_indices.n_elem, 3);
@@ -258,14 +258,14 @@ arma::umat Vespucci::Math::PeakFinding::FindPeakPositions(arma::vec X, arma::vec
             results.row(i) = buffer.t();
         }
     }catch(std::exception e){
-        cout << "Exception!" << endl;
-        cout << e.what() << endl;
-        cout << "iterator index = " << i << endl;
-        cout << "maxima index = " << maxima_indices(i) << endl;
-        cout << "extrema_indices.n_rows = " << extrema_indices.n_rows << endl;
-        cout << "center_index = " << center_index << endl;
-        cout << "left_index = " << left_index << endl;
-        cout << "right_index = " << right_index << endl;
+        std::cout << "Exception!" << std::endl;
+        std::cout << e.what() << std::endl;
+        std::cout << "iterator index = " << i << std::endl;
+        std::cout << "maxima index = " << maxima_indices(i) << std::endl;
+        std::cout << "extrema_indices.n_rows = " << extrema_indices.n_rows << std::endl;
+        std::cout << "center_index = " << center_index << std::endl;
+        std::cout << "left_index = " << left_index << std::endl;
+        std::cout << "right_index = " << right_index << std::endl;
         throw std::runtime_error(e.what());
     }
 
@@ -309,8 +309,8 @@ arma::umat Vespucci::Math::PeakFinding::FindPeakPositions(arma::vec X, arma::vec
 arma::vec Vespucci::Math::PeakFinding::PeakPopulation(arma::uword vector_size, arma::umat peak_positions)
 {
     arma::uvec peaks = peak_positions.col(0);
-    arma::vec population = zeros(vector_size);
-    population.elem(peaks) = ones(peaks.n_elem);
+    arma::vec population = arma::zeros(vector_size);
+    population.elem(peaks) = arma::ones(peaks.n_elem);
     return population;
 }
 
@@ -318,16 +318,16 @@ arma::vec Vespucci::Math::PeakFinding::PeakPopulation(arma::uword vector_size, a
 arma::vec Vespucci::Math::PeakFinding::PeakExtrema(arma::uword vector_size, arma::umat peak_positions)
 {
     if (peak_positions.n_cols != 3){
-        return zeros(vector_size);
+        return arma::zeros(vector_size);
     }
     else{
-        arma::vec extrema = zeros(vector_size);
+        arma::vec extrema = arma::zeros(vector_size);
         arma::uvec peak_centers = peak_positions.col(0);
         arma::uvec left_boundaries = peak_positions.col(1);
         arma::uvec right_boundaries = peak_positions.col(2);
-        extrema.elem(peak_centers) = ones(peak_centers.n_elem);
-        extrema.elem(left_boundaries) = -1 * ones(left_boundaries.n_elem);
-        extrema.elem(right_boundaries) = -1 * ones(right_boundaries.n_elem);
+        extrema.elem(peak_centers) = arma::ones(peak_centers.n_elem);
+        extrema.elem(left_boundaries) = -1 * arma::ones(left_boundaries.n_elem);
+        extrema.elem(right_boundaries) = -1 * arma::ones(right_boundaries.n_elem);
         return extrema;
     }
 }
@@ -345,7 +345,7 @@ arma::vec Vespucci::Math::PeakFinding::EstimateBaseline(arma::vec X,
 {
     if (window_size % 2 == 0){
         window_size--;
-        cerr << "invalid window_size, using one less" << endl;
+        std::cerr << "invalid window_size, using one less" << std::endl;
     }
 
     arma::vec baseline = X;
@@ -364,20 +364,20 @@ arma::vec Vespucci::Math::PeakFinding::EstimateBaseline(arma::vec X,
             // if the start or end of the peak is the center, take a flat line
             // from the minimum
             if (start == center){
-                baseline.subarma::vec(start, end-1) = X(end) * ones(size);
+                baseline.subvec(start, end-1) = X(end) * arma::ones(size);
             }
             else if (end == center){
-                baseline.subarma::vec(start, end-1) = X(start) * ones(size);
+                baseline.subvec(start, end-1) = X(start) * arma::ones(size);
             }
             else{
-                baseline.subarma::vec(start, end-1) = linspace(X(start), X(end), size);
+                baseline.subvec(start, end-1) = arma::linspace(X(start), X(end), size);
             }
 
         }
     }catch(std::exception e){
-        cout << "Exception! (peak exclusion)" << endl;
-        cout << "size of peaks = " << peaks.n_rows << " " << peaks.n_cols << endl;
-        cout << "i = " << i << endl;
+        std::cout << "Exception! (peak exclusion)" << std::endl;
+        std::cout << "size of peaks = " << peaks.n_rows << " " << peaks.n_cols << std::endl;
+        std::cout << "i = " << i << std::endl;
         throw std::runtime_error(e.what());
     }
 
@@ -388,7 +388,7 @@ arma::vec Vespucci::Math::PeakFinding::EstimateBaseline(arma::vec X,
     arma::vec filtered(baseline.n_elem);
     try{
         for (arma::uword i = k; i < (X.n_rows - k); ++i){
-            buffer = baseline.subarma::vec(i-k, i+k);
+            buffer = baseline.subvec(i-k, i+k);
             filtered(i) = buffer.min();
         }
         //fill edges with first and last values
@@ -399,8 +399,8 @@ arma::vec Vespucci::Math::PeakFinding::EstimateBaseline(arma::vec X,
             filtered(i) = filtered(filtered.n_rows - k - 2);
         }
     }catch(std::exception e){
-        cout << "Exception! (filtering)" << endl;
-        cout << "i = " << i << endl;
+        std::cout << "Exception! (filtering)" << std::endl;
+        std::cout << "i = " << i << std::endl;
         throw std::runtime_error(e.what());
     }
 

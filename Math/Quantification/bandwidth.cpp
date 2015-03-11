@@ -31,7 +31,7 @@
 /// Finds the full-width at half maximum of a peak bound by min_index and max_index
 double Vespucci::Math::Quantification::FindBandwidth(arma::vec X, arma::uword min_index, arma::uword max_index, arma::vec &midline, arma::vec &baseline, double abscissa_step)
 {
-   arma::vec region = X.subarma::vec(min_index, max_index);
+   arma::vec region = X.subvec(min_index, max_index);
    arma::uword size = region.n_elem;
    double maximum, half_maximum;
    double start_value, end_value;
@@ -41,7 +41,7 @@ double Vespucci::Math::Quantification::FindBandwidth(arma::vec X, arma::uword mi
    arma::uword right_index = 0;
    start_value = X(min_index);
    end_value = X(max_index);
-   baseline = linspace(start_value, end_value, size);
+   baseline = arma::linspace(start_value, end_value, size);
    region -= baseline;
    maximum = region.max();
    half_maximum = maximum / 2.0;
@@ -75,7 +75,7 @@ double Vespucci::Math::Quantification::FindBandwidth(arma::vec X, arma::uword mi
        }
    }
 
-   double region_size = region.subarma::vec(left_index, right_index).n_elem;
+   double region_size = region.subvec(left_index, right_index).n_elem;
    return abscissa_step * region_size;
 }
 
@@ -97,12 +97,12 @@ arma::vec Vespucci::Math::Quantification::FindBandwidthMat(arma::mat X, arma::ve
 
     arma::uword min_index = left_bound(0);
     arma::uword max_index = right_bound(0);
-    boundaries << min_index << endr << max_index;
+    boundaries << min_index << arma::endr << max_index;
 
     min = abscissa(min_index);
     max = abscissa(max_index);
 
-    arma::uword size = abscissa.subarma::vec(min_index, max_index).n_elem;
+    arma::uword size = abscissa.subvec(min_index, max_index).n_elem;
     arma::vec results(X.n_cols);
     midlines.set_size(X.n_cols, size);
     baselines.set_size(X.n_cols, size);

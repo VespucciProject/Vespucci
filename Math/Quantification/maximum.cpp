@@ -30,7 +30,7 @@
 /// Finds the maximum of a peak bound by min_index and max_index
 double Vespucci::Math::Quantification::FindPeakMax(arma::vec X, arma::uword min_index, arma::uword max_index, arma::uword &position)
 {
-    arma::vec region = X.subarma::vec(min_index, max_index);
+    arma::vec region = X.subvec(min_index, max_index);
     double max = region.max();
     arma::uvec positions = find(region == max);
     position = min_index + positions(0);

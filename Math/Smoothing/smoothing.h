@@ -20,7 +20,7 @@
 
 #ifndef SMOOTHING_H
 #define SMOOTHING_H
-#include <mlpack/core.hpp>
+#include <Math/Accessory/accessory.h>
 
 namespace Vespucci
 {

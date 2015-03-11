@@ -1,5 +1,5 @@
-#include "univariateGUI/Analysis/analysisdialog.h"
-#include "ui_univariateGUI/Analysis/analysisdialog.h"
+#include "GUI/Analysis/univariateanalysisdialog.h"
+#include "ui_univariateanalysisdialog.h"
 
 UnivariateAnalysisDialog::UnivariateAnalysisDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),

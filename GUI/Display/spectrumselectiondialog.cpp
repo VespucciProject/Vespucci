@@ -6,38 +6,27 @@ SpectrumSelectionDialog::SpectrumSelectionDialog(QWidget *parent, MainWindow *ma
     ui(new Ui::SpectrumSelectionDialog)
 {
     dataset_ = dataset;
-    cout << "constructor" << endl;
     ui->setupUi(this);
-    cout << "table mdoel" << endl;
     table_model_ = new SpectraTableModel(this, dataset);
     main_window_ = main_window;
-    cout << "spectrum viewer" << endl;
     spectrum_viewer_ = new SpectrumViewer(this, dataset);
     spectrum_viewer_->show();
-    cout << "find table view" << endl;
     table_view_ = this->findChild<QTableView *>("tableView");
-    cout << "set model" << endl;
     table_view_->setModel(table_model_);
     workspace = main_window->workspace_ptr();
-
-
 }
 
 SpectrumSelectionDialog::~SpectrumSelectionDialog()
 {
+    spectrum_viewer_->close();
     delete ui;
 }
 
 void SpectrumSelectionDialog::on_tableView_clicked(const QModelIndex &index)
 {
     uword spectrum_index = index.row();
-    cout << "on_tableView_clicked" << endl;
-
-    cout << "call PointSpectrum" << endl;
     QVector<double> spectrum = dataset_->PointSpectrum(spectrum_index);
-    cout << "call WavelengthQVector" << endl;
     QVector<double> wavelength = dataset_->WavelengthQVector();
-    cout << "call SetPlot" << endl;
     spectrum_viewer_->SetPlot(wavelength, spectrum);
 }
 
@@ -58,7 +47,6 @@ void SpectrumSelectionDialog::SpectrumRemoved(int row)
 
 void SpectrumSelectionDialog::on_pushButton_clicked()
 {
-    cout << "SpectrumSelectionDialog::on_pushButton_clicked()" << endl;
     int row = table_view_->currentIndex().row();
 
     int response = QMessageBox::question(this, "Delete Spectrum?",

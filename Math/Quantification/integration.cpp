@@ -30,12 +30,12 @@
 /// Takes a Riemann sum under a peak defined by certain indices
 double Vespucci::Math::Quantification::IntegratePeak(arma::vec X, arma::uword min_index, arma::uword max_index, double abscissa_step, arma::vec &baseline)
 {
-    arma::vec region = X.subarma::vec(min_index, max_index);
+    arma::vec region = X.subvec(min_index, max_index);
 
     double start = X(min_index);
     double end = X(max_index);
 
-    baseline = linspace(start, end, region.n_elem);
+    baseline = arma::linspace(start, end, region.n_elem);
 
     double baseline_area = sum(baseline) / abscissa_step;
     double region_area = sum(region) / abscissa_step;
@@ -63,9 +63,9 @@ arma::vec Vespucci::Math::Quantification::IntegratePeakMat(arma::mat X, arma::ve
     arma::uword max_index = right_bound(0);
     min = abscissa(min_index);
     max = abscissa(max_index);
-    boundaries << min_index << endr << max_index;
+    boundaries << min_index << arma::endr << max_index;
     arma::vec results(X.n_cols);
-    baselines.set_size(X.col(0).subarma::vec(min_index, max_index).n_elem, X.n_cols);
+    baselines.set_size(X.col(0).subvec(min_index, max_index).n_elem, X.n_cols);
     arma::vec baseline(baselines.n_cols);
     for (arma::uword i = 0; i < X.n_cols; ++i){
         results(i) = IntegratePeak(X.col(i), min_index, max_index, delta, baseline);
@@ -112,12 +112,12 @@ arma::mat Vespucci::Math::Quantification::IntegratePeaksMat(arma::mat X, arma::v
     boundaries(3) = second_max_index;
     //The << operator doesn't seem to work on arma::uvecs...
     /*
-    boundaries << first_min_index << endr << first_max_index <<
-                  second_min_index << endr << second_max_index;
+    boundaries << first_min_index << arma::endr << first_max_index <<
+                  second_min_index << arma::endr << second_max_index;
     */
-    first_baselines.set_size(X.col(0).subarma::vec(first_min_index, first_max_index).n_elem, X.n_cols);
+    first_baselines.set_size(X.col(0).subvec(first_min_index, first_max_index).n_elem, X.n_cols);
     arma::vec first_baseline(first_baselines.n_cols);
-    second_baselines.set_size(X.col(0).subarma::vec(second_min_index, second_max_index).n_elem, X.n_cols);
+    second_baselines.set_size(X.col(0).subvec(second_min_index, second_max_index).n_elem, X.n_cols);
     arma::vec second_baseline(second_baselines.n_cols);
 
     arma::mat results (X.n_cols, 2);

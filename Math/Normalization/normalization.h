@@ -19,7 +19,8 @@
 *******************************************************************************/
 #ifndef NORMALIZATION_H
 #define NORMALIZATION_H
-#include <mlpack/core.hpp>
+#include <Math/Accessory/accessory.h>
+
 namespace Vespucci
 {
     namespace Math

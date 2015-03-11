@@ -179,7 +179,8 @@ HEADERS  += \
     Math/Quantification/quantification.h \
     Math/Smoothing/smoothing.h \
     Math/Transform/cwt.h \
-    Math/PeakFinding/peakfinding.h
+    Math/PeakFinding/peakfinding.h \
+    Math/Accessory/accessory_impl.h
 
 
 FORMS    += \

@@ -18,7 +18,8 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
-
+#include <Math/Transform/cwt.h>
+#include <Math/PeakFinding/peakfinding.h>
 ///
 /// \brief Vespucci::Math::Transform::cwt
 /// \param X
@@ -44,31 +45,31 @@ arma::mat Vespucci::Math::Transform::cwt(arma::vec X, std::string wavelet, arma:
 
     //calculate the wavelet:
     if (wavelet == "mexh"){
-        psi_xval = linspace(-8, 8, 1024);
-        psi = (2/std::sqrt(3.0) * std::pow(datum::pi, -0.25)) * (ones(1024) - arma::pow(psi_xval, 2)) % arma::exp(-arma::pow(psi_xval, 2)/2);
+        psi_xval = arma::linspace(-8, 8, 1024);
+        psi = (2/std::sqrt(3.0) * std::pow(arma::datum::pi, -0.25)) * (arma::ones(1024) - arma::pow(psi_xval, 2)) % arma::exp(-arma::pow(psi_xval, 2)/2);
     }
     else if (wavelet == "haar"){
-        psi_xval = linspace(0, 1, 1024);
+        psi_xval = arma::linspace(0, 1, 1024);
         psi(0) = 0;
         psi(1023) = 0;
-        psi.rows(1, 511) = ones(511);
-        psi.rows(512, 1022) = -1*ones(511);
+        psi.rows(1, 511) = arma::ones(511);
+        psi.rows(512, 1022) = -1*arma::ones(511);
     }
 
-    psi_xval = psi_xval - ones(psi_xval.n_elem)*psi_xval(0);
+    psi_xval = psi_xval - arma::ones(psi_xval.n_elem)*psi_xval(0);
     double dxval = psi_xval(1);
     double xmax = psi_xval(psi_xval.n_elem - 1);
 
     arma::vec f, j, w;
     arma::uvec j_u;
     arma::uword i, scale, next_p2, vector_size;
-    cx_arma::vec X_hat, f_hat, schur_product;
+    arma::cx_vec X_hat, f_hat, schur_product;
 
     //calculate coefficents for all scales
     for (i = 0; i < scales.n_elem; ++i){
         scale = scales(i);
-        f = zeros(X.n_elem);
-        j = arma::floor(linspace(0, scale*xmax - 1, scale*xmax)/(scale*dxval)) + ones(scale*xmax);
+        f = arma::zeros(X.n_elem);
+        j = arma::floor(arma::linspace(0, scale*xmax - 1, scale*xmax)/(scale*dxval)) + arma::ones(scale*xmax);
         j_u.set_size(j.n_elem);
         for (arma::uword k = 0; k < j_u.n_elem; ++k){
             j_u(k) = j(k);
@@ -76,14 +77,14 @@ arma::mat Vespucci::Math::Transform::cwt(arma::vec X, std::string wavelet, arma:
 
         f.rows(0, j.n_elem-1) = flipud(psi.elem(j_u)) - mean(psi.elem(j_u));
         if (f.n_rows != X.n_rows){
-            cerr << "scale too large!" << endl;
+            std::cerr << "scale too large!" << std::endl;
         }
         next_p2 = Vespucci::Math::NextPow(X.n_elem, 2);
         vector_size = std::pow(2, next_p2);
         X_hat = fft(X, vector_size);
         f_hat = fft(f, vector_size);
         schur_product = X_hat % f_hat;
-        w = real( ifft(schur_product, vector_size) );
+        w = arma::real( arma::ifft(schur_product, vector_size) );
 
         //if signal had to be padded, remove padding
         if (w.n_rows > X.n_rows){
@@ -119,8 +120,8 @@ arma::vec Vespucci::Math::Transform::cwt_spdbc(arma::vec X, std::string wavelet,
                                                    peak_magnitudes);
         baseline = Vespucci::Math::PeakFinding::EstimateBaseline(X, peak_extrema, window_size);
     }catch(std::exception e){
-        cerr << endl << "exception! cwt_spdbc" << endl;
-        cerr << e.what();
+        std::cerr << std::endl << "exception! cwt_spdbc" << std::endl;
+        std::cerr << e.what();
         throw(e);
     }
 
@@ -155,9 +156,9 @@ arma::mat Vespucci::Math::Transform::cwt_spdbc_mat(arma::mat X, std::string wave
             corrected.col(i) = current_corrected;
         }
     }catch(std::exception e){
-        cerr << endl << "exception! cwt_spdbc_mat" << endl;
-        cerr << "i = " << i << endl;
-        cerr << e.what();
+        std::cerr << std::endl << "exception! cwt_spdbc_mat" << std::endl;
+        std::cerr << "i = " << i << std::endl;
+        std::cerr << e.what();
         throw(e);
     }
 
@@ -193,8 +194,8 @@ arma::mat Vespucci::Math::Transform::cwtPeakAnalysis(arma::mat X,
         }
     }
     catch(std::exception e){
-        cerr << "CWTPeakAnalysis" << endl;
-        cerr << "i = " << i << endl;
+        std::cerr << "CWTPeakAnalysis" << std::endl;
+        std::cerr << "i = " << i << std::endl;
         throw(e);
     }
     return peak_extrema;

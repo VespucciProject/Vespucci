@@ -1,6 +1,7 @@
 #ifndef ANALYSISRESULTS_H
 #define ANALYSISRESULTS_H
 #include "Data/Dataset/vespuccidataset.h"
+
 ///
 /// \brief The AnalysisResults class
 /// A container for a mat object that allows a mat to be copied to a heap-allocated

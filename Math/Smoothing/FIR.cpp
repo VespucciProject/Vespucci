@@ -40,39 +40,39 @@ arma::mat Vespucci::Math::Smoothing::sgolay(arma::uword poly_order,
                      arma::uword scaling_factor)
 {
     if (window_size % 2 == 0){
-        cerr << "sgolay: invalid window size. Window size must be odd." << endl;
-        cerr << "using window size poly_order + 2 or nearest odd value" << endl;
+        std::cerr << "sgolay: invalid window size. Window size must be odd." << std::endl;
+        std::cerr << "using window size poly_order + 2 or nearest odd value" << std::endl;
         window_size = poly_order + 3 - (poly_order % 2);
     }
 
     if (deriv_order > poly_order){
-        cerr << "sgolay: derivative order greater than polynomial order." << endl;
-        cerr << "using derivative order poly order - 1" << endl;
+        std::cerr << "sgolay: derivative order greater than polynomial order." << std::endl;
+        std::cerr << "using derivative order poly order - 1" << std::endl;
         deriv_order = poly_order - 1;
     }
-    arma::mat F = zeros(window_size, window_size);
+    arma::mat F = arma::zeros(window_size, window_size);
     arma::uword k = (window_size - 1) / 2;
     arma::mat C(window_size, poly_order + 1);
-    sword signed_window_size = window_size;
+    arma::sword signed_window_size = window_size;
     arma::vec column;
-    sword row; //starting at 1 not 0
+    arma::sword row; //starting at 1 not 0
     arma::mat A;
     for (arma::uword i = 0; i <= k; ++i){
         row = i + 1;
-        column = linspace<arma::vec>((1-row), (signed_window_size - row), window_size);
+        column = arma::linspace<arma::vec>((1-row), (signed_window_size - row), window_size);
         for (arma::uword j = 0; j <= poly_order; ++j){
             C.col(j) = arma::pow(column, j);
         }
         A = pinv(C);
         F.row(i) = A.row(deriv_order);
     }
-    sword sign = (deriv_order % 2 == 0 ? 1: -1);
+    arma::sword sign = (deriv_order % 2 == 0 ? 1: -1);
     arma::uword start_index = 0;
     for (arma::uword i = window_size - 1; i >k; --i){
         F.row(i) = sign*F.row(start_index);
         start_index++;
     }
-    double product = (deriv_order == 0 ? 1 : prod(linspace<arma::vec>(1, deriv_order, deriv_order)));
+    double product = (deriv_order == 0 ? 1 : prod(arma::linspace<arma::vec>(1, deriv_order, deriv_order)));
     double power = pow(scaling_factor, deriv_order);
     F /= (power/product);
     return F;
@@ -101,7 +101,7 @@ arma::mat Vespucci::Math::Smoothing::sgolayfilt(arma::mat x, arma::uword poly_or
         deriv_order = poly_order - 1;
     }
     if (x.n_rows < window_size){
-        cerr << "sgolayfilt: not enough data for filter window of this size" << endl;
+        std::cerr << "sgolayfilt: not enough data for filter window of this size" << std::endl;
         return x;
     }
 

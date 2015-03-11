@@ -32,7 +32,7 @@ arma::vec Vespucci::Math::Normalization::StandardScore(arma::vec X)
     arma::vec normalized = X;
     double mean = arma::mean(normalized);
     double std_dev = arma::stddev(X);
-    normalized -= mean * ones(normalized.n_elem);
+    normalized -= mean * arma::ones(normalized.n_elem);
     normalized /= std_dev;
     return normalized;
 }

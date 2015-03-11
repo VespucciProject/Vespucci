@@ -899,7 +899,7 @@ void VespucciDataset::Baseline(QString method, int parameter)
         }
         else if(method == "CWT-SPDBC"){
             arma::field<umat> peak_positions;
-            spectra_ = Vespucci::Math::Transform::cwt_spdbc_Mat(spectra_, "mexh", 128, parameter, "count", 15, peak_positions, baselines_);
+            spectra_ = Vespucci::Math::Transform::cwt_spdbc_mat(spectra_, "mexh", 128, parameter, "count", 15, peak_positions, baselines_);
             mat peak_populations = zeros(spectra_.n_rows, spectra_.n_cols);
             //set peak_populations matrix to ones;
             for (i = 0; i<peak_positions.n_elem; ++i){

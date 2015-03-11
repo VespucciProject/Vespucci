@@ -19,7 +19,7 @@
 *******************************************************************************/
 #ifndef DIMENSION_REDUCTION_H
 #define DIMENSION_REDUCTION_H
-#include <mlpack/core.hpp>
+#include <Math/Accessory/accessory.h>
 
 namespace Vespucci
 {

@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-
+#include "Math/DimensionReduction/dimensionreduction.h"
 
 ///
 /// \brief Vespucci::Math::DimensionReduction::VCA
@@ -39,25 +39,25 @@ bool Vespucci::Math::DimensionReduction::VCA(arma::mat R, arma::uword p,
     arma::uword L = R.n_rows;
     arma::uword N = R.n_cols;
     if (L == 0 || N == 0){
-        cerr << "No data!" << endl;
+        std::cerr << "No data!" << std::endl;
         return false;
     }
 
     if (p > L){
-        cerr << "wrong number of endmembers (" << p << ")!"<< endl;
-        cerr << "set to 5 or one less than number of spectra" << endl;
+        std::cerr << "wrong number of endmembers (" << p << ")!"<< std::endl;
+        std::cerr << "set to 5 or one less than number of spectra" << std::endl;
         p = (L < 5? 5: L-1);
     }
 //mat::mations of SNR
     arma::mat r_m = mean(R, 1);
-    arma::mat R_m = reparma::mat(r_m, 1, N); //the mean of each spectral band
+    arma::mat R_m = arma::repmat(r_m, 1, N); //the mean of each spectral band
     arma::mat R_o = R - R_m; //mean-center the data
     arma::mat Ud;
     arma::vec Sd;
     arma::mat Vd;
     svds(R_o*trans(R_o)/N, p, Ud, Sd, Vd);
     arma::mat x_p = trans(Ud) * R_o;
-    double SNR = mat::mate_snr(R, r_m, x_p);
+    double SNR = Vespucci::Math::DimensionReduction::estimate_snr(R, r_m, x_p);
     double SNR_th = 15 + 10*log10(p);
 
 //Choose projective projection or projection to p-1 subspace
@@ -71,7 +71,7 @@ bool Vespucci::Math::DimensionReduction::VCA(arma::mat R, arma::uword p,
         arma::mat sum_squares = sum(pow(x, 2));
         double c = sum_squares.max();
         c = std::sqrt(c);
-        y = join_vert(x, c*ones(1, N));
+        y = join_vert(x, c*arma::ones(1, N));
       }
     else{
         arma::uword d = p;
@@ -80,7 +80,7 @@ bool Vespucci::Math::DimensionReduction::VCA(arma::mat R, arma::uword p,
         projected_data = Ud * x_p.rows(0, d-1);
         arma::mat x = trans(Ud) * R;
         arma::mat u = mean(x, 1);
-        y = x / reparma::mat(sum(x % reparma::mat(u, 1, N)), d, 1);
+        y = x / arma::repmat(sum(x % arma::repmat(u, 1, N)), d, 1);
     }
 
 
@@ -88,13 +88,13 @@ bool Vespucci::Math::DimensionReduction::VCA(arma::mat R, arma::uword p,
     arma::vec w;
     w.set_size(p);
     arma::vec f;
-    rowarma::vec v;
+    arma::rowvec v;
     indices.set_size(p);
     //there are no fill functions for arma::uvecs
     for (arma::uword i = 0; i < p; ++i)
         indices(i) = 0;
 
-    arma::mat A = zeros(p, p);
+    arma::mat A = arma::zeros(p, p);
     double v_max;
     double sum_squares;
     arma::uvec q1;
@@ -106,7 +106,7 @@ bool Vespucci::Math::DimensionReduction::VCA(arma::mat R, arma::uword p,
         f /= sum_squares;
         v = trans(f) * y;
         v_max = max(abs(v));
-        q1 = find(abs(v) == v_max, 1);
+        q1 = arma::find(abs(v) == v_max, 1);
         indices(i) = q1(0);
         A.col(i) = y.col(indices(i)); //same as x.col(indices(i));
     }
@@ -116,20 +116,20 @@ bool Vespucci::Math::DimensionReduction::VCA(arma::mat R, arma::uword p,
 }
 
 ///
-/// \brief mat::mate_snr mat::mates Signal-to-Noise ratio.
+/// \brief Vespucci::Math Estimates Signal-to-Noise ratio.
 /// \cite Nascimento2005
 /// \param R Input
 /// \param r_m
 /// \param x
 /// \return
 ///
-double Vespucci::Math::DimensionReduction::mat::mate_snr(arma::mat R, arma::vec r_m, arma::mat x)
+double Vespucci::Math::DimensionReduction::estimate_snr(arma::mat R, arma::vec r_m, arma::mat x)
 {
     arma::uword L = R.n_rows;
     arma::uword N = R.n_cols;
     arma::uword p = x.n_rows;
     if (x.n_cols != N){
-        cerr << "invaliid input to mat::mate_snr" << endl;
+        std::cerr << "invaliid input to Estimate_snr" << std::endl;
         return 0;
     }
 
@@ -151,14 +151,14 @@ int Vespucci::Math::DimensionReduction::HySime(arma::mat y,
                      arma::mat Rn,
                      arma::mat &Ek)
 {
-    cout << "Vespucci::Math::DimensionReduction::HySime()" << endl;
+    std::cout << "Vespucci::Math::DimensionReduction::HySime()" << std::endl;
     if (n.n_rows != y.n_rows || n.n_cols  != y.n_cols){
-        cerr << "HySime: Empty noise arma::matrix or its size does not agree with size of y" << endl;
+        std::cerr << "HySime: Empty noise arma::matrix or its size does not agree with size of y" << std::endl;
         throw(std::runtime_error("HySime: Empty noise arma::matrix or does not agree with size of y"));
     }
 
     if (Rn.n_rows != Rn.n_cols || Rn.n_rows != y.n_rows){
-        cerr << "Bad noise correlation arma::matrix" << endl;
+        std::cerr << "Bad noise correlation arma::matrix" << std::endl;
         Rn = n*n.t() / y.n_cols;
     }
 
@@ -169,9 +169,9 @@ int Vespucci::Math::DimensionReduction::HySime(arma::mat y,
     arma::mat E, D, V;
     arma::vec dx;
     svd(E, dx, V, Rx);
-    D = diagarma::mat(dx);
+    D = arma::diagmat(dx);
 
-    Rn = Rn + sum(Rx.diag())/y.n_rows/10000*eye(y.n_rows, y.n_rows);
+    Rn = Rn + sum(Rx.diag())/y.n_rows/10000*arma::eye(y.n_rows, y.n_rows);
 
     arma::mat P = E.t() * Ry * E;
     arma::vec Py = P.diag();
@@ -198,9 +198,9 @@ int Vespucci::Math::DimensionReduction::HySime(arma::mat y,
 void Vespucci::Math::DimensionReduction::EstimateAdditiveNoise(arma::mat &noise, arma::mat &noise_correlation, arma::mat sample)
 {
     double small = 1e-6;
-    noise = zeros(sample.n_rows, sample.n_cols);
+    noise = arma::zeros(sample.n_rows, sample.n_cols);
     arma::mat RR = sample * sample.t();
-    arma::mat RRi = inv(RR + small*eye(sample.n_rows, sample.n_rows));
+    arma::mat RRi = arma::inv(RR + small*arma::eye(sample.n_rows, sample.n_rows));
     arma::mat XX, RRa, beta;
     for (arma::uword i = 0; i < sample.n_rows; ++i){
         XX = RRi - (RRi.col(i) * RRi.row(i))/RRi(i, i);
@@ -211,5 +211,5 @@ void Vespucci::Math::DimensionReduction::EstimateAdditiveNoise(arma::mat &noise,
         noise.row(i) = sample.row(i) - beta.t() * sample;
     }
     arma::mat nn = noise * noise.t() / sample.n_rows;
-    noise_correlation = diagarma::mat(nn.diag());
+    noise_correlation = arma::diagmat(nn.diag());
 }

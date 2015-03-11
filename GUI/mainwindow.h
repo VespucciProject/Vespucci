@@ -27,7 +27,6 @@ class VespucciWorkspace;
 class VespucciDataset;
 class DatasetListModel;
 class RangeDialog;
-class UnivariateAnalysisDialog;
 namespace Ui {
 class MainWindow;
 }

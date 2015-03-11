@@ -29,6 +29,4 @@
 #include <Math/Smoothing/smoothing.h>
 #include <Math/Transform/cwt.h>
 
-
-
 #endif // VESPUCCI_Math_H

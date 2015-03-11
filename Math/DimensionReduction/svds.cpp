@@ -1,10 +1,4 @@
-
-
-
-
-
 #include <Math/DimensionReduction/dimensionreduction.h>
-
 ///
 /// \brief Vespucci::Math::DimensionReduction::svds Finds a few largest singular values of the arma::matrix X.
 /// This is based on the arma::matlab/Octave function svds(), a truncated singular
@@ -27,52 +21,54 @@
 bool Vespucci::Math::DimensionReduction::svds(arma::mat X, arma::uword k, arma::mat &U, arma::vec &s, arma::mat &V)
 {
     if (X.n_cols < 2){
-        cerr << "svds: X must be 2D arma::matrix" << endl;
+        std::cerr << "svds: X must be 2D arma::matrix" << std::endl;
         return false;
     }
 
     arma::uword m = X.n_rows;
     arma::uword n = X.n_cols;
-    arma::uword p = Vespucci::Math::min(m, n); //used below to establish tolerances.
+    arma::uword p = (m < n ? m : n);
+    //arma::uword p = Vespucci::Math::min(m, n); //used below to establish tolerances.
     //arma::uword q = Vespucci::Math::max(m, n);
 
     if (k > p){
         if (k > m)
-            cerr << "svds: value of k " << k << "is greater than number of rows " << m << endl;
+            std::cerr << "svds: value of k " << k << "is greater than number of rows " << m << std::endl;
         else
-            cerr << "svds: value of k" << k << "is greater than number of columns " << n << endl;
+            std::cerr << "svds: value of k" << k << "is greater than number of columns " << n << std::endl;
     }
 
-    k = Vespucci::Math::min(p, k); //make sure value of k is less than smallest dimension
+    k = (p < k ? p : k);
+            //Vespucci::Math::min(p, k); //make sure value of k is less than smallest dimension
 
     arma::sp_mat B(m+n, m+n);
-    B.subarma::mat(span(0, m-1), span(m, m+n-1)) = X; // top right corner
-    B.subarma::mat(span(m, m+n-1), span(0, m-1)) = X.t(); //bottom left corner
+    B.submat(arma::span(0, m-1), arma::span(m, m+n-1)) = X; // top right corner
+    B.submat(arma::span(m, m+n-1), arma::span(0, m-1)) = X.t(); //bottom left corner
     //If, for some reason, a arma::matrix of zeroes is input...
     if (B.n_nonzero == 0){
-        U = eye(m, k);
-        s = zeros(k, k);
-        V = eye(n, k);
-        cerr << "svds: input arma::matrix has no non-zero elements" << endl;
+        U = arma::eye(m, k);
+        s = arma::zeros(k, k);
+        V = arma::eye(n, k);
+        std::cerr << "svds: input arma::matrix has no non-zero elements" << std::endl;
         return false;
     }
 
     arma::vec eigval;
-    arma::mat eigarma::vec;
+    arma::mat eigvec;
 
     //because we're using sigma=0, results of eigs will be centered around 0
     //we throw out the negative ones, then add in 0 eigenvalues if we have to
     //trying some weird stuff to figure out why arpack call fails
-    bool eigs_success = eigs_sym(eigval, eigarma::vec, B, 2*k);
+    bool eigs_success = eigs_sym(eigval, eigvec, B, 2*k);
 
     if (!eigs_success){
-        cerr << "svds: arma::eigs_sym did not converge!" << endl;
+        std::cerr << "svds: arma::eigs_sym did not converge!" << std::endl;
     }
 
     //Manipulate the results
 
-    //sort eigarma::vec from largest to smallest:
-    eigarma::vec = eigarma::vec.cols(sort_index(eigval, "descend"));
+    //sort eigvec from largest to smallest:
+    eigvec = eigvec.cols(sort_index(eigval, "descend"));
 
     //the negative eigenvalues are artifacts of how the arma::matrix is constructed
     //it is possible that there are two 0 eigenvalues. Only the first is taken
@@ -81,12 +77,12 @@ bool Vespucci::Math::DimensionReduction::svds(arma::mat X, arma::uword k, arma::
     //processed by Vespucci
     arma::uvec return_indices = find(eigval >= 0, k, "first");
 
-    U = sqrt(2) * (eigarma::vec.rows(0, m-1));
+    U = sqrt(2) * (eigvec.rows(0, m-1));
     U = U.cols(return_indices);
 
     s = eigval.rows(return_indices);
 
-    V = sqrt(2) * eigarma::vec.rows(m, m+n-1);
+    V = sqrt(2) * eigvec.rows(m, m+n-1);
     V = V.cols(return_indices);
 
     arma::uvec indices = sort_index(s, "descend");

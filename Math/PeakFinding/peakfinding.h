@@ -19,7 +19,8 @@
 *******************************************************************************/
 #ifndef PEAKFINDING_H
 #define PEAKFINDING_H
-#include <mlpack/core.hpp>
+#include <Math/Accessory/accessory.h>
+
 namespace Vespucci
 {
     namespace Math
