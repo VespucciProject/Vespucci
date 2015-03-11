@@ -20,6 +20,8 @@
 
 #include <Math/Transform/cwt.h>
 #include <Math/PeakFinding/peakfinding.h>
+
+
 ///
 /// \brief Vespucci::Math::Transform::cwt
 /// \param X
@@ -36,14 +38,18 @@
 /// An intelligent background-correction algorithm for highly fluorescent samples
 /// in Raman spectroscopy.
 /// J. Raman Spectrosc., 41: 659–669. doi: 10.1002/jrs.2500
-arma::mat Vespucci::Math::Transform::cwt(arma::vec X, std::string wavelet, arma::uvec scales)
+
+arma::mat Vespucci::Math::Transform::cwt(arma::vec X, std::string wavelet, uvec scales)
 {
     arma::mat wcoeffs(X.n_rows, scales.n_elem);
     arma::vec psi_xval(1024);
     arma::vec psi(1024);
 
+    arma::uword old_length = X.n_rows;
+    X = Vespucci::Math::ExtendToNextPow(X, 2);
 
     //calculate the wavelet:
+
     if (wavelet == "mexh"){
         psi_xval = arma::linspace(-8, 8, 1024);
         psi = (2/std::sqrt(3.0) * std::pow(arma::datum::pi, -0.25)) * (arma::ones(1024) - arma::pow(psi_xval, 2)) % arma::exp(-arma::pow(psi_xval, 2)/2);
@@ -56,51 +62,50 @@ arma::mat Vespucci::Math::Transform::cwt(arma::vec X, std::string wavelet, arma:
         psi.rows(512, 1022) = -1*arma::ones(511);
     }
 
-    psi_xval = psi_xval - arma::ones(psi_xval.n_elem)*psi_xval(0);
+
+    psi_xval -= arma::ones(psi_xval.n_elem)*psi_xval(0);
     double dxval = psi_xval(1);
     double xmax = psi_xval(psi_xval.n_elem - 1);
 
     arma::vec f, j, w;
     arma::uvec j_u;
-    arma::uword i, scale, next_p2, vector_size;
-    arma::cx_vec X_hat, f_hat, schur_product;
-
-    //calculate coefficents for all scales
+    arma::uword i, scale, next_p2, vector_size, shift_by;
+    vector_size = std::pow(2, next_p2);
     for (i = 0; i < scales.n_elem; ++i){
         scale = scales(i);
+
         f = arma::zeros(X.n_elem);
-        j = arma::floor(arma::linspace(0, scale*xmax - 1, scale*xmax)/(scale*dxval)) + arma::ones(scale*xmax);
+        j = arma::floor(arma::linspace(0, scale*xmax, scale*xmax + 1)/(scale*dxval));
         j_u.set_size(j.n_elem);
+
+
         for (arma::uword k = 0; k < j_u.n_elem; ++k){
             j_u(k) = j(k);
         }
 
-        f.rows(0, j.n_elem-1) = flipud(psi.elem(j_u)) - mean(psi.elem(j_u));
+        f.rows(0, j.n_elem-1) = arma::flipud(psi.elem(j_u)) - arma::mean(psi.elem(j_u));
+
         if (f.n_rows != X.n_rows){
-            std::cerr << "scale too large!" << std::endl;
+            cerr << "scale too large!" << endl;
         }
-        next_p2 = Vespucci::Math::NextPow(X.n_elem, 2);
-        vector_size = std::pow(2, next_p2);
-        X_hat = fft(X, vector_size);
-        f_hat = fft(f, vector_size);
-        schur_product = X_hat % f_hat;
-        w = arma::real( arma::ifft(schur_product, vector_size) );
+
+        //convolve and scale
+        w = Vespucci::Math::conv_fft(X, f, "filter") * (1/std::sqrt(scale));
+
+
+        //shift by half wavelet width + scale * xmax
+        shift_by = X.n_rows - std::floor((double) j.n_rows/2)  + scale*xmax;
+
+        w = Vespucci::Math::rotate(w, shift_by, true);
 
         //if signal had to be padded, remove padding
-        if (w.n_rows > X.n_rows){
-            w.shed_rows(X.n_elem, w.n_rows - 1); //remove zero padding
-        }
+        if (w.n_rows > old_length)
+            w.shed_rows(old_length, w.n_rows - 1);
 
-        wcoeffs.col(i) = w * (1/std::sqrt(scale));
+        wcoeffs.col(i) = w;//rotate(w, scale*xmax, true);
     }
-
-    return wcoeffs; //return real part of the ifft
-
+    return wcoeffs;
 }
-
-
-
-
 
 
 arma::vec Vespucci::Math::Transform::cwt_spdbc(arma::vec X, std::string wavelet, arma::uword qscale, double threshold, std::string threshold_method, arma::uword window_size, arma::umat &peak_extrema, arma::vec &baseline)
