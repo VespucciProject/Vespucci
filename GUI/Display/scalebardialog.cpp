@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Display/scalebardialog.h"
-#include "GUI/Display/ui_scalebardialog.h"
+#include "ui_scalebardialog.h"
 
 ///
 /// \brief ScaleBarDialog::ScaleBarDialog

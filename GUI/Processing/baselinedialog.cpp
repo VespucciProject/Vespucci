@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Processing/baselinedialog.h"
-#include "GUI/Processing/ui_baselinedialog.h"
+#include "ui_baselinedialog.h"
 
 ///
 /// \brief BaselineDialog::BaselineDialog

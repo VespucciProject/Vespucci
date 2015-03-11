@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Processing/filterdialog.h"
-#include "GUI/Processing/ui_filterdialog.h"
+#include "ui_filterdialog.h"
 
 ///
 /// \brief FilterDialog::FilterDialog

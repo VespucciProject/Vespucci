@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Display/plotviewer.h"
-#include "GUI/Display/ui_plotviewer.h"
+#include "ui_plotviewer.h"
 
 PlotViewer::PlotViewer(QWidget *parent) :
     QDialog(parent),

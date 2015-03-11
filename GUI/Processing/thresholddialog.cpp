@@ -1,5 +1,5 @@
 #include "GUI/Processing/thresholddialog.h"
-#include "GUI/Processing/ui_thresholddialog.h"
+#include "ui_thresholddialog.h"
 
 ThresholdDialog::ThresholdDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),

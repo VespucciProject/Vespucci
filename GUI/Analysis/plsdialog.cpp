@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Analysis/plsdialog.h"
-#include "GUI/Analysis/ui_plsdialog.h"
+#include "ui_plsdialog.h"
 
 PLSDialog::PLSDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),

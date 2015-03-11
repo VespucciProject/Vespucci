@@ -1,5 +1,5 @@
 #include "GUI/Processing/rangedialog.h"
-#include "GUI/Processing/ui_rangedialog.h"
+#include "ui_rangedialog.h"
 
 ///
 /// \brief RangeDialog::RangeDialog

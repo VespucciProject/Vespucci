@@ -80,14 +80,12 @@ SOURCES += main.cpp\
     Data/Dataset/metadataset.cpp \
     Data/Dataset/vespuccidataset.cpp \
     GUI/Display/aboutdialog.cpp \
-    GUI/Display/analysisdialog.cpp \
     GUI/Analysis/analysisdialog.cpp \
     GUI/Analysis/bandratiodialog.cpp \
     GUI/Processing/baselinedialog.cpp \
     GUI/Processing/booleanizedialog.cpp \
     GUI/Display/citationdialog.cpp \
     GUI/Processing/cropdialog.cpp \
-    GUI/Display/dataextractordialog.cpp \
     GUI/Processing/dataextractordialog.cpp \
     GUI/QAbstractItemModel/datasetlistmodel.cpp \
     GUI/Display/dataviewer.cpp \
@@ -159,7 +157,6 @@ HEADERS  += \
     GUI/QAbstractItemModel/maplistmodel.h \
     GUI/Display/mapviewer.h \
     GUI/Processing/metadatasetdialog.h \
-    GUI/Processing/plotmakerdialog.h \
     GUI/Display/plotviewer.h \
     GUI/Analysis/plsdialog.h \
     GUI/Analysis/principalcomponentsdialog.h \

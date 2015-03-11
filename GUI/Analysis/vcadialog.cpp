@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Analysis/vcadialog.h"
-#include "GUI/Analysis/ui_vcadialog.h"
+#include "ui_vcadialog.h"
 
 ///
 /// \brief VCADialog::VCADialog

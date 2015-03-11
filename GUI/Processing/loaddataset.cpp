@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Processing/loaddataset.h"
-#include "GUI/Processing/ui_loaddataset.h"
+#include "ui_loaddataset.h"
 #include <QFileDialog>
 #include "Data/Dataset/vespuccidataset.h"
 #include "Global/vespucciworkspace.h"
@@ -90,18 +90,18 @@ void LoadDataset::on_buttonBox_accepted()
     QFileInfo file_info(filename);
     QString extension = file_info.suffix();
 
-    InputFileFormat::Format format;
+    std::string format;
     const QString data_format_string = data_format_box_->currentText();
     if (extension == "vds" || (data_format_string == "Vespucci Dataset" && extension != "txt"))
-        format = InputFileFormat::VespucciBinary;
+        format = "VespucciBinary";
     else if (data_format_string == "Wide Text")
-        format = InputFileFormat::WideTabDel;
+        format = "WideTabDel";
     else if (data_format_string == "Wide Text (CSV)")
-        format = InputFileFormat::WideCSV;
+        format = "WideCSV";
     else if (data_format_string == "Long Text")
-        format = InputFileFormat::LongTabDel;
+        format = "LongTabDel";
     else if (data_format_string == "Long Text (CSV)")
-        format = InputFileFormat::LongCSV;
+        format = "LongCSV";
     else
         return;
 
@@ -137,9 +137,7 @@ void LoadDataset::on_buttonBox_accepted()
     if (warning_response == QMessageBox::Yes && file_info.exists()){
         QFile *log_file = workspace->CreateLogFile(name);
 
-        switch (format){
-
-        case InputFileFormat::VespucciBinary :
+        if (format == "VespucciBinary"){
             try{
                 QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename,
                                                             workspace->main_window(),
@@ -157,9 +155,9 @@ void LoadDataset::on_buttonBox_accepted()
                 delete log_file;
                 return;
             }
-            break;
+        }
 
-        default :
+        else{
             try{
                 QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename,
                                                          workspace->main_window(),

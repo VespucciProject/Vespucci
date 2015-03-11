@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Display/dataviewer.h"
-#include "GUI/Display/ui_dataviewer.h"
+#include "ui_dataviewer.h"
 #include "GUI/Display/spectrumviewer.h"
 
 ///

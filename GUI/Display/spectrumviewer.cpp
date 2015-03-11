@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Display/spectrumviewer.h"
-#include "GUI/Display/ui_spectrumviewer.h"
+#include "ui_spectrumviewer.h"
 
 ///
 /// \brief SpectrumViewer::SpectrumViewer

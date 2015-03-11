@@ -217,7 +217,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
                                  QString x_axis_description,
                                  QString y_axis_description,
                                  bool swap_spatial,
-                                 InputFileFormat::Format format)
+                                 std::string format)
     : log_stream_(log_file)
 {
     QDateTime datetime = QDateTime::currentDateTimeUtc();
@@ -249,8 +249,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
     vec indices_temp;
 
 
-    switch (format){
-    case InputFileFormat::WideTabDel :
+    if (format == "WideTabDel"){
         try{
             constructor_canceled_ = TextImport::ImportWideText(text_filename,
                                                                    spectra_,
@@ -270,8 +269,8 @@ VespucciDataset::VespucciDataset(QString text_filename,
             strcat(str, e.what());
             throw std::runtime_error(str);
         }
-        break;
-    case InputFileFormat::WideCSV :
+    }
+    else if (format == "WideCSV"){
         try{
             constructor_canceled_ = TextImport::ImportWideText(text_filename,
                                                                spectra_,
@@ -291,8 +290,8 @@ VespucciDataset::VespucciDataset(QString text_filename,
             strcat(str, e.what());
             throw std::runtime_error(str);
         }
-        break;
-    case InputFileFormat::LongTabDel : case InputFileFormat::LongCSV :
+    }
+    else if (format == "LongTabDel" || format == "LongCSV"){
         try{
             constructor_canceled_ = TextImport::ImportLongText(text_filename,
                                                                spectra_,
@@ -310,13 +309,10 @@ VespucciDataset::VespucciDataset(QString text_filename,
             strcat(str, e.what());
             throw std::runtime_error(str);
         }
-        break;
-
-    default :
+    }
+    else{
         throw std::runtime_error("Invalid file format for text import constructor");
-        break;
-
-    }//end of switch statement
+    }
 
     constructor_canceled_ = false;
     name_ = name;

@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Analysis/bandratiodialog.h"
-#include "GUI/Analysis/ui_bandratiodialog.h"
+#include "ui_bandratiodialog.h"
 
 BandRatioDialog::BandRatioDialog(QWidget *parent,
                                  VespucciWorkspace *ws,

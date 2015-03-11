@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Analysis/principalcomponentsdialog.h"
-#include "GUI/Analysis/ui_principalcomponentsdialog.h"
+#include "ui_principalcomponentsdialog.h"
 
 ///
 /// \brief PrincipalComponentsDialog::PrincipalComponentsDialog

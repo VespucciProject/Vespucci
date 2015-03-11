@@ -19,7 +19,7 @@
 *******************************************************************************/
 
 #include "GUI/Processing/dataextractordialog.h"
-#include "GUI/Processing/ui_dataextractordialog.h"
+#include "ui_dataextractordialog.h"
 
 ///
 /// \brief DataExtractorDialog::DataExtractorDialog

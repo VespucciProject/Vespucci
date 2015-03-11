@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Display/citationdialog.h"
-#include "GUI/Display/ui_citationdialog.h"
+#include "ui_citationdialog.h"
 
 ///
 /// \brief CitationDialog::CitationDialog

@@ -1,5 +1,5 @@
 #include "GUI/Display/spectrumselectiondialog.h"
-#include "GUI/Display/ui_spectrumselectiondialog.h"
+#include "ui_spectrumselectiondialog.h"
 
 SpectrumSelectionDialog::SpectrumSelectionDialog(QWidget *parent, MainWindow *main_window, QSharedPointer<VespucciDataset> dataset) :
     QDialog(parent),

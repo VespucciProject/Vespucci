@@ -1,5 +1,5 @@
 #include "GUI/Processing/booleanizedialog.h"
-#include "GUI/Processing/ui_booleanizedialog.h"
+#include "ui_booleanizedialog.h"
 
 BooleanizeDialog::BooleanizeDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),

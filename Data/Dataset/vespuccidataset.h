@@ -59,6 +59,8 @@ class MapListModel;
 class UnivariateData;
 class AnalysisResults;
 
+
+
 using namespace std;
 using namespace arma;
 
@@ -81,7 +83,7 @@ public:
                     QString x_axis_description,
                     QString y_axis_description,
                     bool swap_spatial,
-                    InputFileFormat::Format format);
+                    std::string format);
 
     VespucciDataset(QString vespucci_binary_filename,
                     MainWindow *main_window,

@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Analysis/univariatedialog.h"
-#include "GUI/Analysis/ui_univariatedialog.h"
+#include "ui_univariatedialog.h"
 
 ///
 /// \brief UnivariateDialog::UnivariateDialog

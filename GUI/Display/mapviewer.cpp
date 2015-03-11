@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Display/mapviewer.h"
-#include "GUI/Display/ui_mapviewer.h"
+#include "ui_mapviewer.h"
 
 
 ///

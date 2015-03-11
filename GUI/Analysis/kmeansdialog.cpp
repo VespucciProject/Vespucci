@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Analysis/kmeansdialog.h"
-#include "GUI/Analysis/ui_kmeansdialog.h"
+#include "ui_kmeansdialog.h"
 
 ///
 /// \brief KMeansDialog::KMeansDialog

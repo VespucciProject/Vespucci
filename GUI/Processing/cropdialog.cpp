@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Processing/cropdialog.h"
-#include "GUI/Processing/ui_cropdialog.h"
+#include "ui_cropdialog.h"
 #include "Global/vespucciworkspace.h"
 #include "Data/Dataset/vespuccidataset.h"
 

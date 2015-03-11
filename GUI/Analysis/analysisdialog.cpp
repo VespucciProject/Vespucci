@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Analysis/analysisdialog.h"
-#include "GUI/Analysis/ui_analysisdialog.h"
+#include "ui_analysisdialog.h"
 
 AnalysisDialog::AnalysisDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),

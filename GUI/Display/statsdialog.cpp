@@ -1,5 +1,5 @@
 #include "GUI/Display/statsdialog.h"
-#include "GUI/Display/ui_statsdialog.h"
+#include "ui_statsdialog.h"
 
 StatsDialog::StatsDialog(QWidget *parent, vec data) :
     QDialog(parent),

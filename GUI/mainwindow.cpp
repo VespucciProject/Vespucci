@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/mainwindow.h"
-#include "GUI/ui_mainwindow.h"
+#include "ui_mainwindow.h"
 #include "GUI/Processing/loaddataset.h"
 #include "GUI/Display/aboutdialog.h"
 #include "GUI/Display/citationdialog.h"
@@ -36,7 +36,7 @@
 #include "GUI/Analysis/analysisdialog.h"
 #include "GUI/Processing/metadatasetdialog.h"
 #include "GUI/Processing/rangedialog.h"
-#include "univariateGUI/Analysis/analysisdialog.h"
+#include "GUI/Analysis/analysisdialog.h"
 #include "GUI/Display/spectrumselectiondialog.h"
 #include "GUI/Processing/booleanizedialog.h"
 #include "GUI/Processing/thresholddialog.h"

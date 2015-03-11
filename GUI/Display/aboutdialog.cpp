@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Display/aboutdialog.h"
-#include "GUI/Display/ui_aboutdialog.h"
+#include "ui_aboutdialog.h"
 
 AboutDialog::AboutDialog(QWidget *parent) :
     QDialog(parent),

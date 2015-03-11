@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Processing/metadatasetdialog.h"
-#include "GUI/Processing/ui_metadatasetdialog.h"
+#include "ui_metadatasetdialog.h"
 #include "Data/Dataset/metadataset.h"
 MetaDatasetDialog::MetaDatasetDialog(QWidget *parent, VespucciWorkspace *ws) :
     QDialog(parent),
