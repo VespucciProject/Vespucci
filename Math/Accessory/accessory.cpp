@@ -172,4 +172,48 @@ arma::uword Vespucci::Math::NextPow(arma::uword number, arma::uword power)
     return std::ceil(std::log(number) / std::log(power));
 }
 
+///
+/// \brief Vespucci::Math::LocalMaxima
+/// \param X A matrix with signals as columns
+/// \return A sparse matrix containing the value of each local maximum at the appropriate
+/// position.
+/// Find the local maxima of a matrix of signals using the first and second
+/// derivative tests. Works best with smooth signals (like CWT coeffs)
+arma::sp_mat Vespucci::Math::LocalMaxima(arma::mat X)
+{
+    arma::mat dX = Vespucci::Math::diff(X, 1);
+    arma::mat d2X = Vespucci::Math::diff(dX, 1);
+    //make everything line up.
+    dX.insert_rows(0, 1, true);
+    d2X.insert_rows(0, 2, true);
 
+    arma::uvec maxima_indices, extrema_indices;
+    arma::vec d2X_extrema;
+    arma::umat locations;
+    arma::vec values;
+    arma::vec extrema_buf;
+    arma::vec X_buf;
+    arma::uvec position_buf_vec;
+    arma::umat position_buf;
+
+
+    for (arma::uword i = 0; i < X.n_cols; ++i){
+        X_buf = X.col(i);
+        //find where the first derivative crosses the x axis
+        extrema_indices = arma::find( (dX.col(i).subvec(0, X.n_rows - 2) % dX.col(i).subvec(1, X.n_rows - 1)) < 0);
+
+        //find the maxima that are negative in the 2nd derivative
+        d2X_extrema = d2X.rows(extrema_indices);
+        maxima_indices = find(d2X_extrema < 0);
+
+        position_buf_vec = extrema_indices.rows(maxima_indices);
+        position_buf.set_size(maxima_indices.n_rows, 2);
+        position_buf.col(0) = position_buf_vec;
+        position_buf.col(1).fill(i);
+        extrema_buf = X_buf.rows(position_buf_vec);
+        values.insert_rows(values.n_rows - 1, extrema_buf);
+        locations.insert_rows(locations.n_rows - 1, position_buf);
+    }
+
+    return arma::sp_mat(locations, values, X.n_rows, X.n_cols, false, false);
+}

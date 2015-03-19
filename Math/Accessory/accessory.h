@@ -7,6 +7,7 @@ namespace Vespucci
     namespace Math
     {
         //general Math functions
+        arma::sp_mat LocalMaxima(arma::mat X);
 
         arma::vec ExtendToNextPow(arma::vec X, arma::uword n);
         arma::uword NextPow(arma::uword number, arma::uword power);

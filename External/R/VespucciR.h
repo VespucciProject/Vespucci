@@ -17,26 +17,25 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef ANALYSISRESULTS_H
-#define ANALYSISRESULTS_H
-#include "Data/Dataset/vespuccidataset.h"
+#ifndef VESPUCCIR_H
+#define VESPUCCIR_H
 
-///
-/// \brief The AnalysisResults class
-/// A container for a mat object that allows a mat to be copied to a heap-allocated
-/// object (this) so pointers to that mat cannot go out of scope. These objects
-/// should be heap-allocated inside smart pointers.
-class AnalysisResults
+#include <RcppArmadillo.h>
+#include <RInside.h>
+
+class VespucciR
 {
 public:
-    AnalysisResults(mat value);
-    mat value();
-    mat *value_ptr();
+    VespucciR(int argc, char *argv[]);
+
+    void SetEnvironment(arma::mat &x, arma::mat &y, arma::mat &abscissa, arma::mat &spectra);
+    void SetEnvironment(arma::field<arma::mat> &objects);
+
+    void GetEnvironment(arma::mat &x, arma::mat &y, arma::mat &abscissa, arma::mat &spectra);
+    void GetEnvironment(arma::field<arma::mat> &objects);
 private:
-    ///
-    /// \brief value_
-    /// The data
-    mat value_;
+    RInside R_;
+
 };
 
-#endif // ANALYSISRESULTS_H
+#endif // VESPUCCIR_H

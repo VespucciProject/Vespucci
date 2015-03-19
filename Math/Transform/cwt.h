@@ -20,7 +20,6 @@
 #ifndef CWT_H
 #define CWT_H
 #include <Math/Accessory/accessory.h>
-
 namespace Vespucci
 {
     namespace Math
@@ -37,6 +36,7 @@ namespace Vespucci
                                       std::string wavelet, arma::uword qscale,
                                       double threshold, std::string threshold_method,
                                       arma::mat &transform);
+            arma::mat FindRidges(arma::mat coefs);
         }
     }
 }

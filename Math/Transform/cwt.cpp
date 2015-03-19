@@ -17,9 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-
-#include <Math/Transform/cwt.h>
 #include <Math/PeakFinding/peakfinding.h>
+#include <Math/Transform/cwt.h>
 
 
 ///
@@ -39,7 +38,7 @@
 /// in Raman spectroscopy.
 /// J. Raman Spectrosc., 41: 659–669. doi: 10.1002/jrs.2500
 
-arma::mat Vespucci::Math::Transform::cwt(arma::vec X, std::string wavelet, uvec scales)
+arma::mat Vespucci::Math::Transform::cwt(arma::vec X, std::string wavelet, arma::uvec scales)
 {
     arma::mat wcoeffs(X.n_rows, scales.n_elem);
     arma::vec psi_xval(1024);
@@ -69,8 +68,7 @@ arma::mat Vespucci::Math::Transform::cwt(arma::vec X, std::string wavelet, uvec 
 
     arma::vec f, j, w;
     arma::uvec j_u;
-    arma::uword i, scale, next_p2, vector_size, shift_by;
-    vector_size = std::pow(2, next_p2);
+    arma::uword i, scale, shift_by;
     for (i = 0; i < scales.n_elem; ++i){
         scale = scales(i);
 
@@ -86,11 +84,11 @@ arma::mat Vespucci::Math::Transform::cwt(arma::vec X, std::string wavelet, uvec 
         f.rows(0, j.n_elem-1) = arma::flipud(psi.elem(j_u)) - arma::mean(psi.elem(j_u));
 
         if (f.n_rows != X.n_rows){
-            cerr << "scale too large!" << endl;
+            std::cerr << "scale too large!" << std::endl;
         }
 
         //convolve and scale
-        w = Vespucci::Math::conv_fft(X, f, "filter") * (1/std::sqrt(scale));
+        w = (1/std::sqrt(scale)) * Vespucci::Math::conv_fft(X, f, "filter");
 
 
         //shift by half wavelet width + scale * xmax

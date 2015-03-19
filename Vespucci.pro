@@ -123,7 +123,9 @@ SOURCES += main.cpp\
     Math/Smoothing/whittaker.cpp \
     Math/Transform/cwt.cpp \
     Math/PeakFinding/peakfinding.cpp \
-    Math/Quantification/misc.cpp
+    Math/Quantification/misc.cpp \
+    External/R/VespucciR.cpp \
+    External/Octave/VespucciOctave.cpp
 
 
 HEADERS  += \
@@ -180,7 +182,9 @@ HEADERS  += \
     Math/Smoothing/smoothing.h \
     Math/Transform/cwt.h \
     Math/PeakFinding/peakfinding.h \
-    Math/Accessory/accessory_impl.h
+    Math/Accessory/accessory_impl.h \
+    External/R/VespucciR.h \
+    External/Octave/VespucciOctave.h
 
 
 FORMS    += \
@@ -362,3 +366,18 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqc
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplot.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplotd.a
 
+#R Integration (these libraries will depend on your R installation)
+win32-g++: INCLUDEPATH += C:\Tools\R\Library\RInside\include
+win32-g++: INCLUDEPATH += C:\Tools\R\Library\RCpp\include
+win32-g++: INCLUDEPATH += C:\Tools\R\Library\RCppArmadillo\include
+win32-g++: INCLUDEPATH += C:\Tools\R\include
+
+win32-g++: LIBS += -LC:\Tools\R\library\RInside\libs\x64 -lRInside
+win32-g++: LIBS += -LC:\Tools\R\library\RCppArmadillo\libs\x64 -lRCppArmadillo
+win32-g++: LIBS += -LC:\Tools\R\library\RCpp\libs\x64 -lRCpp
+win32-g++: LIBS += -LC:\Tools\R\bin\x64 -lR
+win32-g++: LIBS += -LC:\Tools\R\bin\x64 -lRlapack
+win32-g++: LIBS += -LC:\Tools\R\bin\x64 -lRblas
+win32-g++: LIBS += -LC:\Tools\R\bin\x64 -lRiconv
+win32-g++: LIBS += -LC:\Tools\R\bin\x64 -lRzlib
+win32-g++: LIBS += -LC:\Tools\R\bin\x64 -lRgraphapp

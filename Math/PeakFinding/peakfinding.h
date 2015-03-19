@@ -28,6 +28,10 @@ namespace Vespucci
         //Peak detection (SPF)
         namespace PeakFinding
         {
+            arma::uvec FindRidges(arma::mat coefs, double snr_threshold, arma::uword ridge_length);
+
+
+
             arma::vec FindPeaks(arma::vec X, arma::vec dX,
                           double sel,
                           double threshold,
@@ -55,9 +59,10 @@ namespace Vespucci
             arma::vec PeakPopulation(arma::uword vector_size, arma::umat peak_positions);
             arma::vec PeakExtrema(arma::uword vector_size, arma::umat peak_positions);
             arma::mat CWTPeakAnalysis(arma::mat X,
-                                std::string wavelet, arma::uword qscale,
+                                std::string wavelet, arma::uvec scales,
                                 double threshold, std::string threshold_method,
                                 arma::mat &transform);
+
         }
     }
 }
