@@ -39,18 +39,24 @@ VespucciR::VespucciR(int argc, char *argv[]) : R_(argc, argv)
 ///
 void VespucciR::SetEnvironment(arma::mat &x, arma::mat &y, arma::mat &abscissa, arma::mat &spectra)
 {
-
+    R_["x"] = x;
+    R_["y"] = y;
+    R_["spectra"] = spectra;
+    R_["abscissa"] = abscissa;
 }
 
-///
-/// \brief VespucciR::SetEnvironment Sets the initial set of variables defined in the R environment
-/// \param objects Contains a copy of all the dataset elements to be sent to R.
-/// Only matrix and numeric types can be sent.
-///
-void VespucciR::SetEnvironment(arma::field<arma::mat> &objects)
+void VespucciR::SetEnvironment(std::map<std::string, arma::mat> &objects)
 {
-
+    for (std::map<std::string, arma::mat>::iterator i = objects.begin(); i != objects.end(); ++i){
+        if (i->first == "spectra" || i->first == "abscissa"){
+            R_[i->first] = arma::trans(i->second);
+        }
+        else{
+            R_[i->first] = i->second;
+        }
+    }
 }
+
 
 ///
 /// \brief VespucciR::GetEnvironment Returns potentially modified variables from
@@ -62,16 +68,31 @@ void VespucciR::SetEnvironment(arma::field<arma::mat> &objects)
 ///
 void VespucciR::GetEnvironment(arma::mat &x, arma::mat &y, arma::mat &abscissa, arma::mat &spectra)
 {
-
+    x = Rcpp::as<arma::mat>(R_.parseEval("x"));
+    y = Rcpp::as<arma::mat>(R_.parseEval("y"));
+    //R prefers row major layout, so we have to convert back.
+    abscissa = Rcpp::as<arma::mat>(R_.parseEval("t(abscissa)"));
+    spectra = Rcpp::as<arma::mat>(R_.parseEval("t(spectra)"));
 }
 
-///
-/// \brief VespucciR::GetEnvironment Returns potentially modified variables from
-/// the R environment.
-/// \param objects Contains a copy of all the dataset elements to be sent to R
-/// Only matrix and numeric types can be sent
-///
-void VespucciR::GetEnvironment(arma::field<arma::mat> &objects)
+std::map<std::string, arma::mat> VespucciR::GetEnvironment(std::map<std::string, std::string> keys)
 {
-
+    std::map<std::string, arma::mat> objects;
+    arma::mat matrix;
+    std::string vespucci_key;
+    std::string R_key;
+    for (std::map<std::string, std::string>::iterator i = keys.begin(); i != keys.end(); ++i){
+        vespucci_key = i->first;
+        R_key = i->second;
+        matrix = Rcpp::as<arma::mat>(R_.parseEval(R_key));
+        objects[vespucci_key] = matrix;
+    }
+    return objects;
 }
+
+void VespucciR::RunScript(std::string cmd)
+{
+    R_.parseEval(cmd);
+}
+
+

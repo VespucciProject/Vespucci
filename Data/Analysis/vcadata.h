@@ -42,7 +42,7 @@ public:
     int NumberComponents();
     double EndmemberMin(const uword i);
     double EndmemberMax(const uword i);
-
+    mat *value(QString key);
 private:
     ///
     /// \brief endmember_spectra_

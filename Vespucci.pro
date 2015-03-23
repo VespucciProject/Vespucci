@@ -125,7 +125,8 @@ SOURCES += main.cpp\
     Math/PeakFinding/peakfinding.cpp \
     Math/Quantification/misc.cpp \
     External/R/VespucciR.cpp \
-    External/Octave/VespucciOctave.cpp
+    External/Octave/VespucciOctave.cpp \
+    GUI/scriptdialog.cpp
 
 
 HEADERS  += \
@@ -184,7 +185,8 @@ HEADERS  += \
     Math/PeakFinding/peakfinding.h \
     Math/Accessory/accessory_impl.h \
     External/R/VespucciR.h \
-    External/Octave/VespucciOctave.h
+    External/Octave/VespucciOctave.h \
+    GUI/scriptdialog.h
 
 
 FORMS    += \
@@ -215,7 +217,8 @@ FORMS    += \
     GUI/Processing/thresholddialog.ui \
     GUI/Analysis/univariateanalysisdialog.ui \
     GUI/Analysis/univariatedialog.ui \
-    GUI/Analysis/vcadialog.ui
+    GUI/Analysis/vcadialog.ui \
+    GUI/scriptdialog.ui
 
 RESOURCES += \
     resources.qrc

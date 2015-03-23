@@ -333,6 +333,8 @@ public:
 
     QStringList AnalysisResultsList();
     mat *AnalysisResult(QString key);
+    void AddAnalysisResult(std::string key, mat value);
+    void AddAnalysisResults(std::map<std::string, mat> results);
 
     void DestroyLogFile();
 

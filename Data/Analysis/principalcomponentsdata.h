@@ -43,6 +43,7 @@ public:
     mat *coeff();
     vec *percent_variance();
 
+    mat *value(QString key);
 private:
     ///
     /// \brief coeff_

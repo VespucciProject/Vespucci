@@ -77,3 +77,19 @@ vec* PrincipalComponentsData::percent_variance()
 {
     return &percent_variance_;
 }
+
+mat *PrincipalComponentsData::value(QString key)
+{
+    if (key == "PCA Projected Data (Scores)")
+        return &score_;
+    else if (key == "PCA Coefficients (Loadings)")
+        return &coeff_;
+    else if (key == "PCA Hotelling t² Values" || "PCA Hotelling t^2 Values" || "PCA Hotelling t-squared Values")
+        return (mat *) &tsquared_;
+    else if (key == "PCA Eigenvalues of Covariance Matrix")
+        return (mat *) &latent_;
+    else if (key == "PCA Percent Variance")
+        return (mat *) &percent_variance_;
+    else
+        return NULL;
+}

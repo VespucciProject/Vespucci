@@ -35,6 +35,8 @@ public:
     mat *eigvec();
     vec *percent_variance();
 
+    mat *value(QString key);
+
 private:
     ///
     /// \brief pca_data_

@@ -37,3 +37,17 @@ vec *MLPACKPCAData::percent_variance()
 {
     return &percent_variance_;
 }
+
+mat *MLPACKPCAData::value(QString key)
+{
+    if (key == "MLPACK PCA Projection")
+        return &transformed_data_;
+    if (key == "MLPACK PCA Loadings")
+        return &eigvec_;
+    if (key == "MLPACK PCA Eigenvalues")
+        return (mat*) &eigval_;
+    if (key == "MLPACK PCA Variance")
+        return (mat*) &percent_variance_;
+    else
+        return NULL;
+}

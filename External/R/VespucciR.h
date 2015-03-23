@@ -29,10 +29,12 @@ public:
     VespucciR(int argc, char *argv[]);
 
     void SetEnvironment(arma::mat &x, arma::mat &y, arma::mat &abscissa, arma::mat &spectra);
-    void SetEnvironment(arma::field<arma::mat> &objects);
+    void SetEnvironment(std::map<std::string, arma::mat> &objects);
 
     void GetEnvironment(arma::mat &x, arma::mat &y, arma::mat &abscissa, arma::mat &spectra);
-    void GetEnvironment(arma::field<arma::mat> &objects);
+    std::map<std::string, arma::mat> GetEnvironment(std::map<std::string, std::string> keys);
+    void RunScript(std::string cmd);
+
 private:
     RInside R_;
 

@@ -77,6 +77,24 @@ mat *PLSData::percent_variance()
     return &percent_variance_;
 }
 
+mat *PLSData::value(QString key)
+{
+    if (key == "PLS Variance")
+        return &percent_variance_;
+    else if (key == "PLS Predictor Loadings")
+        return &X_loadings_;
+    else if (key == "PLS Response Loadings")
+        return &Y_loadings_;
+    else if (key == "PLS Predictor Scores")
+        return &X_scores_;
+    else if (key == "PLS Response Scores")
+        return &Y_scores_;
+    else if (key == "PLS Coefficients")
+        return &coefficients_;
+    else
+        return NULL;
+}
+
 int PLSData::NumberComponents()
 {
     return coefficients_.n_cols;

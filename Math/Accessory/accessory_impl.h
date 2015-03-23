@@ -116,5 +116,7 @@ template <typename T> T Vespucci::Math::conv_fft(T &A, T &B, std::string type = 
         //w = w.rows(0, A.n_rows - 1);
         return real(w);
     }
+    else
+        throw(std::invalid_argument("argument 'type' invalid"));
 }
 #endif // ACCESSORY_IMPL_H

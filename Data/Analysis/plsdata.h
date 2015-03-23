@@ -41,6 +41,8 @@ public:
     mat *coefficients();
     mat *percent_variance();  
 
+    mat *value(QString key);
+
     int NumberComponents();
     colvec Results(const uword i, bool &valid);
 private:

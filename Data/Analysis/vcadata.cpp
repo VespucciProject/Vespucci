@@ -125,6 +125,20 @@ double VCAData::EndmemberMax(const uword i)
     return max;
 }
 
+mat *VCAData::value(QString key)
+{
+    if (key == "VCA Endmembers")
+        return &endmember_spectra_;
+    else if (key == "VCA Fractional Abundances")
+        return &fractional_abundances_;
+    else if (key == "VCA Pure Pixel Indices")
+        return (mat *) &indices_;
+    else if (key == "VCA Projected Data")
+        return &projected_data_;
+    else
+        return NULL;
+}
+
 ///
 /// \brief VCAData::EndmemberMin
 /// \param i Index of a column of the endmember_spectra_ matrix.

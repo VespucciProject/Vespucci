@@ -2841,5 +2841,47 @@ QStringList VespucciDataset::AnalysisResultsList()
 /// Interface to analysis_results_
 mat *VespucciDataset::AnalysisResult(QString key)
 {
-    return analysis_results_.value(key)->value_ptr();
+    mat *matrix_ptr;
+    bool checked;
+    if (key.split(" ")[0] == "PCA" && principal_components_calculated_){
+        matrix_ptr = principal_components_data_->value(key);
+    }
+    else if (key.split(" ")[0] == "VCA" && vertex_components_calculated_){
+        matrix_ptr = vertex_components_data_->value(key);
+    }
+    else if (key.split(" ")[0] == "PLS" && partial_least_squares_calculated_){
+        matrix_ptr = partial_least_squares_data_->value(key);
+    }
+    else if (key.split(" ")[0] == "MLPACK" && mlpack_pca_calculated_){
+        matrix_ptr = mlpack_pca_data_->value(key);
+    }
+    else if (key.split(" ")[0] == "k-Means" && k_means_calculated_){
+        if (key == "k-Means Assignments")
+            matrix_ptr = (mat *) &k_means_data_;
+        else
+            matrix_ptr = NULL;
+    }
+    else{
+        checked = true;
+        matrix_ptr = analysis_results_.value(key)->value_ptr();
+    }
+    //double check if there is an analysis result that starts with searched sequence but not in relevant object
+    if (checked && matrix_ptr == NULL)
+        matrix_ptr = analysis_results_.value(key)->value_ptr();
+
+    return matrix_ptr;
+}
+
+void VespucciDataset::AddAnalysisResult(string key, mat value)
+{
+    QSharedPointer<AnalysisResults> results(new AnalysisResults(value));
+    analysis_results_.insert(QString::fromStdString(key), results);
+}
+
+void VespucciDataset::AddAnalysisResults(std::map<string, mat> results)
+{
+    for (std::map<string, mat>::iterator i = results.begin(); i != results.end(); ++i){
+        QSharedPointer<AnalysisResults> results(new AnalysisResults(i->second));
+        analysis_results_.insert(QString::fromStdString(i->first), results);
+    }
 }
