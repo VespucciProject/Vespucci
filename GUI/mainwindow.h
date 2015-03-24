@@ -139,6 +139,8 @@ private slots:
 
     void on_actionRemove_Vectors_of_Zeros_triggered();
 
+    void on_actionRun_script_triggered();
+
 private:
     Ui::MainWindow *ui;
 

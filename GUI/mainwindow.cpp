@@ -41,6 +41,7 @@
 #include "GUI/Display/spectrumselectiondialog.h"
 #include "GUI/Processing/booleanizedialog.h"
 #include "GUI/Processing/thresholddialog.h"
+#include "GUI/scriptdialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -1065,4 +1066,11 @@ void MainWindow::on_actionRemove_Vectors_of_Zeros_triggered()
         }
         data.clear();
     }
+}
+
+void MainWindow::on_actionRun_script_triggered()
+{
+    int row = dataset_list_view_->currentIndex().row();
+    ScriptDialog *script_dialog = new ScriptDialog(this, workspace, row);
+    script_dialog->show();
 }

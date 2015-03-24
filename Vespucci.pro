@@ -61,7 +61,10 @@ win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
                          -isystem "C:/Projects/Vespucci/MinGW_libs/include" \
                          -isystem "C:/Projects/Vespucci/MinGW_libs/boost/boost" \
                          -isystem "C:/Projects/Vespucci/MinGW_libs/include/armadillo_bits" \
-                         -isystem "C:/Projects/Vespucci/MinGW_libs/include/mlpack"
+                         -isystem "C:/Projects/Vespucci/MinGW_libs/include/mlpack" \
+                         -isystem "C:/Tools/R/include" \
+                         -isystem "C:/Tools/R/library/Rcpp/include" \
+                         -isystem "C:/Tools/R/library/RcppArmadillo/include/armadillo_bits"
 
 
 

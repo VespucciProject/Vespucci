@@ -126,6 +126,7 @@
     <addaction name="separator"/>
     <addaction name="actionClose_Dataset"/>
     <addaction name="actionCreate_Plot"/>
+    <addaction name="actionRun_script"/>
    </widget>
    <widget class="QMenu" name="menuMap">
     <property name="title">
@@ -361,6 +362,11 @@
   <action name="actionRemove_Vectors_of_Zeros">
    <property name="text">
     <string>Remove Vectors of Zeros</string>
+   </property>
+  </action>
+  <action name="actionRun_script">
+   <property name="text">
+    <string>Run Script...</string>
    </property>
   </action>
  </widget>

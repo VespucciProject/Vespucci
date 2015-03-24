@@ -30,7 +30,9 @@ void ScriptDialog::on_buttonBox_accepted()
     //parse syntax for input box
     std::map<std::string, arma::mat> in_data;
     arma::mat *matrix_ptr;
+    std::cout << "parsing invars..." << std::endl;
     for (int i = 0; i < invars.size(); ++i){
+        std::cout << "invars[i] = " << invars[i].toStdString() << std::endl;
         if (invars[i] == "spectra")
             matrix_ptr = dataset_->spectra_ptr();
         else if (invars[i] == "abscissa")\
@@ -47,17 +49,19 @@ void ScriptDialog::on_buttonBox_accepted()
             in_data[invars[i].toStdString()] = *matrix_ptr;
     }
 
-
+    std::cout << "parsing outvars" << endl;
     std::string interpreter_key;
     std::string vespucci_key;
     std::map<std::string, std::string> variable_keys;
     for (int i = 0; i < outvars.size(); ++i){
+        std::cout << "outvars[i] = " << outvars[i].toStdString() << endl;
         vespucci_key = outvars[i].split("=")[0].trimmed().toStdString();
         interpreter_key = outvars[i].split("=")[1].trimmed().toStdString();
+        std::cout << vespucci_key << ", " << interpreter_key << std::endl;
         variable_keys[vespucci_key] = interpreter_key;
     }
     std::map<std::string, arma::mat> data;
-
+    std::cout << "R stuff" << endl;
     if (interpreter_selector_->currentText() == "R"){
         int argc = 1;
         char* argv[1];
@@ -70,10 +74,9 @@ void ScriptDialog::on_buttonBox_accepted()
         //retrieve output from R
         data = R_instance->GetEnvironment(variable_keys);
 
+        dataset_->AddAnalysisResults(data);
         //delete object created with "new"
         delete R_instance;
-
-        dataset_->AddAnalysisResults(data);
 
     }
     else if (interpreter_selector_->currentText() == "Octave"){

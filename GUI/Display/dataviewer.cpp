@@ -102,7 +102,15 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
         matrix = dataset_->parent_dataset_indices();
         data_objects_.insert("Parent Dataset Coordinates", matrix);
     }
+    QString key;
 
+    if (dataset_->AnalysisResultsList().size() > 0){
+        for (int i = 0; i < dataset_->AnalysisResultsList().size(); ++i){
+            key = dataset_->AnalysisResultsList()[i];
+            matrix = dataset_->AnalysisResult(key);
+            data_objects_.insert(key, matrix);
+        }
+    }
     data_selector_->setCurrentIndex(0);
 }
 
