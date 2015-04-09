@@ -38,7 +38,6 @@ int main(int argc, char *argv[])
 {
     //Launch QApplication instance
     QApplication a(argc, argv);
-
     //A pointer to this goes by "workspace" in every window that needs it
     VespucciWorkspace ws;
     //Clean up dataset log files from when it crashed last

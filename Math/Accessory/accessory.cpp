@@ -99,7 +99,8 @@ arma::mat Vespucci::Math::spdiags(arma::mat B, arma::ivec d, arma::uword m, arma
 /// \brief orth Returns an orthonormal basis of the range space of A
 /// \param X arma::matrix
 /// \return a arma::matrix whose columns form an orthonormal basis for X
-///
+/// This function was written before MLPACK was used. The MLPACK method
+/// mlpack::math::Orthogonalize does the same thing
 arma::mat Vespucci::Math::orth(arma::mat X)
 {
     double eps = arma::datum::eps;
@@ -129,6 +130,7 @@ arma::mat Vespucci::Math::orth(arma::mat X)
 /// \param b
 /// \return
 /// std::max stopped working with arma::uwords for some reason, so I made a max function
+/// It might be a better idea to just cast uwords to int and use std::max
 arma::uword Vespucci::Math::max(arma::uword a, arma::uword b)
 {
     return (a > b ? a : b);
@@ -140,6 +142,7 @@ arma::uword Vespucci::Math::max(arma::uword a, arma::uword b)
 /// \param b
 /// \return
 /// std::min stopped working with arma::uwords for some reason, so I made a min function
+/// It might be a better idea to just cast uwords to int and use std::min
 arma::uword Vespucci::Math::min(arma::uword a, arma::uword b)
 {
     return (a < b ? a : b);
@@ -200,11 +203,20 @@ arma::sp_mat Vespucci::Math::LocalMaxima(arma::mat X)
     for (arma::uword i = 0; i < X.n_cols; ++i){
         X_buf = X.col(i);
         //find where the first derivative crosses the x axis
+        try{
         extrema_indices = arma::find( (dX.col(i).subvec(0, X.n_rows - 2) % dX.col(i).subvec(1, X.n_rows - 1)) < 0);
+        }catch(std::exception e){
+            std::cerr << "find" << std::endl;
+            throw e;
+        }
 
         //find the maxima that are negative in the 2nd derivative
+        try{
         d2X_extrema = d2X.rows(extrema_indices);
         maxima_indices = find(d2X_extrema < 0);
+        }catch(std::exception e){
+
+        }
 
         position_buf_vec = extrema_indices.rows(maxima_indices);
         position_buf.set_size(maxima_indices.n_rows, 2);
@@ -216,4 +228,45 @@ arma::sp_mat Vespucci::Math::LocalMaxima(arma::mat X)
     }
 
     return arma::sp_mat(locations, values, X.n_rows, X.n_cols, false, false);
+}
+
+///
+/// \brief Vespucci::Math::position Find row and column numbers for index
+/// \param index
+/// \param n_rows Number of rows
+/// \param n_cols Number of columns
+/// \param i Row number
+/// \param j Column number
+///
+void Vespucci::Math::position(arma::uword index, arma::uword n_rows, arma::uword n_cols, arma::uword &i, arma::uword &j)
+{
+
+    //first row (0) is 0 to n - 1
+    //second row (1) is n to 2n - 1
+    //third row (2) is 2n to 3n - 1,
+    //etc.
+
+    //the row number is thus, floor(index/n);
+    //the col number is index - (row number) * n
+
+
+    if (index >= n_rows*n_cols)
+        throw std::invalid_argument("index out of bounds");
+    i = (arma::uword) std::floor(index / n_cols);
+    j = (arma::uword) std::floor(index - i*n_cols);
+}
+
+
+arma::umat Vespucci::Math::to_row_column(arma::uvec indices,
+                                         arma::uword n_rows, arma::uword n_cols)
+{
+    arma::umat matrix_indices(indices.n_rows, 2);
+    arma::uword row, column;
+    for(arma::uword i = 0; i < indices.n_rows; ++i){
+        position(indices(i), n_rows, n_cols, row, column);
+        matrix_indices(i, 0) = row;
+        matrix_indices(i, 1) = column;
+    }
+
+    return matrix_indices;
 }

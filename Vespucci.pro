@@ -62,9 +62,9 @@ win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
                          -isystem "C:/Projects/Vespucci/MinGW_libs/boost/boost" \
                          -isystem "C:/Projects/Vespucci/MinGW_libs/include/armadillo_bits" \
                          -isystem "C:/Projects/Vespucci/MinGW_libs/include/mlpack" \
-                         -isystem "C:/Tools/R/include" \
-                         -isystem "C:/Tools/R/library/Rcpp/include" \
-                         -isystem "C:/Tools/R/library/RcppArmadillo/include/armadillo_bits"
+                         -isystem "C:/Tools/R/R-3.1.3/include" \
+                         -isystem "C:/Tools/R/R-3.1.3/library/Rcpp/include" \
+                         -isystem "C:/Tools/R/R-3.1.3/library/RcppArmadillo/include/armadillo_bits"
 
 
 
@@ -129,7 +129,8 @@ SOURCES += main.cpp\
     Math/Quantification/misc.cpp \
     External/R/VespucciR.cpp \
     External/Octave/VespucciOctave.cpp \
-    GUI/scriptdialog.cpp
+    GUI/scriptdialog.cpp \
+    Math/PeakFinding/cwtridge.cpp
 
 
 HEADERS  += \
@@ -189,7 +190,8 @@ HEADERS  += \
     Math/Accessory/accessory_impl.h \
     External/R/VespucciR.h \
     External/Octave/VespucciOctave.h \
-    GUI/scriptdialog.h
+    GUI/scriptdialog.h \
+    Math/PeakFinding/cwtridge.h
 
 
 FORMS    += \
@@ -373,17 +375,17 @@ win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplotd.a
 
 #R Integration (these libraries will depend on your R installation)
-win32-g++: INCLUDEPATH += C:\Tools\R\Library\RInside\include
-win32-g++: INCLUDEPATH += C:\Tools\R\Library\RCpp\include
-win32-g++: INCLUDEPATH += C:\Tools\R\Library\RCppArmadillo\include
-win32-g++: INCLUDEPATH += C:\Tools\R\include
+win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\Library\RInside\include
+win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\Library\RCpp\include
+win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\Library\RCppArmadillo\include
+win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\include
 
-win32-g++: LIBS += -LC:\Tools\R\library\RInside\libs\x64 -lRInside
-win32-g++: LIBS += -LC:\Tools\R\library\RCppArmadillo\libs\x64 -lRCppArmadillo
-win32-g++: LIBS += -LC:\Tools\R\library\RCpp\libs\x64 -lRCpp
-win32-g++: LIBS += -LC:\Tools\R\bin\x64 -lR
-win32-g++: LIBS += -LC:\Tools\R\bin\x64 -lRlapack
-win32-g++: LIBS += -LC:\Tools\R\bin\x64 -lRblas
-win32-g++: LIBS += -LC:\Tools\R\bin\x64 -lRiconv
-win32-g++: LIBS += -LC:\Tools\R\bin\x64 -lRzlib
-win32-g++: LIBS += -LC:\Tools\R\bin\x64 -lRgraphapp
+win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\library\RInside\libs\x64 -lRInside
+win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\library\RCppArmadillo\libs\x64 -lRCppArmadillo
+win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\library\RCpp\libs\x64 -lRCpp
+win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lR
+win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRlapack
+win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRblas
+win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRiconv
+win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRzlib
+win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRgraphapp

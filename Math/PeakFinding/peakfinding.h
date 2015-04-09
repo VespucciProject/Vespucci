@@ -20,7 +20,7 @@
 #ifndef PEAKFINDING_H
 #define PEAKFINDING_H
 #include <Math/Accessory/accessory.h>
-
+#include <Math/PeakFinding/cwtridge.h>
 namespace Vespucci
 {
     namespace Math
@@ -28,8 +28,15 @@ namespace Vespucci
         //Peak detection (SPF)
         namespace PeakFinding
         {
-            arma::uvec FindRidges(arma::mat coefs, double snr_threshold, arma::uword ridge_length);
+            arma::uvec FindRidges(arma::mat coefs, arma::uword gap_threshold, arma::uword ridge_length, arma::uword search_width);
 
+            void LinkRidges(arma::sp_mat &maxima,
+                            arma::mat *coefs,
+                            arma::uword window_size,
+                            arma::uword current_col_ind,
+                            int current_ridge_ind,
+                            arma::uword gap_threshold,
+                            std::vector<Vespucci::Math::CWTRidge> &ridges);
 
 
             arma::vec FindPeaks(arma::vec X, arma::vec dX,

@@ -108,9 +108,14 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
         for (int i = 0; i < dataset_->AnalysisResultsList().size(); ++i){
             key = dataset_->AnalysisResultsList()[i];
             matrix = dataset_->AnalysisResult(key);
-            data_objects_.insert(key, matrix);
+            //attempting to display very large matrices will freeze the dataviewer
+            //items will have to be saved and then opened.
+            if (matrix->n_rows <= 100 || matrix->n_cols <= 100){
+                data_objects_.insert(key, matrix);
+            }
         }
     }
+    data_selector_->addItems(data_objects_.keys());
     data_selector_->setCurrentIndex(0);
 }
 

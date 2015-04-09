@@ -22,6 +22,7 @@
 
 #include <RcppArmadillo.h>
 #include <RInside.h>
+#include <Rcpp.h>
 
 class VespucciR
 {

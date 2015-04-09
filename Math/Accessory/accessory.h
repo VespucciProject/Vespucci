@@ -19,6 +19,10 @@ namespace Vespucci
         arma::uword min(arma::uword a, arma::uword b);
         arma::uword max(arma::uword a, arma::uword b);
 
+        void position(arma::uword index,
+                      arma::uword n_rows, arma::uword n_cols,
+                      arma::uword &i, arma::uword &j);
+        arma::umat to_row_column(arma::uvec indices, arma::uword n_rows, arma::uword n_cols);
     }
 }
 
