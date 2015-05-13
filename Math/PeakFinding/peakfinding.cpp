@@ -22,6 +22,18 @@
 #include <Math/Smoothing/smoothing.h>
 #include <Math/PeakFinding/cwtridge.h>
 
+bool Vespucci::Math::PeakFinding::RidgeTooNoisy(const Vespucci::Math::CWTRidge &ridge, std::string method, const arma::vec &noise, arma::uword window_size, double min_snr)
+{
+    double snr = ridge.SNR(method, window_size, noise);
+    return (snr < min_snr);
+}
+
+bool Vespucci::Math::PeakFinding::RidgeTooShort(const Vespucci::Math::CWTRidge &ridge, arma::uword min_length)
+{
+    return (ridge.length() < min_length);
+}
+
+
 ///
 /// \brief Vespucci::Math::PeakFinding::FindPeaks an implementation of the peakfinder arma::matLAB routine
 /// \param X A vector representing a spectrum
@@ -420,14 +432,14 @@ arma::vec Vespucci::Math::PeakFinding::EstimateBaseline(arma::vec X,
 /// \param search_width
 /// \return
 /// Identify "ridges" in a CWT transform matrix.
-arma::uvec Vespucci::Math::PeakFinding::FindRidges(arma::mat coefs, 
-                                                   arma::uword gap_threshold,
-                                                   arma::uword ridge_length,
-                                                   arma::uword search_width)
+std::vector<Vespucci::Math::CWTRidge>
+    Vespucci::Math::PeakFinding::FindRidges(arma::mat &coefs,
+                                             arma::uvec scales,
+                                             arma::uword gap_threshold,
+                                             arma::uword ridge_length,
+                                             arma::uword search_width,
+                                             double noise_threshold)
 {
-
-
-    arma::uvec peak_centers;
     arma::sp_mat maxima;
     try{
         maxima = Vespucci::Math::LocalMaxima(coefs);
@@ -436,134 +448,164 @@ arma::uvec Vespucci::Math::PeakFinding::FindRidges(arma::mat coefs,
         std::cerr << e.what() << std::endl;
         throw e;
     }
-
+    arma::mat maxima_sum = arma::sum( (arma::mat) maxima, 1);
+    ( (arma::mat) maxima).save("C:/Users/Dan/Documents/maxima.csv", arma::csv_ascii);
+    maxima_sum.save("C:/Users/Dan/Documents/maxima_sum.csv", arma::csv_ascii);
     std::vector<Vespucci::Math::CWTRidge> ridges;
     try{
-    Vespucci::Math::PeakFinding::LinkRidges(maxima, &coefs, search_width,
-                                            maxima.n_rows - 1, 0,
-                                            gap_threshold, ridges);
+        ridges = Vespucci::Math::PeakFinding::LinkRidges(maxima,
+                                                         scales,
+                                                         coefs,
+                                                         search_width,
+                                                         gap_threshold);
     }catch(std::exception e){
-        std::cerr << "LinkRidges" << std::endl;
+        std::cerr << "LinkRidges error" << std::endl;
         std::cerr << e.what();
         throw e;
     }
 
+
+
+
+    //merge degenerate ridges into first ridge with that center
+
+    //sort ridges by index
+    std::sort(ridges.begin(), ridges.end());
+
+    //iterate through the first ridges of a particular center
+    //concatenating degenerate ridges
+    std::vector<Vespucci::Math::CWTRidge>::iterator current;
+    std::vector<Vespucci::Math::CWTRidge>::iterator next;
+    std::vector<Vespucci::Math::CWTRidge>::iterator first;
+    std::vector<Vespucci::Math::CWTRidge>::iterator last;
+
+    //find the unique values
+    //last = std::unique_copy(ridges.begin(), ridges.end(), first);
+
+    //iterate over sorted list, then merge subsequent into first if same
     for (std::vector<Vespucci::Math::CWTRidge>::iterator i = ridges.begin(); i != ridges.end(); ++i){
-        Vespucci::Math::CWTRidge current = *i;
-        peak_centers << current.PeakCenter() << arma::endr;
+        while (i != ridges.end() - 1 && *(i+1) == *i)
+            (*i).Merge(*(++i));
     }
+
+
+    //remove degenerate ridges
+    last = std::unique(ridges.begin(), ridges.end());
+    ridges.erase(last, ridges.end());
+
+    //filter out ridges that are too short or too noisy
+    //the lowest coefficient is the "noise" vector
+    arma::vec noise = coefs.col(0);
+    std::string method = "quantile";
+    arma::uword window_size = 500;
+    std::cout << "lambda stuff" << std::endl;
+    last = std::remove_if(ridges.begin(), ridges.end(),
+                          [noise, method, noise_threshold, window_size, ridge_length]
+                          (const Vespucci::Math::CWTRidge &r)
+                          { return (r.SNR(method, window_size, noise) < noise_threshold) || (r.length() < ridge_length); });
+    ridges.erase(last, ridges.end());
+
+    return ridges;
 }
 
 
-///
-/// \brief Vespucci::Math::PeakFinding::LinkRidges
-/// \param maxima a sparse matrix consiting of ones for a maxes and a zeros elsewhere
-/// \param coefs a pointer to a matrix containing the coefficents.
-/// \param window_size the search window to search the next scale for maxima
-/// \param current_col_ind the current column being examined
-/// \param current_ridge_ind the current index in the ridges object
-/// \param gap_threshold The maximum allowable "gap" between adjacent scales of a ridge
-/// \param ridges Vector containing CWTRidge objects
-/// "Links" ridges of CWT maxima through multiple CWT scales
-void Vespucci::Math::PeakFinding::LinkRidges(arma::sp_mat &maxima,
-                                             arma::mat *coefs,
-                                             arma::uword window_size,
-                                             arma::uword current_col_ind,
-                                             int current_ridge_ind,
-                                             arma::uword gap_threshold,
-                                             std::vector<Vespucci::Math::CWTRidge> &ridges)
+std::vector<Vespucci::Math::CWTRidge> Vespucci::Math::PeakFinding::LinkRidges(arma::sp_mat &maxima, arma::uvec scales, arma::mat &coefs, arma::uword min_window_size, arma::uword gap_threshold)
 {
-    if (window_size % 2 != 0)
-        window_size++; //just go up to closest odd value
+    //return value
+    std::vector<Vespucci::Math::CWTRidge> ridges;
 
-
-    /**** RECURSION CONDITIONS ****/
-
-    //if there are no maxima in this row, move one row down to look for unlinked seeds
-    if (maxima.col(current_col_ind).n_nonzero == 0){
-        Vespucci::Math::PeakFinding::LinkRidges(maxima, coefs, window_size, current_col_ind - 1, current_ridge_ind + 1, gap_threshold, ridges);
+    //find the indices of all local maxima
+    arma::field<arma::uvec> maxima_indices(maxima.n_cols);
+    for (arma::uword i = 0; i < maxima.n_cols; ++i){
+        arma::vec column = (arma::vec) maxima.col(i);
+        arma::uvec query = arma::find(column);
+        maxima_indices(i) = query;
     }
 
-    //if maxima has been cleared of all local maxes, we're done
-    if (maxima.n_nonzero == 0){
-        return;    }
-
-    //check if the gap on the last ridge is too large or we're at the bottom row
-    //if so delete last entry of the last ridge and move to new ridge
-    //check if we are at the bottom row of the matrix
-    if ((ridges.at(current_col_ind).gap() > gap_threshold) || current_col_ind == 0){
-        Vespucci::Math::PeakFinding::LinkRidges(maxima, coefs, window_size, maxima.n_rows -1, current_ridge_ind + 1, gap_threshold, ridges);
-    }
+    arma::uword skip_count = 0;
+    //iterate through "seed columns"
+    for (arma::uword seed_it = maxima_indices.n_rows - 1; seed_it > 2; --seed_it){
+        arma::uword window_size = 1 + (2*scales(seed_it));
+        if (window_size < min_window_size)
+            window_size = min_window_size;
 
 
 
+        //iterates through current seed column to link down columns
+        for (arma::uword max_it = 0; max_it < maxima_indices(seed_it).n_rows; ++max_it){
 
-    /**** LINKING ALGORITHM ****/
+            //each one of these "seeds" gets a new CWTRidge
+            ridges.push_back(Vespucci::Math::CWTRidge(max_it));
 
-    arma::uword last_position; //the most recent col number of the first maxima
+            arma::uword current_index = maxima_indices(seed_it)(max_it);
+            ridges.back().InsertPoint(current_index, seed_it, coefs(current_index, seed_it));
+            //maxima_indices(seed_it)(max_it);
+            try{
+                maxima_indices(seed_it).shed_row(max_it); //remove from search
+            }catch(std::exception e){
+                std::cerr << "first shed_row" << std::endl;
+                throw e;
+            }
 
-    //add new ridge value if this is the first time we've seen this ridge
-    if (current_ridge_ind > ridges.size() - 1){
-        ridges.insert(ridges.end(), Vespucci::Math::CWTRidge());
-        arma::uvec query = arma::find((arma::colvec) maxima.col(current_col_ind));
-        last_position = query(0);
-    }
+            skip_count = 0;
+            int link_it = seed_it - 1;
 
+            //go across columns to link current index
+            while( (skip_count <= gap_threshold) && (link_it >= 0) ){
+                arma::uword window_size = 1 + (2*scales(link_it));
+                if (window_size < min_window_size)
+                    window_size = min_window_size;
+                arma::uword start = current_index - window_size;
+                arma::uword end = current_index + window_size;
+                arma::uvec query;
+                try{
+                    arma::uvec current_col = maxima_indices(link_it);
+                    query = arma::find(current_col >= start && current_col <= end);
+                }catch(std::exception e){
+                    std::cerr << "query" << std::endl;
+                    std::cerr << "link_it = " << link_it << std::endl;
+                    std::cerr << "maxima_indices.n_cols= " << maxima_indices.n_cols << std::endl;
+                    throw e;
+                }
 
+                if (query.n_rows > 1){
+                    //determine which is closer
+                    arma::uvec distance(query.n_rows);
+                    //making sure subtraction works with unsigned...
+                    arma::uword b;
+                    try{
+                        for (b = 0; b < query.n_elem; ++b){
+                            distance(b) = std::abs((int) query(b) - (int) current_index);
+                        }
+                    }catch(std::exception e){
+                        std::cerr << "for loop for found one+" << std::endl;
+                        std::cerr << "distance.n_rows = " << distance.n_rows << std::endl;
+                        std::cerr << "b = " << b << std::endl;
+                        throw e;
+                    }
 
-    else{
-        last_position = ridges.at(current_ridge_ind).LastPosition();
-    }
-    arma::uword next_col_ind = current_col_ind - 1;
-
-    //Start and end of search windows. Window will be smaller at the edges
-    arma::uword k = std::floor(window_size / 2);
-    arma::uword start =
-            (last_position - k < 0? 0 :last_position - k);
-    arma::uword end =
-            (last_position + k > maxima.n_cols ? maxima.n_cols - 1 : last_position + k);
-
-    //search window in next row
-    arma::vec next_row = (arma::vec) maxima.submat(next_col_ind,
-                                                   start,
-                                                   next_col_ind,
-                                                   end);
-    //search for maximum in next row
-    arma::uvec query = arma::find(next_row);
-    arma::uword row_pos;
-
-    //found one maximum in window, link it
-    if (query.n_elem == 1){
-        row_pos = query(0);
-        ridges.at(current_ridge_ind).InsertPoint(next_col_ind, row_pos, coefs->at(next_col_ind, row_pos));
-
-        //remove so subsequent searches don't find it
-        maxima(next_col_ind, row_pos) = 0;
-
-        //call again to go to the next line
-        Vespucci::Math::PeakFinding::LinkRidges(maxima, coefs, window_size, next_col_ind, current_ridge_ind, gap_threshold, ridges);
-    }
-
-    //found more than one maximum in window
-    else if (query.n_elem > 1){
-        //find point closest to center of window if there are 2+ points
-        arma::uword current_min = query(0);
-        for (arma::uword i = 0; i < query.n_elem; ++i){
-            current_min = (current_min <= query(0) ? current_min : query(0));
-        }
-
-        row_pos = current_min;
-        ridges.at(current_ridge_ind).InsertPoint(next_col_ind, row_pos, coefs->at(next_col_ind, row_pos));
-
-        //remove so subsequent searches don't find it
-        maxima(next_col_ind, row_pos) = 0;
-
-        //call again to go to the next line
-        Vespucci::Math::PeakFinding::LinkRidges(maxima, coefs, window_size, next_col_ind, current_ridge_ind, gap_threshold, ridges);
-    }
-
-    //nothing to remove or insert, go to next line in current ridge
-    else{
-        Vespucci::Math::PeakFinding::LinkRidges(maxima, coefs, window_size, next_col_ind, current_ridge_ind, gap_threshold, ridges);
-    }
+                    arma::uvec dis_query = arma::find(distance == distance.min());
+                    arma::uword ind = query(dis_query(0));
+                    ridges.back().InsertPoint(ind, link_it, coefs(ind, link_it));
+                    try{
+                        maxima_indices(link_it).shed_row(ind);
+                    }catch(std::exception e){
+                        maxima_indices(link_it).print();
+                        std::cerr << "maxima_indices.n_rows = " << maxima_indices.n_rows << std::endl;
+                        std::cerr << "ind = " << ind << std::endl;
+                        std::cerr << "inner shed_row" << std::endl;
+                        throw e;
+                    }
+                }
+                else if (query.n_rows == 1){
+                    ridges.back().InsertPoint(query(0), link_it, coefs(query(0), link_it));
+                }
+                else{
+                    ++skip_count;
+                }
+                --link_it;
+            } //end while
+        }//end inner for
+    }//end outer for
+    return ridges;
 }

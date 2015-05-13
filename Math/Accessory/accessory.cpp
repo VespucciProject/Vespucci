@@ -199,12 +199,16 @@ arma::sp_mat Vespucci::Math::LocalMaxima(arma::mat X)
     arma::uvec position_buf_vec;
     arma::umat position_buf;
 
+    for (arma::uword i = 0; i < X.n_cols; ++i){
+        //find where first derivative crosses x axis
+    }
 
     for (arma::uword i = 0; i < X.n_cols; ++i){
         X_buf = X.col(i);
         //find where the first derivative crosses the x axis
         try{
-        extrema_indices = arma::find( (dX.col(i).subvec(0, X.n_rows - 2) % dX.col(i).subvec(1, X.n_rows - 1)) < 0);
+            arma::vec search = (arma::conv_to<arma::vec>::from(dX.col(i).rows(0, X.n_rows - 2)) % arma::conv_to<arma::vec>::from(dX.col(i).rows(1, X.n_rows - 1)));
+            extrema_indices = arma::find(search < 0);
         }catch(std::exception e){
             std::cerr << "find" << std::endl;
             throw e;
@@ -212,23 +216,35 @@ arma::sp_mat Vespucci::Math::LocalMaxima(arma::mat X)
 
         //find the maxima that are negative in the 2nd derivative
         try{
-        d2X_extrema = d2X.rows(extrema_indices);
-        maxima_indices = find(d2X_extrema < 0);
+            d2X_extrema = ((arma::vec) d2X.col(i)).rows(extrema_indices);
+            maxima_indices = arma::find(d2X_extrema < 0);
         }catch(std::exception e){
-
+            std::cerr << "find second" << std::endl;
         }
 
         position_buf_vec = extrema_indices.rows(maxima_indices);
-        position_buf.set_size(maxima_indices.n_rows, 2);
-        position_buf.col(0) = position_buf_vec;
-        position_buf.col(1).fill(i);
+        position_buf.set_size(2, maxima_indices.n_rows);
+        position_buf.row(0) = position_buf_vec.t();
+        position_buf.row(1).fill(i);
+
+
         extrema_buf = X_buf.rows(position_buf_vec);
-        values.insert_rows(values.n_rows - 1, extrema_buf);
-        locations.insert_rows(locations.n_rows - 1, position_buf);
+        try{
+            values.insert_rows(values.n_rows, extrema_buf);
+        }catch (std::exception e){
+            std::cerr << "values.insert_rows failed" << std::endl;
+        }
+        try{
+            locations.insert_cols(locations.n_cols, position_buf);
+        }catch(std::exception e){
+            std::cerr << "locations insert_Rows failed" << std::endl;
+        }
     }
 
     return arma::sp_mat(locations, values, X.n_rows, X.n_cols, false, false);
 }
+
+
 
 ///
 /// \brief Vespucci::Math::position Find row and column numbers for index
@@ -269,4 +285,55 @@ arma::umat Vespucci::Math::to_row_column(arma::uvec indices,
     }
 
     return matrix_indices;
+}
+
+
+double Vespucci::Math::quantile(arma::vec &data, double probs)
+{
+    if (probs > 1 || probs < 0){
+        throw std::invalid_argument("quantile: probs must be between 0 and 1");
+    }
+    if (data.n_rows < 1){
+        throw std::invalid_argument("quantile: empty input vector");
+    }
+
+    double h = (data.n_rows - 1)*probs; //normally you'd add one here, but remember indexing starts at 0
+
+    if (data.in_range(data.in_range(std::floor(h) && std::floor(h) + 1))){
+        return data(std::floor(h)) + (h - std::floor(h))*(data(std::floor(h) + 1) - data(std::floor(h)));
+    }
+    //current or next value is too high, so take last
+    else if ((std::floor(h) >= data.n_rows) || (std::floor(h) + 1 >= data.n_rows)){
+        return data(data.n_rows - 1);
+    }
+    else{
+        throw std::runtime_error("quantile not computed");
+    }
+}
+
+
+double Vespucci::Math::mad(arma::vec &data)
+{
+    double median;
+    double value;
+    arma::vec sorted = sort(data);
+    //calculate median (we do it this way because of an error in MinGW)
+    arma::uword center = sorted.n_rows / 2;
+    if (sorted.n_rows % 2 != 0){
+        median = 0.5*(sorted(center) + sorted(center+1));
+    }
+    else{
+        median = sorted(center);
+    }
+
+    data -= median;
+    sorted = sort(data);
+
+    if (sorted.n_rows % 2 != 0){
+        value = 0.5*(sorted(center) + sorted(center+1));
+    }
+    else{
+        value = sorted(center);
+    }
+    return value;
 }

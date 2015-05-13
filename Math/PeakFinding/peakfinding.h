@@ -28,15 +28,21 @@ namespace Vespucci
         //Peak detection (SPF)
         namespace PeakFinding
         {
-            arma::uvec FindRidges(arma::mat coefs, arma::uword gap_threshold, arma::uword ridge_length, arma::uword search_width);
+            bool RidgeTooNoisy(const Vespucci::Math::CWTRidge &ridge, std::string method, const arma::vec &noise, arma::uword window_size, double min_snr);
+            bool RidgeTooShort(const Vespucci::Math::CWTRidge &ridge, arma::uword min_length);
 
-            void LinkRidges(arma::sp_mat &maxima,
-                            arma::mat *coefs,
-                            arma::uword window_size,
-                            arma::uword current_col_ind,
-                            int current_ridge_ind,
-                            arma::uword gap_threshold,
-                            std::vector<Vespucci::Math::CWTRidge> &ridges);
+            std::vector<Vespucci::Math::CWTRidge> FindRidges(arma::mat &coefs,
+                                                             arma::uvec scales,
+                                                             arma::uword gap_threshold,
+                                                             arma::uword ridge_length,
+                                                             arma::uword search_width, double noise_threshold);
+
+
+            std::vector<Vespucci::Math::CWTRidge> LinkRidges(arma::sp_mat &maxima,
+                                                             arma::uvec scales,
+                                                             arma::mat &coefs,
+                                                             arma::uword min_window_size,
+                                                             arma::uword gap_threshold);
 
 
             arma::vec FindPeaks(arma::vec X, arma::vec dX,

@@ -28,5 +28,7 @@
 #include <Math/Quantification/quantification.h>
 #include <Math/Smoothing/smoothing.h>
 #include <Math/Transform/cwt.h>
+#include <Math/Fitting/linleastsq.h>
+#include <Math/Fitting/nonlinleastsq.h>
 
 #endif // VESPUCCI_Math_H
