@@ -31,7 +31,7 @@
 /// \param fractional_abundances Purity of a given spectrum relative to endmember
 /// \return Convergeance (no actual test implemented...)
 ///
-bool Vespucci::Math::DimensionReduction::VCA(arma::mat R, arma::uword p,
+bool Vespucci::Math::DimensionReduction::VCA(const arma::mat &R, arma::uword p,
          arma::uvec &indices, arma::mat &endmember_spectra,
          arma::mat &projected_data, arma::mat &fractional_abundances)
 {
@@ -123,7 +123,7 @@ bool Vespucci::Math::DimensionReduction::VCA(arma::mat R, arma::uword p,
 /// \param x
 /// \return
 ///
-double Vespucci::Math::DimensionReduction::estimate_snr(arma::mat R, arma::vec r_m, arma::mat x)
+double Vespucci::Math::DimensionReduction::estimate_snr(const arma::mat &R, arma::vec r_m, arma::mat x)
 {
     arma::uword L = R.n_rows;
     arma::uword N = R.n_cols;
@@ -195,7 +195,7 @@ int Vespucci::Math::DimensionReduction::HySime(arma::mat y,
 /// \param sample
 /// The slow additive noise mat::mator from the HySime paper. I'm looking into
 /// faster ones.
-void Vespucci::Math::DimensionReduction::EstimateAdditiveNoise(arma::mat &noise, arma::mat &noise_correlation, arma::mat sample)
+void Vespucci::Math::DimensionReduction::EstimateAdditiveNoise(arma::mat &noise, arma::mat &noise_correlation, const arma::mat &sample)
 {
     double small = 1e-6;
     noise = arma::zeros(sample.n_rows, sample.n_cols);

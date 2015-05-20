@@ -29,13 +29,13 @@ namespace Vespucci
         namespace Smoothing
         {
             arma::mat sgolay(arma::uword poly_order, arma::uword window_size, arma::uword deriv_order, arma::uword scaling_factor);
-            arma::mat sgolayfilt(arma::mat x, arma::uword poly_order, arma::uword window_size, arma::uword deriv_order, arma::uword scaling_factor);
-            arma::vec ApplyFilter(arma::vec x, arma::mat coefficients, arma::uword window_size);
-            arma::vec ApplyFilter(arma::vec x, arma::vec filter);
+            arma::mat sgolayfilt(const arma::mat &x, arma::uword poly_order, arma::uword window_size, arma::uword deriv_order, arma::uword scaling_factor);
+            arma::vec ApplyFilter(const arma::vec &x, arma::mat coefficients, arma::uword window_size);
+            arma::vec ApplyFilter(const arma::vec &x, arma::vec filter);
             arma::vec CreateMovingAverageFilter(arma::uword window_size);
-            arma::vec MedianFilter(arma::vec X, arma::uword window_size);
-            arma::mat MedianFilterMat(arma::mat X, arma::uword window_size);
-            arma::vec WhittakerSmooth(arma::vec x, double lambda, arma::uword penalty_order);
+            arma::vec MedianFilter(const arma::vec &X, arma::uword window_size);
+            arma::mat MedianFilterMat(const arma::mat &X, arma::uword window_size);
+            arma::vec WhittakerSmooth(const arma::vec &x, double lambda, arma::uword penalty_order);
         }
     }
 }

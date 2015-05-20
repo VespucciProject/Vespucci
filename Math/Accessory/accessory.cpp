@@ -182,15 +182,94 @@ arma::uword Vespucci::Math::NextPow(arma::uword number, arma::uword power)
 /// position.
 /// Find the local maxima of a matrix of signals using the first and second
 /// derivative tests. Works best with smooth signals (like CWT coeffs)
-arma::sp_mat Vespucci::Math::LocalMaxima(arma::mat X)
+arma::sp_mat Vespucci::Math::LocalMaxima(const arma::mat &X)
 {
     arma::mat dX = Vespucci::Math::diff(X, 1);
     arma::mat d2X = Vespucci::Math::diff(dX, 1);
     //make everything line up.
     dX.insert_rows(0, 1, true);
     d2X.insert_rows(0, 2, true);
+    return Vespucci::Math::LocalMinima(X, dX, d2X);
+
+}
+
+///
+/// \brief Vespucci::Math::LocalMaxima
+/// \param X A matrix of signals
+/// \param dX A matrix of first derivatives of signals (numerical, S-G, wavelet, etc)
+/// \param d2X A matrix of second derivatives of signals (numerical, S-G, wavelet, etc).
+/// \return
+///
+arma::sp_mat Vespucci::Math::LocalMaxima(const arma::mat &X, const arma::mat &dX, const arma::mat &d2X)
+{
 
     arma::uvec maxima_indices, extrema_indices;
+    arma::vec d2X_extrema;
+    arma::umat locations;
+    arma::vec values;
+    arma::vec extrema_buf;
+    arma::vec X_buf;
+    arma::uvec position_buf_vec;
+    arma::umat position_buf;
+
+    for (arma::uword i = 0; i < X.n_cols; ++i){
+        X_buf = X.col(i);
+        //find where the first derivative crosses the x axis
+        try{
+            arma::vec search = (arma::conv_to<arma::vec>::from(dX.col(i).rows(0, X.n_rows - 2)) % arma::conv_to<arma::vec>::from(dX.col(i).rows(1, X.n_rows - 1)));
+            extrema_indices = arma::find(search < 0);
+        }catch(std::exception e){
+            std::cerr << "find" << std::endl;
+            throw e;
+        }
+
+        //find the maxima that are negative in the 2nd derivative
+        try{
+            d2X_extrema = ((arma::vec) d2X.col(i)).rows(extrema_indices);
+            maxima_indices = arma::find(d2X_extrema < 0);
+        }catch(std::exception e){
+            std::cerr << "find second" << std::endl;
+            throw e;
+        }
+
+        position_buf_vec = extrema_indices.rows(maxima_indices);
+        position_buf.set_size(2, maxima_indices.n_rows);
+        position_buf.row(0) = position_buf_vec.t();
+        position_buf.row(1).fill(i);
+
+
+        extrema_buf = X_buf.rows(position_buf_vec);
+        try{
+            values.insert_rows(values.n_rows, extrema_buf);
+        }catch (std::exception e){
+            std::cerr << "values.insert_rows failed" << std::endl;
+            throw e;
+        }
+        try{
+            locations.insert_cols(locations.n_cols, position_buf);
+        }catch(std::exception e){
+            std::cerr << "locations insert_Rows failed" << std::endl;
+            throw e;
+        }
+    }
+
+    return arma::sp_mat(locations, values, X.n_rows, X.n_cols, false, false);
+}
+
+
+arma::sp_mat Vespucci::Math::LocalMinima(const arma::mat &X)
+{
+    arma::mat dX = Vespucci::Math::diff(X, 1);
+    arma::mat d2X = Vespucci::Math::diff(dX, 1);
+    //make everything line up.
+    dX.insert_rows(0, 1, true);
+    d2X.insert_rows(0, 2, true);
+    return Vespucci::Math::LocalMinima(X, dX, d2X);
+}
+
+arma::sp_mat Vespucci::Math::LocalMinima(const arma::mat &X, const arma::mat &dX, const arma::mat &d2X)
+{
+    arma::uvec minima_indices, extrema_indices;
     arma::vec d2X_extrema;
     arma::umat locations;
     arma::vec values;
@@ -214,16 +293,16 @@ arma::sp_mat Vespucci::Math::LocalMaxima(arma::mat X)
             throw e;
         }
 
-        //find the maxima that are negative in the 2nd derivative
+        //find the extrema that are positive in the 2nd derivative
         try{
             d2X_extrema = ((arma::vec) d2X.col(i)).rows(extrema_indices);
-            maxima_indices = arma::find(d2X_extrema < 0);
+            minima_indices = arma::find(d2X_extrema > 0);
         }catch(std::exception e){
             std::cerr << "find second" << std::endl;
         }
 
-        position_buf_vec = extrema_indices.rows(maxima_indices);
-        position_buf.set_size(2, maxima_indices.n_rows);
+        position_buf_vec = extrema_indices.rows(minima_indices);
+        position_buf.set_size(2, minima_indices.n_rows);
         position_buf.row(0) = position_buf_vec.t();
         position_buf.row(1).fill(i);
 
@@ -233,17 +312,18 @@ arma::sp_mat Vespucci::Math::LocalMaxima(arma::mat X)
             values.insert_rows(values.n_rows, extrema_buf);
         }catch (std::exception e){
             std::cerr << "values.insert_rows failed" << std::endl;
+            throw e;
         }
         try{
             locations.insert_cols(locations.n_cols, position_buf);
         }catch(std::exception e){
             std::cerr << "locations insert_Rows failed" << std::endl;
+            throw e;
         }
     }
 
     return arma::sp_mat(locations, values, X.n_rows, X.n_cols, false, false);
 }
-
 
 
 ///
@@ -337,3 +417,7 @@ double Vespucci::Math::mad(arma::vec &data)
     }
     return value;
 }
+
+
+
+

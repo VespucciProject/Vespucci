@@ -38,9 +38,11 @@ public:
     arma::uword LastPosition() const;
     arma::uword length() const;
     arma::uword PeakCenter() const;
-    double SNR(std::string method, arma::uword window_size, const arma::vec &noise) const;
+    double EstimateSNR(std::string method, arma::uword window_size, const arma::vec &noise);
+    double SNR() const;
     arma::umat points() const;
-
+    double EstimateWidth(const arma::vec &spectra, const arma::vec &first_haar_coefs, const arma::vec &second_haar_coefs, const arma::vec &abscissa);
+    double width() const;
 
 
 
@@ -80,6 +82,19 @@ private:
     /// \brief id
     /// A number used by external functions for debugging purposes
     int id_;
+
+    ///
+    /// \brief calculated_snr_
+    /// Whenever SNR is called, this value is set.
+    double calculated_snr_;
+
+    ///
+    /// \brief width_
+    /// Whenever EstimateWidth is called, this value is set
+    double width_;
+
+    arma::uword left_minimum_;
+    arma::uword right_minimum_;
 };
 }
 }

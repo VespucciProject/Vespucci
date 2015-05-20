@@ -106,7 +106,7 @@ arma::mat Vespucci::Math::Transform::cwt(arma::vec X, std::string wavelet, arma:
 }
 
 
-arma::vec Vespucci::Math::Transform::cwt_spdbc(arma::vec X, std::string wavelet, arma::uword qscale, double threshold, std::string threshold_method, arma::uword window_size, arma::umat &peak_extrema, arma::vec &baseline)
+arma::vec Vespucci::Math::Transform::cwt_spdbc(const arma::vec &X, std::string wavelet, arma::uword qscale, double threshold, std::string threshold_method, arma::uword window_size, arma::umat &peak_extrema, arma::vec &baseline)
 {
     arma::umat peaks;
     arma::vec peak_magnitudes;
@@ -133,7 +133,7 @@ arma::vec Vespucci::Math::Transform::cwt_spdbc(arma::vec X, std::string wavelet,
 }
 
 
-arma::mat Vespucci::Math::Transform::cwt_spdbc_mat(arma::mat X, std::string wavelet, arma::uword qscale,
+arma::mat Vespucci::Math::Transform::cwt_spdbc_mat(const arma::mat &X, std::string wavelet, arma::uword qscale,
                             double threshold, std::string threshold_method,
                             arma::uword window_size, arma::field<arma::umat> &peak_positions,
                             arma::mat &baselines)
@@ -171,7 +171,7 @@ arma::mat Vespucci::Math::Transform::cwt_spdbc_mat(arma::mat X, std::string wave
 
 
 
-arma::mat Vespucci::Math::Transform::cwtPeakAnalysis(arma::mat X,
+arma::mat Vespucci::Math::Transform::cwtPeakAnalysis(const arma::mat &X,
                               std::string wavelet, arma::uword qscale,
                               double threshold, std::string threshold_method,
                               arma::mat &transform)
@@ -210,7 +210,7 @@ arma::mat Vespucci::Math::Transform::cwtPeakAnalysis(arma::mat X,
 /// \param scales
 /// \return
 /// This may be deprecated by putting this loop in cwt
-arma::field<arma::mat> Vespucci::Math::Transform::cwt_multi(arma::mat X, std::string wavelet, arma::uvec scales)
+arma::field<arma::mat> Vespucci::Math::Transform::cwt_multi(const arma::mat &X, std::string wavelet, arma::uvec scales)
 {
     arma::field<arma::mat> results(X.n_cols);
     for (arma::uword i = 0; i < results.n_elem; ++i){

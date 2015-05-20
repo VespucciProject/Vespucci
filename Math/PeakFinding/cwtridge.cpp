@@ -112,14 +112,7 @@ arma::uword Vespucci::Math::CWTRidge::PeakCenter() const
     return point(0);
 }
 
-///
-/// \brief Vespucci::Math::CWTRidge::SNR
-/// \param method How to estimate noise (quantile, mean, stddev)
-/// \param window_size Area of "support region"
-/// \param noise A vector representing CWT at scale = 1;
-/// \return
-///
-double Vespucci::Math::CWTRidge::SNR(std::string method, arma::uword window_size, const arma::vec &noise) const
+double Vespucci::Math::CWTRidge::EstimateSNR(std::string method, arma::uword window_size, const arma::vec &noise)
 {
     double signal = coefs_.max();
     arma::uword start, end, center;
@@ -157,13 +150,68 @@ double Vespucci::Math::CWTRidge::SNR(std::string method, arma::uword window_size
     else{
         throw std::invalid_argument("CWTRidge::SNR: " + method + " not a valid SNR method");
     }
-    return std::abs(signal / noise_level);
-
+    calculated_snr_ = std::abs(signal / noise_level);
+    return calculated_snr_;
 }
+
+///
+/// \brief Vespucci::Math::CWTRidge::SNR
+/// \param method How to estimate noise (quantile, mean, stddev)
+/// \param window_size Area of "support region"
+/// \param noise A vector representing CWT at scale = 1;
+/// \return
+///
+double Vespucci::Math::CWTRidge::SNR() const
+{
+    return calculated_snr_;
+}
+
 
 arma::umat Vespucci::Math::CWTRidge::points() const
 {
     return points_;
+}
+
+double Vespucci::Math::CWTRidge::EstimateWidth(const arma::vec &spectra, const arma::vec &first_haar_coefs, const arma::vec &second_haar_coefs, const arma::vec &abscissa)
+{
+    arma::uword first = PeakCenter() - 3*scale();
+    arma::uword last =  (PeakCenter() + 3*scale() < spectra.n_rows ? PeakCenter() + 3*scale() : spectra.n_rows - 1);
+    arma::vec X = spectra.rows(first, last);//search
+    arma::vec dX = first_haar_coefs.rows(first, last);
+    arma::vec d2X = second_haar_coefs.rows(first, last);
+    arma::sp_vec local_minima = Vespucci::Math::LocalMinima(X, dX, d2X);
+
+    arma::vec q = scale() * arma::ones(local_minima.n_rows) - local_minima;
+
+    arma::uvec negatives = arma::find(q > 0);
+    arma::uvec positives = arma::find(q < 0);
+
+
+    if ((negatives.n_elem > 0)){
+        left_minimum_ = negatives.max();
+    }
+    else{
+        arma::vec window = spectra.rows(first, PeakCenter());
+        arma::uvec q1 = arma::find(window == window.min());
+        left_minimum_ = PeakCenter() - q1.max(); //pick closest if more than one found
+    }
+
+    if (positives.n_elem > 0){
+        right_minimum_ = positives.min();
+    }
+
+    else{
+        arma::vec window = spectra.rows(PeakCenter(), last);
+        arma::uvec q1 = arma::find(window == window.min());
+        right_minimum_ = PeakCenter() - q1.min(); //pick closest if more than one found
+    }
+    width_ = std::abs(abscissa(left_minimum_) - abscissa(right_minimum_));
+    return width_;
+}
+
+double Vespucci::Math::CWTRidge::width() const
+{
+    return width_;
 }
 
 ///

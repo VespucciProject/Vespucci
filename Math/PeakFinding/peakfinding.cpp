@@ -21,17 +21,9 @@
 #include <Math/PeakFinding/peakfinding.h>
 #include <Math/Smoothing/smoothing.h>
 #include <Math/PeakFinding/cwtridge.h>
+#include <Math/Transform/cwt.h>
 
-bool Vespucci::Math::PeakFinding::RidgeTooNoisy(const Vespucci::Math::CWTRidge &ridge, std::string method, const arma::vec &noise, arma::uword window_size, double min_snr)
-{
-    double snr = ridge.SNR(method, window_size, noise);
-    return (snr < min_snr);
-}
 
-bool Vespucci::Math::PeakFinding::RidgeTooShort(const Vespucci::Math::CWTRidge &ridge, arma::uword min_length)
-{
-    return (ridge.length() < min_length);
-}
 
 
 ///
@@ -438,7 +430,9 @@ std::vector<Vespucci::Math::CWTRidge>
                                              arma::uword gap_threshold,
                                              arma::uword ridge_length,
                                              arma::uword search_width,
-                                             double noise_threshold)
+                                             double noise_threshold,
+                                             std::string noise_method,
+                                             arma::uword noise_window)
 {
     arma::sp_mat maxima;
     try{
@@ -474,19 +468,14 @@ std::vector<Vespucci::Math::CWTRidge>
 
     //iterate through the first ridges of a particular center
     //concatenating degenerate ridges
-    std::vector<Vespucci::Math::CWTRidge>::iterator current;
-    std::vector<Vespucci::Math::CWTRidge>::iterator next;
-    std::vector<Vespucci::Math::CWTRidge>::iterator first;
+
     std::vector<Vespucci::Math::CWTRidge>::iterator last;
 
-    //find the unique values
-    //last = std::unique_copy(ridges.begin(), ridges.end(), first);
 
     //iterate over sorted list, then merge subsequent into first if same
-    for (std::vector<Vespucci::Math::CWTRidge>::iterator i = ridges.begin(); i != ridges.end(); ++i){
-        while (i != ridges.end() - 1 && *(i+1) == *i)
+    for (std::vector<Vespucci::Math::CWTRidge>::iterator i = ridges.begin(); i != ridges.end(); ++i)
+        while ((i != ridges.end() - 1) && *(i+1) == *i)
             (*i).Merge(*(++i));
-    }
 
 
     //remove degenerate ridges
@@ -496,20 +485,23 @@ std::vector<Vespucci::Math::CWTRidge>
     //filter out ridges that are too short or too noisy
     //the lowest coefficient is the "noise" vector
     arma::vec noise = coefs.col(0);
-    std::string method = "quantile";
-    arma::uword window_size = 500;
-    std::cout << "lambda stuff" << std::endl;
-    last = std::remove_if(ridges.begin(), ridges.end(),
-                          [noise, method, noise_threshold, window_size, ridge_length]
-                          (const Vespucci::Math::CWTRidge &r)
-                          { return (r.SNR(method, window_size, noise) < noise_threshold) || (r.length() < ridge_length); });
-    ridges.erase(last, ridges.end());
 
+    //estimate SNR for every ridge
+    std::for_each(ridges.begin(), ridges.end(),
+                  [noise, noise_method, noise_window](Vespucci::Math::CWTRidge &r)
+                  {r.EstimateSNR(noise_method, noise_window, noise);});
+
+    //remove too noisy and too short
+    last = std::remove_if(ridges.begin(), ridges.end(),
+                          [noise_threshold, ridge_length]
+                          (const Vespucci::Math::CWTRidge &r)
+                          { return (r.SNR() < noise_threshold) || (r.length() < ridge_length); });
+    ridges.erase(last, ridges.end());
     return ridges;
 }
 
 
-std::vector<Vespucci::Math::CWTRidge> Vespucci::Math::PeakFinding::LinkRidges(arma::sp_mat &maxima, arma::uvec scales, arma::mat &coefs, arma::uword min_window_size, arma::uword gap_threshold)
+std::vector<Vespucci::Math::CWTRidge> Vespucci::Math::PeakFinding::LinkRidges(const arma::sp_mat &maxima, arma::uvec scales, arma::mat &coefs, arma::uword min_window_size, arma::uword gap_threshold)
 {
     //return value
     std::vector<Vespucci::Math::CWTRidge> ridges;
@@ -608,4 +600,25 @@ std::vector<Vespucci::Math::CWTRidge> Vespucci::Math::PeakFinding::LinkRidges(ar
         }//end inner for
     }//end outer for
     return ridges;
+}
+
+
+void Vespucci::Math::PeakFinding::EstimateWidth(const arma::vec &spectrum, const arma::vec &abscissa, std::vector<Vespucci::Math::CWTRidge> &ridges)
+{
+    //perform width estimation on every ridge
+    arma::uvec haar_scales(ridges.size());
+
+    std::for_each(ridges.begin(), ridges.end(),
+                  [&haar_scales](const Vespucci::Math::CWTRidge &r)
+                  {arma::uword i = 0; haar_scales(i) = r.scale(); ++i;});
+
+    arma::mat first_haar_coefs = Vespucci::Math::Transform::cwt(spectrum, "haar", arma::uvec(haar_scales));
+    arma::mat second_haar_coefs = Vespucci::Math::Transform::cwt(first_haar_coefs, "haar", arma::uvec(haar_scales));
+
+
+    for (arma::uword i = 0; i < ridges.size(); ++i){
+        ridges[i].EstimateWidth(spectrum, first_haar_coefs.col(i), second_haar_coefs.col(i), abscissa);
+    }
+
+
 }

@@ -28,7 +28,7 @@
 /// \param baseline
 /// \return
 /// Takes a Riemann sum under a peak defined by certain indices
-double Vespucci::Math::Quantification::IntegratePeak(arma::vec X, arma::uword min_index, arma::uword max_index, double abscissa_step, arma::vec &baseline)
+double Vespucci::Math::Quantification::IntegratePeak(const arma::vec &X, arma::uword min_index, arma::uword max_index, double abscissa_step, arma::vec &baseline)
 {
     arma::vec region = X.subvec(min_index, max_index);
 
@@ -53,7 +53,7 @@ double Vespucci::Math::Quantification::IntegratePeak(arma::vec X, arma::uword mi
 /// \return
 /// Finds the index of specified start and end values, then calls IntegratePeak
 /// on each column of the arma::matrix
-arma::vec Vespucci::Math::Quantification::IntegratePeakMat(arma::mat X, arma::vec abscissa, double &min, double &max, arma::mat &baselines, arma::uvec &boundaries)
+arma::vec Vespucci::Math::Quantification::IntegratePeakMat(const arma::mat &X, arma::vec abscissa, double &min, double &max, arma::mat &baselines, arma::uvec &boundaries)
 {
     double delta = std::abs(abscissa(1) - abscissa(0));
     arma::uvec left_bound = find(((min-delta) <= abscissa) && (abscissa <= (min+delta)));
@@ -87,7 +87,7 @@ arma::vec Vespucci::Math::Quantification::IntegratePeakMat(arma::mat X, arma::ve
 /// \param second_baselines
 /// \return
 /// Performs two peak integrations
-arma::mat Vespucci::Math::Quantification::IntegratePeaksMat(arma::mat X, arma::vec abscissa, double &first_min, double &first_max, double &second_min, double &second_max, arma::mat &first_baselines, arma::mat &second_baselines, arma::uvec &boundaries)
+arma::mat Vespucci::Math::Quantification::IntegratePeaksMat(const arma::mat &X, arma::vec abscissa, double &first_min, double &first_max, double &second_min, double &second_max, arma::mat &first_baselines, arma::mat &second_baselines, arma::uvec &boundaries)
 {
     double delta = std::abs(abscissa(1) - abscissa(0));
     arma::uvec first_left_bound = find(((first_min-delta) <= abscissa) && (abscissa <= (first_min+delta)));

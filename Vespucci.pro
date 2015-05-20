@@ -130,7 +130,8 @@ SOURCES += main.cpp\
     External/R/VespucciR.cpp \
     External/Octave/VespucciOctave.cpp \
     GUI/scriptdialog.cpp \
-    Math/PeakFinding/cwtridge.cpp
+    Math/PeakFinding/cwtridge.cpp \
+    Data/Analysis/cwtdata.cpp
 
 
 HEADERS  += \
@@ -191,7 +192,8 @@ HEADERS  += \
     External/R/VespucciR.h \
     External/Octave/VespucciOctave.h \
     GUI/scriptdialog.h \
-    Math/PeakFinding/cwtridge.h
+    Math/PeakFinding/cwtridge.h \
+    Data/Analysis/cwtdata.h
 
 
 FORMS    += \
@@ -389,3 +391,10 @@ win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRblas
 win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRiconv
 win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRzlib
 win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRgraphapp
+
+#levmar
+#LEVMAR
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -llevmar
+INCLUDEPATH += $$PWD/../MinGW_libs/include/levmar
+DEPENDPATH += $$PWD/../MinGW_libs/include/levmar
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/liblevmar.a

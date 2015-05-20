@@ -28,7 +28,7 @@
 /// \param position
 /// \return
 /// Finds the maximum of a peak bound by min_index and max_index
-double Vespucci::Math::Quantification::FindPeakMax(arma::vec X, arma::uword min_index, arma::uword max_index, arma::uword &position)
+double Vespucci::Math::Quantification::FindPeakMax(const arma::vec &X, arma::uword min_index, arma::uword max_index, arma::uword &position)
 {
     arma::vec region = X.subvec(min_index, max_index);
     double max = region.max();
@@ -47,7 +47,7 @@ double Vespucci::Math::Quantification::FindPeakMax(arma::vec X, arma::uword min_
 /// \return
 /// Iterates FindPeakMat over the columns of a arma::matrix. Finds the indices of specified
 /// min and max inputs
-arma::vec Vespucci::Math::Quantification::FindPeakMaxMat(arma::mat X, arma::vec abscissa, double &min, double &max, arma::vec &positions)
+arma::vec Vespucci::Math::Quantification::FindPeakMaxMat(const arma::mat &X, arma::vec abscissa, double &min, double &max, arma::vec &positions)
 {
     double delta = std::abs(abscissa(1) - abscissa(0));
     arma::uvec left_bound = find(((min-delta) <= abscissa) && (abscissa <= (min+delta)));
@@ -81,7 +81,7 @@ arma::vec Vespucci::Math::Quantification::FindPeakMaxMat(arma::mat X, arma::vec 
 /// \param positions
 /// \return
 /// Finds two peaks in the manner of FindPeakMaxMat
-arma::mat Vespucci::Math::Quantification::FindPeakMaxesMat(arma::mat X, arma::vec abscissa, double &first_min, double &first_max, double &second_min, double &second_max, arma::mat positions)
+arma::mat Vespucci::Math::Quantification::FindPeakMaxesMat(const arma::mat &X, arma::vec abscissa, double &first_min, double &first_max, double &second_min, double &second_max, arma::mat positions)
 {
     double delta = std::abs(abscissa(1) - abscissa(0));
     arma::uvec first_left_bound = find(((first_min-delta) <= abscissa) && (abscissa <= (first_min+delta)));

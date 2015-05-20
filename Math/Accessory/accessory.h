@@ -26,7 +26,15 @@ namespace Vespucci
     namespace Math
     {
         //general Math functions
-        arma::sp_mat LocalMaxima(arma::mat X);
+        arma::sp_mat LocalMaxima(const arma::mat &X);
+        arma::sp_mat LocalMaxima(const arma::mat &X, const arma::mat &dX, const arma::mat &d2X);
+        arma::sp_mat LocalMaxima(const arma::mat &dX, const arma::mat &d2X);
+
+        arma::sp_mat LocalMinima(const arma::mat &X);
+        arma::sp_mat LocalMinima(const arma::mat &X, const arma::mat &dX, const arma::mat &d2X);
+        arma::sp_mat LocalMinima(const arma::mat &dX, const arma::mat &d2X);
+
+
         arma::sp_mat LocalMaximaCWT(arma::mat coefs, arma::uvec scales, arma::uword min_window_size, double amplitude_threshold);
         double quantile (arma::vec &data, double probs);
         double mad (arma::vec &data);

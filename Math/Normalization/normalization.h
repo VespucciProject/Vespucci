@@ -27,8 +27,8 @@ namespace Vespucci
     {
         namespace Normalization
         {
-            arma::vec StandardScore(arma::vec X);
-            arma::mat StandardScoreMat(arma::mat X);
+            arma::vec StandardScore(const arma::vec &X);
+            arma::mat StandardScoreMat(const arma::mat &X);
         }
     }
 }

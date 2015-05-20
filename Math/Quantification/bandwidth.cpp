@@ -29,7 +29,7 @@
 /// \param abscissa_step
 /// \return
 /// Finds the full-width at half maximum of a peak bound by min_index and max_index
-double Vespucci::Math::Quantification::FindBandwidth(arma::vec X, arma::uword min_index, arma::uword max_index, arma::vec &midline, arma::vec &baseline, double abscissa_step)
+double Vespucci::Math::Quantification::FindBandwidth(const arma::vec &X, arma::uword min_index, arma::uword max_index, arma::vec &midline, arma::vec &baseline, double abscissa_step)
 {
    arma::vec region = X.subvec(min_index, max_index);
    arma::uword size = region.n_elem;
@@ -89,7 +89,7 @@ double Vespucci::Math::Quantification::FindBandwidth(arma::vec X, arma::uword mi
 /// \param baselines
 /// \return
 /// Finds the bandwidth of every column of a arma::matrix.
-arma::vec Vespucci::Math::Quantification::FindBandwidthMat(arma::mat X, arma::vec abscissa, double &min, double &max, arma::mat &midlines, arma::mat &baselines, arma::uvec &boundaries)
+arma::vec Vespucci::Math::Quantification::FindBandwidthMat(const arma::mat &X, arma::vec abscissa, double &min, double &max, arma::mat &midlines, arma::mat &baselines, arma::uvec &boundaries)
 {
     double delta = std::abs(abscissa(1) - abscissa(0));
     arma::uvec left_bound = find(((min-delta) <= abscissa) && (abscissa <= (min+delta)));

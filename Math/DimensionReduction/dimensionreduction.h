@@ -31,13 +31,14 @@ namespace Vespucci
                           arma::mat &X_loadings, arma::mat &Y_loadings,
                           arma::mat &X_scores, arma::mat &Y_scores,
                           arma::mat &coefficients, arma::mat &percent_variance, arma::mat &fitted);
-            bool VCA(arma::mat R, arma::uword p, arma::uvec &indices, arma::mat &endmember_spectra,
+            bool VCA(const arma::mat &R, arma::uword p, arma::uvec &indices, arma::mat &endmember_spectra,
                      arma::mat &projected_data, arma::mat &fractional_abundances);
-            double estimate_snr(arma::mat R, arma::vec r_m, arma::mat x);
-            bool svds(arma::mat X, arma::uword k, arma::mat &U, arma::vec &s, arma::mat &V);
+            double estimate_snr(const arma::mat &R, arma::vec r_m, arma::mat x);
+            //deprected by arma::svds() in armadillo 5+
+            bool svds(const arma::mat &X, arma::uword k, arma::mat &U, arma::vec &s, arma::mat &V);
 
             int HySime(arma::mat y, arma::mat n, arma::mat Rn, arma::mat &Ek);
-            void EstimateAdditiveNoise(arma::mat &noise, arma::mat &noise_correlation, arma::mat sample);
+            void EstimateAdditiveNoise(arma::mat &noise, arma::mat &noise_correlation, const arma::mat &sample);
         }
     }
 }

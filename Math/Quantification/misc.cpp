@@ -19,7 +19,7 @@
 *******************************************************************************/
 
 #include <Math/Quantification/quantification.h>
-arma::vec Vespucci::Math::Quantification::CorrelationMat(arma::mat X, arma::vec control)
+arma::vec Vespucci::Math::Quantification::CorrelationMat(const arma::mat &X, arma::vec control)
 {
     arma::vec results;
     results.set_size(X.n_cols);

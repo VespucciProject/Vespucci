@@ -87,7 +87,7 @@ arma::mat Vespucci::Math::Smoothing::sgolay(arma::uword poly_order,
 /// \param scaling_factor A scaling factor
 /// \return Smoothed data
 ///
-arma::mat Vespucci::Math::Smoothing::sgolayfilt(arma::mat x, arma::uword poly_order, arma::uword window_size, arma::uword deriv_order, arma::uword scaling_factor)
+arma::mat Vespucci::Math::Smoothing::sgolayfilt(const arma::mat &x, arma::uword poly_order, arma::uword window_size, arma::uword deriv_order, arma::uword scaling_factor)
 {
     arma::mat return_value(x.n_rows, x.n_cols);
 
@@ -124,7 +124,7 @@ arma::mat Vespucci::Math::Smoothing::sgolayfilt(arma::mat x, arma::uword poly_or
 /// rows are filtered with the lower rows ofccoefficients, and likewise for the
 /// last (window_size - 1)/2 rows and the first rows of coefficients.
 ///
-arma::vec Vespucci::Math::Smoothing::ApplyFilter(arma::vec x, arma::mat coefficients, arma::uword window_size)
+arma::vec Vespucci::Math::Smoothing::ApplyFilter(const arma::vec &x, arma::mat coefficients, arma::uword window_size)
 {
     arma::uword k = (window_size - 1) / 2;
     arma::vec filter = trans(coefficients.row(k));
@@ -145,7 +145,7 @@ arma::vec Vespucci::Math::Smoothing::ApplyFilter(arma::vec x, arma::mat coeffici
 /// \param filter The filter
 /// \return Filtered data
 /// Applies an FIR filter to x
-arma::vec Vespucci::Math::Smoothing::ApplyFilter(arma::vec x, arma::vec filter)
+arma::vec Vespucci::Math::Smoothing::ApplyFilter(const arma::vec &x, arma::vec filter)
 {
     arma::uword k = (filter.n_elem - 1)/ 2;
     arma::vec out = conv(filter, x);

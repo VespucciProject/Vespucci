@@ -27,7 +27,7 @@
 /// \param X A signal to be standardized
 /// \return Standardized signal
 ///
-arma::vec Vespucci::Math::Normalization::StandardScore(arma::vec X)
+arma::vec Vespucci::Math::Normalization::StandardScore(const arma::vec &X)
 {
     arma::vec normalized = X;
     double mean = arma::mean(normalized);
@@ -42,7 +42,7 @@ arma::vec Vespucci::Math::Normalization::StandardScore(arma::vec X)
 /// \param X
 /// \return A arma::matrix in which each column of X is replaced by its standard score.
 ///
-arma::mat Vespucci::Math::Normalization::StandardScoreMat(arma::mat X)
+arma::mat Vespucci::Math::Normalization::StandardScoreMat(const arma::mat &X)
 {
     arma::mat normalized = X;
     for (arma::uword j = 0; j < normalized.n_cols; ++j)

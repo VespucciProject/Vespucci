@@ -26,7 +26,7 @@
 /// \return
 /// Performs median filtering on a signal X. This just ignores the edges becuause
 /// they will be fairly small and not very interesting.
-arma::vec Vespucci::Math::Smoothing::MedianFilter(arma::vec X, arma::uword window_size)
+arma::vec Vespucci::Math::Smoothing::MedianFilter(const arma::vec &X, arma::uword window_size)
 {
     arma::uword k = (window_size - 1) / 2;
 
@@ -57,10 +57,10 @@ arma::vec Vespucci::Math::Smoothing::MedianFilter(arma::vec X, arma::uword windo
 /// \param window_size
 /// \return
 /// Performs Median Filter over a arma::matrix with spectra in columns
-arma::mat Vespucci::Math::Smoothing::MedianFilterMat(arma::mat X, arma::uword window_size)
+arma::mat Vespucci::Math::Smoothing::MedianFilterMat(const arma::mat &X, arma::uword window_size)
 {
     arma::mat filtered;
-    filtered.set_size(X.n_rows, X.n_cols);
+    filtered.set_size(X.n_rows, X.n_cols);   
     for(arma::uword i = 0; i < X.n_cols; ++i)
         filtered.col(i) = MedianFilter(X.col(i), window_size);
     return filtered;

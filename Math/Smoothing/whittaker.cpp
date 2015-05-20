@@ -27,7 +27,7 @@
 /// \return
 /// This may be re-written to use a sparse Cholesky decomposition if such a function
 /// comes to exist in armadillo or MLPACK
-arma::vec Vespucci::Math::Smoothing::WhittakerSmooth(arma::vec x, double lambda, arma::uword penalty_order)
+arma::vec Vespucci::Math::Smoothing::WhittakerSmooth(const arma::vec &x, double lambda, arma::uword penalty_order)
 {
 
     arma::uword m = x.n_elem;

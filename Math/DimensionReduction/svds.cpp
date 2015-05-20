@@ -18,7 +18,7 @@
 /// \param V
 /// \return Whether or not algorithm converged.
 
-bool Vespucci::Math::DimensionReduction::svds(arma::mat X, arma::uword k, arma::mat &U, arma::vec &s, arma::mat &V)
+bool Vespucci::Math::DimensionReduction::svds(const arma::mat &X, arma::uword k, arma::mat &U, arma::vec &s, arma::mat &V)
 {
     if (X.n_cols < 2){
         std::cerr << "svds: X must be 2D arma::matrix" << std::endl;
