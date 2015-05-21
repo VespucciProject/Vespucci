@@ -131,7 +131,9 @@ SOURCES += main.cpp\
     External/Octave/VespucciOctave.cpp \
     GUI/scriptdialog.cpp \
     Math/PeakFinding/cwtridge.cpp \
-    Data/Analysis/cwtdata.cpp
+    Data/Analysis/cwtdata.cpp \
+    Math/Fitting/linleastsq.cpp \
+    Math/Fitting/nonlinleastsq.cpp
 
 
 HEADERS  += \
@@ -193,7 +195,9 @@ HEADERS  += \
     External/Octave/VespucciOctave.h \
     GUI/scriptdialog.h \
     Math/PeakFinding/cwtridge.h \
-    Data/Analysis/cwtdata.h
+    Data/Analysis/cwtdata.h \
+    Math/Fitting/linleastsq.h \
+    Math/Fitting/nonlinleastsq.h
 
 
 FORMS    += \
