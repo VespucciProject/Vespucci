@@ -914,8 +914,6 @@ void VespucciDataset::Baseline(QString method, int parameter)
     }
     catch(exception e){
         char str[50];
-        cerr << "i = " << i << endl;
-        cerr << "j = " << j << endl;
         strcat(str, "Baseline: ");
         strcat(str, e.what());
         throw std::runtime_error(str);
@@ -1629,9 +1627,42 @@ void VespucciDataset::FindPeaks(double sel, double threshold, uword poly_order, 
     analysis_results_.insert(analysis_results_.end(), "Peak Magnitudes", peak_mag);
 }
 
-void VespucciDataset::FindPeaksCWT()
+void VespucciDataset::FindPeaksCWT(string wavelet,
+                                   uword max_scale,
+                                   uword gap_threshold,
+                                   uword min_ridge_length,
+                                   uword search_width,
+                                   double noise_threshold,
+                                   string noise_method,
+                                   uword noise_window_size,
+                                   bool save_coefs,
+                                   bool save_coef_plots,
+                                   bool save_ridge_plots,
+                                   bool save_ridge_plot_data,
+                                   bool estimate_width,
+                                   QString save_directory,
+                                   QString image_format,
+                                   QCPColorGradient gradient)
 {
-
+    cwt_peak_data_ = new CWTData(QSharedPointer<VespucciDataset>(this));
+    cwt_peak_data_->Apply(wavelet,
+                          max_scale,
+                          gap_threshold,
+                          min_ridge_length,
+                          search_width,
+                          noise_threshold,
+                          noise_method,
+                          noise_window_size,
+                          save_coefs,
+                          save_coef_plots,
+                          save_ridge_plots,
+                          save_ridge_plot_data,
+                          estimate_width,
+                          save_directory,
+                          image_format,
+                          gradient);
+    std::map<string, mat*> analysis_result{{"CWT Peaks", cwt_peak_data_->centers()}};
+    analysis_results_.push_back(analysis_result);
 }
 
 ///

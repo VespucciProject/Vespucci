@@ -421,3 +421,46 @@ double Vespucci::Math::mad(arma::vec &data)
 
 
 
+
+///
+/// \brief Vespucci::Math::RecalculateAverage Recalculate the average value when
+/// a new value is added to a list for which only the previous means, stddevs
+/// and counts are known.
+/// \param new_value
+/// \param old_average
+/// \param old_count
+/// \return
+///
+double Vespucci::Math::RecalculateAverage(double new_value,
+                                          double old_average,
+                                          double old_count)
+{
+    return ((old_average * old_count) + new_value) / (old_count + 1.0);
+}
+
+///
+/// \brief Vespucci::Math::RecalculateStdDev Recalculate a standard deviation
+/// when a new value is added to a list for which only the previous means, stddevs
+/// and counts are known.
+/// \param new_value
+/// \param old_mean
+/// \param old_stddev
+/// \param old_count
+/// \return
+///
+double Vespucci::Math::RecalculateStdDev(double new_value,
+                                         double old_mean,
+                                         double old_stddev,
+                                         double old_count)
+
+{
+    double sum_x = old_count*old_mean + new_value;
+    double sum_squares = old_count*(std::pow(old_stddev, 2.0)
+                         + std::pow(old_mean, 2.0))
+                         + std::pow(new_value, 2.0);
+
+    double new_stddev = std::sqrt(
+                        ((old_count + 1.0)*sum_squares - std::pow(sum_x, 2.0))
+                         / std::pow((old_count + 1.0), 2.0));
+    return new_stddev;
+}

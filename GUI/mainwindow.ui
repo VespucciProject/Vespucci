@@ -62,7 +62,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -123,6 +123,7 @@
     <addaction name="actionNew_Composite_Dataset"/>
     <addaction name="actionUnivariate_Analysis"/>
     <addaction name="actionMultivariate_Analysis"/>
+    <addaction name="actionDetect_Peaks"/>
     <addaction name="separator"/>
     <addaction name="actionClose_Dataset"/>
     <addaction name="actionCreate_Plot"/>
@@ -367,6 +368,11 @@
   <action name="actionRun_script">
    <property name="text">
     <string>Run Script...</string>
+   </property>
+  </action>
+  <action name="actionDetect_Peaks">
+   <property name="text">
+    <string>Detect Peaks...</string>
    </property>
   </action>
  </widget>

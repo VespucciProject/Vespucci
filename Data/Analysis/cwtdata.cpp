@@ -66,19 +66,24 @@ void CWTData::Apply(string wavelet,
 
         }
         //
-        data.set_size(ridges.size(), 4);
+        data.set_size(ridges.size(), (estimate_width ? 4 : 3));
+        centers_.set_size((estimate_width ? 8 : 6));
+
+
         std::for_each(ridges.begin(),
                       ridges.end(),
-                      [&data](Vespucci::Math::CWTRidge &r)
+                      [&data, estimate_width](Vespucci::Math::CWTRidge &r)
                         {
                             rowvec row(4);
                             row(0) = r.PeakCenter();
-                            row(1) = r.width();
+                            row(1) = r.SNR();
                             row(2) = r.length();
-                            row(3) = r.SNR();
+
+                            if (estimate_width)
+                                row(3) = r.width();
+
                             data.insert_rows(data.n_rows, row);
                         });
-
 
 
         //save things if requested:
@@ -194,4 +199,56 @@ void CWTData::Apply(string wavelet,
     peak_data_(i) = data;
 
     }//end for iterating over spectra
+
+    //format of centers_ is pos, length, snr, width
+
+    //set centers_ (default interface of this data through AnalysisResults)
+    for (uword i = 0; i < peak_data_.n_elem; ++i){
+        for (uword j = 0; j < peak_data_(i).n_rows; ++j){
+            //search peak center column for value
+            double current = peak_data_(i)(j,0);
+            uvec q = find(centers_.col(0) == current);
+
+            if (q.n_elem == 0){
+                rowvec row(centers_.n_cols);
+                row(0) = peak_data_(i)(j,0);
+                row(1) = 1.0;
+                for (uword k = 2; k < centers_.n_cols; k+=2){
+                    row(k) = peak_data_(i)(j, (k/2)); //mean of value is value
+                    row(k+1) = 0; //stddev of value is 0 (n==1)
+                }
+
+                //add data for new row
+                centers_.insert_rows(centers_.n_rows, row);
+            }//if
+
+            else{
+                double old_count = centers_(q(0), 1);
+                centers_(q(0),1) += 1.0; //increment count
+
+                //recalculate averages and stddevs
+                //k=2 ridge length
+                //k=4 snr
+                //k=6 width (if requested)
+                for (uword k = 2; k < centers_.n_cols; k+=2){
+                    double old_avg = centers_(q(0), k);
+                    double old_stddev = centers_(q(0), k+1);
+                    double new_value = peak_data_(i)(j,(k/2));
+
+                    centers_(q(0), k) =
+                            Vespucci::Math::RecalculateAverage(new_value,
+                                                               old_avg,
+                                                               old_count);
+                    centers_(q(0), k+1) =
+                            Vespucci::Math::RecalculateStdDev(new_value,
+                                                              old_avg,
+                                                              old_stddev,
+                                                              old_count);
+                }//recalculation
+            }//else
+        }//iteration on this spectrum
+    }//iteration through each spectrum to set centers_
+
+
+
 }//end function

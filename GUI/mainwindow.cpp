@@ -42,6 +42,7 @@
 #include "GUI/Processing/booleanizedialog.h"
 #include "GUI/Processing/thresholddialog.h"
 #include "GUI/scriptdialog.h"
+#include "GUI/Analysis/peakfindingdialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -1073,4 +1074,10 @@ void MainWindow::on_actionRun_script_triggered()
     int row = dataset_list_view_->currentIndex().row();
     ScriptDialog *script_dialog = new ScriptDialog(this, workspace, row);
     script_dialog->show();
+}
+
+void MainWindow::on_actionDetect_Peaks_triggered()
+{
+    int row = dataset_list_view_->currentIndex().row();
+    PeakFindingDialog *peak_dialog = new PeakFindingDialog(this);
 }

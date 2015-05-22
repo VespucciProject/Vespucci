@@ -41,7 +41,7 @@
 #include "Data/Analysis/univariatedata.h"
 #include "Data/Analysis/mlpackpcadata.h"
 #include "Data/Analysis/analysisresults.h"
-
+#include "Data/Analysis/cwtdata.h"
 
 
 
@@ -57,6 +57,7 @@ class VespucciWorkspace;
 class MapListModel;
 class UnivariateData;
 class AnalysisResults;
+class CWTData;
 
 
 
@@ -247,7 +248,21 @@ public:
     void PrincipalComponents();
     void FindPeaks(double sel, double threshold,
                    uword poly_order, uword window_size);
-    void FindPeaksCWT();
+    void FindPeaksCWT(std::string wavelet,
+                      uword max_scale, uword gap_threshold,
+                      uword min_ridge_length,
+                      uword search_width,
+                      double noise_threshold,
+                      std::string noise_method,
+                      uword noise_window_size,
+                      bool save_coefs,
+                      bool save_coef_plots,
+                      bool save_ridge_plots,
+                      bool save_ridge_plot_data,
+                      bool estimate_width,
+                      QString save_directory,
+                      QString image_format,
+                      QCPColorGradient gradient);
 
 
     //MEMBER ACCESS FUNCTIONS:
@@ -410,12 +425,16 @@ private:
     QList<QSharedPointer<MapData> > *maps_;
 
 
+    CWTData *cwt_peak_data_;
 
     ///
     /// \brief principal_components_data_
     /// A pointer to a container holding all PCA data and stats.
     PrincipalComponentsData *principal_components_data_;
 
+    ///
+    /// \brief mlpack_pca_data_
+    /// A pointer to a container holding MLPACK PCA data and stats
     MLPACKPCAData *mlpack_pca_data_;
 
     ///

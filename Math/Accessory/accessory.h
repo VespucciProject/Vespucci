@@ -52,6 +52,9 @@ namespace Vespucci
                       arma::uword n_rows, arma::uword n_cols,
                       arma::uword &i, arma::uword &j);
         arma::umat to_row_column(arma::uvec indices, arma::uword n_rows, arma::uword n_cols);
+
+        double RecalculateAverage(double new_value, double old_average, double old_count);
+        double RecalculateStdDev(double new_value, double old_mean, double old_stddev, double old_count);
     }
 }
 

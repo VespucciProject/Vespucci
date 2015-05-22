@@ -12,7 +12,7 @@ class CWTData
 public:
     CWTData(QSharedPointer<VespucciDataset> dataset);
     void Apply(std::string wavelet = "mexh",
-               uword max_scale = 500,
+               uword max_scale = 70,
                uword gap_threshold = 3,
                uword min_ridge_length = 5,
                uword search_width = 5,

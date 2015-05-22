@@ -133,7 +133,8 @@ SOURCES += main.cpp\
     Math/PeakFinding/cwtridge.cpp \
     Data/Analysis/cwtdata.cpp \
     Math/Fitting/linleastsq.cpp \
-    Math/Fitting/nonlinleastsq.cpp
+    Math/Fitting/nonlinleastsq.cpp \
+    GUI/Analysis/peakfindingdialog.cpp
 
 
 HEADERS  += \
@@ -197,7 +198,8 @@ HEADERS  += \
     Math/PeakFinding/cwtridge.h \
     Data/Analysis/cwtdata.h \
     Math/Fitting/linleastsq.h \
-    Math/Fitting/nonlinleastsq.h
+    Math/Fitting/nonlinleastsq.h \
+    GUI/Analysis/peakfindingdialog.h
 
 
 FORMS    += \
@@ -229,7 +231,8 @@ FORMS    += \
     GUI/Analysis/univariateanalysisdialog.ui \
     GUI/Analysis/univariatedialog.ui \
     GUI/Analysis/vcadialog.ui \
-    GUI/scriptdialog.ui
+    GUI/scriptdialog.ui \
+    GUI/Analysis/peakfindingdialog.ui
 
 RESOURCES += \
     resources.qrc
@@ -307,6 +310,10 @@ win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libmlpack.a
 #Armadillo
 win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -larmadillo
 win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libarmadillo.a
+
+#HDF5
+win32: LIBS += -L$$PWD/../MinGW_libs/lib -lhdf5
+wind32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libhdf5.a
 
 #ARPACK-NG
 win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -larpack

@@ -141,6 +141,8 @@ private slots:
 
     void on_actionRun_script_triggered();
 
+    void on_actionDetect_Peaks_triggered();
+
 private:
     Ui::MainWindow *ui;
 

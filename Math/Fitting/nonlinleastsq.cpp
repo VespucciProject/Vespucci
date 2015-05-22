@@ -244,7 +244,7 @@ arma::vec Vespucci::Math::Fitting::FitGaussianPeak(arma::vec signal,
         std::cerr << e.what();
     }
     try{
-        double reduced_chi_squared = chi_squared / (n-4.0);
+        reduced_chi_squared = chi_squared / (n-4.0);
     }catch(std::exception e){
         std::cerr << "reduced_chi_squared" << std::endl;
         std::cerr << e.what();
