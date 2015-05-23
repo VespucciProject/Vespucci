@@ -22,10 +22,14 @@
 # windows libraries from the MinGW_libs branch of the Vespucci repository.
 # To use these libraries, you must be using 64-bit MinGW-w64 toolkit, with SEH
 # for exception handling. All libraries must be compiled in such a manner.
+# A link to download the exact compiler build I used is availible on the GitHub
+# page.
+# R- and Octave-related libraries will be based on your installation of those
+# tools.
 
-# Configuration settings for unix systems are based either on the Ubuntu package
-# manager or the install scripts of the library when the package is not availible
-# from the repository. I do not regularly compile on
+
+# Configuration settings for unix systems are based on my own personal environment
+# I use Clang on linux for the diagnostics.
 
 QT       += core gui
 QT       += widgets printsupport
@@ -43,11 +47,17 @@ TEMPLATE = app
 
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
 unix: !macx: QMAKE_CXXFLAGS += -std=c++11 \
-                        -static-libstdc++ \
+                        -isystem "/home/dan/libraries/include" \
+                        -isystem "/home/dan/libraries/include/armadillo_bits" \
+                        -isystem "/home/dan/libraries/include/mlpack" \
                         -isystem "/usr/local/include" \
                         -isystem "/usr/local/include/armadillo_bits" \
                         -isystem "/usr/local/include/boost" \
-                        -isystem "/usr/include/mlpack"
+                        -isystem "/usr/include/mlpack" \
+                        -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.0/RcppArmadillo/include" \
+                        -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.0/Rcpp/include" \
+                        -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.0/RInside/include" \
+                        -isystem "/usr/share/R/include"
 macx: QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -std=gnu0x -stdlib=libc+
 
 macx: CONFIG +=c++11
@@ -239,23 +249,36 @@ RESOURCES += \
 
 RC_ICONS = "vespuccilogo.ico"
 
-
+#linux libraries, specific to my own install. This will be handled by CMake later
+#I hope...
 unix:!macx: INCLUDEPATH += $$PWD/../../libraries/include
 unix:!macx: DEPENDPATH += $$PWD/../../libraries/include
+unix:!macx: INCLUDEPATH += $$PWD/../../libraries/include/levmar
+unix:!macx: DEPENDPATH += $$PWD/../../libraries/include/levmar
 
+unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/Rcpp/include
+unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/Rcpp/include
+unix:!macx: INCLUDEPATH+= $$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RcppArmadillo/include
+unix:!macx: DEPENDPATH+= $$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RcppArmadillo/include
+unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RInside/include
+unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RInside/include
+unix:!macx: INCLUDEPATH += /usr/share/R/include
+unix:!macx: DEPENDPATH += /usr/share/R/include
+
+#levmar for fitting
 unix:!macx: LIBS += -L$$PWD/../../libraries/lib/ -llevmar
 unix:!macx: PRE_TARGETDEPS += $$PWD/../../libraries/lib/liblevmar.a
 
+#mlpack and dependencies
 unix:!macx: LIBS += -L$$PWD/../../libraries/lib/ -lmlpack
 unix:!macx: LIBS += -L$$PWD/../../libraries/lib/ -larmadillo
 unix:!macx: LIBS += -L$$PWD/../../libraries/lib/ -larpack
 unix:!macx: PRE_TARGETDEPS += $$PWD/../../libraries/lib/libarpack.la
-
 unix:!macx: LIBS += -L$$PWD/../../libraries/lib/ -lopenblas
 
-
-unix:!macx: INCLUDEPATH += $$PWD/../../libraries/include
-unix:!macx: DEPENDPATH += $$PWD/../../libraries/include
+unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RcppArmadillo/libs -lRCppArmadillo
+unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/Rcpp/libs/ -lRCpp
+unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RInside/libs -lRInside
 
 unix:!macx: INCLUDEPATH += /usr/include
 unix:!macx: DEPENDPATH += /usr/include
@@ -382,7 +405,6 @@ win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRzlib
 win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRgraphapp
 
 #levmar
-#LEVMAR
 win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -llevmar
 INCLUDEPATH += $$PWD/../MinGW_libs/include/levmar
 DEPENDPATH += $$PWD/../MinGW_libs/include/levmar

@@ -68,7 +68,7 @@ template <typename T> T Vespucci::Math::diff(const T &X, arma::uword deriv_order
 
 
 
-template <typename T> T Vespucci::Math::rotate(const T &X, arma::uword shift_by, bool slide_back = true)
+template <typename T> T Vespucci::Math::rotate(const T &X, arma::uword shift_by, bool slide_back)
 {
     T start;
     T end;
@@ -105,7 +105,7 @@ template <typename T> T Vespucci::Math::rotate(const T &X, arma::uword shift_by,
 }
 
 //Column-wise 1-D convolution (may re-write with 2d fft later)
-template <typename T> T Vespucci::Math::conv_fft(const T &A, const T &B, std::string type = "circular")
+template <typename T> T Vespucci::Math::conv_fft(const T &A, const T &B, std::string type)
 {
 
     if (A.n_rows < B.n_rows){

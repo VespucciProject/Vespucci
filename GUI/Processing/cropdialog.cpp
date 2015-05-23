@@ -93,12 +93,12 @@ void CropDialog::on_buttonBox_accepted()
     double wl_max = wl_max_box_->value();
 
     if (dataset_->non_spatial()){
-        x_min = nan("");
-        x_max = nan("");
-        y_min = nan("");
-        y_max = nan("");
+        x_min = std::nan("");
+        x_max = std::nan("");
+        y_min = std::nan("");
+        y_max = std::nan("");
     }
-    if ((!isnan(x_max)) && ((x_max - x_min) <= 0 || (y_max - y_min <= 0))){
+    if ((!std::isnan(x_max)) && ((x_max - x_min) <= 0 || (y_max - y_min <= 0))){
         QMessageBox::warning(this, "Error", "Minimum is larger than maximum!");
         return;
     }

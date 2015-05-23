@@ -28,10 +28,9 @@ public:
                QString image_format = "pdf",
                QCPColorGradient gradient = QCPColorGradient::cbGreys);
 
-    mat *centers();
+    mat centers();
 private:
     QSharedPointer<VespucciDataset> dataset_;
-
     ///
     /// \brief peak_data_
     /// Contains, for each column (spectra) a n x 4 (where n = no. of found peaks)
@@ -39,16 +38,6 @@ private:
     /// second column is width in spectral abscissa units, third column is CWT
     ///  ridge length and fourth column is signal-to-noise ratio from CWT coefs.
     field<mat> peak_data_;
-
-    ///
-    /// \brief centers_
-    /// The first column consists of all found centers in spectral abscissa units.
-    /// The second column is the number of times a center at that position was
-    /// found. The third column is the average signal-to-noise. The fourth_column
-    /// is the average length.
-    mat centers_;
-
-
 };
 
 #endif // CWTDATA_H

@@ -67,9 +67,6 @@ void CWTData::Apply(string wavelet,
         }
         //
         data.set_size(ridges.size(), (estimate_width ? 4 : 3));
-        centers_.set_size((estimate_width ? 8 : 6));
-
-
         std::for_each(ridges.begin(),
                       ridges.end(),
                       [&data, estimate_width](Vespucci::Math::CWTRidge &r)
@@ -201,45 +198,62 @@ void CWTData::Apply(string wavelet,
     }//end for iterating over spectra
 
     //format of centers_ is pos, length, snr, width
+}
 
-    //set centers_ (default interface of this data through AnalysisResults)
+///
+/// \brief CWTData::centers
+/// \return A single matrix containing a summary of the information in peak_data_
+/// This is intended to be called once and that matrix stored as an AnalysisResult
+/// to be viewed in the data viewer.
+///
+mat CWTData::centers()
+{
+    mat centers;
+    uword cols = 2 * peak_data_(0).n_cols;
+    //set centers (default interface of this data through AnalysisResults)
     for (uword i = 0; i < peak_data_.n_elem; ++i){
         for (uword j = 0; j < peak_data_(i).n_rows; ++j){
             //search peak center column for value
             double current = peak_data_(i)(j,0);
-            uvec q = find(centers_.col(0) == current);
+            uvec q;
+            if(centers.n_rows){q = find(centers.col(0) == current);}
+            //q will have size zero if centers is empty
 
+            //add a new row for each found value
             if (q.n_elem == 0){
-                rowvec row(centers_.n_cols);
+                rowvec row(cols);
                 row(0) = peak_data_(i)(j,0);
                 row(1) = 1.0;
-                for (uword k = 2; k < centers_.n_cols; k+=2){
+                for (uword k = 2; k < cols; k+=2){
                     row(k) = peak_data_(i)(j, (k/2)); //mean of value is value
                     row(k+1) = 0; //stddev of value is 0 (n==1)
                 }
 
                 //add data for new row
-                centers_.insert_rows(centers_.n_rows, row);
+                if (!centers.n_rows) //evaulates false if no rows (for noncoders...)
+                    centers = row; //start matrix with this row
+                else
+                    centers.insert_rows(centers.n_rows, row); //insert new row
             }//if
 
-            else{
-                double old_count = centers_(q(0), 1);
-                centers_(q(0),1) += 1.0; //increment count
+            else{ //row already found so increment its count and recalc stats
+                double old_count = centers(q(0), 1);
+                centers(q(0),1) += 1.0; //increment count
 
                 //recalculate averages and stddevs
                 //k=2 ridge length
                 //k=4 snr
                 //k=6 width (if requested)
-                for (uword k = 2; k < centers_.n_cols; k+=2){
-                    double old_avg = centers_(q(0), k);
-                    double old_stddev = centers_(q(0), k+1);
+                for (uword k = 2; k < centers.n_cols; k+=2){
+                    double old_avg = centers(q(0), k);
+                    double old_stddev = centers(q(0), k+1);
                     double new_value = peak_data_(i)(j,(k/2));
 
-                    centers_(q(0), k) =
+                    centers(q(0), k) =
                             Vespucci::Math::RecalculateAverage(new_value,
                                                                old_avg,
                                                                old_count);
-                    centers_(q(0), k+1) =
+                    centers(q(0), k+1) =
                             Vespucci::Math::RecalculateStdDev(new_value,
                                                               old_avg,
                                                               old_stddev,
@@ -247,8 +261,7 @@ void CWTData::Apply(string wavelet,
                 }//recalculation
             }//else
         }//iteration on this spectrum
-    }//iteration through each spectrum to set centers_
+    }//iteration through each spectrum to set centers
 
-
-
+    return centers;
 }//end function

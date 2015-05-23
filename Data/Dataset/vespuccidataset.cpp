@@ -472,7 +472,7 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
     x_old_ = x_;
     y_old_ = y_;
     wavelength_old_ = wavelength_;
-    if (!isnan(x_min) && !isnan(x_max) && !isnan(y_min) && !isnan(y_max)){
+    if (!std::isnan(x_min) && !std::isnan(x_max) && !std::isnan(y_min) && !std::isnan(y_max)){
         uvec valid_indices = find ((x_ >= x_min) && (x_ <= x_max));
         try{
             spectra_ = spectra_.cols(valid_indices);
@@ -489,7 +489,7 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
             throw std::runtime_error(str);
         }
     }
-    if (!isnan(wl_min) && !isnan(wl_max)){
+    if (!std::isnan(wl_min) && !std::isnan(wl_max)){
         uvec valid_indices = find(wavelength_ >= wl_min && wavelength_ <= wl_max);
         try{
             spectra_ = spectra_.rows(valid_indices);
@@ -1660,9 +1660,9 @@ void VespucciDataset::FindPeaksCWT(string wavelet,
                           estimate_width,
                           save_directory,
                           image_format,
-                          gradient);
-    std::map<string, mat*> analysis_result{{"CWT Peaks", cwt_peak_data_->centers()}};
-    analysis_results_.push_back(analysis_result);
+                          gradient);   
+    QSharedPointer<AnalysisResults> result(new AnalysisResults(cwt_peak_data_->centers()));
+    analysis_results_.insert(analysis_results_.begin(), "CWT Peak Finding Results", result);
 }
 
 ///
@@ -2873,7 +2873,7 @@ QStringList VespucciDataset::AnalysisResultsList()
 mat *VespucciDataset::AnalysisResult(QString key)
 {
     mat *matrix_ptr;
-    bool checked;
+    bool checked = false;
     if (key.split(" ")[0] == "PCA" && principal_components_calculated_){
         matrix_ptr = principal_components_data_->value(key);
     }
