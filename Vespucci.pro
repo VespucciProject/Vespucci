@@ -276,9 +276,17 @@ unix:!macx: LIBS += -L$$PWD/../../libraries/lib/ -larpack
 unix:!macx: PRE_TARGETDEPS += $$PWD/../../libraries/lib/libarpack.la
 unix:!macx: LIBS += -L$$PWD/../../libraries/lib/ -lopenblas
 
-unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RcppArmadillo/libs -lRCppArmadillo
-unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/Rcpp/libs/ -lRCpp
-unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RInside/libs -lRInside
+
+unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RInside/lib/ -lRInside
+#unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/Rcpp/libs/ -lRcpp
+#unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RcppArmadillo/libs/ -lRCppArmadillo
+unix:!macx: LIBS += -L/usr/share/lib/R/lib/ -lR
+
+
+unix:!macx:CONFIG(release, debug|release): LIBS += -L$$PWD/../../libraries/lib/ -lqcustomplot
+else:unix:!macx:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libraries/lib/ -lqcustomplotd
+unix:!macx:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../libraries/lib/libqcustomplot.a
+else:unix:!macx:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../libraries/lib/libqcustomplotd.a
 
 unix:!macx: INCLUDEPATH += /usr/include
 unix:!macx: DEPENDPATH += /usr/include
@@ -409,6 +417,9 @@ win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -llevmar
 INCLUDEPATH += $$PWD/../MinGW_libs/include/levmar
 DEPENDPATH += $$PWD/../MinGW_libs/include/levmar
 win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/liblevmar.a
+
+
+
 
 
 

@@ -1080,4 +1080,5 @@ void MainWindow::on_actionDetect_Peaks_triggered()
 {
     int row = dataset_list_view_->currentIndex().row();
     PeakFindingDialog *peak_dialog = new PeakFindingDialog(this, workspace, row);
+    peak_dialog->show();
 }
