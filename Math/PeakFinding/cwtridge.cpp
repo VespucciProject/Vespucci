@@ -174,6 +174,7 @@ arma::umat Vespucci::Math::CWTRidge::points() const
 
 double Vespucci::Math::CWTRidge::EstimateWidth(const arma::vec &spectra, const arma::vec &first_haar_coefs, const arma::vec &second_haar_coefs, const arma::vec &abscissa)
 {
+    std::cout << "CWTRidge::EstimateWidth" << std::endl;
     arma::uword first = PeakCenter() - 3*scale();
     arma::uword last =  (PeakCenter() + 3*scale() < spectra.n_rows ? PeakCenter() + 3*scale() : spectra.n_rows - 1);
     arma::vec X = spectra.rows(first, last);//search
@@ -209,6 +210,93 @@ double Vespucci::Math::CWTRidge::EstimateWidth(const arma::vec &spectra, const a
     return width_;
 }
 
+///
+/// \brief Vespucci::Math::CWTRidge::EstimateWidth
+/// \param spectra
+/// \param abscissa
+/// \param max_width should be the even number before a power of two
+/// \return
+///
+double Vespucci::Math::CWTRidge::EstimateWidth(const arma::vec &spectra, const arma::vec &abscissa)
+{
+    arma::uword center = PeakCenter();
+    arma::uword scl = scale();
+    //for some reason, it didn't round down, so I'm using conditional
+    arma::uword first = ((3*scl >= center) ? 0 : center - 3*scl);
+    arma::uword last = ((center + 3*scl) < spectra.n_rows ? center + 3*scl : spectra.n_rows - 1);
+    arma::vec X;
+    try{
+        X = spectra.rows(first, last);//search
+    }catch(std::exception e){
+        std::cerr << "center = " << center << std::endl;
+        std::cerr << "scl = " << scl << std::endl;
+        std::cerr << "first = " << first << std::endl;
+        std::cerr << "last = " << last << std::endl;
+        std::cerr << "X.n_rows = " << X.n_rows << std::endl;
+        std::cerr << "error resizing X" <<std::endl;
+        throw e;
+    }
+
+    arma::uvec scales = {scl};
+    arma::mat dX, d2X;
+    try{
+        dX = Vespucci::Math::Transform::cwt(X, "haar", scales);
+    }catch(std::exception e){
+        std::cerr << "error calculating dX!" <<std::endl;
+        throw e;
+    }
+    try{
+        d2X = Vespucci::Math::Transform::cwt(dX.col(0), "haar", scales);
+    }catch(std::exception e){
+        std::cerr << "error calculating d2X!" << std::endl;
+        throw e;
+    }
+    arma::sp_vec local_minima;
+    try{
+        local_minima = Vespucci::Math::LocalMinima(X, dX, d2X);
+    }catch(std::exception e){
+        std::cerr << "error calculating local_minima!" << std::endl;
+        throw e;
+    }
+
+    //find the local minima larger than and smaller than the center index
+    arma::uvec non_zero_indices = arma::find( (arma::vec) local_minima);
+    arma::uvec lefts = non_zero_indices(arma::find(non_zero_indices < center));
+    arma::uvec rights = non_zero_indices(arma::find(non_zero_indices > center));
+
+
+    try{
+        if ((lefts.n_elem > 0)){
+            left_minimum_ = lefts.max();
+        }
+        else{
+            arma::vec window = spectra.rows(first, center);
+            arma::uvec q1 = arma::find(window == window.min());
+            left_minimum_ = center - q1.max(); //pick closest if more than one found
+        }
+
+        if (rights.n_elem > 0){
+            right_minimum_ = rights.min();
+        }
+
+        else{
+            arma::vec window = spectra.rows(center, last);
+            arma::uvec q1 = arma::find(window == window.min());
+            right_minimum_ = center + q1.min(); //pick closest if more than one found
+        }
+        width_ = std::abs(abscissa(left_minimum_) - abscissa(right_minimum_));
+    }catch(std::exception e){
+        std::cerr << "error in rest of function!" << std::endl;
+        std::cerr << "left_minimum_ = " << left_minimum_ << std::endl;
+        std::cerr << "right_minimum_ = " << right_minimum_ << std::endl;
+        std::cerr << "abscissa.n_rows = " << abscissa.n_rows << std::endl;
+        throw e;
+    }
+
+    return width_;
+
+}
+
 double Vespucci::Math::CWTRidge::width() const
 {
     return width_;
@@ -223,7 +311,7 @@ arma::uword Vespucci::Math::CWTRidge::scale() const
     //find the maximum value of coefs_
     arma::uvec max_indices = arma::find(coefs_ == coefs_.max());
     arma::Row<arma::uword> indices = points_.row(max_indices(0));
-    return indices(1); //the column is the scale
+    return indices(1) + 1; //column zero === scale = 1.
 }
 
 ///

@@ -37,9 +37,10 @@
 int main(int argc, char *argv[])
 {
     //logs of program output which can be viewed after program run.
-    std::freopen("stdout_log.txt", "w", stdout);
-    std::freopen("stderr_log.txt", "w", stderr);
+    //std::freopen("stdout_log.txt", "w", stdout);
+    //std::freopen("stderr_log.txt", "w", stderr);
     //Launch QApplication instance
+
     QApplication a(argc, argv);
     //A pointer to this goes by "workspace" in every window that needs it
     VespucciWorkspace ws;

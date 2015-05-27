@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>399</width>
-    <height>298</height>
+    <height>481</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,7 +40,106 @@
      </item>
     </widget>
    </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Highest Scale</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="1">
+    <widget class="QSpinBox" name="scaleSpinBox">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="minimum">
+      <number>70</number>
+     </property>
+     <property name="maximum">
+      <number>200</number>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Minimum Length</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QSpinBox" name="lengthSpinBox">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="minimum">
+      <number>3</number>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Search Width</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QSpinBox" name="searchSpinBox">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="value">
+      <number>5</number>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_7">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Minimum SNR</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QDoubleSpinBox" name="noiseDoubleSpinBox">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="value">
+      <double>3.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
     <widget class="QCheckBox" name="widthCheckBox">
      <property name="font">
       <font>
@@ -52,7 +151,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="8" column="1">
     <widget class="QCheckBox" name="coefCheckBox">
      <property name="font">
       <font>
@@ -64,7 +163,7 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="10" column="1">
     <widget class="QCheckBox" name="coefPlotCheckBox">
      <property name="font">
       <font>
@@ -76,7 +175,7 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="1">
+   <item row="12" column="1">
     <widget class="QCheckBox" name="ridgeCheckBox">
      <property name="font">
       <font>
@@ -88,7 +187,7 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="1">
+   <item row="13" column="1">
     <widget class="QCheckBox" name="ridgePlotCheckBox">
      <property name="font">
       <font>
@@ -100,62 +199,19 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="0">
-    <widget class="QLabel" name="label_2">
+   <item row="14" column="0">
+    <widget class="QLabel" name="label_3">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Save Path</string>
+      <string>Plot Gradient</string>
      </property>
     </widget>
    </item>
-   <item row="10" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLineEdit" name="directoryLineEdit">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="browseButton">
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Browse...</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="12" column="1">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
+   <item row="14" column="1">
     <widget class="QComboBox" name="gradientComboBox">
      <property name="font">
       <font>
@@ -365,16 +421,124 @@
      </item>
     </widget>
    </item>
-   <item row="9" column="0">
-    <widget class="QLabel" name="label_3">
+   <item row="16" column="0">
+    <widget class="QLabel" name="label_2">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Plot Gradient</string>
+      <string>Save Path</string>
      </property>
+    </widget>
+   </item>
+   <item row="16" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="directoryLineEdit">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="browseButton">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Browse...</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="18" column="1">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_8">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Gap Threshold</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QSpinBox" name="gapSpinBox">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="value">
+      <number>5</number>
+     </property>
+    </widget>
+   </item>
+   <item row="15" column="0">
+    <widget class="QLabel" name="label_9">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Image File Format</string>
+     </property>
+    </widget>
+   </item>
+   <item row="15" column="1">
+    <widget class="QComboBox" name="formatComboBox">
+     <item>
+      <property name="text">
+       <string>pdf</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>tif</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>bmp</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>png</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>jpg</string>
+      </property>
+     </item>
     </widget>
    </item>
   </layout>
@@ -388,8 +552,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>338</x>
+     <y>462</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -404,8 +568,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>389</x>
+     <y>468</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

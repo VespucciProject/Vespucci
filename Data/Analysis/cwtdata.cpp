@@ -38,19 +38,49 @@ void CWTData::Apply(string wavelet,
                     QString image_format,
                     QCPColorGradient gradient)
 {
-    uvec scales = conv_to<uvec>::from(linspace(1, max_scale, max_scale));
-
+    cout << "CWTData::Apply" << endl
+                        << "wavelet = " << wavelet << endl
+                        << "max_scale = " << max_scale << endl
+                        << "gap_threshold = " << gap_threshold << endl
+                        << "min_ridge_length = " << min_ridge_length << endl
+                        << "search_width = " << search_width << endl
+                        << "nosie_threshold = " << noise_threshold << endl
+                        << "noise_method = " << noise_method << endl
+                        << "nosie_window_size = " << noise_window_size << endl
+                        << "save_coefs = " << save_coefs << endl
+                        << "save_coef_plots = " << save_coef_plots << endl
+                        << "save_ridge_plots = " << save_ridge_plots << endl
+                        << "save_ridge_plot_data = " << save_ridge_plot_data << endl
+                        << "estimate_width = " << estimate_width << endl
+                        << "save_directory = " << save_directory.toStdString() << endl
+                        << "image_format = " << image_format.toStdString() << endl
+                        //<< "gradient = " << gradient << endl;
+                           ;
+    uvec scales(max_scale);
+    for (uword i = 0; i < scales.n_rows; ++i){
+        scales(i) = i + 1;
+    }
     mat *spectra = dataset_->spectra_ptr();
     vec abscissa = dataset_->wavelength();
     mat data;
 
     //iterate over spectra
+    QProgressDialog progress("Detecting peaks...", "Cancel", 0, spectra->n_cols, 0);
+    progress.setWindowModality(Qt::WindowModal);
+    cout << "for loop" << endl;
     for (uword i = 0; i < spectra->n_cols; ++i){
+        progress.setValue(i);
+        if (progress.wasCanceled()){
+            clear();
+            return;
+        }
+
         vec current_spectrum = spectra->col(i);
         mat coefs = Vespucci::Math::Transform::cwt(current_spectrum, wavelet, scales);
 
 
         //perform the analysis
+        cout << "call findridges" << endl;
         std::vector<Vespucci::Math::CWTRidge> ridges =
                 Vespucci::Math::PeakFinding::FindRidges(coefs,
                                                         scales,
@@ -62,8 +92,15 @@ void CWTData::Apply(string wavelet,
                                                         noise_window_size);
         //peform width estimation if requested
         if (estimate_width){
-            Vespucci::Math::PeakFinding::EstimateWidth(current_spectrum, dataset_->wavelength(), ridges);
-
+            cout << "estimatewidth" << endl;
+            try{
+                Vespucci::Math::PeakFinding::EstimateWidth(current_spectrum, dataset_->wavelength(), ridges);
+            }
+            catch(exception e){
+                cerr << "Failed width estimation" << endl;
+                cerr << e.what();
+                throw e;
+            }
         }
         //
         data.set_size(ridges.size(), (estimate_width ? 4 : 3));
@@ -264,4 +301,9 @@ mat CWTData::centers()
     }//iteration through each spectrum to set centers
 
     return centers;
+}
+
+void CWTData::clear()
+{
+    peak_data_.clear();
 }//end function

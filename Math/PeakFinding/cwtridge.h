@@ -42,6 +42,7 @@ public:
     double SNR() const;
     arma::umat points() const;
     double EstimateWidth(const arma::vec &spectra, const arma::vec &first_haar_coefs, const arma::vec &second_haar_coefs, const arma::vec &abscissa);
+    double EstimateWidth(const arma::vec &spectra, const arma::vec &abscissa);
     double width() const;
 
 

@@ -65,8 +65,9 @@ void ScriptDialog::on_buttonBox_accepted()
         std::cout << "R stuff" << endl;
         if (interpreter_selector_->currentText() == "R"){
             int argc = 1;
+            char first_arg[] = "vespucci"; //done to avoid string conversion
             char* argv[1];
-            argv[0] = "vespucci";
+            argv[0] = first_arg;
             QScopedPointer<VespucciR> R_instance(new VespucciR(argc, argv));
             //send variables to R
             R_instance->SetEnvironment(in_data);

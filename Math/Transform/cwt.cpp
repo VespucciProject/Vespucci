@@ -47,18 +47,23 @@ arma::mat Vespucci::Math::Transform::cwt(arma::vec X, std::string wavelet, arma:
     arma::uword old_length = X.n_rows;
     X = Vespucci::Math::ExtendToNextPow(X, 2);
 
-    //calculate the wavelet:
 
-    if (wavelet == "mexh"){
-        psi_xval = arma::linspace(-8, 8, 1024);
-        psi = (2/std::sqrt(3.0) * std::pow(arma::datum::pi, -0.25)) * (arma::ones(1024) - arma::pow(psi_xval, 2)) % arma::exp(-arma::pow(psi_xval, 2)/2);
-    }
-    else if (wavelet == "haar"){
-        psi_xval = arma::linspace(0, 1, 1024);
-        psi(0) = 0;
-        psi(1023) = 0;
-        psi.rows(1, 511) = arma::ones(511);
-        psi.rows(512, 1022) = -1*arma::ones(511);
+    //calculate the wavelet:
+    try{
+        if (wavelet == "mexh"){
+            psi_xval = arma::linspace(-8, 8, 1024);
+            psi = (2/std::sqrt(3.0) * std::pow(arma::datum::pi, -0.25)) * (arma::ones(1024) - arma::pow(psi_xval, 2)) % arma::exp(-arma::pow(psi_xval, 2)/2);
+        }
+        else if (wavelet == "haar"){
+            psi_xval = arma::linspace(0, 1, 1024);
+            psi(0) = 0;
+            psi(1023) = 0;
+            psi.rows(1, 511) = arma::ones(511);
+            psi.rows(512, 1022) = -1*arma::ones(511);
+        }
+    }catch(std::exception e){
+        std::cerr << "Error calculating wavelet!" <<std::endl;
+        throw e;
     }
 
 
@@ -69,39 +74,47 @@ arma::mat Vespucci::Math::Transform::cwt(arma::vec X, std::string wavelet, arma:
     arma::vec f, j, w;
     arma::uvec j_u;
     arma::uword i, scale, shift_by;
-    for (i = 0; i < scales.n_elem; ++i){
-        scale = scales(i);
+    try{
+        for (i = 0; i < scales.n_elem; ++i){
+            scale = scales(i);
 
-        f = arma::zeros(X.n_elem);
-        j = arma::floor(arma::linspace(0, scale*xmax, scale*xmax + 1)/(scale*dxval));
-        j_u.set_size(j.n_elem);
+            f = arma::zeros(X.n_elem);
+            j = arma::floor(arma::linspace(0, scale*xmax, scale*xmax + 1)/(scale*dxval));
+            j_u.set_size(j.n_elem);
 
 
-        for (arma::uword k = 0; k < j_u.n_elem; ++k){
-            j_u(k) = j(k);
+            for (arma::uword k = 0; k < j_u.n_elem; ++k){
+                j_u(k) = j(k);
+            }
+
+            f.rows(0, j.n_elem-1) = arma::flipud(psi.elem(j_u)) - arma::mean(psi.elem(j_u));
+
+            if (f.n_rows != X.n_rows){
+                std::cerr << "scale too large!" << std::endl;
+            }
+
+            //convolve and scale
+            w = (1/std::sqrt(scale)) * Vespucci::Math::conv_fft(X, f, "filter");
+
+
+            //shift by half wavelet width + scale * xmax
+            shift_by = X.n_rows - std::floor((double) j.n_rows/2)  + scale*xmax;
+
+            w = Vespucci::Math::rotate(w, shift_by, true);
+
+            //if signal had to be padded, remove padding
+            if (w.n_rows > old_length)
+                w.shed_rows(old_length, w.n_rows - 1);
+
+            wcoeffs.col(i) = w;//rotate(w, scale*xmax, true);
         }
+    }catch(std::exception e){
+        std::cerr << "error in CWT algorithm!" << std::endl;
+        std::cerr << "scale = " << scale;
 
-        f.rows(0, j.n_elem-1) = arma::flipud(psi.elem(j_u)) - arma::mean(psi.elem(j_u));
-
-        if (f.n_rows != X.n_rows){
-            std::cerr << "scale too large!" << std::endl;
-        }
-
-        //convolve and scale
-        w = (1/std::sqrt(scale)) * Vespucci::Math::conv_fft(X, f, "filter");
-
-
-        //shift by half wavelet width + scale * xmax
-        shift_by = X.n_rows - std::floor((double) j.n_rows/2)  + scale*xmax;
-
-        w = Vespucci::Math::rotate(w, shift_by, true);
-
-        //if signal had to be padded, remove padding
-        if (w.n_rows > old_length)
-            w.shed_rows(old_length, w.n_rows - 1);
-
-        wcoeffs.col(i) = w;//rotate(w, scale*xmax, true);
+        throw e;
     }
+
     return wcoeffs;
 }
 

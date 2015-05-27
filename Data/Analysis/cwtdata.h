@@ -29,6 +29,7 @@ public:
                QCPColorGradient gradient = QCPColorGradient::cbGreys);
 
     mat centers();
+    void clear();
 private:
     QSharedPointer<VespucciDataset> dataset_;
     ///
@@ -38,6 +39,7 @@ private:
     /// second column is width in spectral abscissa units, third column is CWT
     ///  ridge length and fourth column is signal-to-noise ratio from CWT coefs.
     field<mat> peak_data_;
+    MainWindow *main_window_;
 };
 
 #endif // CWTDATA_H

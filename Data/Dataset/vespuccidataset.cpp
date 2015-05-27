@@ -1645,22 +1645,28 @@ void VespucciDataset::FindPeaksCWT(string wavelet,
                                    QCPColorGradient gradient)
 {
     cwt_peak_data_ = new CWTData(QSharedPointer<VespucciDataset>(this));
-    cwt_peak_data_->Apply(wavelet,
-                          max_scale,
-                          gap_threshold,
-                          min_ridge_length,
-                          search_width,
-                          noise_threshold,
-                          noise_method,
-                          noise_window_size,
-                          save_coefs,
-                          save_coef_plots,
-                          save_ridge_plots,
-                          save_ridge_plot_data,
-                          estimate_width,
-                          save_directory,
-                          image_format,
-                          gradient);   
+    try{
+        cwt_peak_data_->Apply(wavelet,
+                              max_scale,
+                              gap_threshold,
+                              min_ridge_length,
+                              search_width,
+                              noise_threshold,
+                              noise_method,
+                              noise_window_size,
+                              save_coefs,
+                              save_coef_plots,
+                              save_ridge_plots,
+                              save_ridge_plot_data,
+                              estimate_width,
+                              save_directory,
+                              image_format,
+                              gradient);
+    }
+    catch(exception e){
+        main_window_->DisplayExceptionWarning(e);
+    }
+
     QSharedPointer<AnalysisResults> result(new AnalysisResults(cwt_peak_data_->centers()));
     analysis_results_.insert(analysis_results_.begin(), "CWT Peak Finding Results", result);
 }

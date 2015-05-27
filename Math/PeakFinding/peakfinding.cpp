@@ -606,18 +606,15 @@ std::vector<Vespucci::Math::CWTRidge> Vespucci::Math::PeakFinding::LinkRidges(co
 void Vespucci::Math::PeakFinding::EstimateWidth(const arma::vec &spectrum, const arma::vec &abscissa, std::vector<Vespucci::Math::CWTRidge> &ridges)
 {
     //perform width estimation on every ridge
-    arma::uvec haar_scales(ridges.size());
+    std::cout << "PeakFinding" << std::endl;
 
-    std::for_each(ridges.begin(), ridges.end(),
-                  [&haar_scales](const Vespucci::Math::CWTRidge &r)
-                  {arma::uword i = 0; haar_scales(i) = r.scale(); ++i;});
-
-    arma::mat first_haar_coefs = Vespucci::Math::Transform::cwt(spectrum, "haar", arma::uvec(haar_scales));
-    arma::mat second_haar_coefs = Vespucci::Math::Transform::cwt(first_haar_coefs, "haar", arma::uvec(haar_scales));
-
-
-    for (arma::uword i = 0; i < ridges.size(); ++i){
-        ridges[i].EstimateWidth(spectrum, first_haar_coefs.col(i), second_haar_coefs.col(i), abscissa);
+    try{
+        for (arma::uword i = 0; i < ridges.size(); ++i){
+            ridges[i].EstimateWidth(spectrum, abscissa);
+        }
+    }catch(std::exception e){
+        std::cout << "error calling CWTRidge::EstimateWidth" << std::endl;
+        throw e;
     }
 
 

@@ -155,19 +155,24 @@ arma::uword Vespucci::Math::min(arma::uword a, arma::uword b)
 
 arma::vec Vespucci::Math::ExtendToNextPow(arma::vec X, arma::uword n)
 {
-    arma::uword nextpow = Vespucci::Math::NextPow(X.n_rows, n);
-    arma::uword new_size = std::pow(n, nextpow);
-    arma::vec padding;
-    arma::uword extend_by = new_size - X.n_rows;
-    if (extend_by == 1){
-        padding = flipud(X.row(X.n_rows-1));
-    }
-    else{
-        padding = flipud(X.rows(X.n_rows - extend_by, X.n_rows-1));
-        std::cout << "padding length" << padding.n_rows << std::endl;
+    if (X.n_rows % n == 0){
+        return X;
     }
 
-    return join_vert(X, padding);
+    else{
+        arma::uword nextpow = Vespucci::Math::NextPow(X.n_rows, n);
+        arma::uword new_size = std::pow(n, nextpow);
+        arma::vec padding;
+        arma::uword extend_by = new_size - X.n_rows;
+        if (extend_by == 1){
+            padding = flipud(X.row(X.n_rows-1));
+        }
+        else{
+            padding = flipud(X.rows(X.n_rows - extend_by, X.n_rows-1));
+        }
+
+        return join_vert(X, padding);
+    }
 }
 
 arma::uword Vespucci::Math::NextPow(arma::uword number, arma::uword power)
@@ -182,6 +187,7 @@ arma::uword Vespucci::Math::NextPow(arma::uword number, arma::uword power)
 /// position.
 /// Find the local maxima of a matrix of signals using the first and second
 /// derivative tests. Works best with smooth signals (like CWT coeffs)
+
 arma::sp_mat Vespucci::Math::LocalMaxima(const arma::mat &X)
 {
     arma::mat dX = Vespucci::Math::diff(X, 1);
@@ -189,8 +195,7 @@ arma::sp_mat Vespucci::Math::LocalMaxima(const arma::mat &X)
     //make everything line up.
     dX.insert_rows(0, 1, true);
     d2X.insert_rows(0, 2, true);
-    return Vespucci::Math::LocalMinima(X, dX, d2X);
-
+    return Vespucci::Math::LocalMaxima(X, dX, d2X);
 }
 
 ///
@@ -279,10 +284,6 @@ arma::sp_mat Vespucci::Math::LocalMinima(const arma::mat &X, const arma::mat &dX
     arma::umat position_buf;
 
     for (arma::uword i = 0; i < X.n_cols; ++i){
-        //find where first derivative crosses x axis
-    }
-
-    for (arma::uword i = 0; i < X.n_cols; ++i){
         X_buf = X.col(i);
         //find where the first derivative crosses the x axis
         try{
@@ -322,7 +323,12 @@ arma::sp_mat Vespucci::Math::LocalMinima(const arma::mat &X, const arma::mat &dX
         }
     }
 
-    return arma::sp_mat(locations, values, X.n_rows, X.n_cols, false, false);
+    arma::sp_mat out;
+    if (locations.n_rows !=2 || values.n_cols != locations.n_cols)
+        out = arma::sp_mat(X.n_rows, X.n_cols); //all zeros because no minima found
+    else
+        out = arma::sp_mat(locations, values, X.n_rows, X.n_cols, false, false);
+    return out;
 }
 
 
