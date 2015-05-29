@@ -302,6 +302,11 @@ double Vespucci::Math::CWTRidge::width() const
     return width_;
 }
 
+int Vespucci::Math::CWTRidge::id() const
+{
+    return id_;
+}
+
 ///
 /// \brief Vespucci::Math::CWTRidge::scale
 /// \return The ideal scale (proportional to peak width) of this ridge

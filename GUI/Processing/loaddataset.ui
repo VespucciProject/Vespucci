@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>399</width>
-    <height>361</height>
+    <height>387</height>
    </rect>
   </property>
   <property name="font">
@@ -165,7 +165,7 @@
       <item row="1" column="1">
        <widget class="QLineEdit" name="xDescription">
         <property name="text">
-         <string>Wavenumber</string>
+         <string>Raman Shift</string>
         </property>
        </widget>
       </item>
@@ -186,7 +186,7 @@
       <item row="2" column="1">
        <widget class="QLineEdit" name="yUnits">
         <property name="text">
-         <string>arb. units</string>
+         <string>a.u.</string>
         </property>
        </widget>
       </item>

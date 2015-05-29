@@ -44,7 +44,7 @@ public:
     double EstimateWidth(const arma::vec &spectra, const arma::vec &first_haar_coefs, const arma::vec &second_haar_coefs, const arma::vec &abscissa);
     double EstimateWidth(const arma::vec &spectra, const arma::vec &abscissa);
     double width() const;
-
+    int id() const;
 
 
     //operator overloads (CWTRidge essentially stores peak centers, so relational

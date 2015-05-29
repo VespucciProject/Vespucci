@@ -5,6 +5,7 @@ PeakFindingDialog::PeakFindingDialog(QWidget *parent, VespucciWorkspace *ws, int
     QDialog(parent),
     ui(new Ui::PeakFindingDialog)
 {
+    workspace = ws;
     ui->setupUi(this);
     dataset_ = ws->DatasetAt(row);
 
@@ -33,20 +34,20 @@ PeakFindingDialog::~PeakFindingDialog()
 
 void PeakFindingDialog::on_browseButton_clicked()
 {
-    /*
-    QString directory = workspace->directory();
+    QString directory = "C:/";
+
+    //QString directory = workspace->directory();
     if (directory.isEmpty()){
         directory = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
     }
+
     QString save_directory = QFileDialog::getExistingDirectory(this, "Select Save Directory", directory);
     directory_line_edit_->setText(save_directory);
-    */
+
 }
 
 void PeakFindingDialog::on_buttonBox_accepted()
 {
-    CWTData *cwt_data = new CWTData(dataset_);
-    cout << "cwt_data constructed" << endl;
     QString save_path = directory_line_edit_->text();
     int method_num = method_box_->currentIndex(); //currently discarded as CWT is only implemented method
     bool estimate_width = width_box_->isChecked();
@@ -67,10 +68,12 @@ void PeakFindingDialog::on_buttonBox_accepted()
     QString file_format = format_box_->currentText();
 
     if (method_num == 0){
-        cwt_data->Apply("mexh",
-                        max_scale, gap_threshold, min_length, search_width,
-                        noise_threshold, "quantile", 500, save_coefs, save_coef_plots,
-                        save_ridge_plots, save_ridges, estimate_width, save_path,
-                        file_format, gradient);
+        dataset_->FindPeaksCWT("mexh",
+                               max_scale, gap_threshold, min_length, search_width,
+                               noise_threshold, "quantile", 500,
+                               save_coefs, save_coef_plots,
+                               save_ridge_plots, save_ridges, estimate_width,
+                               save_path, file_format, gradient);
+
     }
 }

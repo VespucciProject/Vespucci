@@ -1623,8 +1623,8 @@ void VespucciDataset::FindPeaks(double sel, double threshold, uword poly_order, 
     }
     QSharedPointer<AnalysisResults> peak_mag(new AnalysisResults(peak_magnitudes));
     QSharedPointer<AnalysisResults> peak_pos(new AnalysisResults(peak_positions));
-    analysis_results_.insert(analysis_results_.end(), "Peak Positions", peak_pos);
-    analysis_results_.insert(analysis_results_.end(), "Peak Magnitudes", peak_mag);
+    analysis_results_.insert("Peak Positions", peak_pos);
+    analysis_results_.insert("Peak Magnitudes", peak_mag);
 }
 
 void VespucciDataset::FindPeaksCWT(string wavelet,
@@ -1667,8 +1667,12 @@ void VespucciDataset::FindPeaksCWT(string wavelet,
         main_window_->DisplayExceptionWarning(e);
     }
 
-    QSharedPointer<AnalysisResults> result(new AnalysisResults(cwt_peak_data_->centers()));
-    analysis_results_.insert(analysis_results_.begin(), "CWT Peak Finding Results", result);
+    mat centers = cwt_peak_data_->centers();
+    QSharedPointer<AnalysisResults> result(new AnalysisResults(centers));
+    analysis_results_.insert("CWT Peak Finding Results", result);
+    mat counts = cwt_peak_data_->counts();
+    QSharedPointer<AnalysisResults> count_result(new AnalysisResults(counts));
+    analysis_results_.insert("CWT Peak Populations", count_result);
 }
 
 ///

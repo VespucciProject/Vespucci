@@ -38,46 +38,40 @@ void CWTData::Apply(string wavelet,
                     QString image_format,
                     QCPColorGradient gradient)
 {
-    cout << "CWTData::Apply" << endl
-                        << "wavelet = " << wavelet << endl
-                        << "max_scale = " << max_scale << endl
-                        << "gap_threshold = " << gap_threshold << endl
-                        << "min_ridge_length = " << min_ridge_length << endl
-                        << "search_width = " << search_width << endl
-                        << "nosie_threshold = " << noise_threshold << endl
-                        << "noise_method = " << noise_method << endl
-                        << "nosie_window_size = " << noise_window_size << endl
-                        << "save_coefs = " << save_coefs << endl
-                        << "save_coef_plots = " << save_coef_plots << endl
-                        << "save_ridge_plots = " << save_ridge_plots << endl
-                        << "save_ridge_plot_data = " << save_ridge_plot_data << endl
-                        << "estimate_width = " << estimate_width << endl
-                        << "save_directory = " << save_directory.toStdString() << endl
-                        << "image_format = " << image_format.toStdString() << endl
-                        //<< "gradient = " << gradient << endl;
-                           ;
+
     uvec scales(max_scale);
     for (uword i = 0; i < scales.n_rows; ++i){
         scales(i) = i + 1;
     }
     mat *spectra = dataset_->spectra_ptr();
     vec abscissa = dataset_->wavelength();
+    mat counts_temp(spectra->n_rows, 2);
+    counts_temp.col(0) = abscissa;
+    counts_temp.col(1) = zeros(spectra->n_rows);
     mat data;
-
+    int progress_it = 0;
     //iterate over spectra
-    QProgressDialog progress("Detecting peaks...", "Cancel", 0, spectra->n_cols, 0);
+    int progress_it_max = (3 + estimate_width + save_coefs + save_coef_plots +
+            (save_ridge_plot_data || save_ridge_plots)) * spectra->n_cols;
+    QProgressDialog progress("Detecting peaks...", "Cancel", 0, progress_it_max, 0);
     progress.setWindowModality(Qt::WindowModal);
+    progress.setWindowTitle("Detecting Peaks");
+    QString current_description;
     cout << "for loop" << endl;
     for (uword i = 0; i < spectra->n_cols; ++i){
-        progress.setValue(i);
+        current_description = "Spectrum " + QString::number(i+1) + " of " + QString::number(spectra->n_cols);
         if (progress.wasCanceled()){
             clear();
             return;
         }
 
         vec current_spectrum = spectra->col(i);
+
+        progress.setLabelText(current_description + ":\nPerforming CWT...");
         mat coefs = Vespucci::Math::Transform::cwt(current_spectrum, wavelet, scales);
 
+        progress.setValue(++progress_it);
+        progress.setLabelText(current_description + ":\nIdentifying Ridges...");
 
         //perform the analysis
         cout << "call findridges" << endl;
@@ -90,44 +84,58 @@ void CWTData::Apply(string wavelet,
                                                         noise_threshold,
                                                         noise_method,
                                                         noise_window_size);
+        progress.setValue(++progress_it);
+
         //peform width estimation if requested
+        vec abscissa = dataset_->wavelength();
         if (estimate_width){
             cout << "estimatewidth" << endl;
+            progress.setLabelText(current_description + ":\nEstimating Width...");
             try{
-                Vespucci::Math::PeakFinding::EstimateWidth(current_spectrum, dataset_->wavelength(), ridges);
+                Vespucci::Math::PeakFinding::EstimateWidth(current_spectrum, abscissa, ridges);
             }
             catch(exception e){
                 cerr << "Failed width estimation" << endl;
                 cerr << e.what();
                 throw e;
             }
+            progress.setValue(++progress_it);
         }
         //
-        data.set_size(ridges.size(), (estimate_width ? 4 : 3));
+        data.set_size(ridges.size(), (estimate_width ? 4 :3));
+        progress.setLabelText(current_description + ":\nFormatting results...");
         std::for_each(ridges.begin(),
                       ridges.end(),
-                      [&data, estimate_width](Vespucci::Math::CWTRidge &r)
+                      [&data, estimate_width, abscissa, &counts_temp](Vespucci::Math::CWTRidge &r)
                         {
+                            //applying std::floor to functions of return type
+                            //uword because int-double conversion has some weird
+                            //artifacts.
+                            uword center_ind = r.PeakCenter();
                             rowvec row(4);
-                            row(0) = r.PeakCenter();
+                            row(0) = abscissa(center_ind);
                             row(1) = r.SNR();
-                            row(2) = r.length();
+                            row(2) = std::floor(r.length());
 
                             if (estimate_width)
                                 row(3) = r.width();
 
                             data.insert_rows(data.n_rows, row);
+                            counts_temp(center_ind, 1) += 1.0;
                         });
-
+        progress.setValue(++progress_it);
 
         //save things if requested:
 
         //save coefficients if requested
         if (save_coefs){
+            progress.setLabelText(current_description + ":\nSaving Coefficients...");
             coefs.save(save_directory.toStdString() + "/coefs_" + std::to_string(i) + ".csv", csv_ascii);
+            progress.setValue(++progress_it);
         }
         //plot coefficients if requested
         if (save_coef_plots){
+            progress.setLabelText(current_description + ":\nPlotting Coefficients...");
             QCPColorMapData *map_data =
                     new QCPColorMapData(coefs.n_cols,
                                         coefs.n_rows,
@@ -158,10 +166,13 @@ void CWTData::Apply(string wavelet,
                 map_plot->saveJpg(save_directory + "/coef_plot_" + QString::number(i) + ".jpg");
             else
                 map_plot->savePdf(save_directory + "/coef_plot_" + QString::number(i) + ".pdf");
+            progress.setValue(++progress_it);
         }//end if (plot)
 
         //save ridge info if requested
         if (save_ridge_plot_data || save_ridge_plots){
+            progress.setLabelText(current_description + ":\nPlotting Ridges...");
+
             QVector<double> ridge_plot_keys;
             QVector<double> ridge_plot_values;
             std::string current_column;
@@ -170,7 +181,7 @@ void CWTData::Apply(string wavelet,
             QCPGraph *ridge_graph = 0;
 
             if (save_ridge_plot_data){
-                ridge_plot_file.open(save_directory.toStdString() + "/ridges.csv");
+                ridge_plot_file.open(save_directory.toStdString() + "/ridges.csv", ios_base::app);
             }
             if (save_ridge_plots){
                 ridge_plot = new QCustomPlot(0);
@@ -186,6 +197,10 @@ void CWTData::Apply(string wavelet,
                 if (save_ridge_plots){
                     ridge_graph = ridge_plot->addGraph();
                     ridge_graph->setScatterStyle(QCPScatterStyle::ssDisc);
+                }
+                if (save_ridge_plot_data){
+                    current_column = "\nspectra_ " + std::to_string(i) +
+                            ",ridge_" + std::to_string(r.id());
                 }
 
                 for (uword i1 = 0; i1 < points.n_rows; ++i1){
@@ -227,14 +242,16 @@ void CWTData::Apply(string wavelet,
             if (ridge_plot_file.is_open()){
                 ridge_plot_file.close();
             }
-
+            progress.setValue(++progress_it);
         } //end if for saving ridge info
     //add the collected information
     peak_data_(i) = data;
+    counts_ = counts_temp;
 
     }//end for iterating over spectra
-
+    cout << "End of Apply()" << endl;
     //format of centers_ is pos, length, snr, width
+    return;
 }
 
 ///
@@ -247,63 +264,87 @@ mat CWTData::centers()
 {
     mat centers;
     uword cols = 2 * peak_data_(0).n_cols;
-    //set centers (default interface of this data through AnalysisResults)
-    for (uword i = 0; i < peak_data_.n_elem; ++i){
-        for (uword j = 0; j < peak_data_(i).n_rows; ++j){
-            //search peak center column for value
-            double current = peak_data_(i)(j,0);
-            uvec q;
-            if(centers.n_rows){q = find(centers.col(0) == current);}
-            //q will have size zero if centers is empty
 
-            //add a new row for each found value
-            if (q.n_elem == 0){
+    for (uword pd_i = 0; pd_i < peak_data_.n_elem; ++pd_i){
+        for (uword i = 0; i < peak_data_(pd_i).n_rows; ++i){
+            double current_center = peak_data_(pd_i)(i, 0);
+            uvec q;
+            if (centers.n_cols)
+                q = find(centers.col(0) == current_center);
+            else
+                q.set_size(0);
+
+            if (!q.n_rows){
                 rowvec row(cols);
-                row(0) = peak_data_(i)(j,0);
+                row(0) = peak_data_(pd_i)(i, 0);
                 row(1) = 1.0;
-                for (uword k = 2; k < cols; k+=2){
-                    row(k) = peak_data_(i)(j, (k/2)); //mean of value is value
-                    row(k+1) = 0; //stddev of value is 0 (n==1)
+                for (uword k = 2; k <cols; k+=2){
+                    try{
+                        row(k) = peak_data_(pd_i)(i, (k/2));
+                        row(k+1) = 0;
+                    }catch(exception e){
+                        cout << "inside for loop, !q.n_rows: " << e.what();
+                        throw e;
+                    }
+                }
+                if (!centers.n_rows)
+                    centers = row;
+                else
+                    centers.insert_rows(centers.n_rows, row);
+            }//new row
+            else{
+                //found a degenerate value
+                //increment count
+                uword ind;
+                double old_count;
+                try{
+                    ind = q(0);
+                    old_count = centers(ind, 1);
+                    centers(ind, 1) = old_count + 1.0;
+                }catch(exception e){
+                    cout << "beginning of else: " << e.what();
+                    throw e;
                 }
 
-                //add data for new row
-                if (!centers.n_rows) //evaulates false if no rows (for noncoders...)
-                    centers = row; //start matrix with this row
-                else
-                    centers.insert_rows(centers.n_rows, row); //insert new row
-            }//if
+                for(uword k = 2; k < cols; k += 2){
+                    double old_avg, old_stdev, new_value;
 
-            else{ //row already found so increment its count and recalc stats
-                double old_count = centers(q(0), 1);
-                centers(q(0),1) += 1.0; //increment count
+                    old_avg = centers(ind, k);
+                    old_stdev = centers(ind, k+1);
+                    new_value = peak_data_(pd_i)(i, (k/2));
 
-                //recalculate averages and stddevs
-                //k=2 ridge length
-                //k=4 snr
-                //k=6 width (if requested)
-                for (uword k = 2; k < centers.n_cols; k+=2){
-                    double old_avg = centers(q(0), k);
-                    double old_stddev = centers(q(0), k+1);
-                    double new_value = peak_data_(i)(j,(k/2));
 
-                    centers(q(0), k) =
+                        //calculate new stats
+                    double new_avg =
                             Vespucci::Math::RecalculateAverage(new_value,
                                                                old_avg,
                                                                old_count);
-                    centers(q(0), k+1) =
+                    double new_stdev =
                             Vespucci::Math::RecalculateStdDev(new_value,
                                                               old_avg,
-                                                              old_stddev,
+                                                              old_stdev,
                                                               old_count);
-                }//recalculation
-            }//else
-        }//iteration on this spectrum
-    }//iteration through each spectrum to set centers
+                        //replace with new values
+                    centers(ind, k) = new_avg;
+                    centers(ind, k+1) = new_stdev;
+                }//iterate over stats, recalculating
 
+            }//else (degenerate row);
+        }//for over rows
+    }//for over spectra
+
+    centers.save("C:/Users/Dan/Desktop/centers.csv", csv_ascii);
     return centers;
 }
+
+
 
 void CWTData::clear()
 {
     peak_data_.clear();
-}//end function
+}
+
+mat CWTData::counts() const
+{
+    return counts_;
+}
