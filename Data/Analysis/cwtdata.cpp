@@ -338,13 +338,45 @@ mat CWTData::centers()
 }
 
 
-
+///
+/// \brief CWTData::clear
+/// Delete everything in peak_data_
 void CWTData::clear()
 {
     peak_data_.clear();
 }
 
+///
+/// \brief CWTData::counts
+/// \return The matrix describing the counts of peaks at each center
+///
 mat CWTData::counts() const
 {
     return counts_;
+}
+
+///
+/// \brief CWTData::HasPeaks
+/// \param range_list A matrix where each row consists of a left and right bound
+/// to determine whether or not a peak center was found in that range.
+/// \return A matrix with the number of rows equal to the rows of the dataset
+/// when this object was created. Each column corresponds to a requested range.
+///
+mat CWTData::HasPeaks(const mat &range_list)
+{
+    mat report(peak_data_.n_elem, range_list.n_rows);
+    for (uword spec_it = 0; spec_it < peak_data_.n_elem; ++spec_it){
+        arma::vec current_centers = peak_data_(spec_it).col(0);
+        for (uword range_it = 0; range_it < range_list.n_rows; ++range_it){
+            uvec q = find(
+                         (current_centers >= range_list(range_it, 0) )
+                          && (current_centers <= range_list(range_it, 1)));
+            if (q.n_elem)
+                report(spec_it, range_it) = 1.0;
+            else
+                report(spec_it, range_it) = 0;
+        }
+    }
+
+    return report;
 }

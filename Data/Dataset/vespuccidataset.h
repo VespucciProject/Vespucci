@@ -263,6 +263,7 @@ public:
                       QString save_directory,
                       QString image_format,
                       QCPColorGradient gradient);
+    void HasPeaksCWT(const mat &range_list);
 
 
     //MEMBER ACCESS FUNCTIONS:

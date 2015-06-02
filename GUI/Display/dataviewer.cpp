@@ -33,8 +33,14 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
 {
     ui->setupUi(this);
     workspace = ws;
+
     dataset_ = workspace->DatasetAt(row);
+
+    QString title = "Data Viewer (" + dataset_->name() + ")";
+    this->setWindowTitle(title);
+
     directory_ = workspace->directory();
+
     export_button_ = this->findChild<QToolButton *>("exportToolButton");
     plot_button_ = this->findChild<QToolButton *>("plotToolButton");
     data_selector_ = this->findChild<QComboBox *>("comboBox");

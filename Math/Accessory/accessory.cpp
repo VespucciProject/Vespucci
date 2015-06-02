@@ -193,8 +193,14 @@ arma::sp_mat Vespucci::Math::LocalMaxima(const arma::mat &X)
     arma::mat dX = Vespucci::Math::diff(X, 1);
     arma::mat d2X = Vespucci::Math::diff(dX, 1);
     //make everything line up.
-    dX.insert_rows(0, 1, true);
-    d2X.insert_rows(0, 2, true);
+    try{
+        dX.insert_rows(0, 1, true);
+        d2X.insert_rows(0, 2, true);
+    }catch(std::exception e){
+        std::cerr << "Error in LocalMaxima with diff calc" << std::endl;
+        throw e;
+    }
+
     return Vespucci::Math::LocalMaxima(X, dX, d2X);
 }
 
@@ -267,8 +273,14 @@ arma::sp_mat Vespucci::Math::LocalMinima(const arma::mat &X)
     arma::mat dX = Vespucci::Math::diff(X, 1);
     arma::mat d2X = Vespucci::Math::diff(dX, 1);
     //make everything line up.
-    dX.insert_rows(0, 1, true);
-    d2X.insert_rows(0, 2, true);
+    try{
+        dX.insert_rows(0, 1, true);
+        d2X.insert_rows(0, 2, true);\
+    }catch(std::exception e){
+        std::cerr << "error in LocalMinima with diff calc" << std::endl;
+        throw e;
+    }
+
     return Vespucci::Math::LocalMinima(X, dX, d2X);
 }
 

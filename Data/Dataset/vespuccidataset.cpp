@@ -1667,12 +1667,33 @@ void VespucciDataset::FindPeaksCWT(string wavelet,
         main_window_->DisplayExceptionWarning(e);
     }
 
-    mat centers = cwt_peak_data_->centers();
-    QSharedPointer<AnalysisResults> result(new AnalysisResults(centers));
-    analysis_results_.insert("CWT Peak Finding Results", result);
+    //mat centers = cwt_peak_data_->centers();
+    //QSharedPointer<AnalysisResults> result(new AnalysisResults(centers));
+    //analysis_results_.insert("CWT Peak Finding Results", result);
     mat counts = cwt_peak_data_->counts();
     QSharedPointer<AnalysisResults> count_result(new AnalysisResults(counts));
-    analysis_results_.insert("CWT Peak Populations", count_result);
+    analysis_results_.insert("Detected Peak Counts", count_result);
+}
+
+void VespucciDataset::HasPeaksCWT(const mat &range_list)
+{
+    //if this pointer evaluates void, stop
+    if (!cwt_peak_data_){
+        QMessageBox::warning(main_window_,
+                             "Peak Finding Not Performed",
+                             "You must perform peak finding before determining "
+                             "peak populations.");
+        return;
+    }
+
+    mat peak_existence = cwt_peak_data_->HasPeaks(range_list);
+    mat peak_pop = trans(sum(peak_existence, 0));
+    peak_pop.insert_cols(0, range_list);
+
+    QSharedPointer<AnalysisResults> exist_result(new AnalysisResults(peak_existence));
+    QSharedPointer<AnalysisResults> pop_results(new AnalysisResults(peak_pop));
+    analysis_results_.insert("Peak Presence by Spectrum", exist_result);
+    analysis_results_.insert("Peak Population", pop_results);
 }
 
 ///

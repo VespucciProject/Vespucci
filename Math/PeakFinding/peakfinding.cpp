@@ -207,7 +207,12 @@ arma::umat Vespucci::Math::PeakFinding::FindPeakPositions(arma::vec X, arma::vec
     //threshold can be arbitrary or calculated
 
     arma::vec d2X = Vespucci::Math::diff(dX, 1);
-    d2X.insert_rows(0, 1, true);
+    try{
+        d2X.insert_rows(0, 1, true);
+    }catch(std::exception e){
+        std::cerr << "error in Vespucci::Math::PeakFinding::FindPeakPositions" << std::endl;
+    }
+
     if (threshold_method == "count" && threshold <= 0){
         throw std::runtime_error("Invalid threshold value for given method");
     }
@@ -442,10 +447,12 @@ std::vector<Vespucci::Math::CWTRidge>
         std::cerr << e.what() << std::endl;
         throw e;
     }
+    /*
     arma::mat maxima_sum = arma::sum( (arma::mat) maxima, 1);
     ( (arma::mat) maxima).save("C:/Users/Dan/Documents/maxima.csv", arma::csv_ascii);
     maxima_sum.save("C:/Users/Dan/Documents/maxima_sum.csv", arma::csv_ascii);
-    std::vector<Vespucci::Math::CWTRidge> ridges;
+    */
+std::vector<Vespucci::Math::CWTRidge> ridges;
     try{
         ridges = Vespucci::Math::PeakFinding::LinkRidges(maxima,
                                                          scales,

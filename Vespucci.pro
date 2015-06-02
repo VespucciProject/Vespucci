@@ -144,7 +144,8 @@ SOURCES += main.cpp\
     Data/Analysis/cwtdata.cpp \
     Math/Fitting/linleastsq.cpp \
     Math/Fitting/nonlinleastsq.cpp \
-    GUI/Analysis/peakfindingdialog.cpp
+    GUI/Analysis/peakfindingdialog.cpp \
+    GUI/Analysis/haspeaksdialog.cpp
 
 
 HEADERS  += \
@@ -209,7 +210,8 @@ HEADERS  += \
     Data/Analysis/cwtdata.h \
     Math/Fitting/linleastsq.h \
     Math/Fitting/nonlinleastsq.h \
-    GUI/Analysis/peakfindingdialog.h
+    GUI/Analysis/peakfindingdialog.h \
+    GUI/Analysis/haspeaksdialog.h
 
 
 FORMS    += \
@@ -242,7 +244,8 @@ FORMS    += \
     GUI/Analysis/univariatedialog.ui \
     GUI/Analysis/vcadialog.ui \
     GUI/scriptdialog.ui \
-    GUI/Analysis/peakfindingdialog.ui
+    GUI/Analysis/peakfindingdialog.ui \
+    GUI/Analysis/haspeaksdialog.ui
 
 RESOURCES += \
     resources.qrc

@@ -17,15 +17,24 @@ void Vespucci::Math::CWTRidge::InsertPoint(arma::uword row, arma::uword column, 
     arma::uvec new_row(2);
     new_row(0) = row;
     new_row(1) = column;
-    points_.insert_rows(points_.n_rows, new_row.t());
-    coefs_.resize(points_.n_rows);
-    coefs_(coefs_.n_rows - 1) = value;
+    try{
+        points_.insert_rows(points_.n_rows, new_row.t());
+        coefs_.resize(points_.n_rows);
+        coefs_(coefs_.n_rows - 1) = value;
+    }catch(std::exception e){
+        std::cerr << "error in Vespucci::Math::CWTRidge::InsertPoint" << std::endl;
+        throw e;
+    }
 }
 
 void Vespucci::Math::CWTRidge::Merge(Vespucci::Math::CWTRidge &new_ridge)
 {
-    points_.insert_rows(points_.n_rows, new_ridge.points());
-    coefs_.insert_rows(coefs_.n_rows, new_ridge.coefs());
+    try{
+        points_.insert_rows(points_.n_rows, new_ridge.points());
+        coefs_.insert_rows(coefs_.n_rows, new_ridge.coefs());
+    }catch(std::exception e){
+        std::cerr << "Error in Vespucci::Math::CWTRidge::Merge" << std::endl;
+    }
 }
 
 

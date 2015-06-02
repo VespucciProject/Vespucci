@@ -31,6 +31,7 @@ public:
     mat centers();
     void clear();
     mat counts() const;
+    mat HasPeaks(const mat &range_list);
 private:
     QSharedPointer<VespucciDataset> dataset_;
     ///
