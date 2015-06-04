@@ -26,6 +26,7 @@ class CWTRidge
 {
 public:
     CWTRidge(int id);
+    arma::umat points() const;
     arma::uword gap() const;
     bool HasPoint(arma::uword row, arma::uword column) const;
     arma::uword scale() const;
@@ -40,7 +41,6 @@ public:
     arma::uword PeakCenter() const;
     double EstimateSNR(std::string method, arma::uword window_size, const arma::vec &noise);
     double SNR() const;
-    arma::umat points() const;
     double EstimateWidth(const arma::vec &spectra, const arma::vec &first_haar_coefs, const arma::vec &second_haar_coefs, const arma::vec &abscissa);
     double EstimateWidth(const arma::vec &spectra, const arma::vec &abscissa);
     double width() const;

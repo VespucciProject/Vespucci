@@ -43,6 +43,7 @@
 #include "GUI/Processing/thresholddialog.h"
 #include "GUI/scriptdialog.h"
 #include "GUI/Analysis/peakfindingdialog.h"
+#include "GUI/Analysis/haspeaksdialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -1081,4 +1082,11 @@ void MainWindow::on_actionDetect_Peaks_triggered()
     int row = dataset_list_view_->currentIndex().row();
     PeakFindingDialog *peak_dialog = new PeakFindingDialog(this, workspace, row);
     peak_dialog->show();
+}
+
+void MainWindow::on_actionCalculate_Peak_Populations_triggered()
+{
+    int row = dataset_list_view_->currentIndex().row();
+    HasPeaksDialog *peaks_dialog = new HasPeaksDialog(this, workspace, row);
+    peaks_dialog->show();
 }

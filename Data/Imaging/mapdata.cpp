@@ -80,6 +80,7 @@ MapData::MapData(QString x_axis_description,
                                            dataset_,
                                            map_qcp_->size(),
                                            *directory);
+
     QObject::connect(map_qcp_,
                      SIGNAL(plottableClick(QCPAbstractPlottable*,QMouseEvent*)),
                      spectrum_display_,

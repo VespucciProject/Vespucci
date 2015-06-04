@@ -5,9 +5,10 @@ HasPeaksDialog::HasPeaksDialog(QWidget *parent, VespucciWorkspace *ws, int row) 
     QDialog(parent),
     ui(new Ui::HasPeaksDialog)
 {
+
     ui->setupUi(this);
     dataset_ = ws->DatasetAt(row);
-
+    workspace = ws;
     table_widget_ = findChild<QTableWidget *>("tableWidget");
     min_box_ = findChild<QDoubleSpinBox *>("minDoubleSpinBox");
     max_box_ = findChild<QDoubleSpinBox *>("maxDoubleSpinBox");
@@ -25,5 +26,30 @@ HasPeaksDialog::~HasPeaksDialog()
 
 void HasPeaksDialog::on_buttonBox_accepted()
 {
-
+    mat points(table_widget_->rowCount(), 2);
+    bool ok = true;
+    double left, right;
+    for (unsigned int i = 0; i < table_widget_->rowCount(); ++i){
+        left = table_widget_->itemAt(i, 0)->text().toDouble(&ok);
+        right = table_widget_->itemAt(i, 1)->text().toDouble(&ok);
+        if(!ok){
+            QMessageBox::warning(this,
+                                 "Parsing Error",
+                                 "Row " +
+                                 QString::number(i) +
+                                 " skipped due to invalid text");
+            points(i, 0) = 0;
+            points(i, 1) = 0; //ranges with equal values are skipped
+        }
+        else{
+            points(i, 0) = left;
+            points(i, 1) = right;
+        }
+    }
+    try{
+        dataset_->HasPeaksCWT(points);
+    }
+    catch(exception e){
+        workspace->main_window()->DisplayExceptionWarning(e);
+    }
 }

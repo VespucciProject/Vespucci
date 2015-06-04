@@ -24,9 +24,6 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2" rowspan="2">
-    <widget class="QTableView" name="tableView"/>
-   </item>
    <item row="1" column="0">
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
@@ -120,6 +117,9 @@
       <string>Add/Remove Range</string>
      </property>
     </widget>
+   </item>
+   <item row="1" column="2" rowspan="2">
+    <widget class="QTableWidget" name="tableWidget"/>
    </item>
   </layout>
  </widget>

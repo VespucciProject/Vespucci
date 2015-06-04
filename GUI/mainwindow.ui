@@ -67,7 +67,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>24</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -129,6 +129,7 @@
     <addaction name="actionUnivariate_Analysis"/>
     <addaction name="actionMultivariate_Analysis"/>
     <addaction name="actionDetect_Peaks"/>
+    <addaction name="actionCalculate_Peak_Populations"/>
     <addaction name="separator"/>
     <addaction name="actionClose_Dataset"/>
     <addaction name="actionCreate_Plot"/>
@@ -378,6 +379,11 @@
   <action name="actionDetect_Peaks">
    <property name="text">
     <string>Detect Peaks...</string>
+   </property>
+  </action>
+  <action name="actionCalculate_Peak_Populations">
+   <property name="text">
+    <string>Calculate Peak Populations</string>
    </property>
   </action>
  </widget>

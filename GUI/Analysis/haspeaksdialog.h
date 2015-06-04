@@ -25,6 +25,7 @@ private:
     QDoubleSpinBox *min_box_;
     QDoubleSpinBox *max_box_;
     QTableWidget *table_widget_;
+    VespucciWorkspace *workspace;
 
 };
 

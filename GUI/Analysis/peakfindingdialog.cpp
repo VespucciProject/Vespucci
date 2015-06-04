@@ -25,6 +25,8 @@ PeakFindingDialog::PeakFindingDialog(QWidget *parent, VespucciWorkspace *ws, int
     gap_box_ = findChild<QSpinBox *>("gapSpinBox");
     length_box_ = findChild<QSpinBox *>("lengthSpinBox");
 
+    gradient_box_->setCurrentIndex(18); //set index to QCP Grayscale
+
 }
 
 PeakFindingDialog::~PeakFindingDialog()

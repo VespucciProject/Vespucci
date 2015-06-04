@@ -102,6 +102,7 @@ void CWTData::Apply(string wavelet,
             progress.setValue(++progress_it);
         }
         //
+
         data.set_size(ridges.size(), (estimate_width ? 4 :3));
         progress.setLabelText(current_description + ":\nFormatting results...");
         std::for_each(ridges.begin(),
@@ -112,7 +113,7 @@ void CWTData::Apply(string wavelet,
                             //uword because int-double conversion has some weird
                             //artifacts.
                             uword center_ind = r.PeakCenter();
-                            rowvec row(4);
+                            rowvec row(data.n_cols);
                             row(0) = abscissa(center_ind);
                             row(1) = r.SNR();
                             row(2) = std::floor(r.length());
@@ -137,13 +138,14 @@ void CWTData::Apply(string wavelet,
         if (save_coef_plots){
             progress.setLabelText(current_description + ":\nPlotting Coefficients...");
             QCPColorMapData *map_data =
-                    new QCPColorMapData(coefs.n_cols,
-                                        coefs.n_rows,
-                                        dataset_->WavelengthRange(),
+                    new QCPColorMapData(coefs.n_rows,
+                                        coefs.n_cols,
+                                        QCPRange(abscissa.min(), abscissa.max()),
                                         QCPRange(1, coefs.n_cols));
             for (uword j1 = 0; j1 < coefs.n_cols; ++j1)
                 for (uword i1 = 0; i1 < coefs.n_rows; ++i1)
-                    map_data->setCell(j1, i1, coefs(i1,j1));
+                    map_data->setCell(i1, j1, coefs(i1,j1));
+
             QCustomPlot *map_plot = new QCustomPlot();
             QCPColorMap *color_map = new QCPColorMap(map_plot->xAxis, map_plot->yAxis);
             map_plot->addPlottable(color_map);
@@ -175,55 +177,49 @@ void CWTData::Apply(string wavelet,
 
             QVector<double> ridge_plot_keys;
             QVector<double> ridge_plot_values;
-            std::string current_column;
-            std::ofstream ridge_plot_file;
+            //QStringList ridge_plot_data;
+            std::vector<std::vector<std::string> > ridge_plot_data;
             QCustomPlot *ridge_plot = 0;
             QCPGraph *ridge_graph = 0;
 
-            if (save_ridge_plot_data){
-                ridge_plot_file.open(save_directory.toStdString() + "/ridges.csv", ios_base::app);
-            }
+            string ridge_filename = save_directory.toStdString() +
+                                    "/ridges_" + to_string(i) + ".txt";
+            ofstream ridge_file(ridge_filename, ios_base::app);
             if (save_ridge_plots){
                 ridge_plot = new QCustomPlot(0);
                 ridge_plot->xAxis->setRange(dataset_->WavelengthRange());
                 ridge_plot->yAxis->setRange(QCPRange(1, max_scale));
             }
 
+            field<mat> ridge_points(1, ridges.size());
+
+
             //iterate over ridges
-            for (Vespucci::Math::CWTRidge r : ridges){
-                //points.col(0) is index, points.col(1) is scale
-                umat points = r.points();
+            for (unsigned int ir = 0; ir < ridges.size(); ++ir){
+                umat points = ridges[ir].points();
+                vec ridge_x = abscissa(points.col(0));
+                vec ridge_y = conv_to<vec>::from(points.col(1));
+                mat current_ridge_data(points.n_rows, 2);
+                current_ridge_data.col(0) = ridge_x;
+                current_ridge_data.col(1) = ridge_y;
+
+                ridge_plot_keys = QVector<double>::fromStdVector(
+                            conv_to<std::vector<double> >::from(ridge_x));
+                ridge_plot_values = QVector<double>::fromStdVector(
+                            conv_to<std::vector<double> >::from(ridge_y));
+
+                ridge_points(0, ir) = current_ridge_data;
 
                 if (save_ridge_plots){
                     ridge_graph = ridge_plot->addGraph();
                     ridge_graph->setScatterStyle(QCPScatterStyle::ssDisc);
-                }
-                if (save_ridge_plot_data){
-                    current_column = "\nspectra_ " + std::to_string(i) +
-                            ",ridge_" + std::to_string(r.id());
-                }
-
-                for (uword i1 = 0; i1 < points.n_rows; ++i1){
-
-                    if (save_ridge_plot_data)
-                        current_column += std::to_string(abscissa(points(i1, 0))) + "," + std::to_string(points(i1, 1)) + "\n";
-
-                    if (save_ridge_plots){
-                        ridge_plot_keys.append(abscissa(points(i1, 0)));
-                        ridge_plot_values.append(points(i1, 1));
-                    }
-
-                } //end for over points
-
-                if (save_ridge_plot_data){
-                    ridge_plot_file << current_column;
-                }
-                if (save_ridge_plots){
-                    //each ridge is considered a separate graph so that they may be linked
                     ridge_graph->addData(ridge_plot_keys, ridge_plot_values);
                 }
+
+
             }//end for over ridges
 
+            //
 
             if (save_ridge_plots){
                 //save the plot based on file format
@@ -239,14 +235,15 @@ void CWTData::Apply(string wavelet,
                     ridge_plot->savePdf(save_directory + "/ridge_plot_" + QString::number(i) + ".pdf");
             }
 
-            if (ridge_plot_file.is_open()){
-                ridge_plot_file.close();
-            }
+
+            ridge_file << ridge_points;
+            ridge_file.close();
             progress.setValue(++progress_it);
         } //end if for saving ridge info
     //add the collected information
     peak_data_(i) = data;
     counts_ = counts_temp;
+
 
     }//end for iterating over spectra
     cout << "End of Apply()" << endl;

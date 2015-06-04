@@ -55,6 +55,7 @@ namespace Vespucci
 
         double RecalculateAverage(double new_value, double old_average, double old_count);
         double RecalculateStdDev(double new_value, double old_mean, double old_stddev, double old_count);
+
     }
 }
 

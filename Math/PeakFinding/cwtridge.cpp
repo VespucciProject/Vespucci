@@ -38,6 +38,11 @@ void Vespucci::Math::CWTRidge::Merge(Vespucci::Math::CWTRidge &new_ridge)
 }
 
 
+arma::umat Vespucci::Math::CWTRidge::points() const
+{
+    return points_;
+}
+
 
 ///
 /// \brief Vespucci::Math::CWTRidge::RemoveLastPoint
@@ -173,12 +178,6 @@ double Vespucci::Math::CWTRidge::EstimateSNR(std::string method, arma::uword win
 double Vespucci::Math::CWTRidge::SNR() const
 {
     return calculated_snr_;
-}
-
-
-arma::umat Vespucci::Math::CWTRidge::points() const
-{
-    return points_;
 }
 
 double Vespucci::Math::CWTRidge::EstimateWidth(const arma::vec &spectra, const arma::vec &first_haar_coefs, const arma::vec &second_haar_coefs, const arma::vec &abscissa)
