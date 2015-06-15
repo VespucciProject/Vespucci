@@ -18,6 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Display/spectrumviewer.h"
+#include "Global/vespucci.h"
 #include "ui_spectrumviewer.h"
 
 ///
@@ -278,22 +279,19 @@ void SpectrumViewer::on_pushButton_clicked()
         //only images can be saved in this view
         QString filename =
                 QFileDialog::getSaveFileName(this,
-                                             "Save As...",
+                                             tr("Save File"),
                                              directory_,
-                                             tr("TIFF (*.tif);;"
-                                                "JPEG (*.jpg);;"
-                                                "PNG (*.png);;"
-                                                "BMP (*.bmp);;"));
-        bool success;
-        QFileInfo file_info(filename);
-        QString extension = file_info.suffix();
-        if (extension == "bmp")
-            success = spectrum_plot_->saveBmp(filename);
-        else if (extension == "jpg")
-            success = spectrum_plot_->saveJpg(filename);
-        else
-            success = spectrum_plot_->savePng(filename);
-        //PNG is default because everyone can open them
+                                             tr("Scalable Vector Graphics (*.svg);; "
+                                                "Enhanced Windows Metafile (*.emf);; "
+                                                "Portable Document Format (*.pdf);; "
+                                                "Tagged Image File Format (*.tif);; "
+                                                "Windows Bitmap (*.bmp);; "
+                                                "Portable Network Graphics (*.png);; "
+                                                "JPEG (*.jpg)"));
+        Vespucci::SavePlot(spectrum_plot_, filename);
+
+
+        bool success = Vespucci::SavePlot(spectrum_plot_, filename);
         if(success)
             QMessageBox::information(this, "Success!", "File " + filename + " written successfully");
         else
@@ -310,21 +308,20 @@ void SpectrumViewer::on_pushButton_clicked()
                                          "Save As...",
                                          directory_,
                                          tr("Tab-delimited text (*.txt);;"
-                                            "PDF (*.pdf);;"
-                                            "TIFF (*.tif);;"
-                                            "JPEG (*.jpg);;"
-                                            "PNG (*.png);;"
-                                            "BMP (*.bmp);;"
-                                            "CSV (*.csv);;"
-                                            "Armadillo binary (*.arma);;"));
+                                            "Comma-separated Values (*.csv);;"
+                                            "Scalable Vector Graphics (*.svg);; "
+                                            "Enhanced Windows Metafile (*.emf);; "
+                                            "Portable Document Format (*.pdf);; "
+                                            "Tagged Image File Format (*.tif);; "
+                                            "Windows Bitmap (*.bmp);; "
+                                            "Portable Network Graphics (*.png);; "
+                                            "JPEG (*.jpg)"
+                                            ));
     bool success;
     QFileInfo file_info(filename);
 
     QString extension = file_info.suffix();
 
-    int width = spectrum_plot_->width();
-    int height = spectrum_plot_->height();
-    double scale = 1.0;
     vec spectrum = dataset_->spectra_ptr()->col(current_index_);
     vec wavelength = dataset_->wavelength();
     mat results;
@@ -339,18 +336,16 @@ void SpectrumViewer::on_pushButton_clicked()
             +QString::number(current_y_)
             +")";
 
-    if (extension== "pdf")
-        success = spectrum_plot_->savePdf(filename,
-                                          true, width, height,
-                                          "Vespucci", description);
-    else if (extension == "tif")
-        success = spectrum_plot_->saveRastered(filename, width, height, scale, "TIF", 1);
-    else if (extension == "bmp")
-        success = spectrum_plot_->saveBmp(filename);
-    else if (extension == "jpg")
-        success = spectrum_plot_->saveJpg(filename);
-    else if (extension == "png")
-        success = spectrum_plot_->savePng(filename);
+    if ( (extension== "pdf")
+       ||(extension == "tif")
+       ||(extension == "bmp")
+       ||(extension == "jpg")
+       ||(extension == "png")
+       ||(extension == "svg")
+       ||(extension == "emf")){
+        success = Vespucci::SavePlot(spectrum_plot_, filename);
+    }
+
     else if (extension == "csv")
         success = results.save(filename.toStdString(), csv_ascii);
     else if (extension == "arma")

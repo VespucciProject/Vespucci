@@ -150,6 +150,7 @@ public:
                   double scale = 1.0,
                   int quality = 0);
 
+
     void ExportText();
     void ShowStatsDialog();
 

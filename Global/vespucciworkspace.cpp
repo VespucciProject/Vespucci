@@ -19,7 +19,7 @@
 *******************************************************************************/
 #include "Global/vespucciworkspace.h"
 #include <iostream>
-
+#include <QtSvg>
 ///
 /// \brief VespucciWorkspace::VespucciWorkspace
 /// Constructor
@@ -91,7 +91,7 @@ void VespucciWorkspace::RemoveDatasetAt(int row, const QModelIndex &parent)
 /// \brief VespucciWorkspace::dataset_loading_count
 /// \return
 /// A count of the datasets that have been loaded.
-int VespucciWorkspace::dataset_loading_count()
+int VespucciWorkspace::dataset_loading_count() const
 {
     return dataset_loading_count_;
 }
@@ -100,7 +100,7 @@ int VespucciWorkspace::dataset_loading_count()
 /// \brief VespucciWorkspace::directory
 /// \return
 /// The global working directory
-QString VespucciWorkspace::directory()
+QString VespucciWorkspace::directory() const
 {
     return directory_;
 }
@@ -117,7 +117,7 @@ void VespucciWorkspace::set_directory(QString directory)
 ///
 /// \brief VespucciWorkspace::dataset_names
 /// \return List of names of all the workspaces
-QStringList VespucciWorkspace::dataset_names()
+QStringList VespucciWorkspace::dataset_names() const
 {
     return dataset_names_;
 }
@@ -136,7 +136,7 @@ MainWindow *VespucciWorkspace::main_window()
 /// \param row Index of the dataset
 /// \return Maximum of the spectral abscissa
 ///
-double VespucciWorkspace::GetWavelengthMax(int row)
+double VespucciWorkspace::GetWavelengthMax(int row) const
 {
     return datasets_->at(row)->wavelength().max();
 }
@@ -146,7 +146,7 @@ double VespucciWorkspace::GetWavelengthMax(int row)
 /// \param row Index of the dataset
 /// \return  Minimum of the spectral abscissa
 ///
-double VespucciWorkspace::GetWavelengthMin(int row)
+double VespucciWorkspace::GetWavelengthMin(int row) const
 {
     return datasets_->at(row)->wavelength().min();
 }
@@ -157,7 +157,7 @@ double VespucciWorkspace::GetWavelengthMin(int row)
 /// \param i Index of desired dataset
 /// \return Desired dataset
 ///
-QSharedPointer<VespucciDataset> VespucciWorkspace::DatasetAt(int i)
+QSharedPointer<VespucciDataset> VespucciWorkspace::DatasetAt(int i) const
 {
     //return datasets_[i];
     return dataset_list_model_->DatasetAt(i);
@@ -290,7 +290,7 @@ unsigned int VespucciWorkspace::UpdateCount()
 /// \brief dataset_list_model
 /// \return The dataset list model
 ///
-DatasetListModel* VespucciWorkspace::dataset_list_model()
+DatasetListModel* VespucciWorkspace::dataset_list_model() const
 {
     return dataset_list_model_;
 }
@@ -303,3 +303,106 @@ void VespucciWorkspace::CleanLogFiles()
     foreach (QString filename, current_dir.entryList(filters, QDir::Files))
         QFile::remove(filename);
 }
+
+
+/*
+///
+/// \brief VespucciWorkspace::SavePlot
+/// \param plot
+/// \param filename
+/// \return
+///
+bool VespucciWorkspace::SavePlot(QCustomPlot *plot, QString filename) const
+{
+    QStringList filename_list = filename.split(".");
+    QString extension = filename_list.last();
+
+    //this method of determining type may not be valid on non-Win platforms
+    //check this on GNU/Linux and Mac OSX later.
+
+    bool success = true;
+
+    if (extension == "bmp")
+        success = plot->saveBmp(filename, 0, 0, 1.0);
+    else if (extension == "pdf")
+        success = plot->savePdf(filename, false, 0, 0, "Vespucci 1.0", "Plot");
+    else if (extension == "png"){
+        bool ok;
+        int quality = QInputDialog::getInt(plot->parentWidget(), "Enter Quality",
+                                           "Quality (%)",
+                                           80, 0, 100, 1, &ok);
+        if (ok)
+            plot->savePng(filename, 0, 0, 1.0, quality);
+    }
+
+    else if (extension == "jpg"){
+        bool ok;
+        int quality = QInputDialog::getInt(plot->parentWidget(), "Enter Quality",
+                                           "Quality (%)",
+                                           80, 0, 100, 1, &ok);
+        if (ok)
+            plot->saveJpg(filename, 0, 0, 1.0, quality);
+    }
+    else if (extension == "svg"){
+        QPicture picture;
+        QCPPainter qcp_painter(&picture);
+        plot->toPainter(&qcp_painter);
+
+
+        QSvgGenerator generator;
+        generator.setFileName(filename);
+
+        QPainter painter;
+
+        painter.begin(&generator);
+        painter.drawPicture(0, 0, picture);
+        painter.end();
+    }
+    else if (extension == "emf"){
+        QStringList filename_trunk_list = filename_list;
+        filename_trunk_list.removeLast();
+        QString filename_trunk = filename_trunk_list.join(".");
+        QString SVG_filename = filename_trunk + ".svg";
+        QPicture picture;
+        QCPPainter qcp_painter(&picture);
+        plot->toPainter(&qcp_painter);
+
+        QSvgGenerator generator;
+        generator.setFileName(SVG_filename);
+
+        QPainter painter;
+
+        painter.begin(&generator);
+        painter.drawPicture(0, 0, picture);
+        painter.end();
+
+        //call java program "EMFGenerator" to convert svg file then
+        QProcess *process = new QProcess(0);
+        QString command = "java -jar EMFGenerator.jar \"" + SVG_filename + "\"";
+        process->start(command);
+    }
+
+    else{
+        //default to tif, force extension (for Windows compatability)
+        if (extension != "tif")
+            filename.append(".tif");
+        bool ok;
+        int quality = QInputDialog::getInt(plot->parentWidget(),
+                                           "Compression",
+                                           "Enter 0 for no compression,"
+                                           "1 for LZW lossless compression",
+                                           0, 0, 1, 1, &ok);
+        if (ok){
+            QPixmap background = plot->background();
+            plot->setBackground(Qt::transparent);
+            plot->replot();
+            success = plot->saveRastered(filename, 0, 0, 1.0, "TIF", quality);
+            plot->setBackground(background);
+            plot->replot();
+
+        }
+    }
+
+    return success;
+}
+*/

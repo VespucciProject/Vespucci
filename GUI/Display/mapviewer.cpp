@@ -19,7 +19,7 @@
 *******************************************************************************/
 #include "GUI/Display/mapviewer.h"
 #include "ui_mapviewer.h"
-
+#include "Global/vespucci.h"
 
 ///
 /// \brief MapViewer::MapViewer
@@ -169,19 +169,27 @@ void MapViewer::on_actionSave_Image_As_triggered()
             QFileDialog::getSaveFileName(this,
                                          tr("Save File"),
                                          path,
-                                         tr("Tagged Image File Format (*.tif);; "
+                                         tr("Scalable Vector Graphics (*.svg);; "
+                                            "Enhanced Windows Metafile (*.emf);; "
                                             "Portable Document Format (*.pdf);; "
+                                            "Tagged Image File Format (*.tif);; "
                                             "Windows Bitmap (*.bmp);; "
                                             "Portable Network Graphics (*.png);; "
                                             "JPEG (*.jpg)"));
+    Vespucci::SavePlot(qcp_, filename);
 
+    /*
     QStringList filename_list = filename.split(".");
     QString extension = filename_list.last();
 
     //this method of determining type may not be valid on non-Win platforms
     //check this on GNU/Linux and Mac OSX later.
 
+
+
+
     if (extension == "bmp")
+        Vespucci::SavePlot(qcp_, filename);
         parent_->saveBmp(filename, 0, 0, 1.0);
     else if (extension == "pdf")
         parent_->savePdf(filename, 0, 0);
@@ -216,6 +224,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
         if (ok)
             parent_->saveTiff(filename, 0, 0, 1.0, quality);
     }
+    */
 
 }
 

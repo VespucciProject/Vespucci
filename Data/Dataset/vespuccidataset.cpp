@@ -603,7 +603,7 @@ void VespucciDataset::UnitAreaNormalize()
 
     try{
         for (uword j = 0; j < num_cols; ++j){
-            vec spectrum = spectra_.row(j);
+            vec spectrum = spectra_.col(j);
             double spectrum_sum = sum(spectrum);
             for (uword i = 0; i < num_rows; ++i){
                 spectra_(i, j) = spectra_(i, j) / spectrum_sum;

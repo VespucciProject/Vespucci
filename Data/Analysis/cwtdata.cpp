@@ -158,16 +158,12 @@ void CWTData::Apply(string wavelet,
             map_plot->replot();
 
             //save the plot based on file format
+            QString save_path = save_directory +
+                    "/coef_plot_" + QString::number(i) + "." + image_format;
+
+            Vespucci::SavePlot(map_plot, save_path);
             if (image_format == "tif")
                 map_plot->saveRastered(save_directory + "/coef_plot_" + QString::number(i) + ".tif", 0, 0, 1.0, "TIFF");
-            else if (image_format == "bmp")
-                map_plot->saveBmp(save_directory + "/coef_plot_" + QString::number(i) + ".bmp");
-            else if (image_format == "png")
-                map_plot->savePng(save_directory + "/coef_plot_" + QString::number(i) + ".png");
-            else if (image_format == "jpg")
-                map_plot->saveJpg(save_directory + "/coef_plot_" + QString::number(i) + ".jpg");
-            else
-                map_plot->savePdf(save_directory + "/coef_plot_" + QString::number(i) + ".pdf");
             progress.setValue(++progress_it);
         }//end if (plot)
 

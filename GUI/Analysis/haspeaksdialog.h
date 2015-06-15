@@ -19,11 +19,13 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
+    void on_addPushButton_clicked();
+
+    void on_removePushButton_2_clicked();
+
 private:
     Ui::HasPeaksDialog *ui;
     QSharedPointer<VespucciDataset> dataset_;
-    QDoubleSpinBox *min_box_;
-    QDoubleSpinBox *max_box_;
     QTableWidget *table_widget_;
     VespucciWorkspace *workspace;
 

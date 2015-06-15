@@ -18,6 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "Data/Imaging/mapdata.h"
+#include <QtSvg>
 
 ///
 /// \brief MapData::MapData
@@ -251,6 +252,7 @@ void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation, int
     key_size +=50;
     value_size +=50;
     map_display_->resize(key_size, value_size);
+
 }
 
 ///
@@ -434,6 +436,7 @@ bool MapData::saveTiff(const QString &fileName, int width, int height, double sc
     map_qcp_->replot();
     return success;
 }
+
 
 void MapData::ExportText()
 {

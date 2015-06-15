@@ -10,8 +10,6 @@ HasPeaksDialog::HasPeaksDialog(QWidget *parent, VespucciWorkspace *ws, int row) 
     dataset_ = ws->DatasetAt(row);
     workspace = ws;
     table_widget_ = findChild<QTableWidget *>("tableWidget");
-    min_box_ = findChild<QDoubleSpinBox *>("minDoubleSpinBox");
-    max_box_ = findChild<QDoubleSpinBox *>("maxDoubleSpinBox");
 
     table_widget_->setRowCount(1);
     table_widget_->setColumnCount(2);
@@ -26,12 +24,21 @@ HasPeaksDialog::~HasPeaksDialog()
 
 void HasPeaksDialog::on_buttonBox_accepted()
 {
+    if (table_widget_->rowCount() == 0){
+        return;
+    }
     mat points(table_widget_->rowCount(), 2);
     bool ok = true;
     double left, right;
     for (unsigned int i = 0; i < table_widget_->rowCount(); ++i){
-        left = table_widget_->itemAt(i, 0)->text().toDouble(&ok);
-        right = table_widget_->itemAt(i, 1)->text().toDouble(&ok);
+        if (!table_widget_->item(i,0) || !table_widget_->item(i,1)){
+            ok = false;
+        }
+        else{
+            left = table_widget_->item(i, 0)->text().toDouble(&ok);
+            right = table_widget_->item(i, 1)->text().toDouble(&ok);
+        }
+
         if(!ok){
             QMessageBox::warning(this,
                                  "Parsing Error",
@@ -42,6 +49,7 @@ void HasPeaksDialog::on_buttonBox_accepted()
             points(i, 1) = 0; //ranges with equal values are skipped
         }
         else{
+
             points(i, 0) = left;
             points(i, 1) = right;
         }
@@ -52,4 +60,17 @@ void HasPeaksDialog::on_buttonBox_accepted()
     catch(exception e){
         workspace->main_window()->DisplayExceptionWarning(e);
     }
+}
+
+void HasPeaksDialog::on_addPushButton_clicked()
+{
+
+    int row = table_widget_->rowCount();
+    table_widget_->insertRow(row);
+}
+
+void HasPeaksDialog::on_removePushButton_2_clicked()
+{
+    int row = table_widget_->currentRow();
+    table_widget_->removeRow(row);
 }

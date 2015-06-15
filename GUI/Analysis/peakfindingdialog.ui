@@ -521,6 +521,16 @@
      </item>
      <item>
       <property name="text">
+       <string>svg</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>emf</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>tif</string>
       </property>
      </item>

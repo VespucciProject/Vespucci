@@ -33,6 +33,7 @@
 
 QT       += core gui
 QT       += widgets printsupport
+QT       += svg
 CONFIG   += static
 mac: CONFIG += app_bundle
 mac: ICON = vespuccilogo.icns
@@ -145,7 +146,8 @@ SOURCES += main.cpp\
     Math/Fitting/linleastsq.cpp \
     Math/Fitting/nonlinleastsq.cpp \
     GUI/Analysis/peakfindingdialog.cpp \
-    GUI/Analysis/haspeaksdialog.cpp
+    GUI/Analysis/haspeaksdialog.cpp \
+    Global/vespucci.cpp
 
 
 HEADERS  += \
@@ -211,7 +213,8 @@ HEADERS  += \
     Math/Fitting/linleastsq.h \
     Math/Fitting/nonlinleastsq.h \
     GUI/Analysis/peakfindingdialog.h \
-    GUI/Analysis/haspeaksdialog.h
+    GUI/Analysis/haspeaksdialog.h \
+    Global/vespucci.h
 
 
 FORMS    += \

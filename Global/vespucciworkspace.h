@@ -25,6 +25,7 @@
 #include "Data/Dataset/vespuccidataset.h"
 
 #include "Math/VespucciMath.h"
+#include "Global/vespucci.h"
 #include <qcustomplot.h>
 #include "GUI/mainwindow.h"
 #include "GUI/QAbstractItemModel/datasetlistmodel.h"
@@ -41,7 +42,7 @@ class VespucciWorkspace
 public:
     VespucciWorkspace();
     ~VespucciWorkspace();
-    QStringList dataset_names();
+    QStringList dataset_names() const;
     //QStringList map_names();
 
     //adds or removes dataset or map to relevant lists
@@ -55,21 +56,21 @@ public:
     //void RemoveMapAt(int i);
 
 
-    int dataset_loading_count();
+    int dataset_loading_count() const;
     //int map_loading_count();
 
     void set_directory(QString directory);
-    QString directory();
+    QString directory() const;
     QString *directory_ptr();
 
     void SetPointers(MainWindow *main_window);
 
     MainWindow* main_window();
-    double GetWavelengthMin(int row);
-    double GetWavelengthMax(int row);
+    double GetWavelengthMin(int row) const;
+    double GetWavelengthMax(int row) const;
 
     //VespucciDataset* DatasetAt(int i);
-    QSharedPointer<VespucciDataset> DatasetAt(int i);
+    QSharedPointer<VespucciDataset> DatasetAt(int i) const;
 
     QCPRange *global_data_range();
     QCPColorGradient *global_gradient();
@@ -88,8 +89,11 @@ public:
     void SetListWidgetModel(DatasetListModel *model);
     void SetDatasets(QList<QSharedPointer<VespucciDataset> > *datasets);
     unsigned int UpdateCount();
-    DatasetListModel *dataset_list_model();
+    DatasetListModel *dataset_list_model() const;
     void CleanLogFiles();
+
+    //bool SavePlot(QCustomPlot *plot, const QString filename) const;
+
 
 private:
     //pointers to main window and necessary widgets
