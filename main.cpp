@@ -27,6 +27,8 @@
 #include <fstream>
 #include "Data/Imaging/mapdata.h"
 #include "Global/vespucciworkspace.h"
+#include <boost/program_options.hpp>
+#include <cassert>
 
 ///
 /// \brief main
@@ -37,8 +39,26 @@
 int main(int argc, char *argv[])
 {
     //logs of program output which can be viewed after program run.
-    //std::freopen("stdout_log.txt", "w", stdout);
-    //std::freopen("stderr_log.txt", "w", stderr);
+    //This can be used for bug reports
+    //Users can include stdout_log, stderr_log and the dataset log in bug reports
+    //this is disabled for the debug config because I prefer to look at stderr and
+    //stdout output directly when debugging.
+
+#ifdef QT_NO_DEBUG
+    std::freopen("stdout_log.txt", "w", stdout);
+    std::freopen("stderr_log.txt", "w", stderr);
+#endif
+
+    //parse the config file
+    /*
+    namespace po = boost::program_options
+
+    po::options_description config("Configuration");
+    config.add_options()
+            ("R_HOME", po::value<std::string>(&opt)->default_value("C:/Tools/R/R-3.1.3"))
+            ("OCTAVE_DLL_PATH", po::value(&opt)<std::string>->default_value("C:/Octave/Octave-4.0.0/bin"));
+    */
+
     //Launch QApplication instance
 
     QApplication a(argc, argv);

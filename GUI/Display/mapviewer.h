@@ -85,6 +85,8 @@ private slots:
 
     void on_actionExport_Values_triggered();
 
+    void on_actionSet_Font_triggered();
+
 private:
     Ui::MapViewer *ui;
     ///

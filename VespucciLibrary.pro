@@ -42,8 +42,8 @@ isEmpty(PREFIX) {
     PREFIX = $$PWD/../../Vespucci-install
 }
 # it is assumed that casual windows users will not use the build system to install
-TARGET = vespucci
-TEMPLATE = app
+TARGET = libvespucci
+TEMPLATE = lib
 
 
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.

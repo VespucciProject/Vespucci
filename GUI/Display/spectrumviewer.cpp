@@ -328,13 +328,6 @@ void SpectrumViewer::on_pushButton_clicked()
     results.insert_rows(0, wavelength);
     results.insert_rows(1, spectrum);
     results = results.t();
-    QString description =
-            map_data_->name()
-            +" ("
-            +QString::number(current_x_)
-            +", "
-            +QString::number(current_y_)
-            +")";
 
     if ( (extension== "pdf")
        ||(extension == "tif")

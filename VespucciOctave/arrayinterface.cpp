@@ -1,7 +1,7 @@
 #include "arrayinterface.h"
 
-ArrayInterface::ArrayInterface()
+
+ArrayInterface::ArrayInterface(Array<double>::ArrayRep *new_rep) : rep(new_rep)
 {
 
 }
-

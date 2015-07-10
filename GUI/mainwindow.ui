@@ -75,6 +75,7 @@
      <string>File</string>
     </property>
     <addaction name="actionImport_Dataset_from_File"/>
+    <addaction name="actionImport_From_Multiple_Point_Spectra"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -384,6 +385,11 @@
   <action name="actionCalculate_Peak_Populations">
    <property name="text">
     <string>Calculate Peak Populations</string>
+   </property>
+  </action>
+  <action name="actionImport_From_Multiple_Point_Spectra">
+   <property name="text">
+    <string>Import From Multiple Point Spectra</string>
    </property>
   </action>
  </widget>

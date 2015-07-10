@@ -169,6 +169,8 @@ public:
     void LaunchDataExtractor();
     bool crisp_clusters();
     void SetCrispClusters(bool arg1);
+    void SetFonts(const QFont &font);
+
 private:
     ///
     /// \brief x_axis_description_

@@ -150,7 +150,7 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_file_ = log_file;
     log_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
-    log_stream_ << "Version 0.4" << endl << endl;
+    log_stream_ << "Version 1.0" << endl << endl;
     log_stream_ << "Dataset " << name << "created "
                 << datetime.date().toString("yyyy-MM-dd") << "T"
                 << datetime.time().toString("hh:mm:ss") << "Z" << endl;
@@ -223,8 +223,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_file_ = log_file;
 
-    log_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
-    log_stream_ << "Version 0.4" << endl << endl;
+
     log_stream_ << "Dataset " << name << " created "
                 << datetime.date().toString("yyyy-MM-dd") << "T"
                 << datetime.time().toString("hh:mm:ss") << "Z" << endl;
@@ -321,6 +320,55 @@ VespucciDataset::VespucciDataset(QString text_filename,
     main_window_ = main_window;
 }
 
+VespucciDataset::VespucciDataset(QMap<QPair<int, int>, QString> text_filenames,
+                                 MainWindow *main_window,
+                                 QString *directory,
+                                 QFile *log_file,
+                                 QString name,
+                                 QString x_axis_description,
+                                 QString y_axis_description,
+                                 int rows, int cols)
+     : log_stream_(log_file)
+{
+    QDateTime datetime = QDateTime::currentDateTimeUtc();
+    log_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
+    log_stream_ << "Version 1.0" << endl << endl;
+    log_stream_ << "Dataset " << name << "created "
+                << datetime.date().toString("yyyy-MM-dd") << "T"
+                << datetime.time().toString("hh:mm:ss") << "Z" << endl;
+    log_stream_ << "Created from multiple text files"<< endl;
+    non_spatial_ = false;
+    meta_ = false;
+    //Set up variables unrelated to hyperspectral data:
+    map_list_model_ = new MapListModel(main_window, this);
+    map_loading_count_ = 0;
+    principal_components_calculated_ = false;
+    mlpack_pca_calculated_ = false;
+    partial_least_squares_calculated_ = false;
+    vertex_components_calculated_ = false;
+    k_means_calculated_ = false;
+    z_scores_calculated_ = false;
+    directory_ = directory;
+    flipped_ = false;
+    try{
+        constructor_canceled_ = TextImport::ImportMultiplePoints(text_filenames,
+                                                                 rows, cols,
+                                                                 spectra_,
+                                                                 wavelength_,
+                                                                 x_,
+                                                                 y_);
+
+    }
+    catch(exception e){
+        string reason = "Multi import constructor: " + string(e.what());
+        throw std::runtime_error(reason.c_str());
+    }
+    name_ = name;
+    x_axis_description_ = x_axis_description;
+    y_axis_description_ = y_axis_description;
+    main_window_ = main_window;
+}
+
 ///
 /// \brief VespucciDataset::VespucciDataset
 /// \param name The name of the dataset displayed to the user
@@ -343,6 +391,8 @@ VespucciDataset::VespucciDataset(QString name,
     log_file_ = log_file;
     map_list_model_ = new MapListModel(main_window, this);
     QDateTime datetime = QDateTime::currentDateTimeUtc();
+    log_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
+    log_stream_ << "Version 1.0" << endl << endl;
     log_stream_ << "Dataset " << name << "created "
                 << datetime.date().toString("yyyy-MM-dd") << "T"
                 << datetime.time().toString("hh:mm:ss") << "Z" << endl;

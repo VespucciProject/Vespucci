@@ -58,6 +58,7 @@ MapData::MapData(QString x_axis_description,
     map_display_ = new MapViewer(name_, directory_, this);
     map_qcp_ = map_display_->findChild<QCustomPlot *>("mapView");
     map_ = new QCPColorMap(map_qcp_->xAxis, map_qcp_->yAxis);
+    map_->setTightBoundary(false);
     map_->setGradient(gradient);
     map_qcp_->addPlottable(map_);
     map_->data()->setKeyRange(parent->KeyRange());
@@ -897,4 +898,12 @@ void MapData::SetCrispClusters(bool arg1)
 {
     crisp_clusters_ = arg1;
     return;
+}
+
+void MapData::SetFonts(const QFont &font)
+{
+    Vespucci::SetQCPFonts(map_qcp_, font);
+    QCPColorScale *color_scale = qobject_cast<QCPColorScale*>(map_qcp_->plotLayout()->element(0, 1));
+    color_scale->axis()->setTickLabelFont(font);
+    color_scale->axis()->setLabelFont(font);
 }

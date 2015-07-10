@@ -147,7 +147,8 @@ SOURCES += main.cpp\
     Math/Fitting/nonlinleastsq.cpp \
     GUI/Analysis/peakfindingdialog.cpp \
     GUI/Analysis/haspeaksdialog.cpp \
-    Global/vespucci.cpp
+    Global/vespucci.cpp \
+    GUI/Processing/multiimportdialog.cpp
 
 
 HEADERS  += \
@@ -214,7 +215,8 @@ HEADERS  += \
     Math/Fitting/nonlinleastsq.h \
     GUI/Analysis/peakfindingdialog.h \
     GUI/Analysis/haspeaksdialog.h \
-    Global/vespucci.h
+    Global/vespucci.h \
+    GUI/Processing/multiimportdialog.h
 
 
 FORMS    += \
@@ -248,7 +250,8 @@ FORMS    += \
     GUI/Analysis/vcadialog.ui \
     GUI/scriptdialog.ui \
     GUI/Analysis/peakfindingdialog.ui \
-    GUI/Analysis/haspeaksdialog.ui
+    GUI/Analysis/haspeaksdialog.ui \
+    GUI/Processing/multiimportdialog.ui
 
 RESOURCES += \
     resources.qrc

@@ -84,6 +84,14 @@ public:
                     QString y_axis_description,
                     bool swap_spatial,
                     std::string format);
+    VespucciDataset(QMap<QPair<int,int>, QString> text_filenames,
+                    MainWindow *main_window,
+                    QString *directory,
+                    QFile *log_file,
+                    QString name,
+                    QString x_axis_description,
+                    QString y_axis_description,
+                    int rows, int cols);
 
     VespucciDataset(QString vespucci_binary_filename,
                     MainWindow *main_window,

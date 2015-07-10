@@ -40,8 +40,14 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
     else if (extension == "svg"){
         QPicture picture;
         QCPPainter qcp_painter(&picture);
-        plot->toPainter(&qcp_painter);
+        qcp_painter.setMode(QCPPainter::pmVectorized);
 
+        QPixmap old_background = plot->background();
+        plot->setBackground(Qt::transparent);
+        plot->replot();
+
+        plot->toPainter(&qcp_painter);
+        qcp_painter.end();
 
         QSvgGenerator generator;
         generator.setFileName(filename);
@@ -51,15 +57,25 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         painter.begin(&generator);
         painter.drawPicture(0, 0, picture);
         painter.end();
+
+        plot->setBackground(old_background);
+        plot->replot();
     }
     else if (extension == "emf"){
         QStringList filename_trunk_list = filename_list;
         filename_trunk_list.removeLast();
         QString filename_trunk = filename_trunk_list.join(".");
         QString SVG_filename = filename_trunk + ".svg";
+
         QPicture picture;
         QCPPainter qcp_painter(&picture);
+        qcp_painter.setMode(QCPPainter::pmVectorized);
+        QPixmap old_background = plot->background();
+        plot->setBackground(Qt::transparent);
+        plot->replot();
+
         plot->toPainter(&qcp_painter);
+        qcp_painter.end();
 
         QSvgGenerator generator;
         generator.setFileName(SVG_filename);
@@ -69,6 +85,9 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         painter.begin(&generator);
         painter.drawPicture(0, 0, picture);
         painter.end();
+
+        plot->setBackground(old_background);
+        plot->replot();
 
         //call java program "EMFGenerator" to convert svg file then
         QProcess *process = new QProcess(0);
@@ -98,4 +117,28 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
     }
 
     return success;
+}
+
+///
+/// \brief Vespucci::SetQCPFonts
+/// \param plot
+/// \param font
+///
+void Vespucci::SetQCPFonts(QCustomPlot *plot, const QFont &font)
+{
+    plot->setFont(font);
+
+    plot->xAxis->setLabelFont(font);
+    plot->xAxis->setTickLabelFont(font);
+
+    plot->xAxis2->setLabelFont(font);
+    plot->xAxis2->setTickLabelFont(font);
+
+    plot->yAxis->setLabelFont(font);
+    plot->yAxis->setTickLabelFont(font);
+
+    plot->yAxis2->setLabelFont(font);
+    plot->yAxis2->setTickLabelFont(font);
+
+    plot->legend->setFont(font);
 }

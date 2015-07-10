@@ -44,6 +44,7 @@
 #include "GUI/scriptdialog.h"
 #include "GUI/Analysis/peakfindingdialog.h"
 #include "GUI/Analysis/haspeaksdialog.h"
+#include "GUI/Processing/multiimportdialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -1089,4 +1090,10 @@ void MainWindow::on_actionCalculate_Peak_Populations_triggered()
     int row = dataset_list_view_->currentIndex().row();
     HasPeaksDialog *peaks_dialog = new HasPeaksDialog(this, workspace, row);
     peaks_dialog->show();
+}
+
+void MainWindow::on_actionImport_From_Multiple_Point_Spectra_triggered()
+{
+    MultiImportDialog *import_dialog = new MultiImportDialog(this, workspace);
+    import_dialog->show();
 }

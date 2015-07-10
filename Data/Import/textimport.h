@@ -50,6 +50,13 @@ namespace TextImport
                          bool swap_spatial,
                          QProgressDialog *progress);
 
+    bool ImportMultiplePoints(QMap<QPair<int,int>, QString> filenames,
+                              int rows,
+                              int cols,
+                              arma::mat& spectra,
+                              arma::vec& wavelength,
+                              arma::vec& x, arma::vec& y);
+
     bool CheckFileValidity(QString filename, bool &comma_decimals);
 }
 

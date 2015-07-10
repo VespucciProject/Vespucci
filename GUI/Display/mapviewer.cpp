@@ -37,6 +37,7 @@ MapViewer::MapViewer(QString name, QString *directory, MapData *parent):
 
     qcp_= this->findChild<QCustomPlot *>("mapView");
     qcp_->setBackground(this->palette().window());
+
     parent_ = parent;
     //color_map_ = qobject_cast<QCPColorMap *>(color_map_abs);
 
@@ -353,3 +354,17 @@ void MapViewer::on_actionExport_Values_triggered()
     parent_->ExportText();
 }
 
+
+void MapViewer::on_actionSet_Font_triggered()
+{
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok,
+                                      QFont("Arial", 12, QFont::Normal),
+                                      this, "Select Font");
+    if (ok){
+        parent_->SetFonts(font);
+
+    }
+
+
+}

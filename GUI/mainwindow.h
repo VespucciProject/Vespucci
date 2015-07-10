@@ -145,6 +145,8 @@ private slots:
 
     void on_actionCalculate_Peak_Populations_triggered();
 
+    void on_actionImport_From_Multiple_Point_Spectra_triggered();
+
 private:
     Ui::MainWindow *ui;
 
