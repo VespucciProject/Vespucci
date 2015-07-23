@@ -19,5 +19,27 @@
 *******************************************************************************/
 #ifndef LINLEASTSQ_H
 #define LINLEASTSQ_H
+#include "Math/VespucciMath.h"
+namespace Vespucci{
+    namespace Math{
+        namespace LinLeastSq{
+            arma::uword IModPoly(const arma::vec &spectrum, const arma::vec &abscissa,
+                           arma::vec &baseline, arma::vec &corrected,
+                           double &err,
+                           const arma::uword poly_order,
+                           const arma::uword max_it,
+                           const double threshold);
+
+            double CalcDev(const arma::vec &spectrum, const arma::vec &fit);
+            arma::uvec NonPeakInd(const arma::vec &spectrum, const double dev);
+            arma::vec CalcPoly(const arma::vec &coefs, const arma::vec &x);
+            arma::vec OrdinaryLeastSquares(const mat &X, const arma::vec &y);
+            arma::mat Vandermonde(const arma::vec &x, const int poly_order);
+            double CalcErr(const double &dev, const double &prev_dev);
+        }
+    }
+
+}
+
 
 #endif // LINLEASTSQ_H
