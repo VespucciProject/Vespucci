@@ -230,12 +230,14 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QStringList methods;
-    methods << "Min/Max" << "Vector Norm" << "Unit Area" << "Z-score" << "Peak Intensity" << "Scale Spectra" << "Absolute Value" << "Mean Center";
+    methods << "Min/Max" << "Vector Norm" << "Unit Area" << "Z-score"
+            << "Standard Normal Variate" << "Peak Intensity" << "Scale Spectra"
+            << "Absolute Value" << "Mean Center";
     bool ok;
     QString item = QInputDialog::getItem(this,
                                          tr("Normalization/Standardization"),
                                          tr("Method:"), methods, 0, false, &ok);
-    double scaling_factor;
+    double scaling_factor, offset;
     try{
         if (ok && item == "Min/Max"){data->MinMaxNormalize();}
         else if (ok && item == "Vector Norm"){data->VectorNormalize();}
@@ -253,6 +255,11 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
             scaling_factor = QInputDialog::getDouble(this, tr("Enter Scaling Factor"),
                                                      tr("Factor"), 1, -100, 100, 2, &ok);
             data->Scale(scaling_factor);
+        }
+        else if (ok && item == "Standard Normal Variate"){
+            offset = QInputDialog::getDouble(this, "Enter Offset", "Offset",
+                                             0, -2147483647, 2147483647, 4, &ok);
+            data->SNVNormalize(offset);
         }
         else if (ok && item == "Absolute Value"){data->AbsoluteValue();}
         else

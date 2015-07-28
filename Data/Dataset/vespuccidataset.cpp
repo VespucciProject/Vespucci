@@ -836,7 +836,7 @@ void VespucciDataset::SNVNormalize(double offset)
     log_stream_ << "SNVNormalize" << endl;
     SetOldCopies();
     try{
-        spectra_ = Vespucci::Math::Normalization::StandardScoreMat(spectra_);
+        spectra_ = Vespucci::Math::Normalization::SNVNorm(spectra_, offset);
     }
     catch(exception e){
         char str[50];
@@ -845,7 +845,6 @@ void VespucciDataset::SNVNormalize(double offset)
         throw std::runtime_error(str);
     }
 
-    z_scores_calculated_ = true;
     last_operation_ = "Z-score normalize";
 }
 
