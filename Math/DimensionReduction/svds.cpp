@@ -17,7 +17,7 @@
 /// \param s a vector with n
 /// \param V
 /// \return Whether or not algorithm converged.
-
+/*
 bool Vespucci::Math::DimensionReduction::svds(const arma::mat &X, arma::uword k, arma::mat &U, arma::vec &s, arma::mat &V)
 {
     if (X.n_cols < 2){
@@ -92,3 +92,4 @@ bool Vespucci::Math::DimensionReduction::svds(const arma::mat &X, arma::uword k,
     V = V.cols(indices);
     return eigs_success;
 }
+*/

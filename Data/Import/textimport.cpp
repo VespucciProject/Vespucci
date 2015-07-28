@@ -26,7 +26,6 @@ bool TextImport::ImportWideText(QString filename,
                                 QProgressDialog *progress,
                                 const QString sep)
 {
-    cout << "ImportWideText" << endl;
     bool comma_decimals;
     bool valid = CheckFileValidity(filename, comma_decimals);
     if(!valid){
@@ -140,7 +139,6 @@ bool TextImport::ImportLongText(QString filename,
                                 bool swap_spatial,
                                 QProgressDialog *progress)
 {
-    cout << "ImportLongText" << endl;
     bool comma_decimals;
     bool valid = CheckFileValidity(filename, comma_decimals);
     if (!valid)
@@ -184,7 +182,6 @@ bool TextImport::ImportLongText(QString filename,
     //This is the location of the maximum of each copy of the wavelength vector
     //The size of this vector is the number of spectra.
 
-    cout << "find max_indices" << endl;
     uvec max_indices = find(all_wavelength == wavelength_max);
 
     x.set_size(max_indices.n_elem);
@@ -193,7 +190,6 @@ bool TextImport::ImportLongText(QString filename,
     y = all_y.elem(max_indices);
     uword abscissa_size = all_data.n_rows / max_indices.n_elem;
     wavelength.set_size(abscissa_size);
-    cout << "get wavelength" << endl;
     wavelength = all_wavelength.subvec(0, abscissa_size - 1);
 
     spectra.set_size(wavelength.n_elem, x.n_elem);
@@ -204,7 +200,6 @@ bool TextImport::ImportLongText(QString filename,
     //Reading by columns because armadillo matrices are stored in column-major
     //format
     progress->setMaximum(spectra.n_cols);
-    cout << "loop" << endl;
     for (uword i = 0; i < spectra.n_cols; ++i){
         spectra.col(i) = all_spectra.rows(range_start, range_end);
         range_start += spectra.n_rows;
@@ -303,26 +298,30 @@ bool TextImport::ImportMultiplePoints(QMap<QPair<int, int>, QString> filenames,
     }
     typedef QMap<QPair<int, int>, QString>::iterator map_it;
     uword i = 0;
+    QString filename;
     for (map_it it = filenames.begin(); it!=filenames.end(); ++it){
         QPair<int, int> keys = it.key();
         x(i) = (double) keys.first;
         y(i) = (double) keys.second;
-        ok = current_spectrum.load(it.value().toStdString());
+        filename = it.value();
+        ok = current_spectrum.load(filename.toStdString());
         if (!have_abscissa && current_spectrum.n_cols == 2){
             if (current_spectrum.n_rows > current_spectrum.n_cols){
                 wavelength = current_spectrum.col(0);
+                current_spectrum.shed_col(0);
             }
             else{
                 wavelength = current_spectrum.row(0).t();
+                current_spectrum.shed_row(0);
             }
             have_abscissa = true;
         }
         try{
             if (current_spectrum.n_rows > current_spectrum.n_cols){
-                spectra.col(i) = current_spectrum.col(1);
+                spectra.col(i) = current_spectrum.col(0);
             }
             else{
-                spectra.col(i) = current_spectrum.row(1).t();
+                spectra.col(i) = current_spectrum.row(0).t();
             }
         }catch(std::exception e){
             spectra.clear();
@@ -334,7 +333,7 @@ bool TextImport::ImportMultiplePoints(QMap<QPair<int, int>, QString> filenames,
         }
 
          if (!ok){
-            std::cerr << "Could not load file " << filename << "." << std::endl;
+            std::cerr << "Could not load file " << filename.toStdString() << "." << std::endl;
         }
         ++i;
     }

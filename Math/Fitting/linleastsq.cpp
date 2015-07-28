@@ -132,7 +132,7 @@ arma::vec Vespucci::Math::LinLeastSq::CalcPoly(const arma::vec &coefs, const arm
     arma::vec y = coefs(0) + x*coefs(1); //0th and 1st power of x
     //this loop only used for powers where pow(x, power) needs to be calculated
     if (coefs.n_rows > 1){
-        for (uword i = 2; i < coefs.n_rows; ++i)
+        for (arma::uword i = 2; i < coefs.n_rows; ++i)
             y += coefs(i) * arma::pow(x, i);
     }
     return y;
@@ -163,7 +163,7 @@ arma::mat Vespucci::Math::LinLeastSq::Vandermonde(const arma::vec &x, const int 
     arma::mat X(x.n_rows, poly_order + 1);
     X.col(0) = arma::ones(x.n_rows); //faster than pow(X, 0)
     X.col(1) = x;
-    for (uword i = 2; i < X.n_cols; ++i)
+    for (arma::uword i = 2; i < X.n_cols; ++i)
         X.col(i) = arma::pow(x, i);
     return X;
 }

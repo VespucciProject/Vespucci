@@ -35,7 +35,7 @@ namespace Vespucci
                      arma::mat &projected_data, arma::mat &fractional_abundances);
             double estimate_snr(const arma::mat &R, arma::vec r_m, arma::mat x);
             //deprected by arma::svds() in armadillo 5+
-            bool svds(const arma::mat &X, arma::uword k, arma::mat &U, arma::vec &s, arma::mat &V);
+            //bool svds(const arma::mat &X, arma::uword k, arma::mat &U, arma::vec &s, arma::mat &V);
 
             int HySime(arma::mat y, arma::mat n, arma::mat Rn, arma::mat &Ek);
             void EstimateAdditiveNoise(arma::mat &noise, arma::mat &noise_correlation, const arma::mat &sample);

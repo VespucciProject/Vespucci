@@ -109,6 +109,36 @@ arma::vec Vespucci::Math::Fitting::FitGaussianPeak(arma::vec signal,
                                                    std::map<std::string, double> &stats,
                                                    arma::vec &residuals)
 {
+    /*
+    int i, ic, k, m, n, ntries;
+    int info;
+    int ma[60];
+    int na[60];
+    int nf[60];
+    int nj[60];
+    int np[60];
+    int nx[60];
+    double factor, fnorm1, fnorm2, tol;
+    double fjac[60*40];
+    double fvec[65];
+    double x[40];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
     int n = signal.n_rows;
     int m = 4;
     double p[m], opts[LM_OPTS_SZ], info[LM_INFO_SZ];
@@ -126,13 +156,24 @@ arma::vec Vespucci::Math::Fitting::FitGaussianPeak(arma::vec signal,
     //p[3] = w
 
 
-
-
     p[0] = signal.min(); //guess y0 to be the minimum value of the input area
     p[1] = arma::mean(signal - signal.min()); //guess xc to be mean of input area
     p[2] = signal.max() - signal.min(); //guess A to be "height" of input area
     p[3] = arma::stddev(signal - signal.min()); //guess w to be standard deviation of input area
     
+
+
+
+
+
+
+
+
+
+
+
+
+
     std::cout << "Initial Parameters" << std::endl;
     std::cout << "Parameter\tValue\n";
     std::cout << "y0\t" << p[0] << "\t" << std::endl;
@@ -283,4 +324,5 @@ arma::vec Vespucci::Math::Fitting::FitGaussianPeak(arma::vec signal,
 
 
     return fitted;
+    */
 }

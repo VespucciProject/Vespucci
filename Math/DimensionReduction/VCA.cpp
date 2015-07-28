@@ -55,7 +55,7 @@ bool Vespucci::Math::DimensionReduction::VCA(const arma::mat &R, arma::uword p,
     arma::mat Ud;
     arma::vec Sd;
     arma::mat Vd;
-    svds(R_o*trans(R_o)/N, p, Ud, Sd, Vd);
+    arma::svds(Ud, Sd, Vd, arma::sp_mat(arma::cov(R_o)/N), p);
     arma::mat x_p = trans(Ud) * R_o;
     double SNR = Vespucci::Math::DimensionReduction::estimate_snr(R, r_m, x_p);
     double SNR_th = 15 + 10*log10(p);
@@ -75,7 +75,7 @@ bool Vespucci::Math::DimensionReduction::VCA(const arma::mat &R, arma::uword p,
       }
     else{
         arma::uword d = p;
-        svds(R*R.t()/N, d, Ud, Sd, Vd); //R_o is a mean centered version...
+        arma::svds(Ud, Sd, Vd, arma::sp_mat(arma::cov(R)/N), d);//R_o is a mean centered version...
         x_p = trans(Ud)*R;
         projected_data = Ud * x_p.rows(0, d-1);
         arma::mat x = trans(Ud) * R;

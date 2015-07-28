@@ -433,3 +433,8 @@ win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/liblevmar.a
 
 
 
+
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lcminpack
+INCLUDEPATH += $$PWD/../MinGW_libs/include/cminpack-1
+DEPENDPATH += $$PWD/../MinGW_libs/include/cminpack-1
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libcminpack.a

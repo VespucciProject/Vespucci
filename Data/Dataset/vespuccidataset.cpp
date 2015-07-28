@@ -120,7 +120,8 @@ void VespucciDataset::DestroyLogFile()
             success = log_file_->copy(filename);
         }
         //new log file falls out of scope
-        log_file_->remove();
+        if(log_file_->isOpen()){log_file_->close();}
+        QFile::remove(log_file_->fileName());
 
         if (success)
             QMessageBox::information(main_window_, "Success!", "File " + filename + " written successfully");
@@ -1117,7 +1118,7 @@ void VespucciDataset::SingularValue(unsigned int singular_values)
     vec s;
     mat V;
     try{
-        Vespucci::Math::DimensionReduction::svds(spectra_, singular_values, U, s, V);
+        svds(U, s, V, sp_mat(spectra_), singular_values);
         spectra_ = -1 * U * diagmat(s) * V.t();
     }
     catch(exception e){

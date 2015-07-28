@@ -23,10 +23,11 @@
 #include "Math/Accessory/accessory.h"
 #include "Math/Accessory/accessory_impl.h"
 
-    #include <levmar.h>
-    #include <compiler.h>
-    #include <misc.h>
-
+    //#include <levmar.h>
+    //#include <compiler.h>
+    //#include <misc.h>
+#include<cminpack.h>
+#include<minpack.h>
 namespace Vespucci{
     namespace Math{
         namespace Fitting{
