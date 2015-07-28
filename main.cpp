@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
     //this is disabled for the debug config because I prefer to look at stderr and
     //stdout output directly when debugging.
 
+
 #ifdef QT_NO_DEBUG
     std::freopen("stdout_log.txt", "w", stdout);
     std::freopen("stderr_log.txt", "w", stderr);

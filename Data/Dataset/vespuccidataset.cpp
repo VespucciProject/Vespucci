@@ -131,6 +131,14 @@ void VespucciDataset::DestroyLogFile()
     return;
 }
 
+void VespucciDataset::SetOldCopies()
+{
+    spectra_old_ = spectra_;
+    x_old_ = x_;
+    y_old_ = y_;
+    wavelength_old_ = wavelength_;
+}
+
 ///
 /// \brief VespucciDataset::VespucciDataset
 /// \param binary_filename The filename of the binary input file
@@ -519,10 +527,8 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
                                   double y_min, double y_max,
                                   double wl_min, double wl_max)
 {
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+
+    SetOldCopies();
     if (!std::isnan(x_min) && !std::isnan(x_max) && !std::isnan(y_min) && !std::isnan(y_max)){
         uvec valid_indices = find ((x_ >= x_min) && (x_ <= x_max));
         try{
@@ -572,10 +578,7 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
 void VespucciDataset::MinMaxNormalize()
 {
     try{
-        spectra_old_ = spectra_;
-        x_old_ = x_;
-        y_old_ = y_;
-        wavelength_old_ = wavelength_;
+        SetOldCopies();
         vec spectrum_buffer;
         vec extrema_buffer;
         for (uword i = 0; i < spectra_.n_cols; ++i){
@@ -601,10 +604,7 @@ void VespucciDataset::MinMaxNormalize()
 void VespucciDataset::VectorNormalize()
 {
     log_stream_ << "Vector Normalization" << endl << endl;
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     try{
         spectra_ = normalise(spectra_old_);
         spectra_ = spectra_;
@@ -625,10 +625,7 @@ void VespucciDataset::VectorNormalize()
 void VespucciDataset::MeanCenter()
 {
     log_stream_ << "Mean Centering" << endl << endl;
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     try{
         vec mean_intensity = mean(spectra_, 1);
         spectra_.each_col() -= mean_intensity;
@@ -645,10 +642,7 @@ void VespucciDataset::MeanCenter()
 void VespucciDataset::UnitAreaNormalize()
 {
     log_stream_ << "UnitAreaNormalize" << endl << endl;
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     uword num_rows = spectra_.n_rows;
     uword num_cols = spectra_.n_cols;
 
@@ -678,10 +672,7 @@ void VespucciDataset::UnitAreaNormalize()
 ///
 void VespucciDataset::PeakIntensityNormalize(double left_bound, double right_bound)
 {
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     vec positions;
     vec peak_maxes = Vespucci::Math::Quantification::FindPeakMaxMat(spectra_, wavelength_, left_bound, right_bound, positions);
     for (uword j = 0; j < spectra_.n_cols; ++j){
@@ -699,10 +690,7 @@ void VespucciDataset::PeakIntensityNormalize(double left_bound, double right_bou
 ///
 void VespucciDataset::Booleanize(double min, double max, bool keep_inside, bool oneify)
 {
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     last_operation_ = "Booleanize";
     log_stream_
             << "Booleanize" << endl << "min = " << min << endl <<"max = "
@@ -739,10 +727,7 @@ void VespucciDataset::Booleanize(double min, double max, bool keep_inside, bool 
 ///
 void VespucciDataset::Clamp(double min, double max)
 {
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     last_operation_ = "Clamp";
     log_stream_ << "Clamp" << endl << "min = "<< min << endl << "max = " << max << endl;
 
@@ -758,6 +743,7 @@ void VespucciDataset::Clamp(double min, double max)
 
 void VespucciDataset::ShedZeroSpectra()
 {
+    SetOldCopies();
     vec current_col;
     uvec indices;
     uvec indices_buffer;
@@ -780,10 +766,7 @@ void VespucciDataset::ShedZeroSpectra()
 void VespucciDataset::ShedZeroWavelengths()
 {
     log_stream_ << "ShedZeroWavelengths" << endl;
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     vec current_row;
     uvec indices, indices_buffer;
     for (uword i = 0; i < spectra_.n_rows; ++i){
@@ -831,12 +814,8 @@ mat VespucciDataset::ZScoreNormCopy()
 void VespucciDataset::ZScoreNormalize()
 {
     log_stream_ << "ZScoreNormalize" << endl;
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
 
-    mat normalized;
     try{
         spectra_ = Vespucci::Math::Normalization::StandardScoreMat(spectra_);
     }
@@ -852,13 +831,28 @@ void VespucciDataset::ZScoreNormalize()
 
 }
 
+void VespucciDataset::SNVNormalize(double offset)
+{
+    log_stream_ << "SNVNormalize" << endl;
+    SetOldCopies();
+    try{
+        spectra_ = Vespucci::Math::Normalization::StandardScoreMat(spectra_);
+    }
+    catch(exception e){
+        char str[50];
+        strcat(str, "SNVNormalize: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+
+    z_scores_calculated_ = true;
+    last_operation_ = "Z-score normalize";
+}
+
 void VespucciDataset::AbsoluteValue()
 {
     log_stream_ << "AbsoluteValue" << endl;
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
 
     try{
         spectra_ = arma::abs(spectra_);
@@ -887,10 +881,7 @@ void VespucciDataset::SubtractBackground(mat background, QString filename)
 {
     log_stream_ << "SubtractBackground" << endl;
     log_stream_ << "filename == " << filename << endl << endl;
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     if (background.n_rows != spectra_.n_rows){
         QMessageBox::warning(0,
                              "Improper Dimensions!",
@@ -928,10 +919,7 @@ void VespucciDataset::Baseline(QString method, int parameter)
     log_stream_ << "Baseline" << endl;
     log_stream_ << "method == " << method << endl;
     log_stream_ << "parameter == " << parameter << endl;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
-    spectra_old_ = spectra_;
+    SetOldCopies();
     uword i, j;
     umat positions;
     try{
@@ -979,10 +967,7 @@ void VespucciDataset::Baseline(QString method, int parameter)
 /// Removes spectra with a maximum value at or above the threshold
 void VespucciDataset::RemoveClippedSpectra(double threshold)
 {
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     rowvec spectra_max = max(spectra_, 0);
 
     uvec valid_indices = find(spectra_max < threshold);
@@ -1011,10 +996,7 @@ void VespucciDataset::RemoveClippedSpectra(double threshold)
 /// Removes "flat" spectra whose maximum is less than the threshold
 void VespucciDataset::RemoveFlatSpectra(double threshold)
 {
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     rowvec spectra_max = max(spectra_, 0);
 
     uvec valid_indices = find(spectra_max > threshold);
@@ -1049,10 +1031,7 @@ void VespucciDataset::MedianFilter(unsigned int window_size)
     log_stream_ << "MedianFilter" << endl;
     log_stream_ << "window_size == " << window_size << endl << endl;
     mat processed;
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     try{
         processed = Vespucci::Math::Smoothing::MedianFilterMat(spectra_, window_size);
         spectra_ = processed;
@@ -1078,10 +1057,7 @@ void VespucciDataset::LinearMovingAverage(unsigned int window_size)
     log_stream_ << "LinearMovingAverage" << endl;
     log_stream_ << "window_size == " << window_size << endl << endl;
 
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     try{
         vec filter = Vespucci::Math::Smoothing::CreateMovingAverageFilter(window_size);
         for (uword j = 0; j < spectra_.n_cols; ++j){
@@ -1110,10 +1086,7 @@ void VespucciDataset::SingularValue(unsigned int singular_values)
 {
     log_stream_ << "SingularValue" << endl;
     log_stream_ << "singular_values == " << singular_values << endl << endl;
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     mat U;
     vec s;
     mat V;
@@ -1139,6 +1112,7 @@ void VespucciDataset::SingularValue(unsigned int singular_values)
 /// of the matrix.
 int VespucciDataset::QUIC_SVD(double epsilon)
 {
+    SetOldCopies();
     int SVD_rank;
     log_stream_ << "QUIC_SVD" << endl;
     log_stream_ << "epsilon == " << epsilon << endl << endl;
@@ -1148,13 +1122,9 @@ int VespucciDataset::QUIC_SVD(double epsilon)
     cout << "create copy" << endl;
     SVD_rank = u.n_cols;
     log_stream_ << "rank of approximation = " << SVD_rank << endl;
-    copy = u * sigma * v.t();
+    spectra_ = u * sigma * v.t();
     last_operation_ = "truncated SVD de-noise";
     cout << "Copy operations" << endl;
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
     spectra_ = copy;
     return SVD_rank;
 
@@ -1175,10 +1145,8 @@ void VespucciDataset::SavitzkyGolay(unsigned int derivative_order,
     log_stream_ << "derivative_order == " << derivative_order << endl;
     log_stream_ << "polynomial_order == " << polynomial_order << endl;
     log_stream_ << "window_size == " << window_size << endl << endl;
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
+
     try{
         spectra_ = Vespucci::Math::Smoothing::sgolayfilt(spectra_,
                                         polynomial_order,
@@ -1200,10 +1168,8 @@ void VespucciDataset::Scale(double scaling_factor)
 {
     log_stream_ << "Scale" << endl;
     log_stream_ << "scaling_factor = " << scaling_factor << endl;
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
+
     try{
         spectra_ = spectra_ * scaling_factor;
     }catch(exception e){
@@ -1226,10 +1192,7 @@ void VespucciDataset::ShedSpectrum(const uword index)
     cout << "index = " << index << "x = " << x_(index) << " y = " << y_(index) << endl;
     log_stream_ << "Shed Spectrum" << endl;
     log_stream_ << "index = " << index << "x = " << x_(index) << " y = " << y_(index) << endl;
-    spectra_old_ = spectra_;
-    x_old_ = x_;
-    y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    SetOldCopies();
     cout << "spectra columns = " << spectra_.n_cols;
     try{
         spectra_.shed_col(index);

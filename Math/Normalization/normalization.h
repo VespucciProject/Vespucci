@@ -29,6 +29,8 @@ namespace Vespucci
         {
             arma::vec StandardScore(const arma::vec &X);
             arma::mat StandardScoreMat(const arma::mat &X);
+
+            arma::mat SNVNorm(const arma::mat &X, const double offset);
         }
     }
 }

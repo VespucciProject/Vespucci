@@ -45,7 +45,17 @@ arma::vec Vespucci::Math::Normalization::StandardScore(const arma::vec &X)
 arma::mat Vespucci::Math::Normalization::StandardScoreMat(const arma::mat &X)
 {
     arma::mat normalized = X;
-    for (arma::uword j = 0; j < normalized.n_cols; ++j)
-        normalized.col(j) = StandardScore(normalized.col(j));
-    return normalized;
+    arma::rowvec means = mean(X);
+    arma::rowvec std_devs = arma::stddev(X);
+    normalized.each_row() -= means;
+    std_devs.transform( [](double val){return 1.0 / val;}); //probably faster than finding inverse of diagonal matrix?
+    return normalized * arma::diagmat(std_devs);
+}
+
+
+arma::mat Vespucci::Math::Normalization::SNVNorm(const arma::mat &X, const double offset)
+{
+    arma::rowvec weights = arma::stddev(X, 0) + offset*arma::ones(1, X.n_cols);
+    weights.transform( [](double val){return 1.0 / val;});
+    return X * arma::diagmat(weights);
 }

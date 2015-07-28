@@ -135,6 +135,7 @@ public:
     void VectorNormalize();
     void MeanCenter();
     void ZScoreNormalize();
+    void SNVNormalize(double offset);
     void AbsoluteValue();
     void UnitAreaNormalize();
     void PeakIntensityNormalize(double peak_position);
@@ -361,6 +362,7 @@ public:
     void AddAnalysisResults(std::map<std::string, mat> results);
 
     void DestroyLogFile();
+    void SetOldCopies();
 
 private:
 
