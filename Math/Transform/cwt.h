@@ -24,6 +24,10 @@ namespace Vespucci
 {
     namespace Math
     {
+    /// \namespace Vespucci::Math::DimensionReduction
+    /// \brief A namespace for math functions relating to transforms
+    ///
+    ///
         namespace Transform
         {
             arma::mat cwt(arma::vec X, std::string wavelet, arma::uvec scales);

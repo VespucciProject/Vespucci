@@ -25,6 +25,10 @@ namespace Vespucci
 {
     namespace Math
     {
+    /// \namespace Vespucci::Math::Normalization
+    /// \brief A namespace for math functions relating to normalization.
+    ///
+    ///
         namespace Normalization
         {
             arma::vec StandardScore(const arma::vec &X);

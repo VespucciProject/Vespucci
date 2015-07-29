@@ -25,6 +25,10 @@ namespace Vespucci
 {
     namespace Math
     {
+        /// \namespace Vespucci::Math::DimensionReduction
+        /// \brief A namespace for math functions relating to dimension reduction.
+        ///
+        ///
         namespace DimensionReduction
         {
             bool plsregress(arma::mat X, arma::mat Y, int components,

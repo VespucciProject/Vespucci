@@ -22,6 +22,11 @@
 #include "Math/VespucciMath.h"
 namespace Vespucci{
     namespace Math{
+        /// \namespace Vespucci::Math:::LinLeastSq
+        /// \brief A namespace for math functions relating to linear
+        /// least squares regression.
+        ///
+        ///
         namespace LinLeastSq{
             arma::uword IModPoly(const arma::vec &spectrum, const arma::vec &abscissa,
                            arma::vec &baseline, arma::vec &corrected,

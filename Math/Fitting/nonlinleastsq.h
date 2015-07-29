@@ -30,6 +30,10 @@
 #include<minpack.h>
 namespace Vespucci{
     namespace Math{
+    /// \namespace Vespucci::Math::Fitting
+    /// \brief A namespace for math functions relating to non-linear curve fitting
+    ///
+    ///
         namespace Fitting{
             arma::vec FitBaseline(arma::vec signal, std::string function, std::vector<double> initial_params, std::vector<double> lims);
             arma::vec FitGaussianPeak(arma::vec signal, int iterations, std::string &reason, std::map<std::string, std::pair<double, double> > &params, std::map<std::string, double> &stats, arma::vec &residuals);

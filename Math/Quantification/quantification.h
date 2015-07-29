@@ -25,6 +25,10 @@ namespace Vespucci
 {
     namespace Math
     {
+    /// \namespace Vespucci::Math::Quantification
+    /// \brief A namespace for math functions relating to peak quantification
+    ///
+    ///
         namespace Quantification
         {
             //Peak determination

@@ -31,4 +31,16 @@
 #include <Math/Fitting/linleastsq.h>
 #include <Math/Fitting/nonlinleastsq.h>
 
+
+namespace Vespucci{
+
+/// \namespace Vespucci::Math
+/// \brief A namespace for math functions
+///
+///
+namespace Math{
+
+    }
+}
+
 #endif // VESPUCCI_Math_H

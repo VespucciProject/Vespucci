@@ -26,6 +26,10 @@ namespace Vespucci
     namespace Math
     {
         //Peak detection (SPF)
+    /// \namespace Vespucci::Math::PeakFinding
+    /// \brief A namespace for math functions relating to peak detection and counting
+    ///
+    ///
         namespace PeakFinding
         {
             std::vector<Vespucci::Math::CWTRidge> FindRidges(arma::mat &coefs,

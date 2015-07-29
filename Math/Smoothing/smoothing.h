@@ -26,6 +26,10 @@ namespace Vespucci
 {
     namespace Math
     {
+    /// \namespace Vespucci::Math::Smoothing
+    /// \brief A namespace for math functions relating to filtering and smoothing signals.
+    ///
+    ///
         namespace Smoothing
         {
             arma::mat sgolay(arma::uword poly_order, arma::uword window_size, arma::uword deriv_order, arma::uword scaling_factor);
