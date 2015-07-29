@@ -1,0 +1,4 @@
+<map id="Vespucci::Math::DimensionReduction::plsregress" name="Vespucci::Math::DimensionReduction::plsregress">
+<area shape="rect" id="node2" href="$class_p_l_s_data.html#ade79be27d52f0edba28d719d9926453b" title="PLSData::Apply. " alt="" coords="236,13,351,39"/>
+<area shape="rect" id="node3" href="$class_vespucci_dataset.html#a300693f9bc5b14cbfc9ac710af4b09a1" title="VespucciDataset::PartialLeastSquares Performs PLS regression on data. Resulting map is score for one ..." alt="" coords="399,5,565,47"/>
+</map>

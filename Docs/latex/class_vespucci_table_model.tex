@@ -1,0 +1,203 @@
+\hypertarget{class_vespucci_table_model}{\section{Vespucci\+Table\+Model Class Reference}
+\label{class_vespucci_table_model}\index{Vespucci\+Table\+Model@{Vespucci\+Table\+Model}}
+}
+
+
+The \hyperlink{class_vespucci_table_model}{Vespucci\+Table\+Model} class The Q\+Abstract\+Table\+Model that handles armadillo objects for the \hyperlink{class_data_viewer}{Data\+Viewer} class.  
+
+
+
+
+{\ttfamily \#include $<$vespuccitablemodel.\+h$>$}
+
+
+
+Inheritance diagram for Vespucci\+Table\+Model\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=190pt]{class_vespucci_table_model__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Vespucci\+Table\+Model\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=190pt]{class_vespucci_table_model__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_vespucci_table_model_a5699dba13d0f4b29d047281f79bd018a}{Vespucci\+Table\+Model} (Q\+Object $\ast$parent, mat $\ast$input\+\_\+data)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_table_model_a5699dba13d0f4b29d047281f79bd018a}{Vespucci\+Table\+Model\+::\+Vespucci\+Table\+Model}. \end{DoxyCompactList}\item 
+\hyperlink{class_vespucci_table_model_a76f4ecf714a2e586298402b5468b3a05}{Vespucci\+Table\+Model} (Q\+Object $\ast$parent, Q\+Shared\+Pointer$<$ \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} $>$ dataset, Q\+String type)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_table_model_a5699dba13d0f4b29d047281f79bd018a}{Vespucci\+Table\+Model\+::\+Vespucci\+Table\+Model}. \end{DoxyCompactList}\item 
+int \hyperlink{class_vespucci_table_model_a0820ddde1a8538e106c68dc2893fad51}{row\+Count} (const Q\+Model\+Index \&parent) const 
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_table_model_a0820ddde1a8538e106c68dc2893fad51}{Vespucci\+Table\+Model\+::row\+Count}. \end{DoxyCompactList}\item 
+int \hyperlink{class_vespucci_table_model_a4759aecfe949a158a56020b283d0d8b5}{column\+Count} (const Q\+Model\+Index \&parent) const 
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_table_model_a4759aecfe949a158a56020b283d0d8b5}{Vespucci\+Table\+Model\+::column\+Count}. \end{DoxyCompactList}\item 
+Q\+Variant \hyperlink{class_vespucci_table_model_ac2ad0341ad7c307ddbcd3959af0df56e}{data} (const Q\+Model\+Index \&index, int role) const 
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_table_model_ac2ad0341ad7c307ddbcd3959af0df56e}{Vespucci\+Table\+Model\+::data}. \end{DoxyCompactList}\item 
+mat $\ast$ \hyperlink{class_vespucci_table_model_ac6ec4e91a07a79e30392d8e840865152}{Get\+Data} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_table_model_ac6ec4e91a07a79e30392d8e840865152}{Vespucci\+Table\+Model\+::\+Get\+Data}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{class_vespucci_table_model}{Vespucci\+Table\+Model} class The Q\+Abstract\+Table\+Model that handles armadillo objects for the \hyperlink{class_data_viewer}{Data\+Viewer} class. 
+
+Definition at line 31 of file vespuccitablemodel.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_vespucci_table_model_a5699dba13d0f4b29d047281f79bd018a}{\index{Vespucci\+Table\+Model@{Vespucci\+Table\+Model}!Vespucci\+Table\+Model@{Vespucci\+Table\+Model}}
+\index{Vespucci\+Table\+Model@{Vespucci\+Table\+Model}!Vespucci\+Table\+Model@{Vespucci\+Table\+Model}}
+\subsubsection[{Vespucci\+Table\+Model}]{\setlength{\rightskip}{0pt plus 5cm}Vespucci\+Table\+Model\+::\+Vespucci\+Table\+Model (
+\begin{DoxyParamCaption}
+\item[{Q\+Object $\ast$}]{parent, }
+\item[{mat $\ast$}]{input\+\_\+data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [explicit]}}}\label{class_vespucci_table_model_a5699dba13d0f4b29d047281f79bd018a}
+
+
+\hyperlink{class_vespucci_table_model_a5699dba13d0f4b29d047281f79bd018a}{Vespucci\+Table\+Model\+::\+Vespucci\+Table\+Model}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em parent} & See Q\+Dialog \\
+\hline
+{\em input\+\_\+data} & The matrix that is displayed by the model \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 26 of file vespuccitablemodel.\+cpp.
+
+\hypertarget{class_vespucci_table_model_a76f4ecf714a2e586298402b5468b3a05}{\index{Vespucci\+Table\+Model@{Vespucci\+Table\+Model}!Vespucci\+Table\+Model@{Vespucci\+Table\+Model}}
+\index{Vespucci\+Table\+Model@{Vespucci\+Table\+Model}!Vespucci\+Table\+Model@{Vespucci\+Table\+Model}}
+\subsubsection[{Vespucci\+Table\+Model}]{\setlength{\rightskip}{0pt plus 5cm}Vespucci\+Table\+Model\+::\+Vespucci\+Table\+Model (
+\begin{DoxyParamCaption}
+\item[{Q\+Object $\ast$}]{parent, }
+\item[{Q\+Shared\+Pointer$<$ {\bf Vespucci\+Dataset} $>$}]{dataset, }
+\item[{Q\+String}]{type}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_table_model_a76f4ecf714a2e586298402b5468b3a05}
+
+
+\hyperlink{class_vespucci_table_model_a5699dba13d0f4b29d047281f79bd018a}{Vespucci\+Table\+Model\+::\+Vespucci\+Table\+Model}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em parent} & \\
+\hline
+{\em dataset} & Dataset containing data to be displayed \\
+\hline
+{\em type} & The type of data this is \char`\"{}spatial\char`\"{} or not \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 41 of file vespuccitablemodel.\+cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_vespucci_table_model_a4759aecfe949a158a56020b283d0d8b5}{\index{Vespucci\+Table\+Model@{Vespucci\+Table\+Model}!column\+Count@{column\+Count}}
+\index{column\+Count@{column\+Count}!Vespucci\+Table\+Model@{Vespucci\+Table\+Model}}
+\subsubsection[{column\+Count}]{\setlength{\rightskip}{0pt plus 5cm}int Vespucci\+Table\+Model\+::column\+Count (
+\begin{DoxyParamCaption}
+\item[{const Q\+Model\+Index \&}]{parent}
+\end{DoxyParamCaption}
+) const}}\label{class_vespucci_table_model_a4759aecfe949a158a56020b283d0d8b5}
+
+
+\hyperlink{class_vespucci_table_model_a4759aecfe949a158a56020b283d0d8b5}{Vespucci\+Table\+Model\+::column\+Count}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em parent} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+See Q\+Abstract\+Table\+Model\+::column\+Count() 
+\end{DoxyReturn}
+
+
+Definition at line 122 of file vespuccitablemodel.\+cpp.
+
+\hypertarget{class_vespucci_table_model_ac2ad0341ad7c307ddbcd3959af0df56e}{\index{Vespucci\+Table\+Model@{Vespucci\+Table\+Model}!data@{data}}
+\index{data@{data}!Vespucci\+Table\+Model@{Vespucci\+Table\+Model}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}Q\+Variant Vespucci\+Table\+Model\+::data (
+\begin{DoxyParamCaption}
+\item[{const Q\+Model\+Index \&}]{index, }
+\item[{int}]{role}
+\end{DoxyParamCaption}
+) const}}\label{class_vespucci_table_model_ac2ad0341ad7c307ddbcd3959af0df56e}
+
+
+\hyperlink{class_vespucci_table_model_ac2ad0341ad7c307ddbcd3959af0df56e}{Vespucci\+Table\+Model\+::data}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & \\
+\hline
+{\em role} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+See Q\+Abstract\+Table\+Model\+::data() 
+\end{DoxyReturn}
+
+
+Definition at line 64 of file vespuccitablemodel.\+cpp.
+
+\hypertarget{class_vespucci_table_model_ac6ec4e91a07a79e30392d8e840865152}{\index{Vespucci\+Table\+Model@{Vespucci\+Table\+Model}!Get\+Data@{Get\+Data}}
+\index{Get\+Data@{Get\+Data}!Vespucci\+Table\+Model@{Vespucci\+Table\+Model}}
+\subsubsection[{Get\+Data}]{\setlength{\rightskip}{0pt plus 5cm}mat $\ast$ Vespucci\+Table\+Model\+::\+Get\+Data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_table_model_ac6ec4e91a07a79e30392d8e840865152}
+
+
+\hyperlink{class_vespucci_table_model_ac6ec4e91a07a79e30392d8e840865152}{Vespucci\+Table\+Model\+::\+Get\+Data}. 
+
+\begin{DoxyReturn}{Returns}
+Get a pointer to the displayed data 
+\end{DoxyReturn}
+
+
+Definition at line 143 of file vespuccitablemodel.\+cpp.
+
+\hypertarget{class_vespucci_table_model_a0820ddde1a8538e106c68dc2893fad51}{\index{Vespucci\+Table\+Model@{Vespucci\+Table\+Model}!row\+Count@{row\+Count}}
+\index{row\+Count@{row\+Count}!Vespucci\+Table\+Model@{Vespucci\+Table\+Model}}
+\subsubsection[{row\+Count}]{\setlength{\rightskip}{0pt plus 5cm}int Vespucci\+Table\+Model\+::row\+Count (
+\begin{DoxyParamCaption}
+\item[{const Q\+Model\+Index \&}]{parent}
+\end{DoxyParamCaption}
+) const}}\label{class_vespucci_table_model_a0820ddde1a8538e106c68dc2893fad51}
+
+
+\hyperlink{class_vespucci_table_model_a0820ddde1a8538e106c68dc2893fad51}{Vespucci\+Table\+Model\+::row\+Count}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em parent} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+See Q\+Abstract\+Table\+Model\+::row\+Count 
+\end{DoxyReturn}
+
+
+Definition at line 133 of file vespuccitablemodel.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Vespucci/develop/\+G\+U\+I/\+Q\+Abstract\+Item\+Model/vespuccitablemodel.\+h\item 
+C\+:/\+Projects/\+Vespucci/develop/\+G\+U\+I/\+Q\+Abstract\+Item\+Model/vespuccitablemodel.\+cpp\end{DoxyCompactItemize}

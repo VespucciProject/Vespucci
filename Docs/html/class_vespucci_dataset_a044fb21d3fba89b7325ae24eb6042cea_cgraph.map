@@ -1,0 +1,7 @@
+<map id="VespucciDataset::PartialLeastSquares" name="VespucciDataset::PartialLeastSquares">
+<area shape="rect" id="node2" href="$class_vespucci_dataset.html#a7c685d41d2093602e563f7facaff7f9a" title="VespucciDataset::HySime. " alt="" coords="220,78,395,105"/>
+<area shape="rect" id="node5" href="$class_p_l_s_data.html#ade79be27d52f0edba28d719d9926453b" title="PLSData::Apply. " alt="" coords="250,135,365,162"/>
+<area shape="rect" id="node3" href="$namespace_vespucci_1_1_math_1_1_dimension_reduction.html#ac96e3dc096295499724e3ecbb63a3f57" title="Vespucci::Math::DimensionReduction::EstimateAdditiveNoise. " alt="" coords="443,5,661,47"/>
+<area shape="rect" id="node4" href="$namespace_vespucci_1_1_math_1_1_dimension_reduction.html#a355295f13e2a14e990b22eb96a33db5c" title="Vespucci::Math::DimensionReduction::HySime. " alt="" coords="461,71,643,112"/>
+<area shape="rect" id="node6" href="$namespace_vespucci_1_1_math_1_1_dimension_reduction.html#a5878e156d2d744ee078a70eeb59f97b3" title="Vespucci::MathDimensionReduction::plsregress PLS Regression Using SIMPLS algorithm. This is essentially a line&#45;for&#45;line rewrite of plsregress from the Octave statistics package. Copyright (C) 2012 Fernando Damian Nieuwveldt fdnieuwveldt@gmail.com This is an implementation of the SIMPLS algorithm: Reference: SIMPLS: An alternative approach to partial least squares regression. Chemometrics and Intelligent Laboratory Systems (1993) " alt="" coords="461,136,643,177"/>
+</map>

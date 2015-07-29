@@ -1,0 +1,274 @@
+\hypertarget{namespace_vespucci_1_1_math_1_1_dimension_reduction}{\section{Vespucci\+:\+:Math\+:\+:Dimension\+Reduction Namespace Reference}
+\label{namespace_vespucci_1_1_math_1_1_dimension_reduction}\index{Vespucci\+::\+Math\+::\+Dimension\+Reduction@{Vespucci\+::\+Math\+::\+Dimension\+Reduction}}
+}
+
+
+A namespace for math functions relating to dimension reduction.  
+
+
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{namespace_vespucci_1_1_math_1_1_dimension_reduction_a5878e156d2d744ee078a70eeb59f97b3}{plsregress} (arma\+::mat X, arma\+::mat Y, int components, arma\+::mat \&X\+\_\+loadings, arma\+::mat \&Y\+\_\+loadings, arma\+::mat \&X\+\_\+scores, arma\+::mat \&Y\+\_\+scores, arma\+::mat \&coefficients, arma\+::mat \&percent\+\_\+variance, arma\+::mat \&fitted)
+\begin{DoxyCompactList}\small\item\em Vespucci\+::\+Math\+Dimension\+Reduction\+::plsregress P\+L\+S Regression Using S\+I\+M\+P\+L\+S algorithm. This is essentially a line-\/for-\/line rewrite of plsregress from the Octave statistics package. Copyright (C) 2012 Fernando Damian Nieuwveldt \href{mailto:fdnieuwveldt@gmail.com}{\tt fdnieuwveldt@gmail.\+com} This is an implementation of the S\+I\+M\+P\+L\+S algorithm\+: Reference\+: S\+I\+M\+P\+L\+S\+: An alternative approach to partial least squares regression. Chemometrics and Intelligent Laboratory Systems (1993) \end{DoxyCompactList}\item 
+bool \hyperlink{namespace_vespucci_1_1_math_1_1_dimension_reduction_a2d46d5cccce427efee376aeeea2da058}{V\+C\+A} (const arma\+::mat \&R, arma\+::uword p, arma\+::uvec \&indices, arma\+::mat \&endmember\+\_\+spectra, arma\+::mat \&projected\+\_\+data, arma\+::mat \&fractional\+\_\+abundances)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_1_1_dimension_reduction_a2d46d5cccce427efee376aeeea2da058}{Vespucci\+::\+Math\+::\+Dimension\+Reduction\+::\+V\+C\+A} Vertex Component Analysis. \end{DoxyCompactList}\item 
+double \hyperlink{namespace_vespucci_1_1_math_1_1_dimension_reduction_a37f3a4278bbdfba337f4e776f7d0916b}{estimate\+\_\+snr} (const arma\+::mat \&R, arma\+::vec r\+\_\+m, arma\+::mat x)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math}{Vespucci\+::\+Math} Estimates Signal-\/to-\/\+Noise ratio. {\bfseries [Nascimento2005]}. \end{DoxyCompactList}\item 
+int \hyperlink{namespace_vespucci_1_1_math_1_1_dimension_reduction_a355295f13e2a14e990b22eb96a33db5c}{Hy\+Sime} (arma\+::mat y, arma\+::mat n, arma\+::mat Rn, arma\+::mat \&Ek)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_1_1_dimension_reduction_a355295f13e2a14e990b22eb96a33db5c}{Vespucci\+::\+Math\+::\+Dimension\+Reduction\+::\+Hy\+Sime}. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_vespucci_1_1_math_1_1_dimension_reduction_ac96e3dc096295499724e3ecbb63a3f57}{Estimate\+Additive\+Noise} (arma\+::mat \&noise, arma\+::mat \&noise\+\_\+correlation, const arma\+::mat \&sample)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_1_1_dimension_reduction_ac96e3dc096295499724e3ecbb63a3f57}{Vespucci\+::\+Math\+::\+Dimension\+Reduction\+::\+Estimate\+Additive\+Noise}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A namespace for math functions relating to dimension reduction. 
+
+A namespace for math functions relating to transforms. 
+
+\subsection{Function Documentation}
+\hypertarget{namespace_vespucci_1_1_math_1_1_dimension_reduction_a37f3a4278bbdfba337f4e776f7d0916b}{\index{Vespucci\+::\+Math\+::\+Dimension\+Reduction@{Vespucci\+::\+Math\+::\+Dimension\+Reduction}!estimate\+\_\+snr@{estimate\+\_\+snr}}
+\index{estimate\+\_\+snr@{estimate\+\_\+snr}!Vespucci\+::\+Math\+::\+Dimension\+Reduction@{Vespucci\+::\+Math\+::\+Dimension\+Reduction}}
+\subsubsection[{estimate\+\_\+snr}]{\setlength{\rightskip}{0pt plus 5cm}double Vespucci\+::\+Math\+::\+Dimension\+Reduction\+::estimate\+\_\+snr (
+\begin{DoxyParamCaption}
+\item[{const arma\+::mat \&}]{R, }
+\item[{arma\+::vec}]{r\+\_\+m, }
+\item[{arma\+::mat}]{x}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_dimension_reduction_a37f3a4278bbdfba337f4e776f7d0916b}
+
+
+\hyperlink{namespace_vespucci_1_1_math}{Vespucci\+::\+Math} Estimates Signal-\/to-\/\+Noise ratio. {\bfseries [Nascimento2005]}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em R} & Input \\
+\hline
+{\em r\+\_\+m} & \\
+\hline
+{\em x} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 126 of file V\+C\+A.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_dimension_reduction_a37f3a4278bbdfba337f4e776f7d0916b_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_dimension_reduction_ac96e3dc096295499724e3ecbb63a3f57}{\index{Vespucci\+::\+Math\+::\+Dimension\+Reduction@{Vespucci\+::\+Math\+::\+Dimension\+Reduction}!Estimate\+Additive\+Noise@{Estimate\+Additive\+Noise}}
+\index{Estimate\+Additive\+Noise@{Estimate\+Additive\+Noise}!Vespucci\+::\+Math\+::\+Dimension\+Reduction@{Vespucci\+::\+Math\+::\+Dimension\+Reduction}}
+\subsubsection[{Estimate\+Additive\+Noise}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+::\+Math\+::\+Dimension\+Reduction\+::\+Estimate\+Additive\+Noise (
+\begin{DoxyParamCaption}
+\item[{arma\+::mat \&}]{noise, }
+\item[{arma\+::mat \&}]{noise\+\_\+correlation, }
+\item[{const arma\+::mat \&}]{sample}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_dimension_reduction_ac96e3dc096295499724e3ecbb63a3f57}
+
+
+\hyperlink{namespace_vespucci_1_1_math_1_1_dimension_reduction_ac96e3dc096295499724e3ecbb63a3f57}{Vespucci\+::\+Math\+::\+Dimension\+Reduction\+::\+Estimate\+Additive\+Noise}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em noise} & \\
+\hline
+{\em noise\+\_\+correlation} & \\
+\hline
+{\em sample} & The slow additive noise mat\+::mator from the Hy\+Sime paper. I'm looking into faster ones. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 198 of file V\+C\+A.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_dimension_reduction_ac96e3dc096295499724e3ecbb63a3f57_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_dimension_reduction_a355295f13e2a14e990b22eb96a33db5c}{\index{Vespucci\+::\+Math\+::\+Dimension\+Reduction@{Vespucci\+::\+Math\+::\+Dimension\+Reduction}!Hy\+Sime@{Hy\+Sime}}
+\index{Hy\+Sime@{Hy\+Sime}!Vespucci\+::\+Math\+::\+Dimension\+Reduction@{Vespucci\+::\+Math\+::\+Dimension\+Reduction}}
+\subsubsection[{Hy\+Sime}]{\setlength{\rightskip}{0pt plus 5cm}int Vespucci\+::\+Math\+::\+Dimension\+Reduction\+::\+Hy\+Sime (
+\begin{DoxyParamCaption}
+\item[{arma\+::mat}]{y, }
+\item[{arma\+::mat}]{n, }
+\item[{arma\+::mat}]{Rn, }
+\item[{arma\+::mat \&}]{Ek}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_dimension_reduction_a355295f13e2a14e990b22eb96a33db5c}
+
+
+\hyperlink{namespace_vespucci_1_1_math_1_1_dimension_reduction_a355295f13e2a14e990b22eb96a33db5c}{Vespucci\+::\+Math\+::\+Dimension\+Reduction\+::\+Hy\+Sime}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em y} & \\
+\hline
+{\em n} & \\
+\hline
+{\em Rn} & \\
+\hline
+{\em Ek} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Performs the Hy\+Sime algorithm to predict the rank of y 
+\end{DoxyReturn}
+
+
+Definition at line 149 of file V\+C\+A.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_dimension_reduction_a355295f13e2a14e990b22eb96a33db5c_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_dimension_reduction_a5878e156d2d744ee078a70eeb59f97b3}{\index{Vespucci\+::\+Math\+::\+Dimension\+Reduction@{Vespucci\+::\+Math\+::\+Dimension\+Reduction}!plsregress@{plsregress}}
+\index{plsregress@{plsregress}!Vespucci\+::\+Math\+::\+Dimension\+Reduction@{Vespucci\+::\+Math\+::\+Dimension\+Reduction}}
+\subsubsection[{plsregress}]{\setlength{\rightskip}{0pt plus 5cm}bool Vespucci\+::\+Math\+::\+Dimension\+Reduction\+::plsregress (
+\begin{DoxyParamCaption}
+\item[{arma\+::mat}]{X, }
+\item[{arma\+::mat}]{Y, }
+\item[{int}]{components, }
+\item[{arma\+::mat \&}]{X\+\_\+loadings, }
+\item[{arma\+::mat \&}]{Y\+\_\+loadings, }
+\item[{arma\+::mat \&}]{X\+\_\+scores, }
+\item[{arma\+::mat \&}]{Y\+\_\+scores, }
+\item[{arma\+::mat \&}]{coefficients, }
+\item[{arma\+::mat \&}]{percent\+\_\+variance, }
+\item[{arma\+::mat \&}]{fitted}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_dimension_reduction_a5878e156d2d744ee078a70eeb59f97b3}
+
+
+Vespucci\+::\+Math\+Dimension\+Reduction\+::plsregress P\+L\+S Regression Using S\+I\+M\+P\+L\+S algorithm. This is essentially a line-\/for-\/line rewrite of plsregress from the Octave statistics package. Copyright (C) 2012 Fernando Damian Nieuwveldt \href{mailto:fdnieuwveldt@gmail.com}{\tt fdnieuwveldt@gmail.\+com} This is an implementation of the S\+I\+M\+P\+L\+S algorithm\+: Reference\+: S\+I\+M\+P\+L\+S\+: An alternative approach to partial least squares regression. Chemometrics and Intelligent Laboratory Systems (1993) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & \\
+\hline
+{\em y} & \\
+\hline
+{\em components} & Number of P\+L\+S components \\
+\hline
+{\em x\+\_\+loadings} & \char`\"{}\+Output\char`\"{} values \\
+\hline
+{\em y\+\_\+loadings} & \\
+\hline
+{\em x\+\_\+scores} & \\
+\hline
+{\em y\+\_\+scores} & \\
+\hline
+{\em coefficients} & \\
+\hline
+{\em fitted\+\_\+data} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 41 of file pls.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_dimension_reduction_a5878e156d2d744ee078a70eeb59f97b3_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_dimension_reduction_a2d46d5cccce427efee376aeeea2da058}{\index{Vespucci\+::\+Math\+::\+Dimension\+Reduction@{Vespucci\+::\+Math\+::\+Dimension\+Reduction}!V\+C\+A@{V\+C\+A}}
+\index{V\+C\+A@{V\+C\+A}!Vespucci\+::\+Math\+::\+Dimension\+Reduction@{Vespucci\+::\+Math\+::\+Dimension\+Reduction}}
+\subsubsection[{V\+C\+A}]{\setlength{\rightskip}{0pt plus 5cm}bool Vespucci\+::\+Math\+::\+Dimension\+Reduction\+::\+V\+C\+A (
+\begin{DoxyParamCaption}
+\item[{const arma\+::mat \&}]{R, }
+\item[{arma\+::uword}]{p, }
+\item[{arma\+::uvec \&}]{indices, }
+\item[{arma\+::mat \&}]{endmember\+\_\+spectra, }
+\item[{arma\+::mat \&}]{projected\+\_\+data, }
+\item[{arma\+::mat \&}]{fractional\+\_\+abundances}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_dimension_reduction_a2d46d5cccce427efee376aeeea2da058}
+
+
+\hyperlink{namespace_vespucci_1_1_math_1_1_dimension_reduction_a2d46d5cccce427efee376aeeea2da058}{Vespucci\+::\+Math\+::\+Dimension\+Reduction\+::\+V\+C\+A} Vertex Component Analysis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em R} & The dataset \\
+\hline
+{\em endmembers} & Number of endmembers to compute \\
+\hline
+{\em indices} & Row indices of pure components. \\
+\hline
+{\em endmember\+\_\+spectra} & Spectra of pure components (note that these are in columns, not rows as in spectra\+\_\+) \\
+\hline
+{\em projected\+\_\+data} & Projected data \\
+\hline
+{\em fractional\+\_\+abundances} & Purity of a given spectrum relative to endmember \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Convergeance (no actual test implemented...) 
+\end{DoxyReturn}
+
+
+Definition at line 34 of file V\+C\+A.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_dimension_reduction_a2d46d5cccce427efee376aeeea2da058_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_dimension_reduction_a2d46d5cccce427efee376aeeea2da058_icgraph}
+\end{center}
+\end{figure}
+
+

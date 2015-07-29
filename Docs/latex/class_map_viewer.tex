@@ -1,0 +1,180 @@
+\hypertarget{class_map_viewer}{\section{Map\+Viewer Class Reference}
+\label{class_map_viewer}\index{Map\+Viewer@{Map\+Viewer}}
+}
+
+
+The \hyperlink{class_map_viewer}{Map\+Viewer} class Displays the image created by \hyperlink{class_map_data}{Map\+Data}.  
+
+
+
+
+{\ttfamily \#include $<$mapviewer.\+h$>$}
+
+
+
+Inheritance diagram for Map\+Viewer\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=160pt]{class_map_viewer__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Map\+Viewer\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=160pt]{class_map_viewer__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_map_viewer_a07803ea58b8609639e9a9950021c041c}{Global\+Data\+Range\+Changed} (Q\+C\+P\+Range new\+\_\+range)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_viewer_a07803ea58b8609639e9a9950021c041c}{Map\+Viewer\+::\+Global\+Data\+Range\+Changed}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_viewer_ad9fe700fcec6639713adb177c8775c6d}{Global\+Gradient\+Changed} (Q\+C\+P\+Color\+Gradient new\+\_\+gradient)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_viewer_ad9fe700fcec6639713adb177c8775c6d}{Map\+Viewer\+::\+Global\+Gradient\+Changed}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Q\+C\+P\+Color\+Gradient \hyperlink{class_map_viewer_a9a1662d27539b588c2702f8564f8fb3c}{Get\+Gradient} (int gradient\+\_\+number)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_viewer_a9a1662d27539b588c2702f8564f8fb3c}{Map\+Viewer\+::\+Get\+Gradient}. \end{DoxyCompactList}\item 
+\hyperlink{class_map_viewer_a1119962bac763f5849517f0a88b36e64}{Map\+Viewer} (Q\+String name, Q\+String $\ast$directory, \hyperlink{class_map_data}{Map\+Data} $\ast$parent)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_viewer_a1119962bac763f5849517f0a88b36e64}{Map\+Viewer\+::\+Map\+Viewer}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_map_viewer_a9c0d036ff4695a6da7a2827e6c646c64}{void {\bfseries close\+Event} (Q\+Close\+Event $\ast$event)}\label{class_map_viewer_a9c0d036ff4695a6da7a2827e6c646c64}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{class_map_viewer}{Map\+Viewer} class Displays the image created by \hyperlink{class_map_data}{Map\+Data}. 
+
+Definition at line 41 of file mapviewer.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_map_viewer_a1119962bac763f5849517f0a88b36e64}{\index{Map\+Viewer@{Map\+Viewer}!Map\+Viewer@{Map\+Viewer}}
+\index{Map\+Viewer@{Map\+Viewer}!Map\+Viewer@{Map\+Viewer}}
+\subsubsection[{Map\+Viewer}]{\setlength{\rightskip}{0pt plus 5cm}Map\+Viewer\+::\+Map\+Viewer (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{name, }
+\item[{Q\+String $\ast$}]{directory, }
+\item[{{\bf Map\+Data} $\ast$}]{parent}
+\end{DoxyParamCaption}
+)}}\label{class_map_viewer_a1119962bac763f5849517f0a88b36e64}
+
+
+\hyperlink{class_map_viewer_a1119962bac763f5849517f0a88b36e64}{Map\+Viewer\+::\+Map\+Viewer}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Name of this map \\
+\hline
+{\em directory} & Working directory for this window \\
+\hline
+{\em parent} & \hyperlink{class_map_data}{Map\+Data} associated with this image Constructor for this object \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 30 of file mapviewer.\+cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_map_viewer_a9a1662d27539b588c2702f8564f8fb3c}{\index{Map\+Viewer@{Map\+Viewer}!Get\+Gradient@{Get\+Gradient}}
+\index{Get\+Gradient@{Get\+Gradient}!Map\+Viewer@{Map\+Viewer}}
+\subsubsection[{Get\+Gradient}]{\setlength{\rightskip}{0pt plus 5cm}Q\+C\+P\+Color\+Gradient Map\+Viewer\+::\+Get\+Gradient (
+\begin{DoxyParamCaption}
+\item[{int}]{gradient\+\_\+number}
+\end{DoxyParamCaption}
+)}}\label{class_map_viewer_a9a1662d27539b588c2702f8564f8fb3c}
+
+
+\hyperlink{class_map_viewer_a9a1662d27539b588c2702f8564f8fb3c}{Map\+Viewer\+::\+Get\+Gradient}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em gradient\+\_\+number} & index of color gradient \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Color gradient 
+\end{DoxyReturn}
+
+
+Definition at line 96 of file mapviewer.\+cpp.
+
+\hypertarget{class_map_viewer_a07803ea58b8609639e9a9950021c041c}{\index{Map\+Viewer@{Map\+Viewer}!Global\+Data\+Range\+Changed@{Global\+Data\+Range\+Changed}}
+\index{Global\+Data\+Range\+Changed@{Global\+Data\+Range\+Changed}!Map\+Viewer@{Map\+Viewer}}
+\subsubsection[{Global\+Data\+Range\+Changed}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Viewer\+::\+Global\+Data\+Range\+Changed (
+\begin{DoxyParamCaption}
+\item[{Q\+C\+P\+Range}]{new\+\_\+range}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [slot]}}}\label{class_map_viewer_a07803ea58b8609639e9a9950021c041c}
+
+
+\hyperlink{class_map_viewer_a07803ea58b8609639e9a9950021c041c}{Map\+Viewer\+::\+Global\+Data\+Range\+Changed}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+range} & The new global color range Sets the range to the global color range. Associated with a signal in \hyperlink{class_main_window}{Main\+Window} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 292 of file mapviewer.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_map_viewer_a07803ea58b8609639e9a9950021c041c_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_viewer_ad9fe700fcec6639713adb177c8775c6d}{\index{Map\+Viewer@{Map\+Viewer}!Global\+Gradient\+Changed@{Global\+Gradient\+Changed}}
+\index{Global\+Gradient\+Changed@{Global\+Gradient\+Changed}!Map\+Viewer@{Map\+Viewer}}
+\subsubsection[{Global\+Gradient\+Changed}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Viewer\+::\+Global\+Gradient\+Changed (
+\begin{DoxyParamCaption}
+\item[{Q\+C\+P\+Color\+Gradient}]{new\+\_\+gradient}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [slot]}}}\label{class_map_viewer_ad9fe700fcec6639713adb177c8775c6d}
+
+
+\hyperlink{class_map_viewer_ad9fe700fcec6639713adb177c8775c6d}{Map\+Viewer\+::\+Global\+Gradient\+Changed}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+gradient} & Sets the new global color gradient when the global gradient is changed \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 301 of file mapviewer.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_map_viewer_ad9fe700fcec6639713adb177c8775c6d_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Vespucci/develop/\+G\+U\+I/\+Display/mapviewer.\+h\item 
+C\+:/\+Projects/\+Vespucci/develop/\+G\+U\+I/\+Display/mapviewer.\+cpp\end{DoxyCompactItemize}

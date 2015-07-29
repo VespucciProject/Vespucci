@@ -1,0 +1,310 @@
+\hypertarget{namespace_vespucci_1_1_math_1_1_peak_finding}{\section{Vespucci\+:\+:Math\+:\+:Peak\+Finding Namespace Reference}
+\label{namespace_vespucci_1_1_math_1_1_peak_finding}\index{Vespucci\+::\+Math\+::\+Peak\+Finding@{Vespucci\+::\+Math\+::\+Peak\+Finding}}
+}
+
+
+A namespace for math functions relating to peak detection and counting.  
+
+
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector\\*
+$<$ \hyperlink{class_vespucci_1_1_math_1_1_c_w_t_ridge}{Vespucci\+::\+Math\+::\+C\+W\+T\+Ridge} $>$ \hyperlink{namespace_vespucci_1_1_math_1_1_peak_finding_aede120546d4e46e4073058508fdd7ae9}{Find\+Ridges} (arma\+::mat \&coefs, arma\+::uvec scales, arma\+::uword gap\+\_\+threshold, arma\+::uword ridge\+\_\+length, arma\+::uword search\+\_\+width, double noise\+\_\+threshold, std\+::string noise\+\_\+method, arma\+::uword noise\+\_\+window)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_1_1_peak_finding_aede120546d4e46e4073058508fdd7ae9}{Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Find\+Ridges}. \end{DoxyCompactList}\item 
+\hypertarget{namespace_vespucci_1_1_math_1_1_peak_finding_a436ae6b6b68db30f0502e852999077cc}{std\+::vector\\*
+$<$ \hyperlink{class_vespucci_1_1_math_1_1_c_w_t_ridge}{Vespucci\+::\+Math\+::\+C\+W\+T\+Ridge} $>$ {\bfseries Link\+Ridges} (const arma\+::sp\+\_\+mat \&maxima, arma\+::uvec scales, arma\+::mat \&coefs, arma\+::uword min\+\_\+window\+\_\+size, arma\+::uword gap\+\_\+threshold)}\label{namespace_vespucci_1_1_math_1_1_peak_finding_a436ae6b6b68db30f0502e852999077cc}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_1_1_peak_finding_acbebf6b4e4354d20a048d52eb54e6db4}{void {\bfseries Estimate\+Width} (const arma\+::vec \&spectrum, const arma\+::vec \&abscissa, std\+::vector$<$ \hyperlink{class_vespucci_1_1_math_1_1_c_w_t_ridge}{Vespucci\+::\+Math\+::\+C\+W\+T\+Ridge} $>$ \&ridges)}\label{namespace_vespucci_1_1_math_1_1_peak_finding_acbebf6b4e4354d20a048d52eb54e6db4}
+
+\item 
+arma\+::vec \hyperlink{namespace_vespucci_1_1_math_1_1_peak_finding_a3d5687d6ba8babb49689af636f28aae8}{Find\+Peaks} (arma\+::vec X, arma\+::vec d\+X, double sel, double threshold, arma\+::vec \&peak\+\_\+magnitudes)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_1_1_peak_finding_a3d5687d6ba8babb49689af636f28aae8}{Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Find\+Peaks} an implementation of the peakfinder arma\+::mat\+L\+A\+B routine. \end{DoxyCompactList}\item 
+\hypertarget{namespace_vespucci_1_1_math_1_1_peak_finding_a21149205db5d756da8bf91bbc7b71298}{arma\+::uvec {\bfseries Find\+Peak\+Positions} (arma\+::vec X, arma\+::vec d\+X, double sel, double threshold, arma\+::uvec \&local\+\_\+minima)}\label{namespace_vespucci_1_1_math_1_1_peak_finding_a21149205db5d756da8bf91bbc7b71298}
+
+\item 
+arma\+::mat \hyperlink{namespace_vespucci_1_1_math_1_1_peak_finding_a9f22a184fb69fb6ab32757fdd19e1ae7}{Find\+Peaks\+Mat} (arma\+::mat X, double sel, double threshold, arma\+::uword poly\+\_\+order, arma\+::uword window\+\_\+size, arma\+::mat \&peak\+\_\+magnitudes)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_1_1_peak_finding_a9f22a184fb69fb6ab32757fdd19e1ae7}{Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Find\+Peaks\+Mat} Performs Find\+Peaks on a spectra arma\+::matrix. \end{DoxyCompactList}\item 
+arma\+::vec \hyperlink{namespace_vespucci_1_1_math_1_1_peak_finding_a33b834ac6082132d53ec8b307f16e1bd}{Estimate\+Baseline} (arma\+::vec X, arma\+::umat peaks, arma\+::uword window\+\_\+size)
+\begin{DoxyCompactList}\small\item\em Estimate\+Baseline. \end{DoxyCompactList}\item 
+arma\+::umat \hyperlink{namespace_vespucci_1_1_math_1_1_peak_finding_a502c529617f35fd20d1e11aca2a03a28}{Find\+Peak\+Positions} (arma\+::vec X, arma\+::vec d\+X, double threshold, std\+::string threshold\+\_\+method, arma\+::vec \&peak\+\_\+magnitudes)
+\begin{DoxyCompactList}\small\item\em Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Find\+Peak\+Positions. \end{DoxyCompactList}\item 
+\hypertarget{namespace_vespucci_1_1_math_1_1_peak_finding_ab4743c0a36c5000975f1c9f300e101e0}{arma\+::vec {\bfseries Peak\+Population} (arma\+::uword vector\+\_\+size, arma\+::umat peak\+\_\+positions)}\label{namespace_vespucci_1_1_math_1_1_peak_finding_ab4743c0a36c5000975f1c9f300e101e0}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_1_1_peak_finding_a2106329f1df30b0aca62ccb130494c88}{arma\+::vec {\bfseries Peak\+Extrema} (arma\+::uword vector\+\_\+size, arma\+::umat peak\+\_\+positions)}\label{namespace_vespucci_1_1_math_1_1_peak_finding_a2106329f1df30b0aca62ccb130494c88}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_1_1_peak_finding_a8a56011b11ff2b0778c7209eeca6a897}{arma\+::mat {\bfseries C\+W\+T\+Peak\+Analysis} (arma\+::mat X, std\+::string wavelet, arma\+::uvec scales, double threshold, std\+::string threshold\+\_\+method, arma\+::mat \&transform)}\label{namespace_vespucci_1_1_math_1_1_peak_finding_a8a56011b11ff2b0778c7209eeca6a897}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A namespace for math functions relating to peak detection and counting. 
+
+\subsection{Function Documentation}
+\hypertarget{namespace_vespucci_1_1_math_1_1_peak_finding_a33b834ac6082132d53ec8b307f16e1bd}{\index{Vespucci\+::\+Math\+::\+Peak\+Finding@{Vespucci\+::\+Math\+::\+Peak\+Finding}!Estimate\+Baseline@{Estimate\+Baseline}}
+\index{Estimate\+Baseline@{Estimate\+Baseline}!Vespucci\+::\+Math\+::\+Peak\+Finding@{Vespucci\+::\+Math\+::\+Peak\+Finding}}
+\subsubsection[{Estimate\+Baseline}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::vec Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Estimate\+Baseline (
+\begin{DoxyParamCaption}
+\item[{arma\+::vec}]{X, }
+\item[{arma\+::umat}]{peaks, }
+\item[{arma\+::uword}]{window\+\_\+size}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_peak_finding_a33b834ac6082132d53ec8b307f16e1bd}
+
+
+Estimate\+Baseline. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em X} & Signal \\
+\hline
+{\em peaks} & Positions of peaks to exclude from spectrum to calculate baseline \\
+\hline
+{\em window\+\_\+size} & Size of local minimum filter applied to baseline \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 352 of file peakfinding.\+cpp.
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_peak_finding_a502c529617f35fd20d1e11aca2a03a28}{\index{Vespucci\+::\+Math\+::\+Peak\+Finding@{Vespucci\+::\+Math\+::\+Peak\+Finding}!Find\+Peak\+Positions@{Find\+Peak\+Positions}}
+\index{Find\+Peak\+Positions@{Find\+Peak\+Positions}!Vespucci\+::\+Math\+::\+Peak\+Finding@{Vespucci\+::\+Math\+::\+Peak\+Finding}}
+\subsubsection[{Find\+Peak\+Positions}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::umat Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Find\+Peak\+Positions (
+\begin{DoxyParamCaption}
+\item[{arma\+::vec}]{X, }
+\item[{arma\+::vec}]{d\+X, }
+\item[{double}]{threshold, }
+\item[{std\+::string}]{threshold\+\_\+method, }
+\item[{arma\+::vec \&}]{peak\+\_\+magnitudes}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_peak_finding_a502c529617f35fd20d1e11aca2a03a28}
+
+
+Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Find\+Peak\+Positions. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em X} & \\
+\hline
+{\em d\+X} & A buffered first derivative (same size of X with value of X(i) equal to the derivative of X at i. Taken as a parameter incase a smoothed derivative is to be used \\
+\hline
+{\em threshold} & A value for threshold of significance. Depending on type \\
+\hline
+{\em threshold\+\_\+method} & Describes the method to be used (see below) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A arma\+::umat in which each row represents a peak. The first column contains indices of peak centers, the second column contains the left bound of the peak and the third column contains the right bound of the peak. A arma\+::matrix of this forarma\+::mat is the expected input for \hyperlink{namespace_vespucci_1_1_math_1_1_peak_finding_a33b834ac6082132d53ec8b307f16e1bd}{Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Estimate\+Baseline}. The peak determination may be carried out on a transformed spectra (such as heavy S-\/\+G smoothing, kernel convolution or C\+W\+T) then Estimate\+Baseline called with these peak centers and the original spectrum. Estimate\+Baseline will then exclude the larger peaks from the baseline. Since Estimate\+Baseline uses a local minimum filter, smaller peaks will be retained while preventing wider peaks from being cut into by the filter.
+\end{DoxyReturn}
+threshold\+\_\+method can be the following\+: \char`\"{}magnitude\char`\"{} -\/ a minimum peak-\/height threshold, arbitrary double \char`\"{}count\char`\"{} -\/ maximum number of peaks found, largest magnitude first (1 to many) \char`\"{}countpercentage\char`\"{} -\/ largest percentage of all peaks found (0 to 1) \char`\"{}ratio\char`\"{} -\/ ratio of largest magnitude (0 to 1) 
+
+Definition at line 202 of file peakfinding.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_peak_finding_a502c529617f35fd20d1e11aca2a03a28_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=225pt]{namespace_vespucci_1_1_math_1_1_peak_finding_a502c529617f35fd20d1e11aca2a03a28_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_peak_finding_a3d5687d6ba8babb49689af636f28aae8}{\index{Vespucci\+::\+Math\+::\+Peak\+Finding@{Vespucci\+::\+Math\+::\+Peak\+Finding}!Find\+Peaks@{Find\+Peaks}}
+\index{Find\+Peaks@{Find\+Peaks}!Vespucci\+::\+Math\+::\+Peak\+Finding@{Vespucci\+::\+Math\+::\+Peak\+Finding}}
+\subsubsection[{Find\+Peaks}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::vec Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Find\+Peaks (
+\begin{DoxyParamCaption}
+\item[{arma\+::vec}]{X, }
+\item[{arma\+::vec}]{d\+X, }
+\item[{double}]{sel, }
+\item[{double}]{threshold, }
+\item[{arma\+::vec \&}]{peak\+\_\+magnitudes}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_peak_finding_a3d5687d6ba8babb49689af636f28aae8}
+
+
+\hyperlink{namespace_vespucci_1_1_math_1_1_peak_finding_a3d5687d6ba8babb49689af636f28aae8}{Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Find\+Peaks} an implementation of the peakfinder arma\+::mat\+L\+A\+B routine. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em X} & A vector representing a spectrum \\
+\hline
+{\em d\+X} & A first-\/derivative spectrum of X \\
+\hline
+{\em sel} & The amount above surrounding data for a peak to be identified \\
+\hline
+{\em threshold} & A threshold value which peaks must be larger than to be maxima \\
+\hline
+{\em poly\+\_\+order} & The polynomial order of the Savitzky-\/\+Golay filter used for derivatization \\
+\hline
+{\em window\+\_\+size} & The window size of the Savitzky-\/\+Golay filter used for derivatization \\
+\hline
+{\em peak\+\_\+locations} & A vector containing one and arma\+::zeros corresponding to whether or not a peak center exists at that wavelength \\
+\hline
+{\em peak\+\_\+magnitudes} & A vector containing values at peak centers. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 45 of file peakfinding.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_peak_finding_a3d5687d6ba8babb49689af636f28aae8_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_peak_finding_a9f22a184fb69fb6ab32757fdd19e1ae7}{\index{Vespucci\+::\+Math\+::\+Peak\+Finding@{Vespucci\+::\+Math\+::\+Peak\+Finding}!Find\+Peaks\+Mat@{Find\+Peaks\+Mat}}
+\index{Find\+Peaks\+Mat@{Find\+Peaks\+Mat}!Vespucci\+::\+Math\+::\+Peak\+Finding@{Vespucci\+::\+Math\+::\+Peak\+Finding}}
+\subsubsection[{Find\+Peaks\+Mat}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::mat Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Find\+Peaks\+Mat (
+\begin{DoxyParamCaption}
+\item[{arma\+::mat}]{X, }
+\item[{double}]{sel, }
+\item[{double}]{threshold, }
+\item[{arma\+::uword}]{poly\+\_\+order, }
+\item[{arma\+::uword}]{window\+\_\+size, }
+\item[{arma\+::mat \&}]{peak\+\_\+magnitudes}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_peak_finding_a9f22a184fb69fb6ab32757fdd19e1ae7}
+
+
+\hyperlink{namespace_vespucci_1_1_math_1_1_peak_finding_a9f22a184fb69fb6ab32757fdd19e1ae7}{Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Find\+Peaks\+Mat} Performs Find\+Peaks on a spectra arma\+::matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & \\
+\hline
+{\em sel} & \\
+\hline
+{\em threshold} & \\
+\hline
+{\em poly\+\_\+order} & \\
+\hline
+{\em window\+\_\+size} & \\
+\hline
+{\em peak\+\_\+locations} & \\
+\hline
+{\em peak\+\_\+magnitudes} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 132 of file peakfinding.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_peak_finding_a9f22a184fb69fb6ab32757fdd19e1ae7_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_peak_finding_a9f22a184fb69fb6ab32757fdd19e1ae7_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_peak_finding_aede120546d4e46e4073058508fdd7ae9}{\index{Vespucci\+::\+Math\+::\+Peak\+Finding@{Vespucci\+::\+Math\+::\+Peak\+Finding}!Find\+Ridges@{Find\+Ridges}}
+\index{Find\+Ridges@{Find\+Ridges}!Vespucci\+::\+Math\+::\+Peak\+Finding@{Vespucci\+::\+Math\+::\+Peak\+Finding}}
+\subsubsection[{Find\+Ridges}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$ {\bf Vespucci\+::\+Math\+::\+C\+W\+T\+Ridge} $>$ Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Find\+Ridges (
+\begin{DoxyParamCaption}
+\item[{arma\+::mat \&}]{coefs, }
+\item[{arma\+::uvec}]{scales, }
+\item[{arma\+::uword}]{gap\+\_\+threshold, }
+\item[{arma\+::uword}]{ridge\+\_\+length, }
+\item[{arma\+::uword}]{search\+\_\+width, }
+\item[{double}]{noise\+\_\+threshold, }
+\item[{std\+::string}]{noise\+\_\+method, }
+\item[{arma\+::uword}]{noise\+\_\+window}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_peak_finding_aede120546d4e46e4073058508fdd7ae9}
+
+
+\hyperlink{namespace_vespucci_1_1_math_1_1_peak_finding_aede120546d4e46e4073058508fdd7ae9}{Vespucci\+::\+Math\+::\+Peak\+Finding\+::\+Find\+Ridges}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em coefs} & \\
+\hline
+{\em gap\+\_\+threshold} & \\
+\hline
+{\em ridge\+\_\+length} & \\
+\hline
+{\em search\+\_\+width} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Identify \char`\"{}ridges\char`\"{} in a C\+W\+T transform matrix. 
+\end{DoxyReturn}
+
+
+Definition at line 433 of file peakfinding.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_peak_finding_aede120546d4e46e4073058508fdd7ae9_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_peak_finding_aede120546d4e46e4073058508fdd7ae9_icgraph}
+\end{center}
+\end{figure}
+
+

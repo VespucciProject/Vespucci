@@ -1,0 +1,9 @@
+<map id="MapData::UseGlobalColorScale" name="MapData::UseGlobalColorScale">
+<area shape="rect" id="node2" href="$class_main_window.html#abe4c08852fad9c895a712dcd22ac9bd5" title="MainWindow::global_gradient. " alt="" coords="294,15,433,56"/>
+<area shape="rect" id="node4" href="$class_main_window.html#a58206491beb13daf24f3ba72e5eebbc0" title="MainWindow::RecalculateGlobalDataRange. " alt="" coords="259,88,468,129"/>
+<area shape="rect" id="node7" href="$class_main_window.html#a89e2dbed5fa59653909d8cd2195c67be" title="MainWindow::global_data_range. " alt="" coords="294,169,433,211"/>
+<area shape="rect" id="node3" href="$class_vespucci_workspace.html#a5f48f7a39986081e485eb23df00a5428" title="VespucciWorkspace::global_gradient. " alt="" coords="536,5,687,47"/>
+<area shape="rect" id="node5" href="$class_vespucci_workspace.html#a2f281b2b05af5a907405eb901ab26633" title="VespucciWorkspace::SetGlobalDataRange. " alt="" coords="536,71,687,112"/>
+<area shape="rect" id="node6" href="$class_vespucci_workspace.html#a0aefd22de491420f2a172448dafc90fc" title="VespucciWorkspace::RecalculateGlobalDataRange. " alt="" coords="516,136,707,177"/>
+<area shape="rect" id="node8" href="$class_vespucci_workspace.html#abaf4eecf7d203d86576483384280fe7e" title="VespucciWorkspace::global_data_range. " alt="" coords="536,201,687,243"/>
+</map>

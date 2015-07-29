@@ -1,0 +1,45 @@
+This branch is the active branch and is {\bfseries probably not stable}.
+
+\hyperlink{namespace_vespucci}{Vespucci} is a free/libre/open-\/source, cross-\/platform tool for spectroscopic imaging
+
+\hyperlink{namespace_vespucci}{Vespucci} is distributed under the terms of the G\+N\+U General Public License version 3. A copy of this license is provided in L\+I\+C\+E\+N\+S\+E
+
+\subsection*{Binary Releases\+: }
+
+Because the members of my group primarily use Windows machines, most releases will only include Windows binaries. Major releases may include binaries for Windows, Mac O\+S\+X, and G\+N\+U/\+Linux (most likely as .deb and .rpm).
+
+A relatively stable Windows development build is availible from Dropbox\+: \href{https://www.dropbox.com/sh/at9zo6udw1oeaao/AADWCdwKD87Z7Fq9Tm6_Wk1fa}{\tt https\+://www.\+dropbox.\+com/sh/at9zo6udw1oeaao/\+A\+A\+D\+W\+Cdw\+K\+D87\+Z7\+Fq9\+Tm6\+\_\+\+Wk1fa}
+
+This is the binary most often used by my research group.
+
+\section*{Compiling \hyperlink{namespace_vespucci}{Vespucci}\+: }
+
+Compiling \hyperlink{namespace_vespucci}{Vespucci} from source is easy on Unix-\/like systems. Assuming you have the proper pre-\/requisites (and Vespucci.\+pro is properly edited to reflect their paths)\+: \begin{DoxyVerb}qmake && make && make install
+\end{DoxyVerb}
+
+
+Should do the trick. This does not require elevation as the default install path is two directories above the source. You can modify P\+R\+E\+F\+I\+X to install to a different directory if you'd like. If you are not compiling with static Qt, and the Qt linked libraries are not in your path, you will have to deploy Qt (using windeployqt or macdeployqt)
+
+\subsection*{Pre-\/requisites\+: }
+
+If you can compile and install M\+L\+P\+A\+C\+K and have the Qt framework installed, then you can compile and install \hyperlink{namespace_vespucci}{Vespucci}. You should have the following libraries on your system\+:
+
+
+\begin{DoxyItemize}
+\item Qt
+\item M\+L\+P\+A\+C\+K
+\item Armadillo (compiled shared or static library)
+\item L\+A\+P\+A\+C\+K and B\+L\+A\+S (or high speed replacement like Open\+B\+L\+A\+S, Accelerate, M\+K\+L, etc.)
+\item A\+R\+P\+A\+C\+K (or A\+R\+P\+A\+C\+K-\/ng)
+\item Boost (program\+\_\+options, unit\+\_\+test\+\_\+framework, random, and math (c99))
+\item Lib\+X\+M\+L2
+\item Vespucci-\/\+Q\+C\+P (compiled shared or static library, a fork of Q\+Custom\+Plot \href{https://github.com/dpfoose/Vespucci-QCP}{\tt https\+://github.\+com/dpfoose/\+Vespucci-\/\+Q\+C\+P})
+\end{DoxyItemize}
+
+All of the above packages, with the exception of M\+L\+P\+A\+C\+K and Q\+Custom\+Plot, are readily available from most major G\+N\+U/\+Linux repositories. Installation on Mac O\+S is similarly easy, though some packages may need to be compiled and installed manually, or installed through Mac\+Ports (\href{https://www.macports.org/}{\tt https\+://www.\+macports.\+org/}) or Fink (\href{http://www.finkproject.org/}{\tt http\+://www.\+finkproject.\+org/}). I haven't included a configure script, but setting directories should be easy enough.
+
+Because it is difficult to find Windows binaries for Armadillo, M\+L\+P\+A\+C\+K and A\+R\+P\+A\+C\+K, and to make development on Windows easier, I have included Windows binaries of all requisite libraries in the Min\+G\+W\+\_\+libs branch. These are compiled with Min\+G\+W-\/w64 version 3 (G\+C\+C 4.\+8.\+2) with S\+E\+H for exception handling. A 7z archive containing the Qt distribution and Min\+G\+W-\/w64 toolkit I use is also included in the toolkit branch.
+
+The included Qt profile uses the library paths used by Ubuntu's package manager. Frameworks are used for Mac O\+S when possible.
+
+For Unix-\/like systems, shared libraries are the default. You will need to compile and install static versions of these libraries if you want a stand-\/ alone executable. Linux packages, if made availible will require Qt, Open\+B\+L\+A\+S, and A\+R\+P\+A\+C\+K (armadillo and M\+L\+P\+A\+C\+K will be included). 

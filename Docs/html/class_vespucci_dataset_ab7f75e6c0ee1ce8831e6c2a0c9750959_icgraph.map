@@ -1,0 +1,7 @@
+<map id="VespucciDataset::GetGradient" name="VespucciDataset::GetGradient">
+<area shape="rect" id="node2" href="$class_vespucci_dataset.html#a385a4f192546dc9fb0c363ca7611d0a2" title="VespucciDataset::Univariate Creates a univariate image. Several peak&#45;determination methods are availi..." alt="" coords="267,5,453,32"/>
+<area shape="rect" id="node3" href="$class_vespucci_dataset.html#a9da8a2ee67a055d50b0ef19be453e3a6" title="VespucciDataset::CorrelationMap. " alt="" coords="252,56,468,83"/>
+<area shape="rect" id="node4" href="$class_vespucci_dataset.html#a3c0e0831d508437377ead473f98b38be" title="VespucciDataset::BandRatio Creates a band ratio univariate map. Band ratio maps represent the ratio o..." alt="" coords="265,107,455,133"/>
+<area shape="rect" id="node5" href="$class_vespucci_dataset.html#ab4c52da3f8281aa7c7cec96f12f20fca" title="VespucciDataset::PrincipalComponents Performs principal component analysis on the data..." alt="" coords="271,158,449,199"/>
+<area shape="rect" id="node6" href="$class_vespucci_dataset.html#a300693f9bc5b14cbfc9ac710af4b09a1" title="VespucciDataset::PartialLeastSquares Performs PLS regression on data. Resulting map is score for one ..." alt="" coords="277,223,443,265"/>
+</map>

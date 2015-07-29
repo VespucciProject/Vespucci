@@ -1,0 +1,6 @@
+<map id="VespucciDataset::PrincipalComponents" name="VespucciDataset::PrincipalComponents">
+<area shape="rect" id="node2" href="$class_principal_components_data.html#abc8ccfa909ad98d53a06b066aeea38df" title="PrincipalComponentsData::Apply. " alt="" coords="245,5,417,47"/>
+<area shape="rect" id="node3" href="$class_principal_components_data.html#aba30bcb89a6667bf8cd80e605337e9ba" title="PrincipalComponentsData::Results. " alt="" coords="245,71,417,112"/>
+<area shape="rect" id="node4" href="$class_vespucci_dataset.html#ab7f75e6c0ee1ce8831e6c2a0c9750959" title="VespucciDataset::GetGradient Selects the color gradient from list of presets. " alt="" coords="232,137,431,163"/>
+<area shape="rect" id="node5" href="$class_vespucci_dataset.html#a99e7818506a6a846fce631cf0d996ab0" title="VespucciDataset::AddMap Adds a map to the list of map pointers and adds its name to relevant lists..." alt="" coords="243,187,420,214"/>
+</map>

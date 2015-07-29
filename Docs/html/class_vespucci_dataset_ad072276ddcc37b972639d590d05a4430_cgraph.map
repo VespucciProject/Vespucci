@@ -1,0 +1,4 @@
+<map id="VespucciDataset::LinearMovingAverage" name="VespucciDataset::LinearMovingAverage">
+<area shape="rect" id="node2" href="$namespace_vespucci_1_1_math_1_1_smoothing.html#a611221f749d15133ad90da3ba3bbca73" title="Vespucci::Math::Smoothing::CreateMovingAverageFilter. " alt="" coords="257,5,440,47"/>
+<area shape="rect" id="node3" href="$namespace_vespucci_1_1_math_1_1_smoothing.html#aa38f2ef278486993ec066ff5701bec62" title="Vespucci::Math::Smoothing::ApplyFilter Apply FIR filters to a column vector. " alt="" coords="257,71,440,112"/>
+</map>

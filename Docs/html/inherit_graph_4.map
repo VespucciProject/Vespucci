@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node2" href="$class_main_window.html" title="The MainWindow class The main window of the program, this is where the user performs most operations..." alt="" coords="160,5,256,32"/>
+<area shape="rect" id="node3" href="$class_map_viewer.html" title="The MapViewer class Displays the image created by MapData. " alt="" coords="165,56,251,83"/>
+</map>

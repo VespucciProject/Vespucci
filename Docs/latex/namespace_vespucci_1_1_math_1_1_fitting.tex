@@ -1,0 +1,80 @@
+\hypertarget{namespace_vespucci_1_1_math_1_1_fitting}{\section{Vespucci\+:\+:Math\+:\+:Fitting Namespace Reference}
+\label{namespace_vespucci_1_1_math_1_1_fitting}\index{Vespucci\+::\+Math\+::\+Fitting@{Vespucci\+::\+Math\+::\+Fitting}}
+}
+
+
+A namespace for math functions relating to non-\/linear curve fitting.  
+
+
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespace_vespucci_1_1_math_1_1_fitting_a6a3b8f03530b331694b06842312ff706}{arma\+::vec {\bfseries Fit\+Baseline} (arma\+::vec signal, std\+::string function, std\+::vector$<$ double $>$ initial\+\_\+params, std\+::vector$<$ double $>$ lims)}\label{namespace_vespucci_1_1_math_1_1_fitting_a6a3b8f03530b331694b06842312ff706}
+
+\item 
+arma\+::vec \hyperlink{namespace_vespucci_1_1_math_1_1_fitting_a7ccac4eb07dd9eaa7c891e8d78be6390}{Fit\+Gaussian\+Peak} (arma\+::vec signal, int iterations, std\+::string \&reason, std\+::map$<$ std\+::string, std\+::pair$<$ double, double $>$ $>$ \&params, std\+::map$<$ std\+::string, double $>$ \&stats, arma\+::vec \&residuals)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_1_1_fitting_a7ccac4eb07dd9eaa7c891e8d78be6390}{Vespucci\+::\+Math\+::\+Fitting\+::\+Fit\+Gaussian\+Peak} fit a gaussian function to a vector using the Levenberg-\/\+Marquardt algorithm. \end{DoxyCompactList}\item 
+\hypertarget{namespace_vespucci_1_1_math_1_1_fitting_ad882180a79f7fb8c0b82c655345c2089}{void {\bfseries Gaussian} (double $\ast$p, double $\ast$x, int m, int n, void $\ast$data)}\label{namespace_vespucci_1_1_math_1_1_fitting_ad882180a79f7fb8c0b82c655345c2089}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_1_1_fitting_a13a109b0157d2715cba67fc5e6630505}{void {\bfseries Gaussian\+Jacobian} (double $\ast$p, double $\ast$jac, int m, int n, void $\ast$data)}\label{namespace_vespucci_1_1_math_1_1_fitting_a13a109b0157d2715cba67fc5e6630505}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_1_1_fitting_ac720c74022d65f7f11b1b301842beebb}{void {\bfseries Lorentzian} (double $\ast$p, double $\ast$x, int m, int n, void $\ast$data)}\label{namespace_vespucci_1_1_math_1_1_fitting_ac720c74022d65f7f11b1b301842beebb}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_1_1_fitting_a46da5c5db0cd303cd4b1e5831ca95ee8}{void {\bfseries Lorentzian\+Jacobian} (double $\ast$p, double $\ast$jac, int m, int n, void $\ast$data)}\label{namespace_vespucci_1_1_math_1_1_fitting_a46da5c5db0cd303cd4b1e5831ca95ee8}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_1_1_fitting_a861a613f20ecc6d496c2eb06ec183e0a}{void {\bfseries Pseudo\+Voigt} (double $\ast$p, double $\ast$x, int m, int n, void $\ast$data)}\label{namespace_vespucci_1_1_math_1_1_fitting_a861a613f20ecc6d496c2eb06ec183e0a}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_1_1_fitting_a9fbd24e3adec9a9da998bd2c6e5be478}{void {\bfseries Pseudo\+Voigt\+Jacobian} (double $\ast$p, double $\ast$jac, int m, int n, void $\ast$data)}\label{namespace_vespucci_1_1_math_1_1_fitting_a9fbd24e3adec9a9da998bd2c6e5be478}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A namespace for math functions relating to non-\/linear curve fitting. 
+
+\subsection{Function Documentation}
+\hypertarget{namespace_vespucci_1_1_math_1_1_fitting_a7ccac4eb07dd9eaa7c891e8d78be6390}{\index{Vespucci\+::\+Math\+::\+Fitting@{Vespucci\+::\+Math\+::\+Fitting}!Fit\+Gaussian\+Peak@{Fit\+Gaussian\+Peak}}
+\index{Fit\+Gaussian\+Peak@{Fit\+Gaussian\+Peak}!Vespucci\+::\+Math\+::\+Fitting@{Vespucci\+::\+Math\+::\+Fitting}}
+\subsubsection[{Fit\+Gaussian\+Peak}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::vec Vespucci\+::\+Math\+::\+Fitting\+::\+Fit\+Gaussian\+Peak (
+\begin{DoxyParamCaption}
+\item[{arma\+::vec}]{signal, }
+\item[{int}]{iterations, }
+\item[{std\+::string \&}]{reason, }
+\item[{std\+::map$<$ std\+::string, std\+::pair$<$ double, double $>$ $>$ \&}]{params, }
+\item[{std\+::map$<$ std\+::string, double $>$ \&}]{stats, }
+\item[{arma\+::vec \&}]{residuals}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_fitting_a7ccac4eb07dd9eaa7c891e8d78be6390}
+
+
+\hyperlink{namespace_vespucci_1_1_math_1_1_fitting_a7ccac4eb07dd9eaa7c891e8d78be6390}{Vespucci\+::\+Math\+::\+Fitting\+::\+Fit\+Gaussian\+Peak} fit a gaussian function to a vector using the Levenberg-\/\+Marquardt algorithm. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em signal} & The area the curve is to be fitted to \\
+\hline
+{\em iterations} & The maximum number of iteratations to perform Levenberg-\/\+Marquardt Algorithm \\
+\hline
+{\em reason} & A string describing how the algorithm ran to \\
+\hline
+{\em params} & A map of pairs where the key is the name of the parameter and the value is a pair containing the value and its standard error \\
+\hline
+{\em stats} & A map of double where the key is the name of a statistic and the value is the value of that statistic \\
+\hline
+{\em residuals} & A \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A vector containing the fitted function. Perform a nonlinear least squares fitting of a gaussian peak using the Levenberg-\/\+Marquardt algorithm as implemented in the levmar C library by M. I. A. Lourakis
+\end{DoxyReturn}
+The fitted equation is of the following form\+: y = y0 + A/(w$\ast$sqrt(P\+I/(4$\ast$ln(2)))) $\ast$ exp(-\/4$\ast$ln(2)$\ast$(x-\/xc)$^\wedge$2/w$^\wedge$2) Params has the following keys\+: \char`\"{}y0\char`\"{} \char`\"{}xc\char`\"{} \char`\"{}\+A\char`\"{} \char`\"{}w\char`\"{}
+
+Stats has the following keys\+: \char`\"{}\+R squared\char`\"{} \char`\"{}\+Adjusted R squared\char`\"{} \char`\"{}\+Chi squared\char`\"{} \char`\"{}\+Reduced chi squared\char`\"{} \char`\"{}\+Points\char`\"{} \char`\"{}\+Degrees of freedom\char`\"{} \char`\"{}\+Residual sum of squares\char`\"{} \char`\"{}\+Iterations\char`\"{} 
+
+Definition at line 105 of file nonlinleastsq.\+cpp.
+

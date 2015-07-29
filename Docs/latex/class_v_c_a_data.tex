@@ -1,0 +1,279 @@
+\hypertarget{class_v_c_a_data}{\section{V\+C\+A\+Data Class Reference}
+\label{class_v_c_a_data}\index{V\+C\+A\+Data@{V\+C\+A\+Data}}
+}
+
+
+The \hyperlink{class_v_c_a_data}{V\+C\+A\+Data} class A class for performing and storing data from Vertex Components Analysis.  
+
+
+
+
+{\ttfamily \#include $<$vcadata.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_v_c_a_data_a9578c4abae0fc9a3465fb9c4f3650894}{{\bfseries V\+C\+A\+Data} (Q\+Shared\+Pointer$<$ \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} $>$ parent, Q\+String $\ast$directory)}\label{class_v_c_a_data_a9578c4abae0fc9a3465fb9c4f3650894}
+
+\item 
+void \hyperlink{class_v_c_a_data_a179153e31b69399bd92ade553c9eef05}{Apply} (mat spectra, int endmembers)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_v_c_a_data_a179153e31b69399bd92ade553c9eef05}{V\+C\+A\+Data\+::\+Apply} Performs vertex component analysis on this object. \end{DoxyCompactList}\item 
+\hypertarget{class_v_c_a_data_a552d50bce4b370fda6814fc9386b461c}{colvec {\bfseries Results} (const uword component)}\label{class_v_c_a_data_a552d50bce4b370fda6814fc9386b461c}
+
+\item 
+Q\+Vector$<$ double $>$ \hyperlink{class_v_c_a_data_a32067c4438e884770607127192ed02dc}{Endmember\+Q\+Vec} (const uword i)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_v_c_a_data_ac29ee6f33857a1ee183a8f993d1578de}{V\+C\+A\+Data\+::\+Endmember}. \end{DoxyCompactList}\item 
+vec \hyperlink{class_v_c_a_data_ac29ee6f33857a1ee183a8f993d1578de}{Endmember} (const uword i)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_v_c_a_data_ac29ee6f33857a1ee183a8f993d1578de}{V\+C\+A\+Data\+::\+Endmember}. \end{DoxyCompactList}\item 
+mat \hyperlink{class_v_c_a_data_a83e5861a6c4246060d620d0189049587}{Endmembers\+As\+Rows} (uvec indices)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_v_c_a_data_a83e5861a6c4246060d620d0189049587}{V\+C\+A\+Data\+::\+Endmembers\+As\+Rows}. \end{DoxyCompactList}\item 
+mat $\ast$ \hyperlink{class_v_c_a_data_acd7a287762f7b8e115aaf957b3d5e1c9}{endmember\+\_\+spectra} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_v_c_a_data_acd7a287762f7b8e115aaf957b3d5e1c9}{V\+C\+A\+Data\+::endmember\+\_\+spectra}. \end{DoxyCompactList}\item 
+mat $\ast$ \hyperlink{class_v_c_a_data_ab19a41122dca6e545271cd762c7ef90b}{projected\+\_\+data} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_v_c_a_data_ab19a41122dca6e545271cd762c7ef90b}{V\+C\+A\+Data\+::projected\+\_\+data}. \end{DoxyCompactList}\item 
+mat $\ast$ \hyperlink{class_v_c_a_data_a7637e08200194ce5c55b30f922b42737}{fractional\+\_\+abundances} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_v_c_a_data_a7637e08200194ce5c55b30f922b42737}{V\+C\+A\+Data\+::fractional\+\_\+abundances}. \end{DoxyCompactList}\item 
+\hypertarget{class_v_c_a_data_ab354f8f70b96ebc590786ef5e2335868}{mat $\ast$ {\bfseries indices} ()}\label{class_v_c_a_data_ab354f8f70b96ebc590786ef5e2335868}
+
+\item 
+\hypertarget{class_v_c_a_data_ae626da0da39f4aaa7ac07c72e0677792}{int {\bfseries Number\+Components} ()}\label{class_v_c_a_data_ae626da0da39f4aaa7ac07c72e0677792}
+
+\item 
+double \hyperlink{class_v_c_a_data_aef9ca46dcb80d174344686bf4b942e97}{Endmember\+Min} (const uword i)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_v_c_a_data_aef9ca46dcb80d174344686bf4b942e97}{V\+C\+A\+Data\+::\+Endmember\+Min}. \end{DoxyCompactList}\item 
+\hypertarget{class_v_c_a_data_ad32a53cf4a94c4ba6ad8da974832b506}{double {\bfseries Endmember\+Max} (const uword i)}\label{class_v_c_a_data_ad32a53cf4a94c4ba6ad8da974832b506}
+
+\item 
+\hypertarget{class_v_c_a_data_aaa096375d6a58c8e634cce4d851819d5}{mat $\ast$ {\bfseries value} (Q\+String key)}\label{class_v_c_a_data_aaa096375d6a58c8e634cce4d851819d5}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{class_v_c_a_data}{V\+C\+A\+Data} class A class for performing and storing data from Vertex Components Analysis. 
+
+Definition at line 28 of file vcadata.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_v_c_a_data_a179153e31b69399bd92ade553c9eef05}{\index{V\+C\+A\+Data@{V\+C\+A\+Data}!Apply@{Apply}}
+\index{Apply@{Apply}!V\+C\+A\+Data@{V\+C\+A\+Data}}
+\subsubsection[{Apply}]{\setlength{\rightskip}{0pt plus 5cm}void V\+C\+A\+Data\+::\+Apply (
+\begin{DoxyParamCaption}
+\item[{mat}]{spectra, }
+\item[{int}]{endmembers}
+\end{DoxyParamCaption}
+)}}\label{class_v_c_a_data_a179153e31b69399bd92ade553c9eef05}
+
+
+\hyperlink{class_v_c_a_data_a179153e31b69399bd92ade553c9eef05}{V\+C\+A\+Data\+::\+Apply} Performs vertex component analysis on this object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em X} & \\
+\hline
+{\em endmembers} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 35 of file vcadata.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_v_c_a_data_a179153e31b69399bd92ade553c9eef05_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_v_c_a_data_a179153e31b69399bd92ade553c9eef05_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_v_c_a_data_ac29ee6f33857a1ee183a8f993d1578de}{\index{V\+C\+A\+Data@{V\+C\+A\+Data}!Endmember@{Endmember}}
+\index{Endmember@{Endmember}!V\+C\+A\+Data@{V\+C\+A\+Data}}
+\subsubsection[{Endmember}]{\setlength{\rightskip}{0pt plus 5cm}vec V\+C\+A\+Data\+::\+Endmember (
+\begin{DoxyParamCaption}
+\item[{const uword}]{i}
+\end{DoxyParamCaption}
+)}}\label{class_v_c_a_data_ac29ee6f33857a1ee183a8f993d1578de}
+
+
+\hyperlink{class_v_c_a_data_ac29ee6f33857a1ee183a8f993d1578de}{V\+C\+A\+Data\+::\+Endmember}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Get a vector corresponding to a single endmember 
+\end{DoxyReturn}
+
+
+Definition at line 65 of file vcadata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_v_c_a_data_ac29ee6f33857a1ee183a8f993d1578de_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_v_c_a_data_acd7a287762f7b8e115aaf957b3d5e1c9}{\index{V\+C\+A\+Data@{V\+C\+A\+Data}!endmember\+\_\+spectra@{endmember\+\_\+spectra}}
+\index{endmember\+\_\+spectra@{endmember\+\_\+spectra}!V\+C\+A\+Data@{V\+C\+A\+Data}}
+\subsubsection[{endmember\+\_\+spectra}]{\setlength{\rightskip}{0pt plus 5cm}mat $\ast$ V\+C\+A\+Data\+::endmember\+\_\+spectra (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_v_c_a_data_acd7a287762f7b8e115aaf957b3d5e1c9}
+
+
+\hyperlink{class_v_c_a_data_acd7a287762f7b8e115aaf957b3d5e1c9}{V\+C\+A\+Data\+::endmember\+\_\+spectra}. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to the endmember spectra matrix 
+\end{DoxyReturn}
+
+
+Definition at line 77 of file vcadata.\+cpp.
+
+\hypertarget{class_v_c_a_data_aef9ca46dcb80d174344686bf4b942e97}{\index{V\+C\+A\+Data@{V\+C\+A\+Data}!Endmember\+Min@{Endmember\+Min}}
+\index{Endmember\+Min@{Endmember\+Min}!V\+C\+A\+Data@{V\+C\+A\+Data}}
+\subsubsection[{Endmember\+Min}]{\setlength{\rightskip}{0pt plus 5cm}double V\+C\+A\+Data\+::\+Endmember\+Min (
+\begin{DoxyParamCaption}
+\item[{const uword}]{i}
+\end{DoxyParamCaption}
+)}}\label{class_v_c_a_data_aef9ca46dcb80d174344686bf4b942e97}
+
+
+\hyperlink{class_v_c_a_data_aef9ca46dcb80d174344686bf4b942e97}{V\+C\+A\+Data\+::\+Endmember\+Min}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & Index of a column of the endmember\+\_\+spectra\+\_\+ matrix. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The minimum value of the endmember in column i 
+\end{DoxyReturn}
+
+
+Definition at line 147 of file vcadata.\+cpp.
+
+\hypertarget{class_v_c_a_data_a32067c4438e884770607127192ed02dc}{\index{V\+C\+A\+Data@{V\+C\+A\+Data}!Endmember\+Q\+Vec@{Endmember\+Q\+Vec}}
+\index{Endmember\+Q\+Vec@{Endmember\+Q\+Vec}!V\+C\+A\+Data@{V\+C\+A\+Data}}
+\subsubsection[{Endmember\+Q\+Vec}]{\setlength{\rightskip}{0pt plus 5cm}Q\+Vector$<$ double $>$ V\+C\+A\+Data\+::\+Endmember\+Q\+Vec (
+\begin{DoxyParamCaption}
+\item[{const uword}]{i}
+\end{DoxyParamCaption}
+)}}\label{class_v_c_a_data_a32067c4438e884770607127192ed02dc}
+
+
+\hyperlink{class_v_c_a_data_ac29ee6f33857a1ee183a8f993d1578de}{V\+C\+A\+Data\+::\+Endmember}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & Index of endmember column \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Plottable Q\+Vector of an endmember 
+\end{DoxyReturn}
+
+
+Definition at line 53 of file vcadata.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_v_c_a_data_a32067c4438e884770607127192ed02dc_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_v_c_a_data_a83e5861a6c4246060d620d0189049587}{\index{V\+C\+A\+Data@{V\+C\+A\+Data}!Endmembers\+As\+Rows@{Endmembers\+As\+Rows}}
+\index{Endmembers\+As\+Rows@{Endmembers\+As\+Rows}!V\+C\+A\+Data@{V\+C\+A\+Data}}
+\subsubsection[{Endmembers\+As\+Rows}]{\setlength{\rightskip}{0pt plus 5cm}mat V\+C\+A\+Data\+::\+Endmembers\+As\+Rows (
+\begin{DoxyParamCaption}
+\item[{uvec}]{indices}
+\end{DoxyParamCaption}
+)}}\label{class_v_c_a_data_a83e5861a6c4246060d620d0189049587}
+
+
+\hyperlink{class_v_c_a_data_a83e5861a6c4246060d620d0189049587}{V\+C\+A\+Data\+::\+Endmembers\+As\+Rows}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em indices} & A list of indices of desired endmemebrs \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Endmember spectra in the same format used in the spectra\+\_\+ matrix This is used in the \hyperlink{class_meta_dataset}{Meta\+Dataset} constructor to grab specific endmembers. 
+\end{DoxyReturn}
+
+
+Definition at line 170 of file vcadata.\+cpp.
+
+\hypertarget{class_v_c_a_data_a7637e08200194ce5c55b30f922b42737}{\index{V\+C\+A\+Data@{V\+C\+A\+Data}!fractional\+\_\+abundances@{fractional\+\_\+abundances}}
+\index{fractional\+\_\+abundances@{fractional\+\_\+abundances}!V\+C\+A\+Data@{V\+C\+A\+Data}}
+\subsubsection[{fractional\+\_\+abundances}]{\setlength{\rightskip}{0pt plus 5cm}mat $\ast$ V\+C\+A\+Data\+::fractional\+\_\+abundances (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_v_c_a_data_a7637e08200194ce5c55b30f922b42737}
+
+
+\hyperlink{class_v_c_a_data_a7637e08200194ce5c55b30f922b42737}{V\+C\+A\+Data\+::fractional\+\_\+abundances}. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to fractional abundances matrix 
+\end{DoxyReturn}
+
+
+Definition at line 86 of file vcadata.\+cpp.
+
+\hypertarget{class_v_c_a_data_ab19a41122dca6e545271cd762c7ef90b}{\index{V\+C\+A\+Data@{V\+C\+A\+Data}!projected\+\_\+data@{projected\+\_\+data}}
+\index{projected\+\_\+data@{projected\+\_\+data}!V\+C\+A\+Data@{V\+C\+A\+Data}}
+\subsubsection[{projected\+\_\+data}]{\setlength{\rightskip}{0pt plus 5cm}mat $\ast$ V\+C\+A\+Data\+::projected\+\_\+data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_v_c_a_data_ab19a41122dca6e545271cd762c7ef90b}
+
+
+\hyperlink{class_v_c_a_data_ab19a41122dca6e545271cd762c7ef90b}{V\+C\+A\+Data\+::projected\+\_\+data}. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to projected data matrix 
+\end{DoxyReturn}
+
+
+Definition at line 95 of file vcadata.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Vespucci/develop/\+Data/\+Analysis/vcadata.\+h\item 
+C\+:/\+Projects/\+Vespucci/develop/\+Data/\+Analysis/vcadata.\+cpp\end{DoxyCompactItemize}

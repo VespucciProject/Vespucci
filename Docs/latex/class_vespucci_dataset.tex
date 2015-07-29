@@ -1,0 +1,2729 @@
+\hypertarget{class_vespucci_dataset}{\section{Vespucci\+Dataset Class Reference}
+\label{class_vespucci_dataset}\index{Vespucci\+Dataset@{Vespucci\+Dataset}}
+}
+
+
+The \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} class This is the main class for dealing with hyperspectral data. This handles the import and export of spectra, and the creation of maps. Images are handled by the \hyperlink{class_map_data}{Map\+Data} class.  
+
+
+
+
+{\ttfamily \#include $<$vespuccidataset.\+h$>$}
+
+
+
+Inheritance diagram for Vespucci\+Dataset\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=171pt]{class_vespucci_dataset__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_vespucci_dataset_acdb8eac7a6160db7a373995a79f8208f}{{\bfseries Vespucci\+Dataset} (const \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} \&dataset)}\label{class_vespucci_dataset_acdb8eac7a6160db7a373995a79f8208f}
+
+\item 
+\hyperlink{class_vespucci_dataset_a06df54f3af54a6a7dcd2d93fced57275}{Vespucci\+Dataset} (Q\+String text\+\_\+filename, \hyperlink{class_main_window}{Main\+Window} $\ast$main\+\_\+window, Q\+String $\ast$directory, Q\+File $\ast$log\+\_\+file, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, Q\+String \hyperlink{class_vespucci_dataset_acb6a4de101573ac93f5fcb5dd5e38c5c}{x\+\_\+axis\+\_\+description}, Q\+String \hyperlink{class_vespucci_dataset_ae49a51e6e1666cea514bec6bf5578405}{y\+\_\+axis\+\_\+description}, bool swap\+\_\+spatial, std\+::string format)
+\begin{DoxyCompactList}\small\item\em Vespucci\+Dataset\+::\+Vespucci\+Dataset. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a3282fa5aecdab486d815db6c5452d3f9}{{\bfseries Vespucci\+Dataset} (Q\+Map$<$ Q\+Pair$<$ int, int $>$, Q\+String $>$ text\+\_\+filenames, \hyperlink{class_main_window}{Main\+Window} $\ast$main\+\_\+window, Q\+String $\ast$directory, Q\+File $\ast$log\+\_\+file, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, Q\+String \hyperlink{class_vespucci_dataset_acb6a4de101573ac93f5fcb5dd5e38c5c}{x\+\_\+axis\+\_\+description}, Q\+String \hyperlink{class_vespucci_dataset_ae49a51e6e1666cea514bec6bf5578405}{y\+\_\+axis\+\_\+description}, int rows, int cols)}\label{class_vespucci_dataset_a3282fa5aecdab486d815db6c5452d3f9}
+
+\item 
+\hyperlink{class_vespucci_dataset_abdada511afcfc13a2f5ffc09138a1755}{Vespucci\+Dataset} (Q\+String vespucci\+\_\+binary\+\_\+filename, \hyperlink{class_main_window}{Main\+Window} $\ast$main\+\_\+window, Q\+String $\ast$directory, Q\+File $\ast$log\+\_\+file, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, Q\+String \hyperlink{class_vespucci_dataset_acb6a4de101573ac93f5fcb5dd5e38c5c}{x\+\_\+axis\+\_\+description}, Q\+String \hyperlink{class_vespucci_dataset_ae49a51e6e1666cea514bec6bf5578405}{y\+\_\+axis\+\_\+description})
+\begin{DoxyCompactList}\small\item\em Vespucci\+Dataset\+::\+Vespucci\+Dataset. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a32bc7599581ddbcf425c03de33997cb5}{{\bfseries Vespucci\+Dataset} (Q\+String binary\+\_\+filename, \hyperlink{class_main_window}{Main\+Window} $\ast$main\+\_\+window, Q\+String $\ast$directory, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, Q\+File $\ast$log\+\_\+file)}\label{class_vespucci_dataset_a32bc7599581ddbcf425c03de33997cb5}
+
+\item 
+\hyperlink{class_vespucci_dataset_a804af150636c59f3109a6a54267a861d}{Vespucci\+Dataset} (Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, \hyperlink{class_main_window}{Main\+Window} $\ast$main\+\_\+window, Q\+String $\ast$directory, Q\+File $\ast$log\+\_\+file, Q\+Shared\+Pointer$<$ \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} $>$ original, uvec \hyperlink{class_vespucci_dataset_a7472b4eb9f6ea7245ed544287ebe4a8b}{indices})
+\begin{DoxyCompactList}\small\item\em Vespucci\+Dataset\+::\+Vespucci\+Dataset. \end{DoxyCompactList}\item 
+\hyperlink{class_vespucci_dataset_a15f16bb144fb3948e5277706d0959009}{Vespucci\+Dataset} (Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, \hyperlink{class_main_window}{Main\+Window} $\ast$main\+\_\+window, Q\+String $\ast$directory, Q\+File $\ast$log\+\_\+file)
+\begin{DoxyCompactList}\small\item\em Vespucci\+Dataset\+::\+Vespucci\+Dataset. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_aa9d0b0fd3cff79098cf16d44a94c6204}{\hyperlink{class_vespucci_dataset_aa9d0b0fd3cff79098cf16d44a94c6204}{$\sim$\+Vespucci\+Dataset} ()}\label{class_vespucci_dataset_aa9d0b0fd3cff79098cf16d44a94c6204}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_aa9d0b0fd3cff79098cf16d44a94c6204}{Vespucci\+Dataset\+::$\sim$\+Vespucci\+Dataset} Destructor deletes everything allocated with new that isn't a smart pointer. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_aff9e3befb759a5a8f54a703434203fb1}{void \hyperlink{class_vespucci_dataset_aff9e3befb759a5a8f54a703434203fb1}{Undo} ()}\label{class_vespucci_dataset_aff9e3befb759a5a8f54a703434203fb1}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_aff9e3befb759a5a8f54a703434203fb1}{Vespucci\+Dataset\+::\+Undo} Swap spectra\+\_\+ and spectra\+\_\+old\+\_\+ to undo an action. Calling this function again re-\/does the action that was undid. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_aa0706b058354cddc5e1fbba68721aa87}{Crop\+Spectra} (double x\+\_\+min, double x\+\_\+max, double y\+\_\+min, double y\+\_\+max, double wl\+\_\+min, double wl\+\_\+max)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_aa0706b058354cddc5e1fbba68721aa87}{Vespucci\+Dataset\+::\+Crop\+Spectra} Crops spectra\+\_\+ based on. \end{DoxyCompactList}\item 
+mat \hyperlink{class_vespucci_dataset_a31ef7d438e00a7e1163fc09074e17f97}{Z\+Score\+Norm\+Copy} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a31ef7d438e00a7e1163fc09074e17f97}{Vespucci\+Dataset\+::\+Z\+Score\+Norm\+Copy} For when you want to Z-\/score normalize without changing spectra\+\_\+. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_ae6b3fa7cce13ee7f3ad7b93131ac0370}{void \hyperlink{class_vespucci_dataset_ae6b3fa7cce13ee7f3ad7b93131ac0370}{Min\+Max\+Normalize} ()}\label{class_vespucci_dataset_ae6b3fa7cce13ee7f3ad7b93131ac0370}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ae6b3fa7cce13ee7f3ad7b93131ac0370}{Vespucci\+Dataset\+::\+Min\+Max\+Normalize} Normalizes each column of spectra\+\_\+ so that the highest value is 1 and lowest value is 0. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a07bfc70e12573e809b5ea1707cba35ae}{void {\bfseries Vector\+Normalize} ()}\label{class_vespucci_dataset_a07bfc70e12573e809b5ea1707cba35ae}
+
+\item 
+\hypertarget{class_vespucci_dataset_af60babe573316c3e65fe1efa5be88964}{void \hyperlink{class_vespucci_dataset_af60babe573316c3e65fe1efa5be88964}{Mean\+Center} ()}\label{class_vespucci_dataset_af60babe573316c3e65fe1efa5be88964}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_af60babe573316c3e65fe1efa5be88964}{Vespucci\+Dataset\+::\+Mean\+Center} Subtract the mean of all spectra in the dataset at each wavelength from each wavelength (i.\+e. in preparation for P\+C\+A) \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_ab2569b51fd98135d25f349438d95ae37}{void \hyperlink{class_vespucci_dataset_ab2569b51fd98135d25f349438d95ae37}{Z\+Score\+Normalize} ()}\label{class_vespucci_dataset_ab2569b51fd98135d25f349438d95ae37}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ab2569b51fd98135d25f349438d95ae37}{Vespucci\+Dataset\+::\+Z\+Score\+Normalize} Normalizes each row using the score of the normal distribution. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a25a12dfa77ac68d7e6980c7010dfe31c}{void {\bfseries S\+N\+V\+Normalize} (double offset)}\label{class_vespucci_dataset_a25a12dfa77ac68d7e6980c7010dfe31c}
+
+\item 
+\hypertarget{class_vespucci_dataset_a7d792a061bb5f20c71b25630f472b45d}{void {\bfseries Absolute\+Value} ()}\label{class_vespucci_dataset_a7d792a061bb5f20c71b25630f472b45d}
+
+\item 
+\hypertarget{class_vespucci_dataset_abcd2b804a6995abfb2d2fcb7e8380e80}{void \hyperlink{class_vespucci_dataset_abcd2b804a6995abfb2d2fcb7e8380e80}{Unit\+Area\+Normalize} ()}\label{class_vespucci_dataset_abcd2b804a6995abfb2d2fcb7e8380e80}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_abcd2b804a6995abfb2d2fcb7e8380e80}{Vespucci\+Dataset\+::\+Unit\+Area\+Normalize} normalizes the spectral data so that the area under each point spectrum is 1. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a6c999f6492662781ea7ee26e4c38e574}{void {\bfseries Peak\+Intensity\+Normalize} (double peak\+\_\+position)}\label{class_vespucci_dataset_a6c999f6492662781ea7ee26e4c38e574}
+
+\item 
+void \hyperlink{class_vespucci_dataset_a358b924b2ec9277e054fb52462ff5f61}{Peak\+Intensity\+Normalize} (double left\+\_\+bound, double right\+\_\+bound)
+\begin{DoxyCompactList}\small\item\em Vespucci\+Dataset\+::\+Peak\+Intensity\+Normalize. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a21f1635124ce556cd1578ffc1178ceef}{Booleanize} (double min, double max, bool keep\+\_\+inside, bool oneify)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a21f1635124ce556cd1578ffc1178ceef}{Vespucci\+Dataset\+::\+Booleanize}. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a4b280cfa6a8a99df7594aab5ebb3e0b0}{Clamp} (double min, double max)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a4b280cfa6a8a99df7594aab5ebb3e0b0}{Vespucci\+Dataset\+::\+Clamp}. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a63d5387d76c9a345811b795b846e9699}{void {\bfseries Shed\+Zero\+Spectra} ()}\label{class_vespucci_dataset_a63d5387d76c9a345811b795b846e9699}
+
+\item 
+\hypertarget{class_vespucci_dataset_a77e67b083a776d38b189a1663c67efc9}{void {\bfseries Shed\+Zero\+Wavelengths} ()}\label{class_vespucci_dataset_a77e67b083a776d38b189a1663c67efc9}
+
+\item 
+void \hyperlink{class_vespucci_dataset_a9e8babb51db520d6610d532ad88c4cce}{Subtract\+Background} (mat background, Q\+String filename)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a9e8babb51db520d6610d532ad88c4cce}{Vespucci\+Dataset\+::\+Subtract\+Background} Subtracts a known background spectrum. This can be extracted from a control map using this software (using $\ast$ component analysis endmember extraction or average spectrum). \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_aafa57b522cc3ddf08d518f862ad236b5}{Median\+Filter} (unsigned int window\+\_\+size)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_aafa57b522cc3ddf08d518f862ad236b5}{Vespucci\+Dataset\+::\+Median\+Filter} performs median filtering on the spectral data. Entries near the boundaries of spectra are not processed. See also \hyperlink{class_vespucci_dataset_ad072276ddcc37b972639d590d05a4430}{Vespucci\+Dataset\+::\+Linear\+Moving\+Average}. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_ad072276ddcc37b972639d590d05a4430}{Linear\+Moving\+Average} (unsigned int window\+\_\+size)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ad072276ddcc37b972639d590d05a4430}{Vespucci\+Dataset\+::\+Linear\+Moving\+Average} Performs moving average filtering on the spectral data. Entries near the boundaries of spectra are not processed. See also \hyperlink{class_vespucci_dataset_aafa57b522cc3ddf08d518f862ad236b5}{Vespucci\+Dataset\+::\+Median\+Filter}. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a8121d9aa54b36860dbc66db4d7fde8cd}{Savitzky\+Golay} (unsigned int derivative\+\_\+order, unsigned int polynomial\+\_\+order, unsigned int window\+\_\+size)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a8121d9aa54b36860dbc66db4d7fde8cd}{Vespucci\+Dataset\+::\+Savitzky\+Golay} Performs derivatization/\+Savitzky-\/\+Golay smoothing. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_ada0febff69cc36c4af9c8f46220450a0}{Singular\+Value} (unsigned int singular\+\_\+values)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ada0febff69cc36c4af9c8f46220450a0}{Vespucci\+Dataset\+::\+Singular\+Value} Denoises the spectra matrix using a truncated singular value decomposition. The first singular\+\_\+values singular values are used to \char`\"{}reconstruct\char`\"{} the spectra matrix. The function used to find the truncated S\+V\+D is Vespucci\+::\+Math\+::\+Dimension\+Reduction\+::svds. \end{DoxyCompactList}\item 
+int \hyperlink{class_vespucci_dataset_a6489d547c05a8e36b392d0d6147674c8}{Q\+U\+I\+C\+\_\+\+S\+V\+D} (double epsilon)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a6489d547c05a8e36b392d0d6147674c8}{Vespucci\+Dataset\+::\+Q\+U\+I\+C\+\_\+\+S\+V\+D}. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a225fd450bcf573db13e6f563a4a0e539}{Baseline} (Q\+String method, int parameter)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a225fd450bcf573db13e6f563a4a0e539}{Vespucci\+Dataset\+::\+Baseline} Baseline-\/adjusts the data. This function uses a median filter with a large window to determine the baseline on the assumption that the median value is more likely to be basline than spectrum. This will complicate things if there are many peaks. Additionally, this significantly narrows the shape of peaks. Other baseline methods may be implemented later. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_abd888e214b881eecb1979310adafa770}{Remove\+Clipped\+Spectra} (double threshold)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_abd888e214b881eecb1979310adafa770}{Vespucci\+Dataset\+::\+Remove\+Clipped\+Spectra}. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a1b5a22709b819e92ea63b8bd6ef9f04e}{Remove\+Flat\+Spectra} (double threshold)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a1b5a22709b819e92ea63b8bd6ef9f04e}{Vespucci\+Dataset\+::\+Remove\+Flat\+Spectra}. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a6f0de5a5f353ac7405dfda1cf5626e50}{void {\bfseries Scale} (double scaling\+\_\+factor)}\label{class_vespucci_dataset_a6f0de5a5f353ac7405dfda1cf5626e50}
+
+\item 
+void \hyperlink{class_vespucci_dataset_a3d199a68c6dfa8f609ed7eacdb3d1ec8}{Shed\+Spectrum} (const uword index)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a3d199a68c6dfa8f609ed7eacdb3d1ec8}{Vespucci\+Dataset\+::\+Shed\+Spectrum}. \end{DoxyCompactList}\item 
+int \hyperlink{class_vespucci_dataset_a7c685d41d2093602e563f7facaff7f9a}{Hy\+Sime} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a7c685d41d2093602e563f7facaff7f9a}{Vespucci\+Dataset\+::\+Hy\+Sime}. \end{DoxyCompactList}\item 
+Q\+Vector$<$ double $>$ \hyperlink{class_vespucci_dataset_a0d31db077798909a755ad505f060fedb}{Point\+Spectrum} (const uword index)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a0d31db077798909a755ad505f060fedb}{Vespucci\+Dataset\+::\+Point\+Spectrum}. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_ac183c048438921d67865377c1533c49e}{Q\+Vector$<$ double $>$ {\bfseries Wavelength\+Q\+Vector} ()}\label{class_vespucci_dataset_ac183c048438921d67865377c1533c49e}
+
+\item 
+\hypertarget{class_vespucci_dataset_aa696f82f686c193e9d5cf5367c7932c9}{int {\bfseries Find\+Index} (int x\+\_\+value, int y\+\_\+value)}\label{class_vespucci_dataset_aa696f82f686c193e9d5cf5367c7932c9}
+
+\item 
+\hypertarget{class_vespucci_dataset_a21e40c0c1d04d0132168398f7ef3aad6}{uword {\bfseries Find\+Index} (double abscissa\+\_\+value)}\label{class_vespucci_dataset_a21e40c0c1d04d0132168398f7ef3aad6}
+
+\item 
+uvec \hyperlink{class_vespucci_dataset_abb3bb39b5386bf5bdafd3117d9fed059}{Find\+Range} (double start, double end)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_abb3bb39b5386bf5bdafd3117d9fed059}{Vespucci\+Dataset\+::\+Find\+Range}. Finds the index of the wavelength value closest to the specified wavelength range. \end{DoxyCompactList}\item 
+uword \hyperlink{class_vespucci_dataset_af4188669d80c1595fb2eeb20c4e777fd}{Find\+Origin} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_af4188669d80c1595fb2eeb20c4e777fd}{Vespucci\+Dataset\+::\+Find\+Origin}. \end{DoxyCompactList}\item 
+int \hyperlink{class_vespucci_dataset_a9498294b2403dec1d12b56db0ba17ab3}{Key\+Size} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a9498294b2403dec1d12b56db0ba17ab3}{Vespucci\+Dataset\+::\+Key\+Size} Finds the number of data points in x variable to properly set axes of Q\+Custom\+Plot objects. \end{DoxyCompactList}\item 
+int \hyperlink{class_vespucci_dataset_ae8a121fd6312fb76cb545486e01b0910}{Value\+Size} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ae8a121fd6312fb76cb545486e01b0910}{Vespucci\+Dataset\+::\+Value\+Size} Finds number of unique y values for properly setting Q\+C\+P\+Axis. \end{DoxyCompactList}\item 
+Q\+C\+P\+Range \hyperlink{class_vespucci_dataset_a629addf6a7281a63db495a116aa5acd5}{Key\+Range} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a629addf6a7281a63db495a116aa5acd5}{Vespucci\+Dataset\+::\+Key\+Range} Finds the minima and maxima of x variable to properly set axes of Q\+Custom\+Plot objects. \end{DoxyCompactList}\item 
+Q\+C\+P\+Range \hyperlink{class_vespucci_dataset_aa7e9174b8509f4359134794050b2aae8}{Value\+Range} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_aa7e9174b8509f4359134794050b2aae8}{Vespucci\+Dataset\+::\+Value\+Range} Finds the minima and maxima of y variable to properly set axes of Q\+Custom\+Plot objects. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a7be76ea62f7f2119a0f3eeb0fbc92d02}{bool {\bfseries Save} (Q\+String filename)}\label{class_vespucci_dataset_a7be76ea62f7f2119a0f3eeb0fbc92d02}
+
+\item 
+\hypertarget{class_vespucci_dataset_a47cdd14a8b190bf8b8bd2c1d9a466dc5}{bool {\bfseries Save\+Spectrum} (Q\+String filename, uword column, file\+\_\+type type)}\label{class_vespucci_dataset_a47cdd14a8b190bf8b8bd2c1d9a466dc5}
+
+\item 
+void \hyperlink{class_vespucci_dataset_a385a4f192546dc9fb0c363ca7611d0a2}{Univariate} (double min, double max, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, Univariate\+Method\+::\+Method method, Q\+String integration\+\_\+method, uword gradient\+\_\+index)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a385a4f192546dc9fb0c363ca7611d0a2}{Vespucci\+Dataset\+::\+Univariate} Creates a univariate image. Several peak-\/determination methods are availible. All methods except for \char`\"{}\+Intensity\char`\"{} estimate a local baseline. This is done by drawing a straight line from the left to right endpoint. This can cause problems when the endpoints are near other local maxima. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_ad7691f7254731334236ecc4a58fd81f0}{void {\bfseries Univariate} (double min, double max, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, Univariate\+Method\+::\+Method method, Q\+String integration\+\_\+method)}\label{class_vespucci_dataset_ad7691f7254731334236ecc4a58fd81f0}
+
+\item 
+void \hyperlink{class_vespucci_dataset_a9da8a2ee67a055d50b0ef19be453e3a6}{Correlation\+Map} (vec control, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, uword gradient\+\_\+index)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a9da8a2ee67a055d50b0ef19be453e3a6}{Vespucci\+Dataset\+::\+Correlation\+Map}. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a3c0e0831d508437377ead473f98b38be}{Band\+Ratio} (double first\+\_\+min, double first\+\_\+max, double second\+\_\+min, double second\+\_\+max, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, Univariate\+Method\+::\+Method method, unsigned int gradient\+\_\+index)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a3c0e0831d508437377ead473f98b38be}{Vespucci\+Dataset\+::\+Band\+Ratio} Creates a band ratio univariate map. Band ratio maps represent the ratio of two peaks. The determination methods here are identical to those in \hyperlink{class_vespucci_dataset_a385a4f192546dc9fb0c363ca7611d0a2}{Vespucci\+Dataset\+::\+Univariate}. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a665c83f1ca58c875a042a867766918e4}{Band\+Ratio} (double first\+\_\+min, double first\+\_\+max, double second\+\_\+min, double second\+\_\+max, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, Univariate\+Method\+::\+Method method)
+\begin{DoxyCompactList}\small\item\em Band\+Ratio Band ratio analysis without imaging. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a300693f9bc5b14cbfc9ac710af4b09a1}{Partial\+Least\+Squares} (uword components, uword image\+\_\+component, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, unsigned int gradient\+\_\+index, bool recalculate)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a300693f9bc5b14cbfc9ac710af4b09a1}{Vespucci\+Dataset\+::\+Partial\+Least\+Squares} Performs P\+L\+S regression on data. Resulting map is score for one P\+L\+S Component, taken from one column of the X loadings. P\+L\+S is performed once. Subsequent maps use data from first call, stored as Partial\+Least\+Squares\+Data object, unless user requests recalculation. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_ab4c52da3f8281aa7c7cec96f12f20fca}{Principal\+Components} (int component, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, int gradient\+\_\+index, bool recalculate)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ab4c52da3f8281aa7c7cec96f12f20fca}{Vespucci\+Dataset\+::\+Principal\+Components} Performs principal component analysis on the data. Uses armadillo's pca routine. This function both calculates and plots principal components maps. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a7d9bf2dacd931192a7339785b2d38c7d}{Principal\+Components} (bool scale\+Data)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ab4c52da3f8281aa7c7cec96f12f20fca}{Vespucci\+Dataset\+::\+Principal\+Components}. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a40501c7de54e334e44594887f4144a96}{void {\bfseries Vertex\+Components} (uword endmembers, uword image\+\_\+component, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, unsigned gradient\+\_\+index, bool recalculate)}\label{class_vespucci_dataset_a40501c7de54e334e44594887f4144a96}
+
+\item 
+void \hyperlink{class_vespucci_dataset_a66187dec3aeafb655e75d7be5af7f52d}{K\+Means} (size\+\_\+t clusters, Q\+String metric\+\_\+text, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name})
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a66187dec3aeafb655e75d7be5af7f52d}{Vespucci\+Dataset\+::\+K\+Means} Implements K-\/means clustering using M\+L\+P\+A\+C\+K. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a06e4c491164d6ef3d74f5c5554bd35a5}{void {\bfseries Independent\+Components} (int image\+\_\+component, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name}, int gradient\+\_\+index, bool recalculate)}\label{class_vespucci_dataset_a06e4c491164d6ef3d74f5c5554bd35a5}
+
+\item 
+\hypertarget{class_vespucci_dataset_a073243e48a96ed505d24d9d87c2c86e0}{void {\bfseries Agglomerative} (int clusters, Q\+String distance\+\_\+metric, Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name})}\label{class_vespucci_dataset_a073243e48a96ed505d24d9d87c2c86e0}
+
+\item 
+void \hyperlink{class_vespucci_dataset_a044fb21d3fba89b7325ae24eb6042cea}{Partial\+Least\+Squares} (uword components)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a300693f9bc5b14cbfc9ac710af4b09a1}{Vespucci\+Dataset\+::\+Partial\+Least\+Squares}. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a74779cef5217e51364427aaed06bf500}{Vertex\+Components} (uword endmembers)
+\begin{DoxyCompactList}\small\item\em Vespucci\+Dataset\+::\+Vertex\+Components. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a738987dbd501063f1fcb6cca7ca9884f}{K\+Means} (size\+\_\+t clusters)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a66187dec3aeafb655e75d7be5af7f52d}{Vespucci\+Dataset\+::\+K\+Means}. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a5e831b6a048313e1740632d7ab3df52d}{void \hyperlink{class_vespucci_dataset_a5e831b6a048313e1740632d7ab3df52d}{Principal\+Components} ()}\label{class_vespucci_dataset_a5e831b6a048313e1740632d7ab3df52d}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ab4c52da3f8281aa7c7cec96f12f20fca}{Vespucci\+Dataset\+::\+Principal\+Components} Perform P\+C\+A without creating an image. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a1f8933230496f1b3f475a884a021c6e5}{Find\+Peaks} (double sel, double threshold, uword poly\+\_\+order, uword window\+\_\+size)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a1f8933230496f1b3f475a884a021c6e5}{Vespucci\+Dataset\+::\+Find\+Peaks}. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_ac0e50ce0c06f3cc95d02f79eaa777f0e}{void {\bfseries Find\+Peaks\+C\+W\+T} (std\+::string wavelet, uword max\+\_\+scale, uword gap\+\_\+threshold, uword min\+\_\+ridge\+\_\+length, uword search\+\_\+width, double noise\+\_\+threshold, std\+::string noise\+\_\+method, uword noise\+\_\+window\+\_\+size, bool save\+\_\+coefs, bool save\+\_\+coef\+\_\+plots, bool save\+\_\+ridge\+\_\+plots, bool save\+\_\+ridge\+\_\+plot\+\_\+data, bool estimate\+\_\+width, Q\+String save\+\_\+directory, Q\+String image\+\_\+format, Q\+C\+P\+Color\+Gradient gradient)}\label{class_vespucci_dataset_ac0e50ce0c06f3cc95d02f79eaa777f0e}
+
+\item 
+\hypertarget{class_vespucci_dataset_acc179b1759c4b54d55cb3b99dfefa0e2}{void {\bfseries Has\+Peaks\+C\+W\+T} (const mat \&range\+\_\+list)}\label{class_vespucci_dataset_acc179b1759c4b54d55cb3b99dfefa0e2}
+
+\item 
+vec \hyperlink{class_vespucci_dataset_ab43f057969b6603cbc46f8e9356b9b56}{wavelength} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ab43f057969b6603cbc46f8e9356b9b56}{Vespucci\+Dataset\+::wavelength}. \end{DoxyCompactList}\item 
+colvec \hyperlink{class_vespucci_dataset_aa7f8bd75b05670da47cb453b5350110b}{x} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_aa7f8bd75b05670da47cb453b5350110b}{Vespucci\+Dataset\+::x}. \end{DoxyCompactList}\item 
+colvec \hyperlink{class_vespucci_dataset_a83f8c7559de5e723073979f5556174fd}{y} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a83f8c7559de5e723073979f5556174fd}{Vespucci\+Dataset\+::y}. \end{DoxyCompactList}\item 
+colvec \hyperlink{class_vespucci_dataset_aa8f18d4758207aafc68e166036381035}{x} (uvec \hyperlink{class_vespucci_dataset_a7472b4eb9f6ea7245ed544287ebe4a8b}{indices})
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_aa7f8bd75b05670da47cb453b5350110b}{Vespucci\+Dataset\+::x}. \end{DoxyCompactList}\item 
+colvec \hyperlink{class_vespucci_dataset_aad51d79b1b30126fa297c6c716e286a2}{y} (uvec \hyperlink{class_vespucci_dataset_a7472b4eb9f6ea7245ed544287ebe4a8b}{indices})
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a83f8c7559de5e723073979f5556174fd}{Vespucci\+Dataset\+::y}. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_acf043eb854856b4c7a5e1facaf38b017}{double {\bfseries x} (uword index)}\label{class_vespucci_dataset_acf043eb854856b4c7a5e1facaf38b017}
+
+\item 
+\hypertarget{class_vespucci_dataset_a9c8fcdbf916bb3f5a5a8e9eb114e5e13}{double {\bfseries y} (uword index)}\label{class_vespucci_dataset_a9c8fcdbf916bb3f5a5a8e9eb114e5e13}
+
+\item 
+\hypertarget{class_vespucci_dataset_a9b3854cdf3cba2b2d02f157a6224bea2}{vec {\bfseries wavelength} (uvec \hyperlink{class_vespucci_dataset_a7472b4eb9f6ea7245ed544287ebe4a8b}{indices})}\label{class_vespucci_dataset_a9b3854cdf3cba2b2d02f157a6224bea2}
+
+\item 
+mat \hyperlink{class_vespucci_dataset_a536a8837c5a2ad10a0bb3577f8741ee2}{spectra} (uvec \hyperlink{class_vespucci_dataset_a7472b4eb9f6ea7245ed544287ebe4a8b}{indices})
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a536a8837c5a2ad10a0bb3577f8741ee2}{Vespucci\+Dataset\+::spectra}. \end{DoxyCompactList}\item 
+mat \hyperlink{class_vespucci_dataset_a8b1186c4bff0d513c336d7a48861777f}{spectra} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a536a8837c5a2ad10a0bb3577f8741ee2}{Vespucci\+Dataset\+::spectra}. \end{DoxyCompactList}\item 
+const Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{Vespucci\+Dataset\+::name}. \end{DoxyCompactList}\item 
+vec \hyperlink{class_vespucci_dataset_a7472b4eb9f6ea7245ed544287ebe4a8b}{indices} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a7472b4eb9f6ea7245ed544287ebe4a8b}{Vespucci\+Dataset\+::indices}. \end{DoxyCompactList}\item 
+mat $\ast$ \hyperlink{class_vespucci_dataset_ab0db3c7619e32824b893878fd6d31ba5}{indices\+\_\+ptr} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ab0db3c7619e32824b893878fd6d31ba5}{Vespucci\+Dataset\+::indices\+\_\+ptr}. \end{DoxyCompactList}\item 
+bool \hyperlink{class_vespucci_dataset_a8f9cb5f4e13fd2cb40b88907213d671a}{principal\+\_\+components\+\_\+calculated} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a8f9cb5f4e13fd2cb40b88907213d671a}{Vespucci\+Dataset\+::principal\+\_\+components\+\_\+calculated} Accessor for principal\+\_\+components\+\_\+calculated\+\_\+. The P\+C\+A dialog requests this to make sure that the same P\+C\+A is not calculated twice. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_aca96f1b0e3aa4e634ff95e9d2491fed9}{bool {\bfseries mlpack\+\_\+pca\+\_\+calculated} ()}\label{class_vespucci_dataset_aca96f1b0e3aa4e634ff95e9d2491fed9}
+
+\item 
+bool \hyperlink{class_vespucci_dataset_a3c0e14745c1346fb9598cd266067aa17}{vertex\+\_\+components\+\_\+calculated} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a3c0e14745c1346fb9598cd266067aa17}{Vespucci\+Dataset\+::vertex\+\_\+components\+\_\+calculated} Accessor for vertex\+\_\+components\+\_\+calculated\+\_\+. The V\+C\+A dialog requests this to make sure that the same V\+C\+A is not calculated twice. \end{DoxyCompactList}\item 
+bool \hyperlink{class_vespucci_dataset_a6e9531435042c5f6a38235d4d3021571}{partial\+\_\+least\+\_\+squares\+\_\+calculated} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a6e9531435042c5f6a38235d4d3021571}{Vespucci\+Dataset\+::partial\+\_\+least\+\_\+squares\+\_\+calculated} Accessor for partial\+\_\+least\+\_\+squares\+\_\+calculated. The P\+L\+S dialog requests this to make sure that the same P\+L\+S is not calculated twice. \end{DoxyCompactList}\item 
+bool \hyperlink{class_vespucci_dataset_a8679cd7dd55d7e27b957626de4398fe8}{k\+\_\+means\+\_\+calculated} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a8679cd7dd55d7e27b957626de4398fe8}{Vespucci\+Dataset\+::k\+\_\+means\+\_\+calculated} Accessor for k\+\_\+means\+\_\+calculated\+\_\+. Used for filling dataviewer. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a2a1d250e8d83ded5b751a442e7c42521}{bool {\bfseries radical\+\_\+calculated} ()}\label{class_vespucci_dataset_a2a1d250e8d83ded5b751a442e7c42521}
+
+\item 
+\hyperlink{class_principal_components_data}{Principal\+Components\+Data} $\ast$ \hyperlink{class_vespucci_dataset_aaebb151c72e7f41b8d5e6b1067fd2a07}{principal\+\_\+components\+\_\+data} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_aaebb151c72e7f41b8d5e6b1067fd2a07}{Vespucci\+Dataset\+::principal\+\_\+components\+\_\+data} Accessor for principal\+\_\+components\+\_\+data\+\_\+. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_aa70df98d12e5ff1452672f270c996223}{\hyperlink{class_m_l_p_a_c_k_p_c_a_data}{M\+L\+P\+A\+C\+K\+P\+C\+A\+Data} $\ast$ {\bfseries mlpack\+\_\+pca\+\_\+data} ()}\label{class_vespucci_dataset_aa70df98d12e5ff1452672f270c996223}
+
+\item 
+\hyperlink{class_v_c_a_data}{V\+C\+A\+Data} $\ast$ \hyperlink{class_vespucci_dataset_a0129e80bf2e5358d45085e9684e7812a}{vertex\+\_\+components\+\_\+data} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a0129e80bf2e5358d45085e9684e7812a}{Vespucci\+Dataset\+::vertex\+\_\+components\+\_\+data} Accessor for vertex\+\_\+components\+\_\+data\+\_\+. \end{DoxyCompactList}\item 
+\hyperlink{class_p_l_s_data}{P\+L\+S\+Data} $\ast$ \hyperlink{class_vespucci_dataset_ab6837c459330d8706dd6b2f2189d69b8}{partial\+\_\+least\+\_\+squares\+\_\+data} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ab6837c459330d8706dd6b2f2189d69b8}{Vespucci\+Dataset\+::partial\+\_\+least\+\_\+squares\+\_\+data} Accessor for partial\+\_\+least\+\_\+squares\+\_\+data\+\_\+;. \end{DoxyCompactList}\item 
+mat $\ast$ \hyperlink{class_vespucci_dataset_ac15a3d31b8a9ea58e114a935c0ac869d}{k\+\_\+means\+\_\+data} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ac15a3d31b8a9ea58e114a935c0ac869d}{Vespucci\+Dataset\+::k\+\_\+means\+\_\+data}. \end{DoxyCompactList}\item 
+Q\+List$<$ Q\+Shared\+Pointer\\*
+$<$ \hyperlink{class_univariate_data}{Univariate\+Data} $>$ $>$ \hyperlink{class_vespucci_dataset_a3efe2f88f3ca441b640635c04196153e}{univariate\+\_\+datas} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a3efe2f88f3ca441b640635c04196153e}{Vespucci\+Dataset\+::univariate\+\_\+datas}. \end{DoxyCompactList}\item 
+const Q\+String \hyperlink{class_vespucci_dataset_acb6a4de101573ac93f5fcb5dd5e38c5c}{x\+\_\+axis\+\_\+description} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_acb6a4de101573ac93f5fcb5dd5e38c5c}{Vespucci\+Dataset\+::x\+\_\+axis\+\_\+description} The x\+\_\+axis\+\_\+description is printed on the spectrum viewer. \end{DoxyCompactList}\item 
+const Q\+String \hyperlink{class_vespucci_dataset_ae49a51e6e1666cea514bec6bf5578405}{y\+\_\+axis\+\_\+description} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ae49a51e6e1666cea514bec6bf5578405}{Vespucci\+Dataset\+::y\+\_\+axis\+\_\+description}. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_aa35196b0c4fb0617d7ffd9545b9119b3}{Set\+Name} (Q\+String new\+\_\+name)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_aa35196b0c4fb0617d7ffd9545b9119b3}{Vespucci\+Dataset\+::\+Set\+Name}. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a6deccc4fb8829e27a68289e07a294f90}{Set\+Data} (mat \hyperlink{class_vespucci_dataset_a536a8837c5a2ad10a0bb3577f8741ee2}{spectra}, vec \hyperlink{class_vespucci_dataset_ab43f057969b6603cbc46f8e9356b9b56}{wavelength}, colvec \hyperlink{class_vespucci_dataset_aa7f8bd75b05670da47cb453b5350110b}{x}, colvec \hyperlink{class_vespucci_dataset_a83f8c7559de5e723073979f5556174fd}{y})
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a6deccc4fb8829e27a68289e07a294f90}{Vespucci\+Dataset\+::\+Set\+Data}. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_ac3d023864da930929b3491ef0d4ec14b}{Set\+Indices} (vec \hyperlink{class_vespucci_dataset_a7472b4eb9f6ea7245ed544287ebe4a8b}{indices})
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ac3d023864da930929b3491ef0d4ec14b}{Vespucci\+Dataset\+::\+Set\+Indices}. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_adcab2eab5d82f74232c8d706aa67dbf5}{Q\+String\+List {\bfseries map\+\_\+names} ()}\label{class_vespucci_dataset_adcab2eab5d82f74232c8d706aa67dbf5}
+
+\item 
+\hypertarget{class_vespucci_dataset_a1d728faac400905bef4fa437e089c987}{void {\bfseries Add\+Dataset} (\hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} dataset)}\label{class_vespucci_dataset_a1d728faac400905bef4fa437e089c987}
+
+\item 
+\hypertarget{class_vespucci_dataset_aba2b5b8368d785374e7fb56c93403582}{void {\bfseries Remove\+Dataset} (Q\+String \hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{name})}\label{class_vespucci_dataset_aba2b5b8368d785374e7fb56c93403582}
+
+\item 
+void \hyperlink{class_vespucci_dataset_a99e7818506a6a846fce631cf0d996ab0}{Add\+Map} (Q\+Shared\+Pointer$<$ \hyperlink{class_map_data}{Map\+Data} $>$ map)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a99e7818506a6a846fce631cf0d996ab0}{Vespucci\+Dataset\+::\+Add\+Map} Adds a map to the list of map pointers and adds its name to relevant lists. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a4524268e2b962f0efa7569e33d5456d1}{Remove\+Map\+At} (unsigned int i)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a4524268e2b962f0efa7569e33d5456d1}{Vespucci\+Dataset\+::\+Remove\+Map\+At}. \end{DoxyCompactList}\item 
+int \hyperlink{class_vespucci_dataset_a5ddd5cfaca0df48cd8ac3976f339a1cc}{map\+\_\+loading\+\_\+count} ()
+\begin{DoxyCompactList}\small\item\em Vespucci\+Dataset\+::map\+\_\+names. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a06f001e1a7c5bc58088498c6c78555d4}{Set\+X\+Description} (Q\+String description)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a06f001e1a7c5bc58088498c6c78555d4}{Vespucci\+Dataset\+::\+Set\+X\+Description} Sets the value of the spectral abscissa description. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a1665798dbd73ca4763b5101d29b7d7c3}{Set\+Y\+Description} (Q\+String description)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a1665798dbd73ca4763b5101d29b7d7c3}{Vespucci\+Dataset\+::\+Set\+Y\+Description}. \end{DoxyCompactList}\item 
+Q\+C\+P\+Range \hyperlink{class_vespucci_dataset_ae2583a142dba66a370ecc471b009a7a2}{Wavelength\+Range} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ae2583a142dba66a370ecc471b009a7a2}{Vespucci\+Dataset\+::\+Wavelength\+Range}. \end{DoxyCompactList}\item 
+Q\+C\+P\+Range \hyperlink{class_vespucci_dataset_a8f7646308fe2b61e47e007ea36eda489}{Point\+Spectrum\+Range} (int i)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a8f7646308fe2b61e47e007ea36eda489}{Vespucci\+Dataset\+::\+Point\+Spectrum\+Range}. \end{DoxyCompactList}\item 
+Q\+C\+P\+Color\+Gradient \hyperlink{class_vespucci_dataset_ab7f75e6c0ee1ce8831e6c2a0c9750959}{Get\+Gradient} (int gradient\+\_\+number)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ab7f75e6c0ee1ce8831e6c2a0c9750959}{Vespucci\+Dataset\+::\+Get\+Gradient} Selects the color gradient from list of presets. \end{DoxyCompactList}\item 
+Q\+C\+P\+Color\+Gradient \hyperlink{class_vespucci_dataset_ad6234efd06ea775780a1ed2576135f86}{Get\+Cluster\+Gradient} (int clusters)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ad6234efd06ea775780a1ed2576135f86}{Vespucci\+Dataset\+::\+Get\+Cluster\+Gradient} Cluster gradients are slightly different from the continuous gradients. This selects the right gradient based on the number of clusters. \end{DoxyCompactList}\item 
+bool \hyperlink{class_vespucci_dataset_ac02e9051b8fbc280d769598b80c3eb57}{Constructor\+Cancelled} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ac02e9051b8fbc280d769598b80c3eb57}{Vespucci\+Dataset\+::\+Constructor\+Cancelled} Specifies whether or not the constructor has been canceled. The constructor asks this and cleans everything up in case it is canceled. \end{DoxyCompactList}\item 
+mat \hyperlink{class_vespucci_dataset_a0b25d46d2ea17f59fbd9c2007d958d64}{Average\+Spectrum} (bool stats)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a0b25d46d2ea17f59fbd9c2007d958d64}{Vespucci\+Dataset\+::\+Average\+Spectrum} Finds the average of the spectrum. This can be saved by the user. Probably not all that useful, except for determining a spectrum to use as a background spectrum for other maps. \end{DoxyCompactList}\item 
+mat $\ast$ \hyperlink{class_vespucci_dataset_a64ac0dabcee669da58f55ae94bb63bc8}{x\+\_\+ptr} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a64ac0dabcee669da58f55ae94bb63bc8}{Vespucci\+Dataset\+::x\+\_\+ptr}. \end{DoxyCompactList}\item 
+mat $\ast$ \hyperlink{class_vespucci_dataset_ae3e3a13a4c77f575a64070765e613759}{y\+\_\+ptr} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ae3e3a13a4c77f575a64070765e613759}{Vespucci\+Dataset\+::y\+\_\+ptr}. \end{DoxyCompactList}\item 
+mat $\ast$ \hyperlink{class_vespucci_dataset_adb13350f6456bb09277e63a8b8d9a001}{wavelength\+\_\+ptr} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_adb13350f6456bb09277e63a8b8d9a001}{Vespucci\+Dataset\+::wavelength\+\_\+ptr}. \end{DoxyCompactList}\item 
+mat $\ast$ \hyperlink{class_vespucci_dataset_ad91edadd2c2a7630929088d0b0c7fc19}{spectra\+\_\+ptr} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ad91edadd2c2a7630929088d0b0c7fc19}{Vespucci\+Dataset\+::spectra\+\_\+ptr}. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a6f71f24af359f3d61f2ecdbcc7cab396}{mat $\ast$ {\bfseries spectra\+\_\+old\+\_\+ptr} (bool $\ast$ok)}\label{class_vespucci_dataset_a6f71f24af359f3d61f2ecdbcc7cab396}
+
+\item 
+bool \hyperlink{class_vespucci_dataset_afedd02ec813132cb7d6b016c22c7a902}{non\+\_\+spatial} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_afedd02ec813132cb7d6b016c22c7a902}{Vespucci\+Dataset\+::non\+\_\+spatial}. \end{DoxyCompactList}\item 
+bool \hyperlink{class_vespucci_dataset_a9ce29ea693213307431ddebdedf6fa1b}{meta} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a9ce29ea693213307431ddebdedf6fa1b}{Vespucci\+Dataset\+::meta}. \end{DoxyCompactList}\item 
+void \hyperlink{class_vespucci_dataset_a94d860fa93e9ad389f927e58e22ee6d9}{Set\+Parent\+Dataset\+Indices} (mat parent\+\_\+dataset\+\_\+indices)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a94d860fa93e9ad389f927e58e22ee6d9}{Vespucci\+Dataset\+::\+Set\+Parent\+Dataset\+Indices}. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_acb7c814ab4c02c46b9bb22c73a48e3ed}{mat $\ast$ {\bfseries parent\+\_\+dataset\+\_\+indices} ()}\label{class_vespucci_dataset_acb7c814ab4c02c46b9bb22c73a48e3ed}
+
+\item 
+bool \hyperlink{class_vespucci_dataset_ac17feefdb4773091c11e1c08274cfacc}{Undoable} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_ac17feefdb4773091c11e1c08274cfacc}{Vespucci\+Dataset\+::\+Undoable}. \end{DoxyCompactList}\item 
+int \hyperlink{class_vespucci_dataset_a850b757be2abca6b552fbbdd5dba6f09}{Univariate\+Count} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a850b757be2abca6b552fbbdd5dba6f09}{Vespucci\+Dataset\+::\+Univariate\+Count}. \end{DoxyCompactList}\item 
+Q\+String \hyperlink{class_vespucci_dataset_a7c13abe9df69967b39a135d8bf97ce89}{last\+\_\+operation} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a7c13abe9df69967b39a135d8bf97ce89}{Vespucci\+Dataset\+::last\+\_\+operation}. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_ab3f76db92077ce0744067f1450ea0b7c}{\hyperlink{class_map_list_model}{Map\+List\+Model} $\ast$ {\bfseries map\+\_\+list\+\_\+model} ()}\label{class_vespucci_dataset_ab3f76db92077ce0744067f1450ea0b7c}
+
+\item 
+Q\+String\+List \hyperlink{class_vespucci_dataset_af65d31aaea6c890d5e3236b1f05a40c1}{Analysis\+Results\+List} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_af65d31aaea6c890d5e3236b1f05a40c1}{Vespucci\+Dataset\+::\+Analysis\+Results\+List}. \end{DoxyCompactList}\item 
+mat $\ast$ \hyperlink{class_vespucci_dataset_a3d0aabb4b4b9d66da5ae66373d04de7b}{Analysis\+Result} (Q\+String key)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_a3d0aabb4b4b9d66da5ae66373d04de7b}{Vespucci\+Dataset\+::\+Analysis\+Result}. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_a16a6d1595d8b4afd96789d09d55a6954}{void {\bfseries Add\+Analysis\+Result} (std\+::string key, mat value)}\label{class_vespucci_dataset_a16a6d1595d8b4afd96789d09d55a6954}
+
+\item 
+\hypertarget{class_vespucci_dataset_acbaac5a3d06cd1f331abee2714e5734f}{void {\bfseries Add\+Analysis\+Results} (std\+::map$<$ std\+::string, mat $>$ results)}\label{class_vespucci_dataset_acbaac5a3d06cd1f331abee2714e5734f}
+
+\item 
+\hypertarget{class_vespucci_dataset_aca08389cff2f9aa5c0bfb5d41adbc994}{void \hyperlink{class_vespucci_dataset_aca08389cff2f9aa5c0bfb5d41adbc994}{Destroy\+Log\+File} ()}\label{class_vespucci_dataset_aca08389cff2f9aa5c0bfb5d41adbc994}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_dataset_aca08389cff2f9aa5c0bfb5d41adbc994}{Vespucci\+Dataset\+::\+Destroy\+Log\+File} Deletes log file unless user decides to save it elsewhere. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_dataset_ab092b6f1366082df96091fdd3eb5fcfb}{void {\bfseries Set\+Old\+Copies} ()}\label{class_vespucci_dataset_ab092b6f1366082df96091fdd3eb5fcfb}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_vespucci_dataset_a1355c180cf197e0ff964b303232d9c5e}{Q\+Text\+Stream \hyperlink{class_vespucci_dataset_a1355c180cf197e0ff964b303232d9c5e}{log\+\_\+stream\+\_\+}}\label{class_vespucci_dataset_a1355c180cf197e0ff964b303232d9c5e}
+
+\begin{DoxyCompactList}\small\item\em log\+\_\+stream\+\_\+ A log of all U\+I-\/induced functions called on this dataset \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} class This is the main class for dealing with hyperspectral data. This handles the import and export of spectra, and the creation of maps. Images are handled by the \hyperlink{class_map_data}{Map\+Data} class. 
+
+Definition at line 74 of file vespuccidataset.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_vespucci_dataset_a06df54f3af54a6a7dcd2d93fced57275}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Vespucci\+Dataset}]{\setlength{\rightskip}{0pt plus 5cm}Vespucci\+Dataset\+::\+Vespucci\+Dataset (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{text\+\_\+filename, }
+\item[{{\bf Main\+Window} $\ast$}]{main\+\_\+window, }
+\item[{Q\+String $\ast$}]{directory, }
+\item[{Q\+File $\ast$}]{log\+\_\+file, }
+\item[{Q\+String}]{name, }
+\item[{Q\+String}]{x\+\_\+axis\+\_\+description, }
+\item[{Q\+String}]{y\+\_\+axis\+\_\+description, }
+\item[{bool}]{swap\+\_\+spatial, }
+\item[{std\+::string}]{format}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a06df54f3af54a6a7dcd2d93fced57275}
+
+
+Vespucci\+Dataset\+::\+Vespucci\+Dataset. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em text\+\_\+filename} & The filename of the text file from which data is imported \\
+\hline
+{\em main\+\_\+window} & The main window of the program \\
+\hline
+{\em directory} & The current global working directory \\
+\hline
+{\em log\+\_\+file} & The log file \\
+\hline
+{\em name} & The name of the dataset displayed to the user \\
+\hline
+{\em x\+\_\+axis\+\_\+description} & A description of the spectral abscissa \\
+\hline
+{\em y\+\_\+axis\+\_\+description} & A description of the spectral ordinate \\
+\hline
+{\em swap\+\_\+spatial} & Whether or not y is located in the first column instead of the second (some Horiba spectrometers do this). Main function for processing data from text files to create \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} objects. Currently written to accept files in \char`\"{}wide\char`\"{} format, will be expanded to deal with different A\+S\+C\+I\+I formats later with conditionals. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 221 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a06df54f3af54a6a7dcd2d93fced57275_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_abdada511afcfc13a2f5ffc09138a1755}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Vespucci\+Dataset}]{\setlength{\rightskip}{0pt plus 5cm}Vespucci\+Dataset\+::\+Vespucci\+Dataset (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{vespucci\+\_\+binary\+\_\+filename, }
+\item[{{\bf Main\+Window} $\ast$}]{main\+\_\+window, }
+\item[{Q\+String $\ast$}]{directory, }
+\item[{Q\+File $\ast$}]{log\+\_\+file, }
+\item[{Q\+String}]{name, }
+\item[{Q\+String}]{x\+\_\+axis\+\_\+description, }
+\item[{Q\+String}]{y\+\_\+axis\+\_\+description}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_abdada511afcfc13a2f5ffc09138a1755}
+
+
+Vespucci\+Dataset\+::\+Vespucci\+Dataset. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em binary\+\_\+filename} & The filename of the binary input file \\
+\hline
+{\em main\+\_\+window} & The main window of the program \\
+\hline
+{\em directory} & The current working directory \\
+\hline
+{\em name} & The name of the dataset displayed to the user \\
+\hline
+{\em log\+\_\+file} & The log file Constructor for loading saved spectral/spatial data in armadillo format \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 150 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_abdada511afcfc13a2f5ffc09138a1755_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a804af150636c59f3109a6a54267a861d}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Vespucci\+Dataset}]{\setlength{\rightskip}{0pt plus 5cm}Vespucci\+Dataset\+::\+Vespucci\+Dataset (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{name, }
+\item[{{\bf Main\+Window} $\ast$}]{main\+\_\+window, }
+\item[{Q\+String $\ast$}]{directory, }
+\item[{Q\+File $\ast$}]{log\+\_\+file, }
+\item[{Q\+Shared\+Pointer$<$ {\bf Vespucci\+Dataset} $>$}]{original, }
+\item[{uvec}]{indices}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a804af150636c59f3109a6a54267a861d}
+
+
+Vespucci\+Dataset\+::\+Vespucci\+Dataset. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of the dataset displayed to the user \\
+\hline
+{\em main\+\_\+window} & The main window of the program \\
+\hline
+{\em directory} & The current global working directory \\
+\hline
+{\em log\+\_\+file} & The log file \\
+\hline
+{\em original} & The dataset from which this dataset is \char`\"{}extracted\char`\"{} \\
+\hline
+{\em indices} & The indices of the spectra in the previous dataset that will form this one This is a constructor to create a new dataset by \char`\"{}extracting\char`\"{} spectra from a another dataset based on values on an image. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 391 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a804af150636c59f3109a6a54267a861d_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a15f16bb144fb3948e5277706d0959009}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Vespucci\+Dataset}]{\setlength{\rightskip}{0pt plus 5cm}Vespucci\+Dataset\+::\+Vespucci\+Dataset (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{name, }
+\item[{{\bf Main\+Window} $\ast$}]{main\+\_\+window, }
+\item[{Q\+String $\ast$}]{directory, }
+\item[{Q\+File $\ast$}]{log\+\_\+file}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a15f16bb144fb3948e5277706d0959009}
+
+
+Vespucci\+Dataset\+::\+Vespucci\+Dataset. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Dataset name \\
+\hline
+{\em main\+\_\+window} & The \\
+\hline
+{\em directory} & \\
+\hline
+{\em log\+\_\+file} & Constructor to create a dataset without spatial and spectral data set (i.\+e. when using \hyperlink{class_meta_dataset}{Meta\+Dataset}). \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 450 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a15f16bb144fb3948e5277706d0959009_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_vespucci_dataset_a99e7818506a6a846fce631cf0d996ab0}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Add\+Map@{Add\+Map}}
+\index{Add\+Map@{Add\+Map}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Add\+Map}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Add\+Map (
+\begin{DoxyParamCaption}
+\item[{Q\+Shared\+Pointer$<$ {\bf Map\+Data} $>$}]{map}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a99e7818506a6a846fce631cf0d996ab0}
+
+
+\hyperlink{class_vespucci_dataset_a99e7818506a6a846fce631cf0d996ab0}{Vespucci\+Dataset\+::\+Add\+Map} Adds a map to the list of map pointers and adds its name to relevant lists. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em map} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 2521 of file vespuccidataset.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a99e7818506a6a846fce631cf0d996ab0_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a3d0aabb4b4b9d66da5ae66373d04de7b}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Analysis\+Result@{Analysis\+Result}}
+\index{Analysis\+Result@{Analysis\+Result}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Analysis\+Result}]{\setlength{\rightskip}{0pt plus 5cm}mat $\ast$ Vespucci\+Dataset\+::\+Analysis\+Result (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{key}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a3d0aabb4b4b9d66da5ae66373d04de7b}
+
+
+\hyperlink{class_vespucci_dataset_a3d0aabb4b4b9d66da5ae66373d04de7b}{Vespucci\+Dataset\+::\+Analysis\+Result}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Interface to analysis\+\_\+results\+\_\+ 
+\end{DoxyReturn}
+
+
+Definition at line 2917 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_af65d31aaea6c890d5e3236b1f05a40c1}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Analysis\+Results\+List@{Analysis\+Results\+List}}
+\index{Analysis\+Results\+List@{Analysis\+Results\+List}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Analysis\+Results\+List}]{\setlength{\rightskip}{0pt plus 5cm}Q\+String\+List Vespucci\+Dataset\+::\+Analysis\+Results\+List (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_af65d31aaea6c890d5e3236b1f05a40c1}
+
+
+\hyperlink{class_vespucci_dataset_af65d31aaea6c890d5e3236b1f05a40c1}{Vespucci\+Dataset\+::\+Analysis\+Results\+List}. 
+
+\begin{DoxyReturn}{Returns}
+Interface to analysis\+\_\+results\+\_\+ 
+\end{DoxyReturn}
+
+
+Definition at line 2907 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a0b25d46d2ea17f59fbd9c2007d958d64}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Average\+Spectrum@{Average\+Spectrum}}
+\index{Average\+Spectrum@{Average\+Spectrum}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Average\+Spectrum}]{\setlength{\rightskip}{0pt plus 5cm}mat Vespucci\+Dataset\+::\+Average\+Spectrum (
+\begin{DoxyParamCaption}
+\item[{bool}]{stats}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a0b25d46d2ea17f59fbd9c2007d958d64}
+
+
+\hyperlink{class_vespucci_dataset_a0b25d46d2ea17f59fbd9c2007d958d64}{Vespucci\+Dataset\+::\+Average\+Spectrum} Finds the average of the spectrum. This can be saved by the user. Probably not all that useful, except for determining a spectrum to use as a background spectrum for other maps. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em stats} & Whether or not to include standard deviations on the second row. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The average spectrum 
+\end{DoxyReturn}
+
+
+Definition at line 2648 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a3c0e0831d508437377ead473f98b38be}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Band\+Ratio@{Band\+Ratio}}
+\index{Band\+Ratio@{Band\+Ratio}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Band\+Ratio}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Band\+Ratio (
+\begin{DoxyParamCaption}
+\item[{double}]{first\+\_\+min, }
+\item[{double}]{first\+\_\+max, }
+\item[{double}]{second\+\_\+min, }
+\item[{double}]{second\+\_\+max, }
+\item[{Q\+String}]{name, }
+\item[{Univariate\+Method\+::\+Method}]{method, }
+\item[{unsigned int}]{gradient\+\_\+index}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a3c0e0831d508437377ead473f98b38be}
+
+
+\hyperlink{class_vespucci_dataset_a3c0e0831d508437377ead473f98b38be}{Vespucci\+Dataset\+::\+Band\+Ratio} Creates a band ratio univariate map. Band ratio maps represent the ratio of two peaks. The determination methods here are identical to those in \hyperlink{class_vespucci_dataset_a385a4f192546dc9fb0c363ca7611d0a2}{Vespucci\+Dataset\+::\+Univariate}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em first\+\_\+min} & index of left bound of first region of interest \\
+\hline
+{\em first\+\_\+max} & index of right bound of first region of interest \\
+\hline
+{\em second\+\_\+min} & index of left bound of second region of interest \\
+\hline
+{\em second\+\_\+max} & index of right bound of second region of interest \\
+\hline
+{\em name} & name of the \hyperlink{class_map_data}{Map\+Data} object to be created. This becomes name of the map to the user \\
+\hline
+{\em value\+\_\+method} & how the maxima are to be determined (area, derivative, or intensity) \\
+\hline
+{\em gradient\+\_\+index} & index of gradient in the master list (\hyperlink{class_vespucci_dataset_ab7f75e6c0ee1ce8831e6c2a0c9750959}{Get\+Gradient()}) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1380 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a3c0e0831d508437377ead473f98b38be_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a665c83f1ca58c875a042a867766918e4}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Band\+Ratio@{Band\+Ratio}}
+\index{Band\+Ratio@{Band\+Ratio}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Band\+Ratio}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Band\+Ratio (
+\begin{DoxyParamCaption}
+\item[{double}]{first\+\_\+min, }
+\item[{double}]{first\+\_\+max, }
+\item[{double}]{second\+\_\+min, }
+\item[{double}]{second\+\_\+max, }
+\item[{Q\+String}]{name, }
+\item[{Univariate\+Method\+::\+Method}]{method}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a665c83f1ca58c875a042a867766918e4}
+
+
+Band\+Ratio Band ratio analysis without imaging. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em first\+\_\+min} & First spectral region of interest left bound. \\
+\hline
+{\em first\+\_\+max} & First spectral region of interest right bound. \\
+\hline
+{\em second\+\_\+min} & Second spectral region of interest left bound. \\
+\hline
+{\em second\+\_\+max} & Second spectral region of interest right bound. \\
+\hline
+{\em name} & Descriptive name exposed to the user. \\
+\hline
+{\em method} & The method. Perform a band ratio analysis without creating an image. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1443 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a225fd450bcf573db13e6f563a4a0e539}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Baseline@{Baseline}}
+\index{Baseline@{Baseline}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Baseline}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Baseline (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{method, }
+\item[{int}]{parameter}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a225fd450bcf573db13e6f563a4a0e539}
+
+
+\hyperlink{class_vespucci_dataset_a225fd450bcf573db13e6f563a4a0e539}{Vespucci\+Dataset\+::\+Baseline} Baseline-\/adjusts the data. This function uses a median filter with a large window to determine the baseline on the assumption that the median value is more likely to be basline than spectrum. This will complicate things if there are many peaks. Additionally, this significantly narrows the shape of peaks. Other baseline methods may be implemented later. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em method} & \\
+\hline
+{\em window\+\_\+size} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 916 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a225fd450bcf573db13e6f563a4a0e539_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a21f1635124ce556cd1578ffc1178ceef}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Booleanize@{Booleanize}}
+\index{Booleanize@{Booleanize}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Booleanize}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Booleanize (
+\begin{DoxyParamCaption}
+\item[{double}]{min, }
+\item[{double}]{max, }
+\item[{bool}]{keep\+\_\+inside, }
+\item[{bool}]{oneify}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a21f1635124ce556cd1578ffc1178ceef}
+
+
+\hyperlink{class_vespucci_dataset_a21f1635124ce556cd1578ffc1178ceef}{Vespucci\+Dataset\+::\+Booleanize}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em min} & \\
+\hline
+{\em max} & \\
+\hline
+{\em keep\+\_\+inside} & \\
+\hline
+{\em oneify} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 691 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a21f1635124ce556cd1578ffc1178ceef_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a4b280cfa6a8a99df7594aab5ebb3e0b0}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Clamp@{Clamp}}
+\index{Clamp@{Clamp}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Clamp}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Clamp (
+\begin{DoxyParamCaption}
+\item[{double}]{min, }
+\item[{double}]{max}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a4b280cfa6a8a99df7594aab5ebb3e0b0}
+
+
+\hyperlink{class_vespucci_dataset_a4b280cfa6a8a99df7594aab5ebb3e0b0}{Vespucci\+Dataset\+::\+Clamp}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em min} & \\
+\hline
+{\em max} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 728 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a4b280cfa6a8a99df7594aab5ebb3e0b0_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_ac02e9051b8fbc280d769598b80c3eb57}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Constructor\+Cancelled@{Constructor\+Cancelled}}
+\index{Constructor\+Cancelled@{Constructor\+Cancelled}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Constructor\+Cancelled}]{\setlength{\rightskip}{0pt plus 5cm}bool Vespucci\+Dataset\+::\+Constructor\+Cancelled (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ac02e9051b8fbc280d769598b80c3eb57}
+
+
+\hyperlink{class_vespucci_dataset_ac02e9051b8fbc280d769598b80c3eb57}{Vespucci\+Dataset\+::\+Constructor\+Cancelled} Specifies whether or not the constructor has been canceled. The constructor asks this and cleans everything up in case it is canceled. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 2635 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a9da8a2ee67a055d50b0ef19be453e3a6}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Correlation\+Map@{Correlation\+Map}}
+\index{Correlation\+Map@{Correlation\+Map}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Correlation\+Map}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Correlation\+Map (
+\begin{DoxyParamCaption}
+\item[{vec}]{control, }
+\item[{Q\+String}]{name, }
+\item[{uword}]{gradient\+\_\+index}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a9da8a2ee67a055d50b0ef19be453e3a6}
+
+
+\hyperlink{class_vespucci_dataset_a9da8a2ee67a055d50b0ef19be453e3a6}{Vespucci\+Dataset\+::\+Correlation\+Map}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em control} & The \char`\"{}control\char`\"{} vector to which all spectra are compared \\
+\hline
+{\em name} & The name of the image \\
+\hline
+{\em gradient\+\_\+index} & The index of the color gradient in the global list \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1336 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a9da8a2ee67a055d50b0ef19be453e3a6_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_aa0706b058354cddc5e1fbba68721aa87}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Crop\+Spectra@{Crop\+Spectra}}
+\index{Crop\+Spectra@{Crop\+Spectra}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Crop\+Spectra}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Crop\+Spectra (
+\begin{DoxyParamCaption}
+\item[{double}]{x\+\_\+min, }
+\item[{double}]{x\+\_\+max, }
+\item[{double}]{y\+\_\+min, }
+\item[{double}]{y\+\_\+max, }
+\item[{double}]{wl\+\_\+min, }
+\item[{double}]{wl\+\_\+max}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_aa0706b058354cddc5e1fbba68721aa87}
+
+
+\hyperlink{class_vespucci_dataset_aa0706b058354cddc5e1fbba68721aa87}{Vespucci\+Dataset\+::\+Crop\+Spectra} Crops spectra\+\_\+ based on. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+min} & value of x below which spectra are deleted \\
+\hline
+{\em x\+\_\+max} & value of x above which spectra are deleted \\
+\hline
+{\em y\+\_\+min} & value of y below which spectra are deleted \\
+\hline
+{\em y\+\_\+max} & value of y above which spectra are deleted Removes all data points outside of the range. Cannot be undone. It is preferable to create a new dataset rather than crop an old one. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 526 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_af4188669d80c1595fb2eeb20c4e777fd}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Find\+Origin@{Find\+Origin}}
+\index{Find\+Origin@{Find\+Origin}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Find\+Origin}]{\setlength{\rightskip}{0pt plus 5cm}uword Vespucci\+Dataset\+::\+Find\+Origin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_af4188669d80c1595fb2eeb20c4e777fd}
+
+
+\hyperlink{class_vespucci_dataset_af4188669d80c1595fb2eeb20c4e777fd}{Vespucci\+Dataset\+::\+Find\+Origin}. 
+
+\begin{DoxyReturn}{Returns}
+Find the point closest to (0,0) in the map. If the function fails, find the index in the middle of the spatial data. 
+\end{DoxyReturn}
+
+
+Definition at line 2170 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_af4188669d80c1595fb2eeb20c4e777fd_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a1f8933230496f1b3f475a884a021c6e5}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Find\+Peaks@{Find\+Peaks}}
+\index{Find\+Peaks@{Find\+Peaks}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Find\+Peaks}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Find\+Peaks (
+\begin{DoxyParamCaption}
+\item[{double}]{sel, }
+\item[{double}]{threshold, }
+\item[{uword}]{poly\+\_\+order, }
+\item[{uword}]{window\+\_\+size}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a1f8933230496f1b3f475a884a021c6e5}
+
+
+\hyperlink{class_vespucci_dataset_a1f8933230496f1b3f475a884a021c6e5}{Vespucci\+Dataset\+::\+Find\+Peaks}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sel} & The amount above the surrounding data for a peak to be identified \\
+\hline
+{\em threshold} & A value which peaks must be larger than to be maxima \\
+\hline
+{\em poly\+\_\+order} & Polynomial order for Savitzky-\/\+Golay derivatization \\
+\hline
+{\em window\+\_\+size} & Window size for Savitzky-\/\+Golay derivatization \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1615 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a1f8933230496f1b3f475a884a021c6e5_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_abb3bb39b5386bf5bdafd3117d9fed059}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Find\+Range@{Find\+Range}}
+\index{Find\+Range@{Find\+Range}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Find\+Range}]{\setlength{\rightskip}{0pt plus 5cm}uvec Vespucci\+Dataset\+::\+Find\+Range (
+\begin{DoxyParamCaption}
+\item[{double}]{start, }
+\item[{double}]{end}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_abb3bb39b5386bf5bdafd3117d9fed059}
+
+
+\hyperlink{class_vespucci_dataset_abb3bb39b5386bf5bdafd3117d9fed059}{Vespucci\+Dataset\+::\+Find\+Range}. Finds the index of the wavelength value closest to the specified wavelength range. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em start} & the first wavelength in the spectral region of interest \\
+\hline
+{\em end} & the second wavelength in the spectral region of interest \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 2157 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_abb3bb39b5386bf5bdafd3117d9fed059_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_ad6234efd06ea775780a1ed2576135f86}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Get\+Cluster\+Gradient@{Get\+Cluster\+Gradient}}
+\index{Get\+Cluster\+Gradient@{Get\+Cluster\+Gradient}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Get\+Cluster\+Gradient}]{\setlength{\rightskip}{0pt plus 5cm}Q\+C\+P\+Color\+Gradient Vespucci\+Dataset\+::\+Get\+Cluster\+Gradient (
+\begin{DoxyParamCaption}
+\item[{int}]{clusters}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ad6234efd06ea775780a1ed2576135f86}
+
+
+\hyperlink{class_vespucci_dataset_ad6234efd06ea775780a1ed2576135f86}{Vespucci\+Dataset\+::\+Get\+Cluster\+Gradient} Cluster gradients are slightly different from the continuous gradients. This selects the right gradient based on the number of clusters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em clusters} & Number of clusters \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Proper color gradient for number of clusters 
+\end{DoxyReturn}
+
+
+Definition at line 2613 of file vespuccidataset.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_ad6234efd06ea775780a1ed2576135f86_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_ab7f75e6c0ee1ce8831e6c2a0c9750959}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Get\+Gradient@{Get\+Gradient}}
+\index{Get\+Gradient@{Get\+Gradient}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Get\+Gradient}]{\setlength{\rightskip}{0pt plus 5cm}Q\+C\+P\+Color\+Gradient Vespucci\+Dataset\+::\+Get\+Gradient (
+\begin{DoxyParamCaption}
+\item[{int}]{gradient\+\_\+number}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ab7f75e6c0ee1ce8831e6c2a0c9750959}
+
+
+\hyperlink{class_vespucci_dataset_ab7f75e6c0ee1ce8831e6c2a0c9750959}{Vespucci\+Dataset\+::\+Get\+Gradient} Selects the color gradient from list of presets. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em gradient\+\_\+number} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 2559 of file vespuccidataset.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_ab7f75e6c0ee1ce8831e6c2a0c9750959_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a7c685d41d2093602e563f7facaff7f9a}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Hy\+Sime@{Hy\+Sime}}
+\index{Hy\+Sime@{Hy\+Sime}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Hy\+Sime}]{\setlength{\rightskip}{0pt plus 5cm}int Vespucci\+Dataset\+::\+Hy\+Sime (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a7c685d41d2093602e563f7facaff7f9a}
+
+
+\hyperlink{class_vespucci_dataset_a7c685d41d2093602e563f7facaff7f9a}{Vespucci\+Dataset\+::\+Hy\+Sime}. 
+
+\begin{DoxyReturn}{Returns}
+Dimensionality predicted by Hy\+Sime algorithm 
+\end{DoxyReturn}
+
+
+Definition at line 1214 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a7c685d41d2093602e563f7facaff7f9a_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a7c685d41d2093602e563f7facaff7f9a_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a7472b4eb9f6ea7245ed544287ebe4a8b}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!indices@{indices}}
+\index{indices@{indices}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{indices}]{\setlength{\rightskip}{0pt plus 5cm}vec Vespucci\+Dataset\+::indices (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a7472b4eb9f6ea7245ed544287ebe4a8b}
+
+
+\hyperlink{class_vespucci_dataset_a7472b4eb9f6ea7245ed544287ebe4a8b}{Vespucci\+Dataset\+::indices}. 
+
+\begin{DoxyReturn}{Returns}
+The indices\+\_\+ vector 
+\end{DoxyReturn}
+
+
+Definition at line 2364 of file vespuccidataset.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a7472b4eb9f6ea7245ed544287ebe4a8b_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_ab0db3c7619e32824b893878fd6d31ba5}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!indices\+\_\+ptr@{indices\+\_\+ptr}}
+\index{indices\+\_\+ptr@{indices\+\_\+ptr}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{indices\+\_\+ptr}]{\setlength{\rightskip}{0pt plus 5cm}mat $\ast$ Vespucci\+Dataset\+::indices\+\_\+ptr (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ab0db3c7619e32824b893878fd6d31ba5}
+
+
+\hyperlink{class_vespucci_dataset_ab0db3c7619e32824b893878fd6d31ba5}{Vespucci\+Dataset\+::indices\+\_\+ptr}. 
+
+\begin{DoxyReturn}{Returns}
+A pointer to the indices\+\_\+ vector 
+\end{DoxyReturn}
+
+
+Definition at line 2373 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a8679cd7dd55d7e27b957626de4398fe8}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!k\+\_\+means\+\_\+calculated@{k\+\_\+means\+\_\+calculated}}
+\index{k\+\_\+means\+\_\+calculated@{k\+\_\+means\+\_\+calculated}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{k\+\_\+means\+\_\+calculated}]{\setlength{\rightskip}{0pt plus 5cm}bool Vespucci\+Dataset\+::k\+\_\+means\+\_\+calculated (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a8679cd7dd55d7e27b957626de4398fe8}
+
+
+\hyperlink{class_vespucci_dataset_a8679cd7dd55d7e27b957626de4398fe8}{Vespucci\+Dataset\+::k\+\_\+means\+\_\+calculated} Accessor for k\+\_\+means\+\_\+calculated\+\_\+. Used for filling dataviewer. 
+
+\begin{DoxyReturn}{Returns}
+Whether or not k means have been calculated. 
+\end{DoxyReturn}
+
+
+Definition at line 2743 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_ac15a3d31b8a9ea58e114a935c0ac869d}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!k\+\_\+means\+\_\+data@{k\+\_\+means\+\_\+data}}
+\index{k\+\_\+means\+\_\+data@{k\+\_\+means\+\_\+data}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{k\+\_\+means\+\_\+data}]{\setlength{\rightskip}{0pt plus 5cm}mat $\ast$ Vespucci\+Dataset\+::k\+\_\+means\+\_\+data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ac15a3d31b8a9ea58e114a935c0ac869d}
+
+
+\hyperlink{class_vespucci_dataset_ac15a3d31b8a9ea58e114a935c0ac869d}{Vespucci\+Dataset\+::k\+\_\+means\+\_\+data}. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to the matrix containing the k-\/means assignments 
+\end{DoxyReturn}
+
+
+Definition at line 2787 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a629addf6a7281a63db495a116aa5acd5}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Key\+Range@{Key\+Range}}
+\index{Key\+Range@{Key\+Range}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Key\+Range}]{\setlength{\rightskip}{0pt plus 5cm}Q\+C\+P\+Range Vespucci\+Dataset\+::\+Key\+Range (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a629addf6a7281a63db495a116aa5acd5}
+
+
+\hyperlink{class_vespucci_dataset_a629addf6a7281a63db495a116aa5acd5}{Vespucci\+Dataset\+::\+Key\+Range} Finds the minima and maxima of x variable to properly set axes of Q\+Custom\+Plot objects. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 2251 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a9498294b2403dec1d12b56db0ba17ab3}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Key\+Size@{Key\+Size}}
+\index{Key\+Size@{Key\+Size}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Key\+Size}]{\setlength{\rightskip}{0pt plus 5cm}int Vespucci\+Dataset\+::\+Key\+Size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a9498294b2403dec1d12b56db0ba17ab3}
+
+
+\hyperlink{class_vespucci_dataset_a9498294b2403dec1d12b56db0ba17ab3}{Vespucci\+Dataset\+::\+Key\+Size} Finds the number of data points in x variable to properly set axes of Q\+Custom\+Plot objects. 
+
+\begin{DoxyReturn}{Returns}
+number of unique x values 
+\end{DoxyReturn}
+
+
+Definition at line 2265 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a66187dec3aeafb655e75d7be5af7f52d}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!K\+Means@{K\+Means}}
+\index{K\+Means@{K\+Means}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{K\+Means}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+K\+Means (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{clusters, }
+\item[{Q\+String}]{metric\+\_\+text, }
+\item[{Q\+String}]{name}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a66187dec3aeafb655e75d7be5af7f52d}
+
+
+\hyperlink{class_vespucci_dataset_a66187dec3aeafb655e75d7be5af7f52d}{Vespucci\+Dataset\+::\+K\+Means} Implements K-\/means clustering using M\+L\+P\+A\+C\+K. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em clusters} & Number of clusters to find \\
+\hline
+{\em metric} & Distance metric \\
+\hline
+{\em name} & Name of map in workspace. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1973 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a66187dec3aeafb655e75d7be5af7f52d_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a738987dbd501063f1fcb6cca7ca9884f}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!K\+Means@{K\+Means}}
+\index{K\+Means@{K\+Means}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{K\+Means}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+K\+Means (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{clusters}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a738987dbd501063f1fcb6cca7ca9884f}
+
+
+\hyperlink{class_vespucci_dataset_a66187dec3aeafb655e75d7be5af7f52d}{Vespucci\+Dataset\+::\+K\+Means}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em clusters} & Perform k-\/\+Means clustering without creating an image \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 2117 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a738987dbd501063f1fcb6cca7ca9884f_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a7c13abe9df69967b39a135d8bf97ce89}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!last\+\_\+operation@{last\+\_\+operation}}
+\index{last\+\_\+operation@{last\+\_\+operation}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{last\+\_\+operation}]{\setlength{\rightskip}{0pt plus 5cm}Q\+String Vespucci\+Dataset\+::last\+\_\+operation (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a7c13abe9df69967b39a135d8bf97ce89}
+
+
+\hyperlink{class_vespucci_dataset_a7c13abe9df69967b39a135d8bf97ce89}{Vespucci\+Dataset\+::last\+\_\+operation}. 
+
+\begin{DoxyReturn}{Returns}
+Description of last pre-\/processing operation performed 
+\end{DoxyReturn}
+
+
+Definition at line 2893 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_ad072276ddcc37b972639d590d05a4430}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Linear\+Moving\+Average@{Linear\+Moving\+Average}}
+\index{Linear\+Moving\+Average@{Linear\+Moving\+Average}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Linear\+Moving\+Average}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Linear\+Moving\+Average (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{window\+\_\+size}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ad072276ddcc37b972639d590d05a4430}
+
+
+\hyperlink{class_vespucci_dataset_ad072276ddcc37b972639d590d05a4430}{Vespucci\+Dataset\+::\+Linear\+Moving\+Average} Performs moving average filtering on the spectral data. Entries near the boundaries of spectra are not processed. See also \hyperlink{class_vespucci_dataset_aafa57b522cc3ddf08d518f862ad236b5}{Vespucci\+Dataset\+::\+Median\+Filter}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em window\+\_\+size} & -\/ an odd number representing the width of the window. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1054 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_ad072276ddcc37b972639d590d05a4430_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a5ddd5cfaca0df48cd8ac3976f339a1cc}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!map\+\_\+loading\+\_\+count@{map\+\_\+loading\+\_\+count}}
+\index{map\+\_\+loading\+\_\+count@{map\+\_\+loading\+\_\+count}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{map\+\_\+loading\+\_\+count}]{\setlength{\rightskip}{0pt plus 5cm}int Vespucci\+Dataset\+::map\+\_\+loading\+\_\+count (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a5ddd5cfaca0df48cd8ac3976f339a1cc}
+
+
+Vespucci\+Dataset\+::map\+\_\+names. 
+
+\begin{DoxyReturn}{Returns}
+list of names of the maps created from this dataset \hyperlink{class_vespucci_dataset_a5ddd5cfaca0df48cd8ac3976f339a1cc}{Vespucci\+Dataset\+::map\+\_\+loading\+\_\+count} 
+
+number of maps created for this dataset 
+\end{DoxyReturn}
+
+
+Definition at line 2500 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_aafa57b522cc3ddf08d518f862ad236b5}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Median\+Filter@{Median\+Filter}}
+\index{Median\+Filter@{Median\+Filter}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Median\+Filter}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Median\+Filter (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{window\+\_\+size}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_aafa57b522cc3ddf08d518f862ad236b5}
+
+
+\hyperlink{class_vespucci_dataset_aafa57b522cc3ddf08d518f862ad236b5}{Vespucci\+Dataset\+::\+Median\+Filter} performs median filtering on the spectral data. Entries near the boundaries of spectra are not processed. See also \hyperlink{class_vespucci_dataset_ad072276ddcc37b972639d590d05a4430}{Vespucci\+Dataset\+::\+Linear\+Moving\+Average}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em window\+\_\+size} & -\/ an odd number representing the width of the window. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1028 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_aafa57b522cc3ddf08d518f862ad236b5_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a9ce29ea693213307431ddebdedf6fa1b}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!meta@{meta}}
+\index{meta@{meta}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{meta}]{\setlength{\rightskip}{0pt plus 5cm}bool Vespucci\+Dataset\+::meta (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a9ce29ea693213307431ddebdedf6fa1b}
+
+
+\hyperlink{class_vespucci_dataset_a9ce29ea693213307431ddebdedf6fa1b}{Vespucci\+Dataset\+::meta}. 
+
+\begin{DoxyReturn}{Returns}
+Whether or not this is an instance of \hyperlink{class_meta_dataset}{Meta\+Dataset} 
+\end{DoxyReturn}
+
+
+Definition at line 2870 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!name@{name}}
+\index{name@{name}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}const Q\+String Vespucci\+Dataset\+::name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}
+
+
+\hyperlink{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9}{Vespucci\+Dataset\+::name}. 
+
+\begin{DoxyReturn}{Returns}
+member name\+\_\+, the name of the dataset as seen by the user 
+\end{DoxyReturn}
+
+
+Definition at line 2457 of file vespuccidataset.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_ae5b30cb466acfdf741b360bc4f897cc9_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_afedd02ec813132cb7d6b016c22c7a902}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!non\+\_\+spatial@{non\+\_\+spatial}}
+\index{non\+\_\+spatial@{non\+\_\+spatial}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{non\+\_\+spatial}]{\setlength{\rightskip}{0pt plus 5cm}bool Vespucci\+Dataset\+::non\+\_\+spatial (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_afedd02ec813132cb7d6b016c22c7a902}
+
+
+\hyperlink{class_vespucci_dataset_afedd02ec813132cb7d6b016c22c7a902}{Vespucci\+Dataset\+::non\+\_\+spatial}. 
+
+\begin{DoxyReturn}{Returns}
+True if map has empty x\+\_\+ and y\+\_\+ 
+\end{DoxyReturn}
+
+
+Definition at line 2861 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a6e9531435042c5f6a38235d4d3021571}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!partial\+\_\+least\+\_\+squares\+\_\+calculated@{partial\+\_\+least\+\_\+squares\+\_\+calculated}}
+\index{partial\+\_\+least\+\_\+squares\+\_\+calculated@{partial\+\_\+least\+\_\+squares\+\_\+calculated}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{partial\+\_\+least\+\_\+squares\+\_\+calculated}]{\setlength{\rightskip}{0pt plus 5cm}bool Vespucci\+Dataset\+::partial\+\_\+least\+\_\+squares\+\_\+calculated (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a6e9531435042c5f6a38235d4d3021571}
+
+
+\hyperlink{class_vespucci_dataset_a6e9531435042c5f6a38235d4d3021571}{Vespucci\+Dataset\+::partial\+\_\+least\+\_\+squares\+\_\+calculated} Accessor for partial\+\_\+least\+\_\+squares\+\_\+calculated. The P\+L\+S dialog requests this to make sure that the same P\+L\+S is not calculated twice. 
+
+\begin{DoxyReturn}{Returns}
+Whether or not P\+L\+S has been computed. 
+\end{DoxyReturn}
+
+
+Definition at line 2733 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_ab6837c459330d8706dd6b2f2189d69b8}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!partial\+\_\+least\+\_\+squares\+\_\+data@{partial\+\_\+least\+\_\+squares\+\_\+data}}
+\index{partial\+\_\+least\+\_\+squares\+\_\+data@{partial\+\_\+least\+\_\+squares\+\_\+data}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{partial\+\_\+least\+\_\+squares\+\_\+data}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+L\+S\+Data} $\ast$ Vespucci\+Dataset\+::partial\+\_\+least\+\_\+squares\+\_\+data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ab6837c459330d8706dd6b2f2189d69b8}
+
+
+\hyperlink{class_vespucci_dataset_ab6837c459330d8706dd6b2f2189d69b8}{Vespucci\+Dataset\+::partial\+\_\+least\+\_\+squares\+\_\+data} Accessor for partial\+\_\+least\+\_\+squares\+\_\+data\+\_\+;. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 2778 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a300693f9bc5b14cbfc9ac710af4b09a1}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Partial\+Least\+Squares@{Partial\+Least\+Squares}}
+\index{Partial\+Least\+Squares@{Partial\+Least\+Squares}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Partial\+Least\+Squares}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Partial\+Least\+Squares (
+\begin{DoxyParamCaption}
+\item[{uword}]{components, }
+\item[{uword}]{image\+\_\+component, }
+\item[{Q\+String}]{name, }
+\item[{unsigned int}]{gradient\+\_\+index, }
+\item[{bool}]{recalculate}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a300693f9bc5b14cbfc9ac710af4b09a1}
+
+
+\hyperlink{class_vespucci_dataset_a300693f9bc5b14cbfc9ac710af4b09a1}{Vespucci\+Dataset\+::\+Partial\+Least\+Squares} Performs P\+L\+S regression on data. Resulting map is score for one P\+L\+S Component, taken from one column of the X loadings. P\+L\+S is performed once. Subsequent maps use data from first call, stored as Partial\+Least\+Squares\+Data object, unless user requests recalculation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em components} & the number of components/response variables of the regression data \\
+\hline
+{\em name} & the name of the \hyperlink{class_map_data}{Map\+Data} object to be created. \\
+\hline
+{\em gradient\+\_\+index} & the index of the color gradient in the color gradient list \\
+\hline
+{\em recalculate} & whether or not to recalculate P\+L\+S regression. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1852 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a300693f9bc5b14cbfc9ac710af4b09a1_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a044fb21d3fba89b7325ae24eb6042cea}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Partial\+Least\+Squares@{Partial\+Least\+Squares}}
+\index{Partial\+Least\+Squares@{Partial\+Least\+Squares}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Partial\+Least\+Squares}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Partial\+Least\+Squares (
+\begin{DoxyParamCaption}
+\item[{uword}]{components}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a044fb21d3fba89b7325ae24eb6042cea}
+
+
+\hyperlink{class_vespucci_dataset_a300693f9bc5b14cbfc9ac710af4b09a1}{Vespucci\+Dataset\+::\+Partial\+Least\+Squares}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em components} & Perform partial least squares without creating an image \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1939 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a044fb21d3fba89b7325ae24eb6042cea_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a358b924b2ec9277e054fb52462ff5f61}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Peak\+Intensity\+Normalize@{Peak\+Intensity\+Normalize}}
+\index{Peak\+Intensity\+Normalize@{Peak\+Intensity\+Normalize}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Peak\+Intensity\+Normalize}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Peak\+Intensity\+Normalize (
+\begin{DoxyParamCaption}
+\item[{double}]{left\+\_\+bound, }
+\item[{double}]{right\+\_\+bound}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a358b924b2ec9277e054fb52462ff5f61}
+
+
+Vespucci\+Dataset\+::\+Peak\+Intensity\+Normalize. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em left\+\_\+bound} & \\
+\hline
+{\em right\+\_\+bound} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 673 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a358b924b2ec9277e054fb52462ff5f61_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a0d31db077798909a755ad505f060fedb}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Point\+Spectrum@{Point\+Spectrum}}
+\index{Point\+Spectrum@{Point\+Spectrum}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Point\+Spectrum}]{\setlength{\rightskip}{0pt plus 5cm}Q\+Vector$<$ double $>$ Vespucci\+Dataset\+::\+Point\+Spectrum (
+\begin{DoxyParamCaption}
+\item[{const uword}]{index}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a0d31db077798909a755ad505f060fedb}
+
+
+\hyperlink{class_vespucci_dataset_a0d31db077798909a755ad505f060fedb}{Vespucci\+Dataset\+::\+Point\+Spectrum}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 2186 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a0d31db077798909a755ad505f060fedb_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a8f7646308fe2b61e47e007ea36eda489}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Point\+Spectrum\+Range@{Point\+Spectrum\+Range}}
+\index{Point\+Spectrum\+Range@{Point\+Spectrum\+Range}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Point\+Spectrum\+Range}]{\setlength{\rightskip}{0pt plus 5cm}Q\+C\+P\+Range Vespucci\+Dataset\+::\+Point\+Spectrum\+Range (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a8f7646308fe2b61e47e007ea36eda489}
+
+
+\hyperlink{class_vespucci_dataset_a8f7646308fe2b61e47e007ea36eda489}{Vespucci\+Dataset\+::\+Point\+Spectrum\+Range}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & col of spectra\+\_\+ containing desired spectrum \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the range of y values for the point spectra at i 
+\end{DoxyReturn}
+
+
+Definition at line 2543 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a8f9cb5f4e13fd2cb40b88907213d671a}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!principal\+\_\+components\+\_\+calculated@{principal\+\_\+components\+\_\+calculated}}
+\index{principal\+\_\+components\+\_\+calculated@{principal\+\_\+components\+\_\+calculated}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{principal\+\_\+components\+\_\+calculated}]{\setlength{\rightskip}{0pt plus 5cm}bool Vespucci\+Dataset\+::principal\+\_\+components\+\_\+calculated (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a8f9cb5f4e13fd2cb40b88907213d671a}
+
+
+\hyperlink{class_vespucci_dataset_a8f9cb5f4e13fd2cb40b88907213d671a}{Vespucci\+Dataset\+::principal\+\_\+components\+\_\+calculated} Accessor for principal\+\_\+components\+\_\+calculated\+\_\+. The P\+C\+A dialog requests this to make sure that the same P\+C\+A is not calculated twice. 
+
+\begin{DoxyReturn}{Returns}
+Whether or not P\+C\+A has been calculated. 
+\end{DoxyReturn}
+
+
+Definition at line 2706 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_aaebb151c72e7f41b8d5e6b1067fd2a07}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!principal\+\_\+components\+\_\+data@{principal\+\_\+components\+\_\+data}}
+\index{principal\+\_\+components\+\_\+data@{principal\+\_\+components\+\_\+data}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{principal\+\_\+components\+\_\+data}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Principal\+Components\+Data} $\ast$ Vespucci\+Dataset\+::principal\+\_\+components\+\_\+data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_aaebb151c72e7f41b8d5e6b1067fd2a07}
+
+
+\hyperlink{class_vespucci_dataset_aaebb151c72e7f41b8d5e6b1067fd2a07}{Vespucci\+Dataset\+::principal\+\_\+components\+\_\+data} Accessor for principal\+\_\+components\+\_\+data\+\_\+. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to the class that handles the output of arma\+::princomp 
+\end{DoxyReturn}
+
+
+Definition at line 2753 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_ab4c52da3f8281aa7c7cec96f12f20fca}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Principal\+Components@{Principal\+Components}}
+\index{Principal\+Components@{Principal\+Components}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Principal\+Components}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Principal\+Components (
+\begin{DoxyParamCaption}
+\item[{int}]{component, }
+\item[{Q\+String}]{name, }
+\item[{int}]{gradient\+\_\+index, }
+\item[{bool}]{recalculate}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ab4c52da3f8281aa7c7cec96f12f20fca}
+
+
+\hyperlink{class_vespucci_dataset_ab4c52da3f8281aa7c7cec96f12f20fca}{Vespucci\+Dataset\+::\+Principal\+Components} Performs principal component analysis on the data. Uses armadillo's pca routine. This function both calculates and plots principal components maps. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em component} & the P\+C\+A component from which the image will be produced \\
+\hline
+{\em name} & the name of the \hyperlink{class_map_data}{Map\+Data} object to be created \\
+\hline
+{\em gradient\+\_\+index} & the index of the gradient in the master list (in function Get\+Gradient) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1473 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_ab4c52da3f8281aa7c7cec96f12f20fca_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a7d9bf2dacd931192a7339785b2d38c7d}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Principal\+Components@{Principal\+Components}}
+\index{Principal\+Components@{Principal\+Components}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Principal\+Components}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Principal\+Components (
+\begin{DoxyParamCaption}
+\item[{bool}]{scale\+Data}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a7d9bf2dacd931192a7339785b2d38c7d}
+
+
+\hyperlink{class_vespucci_dataset_ab4c52da3f8281aa7c7cec96f12f20fca}{Vespucci\+Dataset\+::\+Principal\+Components}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scale\+Data} & \\
+\hline
+{\em recalculate} & Perform P\+C\+A using M\+L\+P\+A\+C\+K's implementation. This is designed for dimensionality reduction, not classification, so there is no corresponding imaging function \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1567 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a6489d547c05a8e36b392d0d6147674c8}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Q\+U\+I\+C\+\_\+\+S\+V\+D@{Q\+U\+I\+C\+\_\+\+S\+V\+D}}
+\index{Q\+U\+I\+C\+\_\+\+S\+V\+D@{Q\+U\+I\+C\+\_\+\+S\+V\+D}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Q\+U\+I\+C\+\_\+\+S\+V\+D}]{\setlength{\rightskip}{0pt plus 5cm}int Vespucci\+Dataset\+::\+Q\+U\+I\+C\+\_\+\+S\+V\+D (
+\begin{DoxyParamCaption}
+\item[{double}]{epsilon}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a6489d547c05a8e36b392d0d6147674c8}
+
+
+\hyperlink{class_vespucci_dataset_a6489d547c05a8e36b392d0d6147674c8}{Vespucci\+Dataset\+::\+Q\+U\+I\+C\+\_\+\+S\+V\+D}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em epsilon} & Error tolerance fraction for calculated subspace Use the Q\+U\+I\+C-\/\+S\+V\+D algorithm to denoise the spectra by finding a lower-\/rank approximation of the matrix. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1112 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_abd888e214b881eecb1979310adafa770}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Remove\+Clipped\+Spectra@{Remove\+Clipped\+Spectra}}
+\index{Remove\+Clipped\+Spectra@{Remove\+Clipped\+Spectra}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Remove\+Clipped\+Spectra}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Remove\+Clipped\+Spectra (
+\begin{DoxyParamCaption}
+\item[{double}]{threshold}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_abd888e214b881eecb1979310adafa770}
+
+
+\hyperlink{class_vespucci_dataset_abd888e214b881eecb1979310adafa770}{Vespucci\+Dataset\+::\+Remove\+Clipped\+Spectra}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em threshold} & Removes spectra with a maximum value at or above the threshold \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 967 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a1b5a22709b819e92ea63b8bd6ef9f04e}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Remove\+Flat\+Spectra@{Remove\+Flat\+Spectra}}
+\index{Remove\+Flat\+Spectra@{Remove\+Flat\+Spectra}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Remove\+Flat\+Spectra}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Remove\+Flat\+Spectra (
+\begin{DoxyParamCaption}
+\item[{double}]{threshold}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a1b5a22709b819e92ea63b8bd6ef9f04e}
+
+
+\hyperlink{class_vespucci_dataset_a1b5a22709b819e92ea63b8bd6ef9f04e}{Vespucci\+Dataset\+::\+Remove\+Flat\+Spectra}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em threshold} & Removes \char`\"{}flat\char`\"{} spectra whose maximum is less than the threshold \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 996 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a4524268e2b962f0efa7569e33d5456d1}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Remove\+Map\+At@{Remove\+Map\+At}}
+\index{Remove\+Map\+At@{Remove\+Map\+At}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Remove\+Map\+At}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Remove\+Map\+At (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{i}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a4524268e2b962f0efa7569e33d5456d1}
+
+
+\hyperlink{class_vespucci_dataset_a4524268e2b962f0efa7569e33d5456d1}{Vespucci\+Dataset\+::\+Remove\+Map\+At}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & index of map in the relevant lists \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 2509 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a8121d9aa54b36860dbc66db4d7fde8cd}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Savitzky\+Golay@{Savitzky\+Golay}}
+\index{Savitzky\+Golay@{Savitzky\+Golay}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Savitzky\+Golay}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Savitzky\+Golay (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{derivative\+\_\+order, }
+\item[{unsigned int}]{polynomial\+\_\+order, }
+\item[{unsigned int}]{window\+\_\+size}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a8121d9aa54b36860dbc66db4d7fde8cd}
+
+
+\hyperlink{class_vespucci_dataset_a8121d9aa54b36860dbc66db4d7fde8cd}{Vespucci\+Dataset\+::\+Savitzky\+Golay} Performs derivatization/\+Savitzky-\/\+Golay smoothing. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em derivative\+\_\+order} & The order of the derivative. \\
+\hline
+{\em polynomial\+\_\+order} & The order of the polynomial \\
+\hline
+{\em window\+\_\+size} & The size of the filter window. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1139 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a8121d9aa54b36860dbc66db4d7fde8cd_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a6deccc4fb8829e27a68289e07a294f90}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Set\+Data@{Set\+Data}}
+\index{Set\+Data@{Set\+Data}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Set\+Data}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Set\+Data (
+\begin{DoxyParamCaption}
+\item[{mat}]{spectra, }
+\item[{vec}]{wavelength, }
+\item[{colvec}]{x, }
+\item[{colvec}]{y}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a6deccc4fb8829e27a68289e07a294f90}
+
+
+\hyperlink{class_vespucci_dataset_a6deccc4fb8829e27a68289e07a294f90}{Vespucci\+Dataset\+::\+Set\+Data}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em spectra} & Spectra \\
+\hline
+{\em wavelength} & Spectral abscissa \\
+\hline
+{\em x} & Colvec of horizontal axis spatial data \\
+\hline
+{\em y} & Colvec of vertical axis spatial data Set the data of the dataset. Used by the \hyperlink{class_meta_dataset}{Meta\+Dataset} constructor \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 2478 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a6deccc4fb8829e27a68289e07a294f90_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a6deccc4fb8829e27a68289e07a294f90_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_ac3d023864da930929b3491ef0d4ec14b}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Set\+Indices@{Set\+Indices}}
+\index{Set\+Indices@{Set\+Indices}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Set\+Indices}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Set\+Indices (
+\begin{DoxyParamCaption}
+\item[{vec}]{indices}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ac3d023864da930929b3491ef0d4ec14b}
+
+
+\hyperlink{class_vespucci_dataset_ac3d023864da930929b3491ef0d4ec14b}{Vespucci\+Dataset\+::\+Set\+Indices}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em indices} & A new indices\+\_\+ vector \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 2382 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_ac3d023864da930929b3491ef0d4ec14b_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_ac3d023864da930929b3491ef0d4ec14b_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_aa35196b0c4fb0617d7ffd9545b9119b3}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Set\+Name@{Set\+Name}}
+\index{Set\+Name@{Set\+Name}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Set\+Name}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Set\+Name (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{new\+\_\+name}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_aa35196b0c4fb0617d7ffd9545b9119b3}
+
+
+\hyperlink{class_vespucci_dataset_aa35196b0c4fb0617d7ffd9545b9119b3}{Vespucci\+Dataset\+::\+Set\+Name}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+name} & new name of dataset \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 2466 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a94d860fa93e9ad389f927e58e22ee6d9}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Set\+Parent\+Dataset\+Indices@{Set\+Parent\+Dataset\+Indices}}
+\index{Set\+Parent\+Dataset\+Indices@{Set\+Parent\+Dataset\+Indices}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Set\+Parent\+Dataset\+Indices}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Set\+Parent\+Dataset\+Indices (
+\begin{DoxyParamCaption}
+\item[{mat}]{parent\+\_\+dataset\+\_\+indices}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a94d860fa93e9ad389f927e58e22ee6d9}
+
+
+\hyperlink{class_vespucci_dataset_a94d860fa93e9ad389f927e58e22ee6d9}{Vespucci\+Dataset\+::\+Set\+Parent\+Dataset\+Indices}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em parent\+\_\+dataset\+\_\+indices} & Set the parent\+\_\+dataset\+\_\+indices\+\_\+ variable. Used by the \hyperlink{class_meta_dataset}{Meta\+Dataset} constructor. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 2879 of file vespuccidataset.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a94d860fa93e9ad389f927e58e22ee6d9_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a06f001e1a7c5bc58088498c6c78555d4}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Set\+X\+Description@{Set\+X\+Description}}
+\index{Set\+X\+Description@{Set\+X\+Description}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Set\+X\+Description}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Set\+X\+Description (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{description}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a06f001e1a7c5bc58088498c6c78555d4}
+
+
+\hyperlink{class_vespucci_dataset_a06f001e1a7c5bc58088498c6c78555d4}{Vespucci\+Dataset\+::\+Set\+X\+Description} Sets the value of the spectral abscissa description. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em description} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 2677 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a1665798dbd73ca4763b5101d29b7d7c3}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Set\+Y\+Description@{Set\+Y\+Description}}
+\index{Set\+Y\+Description@{Set\+Y\+Description}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Set\+Y\+Description}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Set\+Y\+Description (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{description}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a1665798dbd73ca4763b5101d29b7d7c3}
+
+
+\hyperlink{class_vespucci_dataset_a1665798dbd73ca4763b5101d29b7d7c3}{Vespucci\+Dataset\+::\+Set\+Y\+Description}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em description} & Sets the value of the spectral ordinate axis description \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 2686 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a3d199a68c6dfa8f609ed7eacdb3d1ec8}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Shed\+Spectrum@{Shed\+Spectrum}}
+\index{Shed\+Spectrum@{Shed\+Spectrum}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Shed\+Spectrum}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Shed\+Spectrum (
+\begin{DoxyParamCaption}
+\item[{const uword}]{index}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a3d199a68c6dfa8f609ed7eacdb3d1ec8}
+
+
+\hyperlink{class_vespucci_dataset_a3d199a68c6dfa8f609ed7eacdb3d1ec8}{Vespucci\+Dataset\+::\+Shed\+Spectrum}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & Index of spectrum to shed. Removes a spectrum from the dataset \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1188 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a3d199a68c6dfa8f609ed7eacdb3d1ec8_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_ada0febff69cc36c4af9c8f46220450a0}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Singular\+Value@{Singular\+Value}}
+\index{Singular\+Value@{Singular\+Value}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Singular\+Value}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Singular\+Value (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{singular\+\_\+values}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ada0febff69cc36c4af9c8f46220450a0}
+
+
+\hyperlink{class_vespucci_dataset_ada0febff69cc36c4af9c8f46220450a0}{Vespucci\+Dataset\+::\+Singular\+Value} Denoises the spectra matrix using a truncated singular value decomposition. The first singular\+\_\+values singular values are used to \char`\"{}reconstruct\char`\"{} the spectra matrix. The function used to find the truncated S\+V\+D is Vespucci\+::\+Math\+::\+Dimension\+Reduction\+::svds. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em singular\+\_\+values} & Number of singular values to use. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1084 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a536a8837c5a2ad10a0bb3577f8741ee2}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!spectra@{spectra}}
+\index{spectra@{spectra}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{spectra}]{\setlength{\rightskip}{0pt plus 5cm}mat Vespucci\+Dataset\+::spectra (
+\begin{DoxyParamCaption}
+\item[{uvec}]{indices}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a536a8837c5a2ad10a0bb3577f8741ee2}
+
+
+\hyperlink{class_vespucci_dataset_a536a8837c5a2ad10a0bb3577f8741ee2}{Vespucci\+Dataset\+::spectra}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em indices} & Vector of indices \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Submat of spectra at indices 
+\end{DoxyReturn}
+
+
+Definition at line 2448 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a8b1186c4bff0d513c336d7a48861777f}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!spectra@{spectra}}
+\index{spectra@{spectra}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{spectra}]{\setlength{\rightskip}{0pt plus 5cm}mat Vespucci\+Dataset\+::spectra (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a8b1186c4bff0d513c336d7a48861777f}
+
+
+\hyperlink{class_vespucci_dataset_a536a8837c5a2ad10a0bb3577f8741ee2}{Vespucci\+Dataset\+::spectra}. 
+
+\begin{DoxyReturn}{Returns}
+member spectra\+\_\+ 
+\end{DoxyReturn}
+
+
+Definition at line 2438 of file vespuccidataset.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a8b1186c4bff0d513c336d7a48861777f_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_ad91edadd2c2a7630929088d0b0c7fc19}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!spectra\+\_\+ptr@{spectra\+\_\+ptr}}
+\index{spectra\+\_\+ptr@{spectra\+\_\+ptr}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{spectra\+\_\+ptr}]{\setlength{\rightskip}{0pt plus 5cm}mat $\ast$ Vespucci\+Dataset\+::spectra\+\_\+ptr (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ad91edadd2c2a7630929088d0b0c7fc19}
+
+
+\hyperlink{class_vespucci_dataset_ad91edadd2c2a7630929088d0b0c7fc19}{Vespucci\+Dataset\+::spectra\+\_\+ptr}. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 2805 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a9e8babb51db520d6610d532ad88c4cce}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Subtract\+Background@{Subtract\+Background}}
+\index{Subtract\+Background@{Subtract\+Background}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Subtract\+Background}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Subtract\+Background (
+\begin{DoxyParamCaption}
+\item[{mat}]{background, }
+\item[{Q\+String}]{filename}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a9e8babb51db520d6610d532ad88c4cce}
+
+
+\hyperlink{class_vespucci_dataset_a9e8babb51db520d6610d532ad88c4cce}{Vespucci\+Dataset\+::\+Subtract\+Background} Subtracts a known background spectrum. This can be extracted from a control map using this software (using $\ast$ component analysis endmember extraction or average spectrum). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em background} & A matrix consisting of a single spectrum representing the background. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 879 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_ac17feefdb4773091c11e1c08274cfacc}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Undoable@{Undoable}}
+\index{Undoable@{Undoable}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Undoable}]{\setlength{\rightskip}{0pt plus 5cm}bool Vespucci\+Dataset\+::\+Undoable (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ac17feefdb4773091c11e1c08274cfacc}
+
+
+\hyperlink{class_vespucci_dataset_ac17feefdb4773091c11e1c08274cfacc}{Vespucci\+Dataset\+::\+Undoable}. 
+
+\begin{DoxyReturn}{Returns}
+Whether or not the last operation can be undone 
+\end{DoxyReturn}
+
+
+Definition at line 2816 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a385a4f192546dc9fb0c363ca7611d0a2}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Univariate@{Univariate}}
+\index{Univariate@{Univariate}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Univariate}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Univariate (
+\begin{DoxyParamCaption}
+\item[{double}]{min, }
+\item[{double}]{max, }
+\item[{Q\+String}]{name, }
+\item[{Univariate\+Method\+::\+Method}]{method, }
+\item[{Q\+String}]{integration\+\_\+method, }
+\item[{uword}]{gradient\+\_\+index}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a385a4f192546dc9fb0c363ca7611d0a2}
+
+
+\hyperlink{class_vespucci_dataset_a385a4f192546dc9fb0c363ca7611d0a2}{Vespucci\+Dataset\+::\+Univariate} Creates a univariate image. Several peak-\/determination methods are availible. All methods except for \char`\"{}\+Intensity\char`\"{} estimate a local baseline. This is done by drawing a straight line from the left to right endpoint. This can cause problems when the endpoints are near other local maxima. 
+
+The \char`\"{}\+Bandwidth\char`\"{} method calculates the full-\/width at half maximum of the peak near the range specified.
+
+The \char`\"{}\+Intensity\char`\"{} method calculates the local maximum of the spectrum within the range specified.
+
+The \char`\"{}\+Area\char`\"{} method takes a right Riemann sum of the spectrum
+
+The \char`\"{}\+Derivative\char`\"{} method is misleadingly named (this is based on in-\/house M\+A\+T\+L\+A\+B code previously used by my group). The derivative method is actually and area method which finds the edges of the peak by taking a second derivative. It then determines the peak in an identical fashion to the \char`\"{}\+Area\char`\"{} method///
+
+
+\begin{DoxyParams}{Parameters}
+{\em min} & left bound of spectral region of interest \\
+\hline
+{\em max} & right bound of spectral region of interest \\
+\hline
+{\em name} & name of \hyperlink{class_map_data}{Map\+Data} object to be created \\
+\hline
+{\em value\+\_\+method} & method of determining peak (intensity, derivative, or area) \\
+\hline
+{\em gradient\+\_\+index} & index of color scheme in master list (\hyperlink{class_vespucci_dataset_ab7f75e6c0ee1ce8831e6c2a0c9750959}{Get\+Gradient()}); \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1258 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a385a4f192546dc9fb0c363ca7611d0a2_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a3efe2f88f3ca441b640635c04196153e}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!univariate\+\_\+datas@{univariate\+\_\+datas}}
+\index{univariate\+\_\+datas@{univariate\+\_\+datas}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{univariate\+\_\+datas}]{\setlength{\rightskip}{0pt plus 5cm}Q\+List$<$ Q\+Shared\+Pointer$<$ {\bf Univariate\+Data} $>$ $>$ Vespucci\+Dataset\+::univariate\+\_\+datas (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a3efe2f88f3ca441b640635c04196153e}
+
+
+\hyperlink{class_vespucci_dataset_a3efe2f88f3ca441b640635c04196153e}{Vespucci\+Dataset\+::univariate\+\_\+datas}. 
+
+\begin{DoxyReturn}{Returns}
+The container holding smart pointers to the univariate data objects 
+\end{DoxyReturn}
+
+
+Definition at line 2796 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a850b757be2abca6b552fbbdd5dba6f09}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Univariate\+Count@{Univariate\+Count}}
+\index{Univariate\+Count@{Univariate\+Count}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Univariate\+Count}]{\setlength{\rightskip}{0pt plus 5cm}int Vespucci\+Dataset\+::\+Univariate\+Count (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a850b757be2abca6b552fbbdd5dba6f09}
+
+
+\hyperlink{class_vespucci_dataset_a850b757be2abca6b552fbbdd5dba6f09}{Vespucci\+Dataset\+::\+Univariate\+Count}. 
+
+\begin{DoxyReturn}{Returns}
+Number of univariate/band ratio data objects have been created 
+\end{DoxyReturn}
+
+
+Definition at line 2825 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_aa7e9174b8509f4359134794050b2aae8}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Value\+Range@{Value\+Range}}
+\index{Value\+Range@{Value\+Range}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Value\+Range}]{\setlength{\rightskip}{0pt plus 5cm}Q\+C\+P\+Range Vespucci\+Dataset\+::\+Value\+Range (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_aa7e9174b8509f4359134794050b2aae8}
+
+
+\hyperlink{class_vespucci_dataset_aa7e9174b8509f4359134794050b2aae8}{Vespucci\+Dataset\+::\+Value\+Range} Finds the minima and maxima of y variable to properly set axes of Q\+Custom\+Plot objects. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 2238 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_ae8a121fd6312fb76cb545486e01b0910}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Value\+Size@{Value\+Size}}
+\index{Value\+Size@{Value\+Size}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Value\+Size}]{\setlength{\rightskip}{0pt plus 5cm}int Vespucci\+Dataset\+::\+Value\+Size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ae8a121fd6312fb76cb545486e01b0910}
+
+
+\hyperlink{class_vespucci_dataset_ae8a121fd6312fb76cb545486e01b0910}{Vespucci\+Dataset\+::\+Value\+Size} Finds number of unique y values for properly setting Q\+C\+P\+Axis. 
+
+\begin{DoxyReturn}{Returns}
+number of unique y values 
+\end{DoxyReturn}
+
+
+Definition at line 2300 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a3c0e14745c1346fb9598cd266067aa17}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!vertex\+\_\+components\+\_\+calculated@{vertex\+\_\+components\+\_\+calculated}}
+\index{vertex\+\_\+components\+\_\+calculated@{vertex\+\_\+components\+\_\+calculated}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{vertex\+\_\+components\+\_\+calculated}]{\setlength{\rightskip}{0pt plus 5cm}bool Vespucci\+Dataset\+::vertex\+\_\+components\+\_\+calculated (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a3c0e14745c1346fb9598cd266067aa17}
+
+
+\hyperlink{class_vespucci_dataset_a3c0e14745c1346fb9598cd266067aa17}{Vespucci\+Dataset\+::vertex\+\_\+components\+\_\+calculated} Accessor for vertex\+\_\+components\+\_\+calculated\+\_\+. The V\+C\+A dialog requests this to make sure that the same V\+C\+A is not calculated twice. 
+
+\begin{DoxyReturn}{Returns}
+Whether or not V\+C\+A has been computed. 
+\end{DoxyReturn}
+
+
+Definition at line 2722 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a0129e80bf2e5358d45085e9684e7812a}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!vertex\+\_\+components\+\_\+data@{vertex\+\_\+components\+\_\+data}}
+\index{vertex\+\_\+components\+\_\+data@{vertex\+\_\+components\+\_\+data}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{vertex\+\_\+components\+\_\+data}]{\setlength{\rightskip}{0pt plus 5cm}{\bf V\+C\+A\+Data} $\ast$ Vespucci\+Dataset\+::vertex\+\_\+components\+\_\+data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a0129e80bf2e5358d45085e9684e7812a}
+
+
+\hyperlink{class_vespucci_dataset_a0129e80bf2e5358d45085e9684e7812a}{Vespucci\+Dataset\+::vertex\+\_\+components\+\_\+data} Accessor for vertex\+\_\+components\+\_\+data\+\_\+. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 2768 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a74779cef5217e51364427aaed06bf500}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Vertex\+Components@{Vertex\+Components}}
+\index{Vertex\+Components@{Vertex\+Components}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Vertex\+Components}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+Dataset\+::\+Vertex\+Components (
+\begin{DoxyParamCaption}
+\item[{uword}]{endmembers}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a74779cef5217e51364427aaed06bf500}
+
+
+Vespucci\+Dataset\+::\+Vertex\+Components. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em endmembers} & Perform V\+C\+A without creating an image \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1802 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a74779cef5217e51364427aaed06bf500_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_ab43f057969b6603cbc46f8e9356b9b56}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!wavelength@{wavelength}}
+\index{wavelength@{wavelength}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{wavelength}]{\setlength{\rightskip}{0pt plus 5cm}vec Vespucci\+Dataset\+::wavelength (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ab43f057969b6603cbc46f8e9356b9b56}
+
+
+\hyperlink{class_vespucci_dataset_ab43f057969b6603cbc46f8e9356b9b56}{Vespucci\+Dataset\+::wavelength}. 
+
+\begin{DoxyReturn}{Returns}
+member wavelength\+\_\+ (spectrum key values) 
+\end{DoxyReturn}
+
+
+Definition at line 2341 of file vespuccidataset.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_ab43f057969b6603cbc46f8e9356b9b56_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_adb13350f6456bb09277e63a8b8d9a001}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!wavelength\+\_\+ptr@{wavelength\+\_\+ptr}}
+\index{wavelength\+\_\+ptr@{wavelength\+\_\+ptr}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{wavelength\+\_\+ptr}]{\setlength{\rightskip}{0pt plus 5cm}mat $\ast$ Vespucci\+Dataset\+::wavelength\+\_\+ptr (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_adb13350f6456bb09277e63a8b8d9a001}
+
+
+\hyperlink{class_vespucci_dataset_adb13350f6456bb09277e63a8b8d9a001}{Vespucci\+Dataset\+::wavelength\+\_\+ptr}. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 2834 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_ae2583a142dba66a370ecc471b009a7a2}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Wavelength\+Range@{Wavelength\+Range}}
+\index{Wavelength\+Range@{Wavelength\+Range}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Wavelength\+Range}]{\setlength{\rightskip}{0pt plus 5cm}Q\+C\+P\+Range Vespucci\+Dataset\+::\+Wavelength\+Range (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ae2583a142dba66a370ecc471b009a7a2}
+
+
+\hyperlink{class_vespucci_dataset_ae2583a142dba66a370ecc471b009a7a2}{Vespucci\+Dataset\+::\+Wavelength\+Range}. 
+
+\begin{DoxyReturn}{Returns}
+the range of the wavlength vector (for plotting point spectra) 
+\end{DoxyReturn}
+
+
+Definition at line 2530 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_aa7f8bd75b05670da47cb453b5350110b}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!x@{x}}
+\index{x@{x}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{x}]{\setlength{\rightskip}{0pt plus 5cm}colvec Vespucci\+Dataset\+::x (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_aa7f8bd75b05670da47cb453b5350110b}
+
+
+\hyperlink{class_vespucci_dataset_aa7f8bd75b05670da47cb453b5350110b}{Vespucci\+Dataset\+::x}. 
+
+\begin{DoxyReturn}{Returns}
+member x\+\_\+ 
+\end{DoxyReturn}
+
+
+Definition at line 2355 of file vespuccidataset.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_aa7f8bd75b05670da47cb453b5350110b_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_aa8f18d4758207aafc68e166036381035}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!x@{x}}
+\index{x@{x}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{x}]{\setlength{\rightskip}{0pt plus 5cm}colvec Vespucci\+Dataset\+::x (
+\begin{DoxyParamCaption}
+\item[{uvec}]{indices}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_aa8f18d4758207aafc68e166036381035}
+
+
+\hyperlink{class_vespucci_dataset_aa7f8bd75b05670da47cb453b5350110b}{Vespucci\+Dataset\+::x}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em indices} & Vector of indices \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Subvec of x corresponding to valeus in indices 
+\end{DoxyReturn}
+
+
+Definition at line 2392 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_acb6a4de101573ac93f5fcb5dd5e38c5c}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!x\+\_\+axis\+\_\+description@{x\+\_\+axis\+\_\+description}}
+\index{x\+\_\+axis\+\_\+description@{x\+\_\+axis\+\_\+description}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{x\+\_\+axis\+\_\+description}]{\setlength{\rightskip}{0pt plus 5cm}const Q\+String Vespucci\+Dataset\+::x\+\_\+axis\+\_\+description (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_acb6a4de101573ac93f5fcb5dd5e38c5c}
+
+
+\hyperlink{class_vespucci_dataset_acb6a4de101573ac93f5fcb5dd5e38c5c}{Vespucci\+Dataset\+::x\+\_\+axis\+\_\+description} The x\+\_\+axis\+\_\+description is printed on the spectrum viewer. 
+
+\begin{DoxyReturn}{Returns}
+Spectral abscissa description. 
+\end{DoxyReturn}
+
+
+Definition at line 2667 of file vespuccidataset.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_acb6a4de101573ac93f5fcb5dd5e38c5c_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_a64ac0dabcee669da58f55ae94bb63bc8}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!x\+\_\+ptr@{x\+\_\+ptr}}
+\index{x\+\_\+ptr@{x\+\_\+ptr}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{x\+\_\+ptr}]{\setlength{\rightskip}{0pt plus 5cm}mat $\ast$ Vespucci\+Dataset\+::x\+\_\+ptr (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a64ac0dabcee669da58f55ae94bb63bc8}
+
+
+\hyperlink{class_vespucci_dataset_a64ac0dabcee669da58f55ae94bb63bc8}{Vespucci\+Dataset\+::x\+\_\+ptr}. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 2843 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a83f8c7559de5e723073979f5556174fd}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!y@{y}}
+\index{y@{y}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{y}]{\setlength{\rightskip}{0pt plus 5cm}colvec Vespucci\+Dataset\+::y (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a83f8c7559de5e723073979f5556174fd}
+
+
+\hyperlink{class_vespucci_dataset_a83f8c7559de5e723073979f5556174fd}{Vespucci\+Dataset\+::y}. 
+
+\begin{DoxyReturn}{Returns}
+member y\+\_\+ 
+\end{DoxyReturn}
+
+
+Definition at line 2411 of file vespuccidataset.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a83f8c7559de5e723073979f5556174fd_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_aad51d79b1b30126fa297c6c716e286a2}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!y@{y}}
+\index{y@{y}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{y}]{\setlength{\rightskip}{0pt plus 5cm}colvec Vespucci\+Dataset\+::y (
+\begin{DoxyParamCaption}
+\item[{uvec}]{indices}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_aad51d79b1b30126fa297c6c716e286a2}
+
+
+\hyperlink{class_vespucci_dataset_a83f8c7559de5e723073979f5556174fd}{Vespucci\+Dataset\+::y}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em indices} & Vector of indices \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Subvec of y at indices 
+\end{DoxyReturn}
+
+
+Definition at line 2421 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_ae49a51e6e1666cea514bec6bf5578405}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!y\+\_\+axis\+\_\+description@{y\+\_\+axis\+\_\+description}}
+\index{y\+\_\+axis\+\_\+description@{y\+\_\+axis\+\_\+description}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{y\+\_\+axis\+\_\+description}]{\setlength{\rightskip}{0pt plus 5cm}const Q\+String Vespucci\+Dataset\+::y\+\_\+axis\+\_\+description (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ae49a51e6e1666cea514bec6bf5578405}
+
+
+\hyperlink{class_vespucci_dataset_ae49a51e6e1666cea514bec6bf5578405}{Vespucci\+Dataset\+::y\+\_\+axis\+\_\+description}. 
+
+\begin{DoxyReturn}{Returns}
+The spectral ordinate axis description. 
+\end{DoxyReturn}
+
+
+Definition at line 2695 of file vespuccidataset.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_ae49a51e6e1666cea514bec6bf5578405_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_vespucci_dataset_ae3e3a13a4c77f575a64070765e613759}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!y\+\_\+ptr@{y\+\_\+ptr}}
+\index{y\+\_\+ptr@{y\+\_\+ptr}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{y\+\_\+ptr}]{\setlength{\rightskip}{0pt plus 5cm}mat $\ast$ Vespucci\+Dataset\+::y\+\_\+ptr (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_ae3e3a13a4c77f575a64070765e613759}
+
+
+\hyperlink{class_vespucci_dataset_ae3e3a13a4c77f575a64070765e613759}{Vespucci\+Dataset\+::y\+\_\+ptr}. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 2852 of file vespuccidataset.\+cpp.
+
+\hypertarget{class_vespucci_dataset_a31ef7d438e00a7e1163fc09074e17f97}{\index{Vespucci\+Dataset@{Vespucci\+Dataset}!Z\+Score\+Norm\+Copy@{Z\+Score\+Norm\+Copy}}
+\index{Z\+Score\+Norm\+Copy@{Z\+Score\+Norm\+Copy}!Vespucci\+Dataset@{Vespucci\+Dataset}}
+\subsubsection[{Z\+Score\+Norm\+Copy}]{\setlength{\rightskip}{0pt plus 5cm}mat Vespucci\+Dataset\+::\+Z\+Score\+Norm\+Copy (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_dataset_a31ef7d438e00a7e1163fc09074e17f97}
+
+
+\hyperlink{class_vespucci_dataset_a31ef7d438e00a7e1163fc09074e17f97}{Vespucci\+Dataset\+::\+Z\+Score\+Norm\+Copy} For when you want to Z-\/score normalize without changing spectra\+\_\+. 
+
+\begin{DoxyReturn}{Returns}
+A normalized copy of the matrix. 
+\end{DoxyReturn}
+
+
+Definition at line 792 of file vespuccidataset.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_vespucci_dataset_a31ef7d438e00a7e1163fc09074e17f97_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Vespucci/develop/\+Data/\+Dataset/vespuccidataset.\+h\item 
+C\+:/\+Projects/\+Vespucci/develop/\+Data/\+Dataset/vespuccidataset.\+cpp\end{DoxyCompactItemize}

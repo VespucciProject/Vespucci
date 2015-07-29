@@ -1,0 +1,5 @@
+<map id="Vespucci::Math::Smoothing::sgolayfilt" name="Vespucci::Math::Smoothing::sgolayfilt">
+<area shape="rect" id="node2" href="$class_vespucci_dataset.html#a8121d9aa54b36860dbc66db4d7fde8cd" title="VespucciDataset::SavitzkyGolay Performs derivatization/Savitzky&#45;Golay smoothing. " alt="" coords="243,5,422,47"/>
+<area shape="rect" id="node3" href="$namespace_vespucci_1_1_math_1_1_peak_finding.html#a9f22a184fb69fb6ab32757fdd19e1ae7" title="Vespucci::Math::PeakFinding::FindPeaksMat Performs FindPeaks on a spectra arma::matrix. " alt="" coords="236,71,429,112"/>
+<area shape="rect" id="node4" href="$class_vespucci_dataset.html#a1f8933230496f1b3f475a884a021c6e5" title="VespucciDataset::FindPeaks. " alt="" coords="477,78,668,105"/>
+</map>

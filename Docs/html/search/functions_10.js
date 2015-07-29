@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['rangedialog',['RangeDialog',['../class_range_dialog.html#a1d209f3a367d76fd1ef1f87ddbe738be',1,'RangeDialog']]],
+  ['recalculateaverage',['RecalculateAverage',['../namespace_vespucci_1_1_math.html#acb3549757968bb5b450a79ffce951cad',1,'Vespucci::Math']]],
+  ['recalculateglobaldatarange',['RecalculateGlobalDataRange',['../class_vespucci_workspace.html#a0aefd22de491420f2a172448dafc90fc',1,'VespucciWorkspace::RecalculateGlobalDataRange()'],['../class_main_window.html#a58206491beb13daf24f3ba72e5eebbc0',1,'MainWindow::RecalculateGlobalDataRange()']]],
+  ['recalculatestddev',['RecalculateStdDev',['../namespace_vespucci_1_1_math.html#ab450596ed05ccd89c5183bd57ed1a0af',1,'Vespucci::Math']]],
+  ['refreshglobalcolorgradient',['RefreshGlobalColorGradient',['../class_vespucci_workspace.html#a616ca3bc6a0eed206870a25e484eaccb',1,'VespucciWorkspace::RefreshGlobalColorGradient()'],['../class_main_window.html#a004bb70b988b902f0e1618bdb2695960',1,'MainWindow::RefreshGlobalColorGradient()']]],
+  ['removeclippedspectra',['RemoveClippedSpectra',['../class_vespucci_dataset.html#abd888e214b881eecb1979310adafa770',1,'VespucciDataset']]],
+  ['removedatasetat',['RemoveDatasetAt',['../class_vespucci_workspace.html#a8d63989aff6c87ea4fd2468a7ef62352',1,'VespucciWorkspace']]],
+  ['removeflatspectra',['RemoveFlatSpectra',['../class_vespucci_dataset.html#a1b5a22709b819e92ea63b8bd6ef9f04e',1,'VespucciDataset']]],
+  ['removelastpoint',['RemoveLastPoint',['../class_vespucci_1_1_math_1_1_c_w_t_ridge.html#a039fef6b6678664d8bb8c019937bfbf9',1,'Vespucci::Math::CWTRidge']]],
+  ['removemapat',['RemoveMapAt',['../class_vespucci_dataset.html#a4524268e2b962f0efa7569e33d5456d1',1,'VespucciDataset']]],
+  ['removethis',['RemoveThis',['../class_map_data.html#aa98f0fec1e13eab7858dce7b7fe31561',1,'MapData']]],
+  ['rescalemapwidget',['RescaleMapWidget',['../class_map_data.html#acdaa2f55e2cbf4ad03582b3d1bc99c2e',1,'MapData']]],
+  ['resetmapwidgetsize',['ResetMapWidgetSize',['../class_map_data.html#a795493559eec5070c21ba9561af583d9',1,'MapData']]],
+  ['results',['Results',['../class_principal_components_data.html#aba30bcb89a6667bf8cd80e605337e9ba',1,'PrincipalComponentsData']]],
+  ['results_5fat_5fposition',['results_at_position',['../class_map_data.html#ad209dc0ec9935f2d551867af307594d0',1,'MapData']]],
+  ['rowcount',['rowCount',['../class_vespucci_table_model.html#a0820ddde1a8538e106c68dc2893fad51',1,'VespucciTableModel']]]
+];

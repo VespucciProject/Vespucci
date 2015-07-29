@@ -1,0 +1,425 @@
+\hypertarget{class_main_window}{\section{Main\+Window Class Reference}
+\label{class_main_window}\index{Main\+Window@{Main\+Window}}
+}
+
+
+The \hyperlink{class_main_window}{Main\+Window} class The main window of the program, this is where the user performs most operations.  
+
+
+
+
+{\ttfamily \#include $<$mainwindow.\+h$>$}
+
+
+
+Inheritance diagram for Main\+Window\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=160pt]{class_main_window__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Main\+Window\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=160pt]{class_main_window__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_main_window_aabdd9af63bada1cef223752691c3d8e0}{void {\bfseries Range\+Dialog\+Accepted} (double min, double max)}\label{class_main_window_aabdd9af63bada1cef223752691c3d8e0}
+
+\end{DoxyCompactItemize}
+\subsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_main_window_ab2c4828c97d36f9dca59d7f0d5314b84}{void {\bfseries Global\+Gradient\+Changed} (Q\+C\+P\+Color\+Gradient gradient)}\label{class_main_window_ab2c4828c97d36f9dca59d7f0d5314b84}
+
+\item 
+\hypertarget{class_main_window_a6de945a7ef4b0a52998e1662bfb99c0f}{void {\bfseries Global\+Data\+Range\+Changed} (Q\+C\+P\+Range data\+\_\+range)}\label{class_main_window_a6de945a7ef4b0a52998e1662bfb99c0f}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_main_window_ab87cdab2f1b7c709fc0f8bca4cf09ebc}{Main\+Window} (Q\+Widget $\ast$parent, \hyperlink{class_vespucci_workspace}{Vespucci\+Workspace} $\ast$ws)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_main_window_ab87cdab2f1b7c709fc0f8bca4cf09ebc}{Main\+Window\+::\+Main\+Window}. \end{DoxyCompactList}\item 
+Q\+C\+P\+Range $\ast$ \hyperlink{class_main_window_a89e2dbed5fa59653909d8cd2195c67be}{global\+\_\+data\+\_\+range} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_main_window_a89e2dbed5fa59653909d8cd2195c67be}{Main\+Window\+::global\+\_\+data\+\_\+range}. \end{DoxyCompactList}\item 
+Q\+C\+P\+Color\+Gradient $\ast$ \hyperlink{class_main_window_abe4c08852fad9c895a712dcd22ac9bd5}{global\+\_\+gradient} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_main_window_abe4c08852fad9c895a712dcd22ac9bd5}{Main\+Window\+::global\+\_\+gradient}. \end{DoxyCompactList}\item 
+void \hyperlink{class_main_window_a58206491beb13daf24f3ba72e5eebbc0}{Recalculate\+Global\+Data\+Range} (Q\+C\+P\+Range $\ast$new\+\_\+data\+\_\+range)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_main_window_a58206491beb13daf24f3ba72e5eebbc0}{Main\+Window\+::\+Recalculate\+Global\+Data\+Range}. \end{DoxyCompactList}\item 
+void \hyperlink{class_main_window_a004bb70b988b902f0e1618bdb2695960}{Refresh\+Global\+Color\+Gradient} (Q\+C\+P\+Color\+Gradient new\+\_\+gradient)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_main_window_a004bb70b988b902f0e1618bdb2695960}{Main\+Window\+::\+Refresh\+Global\+Color\+Gradient}. \end{DoxyCompactList}\item 
+void \hyperlink{class_main_window_aa0c431f17d5790a5bfc0e49e429c173b}{Set\+Global\+Data\+Range} (Q\+C\+P\+Range $\ast$new\+\_\+data\+\_\+range)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_main_window_aa0c431f17d5790a5bfc0e49e429c173b}{Main\+Window\+::\+Set\+Global\+Data\+Range}. \end{DoxyCompactList}\item 
+\hyperlink{class_vespucci_workspace}{Vespucci\+Workspace} $\ast$ \hyperlink{class_main_window_af78d7dca13e15077306eb27737edb096}{workspace\+\_\+ptr} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_main_window_af78d7dca13e15077306eb27737edb096}{Main\+Window\+::workspace\+\_\+ptr}. \end{DoxyCompactList}\item 
+void \hyperlink{class_main_window_afe21228ed02306f34b6194cefeeb7feb}{Display\+Exception\+Warning} (std\+::exception e)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_main_window_afe21228ed02306f34b6194cefeeb7feb}{Main\+Window\+::\+Display\+Exception\+Warning}. \end{DoxyCompactList}\item 
+\hypertarget{class_main_window_a7a13630a02a40927bfb218078c586f9f}{Q\+List\+View $\ast$ {\bfseries map\+\_\+list\+\_\+view} ()}\label{class_main_window_a7a13630a02a40927bfb218078c586f9f}
+
+\item 
+void \hyperlink{class_main_window_a2961ddb7545da22e3bb0df7aca85bae1}{Set\+Active\+Dataset\+List\+Row} (int row)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_main_window_a2961ddb7545da22e3bb0df7aca85bae1}{Main\+Window\+::\+Set\+Active\+Dataset\+List\+Row}. \end{DoxyCompactList}\item 
+\hypertarget{class_main_window_ad31a733d5590bebf61af8413b6251a06}{bool {\bfseries Dataset\+Mappable} (int row)}\label{class_main_window_ad31a733d5590bebf61af8413b6251a06}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_main_window_a4e20a4a065fbb0e4d3532a45a0a91425}{close\+Event} (Q\+Close\+Event $\ast$event)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_main_window_a4e20a4a065fbb0e4d3532a45a0a91425}{Main\+Window\+::close\+Event}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{class_main_window}{Main\+Window} class The main window of the program, this is where the user performs most operations. 
+
+Definition at line 38 of file mainwindow.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_main_window_ab87cdab2f1b7c709fc0f8bca4cf09ebc}{\index{Main\+Window@{Main\+Window}!Main\+Window@{Main\+Window}}
+\index{Main\+Window@{Main\+Window}!Main\+Window@{Main\+Window}}
+\subsubsection[{Main\+Window}]{\setlength{\rightskip}{0pt plus 5cm}Main\+Window\+::\+Main\+Window (
+\begin{DoxyParamCaption}
+\item[{Q\+Widget $\ast$}]{parent, }
+\item[{{\bf Vespucci\+Workspace} $\ast$}]{ws}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [explicit]}}}\label{class_main_window_ab87cdab2f1b7c709fc0f8bca4cf09ebc}
+
+
+\hyperlink{class_main_window_ab87cdab2f1b7c709fc0f8bca4cf09ebc}{Main\+Window\+::\+Main\+Window}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em parent} & usually 0 \\
+\hline
+{\em ws} & the workspace of this instance of \hyperlink{namespace_vespucci}{Vespucci} Default constructor \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 54 of file mainwindow.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_ab87cdab2f1b7c709fc0f8bca4cf09ebc_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_main_window_a4e20a4a065fbb0e4d3532a45a0a91425}{\index{Main\+Window@{Main\+Window}!close\+Event@{close\+Event}}
+\index{close\+Event@{close\+Event}!Main\+Window@{Main\+Window}}
+\subsubsection[{close\+Event}]{\setlength{\rightskip}{0pt plus 5cm}void Main\+Window\+::close\+Event (
+\begin{DoxyParamCaption}
+\item[{Q\+Close\+Event $\ast$}]{event}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}}\label{class_main_window_a4e20a4a065fbb0e4d3532a45a0a91425}
+
+
+\hyperlink{class_main_window_a4e20a4a065fbb0e4d3532a45a0a91425}{Main\+Window\+::close\+Event}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & Exits the program \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 77 of file mainwindow.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a4e20a4a065fbb0e4d3532a45a0a91425_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_main_window_afe21228ed02306f34b6194cefeeb7feb}{\index{Main\+Window@{Main\+Window}!Display\+Exception\+Warning@{Display\+Exception\+Warning}}
+\index{Display\+Exception\+Warning@{Display\+Exception\+Warning}!Main\+Window@{Main\+Window}}
+\subsubsection[{Display\+Exception\+Warning}]{\setlength{\rightskip}{0pt plus 5cm}void Main\+Window\+::\+Display\+Exception\+Warning (
+\begin{DoxyParamCaption}
+\item[{std\+::exception}]{e}
+\end{DoxyParamCaption}
+)}}\label{class_main_window_afe21228ed02306f34b6194cefeeb7feb}
+
+
+\hyperlink{class_main_window_afe21228ed02306f34b6194cefeeb7feb}{Main\+Window\+::\+Display\+Exception\+Warning}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em e} & Used to handle exceptions arising from dialogs. Displays a pop-\/up box describing the nature of the error. Most exceptions are not critical, but will result in the action that caused the exception being canceled. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 804 of file mainwindow.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_afe21228ed02306f34b6194cefeeb7feb_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_main_window_a89e2dbed5fa59653909d8cd2195c67be}{\index{Main\+Window@{Main\+Window}!global\+\_\+data\+\_\+range@{global\+\_\+data\+\_\+range}}
+\index{global\+\_\+data\+\_\+range@{global\+\_\+data\+\_\+range}!Main\+Window@{Main\+Window}}
+\subsubsection[{global\+\_\+data\+\_\+range}]{\setlength{\rightskip}{0pt plus 5cm}Q\+C\+P\+Range $\ast$ Main\+Window\+::global\+\_\+data\+\_\+range (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_main_window_a89e2dbed5fa59653909d8cd2195c67be}
+
+
+\hyperlink{class_main_window_a89e2dbed5fa59653909d8cd2195c67be}{Main\+Window\+::global\+\_\+data\+\_\+range}. 
+
+\begin{DoxyReturn}{Returns}
+Return the global data range (to \hyperlink{class_map_viewer}{Map\+Viewer} widgets) 
+\end{DoxyReturn}
+
+
+Definition at line 706 of file mainwindow.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=333pt]{class_main_window_a89e2dbed5fa59653909d8cd2195c67be_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a89e2dbed5fa59653909d8cd2195c67be_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_main_window_abe4c08852fad9c895a712dcd22ac9bd5}{\index{Main\+Window@{Main\+Window}!global\+\_\+gradient@{global\+\_\+gradient}}
+\index{global\+\_\+gradient@{global\+\_\+gradient}!Main\+Window@{Main\+Window}}
+\subsubsection[{global\+\_\+gradient}]{\setlength{\rightskip}{0pt plus 5cm}Q\+C\+P\+Color\+Gradient $\ast$ Main\+Window\+::global\+\_\+gradient (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_main_window_abe4c08852fad9c895a712dcd22ac9bd5}
+
+
+\hyperlink{class_main_window_abe4c08852fad9c895a712dcd22ac9bd5}{Main\+Window\+::global\+\_\+gradient}. 
+
+\begin{DoxyReturn}{Returns}
+Return the global color gradient (to \hyperlink{class_map_viewer}{Map\+Viewer} widgets) 
+\end{DoxyReturn}
+
+
+Definition at line 715 of file mainwindow.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=333pt]{class_main_window_abe4c08852fad9c895a712dcd22ac9bd5_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_abe4c08852fad9c895a712dcd22ac9bd5_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_main_window_a58206491beb13daf24f3ba72e5eebbc0}{\index{Main\+Window@{Main\+Window}!Recalculate\+Global\+Data\+Range@{Recalculate\+Global\+Data\+Range}}
+\index{Recalculate\+Global\+Data\+Range@{Recalculate\+Global\+Data\+Range}!Main\+Window@{Main\+Window}}
+\subsubsection[{Recalculate\+Global\+Data\+Range}]{\setlength{\rightskip}{0pt plus 5cm}void Main\+Window\+::\+Recalculate\+Global\+Data\+Range (
+\begin{DoxyParamCaption}
+\item[{Q\+C\+P\+Range $\ast$}]{new\+\_\+data\+\_\+range}
+\end{DoxyParamCaption}
+)}}\label{class_main_window_a58206491beb13daf24f3ba72e5eebbc0}
+
+
+\hyperlink{class_main_window_a58206491beb13daf24f3ba72e5eebbc0}{Main\+Window\+::\+Recalculate\+Global\+Data\+Range}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+data\+\_\+range} & Recalculate the global data range based on previous range and the new data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 724 of file mainwindow.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a58206491beb13daf24f3ba72e5eebbc0_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a58206491beb13daf24f3ba72e5eebbc0_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_main_window_a004bb70b988b902f0e1618bdb2695960}{\index{Main\+Window@{Main\+Window}!Refresh\+Global\+Color\+Gradient@{Refresh\+Global\+Color\+Gradient}}
+\index{Refresh\+Global\+Color\+Gradient@{Refresh\+Global\+Color\+Gradient}!Main\+Window@{Main\+Window}}
+\subsubsection[{Refresh\+Global\+Color\+Gradient}]{\setlength{\rightskip}{0pt plus 5cm}void Main\+Window\+::\+Refresh\+Global\+Color\+Gradient (
+\begin{DoxyParamCaption}
+\item[{Q\+C\+P\+Color\+Gradient}]{new\+\_\+gradient}
+\end{DoxyParamCaption}
+)}}\label{class_main_window_a004bb70b988b902f0e1618bdb2695960}
+
+
+\hyperlink{class_main_window_a004bb70b988b902f0e1618bdb2695960}{Main\+Window\+::\+Refresh\+Global\+Color\+Gradient}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+gradient} & Change the global color gradient and update it for all objects using it \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 741 of file mainwindow.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a004bb70b988b902f0e1618bdb2695960_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_main_window_a2961ddb7545da22e3bb0df7aca85bae1}{\index{Main\+Window@{Main\+Window}!Set\+Active\+Dataset\+List\+Row@{Set\+Active\+Dataset\+List\+Row}}
+\index{Set\+Active\+Dataset\+List\+Row@{Set\+Active\+Dataset\+List\+Row}!Main\+Window@{Main\+Window}}
+\subsubsection[{Set\+Active\+Dataset\+List\+Row}]{\setlength{\rightskip}{0pt plus 5cm}void Main\+Window\+::\+Set\+Active\+Dataset\+List\+Row (
+\begin{DoxyParamCaption}
+\item[{int}]{row}
+\end{DoxyParamCaption}
+)}}\label{class_main_window_a2961ddb7545da22e3bb0df7aca85bae1}
+
+
+\hyperlink{class_main_window_a2961ddb7545da22e3bb0df7aca85bae1}{Main\+Window\+::\+Set\+Active\+Dataset\+List\+Row}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row} & Change the row that is active in the dataset list view \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 827 of file mainwindow.\+cpp.
+
+\hypertarget{class_main_window_aa0c431f17d5790a5bfc0e49e429c173b}{\index{Main\+Window@{Main\+Window}!Set\+Global\+Data\+Range@{Set\+Global\+Data\+Range}}
+\index{Set\+Global\+Data\+Range@{Set\+Global\+Data\+Range}!Main\+Window@{Main\+Window}}
+\subsubsection[{Set\+Global\+Data\+Range}]{\setlength{\rightskip}{0pt plus 5cm}void Main\+Window\+::\+Set\+Global\+Data\+Range (
+\begin{DoxyParamCaption}
+\item[{Q\+C\+P\+Range $\ast$}]{new\+\_\+data\+\_\+range}
+\end{DoxyParamCaption}
+)}}\label{class_main_window_aa0c431f17d5790a5bfc0e49e429c173b}
+
+
+\hyperlink{class_main_window_aa0c431f17d5790a5bfc0e49e429c173b}{Main\+Window\+::\+Set\+Global\+Data\+Range}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+data\+\_\+range} & Set the global data range and update it for all objects using it \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 751 of file mainwindow.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_aa0c431f17d5790a5bfc0e49e429c173b_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_main_window_af78d7dca13e15077306eb27737edb096}{\index{Main\+Window@{Main\+Window}!workspace\+\_\+ptr@{workspace\+\_\+ptr}}
+\index{workspace\+\_\+ptr@{workspace\+\_\+ptr}!Main\+Window@{Main\+Window}}
+\subsubsection[{workspace\+\_\+ptr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Vespucci\+Workspace} $\ast$ Main\+Window\+::workspace\+\_\+ptr (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_main_window_af78d7dca13e15077306eb27737edb096}
+
+
+\hyperlink{class_main_window_af78d7dca13e15077306eb27737edb096}{Main\+Window\+::workspace\+\_\+ptr}. 
+
+\begin{DoxyReturn}{Returns}
+Very kludgy way of getting the workspace variable to window variables. 
+\end{DoxyReturn}
+
+
+Definition at line 761 of file mainwindow.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_af78d7dca13e15077306eb27737edb096_icgraph}
+\end{center}
+\end{figure}
+
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Vespucci/develop/\+G\+U\+I/mainwindow.\+h\item 
+C\+:/\+Projects/\+Vespucci/develop/\+G\+U\+I/mainwindow.\+cpp\end{DoxyCompactItemize}

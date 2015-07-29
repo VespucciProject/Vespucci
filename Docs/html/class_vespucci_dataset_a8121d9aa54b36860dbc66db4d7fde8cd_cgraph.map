@@ -1,0 +1,5 @@
+<map id="VespucciDataset::SavitzkyGolay" name="VespucciDataset::SavitzkyGolay">
+<area shape="rect" id="node2" href="$namespace_vespucci_1_1_math_1_1_smoothing.html#a2cb17f59d170c1ca2437b264d13626b6" title="sgolayfilt Apply Savitzky&#45;Golay smoothing to each column of a arma::matrix " alt="" coords="232,39,415,80"/>
+<area shape="rect" id="node3" href="$namespace_vespucci_1_1_math_1_1_smoothing.html#a0fb8087861e1d4b8f05dd4dff3cdb012" title="Vespucci::Math::Smoothing::sgolay Find a arma::matrix of Savitzky&#45;Golay convolution coefficients..." alt="" coords="463,5,645,47"/>
+<area shape="rect" id="node4" href="$namespace_vespucci_1_1_math_1_1_smoothing.html#aa38f2ef278486993ec066ff5701bec62" title="Vespucci::Math::Smoothing::ApplyFilter Apply FIR filters to a column vector. " alt="" coords="463,71,645,112"/>
+</map>

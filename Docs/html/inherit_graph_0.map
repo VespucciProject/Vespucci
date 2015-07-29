@@ -1,0 +1,32 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node2" href="$class_about_dialog.html" title="The AboutDialog class A QDialog that displays information about Vespucci. " alt="" coords="166,5,258,32"/>
+<area shape="rect" id="node3" href="$class_analysis_dialog.html" title="AnalysisDialog" alt="" coords="158,56,266,83"/>
+<area shape="rect" id="node4" href="$class_band_ratio_dialog.html" title="The BandRatioDialog class The dialog that allows the user to create a band&#45;ratio map. " alt="" coords="153,107,271,133"/>
+<area shape="rect" id="node5" href="$class_baseline_dialog.html" title="The BaselineDialog class The dialog that allows the user to baseline&#45;correct the data. " alt="" coords="158,157,266,184"/>
+<area shape="rect" id="node6" href="$class_booleanize_dialog.html" title="BooleanizeDialog" alt="" coords="151,208,273,235"/>
+<area shape="rect" id="node7" href="$class_citation_dialog.html" title="The CitationDialog class The dialog that displays how to cite Vespucci. " alt="" coords="161,259,263,285"/>
+<area shape="rect" id="node8" href="$class_crop_dialog.html" title="The CropDialog class A dialog that allows the user to &quot;Crop&quot; the dataset (delete all spectra that are..." alt="" coords="169,309,255,336"/>
+<area shape="rect" id="node9" href="$class_data_extractor_dialog.html" title="The DataExtractorDialog class A dialog that allows the user to create a new dataset from a map..." alt="" coords="143,360,281,387"/>
+<area shape="rect" id="node10" href="$class_data_viewer.html" title="The DataViewer class Window that displays dataset elements in a QTableView widget. " alt="" coords="168,411,256,437"/>
+<area shape="rect" id="node11" href="$class_filter_dialog.html" title="The FilterDialog class This dialog allows the user to apply filtering, smoothing or derivatization to..." alt="" coords="169,461,255,488"/>
+<area shape="rect" id="node12" href="$class_has_peaks_dialog.html" title="HasPeaksDialog" alt="" coords="153,512,271,539"/>
+<area shape="rect" id="node13" href="$class_k_means_dialog.html" title="The KMeansDialog class Allows the user to create a k&#45;means clustering map. " alt="" coords="159,563,265,589"/>
+<area shape="rect" id="node14" href="$class_load_dataset.html" title="The LoadDataset class Dialog that allows the user to import files into the program. " alt="" coords="165,613,259,640"/>
+<area shape="rect" id="node15" href="$class_meta_dataset_dialog.html" title="MetaDatasetDialog" alt="" coords="146,664,278,691"/>
+<area shape="rect" id="node16" href="$class_multi_import_dialog.html" title="MultiImportDialog" alt="" coords="151,715,273,741"/>
+<area shape="rect" id="node17" href="$class_peak_finding_dialog.html" title="PeakFindingDialog" alt="" coords="147,765,277,792"/>
+<area shape="rect" id="node18" href="$class_plot_maker_dialog.html" title="PlotMakerDialog" alt="" coords="153,816,271,843"/>
+<area shape="rect" id="node19" href="$class_plot_viewer.html" title="The PlotViewer class For displaying plots that are not maps or spectra (PCA/VCA/PLS Scatterplots..." alt="" coords="170,867,254,893"/>
+<area shape="rect" id="node20" href="$class_p_l_s_dialog.html" title="The PLSDialog class Dialog that allows the user to perform PLS determinant analysis. " alt="" coords="171,917,253,944"/>
+<area shape="rect" id="node21" href="$class_principal_components_dialog.html" title="The PrincipalComponentsDialog class Dialog for performing principal components analysis. " alt="" coords="121,968,303,995"/>
+<area shape="rect" id="node22" href="$class_range_dialog.html" title="The RangeDialog class. " alt="" coords="165,1019,259,1045"/>
+<area shape="rect" id="node23" href="$class_scale_bar_dialog.html" title="The ScaleBarDialog class Dialog for the user to create a scale bar on the image. " alt="" coords="157,1069,267,1096"/>
+<area shape="rect" id="node24" href="$class_script_dialog.html" title="ScriptDialog" alt="" coords="166,1120,258,1147"/>
+<area shape="rect" id="node25" href="$class_spectrum_selection_dialog.html" title="SpectrumSelectionDialog" alt="" coords="128,1171,296,1197"/>
+<area shape="rect" id="node26" href="$class_spectrum_viewer.html" title="The SpectrumViewer class A class for displaying spectra. " alt="" coords="153,1221,271,1248"/>
+<area shape="rect" id="node27" href="$class_stats_dialog.html" title="StatsDialog" alt="" coords="167,1272,257,1299"/>
+<area shape="rect" id="node28" href="$class_threshold_dialog.html" title="ThresholdDialog" alt="" coords="155,1323,269,1349"/>
+<area shape="rect" id="node29" href="$class_univariate_analysis_dialog.html" title="UnivariateAnalysisDialog" alt="" coords="130,1373,294,1400"/>
+<area shape="rect" id="node30" href="$class_univariate_dialog.html" title="The UnivariateDialog class Class allowing user to create univariate images. " alt="" coords="155,1424,269,1451"/>
+<area shape="rect" id="node31" href="$class_v_c_a_dialog.html" title="The VCADialog class A dialog that allows the user to perform vertex components analysis. " alt="" coords="169,1475,255,1501"/>
+</map>

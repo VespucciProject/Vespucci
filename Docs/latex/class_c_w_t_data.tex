@@ -1,0 +1,178 @@
+\hypertarget{class_c_w_t_data}{\section{C\+W\+T\+Data Class Reference}
+\label{class_c_w_t_data}\index{C\+W\+T\+Data@{C\+W\+T\+Data}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_c_w_t_data_ae3a109688cea3f935d866eb14bdd5040}{{\bfseries C\+W\+T\+Data} (Q\+Shared\+Pointer$<$ \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} $>$ dataset)}\label{class_c_w_t_data_ae3a109688cea3f935d866eb14bdd5040}
+
+\item 
+void \hyperlink{class_c_w_t_data_a2bef5240e7e285a722170a79ec09d326}{Apply} (std\+::string wavelet=\char`\"{}mexh\char`\"{}, uword max\+\_\+scale=70, uword gap\+\_\+threshold=3, uword min\+\_\+ridge\+\_\+length=5, uword search\+\_\+width=5, double noise\+\_\+threshold=3.\+0, std\+::string noise\+\_\+method=\char`\"{}quantile\char`\"{}, uword noise\+\_\+window\+\_\+size=500, bool save\+\_\+coefs=false, bool save\+\_\+coef\+\_\+plots=false, bool save\+\_\+ridge\+\_\+plots=false, bool save\+\_\+ridge\+\_\+plot\+\_\+data=false, bool estimate\+\_\+width=false, Q\+String save\+\_\+directory=\char`\"{}C\+W\+T Data\char`\"{}, Q\+String image\+\_\+format=\char`\"{}pdf\char`\"{}, Q\+C\+P\+Color\+Gradient gradient=Q\+C\+P\+Color\+Gradient\+::cb\+Greys)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_c_w_t_data_a2bef5240e7e285a722170a79ec09d326}{C\+W\+T\+Data\+::\+Apply}. \end{DoxyCompactList}\item 
+mat \hyperlink{class_c_w_t_data_ad5f5f9db597ab00373481e6067ba75ac}{centers} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_c_w_t_data_ad5f5f9db597ab00373481e6067ba75ac}{C\+W\+T\+Data\+::centers}. \end{DoxyCompactList}\item 
+\hypertarget{class_c_w_t_data_a95b94433d6244a37cdee0205a67b0321}{void \hyperlink{class_c_w_t_data_a95b94433d6244a37cdee0205a67b0321}{clear} ()}\label{class_c_w_t_data_a95b94433d6244a37cdee0205a67b0321}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_c_w_t_data_a95b94433d6244a37cdee0205a67b0321}{C\+W\+T\+Data\+::clear} Delete everything in peak\+\_\+data\+\_\+. \end{DoxyCompactList}\item 
+mat \hyperlink{class_c_w_t_data_a829d9ca8cdabff46dd3654f2bda64899}{counts} () const 
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_c_w_t_data_a829d9ca8cdabff46dd3654f2bda64899}{C\+W\+T\+Data\+::counts}. \end{DoxyCompactList}\item 
+mat \hyperlink{class_c_w_t_data_acfc35d0f61d67aedc7bf2fed91de1319}{Has\+Peaks} (const mat \&range\+\_\+list)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_c_w_t_data_acfc35d0f61d67aedc7bf2fed91de1319}{C\+W\+T\+Data\+::\+Has\+Peaks}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 10 of file cwtdata.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_c_w_t_data_a2bef5240e7e285a722170a79ec09d326}{\index{C\+W\+T\+Data@{C\+W\+T\+Data}!Apply@{Apply}}
+\index{Apply@{Apply}!C\+W\+T\+Data@{C\+W\+T\+Data}}
+\subsubsection[{Apply}]{\setlength{\rightskip}{0pt plus 5cm}void C\+W\+T\+Data\+::\+Apply (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{wavelet = {\ttfamily \char`\"{}mexh\char`\"{}}, }
+\item[{uword}]{max\+\_\+scale = {\ttfamily 70}, }
+\item[{uword}]{gap\+\_\+threshold = {\ttfamily 3}, }
+\item[{uword}]{min\+\_\+ridge\+\_\+length = {\ttfamily 5}, }
+\item[{uword}]{search\+\_\+width = {\ttfamily 5}, }
+\item[{double}]{noise\+\_\+threshold = {\ttfamily 3.0}, }
+\item[{std\+::string}]{noise\+\_\+method = {\ttfamily \char`\"{}quantile\char`\"{}}, }
+\item[{uword}]{noise\+\_\+window\+\_\+size = {\ttfamily 500}, }
+\item[{bool}]{save\+\_\+coefs = {\ttfamily false}, }
+\item[{bool}]{save\+\_\+coef\+\_\+plots = {\ttfamily false}, }
+\item[{bool}]{save\+\_\+ridge\+\_\+plots = {\ttfamily false}, }
+\item[{bool}]{save\+\_\+ridge\+\_\+plot\+\_\+data = {\ttfamily false}, }
+\item[{bool}]{estimate\+\_\+width = {\ttfamily false}, }
+\item[{Q\+String}]{save\+\_\+directory = {\ttfamily \char`\"{}CWT~Data\char`\"{}}, }
+\item[{Q\+String}]{image\+\_\+format = {\ttfamily \char`\"{}pdf\char`\"{}}, }
+\item[{Q\+C\+P\+Color\+Gradient}]{gradient = {\ttfamily QCPColorGradient\+:\+:cbGreys}}
+\end{DoxyParamCaption}
+)}}\label{class_c_w_t_data_a2bef5240e7e285a722170a79ec09d326}
+
+
+\hyperlink{class_c_w_t_data_a2bef5240e7e285a722170a79ec09d326}{C\+W\+T\+Data\+::\+Apply}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em wavelet} & \\
+\hline
+{\em max\+\_\+scale} & \\
+\hline
+{\em gap\+\_\+threshold} & \\
+\hline
+{\em min\+\_\+ridge\+\_\+length} & \\
+\hline
+{\em search\+\_\+width} & \\
+\hline
+{\em noise\+\_\+threshold} & \\
+\hline
+{\em noise\+\_\+method} & \\
+\hline
+{\em noise\+\_\+window\+\_\+size} & \\
+\hline
+{\em save\+\_\+coefs} & \\
+\hline
+{\em save\+\_\+coef\+\_\+plots} & \\
+\hline
+{\em save\+\_\+ridge\+\_\+plots} & \\
+\hline
+{\em save\+\_\+ridge\+\_\+plot\+\_\+data} & \\
+\hline
+{\em save\+\_\+directory} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 24 of file cwtdata.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_c_w_t_data_a2bef5240e7e285a722170a79ec09d326_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_c_w_t_data_ad5f5f9db597ab00373481e6067ba75ac}{\index{C\+W\+T\+Data@{C\+W\+T\+Data}!centers@{centers}}
+\index{centers@{centers}!C\+W\+T\+Data@{C\+W\+T\+Data}}
+\subsubsection[{centers}]{\setlength{\rightskip}{0pt plus 5cm}mat C\+W\+T\+Data\+::centers (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_c_w_t_data_ad5f5f9db597ab00373481e6067ba75ac}
+
+
+\hyperlink{class_c_w_t_data_ad5f5f9db597ab00373481e6067ba75ac}{C\+W\+T\+Data\+::centers}. 
+
+\begin{DoxyReturn}{Returns}
+A single matrix containing a summary of the information in peak\+\_\+data\+\_\+ This is intended to be called once and that matrix stored as an Analysis\+Result to be viewed in the data viewer. 
+\end{DoxyReturn}
+
+
+Definition at line 256 of file cwtdata.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_c_w_t_data_ad5f5f9db597ab00373481e6067ba75ac_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_c_w_t_data_a829d9ca8cdabff46dd3654f2bda64899}{\index{C\+W\+T\+Data@{C\+W\+T\+Data}!counts@{counts}}
+\index{counts@{counts}!C\+W\+T\+Data@{C\+W\+T\+Data}}
+\subsubsection[{counts}]{\setlength{\rightskip}{0pt plus 5cm}mat C\+W\+T\+Data\+::counts (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}}\label{class_c_w_t_data_a829d9ca8cdabff46dd3654f2bda64899}
+
+
+\hyperlink{class_c_w_t_data_a829d9ca8cdabff46dd3654f2bda64899}{C\+W\+T\+Data\+::counts}. 
+
+\begin{DoxyReturn}{Returns}
+The matrix describing the counts of peaks at each center 
+\end{DoxyReturn}
+
+
+Definition at line 346 of file cwtdata.\+cpp.
+
+\hypertarget{class_c_w_t_data_acfc35d0f61d67aedc7bf2fed91de1319}{\index{C\+W\+T\+Data@{C\+W\+T\+Data}!Has\+Peaks@{Has\+Peaks}}
+\index{Has\+Peaks@{Has\+Peaks}!C\+W\+T\+Data@{C\+W\+T\+Data}}
+\subsubsection[{Has\+Peaks}]{\setlength{\rightskip}{0pt plus 5cm}mat C\+W\+T\+Data\+::\+Has\+Peaks (
+\begin{DoxyParamCaption}
+\item[{const mat \&}]{range\+\_\+list}
+\end{DoxyParamCaption}
+)}}\label{class_c_w_t_data_acfc35d0f61d67aedc7bf2fed91de1319}
+
+
+\hyperlink{class_c_w_t_data_acfc35d0f61d67aedc7bf2fed91de1319}{C\+W\+T\+Data\+::\+Has\+Peaks}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em range\+\_\+list} & A matrix where each row consists of a left and right bound to determine whether or not a peak center was found in that range. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A matrix with the number of rows equal to the rows of the dataset when this object was created. Each column corresponds to a requested range. 
+\end{DoxyReturn}
+
+
+Definition at line 358 of file cwtdata.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Vespucci/develop/\+Data/\+Analysis/cwtdata.\+h\item 
+C\+:/\+Projects/\+Vespucci/develop/\+Data/\+Analysis/cwtdata.\+cpp\end{DoxyCompactItemize}

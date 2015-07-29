@@ -1,0 +1,367 @@
+\hypertarget{namespace_vespucci_1_1_math_1_1_smoothing}{\section{Vespucci\+:\+:Math\+:\+:Smoothing Namespace Reference}
+\label{namespace_vespucci_1_1_math_1_1_smoothing}\index{Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}}
+}
+
+
+A namespace for math functions relating to filtering and smoothing signals.  
+
+
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+arma\+::mat \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_a0fb8087861e1d4b8f05dd4dff3cdb012}{sgolay} (arma\+::uword poly\+\_\+order, arma\+::uword window\+\_\+size, arma\+::uword deriv\+\_\+order, arma\+::uword scaling\+\_\+factor)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_a0fb8087861e1d4b8f05dd4dff3cdb012}{Vespucci\+::\+Math\+::\+Smoothing\+::sgolay} Find a arma\+::matrix of Savitzky-\/\+Golay convolution coefficients. \end{DoxyCompactList}\item 
+arma\+::mat \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_a2cb17f59d170c1ca2437b264d13626b6}{sgolayfilt} (const arma\+::mat \&x, arma\+::uword poly\+\_\+order, arma\+::uword window\+\_\+size, arma\+::uword deriv\+\_\+order, arma\+::uword scaling\+\_\+factor)
+\begin{DoxyCompactList}\small\item\em sgolayfilt Apply Savitzky-\/\+Golay smoothing to each column of a arma\+::matrix \end{DoxyCompactList}\item 
+arma\+::vec \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_aa38f2ef278486993ec066ff5701bec62}{Apply\+Filter} (const arma\+::vec \&x, arma\+::mat coefficients, arma\+::uword window\+\_\+size)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_aa38f2ef278486993ec066ff5701bec62}{Vespucci\+::\+Math\+::\+Smoothing\+::\+Apply\+Filter} Apply F\+I\+R filters to a column vector. \end{DoxyCompactList}\item 
+arma\+::vec \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_ae7edb32bb2b859965dae5626b829e0cf}{Apply\+Filter} (const arma\+::vec \&x, arma\+::vec filter)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_aa38f2ef278486993ec066ff5701bec62}{Vespucci\+::\+Math\+::\+Smoothing\+::\+Apply\+Filter}. \end{DoxyCompactList}\item 
+arma\+::vec \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_a611221f749d15133ad90da3ba3bbca73}{Create\+Moving\+Average\+Filter} (arma\+::uword window\+\_\+size)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_a611221f749d15133ad90da3ba3bbca73}{Vespucci\+::\+Math\+::\+Smoothing\+::\+Create\+Moving\+Average\+Filter}. \end{DoxyCompactList}\item 
+arma\+::vec \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_a5456df71022c23baab4c51988866656e}{Median\+Filter} (const arma\+::vec \&X, arma\+::uword window\+\_\+size)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_a5456df71022c23baab4c51988866656e}{Vespucci\+::\+Math\+::\+Smoothing\+::\+Median\+Filter}. \end{DoxyCompactList}\item 
+arma\+::mat \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_a2b168115738d2931e0a5504823b26b3b}{Median\+Filter\+Mat} (const arma\+::mat \&X, arma\+::uword window\+\_\+size)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_a2b168115738d2931e0a5504823b26b3b}{Vespucci\+::\+Math\+::\+Smoothing\+::\+Median\+Filter\+Mat}. \end{DoxyCompactList}\item 
+arma\+::vec \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_ab92bb85566a363c2c54ad77d4eb2468f}{Whittaker\+Smooth} (const arma\+::vec \&x, double lambda, arma\+::uword penalty\+\_\+order)
+\begin{DoxyCompactList}\small\item\em Vespucci\+::\+Math\+::\+Whittaker\+Smooth. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A namespace for math functions relating to filtering and smoothing signals. 
+
+\subsection{Function Documentation}
+\hypertarget{namespace_vespucci_1_1_math_1_1_smoothing_aa38f2ef278486993ec066ff5701bec62}{\index{Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}!Apply\+Filter@{Apply\+Filter}}
+\index{Apply\+Filter@{Apply\+Filter}!Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}}
+\subsubsection[{Apply\+Filter}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::vec Vespucci\+::\+Math\+::\+Smoothing\+::\+Apply\+Filter (
+\begin{DoxyParamCaption}
+\item[{const arma\+::vec \&}]{x, }
+\item[{arma\+::mat}]{coefficients, }
+\item[{arma\+::uword}]{window\+\_\+size}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_smoothing_aa38f2ef278486993ec066ff5701bec62}
+
+
+\hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_aa38f2ef278486993ec066ff5701bec62}{Vespucci\+::\+Math\+::\+Smoothing\+::\+Apply\+Filter} Apply F\+I\+R filters to a column vector. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Data to be filtered \\
+\hline
+{\em coefficients} & A arma\+::matrix of F\+I\+R filters. \\
+\hline
+{\em window\+\_\+size} & Filter window size \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Filtered data Apply F\+I\+R filters to a column vector. The central row of coefficients contains the filter used for most of the data. The first (window\+\_\+size -\/ 1)/2 rows are filtered with the lower rows ofccoefficients, and likewise for the last (window\+\_\+size -\/ 1)/2 rows and the first rows of coefficients. 
+\end{DoxyReturn}
+
+
+Definition at line 127 of file F\+I\+R.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_smoothing_aa38f2ef278486993ec066ff5701bec62_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_smoothing_ae7edb32bb2b859965dae5626b829e0cf}{\index{Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}!Apply\+Filter@{Apply\+Filter}}
+\index{Apply\+Filter@{Apply\+Filter}!Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}}
+\subsubsection[{Apply\+Filter}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::vec Vespucci\+::\+Math\+::\+Smoothing\+::\+Apply\+Filter (
+\begin{DoxyParamCaption}
+\item[{const arma\+::vec \&}]{x, }
+\item[{arma\+::vec}]{filter}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_smoothing_ae7edb32bb2b859965dae5626b829e0cf}
+
+
+\hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_aa38f2ef278486993ec066ff5701bec62}{Vespucci\+::\+Math\+::\+Smoothing\+::\+Apply\+Filter}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The vector to filter \\
+\hline
+{\em filter} & The filter \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Filtered data Applies an F\+I\+R filter to x 
+\end{DoxyReturn}
+
+
+Definition at line 148 of file F\+I\+R.\+cpp.
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_smoothing_a611221f749d15133ad90da3ba3bbca73}{\index{Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}!Create\+Moving\+Average\+Filter@{Create\+Moving\+Average\+Filter}}
+\index{Create\+Moving\+Average\+Filter@{Create\+Moving\+Average\+Filter}!Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}}
+\subsubsection[{Create\+Moving\+Average\+Filter}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::vec Vespucci\+::\+Math\+::\+Smoothing\+::\+Create\+Moving\+Average\+Filter (
+\begin{DoxyParamCaption}
+\item[{arma\+::uword}]{window\+\_\+size}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_smoothing_a611221f749d15133ad90da3ba3bbca73}
+
+
+\hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_a611221f749d15133ad90da3ba3bbca73}{Vespucci\+::\+Math\+::\+Smoothing\+::\+Create\+Moving\+Average\+Filter}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em window\+\_\+size} & The window size of the filter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A moving average filter Create a moving average filter of a certain window size. 
+\end{DoxyReturn}
+
+
+Definition at line 165 of file F\+I\+R.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_smoothing_a611221f749d15133ad90da3ba3bbca73_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_smoothing_a5456df71022c23baab4c51988866656e}{\index{Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}!Median\+Filter@{Median\+Filter}}
+\index{Median\+Filter@{Median\+Filter}!Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}}
+\subsubsection[{Median\+Filter}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::vec Vespucci\+::\+Math\+::\+Smoothing\+::\+Median\+Filter (
+\begin{DoxyParamCaption}
+\item[{const arma\+::vec \&}]{X, }
+\item[{arma\+::uword}]{window\+\_\+size}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_smoothing_a5456df71022c23baab4c51988866656e}
+
+
+\hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_a5456df71022c23baab4c51988866656e}{Vespucci\+::\+Math\+::\+Smoothing\+::\+Median\+Filter}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em X} & \\
+\hline
+{\em window\+\_\+size} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Performs median filtering on a signal X. This just ignores the edges becuause they will be fairly small and not very interesting. 
+\end{DoxyReturn}
+
+
+Definition at line 29 of file nonlinear.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_smoothing_a5456df71022c23baab4c51988866656e_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_smoothing_a2b168115738d2931e0a5504823b26b3b}{\index{Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}!Median\+Filter\+Mat@{Median\+Filter\+Mat}}
+\index{Median\+Filter\+Mat@{Median\+Filter\+Mat}!Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}}
+\subsubsection[{Median\+Filter\+Mat}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::mat Vespucci\+::\+Math\+::\+Smoothing\+::\+Median\+Filter\+Mat (
+\begin{DoxyParamCaption}
+\item[{const arma\+::mat \&}]{X, }
+\item[{arma\+::uword}]{window\+\_\+size}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_smoothing_a2b168115738d2931e0a5504823b26b3b}
+
+
+\hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_a2b168115738d2931e0a5504823b26b3b}{Vespucci\+::\+Math\+::\+Smoothing\+::\+Median\+Filter\+Mat}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em X} & \\
+\hline
+{\em window\+\_\+size} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Performs Median Filter over a arma\+::matrix with spectra in columns 
+\end{DoxyReturn}
+
+
+Definition at line 60 of file nonlinear.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_smoothing_a2b168115738d2931e0a5504823b26b3b_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_smoothing_a2b168115738d2931e0a5504823b26b3b_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_smoothing_a0fb8087861e1d4b8f05dd4dff3cdb012}{\index{Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}!sgolay@{sgolay}}
+\index{sgolay@{sgolay}!Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}}
+\subsubsection[{sgolay}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::mat Vespucci\+::\+Math\+::\+Smoothing\+::sgolay (
+\begin{DoxyParamCaption}
+\item[{arma\+::uword}]{poly\+\_\+order, }
+\item[{arma\+::uword}]{window\+\_\+size, }
+\item[{arma\+::uword}]{deriv\+\_\+order, }
+\item[{arma\+::uword}]{scaling\+\_\+factor}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_smoothing_a0fb8087861e1d4b8f05dd4dff3cdb012}
+
+
+\hyperlink{namespace_vespucci_1_1_math_1_1_smoothing_a0fb8087861e1d4b8f05dd4dff3cdb012}{Vespucci\+::\+Math\+::\+Smoothing\+::sgolay} Find a arma\+::matrix of Savitzky-\/\+Golay convolution coefficients. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em poly\+\_\+order} & \\
+\hline
+{\em window\+\_\+size} & \\
+\hline
+{\em deriv\+\_\+order} & \\
+\hline
+{\em scaling\+\_\+factor} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A arma\+::matrix of size window\+\_\+size by window\+\_\+size containing coefficients. Finds a arma\+::matrix of Savitzky-\/\+Golay convolution coefficients, similar to the sgolay function in the Octave and arma\+::mat\+L\+A\+B signal packages. The central row is the filter used for most of the dataset. The outer rows are used on the edges of the signal to be filtered. 
+\end{DoxyReturn}
+
+
+Definition at line 37 of file F\+I\+R.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_smoothing_a0fb8087861e1d4b8f05dd4dff3cdb012_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_smoothing_a2cb17f59d170c1ca2437b264d13626b6}{\index{Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}!sgolayfilt@{sgolayfilt}}
+\index{sgolayfilt@{sgolayfilt}!Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}}
+\subsubsection[{sgolayfilt}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::mat Vespucci\+::\+Math\+::\+Smoothing\+::sgolayfilt (
+\begin{DoxyParamCaption}
+\item[{const arma\+::mat \&}]{x, }
+\item[{arma\+::uword}]{poly\+\_\+order, }
+\item[{arma\+::uword}]{window\+\_\+size, }
+\item[{arma\+::uword}]{deriv\+\_\+order, }
+\item[{arma\+::uword}]{scaling\+\_\+factor}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_smoothing_a2cb17f59d170c1ca2437b264d13626b6}
+
+
+sgolayfilt Apply Savitzky-\/\+Golay smoothing to each column of a arma\+::matrix 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Input arma\+::matrix. Each column is a signal \\
+\hline
+{\em poly\+\_\+order} & Polynomial order for smoothing \\
+\hline
+{\em window\+\_\+size} & Size of filter window. Must be odd and larger than poly order \\
+\hline
+{\em deriv\+\_\+order} & Derivative order, to extract derivatized data directly \\
+\hline
+{\em scaling\+\_\+factor} & A scaling factor \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Smoothed data 
+\end{DoxyReturn}
+
+
+Definition at line 90 of file F\+I\+R.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_smoothing_a2cb17f59d170c1ca2437b264d13626b6_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_smoothing_a2cb17f59d170c1ca2437b264d13626b6_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_1_1_smoothing_ab92bb85566a363c2c54ad77d4eb2468f}{\index{Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}!Whittaker\+Smooth@{Whittaker\+Smooth}}
+\index{Whittaker\+Smooth@{Whittaker\+Smooth}!Vespucci\+::\+Math\+::\+Smoothing@{Vespucci\+::\+Math\+::\+Smoothing}}
+\subsubsection[{Whittaker\+Smooth}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::vec Vespucci\+::\+Math\+::\+Smoothing\+::\+Whittaker\+Smooth (
+\begin{DoxyParamCaption}
+\item[{const arma\+::vec \&}]{x, }
+\item[{double}]{lambda, }
+\item[{arma\+::uword}]{penalty\+\_\+order}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_1_1_smoothing_ab92bb85566a363c2c54ad77d4eb2468f}
+
+
+Vespucci\+::\+Math\+::\+Whittaker\+Smooth. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & \\
+\hline
+{\em lambda} & \\
+\hline
+{\em penalty\+\_\+order} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This may be re-\/written to use a sparse Cholesky decomposition if such a function comes to exist in armadillo or M\+L\+P\+A\+C\+K 
+\end{DoxyReturn}
+
+
+Definition at line 30 of file whittaker.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_1_1_smoothing_ab92bb85566a363c2c54ad77d4eb2468f_cgraph}
+\end{center}
+\end{figure}
+
+

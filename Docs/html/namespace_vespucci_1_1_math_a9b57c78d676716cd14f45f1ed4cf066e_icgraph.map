@@ -1,0 +1,10 @@
+<map id="Vespucci::Math::diff" name="Vespucci::Math::diff">
+<area shape="rect" id="node2" href="$namespace_vespucci_1_1_math.html#a0ae415aafa638d49a2ee5b2816bdf7ec" title="Vespucci::Math::LocalMaxima. " alt="" coords="197,13,396,39"/>
+<area shape="rect" id="node5" href="$class_vespucci_1_1_math_1_1_c_w_t_ridge.html#a83f1ff9fd6e95fb8208055c27e10f1fb" title="Vespucci::Math::CWTRidge::gap. " alt="" coords="191,63,403,90"/>
+<area shape="rect" id="node6" href="$namespace_vespucci_1_1_math_1_1_peak_finding.html#a9f22a184fb69fb6ab32757fdd19e1ae7" title="Vespucci::Math::PeakFinding::FindPeaksMat Performs FindPeaks on a spectra arma::matrix. " alt="" coords="200,115,393,156"/>
+<area shape="rect" id="node8" href="$namespace_vespucci_1_1_math_1_1_peak_finding.html#a502c529617f35fd20d1e11aca2a03a28" title="Vespucci::Math::PeakFinding::FindPeakPositions. " alt="" coords="200,204,393,245"/>
+<area shape="rect" id="node9" href="$namespace_vespucci_1_1_math_1_1_smoothing.html#ab92bb85566a363c2c54ad77d4eb2468f" title="Vespucci::Math::WhittakerSmooth. " alt="" coords="205,269,388,311"/>
+<area shape="rect" id="node3" href="$namespace_vespucci_1_1_math_1_1_peak_finding.html#aede120546d4e46e4073058508fdd7ae9" title="Vespucci::Math::PeakFinding::FindRidges. " alt="" coords="451,5,644,47"/>
+<area shape="rect" id="node4" href="$class_c_w_t_data.html#a2bef5240e7e285a722170a79ec09d326" title="CWTData::Apply. " alt="" coords="692,13,811,39"/>
+<area shape="rect" id="node7" href="$class_vespucci_dataset.html#a1f8933230496f1b3f475a884a021c6e5" title="VespucciDataset::FindPeaks. " alt="" coords="452,122,643,149"/>
+</map>

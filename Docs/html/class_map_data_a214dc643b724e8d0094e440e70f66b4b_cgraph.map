@@ -1,0 +1,6 @@
+<map id="MapData::set_baselines" name="MapData::set_baselines">
+<area shape="rect" id="node2" href="$class_map_data.html#a6c73650238e622489f4ba5ae580e0c84" title="MapData::first_abscissa. " alt="" coords="226,5,389,32"/>
+<area shape="rect" id="node3" href="$class_map_data.html#a16fba2ab43dd4480662a2a1d76611352" title="MapData::second_abscissa. " alt="" coords="216,56,399,83"/>
+<area shape="rect" id="node4" href="$class_map_data.html#a02dfe98d659e8eac8bf8eec4c376223f" title="MapData::first_baseline. " alt="" coords="228,107,387,133"/>
+<area shape="rect" id="node5" href="$class_map_data.html#afd3efd4d5aad351c03f2a68d62deaa4a" title="MapData::second_baseline. " alt="" coords="218,157,397,184"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="Vespucci::Math::DimensionReduction::EstimateAdditiveNoise" name="Vespucci::Math::DimensionReduction::EstimateAdditiveNoise">
+<area shape="rect" id="node2" href="$class_vespucci_dataset.html#a7c685d41d2093602e563f7facaff7f9a" title="VespucciDataset::HySime. " alt="" coords="272,64,447,91"/>
+<area shape="rect" id="node3" href="$class_vespucci_dataset.html#a74779cef5217e51364427aaed06bf500" title="VespucciDataset::VertexComponents. " alt="" coords="495,5,735,32"/>
+<area shape="rect" id="node4" href="$class_vespucci_dataset.html#a300693f9bc5b14cbfc9ac710af4b09a1" title="VespucciDataset::PartialLeastSquares Performs PLS regression on data. Resulting map is score for one ..." alt="" coords="531,57,698,98"/>
+<area shape="rect" id="node5" href="$class_vespucci_dataset.html#a66187dec3aeafb655e75d7be5af7f52d" title="VespucciDataset::KMeans Implements K&#45;means clustering using MLPACK. " alt="" coords="526,123,703,149"/>
+</map>

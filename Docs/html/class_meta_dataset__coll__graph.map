@@ -1,0 +1,3 @@
+<map id="MetaDataset" name="MetaDataset">
+<area shape="rect" id="node2" href="$class_vespucci_dataset.html" title="The VespucciDataset class This is the main class for dealing with hyperspectral data. This handles the import and export of spectra, and the creation of maps. Images are handled by the MapData class. " alt="" coords="5,5,127,32"/>
+</map>

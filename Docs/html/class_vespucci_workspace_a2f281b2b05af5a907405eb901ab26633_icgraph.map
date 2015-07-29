@@ -1,0 +1,5 @@
+<map id="VespucciWorkspace::SetGlobalDataRange" name="VespucciWorkspace::SetGlobalDataRange">
+<area shape="rect" id="node2" href="$class_main_window.html#a58206491beb13daf24f3ba72e5eebbc0" title="MainWindow::RecalculateGlobalDataRange. " alt="" coords="204,5,413,47"/>
+<area shape="rect" id="node4" href="$class_main_window.html#aa0c431f17d5790a5bfc0e49e429c173b" title="MainWindow::SetGlobalDataRange. " alt="" coords="215,71,403,112"/>
+<area shape="rect" id="node3" href="$class_map_data.html#af30cb1a76812d7904c1f571a8e1fe1e4" title="MapData::UseGlobalColorScale. " alt="" coords="461,13,667,39"/>
+</map>

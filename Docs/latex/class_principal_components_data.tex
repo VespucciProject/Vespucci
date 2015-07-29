@@ -1,0 +1,149 @@
+\hypertarget{class_principal_components_data}{\section{Principal\+Components\+Data Class Reference}
+\label{class_principal_components_data}\index{Principal\+Components\+Data@{Principal\+Components\+Data}}
+}
+
+
+The \hyperlink{class_principal_components_data}{Principal\+Components\+Data} class A class for performing and storing data from principal components analysis.  
+
+
+
+
+{\ttfamily \#include $<$principalcomponentsdata.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_principal_components_data_a288b9bc87055615bd7b3867ba7be1f48}{Principal\+Components\+Data} (Q\+Shared\+Pointer$<$ \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} $>$ parent, Q\+String $\ast$directory)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_principal_components_data_a288b9bc87055615bd7b3867ba7be1f48}{Principal\+Components\+Data\+::\+Principal\+Components\+Data}. \end{DoxyCompactList}\item 
+void \hyperlink{class_principal_components_data_abc8ccfa909ad98d53a06b066aeea38df}{Apply} (mat spectra)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_principal_components_data_abc8ccfa909ad98d53a06b066aeea38df}{Principal\+Components\+Data\+::\+Apply}. \end{DoxyCompactList}\item 
+\hypertarget{class_principal_components_data_ada4b8b37f6acc4c32772055d8ff37067}{bool {\bfseries Save\+Coefficient\+Matrix} ()}\label{class_principal_components_data_ada4b8b37f6acc4c32772055d8ff37067}
+
+\item 
+colvec \hyperlink{class_principal_components_data_aba30bcb89a6667bf8cd80e605337e9ba}{Results} (int component)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_principal_components_data_aba30bcb89a6667bf8cd80e605337e9ba}{Principal\+Components\+Data\+::\+Results}. \end{DoxyCompactList}\item 
+\hypertarget{class_principal_components_data_a995a0e7cf6ed2ec4131bbe50bcf4cef6}{vec $\ast$ {\bfseries tsquared} ()}\label{class_principal_components_data_a995a0e7cf6ed2ec4131bbe50bcf4cef6}
+
+\item 
+\hypertarget{class_principal_components_data_a809873d82bc42ef1101cf102891f4bc6}{mat $\ast$ {\bfseries score} ()}\label{class_principal_components_data_a809873d82bc42ef1101cf102891f4bc6}
+
+\item 
+\hypertarget{class_principal_components_data_a21e37c5b5ca0bd2d9ee5424afc0f116f}{vec $\ast$ {\bfseries latent} ()}\label{class_principal_components_data_a21e37c5b5ca0bd2d9ee5424afc0f116f}
+
+\item 
+\hypertarget{class_principal_components_data_aa0913da59b8bb2f6945ec242b49ddd76}{mat $\ast$ {\bfseries coeff} ()}\label{class_principal_components_data_aa0913da59b8bb2f6945ec242b49ddd76}
+
+\item 
+\hypertarget{class_principal_components_data_a7cea0719a307b49f1235c1bf8b4faea6}{vec $\ast$ {\bfseries percent\+\_\+variance} ()}\label{class_principal_components_data_a7cea0719a307b49f1235c1bf8b4faea6}
+
+\item 
+\hypertarget{class_principal_components_data_a307b5fe9e5092b68d1a26ed887452691}{mat $\ast$ {\bfseries value} (Q\+String key)}\label{class_principal_components_data_a307b5fe9e5092b68d1a26ed887452691}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{class_principal_components_data}{Principal\+Components\+Data} class A class for performing and storing data from principal components analysis. 
+
+Definition at line 30 of file principalcomponentsdata.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_principal_components_data_a288b9bc87055615bd7b3867ba7be1f48}{\index{Principal\+Components\+Data@{Principal\+Components\+Data}!Principal\+Components\+Data@{Principal\+Components\+Data}}
+\index{Principal\+Components\+Data@{Principal\+Components\+Data}!Principal\+Components\+Data@{Principal\+Components\+Data}}
+\subsubsection[{Principal\+Components\+Data}]{\setlength{\rightskip}{0pt plus 5cm}Principal\+Components\+Data\+::\+Principal\+Components\+Data (
+\begin{DoxyParamCaption}
+\item[{Q\+Shared\+Pointer$<$ {\bf Vespucci\+Dataset} $>$}]{parent, }
+\item[{Q\+String $\ast$}]{directory}
+\end{DoxyParamCaption}
+)}}\label{class_principal_components_data_a288b9bc87055615bd7b3867ba7be1f48}
+
+
+\hyperlink{class_principal_components_data_a288b9bc87055615bd7b3867ba7be1f48}{Principal\+Components\+Data\+::\+Principal\+Components\+Data}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em parent} & Dataset \\
+\hline
+{\em directory} & global directory \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 27 of file principalcomponentsdata.\+cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_principal_components_data_abc8ccfa909ad98d53a06b066aeea38df}{\index{Principal\+Components\+Data@{Principal\+Components\+Data}!Apply@{Apply}}
+\index{Apply@{Apply}!Principal\+Components\+Data@{Principal\+Components\+Data}}
+\subsubsection[{Apply}]{\setlength{\rightskip}{0pt plus 5cm}void Principal\+Components\+Data\+::\+Apply (
+\begin{DoxyParamCaption}
+\item[{mat}]{spectra}
+\end{DoxyParamCaption}
+)}}\label{class_principal_components_data_abc8ccfa909ad98d53a06b066aeea38df}
+
+
+\hyperlink{class_principal_components_data_abc8ccfa909ad98d53a06b066aeea38df}{Principal\+Components\+Data\+::\+Apply}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em spectra} & Perform analysis using arma\+::princomp \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 38 of file principalcomponentsdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_principal_components_data_abc8ccfa909ad98d53a06b066aeea38df_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_principal_components_data_aba30bcb89a6667bf8cd80e605337e9ba}{\index{Principal\+Components\+Data@{Principal\+Components\+Data}!Results@{Results}}
+\index{Results@{Results}!Principal\+Components\+Data@{Principal\+Components\+Data}}
+\subsubsection[{Results}]{\setlength{\rightskip}{0pt plus 5cm}colvec Principal\+Components\+Data\+::\+Results (
+\begin{DoxyParamCaption}
+\item[{int}]{component}
+\end{DoxyParamCaption}
+)}}\label{class_principal_components_data_aba30bcb89a6667bf8cd80e605337e9ba}
+
+
+\hyperlink{class_principal_components_data_aba30bcb89a6667bf8cd80e605337e9ba}{Principal\+Components\+Data\+::\+Results}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em component} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Return the score for a particular column 
+\end{DoxyReturn}
+
+
+Definition at line 51 of file principalcomponentsdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_principal_components_data_aba30bcb89a6667bf8cd80e605337e9ba_icgraph}
+\end{center}
+\end{figure}
+
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Vespucci/develop/\+Data/\+Analysis/principalcomponentsdata.\+h\item 
+C\+:/\+Projects/\+Vespucci/develop/\+Data/\+Analysis/principalcomponentsdata.\+cpp\end{DoxyCompactItemize}

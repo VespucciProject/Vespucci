@@ -1,0 +1,96 @@
+\hypertarget{class_vespucci_r}{\section{Vespucci\+R Class Reference}
+\label{class_vespucci_r}\index{Vespucci\+R@{Vespucci\+R}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_vespucci_r_a12f725a7d70566345af1836a8d7ca8a3}{{\bfseries Vespucci\+R} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})}\label{class_vespucci_r_a12f725a7d70566345af1836a8d7ca8a3}
+
+\item 
+void \hyperlink{class_vespucci_r_a22d8fc98c28bc09c0315a1a52ffe8ec2}{Set\+Environment} (arma\+::mat \&x, arma\+::mat \&y, arma\+::mat \&abscissa, arma\+::mat \&spectra)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_r_a22d8fc98c28bc09c0315a1a52ffe8ec2}{Vespucci\+R\+::\+Set\+Environment} Sets the initial set of variables defined in the R environment. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_r_a3d362aec993490166a1c4bfb74447fdd}{void {\bfseries Set\+Environment} (std\+::map$<$ std\+::string, arma\+::mat $>$ \&objects)}\label{class_vespucci_r_a3d362aec993490166a1c4bfb74447fdd}
+
+\item 
+void \hyperlink{class_vespucci_r_a05e5b3603d1c85508760951ed90b2737}{Get\+Environment} (arma\+::mat \&x, arma\+::mat \&y, arma\+::mat \&abscissa, arma\+::mat \&spectra)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_vespucci_r_a05e5b3603d1c85508760951ed90b2737}{Vespucci\+R\+::\+Get\+Environment} Returns potentially modified variables from the R environment. \end{DoxyCompactList}\item 
+\hypertarget{class_vespucci_r_a50a9a9a6349747c8587144f98a50d85b}{std\+::map$<$ std\+::string, arma\+::mat $>$ {\bfseries Get\+Environment} (std\+::map$<$ std\+::string, std\+::string $>$ keys)}\label{class_vespucci_r_a50a9a9a6349747c8587144f98a50d85b}
+
+\item 
+\hypertarget{class_vespucci_r_a520dfeee347527a033ef777b3fce11c8}{void {\bfseries Run\+Script} (std\+::string cmd)}\label{class_vespucci_r_a520dfeee347527a033ef777b3fce11c8}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 27 of file Vespucci\+R.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_vespucci_r_a05e5b3603d1c85508760951ed90b2737}{\index{Vespucci\+R@{Vespucci\+R}!Get\+Environment@{Get\+Environment}}
+\index{Get\+Environment@{Get\+Environment}!Vespucci\+R@{Vespucci\+R}}
+\subsubsection[{Get\+Environment}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+R\+::\+Get\+Environment (
+\begin{DoxyParamCaption}
+\item[{arma\+::mat \&}]{x, }
+\item[{arma\+::mat \&}]{y, }
+\item[{arma\+::mat \&}]{abscissa, }
+\item[{arma\+::mat \&}]{spectra}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_r_a05e5b3603d1c85508760951ed90b2737}
+
+
+\hyperlink{class_vespucci_r_a05e5b3603d1c85508760951ed90b2737}{Vespucci\+R\+::\+Get\+Environment} Returns potentially modified variables from the R environment. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & \\
+\hline
+{\em y} & \\
+\hline
+{\em abscissa} & \\
+\hline
+{\em spectra} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 68 of file Vespucci\+R.\+cpp.
+
+\hypertarget{class_vespucci_r_a22d8fc98c28bc09c0315a1a52ffe8ec2}{\index{Vespucci\+R@{Vespucci\+R}!Set\+Environment@{Set\+Environment}}
+\index{Set\+Environment@{Set\+Environment}!Vespucci\+R@{Vespucci\+R}}
+\subsubsection[{Set\+Environment}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+R\+::\+Set\+Environment (
+\begin{DoxyParamCaption}
+\item[{arma\+::mat \&}]{x, }
+\item[{arma\+::mat \&}]{y, }
+\item[{arma\+::mat \&}]{abscissa, }
+\item[{arma\+::mat \&}]{spectra}
+\end{DoxyParamCaption}
+)}}\label{class_vespucci_r_a22d8fc98c28bc09c0315a1a52ffe8ec2}
+
+
+\hyperlink{class_vespucci_r_a22d8fc98c28bc09c0315a1a52ffe8ec2}{Vespucci\+R\+::\+Set\+Environment} Sets the initial set of variables defined in the R environment. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & 1-\/column matrix of horizontal spatial position \\
+\hline
+{\em y} & 1-\/colum matrix of vertical spatial position \\
+\hline
+{\em abscissa} & 1-\/column matrix containing spectral abscissa \\
+\hline
+{\em spectra} & Column having the same number of rows as the abscissa and the same number of columns as x and y have rows. Contains spectral data.\\
+\hline
+\end{DoxyParams}
+The nth row of x and y correspond to the nth column of spectra. The nth row of abscissa corresponds to the nth row of spectra. Spectra will be transposed within the R environment in keeping with R's convention of samples in rows and observations in columns. 
+
+Definition at line 39 of file Vespucci\+R.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Vespucci/develop/\+External/\+R/Vespucci\+R.\+h\item 
+C\+:/\+Projects/\+Vespucci/develop/\+External/\+R/Vespucci\+R.\+cpp\end{DoxyCompactItemize}

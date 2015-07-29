@@ -1,0 +1,10 @@
+<map id="MetaDataset::MetaDataset" name="MetaDataset::MetaDataset">
+<area shape="rect" id="node2" href="$class_vespucci_dataset.html#a8b1186c4bff0d513c336d7a48861777f" title="VespucciDataset::spectra. " alt="" coords="481,5,653,32"/>
+<area shape="rect" id="node3" href="$class_vespucci_dataset.html#ab43f057969b6603cbc46f8e9356b9b56" title="VespucciDataset::wavelength. " alt="" coords="471,68,663,95"/>
+<area shape="rect" id="node4" href="$class_vespucci_dataset.html#aa7f8bd75b05670da47cb453b5350110b" title="VespucciDataset::x. " alt="" coords="499,144,635,171"/>
+<area shape="rect" id="node5" href="$class_vespucci_dataset.html#a83f8c7559de5e723073979f5556174fd" title="VespucciDataset::y. " alt="" coords="499,199,635,225"/>
+<area shape="rect" id="node6" href="$class_vespucci_dataset.html#a6deccc4fb8829e27a68289e07a294f90" title="VespucciDataset::SetData. " alt="" coords="239,100,415,127"/>
+<area shape="rect" id="node7" href="$class_vespucci_dataset.html#a94d860fa93e9ad389f927e58e22ee6d9" title="VespucciDataset::SetParentDatasetIndices. " alt="" coords="234,253,421,294"/>
+<area shape="rect" id="node8" href="$class_vespucci_dataset.html#ac3d023864da930929b3491ef0d4ec14b" title="VespucciDataset::SetIndices. " alt="" coords="232,319,423,345"/>
+<area shape="rect" id="node9" href="$class_vespucci_dataset.html#a7472b4eb9f6ea7245ed544287ebe4a8b" title="VespucciDataset::indices. " alt="" coords="481,319,652,345"/>
+</map>

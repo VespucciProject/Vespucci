@@ -1,0 +1,8 @@
+<map id="MainWindow::DisplayExceptionWarning" name="MainWindow::DisplayExceptionWarning">
+<area shape="rect" id="node2" href="$class_vespucci_dataset.html#a21f1635124ce556cd1578ffc1178ceef" title="VespucciDataset::Booleanize. " alt="" coords="269,5,463,32"/>
+<area shape="rect" id="node3" href="$class_vespucci_dataset.html#a4b280cfa6a8a99df7594aab5ebb3e0b0" title="VespucciDataset::Clamp. " alt="" coords="283,56,449,83"/>
+<area shape="rect" id="node4" href="$class_vespucci_dataset.html#a3d199a68c6dfa8f609ed7eacdb3d1ec8" title="VespucciDataset::ShedSpectrum. " alt="" coords="259,107,473,133"/>
+<area shape="rect" id="node5" href="$class_vespucci_dataset.html#a0d31db077798909a755ad505f060fedb" title="VespucciDataset::PointSpectrum. " alt="" coords="259,157,473,184"/>
+<area shape="rect" id="node6" href="$class_map_data.html#aa98f0fec1e13eab7858dce7b7fe31561" title="MapData::RemoveThis Triggers the VespucciDataset object to remove this from the list. Since VespucciDataset stores MapData objects as shared pointers, and only one object (the map list) contains this pointer, this removal results in this object being deleted. " alt="" coords="290,208,442,235"/>
+<area shape="rect" id="node7" href="$class_univariate_dialog.html#a5bc17ac0e28fa8336c661ffc7c3cb1ed" title="UnivariateDialog::UnivariateDialog. " alt="" coords="277,259,455,301"/>
+</map>

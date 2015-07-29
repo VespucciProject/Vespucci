@@ -1,0 +1,471 @@
+\hypertarget{namespace_vespucci_1_1_math}{\section{Vespucci\+:\+:Math Namespace Reference}
+\label{namespace_vespucci_1_1_math}\index{Vespucci\+::\+Math@{Vespucci\+::\+Math}}
+}
+
+
+A namespace for math functions relating to linear least squares regression.  
+
+
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespace_vespucci_1_1_math_1_1_dimension_reduction}{Dimension\+Reduction}
+\begin{DoxyCompactList}\small\item\em A namespace for math functions relating to dimension reduction. \end{DoxyCompactList}\item 
+ \hyperlink{namespace_vespucci_1_1_math_1_1_fitting}{Fitting}
+\begin{DoxyCompactList}\small\item\em A namespace for math functions relating to non-\/linear curve fitting. \end{DoxyCompactList}\item 
+ \hyperlink{namespace_vespucci_1_1_math_1_1_normalization}{Normalization}
+\begin{DoxyCompactList}\small\item\em A namespace for math functions relating to normalization. \end{DoxyCompactList}\item 
+ \hyperlink{namespace_vespucci_1_1_math_1_1_peak_finding}{Peak\+Finding}
+\begin{DoxyCompactList}\small\item\em A namespace for math functions relating to peak detection and counting. \end{DoxyCompactList}\item 
+ \hyperlink{namespace_vespucci_1_1_math_1_1_quantification}{Quantification}
+\begin{DoxyCompactList}\small\item\em A namespace for math functions relating to peak quantification. \end{DoxyCompactList}\item 
+ \hyperlink{namespace_vespucci_1_1_math_1_1_smoothing}{Smoothing}
+\begin{DoxyCompactList}\small\item\em A namespace for math functions relating to filtering and smoothing signals. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_vespucci_1_1_math_1_1_c_w_t_ridge}{C\+W\+T\+Ridge}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+arma\+::sp\+\_\+mat \hyperlink{namespace_vespucci_1_1_math_a0ae415aafa638d49a2ee5b2816bdf7ec}{Local\+Maxima} (const arma\+::mat \&X)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_a0ae415aafa638d49a2ee5b2816bdf7ec}{Vespucci\+::\+Math\+::\+Local\+Maxima}. \end{DoxyCompactList}\item 
+arma\+::sp\+\_\+mat \hyperlink{namespace_vespucci_1_1_math_ae5214109e423583abf4dfa8c71223343}{Local\+Maxima} (const arma\+::mat \&X, const arma\+::mat \&d\+X, const arma\+::mat \&d2\+X)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_a0ae415aafa638d49a2ee5b2816bdf7ec}{Vespucci\+::\+Math\+::\+Local\+Maxima}. \end{DoxyCompactList}\item 
+\hypertarget{namespace_vespucci_1_1_math_a1422b7165b9083556e665f6bd9bf436f}{arma\+::sp\+\_\+mat {\bfseries Local\+Maxima} (const arma\+::mat \&d\+X, const arma\+::mat \&d2\+X)}\label{namespace_vespucci_1_1_math_a1422b7165b9083556e665f6bd9bf436f}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_a72d209bf07859fa53f1f6aadf1d0a37b}{arma\+::sp\+\_\+mat {\bfseries Local\+Minima} (const arma\+::mat \&X)}\label{namespace_vespucci_1_1_math_a72d209bf07859fa53f1f6aadf1d0a37b}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_ab06ee701a990bd32f2a635a85b8ea169}{arma\+::sp\+\_\+mat {\bfseries Local\+Minima} (const arma\+::mat \&X, const arma\+::mat \&d\+X, const arma\+::mat \&d2\+X)}\label{namespace_vespucci_1_1_math_ab06ee701a990bd32f2a635a85b8ea169}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_a8d9d570bd9573eed29637015ea97a70f}{arma\+::sp\+\_\+mat {\bfseries Local\+Minima} (const arma\+::mat \&d\+X, const arma\+::mat \&d2\+X)}\label{namespace_vespucci_1_1_math_a8d9d570bd9573eed29637015ea97a70f}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_a4c8faf974f4645faf1ab8d7e481e942e}{arma\+::sp\+\_\+mat {\bfseries Local\+Maxima\+C\+W\+T} (arma\+::mat coefs, arma\+::uvec scales, arma\+::uword min\+\_\+window\+\_\+size, double amplitude\+\_\+threshold)}\label{namespace_vespucci_1_1_math_a4c8faf974f4645faf1ab8d7e481e942e}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_ae68dc0148a7d71a4d8fc32d5bb529fe2}{double {\bfseries quantile} (arma\+::vec \&data, double probs)}\label{namespace_vespucci_1_1_math_ae68dc0148a7d71a4d8fc32d5bb529fe2}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_a969400e80b9f6bd1adf47db14cf4e38b}{double {\bfseries mad} (arma\+::vec \&data)}\label{namespace_vespucci_1_1_math_a969400e80b9f6bd1adf47db14cf4e38b}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_aadc2b81e01a65a5de688088ca41791ce}{arma\+::vec {\bfseries Extend\+To\+Next\+Pow} (arma\+::vec X, arma\+::uword n)}\label{namespace_vespucci_1_1_math_aadc2b81e01a65a5de688088ca41791ce}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_a979122c285b76d99e1cc430f8cd2fcd6}{arma\+::uword {\bfseries Next\+Pow} (arma\+::uword number, arma\+::uword power)}\label{namespace_vespucci_1_1_math_a979122c285b76d99e1cc430f8cd2fcd6}
+
+\item 
+arma\+::mat \hyperlink{namespace_vespucci_1_1_math_a3fecba29812be11a79fe7d9a2a88964e}{spdiags} (arma\+::mat B, arma\+::ivec d, arma\+::uword m, arma\+::uword n)
+\begin{DoxyCompactList}\small\item\em spdiags analgous to the Octave/arma\+::mat\+L\+A\+B function A = spdiags(\+B, d, m, n). \end{DoxyCompactList}\item 
+arma\+::mat \hyperlink{namespace_vespucci_1_1_math_a9ae51093bbdcdae2b8e6772d8951889c}{orth} (arma\+::mat X)
+\begin{DoxyCompactList}\small\item\em orth Returns an orthonormal basis of the range space of A \end{DoxyCompactList}\item 
+arma\+::uword \hyperlink{namespace_vespucci_1_1_math_a884dc00603c6aed8e2ee23988c429c64}{min} (arma\+::uword a, arma\+::uword b)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_a884dc00603c6aed8e2ee23988c429c64}{Vespucci\+::\+Math\+::min}. \end{DoxyCompactList}\item 
+arma\+::uword \hyperlink{namespace_vespucci_1_1_math_a3d8f536b4465a4bacce89a51e3854daf}{max} (arma\+::uword a, arma\+::uword b)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_a3d8f536b4465a4bacce89a51e3854daf}{Vespucci\+::\+Math\+::max}. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_vespucci_1_1_math_a62f5e835cad1e15513494a5a48e028ae}{position} (arma\+::uword index, arma\+::uword n\+\_\+rows, arma\+::uword n\+\_\+cols, arma\+::uword \&i, arma\+::uword \&j)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_a62f5e835cad1e15513494a5a48e028ae}{Vespucci\+::\+Math\+::position} Find row and column numbers for index. \end{DoxyCompactList}\item 
+\hypertarget{namespace_vespucci_1_1_math_a114f5bdc75f1c911ccf1d6e8652d6cfa}{arma\+::umat {\bfseries to\+\_\+row\+\_\+column} (arma\+::uvec indices, arma\+::uword n\+\_\+rows, arma\+::uword n\+\_\+cols)}\label{namespace_vespucci_1_1_math_a114f5bdc75f1c911ccf1d6e8652d6cfa}
+
+\item 
+double \hyperlink{namespace_vespucci_1_1_math_acb3549757968bb5b450a79ffce951cad}{Recalculate\+Average} (double new\+\_\+value, double old\+\_\+average, double old\+\_\+count)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_acb3549757968bb5b450a79ffce951cad}{Vespucci\+::\+Math\+::\+Recalculate\+Average} Recalculate the average value when a new value is added to a list for which only the previous means, stddevs and counts are known. \end{DoxyCompactList}\item 
+double \hyperlink{namespace_vespucci_1_1_math_ab450596ed05ccd89c5183bd57ed1a0af}{Recalculate\+Std\+Dev} (double new\+\_\+value, double old\+\_\+mean, double old\+\_\+stddev, double old\+\_\+count)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_ab450596ed05ccd89c5183bd57ed1a0af}{Vespucci\+::\+Math\+::\+Recalculate\+Std\+Dev} Recalculate a standard deviation when a new value is added to a list for which only the previous means, stddevs and counts are known. \end{DoxyCompactList}\item 
+\hypertarget{namespace_vespucci_1_1_math_a9c2b0dceba939de8417c1aa0382f9265}{{\footnotesize template$<$typename T $>$ }\\T {\bfseries conv\+\_\+fft} (const T \&A, const T \&B, std\+::string type)}\label{namespace_vespucci_1_1_math_a9c2b0dceba939de8417c1aa0382f9265}
+
+\item 
+\hypertarget{namespace_vespucci_1_1_math_a7928f8156c95fd307e7af5fef42bd2d0}{{\footnotesize template$<$typename T $>$ }\\T {\bfseries rotate} (const T \&X, arma\+::uword shift\+\_\+by, bool slide\+\_\+back=true)}\label{namespace_vespucci_1_1_math_a7928f8156c95fd307e7af5fef42bd2d0}
+
+\item 
+{\footnotesize template$<$typename T $>$ }\\T \hyperlink{namespace_vespucci_1_1_math_a9b57c78d676716cd14f45f1ed4cf066e}{diff} (const T \&X, arma\+::uword deriv\+\_\+order=1)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vespucci_1_1_math_a9b57c78d676716cd14f45f1ed4cf066e}{Vespucci\+::\+Math\+::diff}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A namespace for math functions relating to linear least squares regression. 
+
+A namespace for math functions.
+
+\+:\+::\+Lin\+Least\+Sq 
+
+\subsection{Function Documentation}
+\hypertarget{namespace_vespucci_1_1_math_a9b57c78d676716cd14f45f1ed4cf066e}{\index{Vespucci\+::\+Math@{Vespucci\+::\+Math}!diff@{diff}}
+\index{diff@{diff}!Vespucci\+::\+Math@{Vespucci\+::\+Math}}
+\subsubsection[{diff}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ T Vespucci\+::\+Math\+::diff (
+\begin{DoxyParamCaption}
+\item[{const T \&}]{X, }
+\item[{arma\+::uword}]{deriv\+\_\+order = {\ttfamily 1}}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_a9b57c78d676716cd14f45f1ed4cf066e}
+
+
+\hyperlink{namespace_vespucci_1_1_math_a9b57c78d676716cd14f45f1ed4cf066e}{Vespucci\+::\+Math\+::diff}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em X} & A vector represetning a signal or a arma\+::matrix where each column is a signal \\
+\hline
+{\em deriv\+\_\+order} & The derivative order to calculate \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The deriv\+\_\+order-\/th derivative of X, a vector with deriv\+\_\+order fewer elements than X.
+\end{DoxyReturn}
+Perform arithmetic differentiation of a vector or arma\+::matrix (if X is a arma\+::matrix, the differentiation is performed to all the columns). 
+
+Definition at line 46 of file accessory\+\_\+impl.\+h.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=183pt]{namespace_vespucci_1_1_math_a9b57c78d676716cd14f45f1ed4cf066e_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_a9b57c78d676716cd14f45f1ed4cf066e_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_a0ae415aafa638d49a2ee5b2816bdf7ec}{\index{Vespucci\+::\+Math@{Vespucci\+::\+Math}!Local\+Maxima@{Local\+Maxima}}
+\index{Local\+Maxima@{Local\+Maxima}!Vespucci\+::\+Math@{Vespucci\+::\+Math}}
+\subsubsection[{Local\+Maxima}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::sp\+\_\+mat Vespucci\+::\+Math\+::\+Local\+Maxima (
+\begin{DoxyParamCaption}
+\item[{const arma\+::mat \&}]{X}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_a0ae415aafa638d49a2ee5b2816bdf7ec}
+
+
+\hyperlink{namespace_vespucci_1_1_math_a0ae415aafa638d49a2ee5b2816bdf7ec}{Vespucci\+::\+Math\+::\+Local\+Maxima}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em X} & A matrix with signals as columns \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A sparse matrix containing the value of each local maximum at the appropriate position. Find the local maxima of a matrix of signals using the first and second derivative tests. Works best with smooth signals (like C\+W\+T coeffs) 
+\end{DoxyReturn}
+
+
+Definition at line 191 of file accessory.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_a0ae415aafa638d49a2ee5b2816bdf7ec_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_a0ae415aafa638d49a2ee5b2816bdf7ec_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_ae5214109e423583abf4dfa8c71223343}{\index{Vespucci\+::\+Math@{Vespucci\+::\+Math}!Local\+Maxima@{Local\+Maxima}}
+\index{Local\+Maxima@{Local\+Maxima}!Vespucci\+::\+Math@{Vespucci\+::\+Math}}
+\subsubsection[{Local\+Maxima}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::sp\+\_\+mat Vespucci\+::\+Math\+::\+Local\+Maxima (
+\begin{DoxyParamCaption}
+\item[{const arma\+::mat \&}]{X, }
+\item[{const arma\+::mat \&}]{d\+X, }
+\item[{const arma\+::mat \&}]{d2\+X}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_ae5214109e423583abf4dfa8c71223343}
+
+
+\hyperlink{namespace_vespucci_1_1_math_a0ae415aafa638d49a2ee5b2816bdf7ec}{Vespucci\+::\+Math\+::\+Local\+Maxima}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em X} & A matrix of signals \\
+\hline
+{\em d\+X} & A matrix of first derivatives of signals (numerical, S-\/\+G, wavelet, etc) \\
+\hline
+{\em d2\+X} & A matrix of second derivatives of signals (numerical, S-\/\+G, wavelet, etc). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 214 of file accessory.\+cpp.
+
+\hypertarget{namespace_vespucci_1_1_math_a3d8f536b4465a4bacce89a51e3854daf}{\index{Vespucci\+::\+Math@{Vespucci\+::\+Math}!max@{max}}
+\index{max@{max}!Vespucci\+::\+Math@{Vespucci\+::\+Math}}
+\subsubsection[{max}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::uword Vespucci\+::\+Math\+::max (
+\begin{DoxyParamCaption}
+\item[{arma\+::uword}]{a, }
+\item[{arma\+::uword}]{b}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_a3d8f536b4465a4bacce89a51e3854daf}
+
+
+\hyperlink{namespace_vespucci_1_1_math_a3d8f536b4465a4bacce89a51e3854daf}{Vespucci\+::\+Math\+::max}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & \\
+\hline
+{\em b} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::max stopped working with arma\+::uwords for some reason, so I made a max function It might be a better idea to just cast uwords to int and use std\+::max 
+\end{DoxyReturn}
+
+
+Definition at line 134 of file accessory.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_a3d8f536b4465a4bacce89a51e3854daf_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_a884dc00603c6aed8e2ee23988c429c64}{\index{Vespucci\+::\+Math@{Vespucci\+::\+Math}!min@{min}}
+\index{min@{min}!Vespucci\+::\+Math@{Vespucci\+::\+Math}}
+\subsubsection[{min}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::uword Vespucci\+::\+Math\+::min (
+\begin{DoxyParamCaption}
+\item[{arma\+::uword}]{a, }
+\item[{arma\+::uword}]{b}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_a884dc00603c6aed8e2ee23988c429c64}
+
+
+\hyperlink{namespace_vespucci_1_1_math_a884dc00603c6aed8e2ee23988c429c64}{Vespucci\+::\+Math\+::min}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & \\
+\hline
+{\em b} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::min stopped working with arma\+::uwords for some reason, so I made a min function It might be a better idea to just cast uwords to int and use std\+::min 
+\end{DoxyReturn}
+
+
+Definition at line 146 of file accessory.\+cpp.
+
+\hypertarget{namespace_vespucci_1_1_math_a9ae51093bbdcdae2b8e6772d8951889c}{\index{Vespucci\+::\+Math@{Vespucci\+::\+Math}!orth@{orth}}
+\index{orth@{orth}!Vespucci\+::\+Math@{Vespucci\+::\+Math}}
+\subsubsection[{orth}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::mat Vespucci\+::\+Math\+::orth (
+\begin{DoxyParamCaption}
+\item[{arma\+::mat}]{X}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_a9ae51093bbdcdae2b8e6772d8951889c}
+
+
+orth Returns an orthonormal basis of the range space of A 
+
+
+\begin{DoxyParams}{Parameters}
+{\em X} & arma\+::matrix \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a arma\+::matrix whose columns form an orthonormal basis for X This function was written before M\+L\+P\+A\+C\+K was used. The M\+L\+P\+A\+C\+K method mlpack\+::math\+::\+Orthogonalize does the same thing 
+\end{DoxyReturn}
+
+
+Definition at line 104 of file accessory.\+cpp.
+
+\hypertarget{namespace_vespucci_1_1_math_a62f5e835cad1e15513494a5a48e028ae}{\index{Vespucci\+::\+Math@{Vespucci\+::\+Math}!position@{position}}
+\index{position@{position}!Vespucci\+::\+Math@{Vespucci\+::\+Math}}
+\subsubsection[{position}]{\setlength{\rightskip}{0pt plus 5cm}void Vespucci\+::\+Math\+::position (
+\begin{DoxyParamCaption}
+\item[{arma\+::uword}]{index, }
+\item[{arma\+::uword}]{n\+\_\+rows, }
+\item[{arma\+::uword}]{n\+\_\+cols, }
+\item[{arma\+::uword \&}]{i, }
+\item[{arma\+::uword \&}]{j}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_a62f5e835cad1e15513494a5a48e028ae}
+
+
+\hyperlink{namespace_vespucci_1_1_math_a62f5e835cad1e15513494a5a48e028ae}{Vespucci\+::\+Math\+::position} Find row and column numbers for index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & \\
+\hline
+{\em n\+\_\+rows} & Number of rows \\
+\hline
+{\em n\+\_\+cols} & Number of columns \\
+\hline
+{\em i} & Row number \\
+\hline
+{\em j} & Column number \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 355 of file accessory.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_a62f5e835cad1e15513494a5a48e028ae_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_acb3549757968bb5b450a79ffce951cad}{\index{Vespucci\+::\+Math@{Vespucci\+::\+Math}!Recalculate\+Average@{Recalculate\+Average}}
+\index{Recalculate\+Average@{Recalculate\+Average}!Vespucci\+::\+Math@{Vespucci\+::\+Math}}
+\subsubsection[{Recalculate\+Average}]{\setlength{\rightskip}{0pt plus 5cm}double Vespucci\+::\+Math\+::\+Recalculate\+Average (
+\begin{DoxyParamCaption}
+\item[{double}]{new\+\_\+value, }
+\item[{double}]{old\+\_\+average, }
+\item[{double}]{old\+\_\+count}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_acb3549757968bb5b450a79ffce951cad}
+
+
+\hyperlink{namespace_vespucci_1_1_math_acb3549757968bb5b450a79ffce951cad}{Vespucci\+::\+Math\+::\+Recalculate\+Average} Recalculate the average value when a new value is added to a list for which only the previous means, stddevs and counts are known. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+value} & \\
+\hline
+{\em old\+\_\+average} & \\
+\hline
+{\em old\+\_\+count} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 452 of file accessory.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_acb3549757968bb5b450a79ffce951cad_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_ab450596ed05ccd89c5183bd57ed1a0af}{\index{Vespucci\+::\+Math@{Vespucci\+::\+Math}!Recalculate\+Std\+Dev@{Recalculate\+Std\+Dev}}
+\index{Recalculate\+Std\+Dev@{Recalculate\+Std\+Dev}!Vespucci\+::\+Math@{Vespucci\+::\+Math}}
+\subsubsection[{Recalculate\+Std\+Dev}]{\setlength{\rightskip}{0pt plus 5cm}double Vespucci\+::\+Math\+::\+Recalculate\+Std\+Dev (
+\begin{DoxyParamCaption}
+\item[{double}]{new\+\_\+value, }
+\item[{double}]{old\+\_\+mean, }
+\item[{double}]{old\+\_\+stddev, }
+\item[{double}]{old\+\_\+count}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_ab450596ed05ccd89c5183bd57ed1a0af}
+
+
+\hyperlink{namespace_vespucci_1_1_math_ab450596ed05ccd89c5183bd57ed1a0af}{Vespucci\+::\+Math\+::\+Recalculate\+Std\+Dev} Recalculate a standard deviation when a new value is added to a list for which only the previous means, stddevs and counts are known. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+value} & \\
+\hline
+{\em old\+\_\+mean} & \\
+\hline
+{\em old\+\_\+stddev} & \\
+\hline
+{\em old\+\_\+count} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 469 of file accessory.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_vespucci_1_1_math_ab450596ed05ccd89c5183bd57ed1a0af_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespace_vespucci_1_1_math_a3fecba29812be11a79fe7d9a2a88964e}{\index{Vespucci\+::\+Math@{Vespucci\+::\+Math}!spdiags@{spdiags}}
+\index{spdiags@{spdiags}!Vespucci\+::\+Math@{Vespucci\+::\+Math}}
+\subsubsection[{spdiags}]{\setlength{\rightskip}{0pt plus 5cm}arma\+::mat Vespucci\+::\+Math\+::spdiags (
+\begin{DoxyParamCaption}
+\item[{arma\+::mat}]{B, }
+\item[{arma\+::ivec}]{d, }
+\item[{arma\+::uword}]{m, }
+\item[{arma\+::uword}]{n}
+\end{DoxyParamCaption}
+)}}\label{namespace_vespucci_1_1_math_a3fecba29812be11a79fe7d9a2a88964e}
+
+
+spdiags analgous to the Octave/arma\+::mat\+L\+A\+B function A = spdiags(\+B, d, m, n). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em B} & a arma\+::matrix containing the new diagonal vectors as columns \\
+\hline
+{\em d} & a vector containing the row numbers to set. The first column vector of B corresponds to the first entry in d. \\
+\hline
+{\em m} & the number of rows of the output arma\+::matrix \\
+\hline
+{\em n} & the number of columns of the output arma\+::matrix \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a m by n sparase arma\+::matrix with the columns of B as diagonals A translation of the Octave/arma\+::mat\+L\+A\+B function A = spdiags(\+B, d, m, n). For subdiagonals (entries of d $<$ 0) vectors are truncated at the end when they are longer than the target diagonal. For superdiagonals, vectors are truncated at the beginning when they are longer than the target diagonal. 
+\end{DoxyReturn}
+
+
+Definition at line 33 of file accessory.\+cpp.
+

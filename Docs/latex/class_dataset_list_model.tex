@@ -1,0 +1,101 @@
+\hypertarget{class_dataset_list_model}{\section{Dataset\+List\+Model Class Reference}
+\label{class_dataset_list_model}\index{Dataset\+List\+Model@{Dataset\+List\+Model}}
+}
+
+
+The \hyperlink{class_dataset_list_model}{Dataset\+List\+Model} class Exposes the U\+I to the contents of the master dataset list.  
+
+
+
+
+{\ttfamily \#include $<$datasetlistmodel.\+h$>$}
+
+
+
+Inheritance diagram for Dataset\+List\+Model\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=183pt]{class_dataset_list_model__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Dataset\+List\+Model\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=183pt]{class_dataset_list_model__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_dataset_list_model_a86428aaae4fe37364d16b95c1a40415c}{void {\bfseries Dataset\+Added} (const Q\+Model\+Index \&index)}\label{class_dataset_list_model_a86428aaae4fe37364d16b95c1a40415c}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_dataset_list_model_a276029a6806e8aef718dd6c2aed05a06}{{\bfseries Dataset\+List\+Model} (Q\+Object $\ast$parent, \hyperlink{class_vespucci_workspace}{Vespucci\+Workspace} $\ast$ws)}\label{class_dataset_list_model_a276029a6806e8aef718dd6c2aed05a06}
+
+\item 
+\hypertarget{class_dataset_list_model_a03e20ece69419b89e5c048ec01272c94}{int {\bfseries row\+Count} (const Q\+Model\+Index \&parent) const }\label{class_dataset_list_model_a03e20ece69419b89e5c048ec01272c94}
+
+\item 
+\hypertarget{class_dataset_list_model_a4b31feaaf22d48d90ec70a8c20bb0d90}{bool {\bfseries remove\+Row} (int row, const Q\+Model\+Index \&parent)}\label{class_dataset_list_model_a4b31feaaf22d48d90ec70a8c20bb0d90}
+
+\item 
+\hypertarget{class_dataset_list_model_a9a186b0ff39cae3bb3b50fab95cd4e43}{bool {\bfseries Add\+Dataset} (Q\+Shared\+Pointer$<$ \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} $>$ dataset)}\label{class_dataset_list_model_a9a186b0ff39cae3bb3b50fab95cd4e43}
+
+\item 
+\hypertarget{class_dataset_list_model_af66b4812c85933aedd7fdccff61a98a0}{Q\+Shared\+Pointer$<$ \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} $>$ {\bfseries Dataset\+At} (int row)}\label{class_dataset_list_model_af66b4812c85933aedd7fdccff61a98a0}
+
+\item 
+Q\+Variant \hyperlink{class_dataset_list_model_af7ce31fef1181dd3e4cac94c754edd05}{data} (const Q\+Model\+Index \&index, int role) const 
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_dataset_list_model_af7ce31fef1181dd3e4cac94c754edd05}{Dataset\+List\+Model\+::data}. \end{DoxyCompactList}\item 
+\hypertarget{class_dataset_list_model_a2839a86d8b45aaaefbbab118bc954ca0}{void \hyperlink{class_dataset_list_model_a2839a86d8b45aaaefbbab118bc954ca0}{Clear\+Datasets} ()}\label{class_dataset_list_model_a2839a86d8b45aaaefbbab118bc954ca0}
+
+\begin{DoxyCompactList}\small\item\em Dataset\+List\+Model\+::\+Clear\+Mapss Clears the dataset container. Used when closing the program. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{class_dataset_list_model}{Dataset\+List\+Model} class Exposes the U\+I to the contents of the master dataset list. 
+
+Definition at line 31 of file datasetlistmodel.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_dataset_list_model_af7ce31fef1181dd3e4cac94c754edd05}{\index{Dataset\+List\+Model@{Dataset\+List\+Model}!data@{data}}
+\index{data@{data}!Dataset\+List\+Model@{Dataset\+List\+Model}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}Q\+Variant Dataset\+List\+Model\+::data (
+\begin{DoxyParamCaption}
+\item[{const Q\+Model\+Index \&}]{index, }
+\item[{int}]{role}
+\end{DoxyParamCaption}
+) const}}\label{class_dataset_list_model_af7ce31fef1181dd3e4cac94c754edd05}
+
+
+\hyperlink{class_dataset_list_model_af7ce31fef1181dd3e4cac94c754edd05}{Dataset\+List\+Model\+::data}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & \\
+\hline
+{\em role} & The role (will always be Qt\+::\+Display\+Role (to display dataset name) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A re-\/implementation of Q\+Abstract\+Item\+Model\+::data(); 
+\end{DoxyReturn}
+
+
+Definition at line 40 of file datasetlistmodel.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Vespucci/develop/\+G\+U\+I/\+Q\+Abstract\+Item\+Model/datasetlistmodel.\+h\item 
+C\+:/\+Projects/\+Vespucci/develop/\+G\+U\+I/\+Q\+Abstract\+Item\+Model/datasetlistmodel.\+cpp\end{DoxyCompactItemize}

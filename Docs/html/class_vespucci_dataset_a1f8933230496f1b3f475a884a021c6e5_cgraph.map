@@ -1,0 +1,8 @@
+<map id="VespucciDataset::FindPeaks" name="VespucciDataset::FindPeaks">
+<area shape="rect" id="node2" href="$namespace_vespucci_1_1_math_1_1_peak_finding.html#a9f22a184fb69fb6ab32757fdd19e1ae7" title="Vespucci::Math::PeakFinding::FindPeaksMat Performs FindPeaks on a spectra arma::matrix. " alt="" coords="244,120,437,161"/>
+<area shape="rect" id="node3" href="$namespace_vespucci_1_1_math_1_1_smoothing.html#a2cb17f59d170c1ca2437b264d13626b6" title="sgolayfilt Apply Savitzky&#45;Golay smoothing to each column of a arma::matrix " alt="" coords="491,37,673,79"/>
+<area shape="rect" id="node6" href="$namespace_vespucci_1_1_math.html#a9b57c78d676716cd14f45f1ed4cf066e" title="Vespucci::Math::diff. " alt="" coords="513,127,651,154"/>
+<area shape="rect" id="node7" href="$namespace_vespucci_1_1_math_1_1_peak_finding.html#a3d5687d6ba8babb49689af636f28aae8" title="Vespucci::Math::PeakFinding::FindPeaks an implementation of the peakfinder arma::matLAB routine..." alt="" coords="485,179,679,220"/>
+<area shape="rect" id="node4" href="$namespace_vespucci_1_1_math_1_1_smoothing.html#a0fb8087861e1d4b8f05dd4dff3cdb012" title="Vespucci::Math::Smoothing::sgolay Find a arma::matrix of Savitzky&#45;Golay convolution coefficients..." alt="" coords="727,5,909,47"/>
+<area shape="rect" id="node5" href="$namespace_vespucci_1_1_math_1_1_smoothing.html#aa38f2ef278486993ec066ff5701bec62" title="Vespucci::Math::Smoothing::ApplyFilter Apply FIR filters to a column vector. " alt="" coords="727,71,909,112"/>
+</map>

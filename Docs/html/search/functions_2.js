@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['centers',['centers',['../class_c_w_t_data.html#ad5f5f9db597ab00373481e6067ba75ac',1,'CWTData']]],
+  ['citationdialog',['CitationDialog',['../class_citation_dialog.html#a566d6d063e20f68d619ff15412bda2f0',1,'CitationDialog']]],
+  ['clamp',['Clamp',['../class_vespucci_dataset.html#a4b280cfa6a8a99df7594aab5ebb3e0b0',1,'VespucciDataset']]],
+  ['clear',['clear',['../class_c_w_t_data.html#a95b94433d6244a37cdee0205a67b0321',1,'CWTData']]],
+  ['cleardatasets',['ClearDatasets',['../class_vespucci_workspace.html#a85053e9aa9e55a70f0a54fed14b8316c',1,'VespucciWorkspace::ClearDatasets()'],['../class_dataset_list_model.html#a2839a86d8b45aaaefbbab118bc954ca0',1,'DatasetListModel::ClearDatasets()']]],
+  ['clearmaps',['ClearMaps',['../class_map_list_model.html#a1acfd761a0d1efc2226f177f6b0dc039',1,'MapListModel']]],
+  ['closeevent',['closeEvent',['../class_main_window.html#a4e20a4a065fbb0e4d3532a45a0a91425',1,'MainWindow']]],
+  ['coefs',['coefs',['../class_vespucci_1_1_math_1_1_c_w_t_ridge.html#a02b63dc6a5194e2ca1c700f5d2ccee21',1,'Vespucci::Math::CWTRidge']]],
+  ['columncount',['columnCount',['../class_vespucci_table_model.html#a4759aecfe949a158a56020b283d0d8b5',1,'VespucciTableModel']]],
+  ['constructorcancelled',['ConstructorCancelled',['../class_vespucci_dataset.html#ac02e9051b8fbc280d769598b80c3eb57',1,'VespucciDataset']]],
+  ['correlationmap',['CorrelationMap',['../class_vespucci_dataset.html#a9da8a2ee67a055d50b0ef19be453e3a6',1,'VespucciDataset']]],
+  ['counts',['counts',['../class_c_w_t_data.html#a829d9ca8cdabff46dd3654f2bda64899',1,'CWTData']]],
+  ['createimage',['CreateImage',['../class_map_data.html#ad1fe1aaad46b33c4f6a2be1d7f889dee',1,'MapData']]],
+  ['createlogfile',['CreateLogFile',['../class_vespucci_workspace.html#a146009858a8dcd88e46a695ce9d5c965',1,'VespucciWorkspace']]],
+  ['createmovingaveragefilter',['CreateMovingAverageFilter',['../namespace_vespucci_1_1_math_1_1_smoothing.html#a611221f749d15133ad90da3ba3bbca73',1,'Vespucci::Math::Smoothing']]],
+  ['crisp_5fclusters',['crisp_clusters',['../class_map_data.html#a769fa8b15df27ed067a951ea1427c894',1,'MapData']]],
+  ['cropdialog',['CropDialog',['../class_crop_dialog.html#aecf1b569a29c94fe0678a6d352c31740',1,'CropDialog']]],
+  ['cropspectra',['CropSpectra',['../class_vespucci_dataset.html#aa0706b058354cddc5e1fbba68721aa87',1,'VespucciDataset']]]
+];

@@ -1,0 +1,115 @@
+\hypertarget{class_p_l_s_data}{\section{P\+L\+S\+Data Class Reference}
+\label{class_p_l_s_data}\index{P\+L\+S\+Data@{P\+L\+S\+Data}}
+}
+
+
+The \hyperlink{class_p_l_s_data}{P\+L\+S\+Data} class A class for performing and storing data related to partial least squares determinant analysis.  
+
+
+
+
+{\ttfamily \#include $<$plsdata.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_p_l_s_data_ab35feaa574a919c2871ad2c4ec26329e}{{\bfseries P\+L\+S\+Data} (Q\+Shared\+Pointer$<$ \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} $>$ parent, Q\+String $\ast$directory)}\label{class_p_l_s_data_ab35feaa574a919c2871ad2c4ec26329e}
+
+\item 
+bool \hyperlink{class_p_l_s_data_ade79be27d52f0edba28d719d9926453b}{Apply} (mat spectra, vec wavelength, int components)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_p_l_s_data_ade79be27d52f0edba28d719d9926453b}{P\+L\+S\+Data\+::\+Apply}. \end{DoxyCompactList}\item 
+\hypertarget{class_p_l_s_data_a87ef81491a831dd54e2e8caee0d0e405}{mat $\ast$ {\bfseries X\+\_\+loadings} ()}\label{class_p_l_s_data_a87ef81491a831dd54e2e8caee0d0e405}
+
+\item 
+\hypertarget{class_p_l_s_data_a18918728d424d344471cd300effe97ed}{mat $\ast$ {\bfseries Y\+\_\+loadings} ()}\label{class_p_l_s_data_a18918728d424d344471cd300effe97ed}
+
+\item 
+\hypertarget{class_p_l_s_data_a2c680b87fab4edf16491537812662f59}{mat $\ast$ {\bfseries X\+\_\+scores} ()}\label{class_p_l_s_data_a2c680b87fab4edf16491537812662f59}
+
+\item 
+\hypertarget{class_p_l_s_data_a5e38d1423170ec72542e6204c59f7e8e}{mat $\ast$ {\bfseries Y\+\_\+scores} ()}\label{class_p_l_s_data_a5e38d1423170ec72542e6204c59f7e8e}
+
+\item 
+\hypertarget{class_p_l_s_data_a68558e212a301faa78763ce7d0a1ab26}{mat $\ast$ {\bfseries coefficients} ()}\label{class_p_l_s_data_a68558e212a301faa78763ce7d0a1ab26}
+
+\item 
+\hypertarget{class_p_l_s_data_a62b476c9af576129f965d9b9feef872b}{mat $\ast$ {\bfseries percent\+\_\+variance} ()}\label{class_p_l_s_data_a62b476c9af576129f965d9b9feef872b}
+
+\item 
+\hypertarget{class_p_l_s_data_ab139839ce7fe59066c34d8a5ea7d215a}{mat $\ast$ {\bfseries value} (Q\+String key)}\label{class_p_l_s_data_ab139839ce7fe59066c34d8a5ea7d215a}
+
+\item 
+\hypertarget{class_p_l_s_data_ac5920ce5a34da9417c40fc0cb0952b46}{int {\bfseries Number\+Components} ()}\label{class_p_l_s_data_ac5920ce5a34da9417c40fc0cb0952b46}
+
+\item 
+\hypertarget{class_p_l_s_data_a007cf3a5fe8ed766d7c7308dc9403ad8}{colvec {\bfseries Results} (const uword i, bool \&valid)}\label{class_p_l_s_data_a007cf3a5fe8ed766d7c7308dc9403ad8}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{class_p_l_s_data}{P\+L\+S\+Data} class A class for performing and storing data related to partial least squares determinant analysis. 
+
+Definition at line 29 of file plsdata.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_p_l_s_data_ade79be27d52f0edba28d719d9926453b}{\index{P\+L\+S\+Data@{P\+L\+S\+Data}!Apply@{Apply}}
+\index{Apply@{Apply}!P\+L\+S\+Data@{P\+L\+S\+Data}}
+\subsubsection[{Apply}]{\setlength{\rightskip}{0pt plus 5cm}bool P\+L\+S\+Data\+::\+Apply (
+\begin{DoxyParamCaption}
+\item[{mat}]{spectra, }
+\item[{vec}]{wavelength, }
+\item[{int}]{components}
+\end{DoxyParamCaption}
+)}}\label{class_p_l_s_data_ade79be27d52f0edba28d719d9926453b}
+
+
+\hyperlink{class_p_l_s_data_ade79be27d52f0edba28d719d9926453b}{P\+L\+S\+Data\+::\+Apply}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em spectra} & Input matrix \\
+\hline
+{\em wavelength} & Spectral abscissa \\
+\hline
+{\em components} & Number of components to calculate \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Performs P\+L\+S analysis on a copy of the spectra matrix (transposed). 
+\end{DoxyReturn}
+
+
+Definition at line 35 of file plsdata.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=339pt]{class_p_l_s_data_ade79be27d52f0edba28d719d9926453b_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=327pt]{class_p_l_s_data_ade79be27d52f0edba28d719d9926453b_icgraph}
+\end{center}
+\end{figure}
+
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Vespucci/develop/\+Data/\+Analysis/plsdata.\+h\item 
+C\+:/\+Projects/\+Vespucci/develop/\+Data/\+Analysis/plsdata.\+cpp\end{DoxyCompactItemize}

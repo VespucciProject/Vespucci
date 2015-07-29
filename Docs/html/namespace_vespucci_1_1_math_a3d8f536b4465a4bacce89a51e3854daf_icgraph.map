@@ -1,0 +1,10 @@
+<map id="Vespucci::Math::max" name="Vespucci::Math::max">
+<area shape="rect" id="node2" href="$namespace_vespucci_1_1_math_1_1_dimension_reduction.html#a2d46d5cccce427efee376aeeea2da058" title="Vespucci::Math::DimensionReduction::VCA Vertex Component Analysis. " alt="" coords="209,5,391,47"/>
+<area shape="rect" id="node5" href="$namespace_vespucci_1_1_math_1_1_quantification.html#a67d066d37ce165ac3e8c04d97436363c" title="Vespucci::Math::Quantification::FindPeakMax. " alt="" coords="200,71,400,112"/>
+<area shape="rect" id="node3" href="$class_v_c_a_data.html#a179153e31b69399bd92ade553c9eef05" title="VCAData::Apply Performs vertex component analysis on this object. " alt="" coords="489,13,607,39"/>
+<area shape="rect" id="node4" href="$class_vespucci_dataset.html#a74779cef5217e51364427aaed06bf500" title="VespucciDataset::VertexComponents. " alt="" coords="696,13,936,39"/>
+<area shape="rect" id="node6" href="$namespace_vespucci_1_1_math_1_1_quantification.html#ac8a29afbde382eddd90a15749a8c3151" title="Vespucci::Math::Quantification::FindPeakMaxMat. " alt="" coords="448,67,648,108"/>
+<area shape="rect" id="node9" href="$namespace_vespucci_1_1_math_1_1_quantification.html#a6b4ad9737e416fb31ffc736465c3e87d" title="Vespucci::Math::Quantification::FindPeakMaxesMat. " alt="" coords="448,132,648,173"/>
+<area shape="rect" id="node7" href="$class_univariate_data.html#a3a476f351459feae0b8fc21ed957cd27" title="UnivariateData::Apply. " alt="" coords="743,70,889,97"/>
+<area shape="rect" id="node8" href="$class_vespucci_dataset.html#a358b924b2ec9277e054fb52462ff5f61" title="VespucciDataset::PeakIntensityNormalize. " alt="" coords="712,121,920,163"/>
+</map>

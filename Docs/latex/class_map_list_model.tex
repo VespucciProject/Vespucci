@@ -1,0 +1,95 @@
+\hypertarget{class_map_list_model}{\section{Map\+List\+Model Class Reference}
+\label{class_map_list_model}\index{Map\+List\+Model@{Map\+List\+Model}}
+}
+
+
+The \hyperlink{class_map_list_model}{Map\+List\+Model} class Exposes the U\+I to the contents of the master map list.  
+
+
+
+
+{\ttfamily \#include $<$maplistmodel.\+h$>$}
+
+
+
+Inheritance diagram for Map\+List\+Model\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=183pt]{class_map_list_model__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Map\+List\+Model\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=183pt]{class_map_list_model__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_map_list_model_a8efdb956b03e7d40872a247f0f0031c5}{{\bfseries Map\+List\+Model} (Q\+Object $\ast$parent, \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} $\ast$dataset)}\label{class_map_list_model_a8efdb956b03e7d40872a247f0f0031c5}
+
+\item 
+\hypertarget{class_map_list_model_a109d6521ba8f2e40f07edd09e3e6fdcc}{int {\bfseries row\+Count} (const Q\+Model\+Index \&parent) const }\label{class_map_list_model_a109d6521ba8f2e40f07edd09e3e6fdcc}
+
+\item 
+\hypertarget{class_map_list_model_a67bc521b5f6aa669b4b62b1119573629}{bool {\bfseries remove\+Row} (int row, const Q\+Model\+Index \&parent)}\label{class_map_list_model_a67bc521b5f6aa669b4b62b1119573629}
+
+\item 
+\hypertarget{class_map_list_model_a44517a4200ce59ff5cfbf6a644c66005}{bool {\bfseries Add\+Map} (Q\+Shared\+Pointer$<$ \hyperlink{class_map_data}{Map\+Data} $>$ map)}\label{class_map_list_model_a44517a4200ce59ff5cfbf6a644c66005}
+
+\item 
+\hypertarget{class_map_list_model_a8620132016e5ae59ea1a60f08167a8d6}{Q\+Shared\+Pointer$<$ \hyperlink{class_map_data}{Map\+Data} $>$ {\bfseries Map\+At} (int row)}\label{class_map_list_model_a8620132016e5ae59ea1a60f08167a8d6}
+
+\item 
+Q\+Variant \hyperlink{class_map_list_model_a5052c6bc02674c253d497fa5c5a455d5}{data} (const Q\+Model\+Index \&index, int role) const 
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_list_model_a5052c6bc02674c253d497fa5c5a455d5}{Map\+List\+Model\+::data}. \end{DoxyCompactList}\item 
+\hypertarget{class_map_list_model_a1acfd761a0d1efc2226f177f6b0dc039}{void \hyperlink{class_map_list_model_a1acfd761a0d1efc2226f177f6b0dc039}{Clear\+Maps} ()}\label{class_map_list_model_a1acfd761a0d1efc2226f177f6b0dc039}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_list_model_a1acfd761a0d1efc2226f177f6b0dc039}{Map\+List\+Model\+::\+Clear\+Maps} Clears the map container. Used when closing the program. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{class_map_list_model}{Map\+List\+Model} class Exposes the U\+I to the contents of the master map list. 
+
+Definition at line 33 of file maplistmodel.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_map_list_model_a5052c6bc02674c253d497fa5c5a455d5}{\index{Map\+List\+Model@{Map\+List\+Model}!data@{data}}
+\index{data@{data}!Map\+List\+Model@{Map\+List\+Model}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}Q\+Variant Map\+List\+Model\+::data (
+\begin{DoxyParamCaption}
+\item[{const Q\+Model\+Index \&}]{index, }
+\item[{int}]{role}
+\end{DoxyParamCaption}
+) const}}\label{class_map_list_model_a5052c6bc02674c253d497fa5c5a455d5}
+
+
+\hyperlink{class_map_list_model_a5052c6bc02674c253d497fa5c5a455d5}{Map\+List\+Model\+::data}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & \\
+\hline
+{\em role} & The role (will always be Qt\+::\+Display\+Role (to display map name) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A re-\/implementation of Q\+Abstract\+Item\+Model\+::data(); 
+\end{DoxyReturn}
+
+
+Definition at line 39 of file maplistmodel.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Vespucci/develop/\+G\+U\+I/\+Q\+Abstract\+Item\+Model/maplistmodel.\+h\item 
+C\+:/\+Projects/\+Vespucci/develop/\+G\+U\+I/\+Q\+Abstract\+Item\+Model/maplistmodel.\+cpp\end{DoxyCompactItemize}

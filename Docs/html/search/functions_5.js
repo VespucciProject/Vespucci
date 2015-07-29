@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['filterdialog',['FilterDialog',['../class_filter_dialog.html#a6bef33c31a492314928b700757c81840',1,'FilterDialog']]],
+  ['findbandwidth',['FindBandwidth',['../namespace_vespucci_1_1_math_1_1_quantification.html#a9ae95323be0190407aac32ec87605352',1,'Vespucci::Math::Quantification']]],
+  ['findbandwidthmat',['FindBandwidthMat',['../namespace_vespucci_1_1_math_1_1_quantification.html#a1f48a5ba0518572ef75a81985a267265',1,'Vespucci::Math::Quantification']]],
+  ['findorigin',['FindOrigin',['../class_vespucci_dataset.html#af4188669d80c1595fb2eeb20c4e777fd',1,'VespucciDataset']]],
+  ['findpeakmax',['FindPeakMax',['../namespace_vespucci_1_1_math_1_1_quantification.html#a67d066d37ce165ac3e8c04d97436363c',1,'Vespucci::Math::Quantification']]],
+  ['findpeakmaxesmat',['FindPeakMaxesMat',['../namespace_vespucci_1_1_math_1_1_quantification.html#a6b4ad9737e416fb31ffc736465c3e87d',1,'Vespucci::Math::Quantification']]],
+  ['findpeakmaxmat',['FindPeakMaxMat',['../namespace_vespucci_1_1_math_1_1_quantification.html#ac8a29afbde382eddd90a15749a8c3151',1,'Vespucci::Math::Quantification']]],
+  ['findpeakpositions',['FindPeakPositions',['../namespace_vespucci_1_1_math_1_1_peak_finding.html#a502c529617f35fd20d1e11aca2a03a28',1,'Vespucci::Math::PeakFinding']]],
+  ['findpeaks',['FindPeaks',['../class_vespucci_dataset.html#a1f8933230496f1b3f475a884a021c6e5',1,'VespucciDataset::FindPeaks()'],['../namespace_vespucci_1_1_math_1_1_peak_finding.html#a3d5687d6ba8babb49689af636f28aae8',1,'Vespucci::Math::PeakFinding::FindPeaks()']]],
+  ['findpeaksmat',['FindPeaksMat',['../namespace_vespucci_1_1_math_1_1_peak_finding.html#a9f22a184fb69fb6ab32757fdd19e1ae7',1,'Vespucci::Math::PeakFinding']]],
+  ['findrange',['FindRange',['../class_vespucci_dataset.html#abb3bb39b5386bf5bdafd3117d9fed059',1,'VespucciDataset']]],
+  ['findridges',['FindRidges',['../namespace_vespucci_1_1_math_1_1_peak_finding.html#aede120546d4e46e4073058508fdd7ae9',1,'Vespucci::Math::PeakFinding']]],
+  ['first_5fabscissa',['first_abscissa',['../class_map_data.html#a6c73650238e622489f4ba5ae580e0c84',1,'MapData']]],
+  ['first_5fbaseline',['first_baseline',['../class_map_data.html#a02dfe98d659e8eac8bf8eec4c376223f',1,'MapData']]],
+  ['fitgaussianpeak',['FitGaussianPeak',['../namespace_vespucci_1_1_math_1_1_fitting.html#a7ccac4eb07dd9eaa7c891e8d78be6390',1,'Vespucci::Math::Fitting']]],
+  ['fractional_5fabundances',['fractional_abundances',['../class_v_c_a_data.html#a7637e08200194ce5c55b30f922b42737',1,'VCAData']]]
+];

@@ -1,0 +1,5 @@
+<map id="Vespucci::Math::Smoothing::MedianFilter" name="Vespucci::Math::Smoothing::MedianFilter">
+<area shape="rect" id="node2" href="$namespace_vespucci_1_1_math_1_1_smoothing.html#a2b168115738d2931e0a5504823b26b3b" title="Vespucci::Math::Smoothing::MedianFilterMat. " alt="" coords="236,23,419,65"/>
+<area shape="rect" id="node3" href="$class_vespucci_dataset.html#a225fd450bcf573db13e6f563a4a0e539" title="VespucciDataset::Baseline Baseline&#45;adjusts the data. This function uses a median filter with a large ..." alt="" coords="477,5,656,32"/>
+<area shape="rect" id="node4" href="$class_vespucci_dataset.html#aafa57b522cc3ddf08d518f862ad236b5" title="VespucciDataset::MedianFilter performs median filtering on the spectral data. Entries near the bounda..." alt="" coords="467,56,667,83"/>
+</map>

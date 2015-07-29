@@ -1,0 +1,1407 @@
+\hypertarget{class_map_data}{\section{Map\+Data Class Reference}
+\label{class_map_data}\index{Map\+Data@{Map\+Data}}
+}
+
+
+The \hyperlink{class_map_data}{Map\+Data} class Class for processed map data. Images are created from this data.  
+
+
+
+
+{\ttfamily \#include $<$mapdata.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_map_data_ab50af013c711ed6ae81b3a0f22d3e83a}{Map\+Data} (Q\+String x\+\_\+axis\+\_\+description, Q\+String y\+\_\+axis\+\_\+description, colvec x, colvec y, colvec results, Q\+Shared\+Pointer$<$ \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} $>$ parent, Q\+String $\ast$directory, Q\+C\+P\+Color\+Gradient gradient, int \hyperlink{class_map_data_a24c45edae66512b7a7b7d62be38b91f1}{source\+\_\+index}, int tick\+\_\+count, \hyperlink{class_main_window}{Main\+Window} $\ast$main\+\_\+window)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_ab50af013c711ed6ae81b3a0f22d3e83a}{Map\+Data\+::\+Map\+Data}. \end{DoxyCompactList}\item 
+\hypertarget{class_map_data_afc3e096cf252c30641055ea4eaaab410}{\hyperlink{class_map_data_afc3e096cf252c30641055ea4eaaab410}{$\sim$\+Map\+Data} ()}\label{class_map_data_afc3e096cf252c30641055ea4eaaab410}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_afc3e096cf252c30641055ea4eaaab410}{Map\+Data\+::$\sim$\+Map\+Data} Deletes everything the new keyword is used on in this object. Destructor triggered when this is removed from \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} list. \end{DoxyCompactList}\item 
+Q\+String \hyperlink{class_map_data_af829b775c94e7036c1ad5cd495c942e8}{name} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_af829b775c94e7036c1ad5cd495c942e8}{Map\+Data\+::name}. \end{DoxyCompactList}\item 
+Q\+String \hyperlink{class_map_data_aa98befcd52daa5ed565fa375c28461d4}{type} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_aa98befcd52daa5ed565fa375c28461d4}{Map\+Data\+::type}. \end{DoxyCompactList}\item 
+int \hyperlink{class_map_data_a24c45edae66512b7a7b7d62be38b91f1}{source\+\_\+index} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a24c45edae66512b7a7b7d62be38b91f1}{Map\+Data\+::source\+\_\+index}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_a5ff97fbb20dfca5642ce39e26dde38af}{set\+\_\+type} (Q\+String \hyperlink{class_map_data_aa98befcd52daa5ed565fa375c28461d4}{type})
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a5ff97fbb20dfca5642ce39e26dde38af}{Map\+Data\+::set\+\_\+type}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_ab9eff280b000c33226850a6541c81f89}{set\+\_\+name} (Q\+String \hyperlink{class_map_data_af829b775c94e7036c1ad5cd495c942e8}{name}, Q\+String \hyperlink{class_map_data_aa98befcd52daa5ed565fa375c28461d4}{type})
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_ab9eff280b000c33226850a6541c81f89}{Map\+Data\+::set\+\_\+name}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_a5894d1e395e80ba4c15e22438bc21bd3}{set\+\_\+baseline} (vec abscissa, mat baseline)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a5894d1e395e80ba4c15e22438bc21bd3}{Map\+Data\+::set\+\_\+baseline}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_a214dc643b724e8d0094e440e70f66b4b}{set\+\_\+baselines} (vec \hyperlink{class_map_data_a6c73650238e622489f4ba5ae580e0c84}{first\+\_\+abscissa}, vec \hyperlink{class_map_data_a16fba2ab43dd4480662a2a1d76611352}{second\+\_\+abscissa}, mat \hyperlink{class_map_data_a02dfe98d659e8eac8bf8eec4c376223f}{first\+\_\+baseline}, mat \hyperlink{class_map_data_afd3efd4d5aad351c03f2a68d62deaa4a}{second\+\_\+baseline})
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a214dc643b724e8d0094e440e70f66b4b}{Map\+Data\+::set\+\_\+baselines}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_a2520ff301a4e5460f9e138f86298b66e}{set\+\_\+fwhm} (mat \hyperlink{class_map_data_a95f9011ac33e065d58f2bf26b0db9580}{mid\+\_\+lines})
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a2520ff301a4e5460f9e138f86298b66e}{Map\+Data\+::set\+\_\+fwhm}. \end{DoxyCompactList}\item 
+bool \hyperlink{class_map_data_a431880bb19b6845d2e9315306c0af0a2}{univariate\+\_\+area} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a431880bb19b6845d2e9315306c0af0a2}{Map\+Data\+::univariate\+\_\+area}. \end{DoxyCompactList}\item 
+bool \hyperlink{class_map_data_a5ac3afb97da8c1b45e698db88d604974}{band\+\_\+ratio\+\_\+area} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a5ac3afb97da8c1b45e698db88d604974}{Map\+Data\+::band\+\_\+ratio\+\_\+area}. \end{DoxyCompactList}\item 
+bool \hyperlink{class_map_data_af54e11703d6d0d276e056fc5302b5e7c}{univariate\+\_\+bandwidth} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_af54e11703d6d0d276e056fc5302b5e7c}{Map\+Data\+::univariate\+\_\+bandwidth}. \end{DoxyCompactList}\item 
+Q\+Vector$<$ double $>$ \hyperlink{class_map_data_a02dfe98d659e8eac8bf8eec4c376223f}{first\+\_\+baseline} (int i)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a02dfe98d659e8eac8bf8eec4c376223f}{Map\+Data\+::first\+\_\+baseline}. \end{DoxyCompactList}\item 
+Q\+Vector$<$ double $>$ \hyperlink{class_map_data_afd3efd4d5aad351c03f2a68d62deaa4a}{second\+\_\+baseline} (int i)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_afd3efd4d5aad351c03f2a68d62deaa4a}{Map\+Data\+::second\+\_\+baseline}. \end{DoxyCompactList}\item 
+Q\+Vector$<$ double $>$ \hyperlink{class_map_data_a6c73650238e622489f4ba5ae580e0c84}{first\+\_\+abscissa} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a6c73650238e622489f4ba5ae580e0c84}{Map\+Data\+::first\+\_\+abscissa}. \end{DoxyCompactList}\item 
+Q\+Vector$<$ double $>$ \hyperlink{class_map_data_a16fba2ab43dd4480662a2a1d76611352}{second\+\_\+abscissa} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a16fba2ab43dd4480662a2a1d76611352}{Map\+Data\+::second\+\_\+abscissa}. \end{DoxyCompactList}\item 
+\hypertarget{class_map_data_a534ed582acba267677828d8adee990cb}{Q\+Vector$<$ double $>$ {\bfseries half\+\_\+max} (int i)}\label{class_map_data_a534ed582acba267677828d8adee990cb}
+
+\item 
+Q\+Vector$<$ double $>$ \hyperlink{class_map_data_a1abf4b8f0c1cb51017e6dfffd0e4ff99}{mid\+\_\+line} (int i)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a1abf4b8f0c1cb51017e6dfffd0e4ff99}{Map\+Data\+::mid\+\_\+line}. \end{DoxyCompactList}\item 
+Q\+Vector$<$ double $>$ \hyperlink{class_map_data_a95f9011ac33e065d58f2bf26b0db9580}{mid\+\_\+lines} (int i)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a95f9011ac33e065d58f2bf26b0db9580}{Map\+Data\+::mid\+\_\+lines}. \end{DoxyCompactList}\item 
+\hypertarget{class_map_data_a4449d591b36835bfc33e4d4f18a5440f}{void {\bfseries set\+Key\+Size} (int size)}\label{class_map_data_a4449d591b36835bfc33e4d4f18a5440f}
+
+\item 
+\hypertarget{class_map_data_a012b63962abf29178802dae20c40d4b8}{void {\bfseries set\+Value\+Size} (int size)}\label{class_map_data_a012b63962abf29178802dae20c40d4b8}
+
+\item 
+\hypertarget{class_map_data_a285fff0a4f3362a155df80e0c61bdc45}{void {\bfseries set\+Key\+Range} (const Q\+C\+P\+Range \&range)}\label{class_map_data_a285fff0a4f3362a155df80e0c61bdc45}
+
+\item 
+\hypertarget{class_map_data_a90916d2acda22cd75c03f1daf9481e56}{void {\bfseries set\+Value\+Range} (const Q\+C\+P\+Range \&range)}\label{class_map_data_a90916d2acda22cd75c03f1daf9481e56}
+
+\item 
+Q\+C\+P\+Range \hyperlink{class_map_data_aab56283cdcdbc2d122a6a4a6d0da0eb7}{data\+Range} ()
+\begin{DoxyCompactList}\small\item\em Map\+Data\+::data\+\_\+range. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_ad9e7fbe1bbb0f16b52eb71e0c7da4fb6}{set\+Gradient} (const Q\+C\+P\+Color\+Gradient \&gradient)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_ad9e7fbe1bbb0f16b52eb71e0c7da4fb6}{Map\+Data\+::set\+Gradient}. \end{DoxyCompactList}\item 
+\hypertarget{class_map_data_ad93b4a05e79ca14e075d7991fce4b5cd}{void \hyperlink{class_map_data_ad93b4a05e79ca14e075d7991fce4b5cd}{Show\+Map\+Window} ()}\label{class_map_data_ad93b4a05e79ca14e075d7991fce4b5cd}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_ad93b4a05e79ca14e075d7991fce4b5cd}{Map\+Data\+::\+Show\+Map\+Window} Shows or hides the map window. \end{DoxyCompactList}\item 
+\hypertarget{class_map_data_a3a4fab7a7f8862cab5f3fb9df19d41b5}{void \hyperlink{class_map_data_a3a4fab7a7f8862cab5f3fb9df19d41b5}{Hide\+Map\+Window} ()}\label{class_map_data_a3a4fab7a7f8862cab5f3fb9df19d41b5}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a3a4fab7a7f8862cab5f3fb9df19d41b5}{Map\+Data\+::\+Hide\+Map\+Window} Closes the map window. \end{DoxyCompactList}\item 
+bool \hyperlink{class_map_data_aef9546998544f313097d1510b1d2316f}{Map\+Window\+Visible} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_aef9546998544f313097d1510b1d2316f}{Map\+Data\+::\+Map\+Window\+Visible}. \end{DoxyCompactList}\item 
+bool \hyperlink{class_map_data_ac0606ccd229f86320f5f08838d4d96db}{Spectrum\+Viewer\+Visible} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_ac0606ccd229f86320f5f08838d4d96db}{Map\+Data\+::\+Spectrum\+Viewer\+Visible}. \end{DoxyCompactList}\item 
+\hypertarget{class_map_data_a61f4104e14f8b8e0d1a51872412737e1}{void \hyperlink{class_map_data_a61f4104e14f8b8e0d1a51872412737e1}{Hide\+Spectrum\+Viewer} ()}\label{class_map_data_a61f4104e14f8b8e0d1a51872412737e1}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a61f4104e14f8b8e0d1a51872412737e1}{Map\+Data\+::\+Hide\+Spectrum\+Viewer} Close the spectrum viewer if it is open. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_ad1fe1aaad46b33c4f6a2be1d7f889dee}{Create\+Image} (Q\+C\+P\+Color\+Gradient color\+\_\+scheme, bool interpolation, int tick\+\_\+count)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_ad1fe1aaad46b33c4f6a2be1d7f889dee}{Map\+Data\+::\+Create\+Image}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_a69f3cc1424820012dd81b21a171b1811}{Set\+Map\+Data} (Q\+C\+P\+Color\+Map\+Data $\ast$map\+\_\+data)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a69f3cc1424820012dd81b21a171b1811}{Map\+Data\+::\+Set\+Map\+Data}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_af89b6dafdaa3a857c8c99256efabaa01}{Show\+Spectrum\+Viewer} (bool enabled)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_af89b6dafdaa3a857c8c99256efabaa01}{Map\+Data\+::\+Show\+Spectrum\+Viewer}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_a83f631070387a73af804b39cd8463c83}{Set\+X\+Description} (Q\+String description)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a83f631070387a73af804b39cd8463c83}{Map\+Data\+::\+Set\+X\+Description}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_a7c08027239b5dada495ab7087b13a983}{Set\+Y\+Description} (Q\+String description)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a7c08027239b5dada495ab7087b13a983}{Map\+Data\+::\+Set\+Y\+Description}. \end{DoxyCompactList}\item 
+\hypertarget{class_map_data_aae8067a6dcb4d2a43121903cf2937e6e}{void {\bfseries set\+Size} (int key\+\_\+size, int value\+\_\+size)}\label{class_map_data_aae8067a6dcb4d2a43121903cf2937e6e}
+
+\item 
+bool \hyperlink{class_map_data_af6a0e12976a942f506035051162e6bac}{interpolate} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_af6a0e12976a942f506035051162e6bac}{Map\+Data\+::interpolate}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_a61607dc64ab986d73904ea00a8801284}{set\+Interpolate} (bool enabled)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a61607dc64ab986d73904ea00a8801284}{Map\+Data\+::set\+Interpolate}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_af6be86434180cebe257194b25eb3b26b}{Show\+Color\+Scale} (bool enabled)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_af6be86434180cebe257194b25eb3b26b}{Map\+Data\+::\+Show\+Color\+Scale}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_a728ba9e61677b4f25c98d2579ec1ac6a}{Show\+Axes} (bool enabled)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a728ba9e61677b4f25c98d2579ec1ac6a}{Map\+Data\+::\+Show\+Axes}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_a2a31f4dd7ede95fb61852db6cb815ca9}{Set\+Data\+Range} (Q\+C\+P\+Range new\+\_\+range)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a2a31f4dd7ede95fb61852db6cb815ca9}{Map\+Data\+::\+Set\+Data\+Range}. \end{DoxyCompactList}\item 
+\hypertarget{class_map_data_aa98f0fec1e13eab7858dce7b7fe31561}{void \hyperlink{class_map_data_aa98f0fec1e13eab7858dce7b7fe31561}{Remove\+This} ()}\label{class_map_data_aa98f0fec1e13eab7858dce7b7fe31561}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_aa98f0fec1e13eab7858dce7b7fe31561}{Map\+Data\+::\+Remove\+This} Triggers the \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} object to remove this from the list. Since \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} stores \hyperlink{class_map_data}{Map\+Data} objects as shared pointers, and only one object (the map list) contains this pointer, this removal results in this object being deleted. \end{DoxyCompactList}\item 
+bool \hyperlink{class_map_data_aecfef074535f5fa0586a94125782411a}{save\+Pdf} (const Q\+String \&file\+Name, int width, int height)
+\begin{DoxyCompactList}\small\item\em Map\+Data\+::save\+P\+D\+F. \end{DoxyCompactList}\item 
+bool \hyperlink{class_map_data_a6bcf8d8f2d6e06079565517934bd24e5}{save\+Png} (const Q\+String \&file\+Name, int width=0, int height=0, double scale=1.\+0, int quality=-\/1)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a6bcf8d8f2d6e06079565517934bd24e5}{Map\+Data\+::save\+Png}. \end{DoxyCompactList}\item 
+bool \hyperlink{class_map_data_a79f4f199f916d9dbd8368a27070ea3c4}{save\+Jpg} (const Q\+String \&file\+Name, int width=0, int height=0, double scale=1.\+0, int quality=-\/1)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a79f4f199f916d9dbd8368a27070ea3c4}{Map\+Data\+::save\+Jpg}. \end{DoxyCompactList}\item 
+bool \hyperlink{class_map_data_ae913ad8de2631267f8eb7f56a8c7682b}{save\+Bmp} (const Q\+String \&file\+Name, int width=0, int height=0, double scale=1.\+0)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_ae913ad8de2631267f8eb7f56a8c7682b}{Map\+Data\+::save\+Bmp}. \end{DoxyCompactList}\item 
+bool \hyperlink{class_map_data_a4c90d0715c7591975e439d54a4a88e6d}{save\+Tiff} (const Q\+String \&file\+Name, int width=0, int height=0, double scale=1.\+0, int quality=0)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a4c90d0715c7591975e439d54a4a88e6d}{Map\+Data\+::save\+Tiff}. \end{DoxyCompactList}\item 
+\hypertarget{class_map_data_ad7ad56bbfe5c466c1d29df04567a34f3}{void {\bfseries Export\+Text} ()}\label{class_map_data_ad7ad56bbfe5c466c1d29df04567a34f3}
+
+\item 
+\hypertarget{class_map_data_ad71bce0881234bfd6a8d17aee3bb9755}{void {\bfseries Show\+Stats\+Dialog} ()}\label{class_map_data_ad71bce0881234bfd6a8d17aee3bb9755}
+
+\item 
+void \hyperlink{class_map_data_addb50d1d449353343157ab45d6d96c1a}{Draw\+Scale\+Bar} (double width, double height, Q\+String units, Q\+Color color, Q\+String position, Q\+Font font)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_addb50d1d449353343157ab45d6d96c1a}{Map\+Data\+::\+Draw\+Scale\+Bar}. \end{DoxyCompactList}\item 
+double \hyperlink{class_map_data_ad209dc0ec9935f2d551867af307594d0}{results\+\_\+at\+\_\+position} (double x, double y)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_ad209dc0ec9935f2d551867af307594d0}{Map\+Data\+::results\+\_\+at\+\_\+position}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_af30cb1a76812d7904c1f571a8e1fe1e4}{Use\+Global\+Color\+Scale} (bool arg1)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_af30cb1a76812d7904c1f571a8e1fe1e4}{Map\+Data\+::\+Use\+Global\+Color\+Scale}. \end{DoxyCompactList}\item 
+\hypertarget{class_map_data_acdaa2f55e2cbf4ad03582b3d1bc99c2e}{void \hyperlink{class_map_data_acdaa2f55e2cbf4ad03582b3d1bc99c2e}{Rescale\+Map\+Widget} ()}\label{class_map_data_acdaa2f55e2cbf4ad03582b3d1bc99c2e}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_acdaa2f55e2cbf4ad03582b3d1bc99c2e}{Map\+Data\+::\+Rescale\+Map\+Widget} Changes the proportions of the map window back to the initial proportions. Maintains the longest of the resized dimensions and adjusts the other dimension accordingly. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_a980161f78d12c23787f6593e0ea79282}{Lock\+Map\+Display\+Size} (bool lock)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a980161f78d12c23787f6593e0ea79282}{Map\+Data\+::\+Lock\+Map\+Display\+Size}. \end{DoxyCompactList}\item 
+\hypertarget{class_map_data_a795493559eec5070c21ba9561af583d9}{void \hyperlink{class_map_data_a795493559eec5070c21ba9561af583d9}{Reset\+Map\+Widget\+Size} ()}\label{class_map_data_a795493559eec5070c21ba9561af583d9}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a795493559eec5070c21ba9561af583d9}{Map\+Data\+::\+Reset\+Map\+Widget\+Size} Returns the size of the map window to the original proportions. \end{DoxyCompactList}\item 
+uvec \hyperlink{class_map_data_a9a36051c2e38bc6dd21c1452cabdf56d}{extract\+\_\+range} (double lower, double upper)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a9a36051c2e38bc6dd21c1452cabdf56d}{Map\+Data\+::extract\+\_\+range}. \end{DoxyCompactList}\item 
+\hypertarget{class_map_data_a2788d8eab92222a00724772fdd997b1f}{void \hyperlink{class_map_data_a2788d8eab92222a00724772fdd997b1f}{Launch\+Data\+Extractor} ()}\label{class_map_data_a2788d8eab92222a00724772fdd997b1f}
+
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a2788d8eab92222a00724772fdd997b1f}{Map\+Data\+::\+Launch\+Data\+Extractor} Launch the data extractor dialog. \end{DoxyCompactList}\item 
+bool \hyperlink{class_map_data_a769fa8b15df27ed067a951ea1427c894}{crisp\+\_\+clusters} ()
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a769fa8b15df27ed067a951ea1427c894}{Map\+Data\+::crisp\+\_\+clusters}. \end{DoxyCompactList}\item 
+void \hyperlink{class_map_data_a8d9e7f2a19b116370354f06150af1cbe}{Set\+Crisp\+Clusters} (bool arg1)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_map_data_a8d9e7f2a19b116370354f06150af1cbe}{Map\+Data\+::\+Set\+Crisp\+Clusters}. \end{DoxyCompactList}\item 
+\hypertarget{class_map_data_a60100b519b8e081cad23925043b3c024}{void {\bfseries Set\+Fonts} (const Q\+Font \&font)}\label{class_map_data_a60100b519b8e081cad23925043b3c024}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_map_data_a25748ed400f0e0fff2cb3fd70074a8de}{mat {\bfseries stats\+\_\+}}\label{class_map_data_a25748ed400f0e0fff2cb3fd70074a8de}
+
+\item 
+\hypertarget{class_map_data_a605938fe04909b1147ed36b43a74292d}{double {\bfseries x\+\_\+dimension\+\_\+}}\label{class_map_data_a605938fe04909b1147ed36b43a74292d}
+
+\item 
+\hypertarget{class_map_data_ae730473a1d211f29a29727b03463edc0}{double {\bfseries y\+\_\+dimension\+\_\+}}\label{class_map_data_ae730473a1d211f29a29727b03463edc0}
+
+\item 
+\hypertarget{class_map_data_a395c613ef1240dea250d2fa7df5d4d47}{colvec {\bfseries results\+\_\+}}\label{class_map_data_a395c613ef1240dea250d2fa7df5d4d47}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{class_map_data}{Map\+Data} class Class for processed map data. Images are created from this data. 
+
+Definition at line 49 of file mapdata.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_map_data_ab50af013c711ed6ae81b3a0f22d3e83a}{\index{Map\+Data@{Map\+Data}!Map\+Data@{Map\+Data}}
+\index{Map\+Data@{Map\+Data}!Map\+Data@{Map\+Data}}
+\subsubsection[{Map\+Data}]{\setlength{\rightskip}{0pt plus 5cm}Map\+Data\+::\+Map\+Data (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{x\+\_\+axis\+\_\+description, }
+\item[{Q\+String}]{y\+\_\+axis\+\_\+description, }
+\item[{colvec}]{x, }
+\item[{colvec}]{y, }
+\item[{colvec}]{results, }
+\item[{Q\+Shared\+Pointer$<$ {\bf Vespucci\+Dataset} $>$}]{parent, }
+\item[{Q\+String $\ast$}]{directory, }
+\item[{Q\+C\+P\+Color\+Gradient}]{gradient, }
+\item[{int}]{source\+\_\+index, }
+\item[{int}]{tick\+\_\+count, }
+\item[{{\bf Main\+Window} $\ast$}]{main\+\_\+window}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_ab50af013c711ed6ae81b3a0f22d3e83a}
+
+
+\hyperlink{class_map_data_ab50af013c711ed6ae81b3a0f22d3e83a}{Map\+Data\+::\+Map\+Data}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+axis\+\_\+description} & Description of the spectral abscissa \\
+\hline
+{\em y\+\_\+axis\+\_\+description} & Description of the spectral ordinate \\
+\hline
+{\em x} & Vector of horizontal coordinates map points \\
+\hline
+{\em y} & Vector of vertical coordinates for map points \\
+\hline
+{\em results} & Vector of results at x and y \\
+\hline
+{\em parent} & The \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} object storing the map data. \\
+\hline
+{\em directory} & The current working directory on the filesystem \\
+\hline
+{\em gradient} & The initially-\/chosen color gradient. \\
+\hline
+{\em source\+\_\+index} & The index of this object in parent. \\
+\hline
+{\em tick\+\_\+count} & Number of ticks on the color scale \\
+\hline
+{\em main\+\_\+window} & The main window of the app. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 37 of file mapdata.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{class_map_data_ab50af013c711ed6ae81b3a0f22d3e83a_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_map_data_a5ac3afb97da8c1b45e698db88d604974}{\index{Map\+Data@{Map\+Data}!band\+\_\+ratio\+\_\+area@{band\+\_\+ratio\+\_\+area}}
+\index{band\+\_\+ratio\+\_\+area@{band\+\_\+ratio\+\_\+area}!Map\+Data@{Map\+Data}}
+\subsubsection[{band\+\_\+ratio\+\_\+area}]{\setlength{\rightskip}{0pt plus 5cm}bool Map\+Data\+::band\+\_\+ratio\+\_\+area (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a5ac3afb97da8c1b45e698db88d604974}
+
+
+\hyperlink{class_map_data_a5ac3afb97da8c1b45e698db88d604974}{Map\+Data\+::band\+\_\+ratio\+\_\+area}. 
+
+\begin{DoxyReturn}{Returns}
+Whether or not this is a band ratio area map. 
+\end{DoxyReturn}
+
+
+Definition at line 652 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_ad1fe1aaad46b33c4f6a2be1d7f889dee}{\index{Map\+Data@{Map\+Data}!Create\+Image@{Create\+Image}}
+\index{Create\+Image@{Create\+Image}!Map\+Data@{Map\+Data}}
+\subsubsection[{Create\+Image}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::\+Create\+Image (
+\begin{DoxyParamCaption}
+\item[{Q\+C\+P\+Color\+Gradient}]{color\+\_\+scheme, }
+\item[{bool}]{interpolation, }
+\item[{int}]{tick\+\_\+count}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_ad1fe1aaad46b33c4f6a2be1d7f889dee}
+
+
+\hyperlink{class_map_data_ad1fe1aaad46b33c4f6a2be1d7f889dee}{Map\+Data\+::\+Create\+Image}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em color\+\_\+scheme} & \\
+\hline
+{\em interpolation} & Creates the image by sending data to the Q\+Custom\+Plot widgets. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 232 of file mapdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=333pt]{class_map_data_ad1fe1aaad46b33c4f6a2be1d7f889dee_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_a769fa8b15df27ed067a951ea1427c894}{\index{Map\+Data@{Map\+Data}!crisp\+\_\+clusters@{crisp\+\_\+clusters}}
+\index{crisp\+\_\+clusters@{crisp\+\_\+clusters}!Map\+Data@{Map\+Data}}
+\subsubsection[{crisp\+\_\+clusters}]{\setlength{\rightskip}{0pt plus 5cm}bool Map\+Data\+::crisp\+\_\+clusters (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a769fa8b15df27ed067a951ea1427c894}
+
+
+\hyperlink{class_map_data_a769fa8b15df27ed067a951ea1427c894}{Map\+Data\+::crisp\+\_\+clusters}. 
+
+\begin{DoxyReturn}{Returns}
+Return whether or not this map was created with a crisp clustering method 
+\end{DoxyReturn}
+
+
+Definition at line 887 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_aab56283cdcdbc2d122a6a4a6d0da0eb7}{\index{Map\+Data@{Map\+Data}!data\+Range@{data\+Range}}
+\index{data\+Range@{data\+Range}!Map\+Data@{Map\+Data}}
+\subsubsection[{data\+Range}]{\setlength{\rightskip}{0pt plus 5cm}Q\+C\+P\+Range Map\+Data\+::data\+Range (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_aab56283cdcdbc2d122a6a4a6d0da0eb7}
+
+
+Map\+Data\+::data\+\_\+range. 
+
+\begin{DoxyReturn}{Returns}
+the data range of the map 
+\end{DoxyReturn}
+
+
+Definition at line 850 of file mapdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=334pt]{class_map_data_aab56283cdcdbc2d122a6a4a6d0da0eb7_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_addb50d1d449353343157ab45d6d96c1a}{\index{Map\+Data@{Map\+Data}!Draw\+Scale\+Bar@{Draw\+Scale\+Bar}}
+\index{Draw\+Scale\+Bar@{Draw\+Scale\+Bar}!Map\+Data@{Map\+Data}}
+\subsubsection[{Draw\+Scale\+Bar}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::\+Draw\+Scale\+Bar (
+\begin{DoxyParamCaption}
+\item[{double}]{width, }
+\item[{double}]{height, }
+\item[{Q\+String}]{units, }
+\item[{Q\+Color}]{color, }
+\item[{Q\+String}]{position, }
+\item[{Q\+Font}]{font}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_addb50d1d449353343157ab45d6d96c1a}
+
+
+\hyperlink{class_map_data_addb50d1d449353343157ab45d6d96c1a}{Map\+Data\+::\+Draw\+Scale\+Bar}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em width} & The width of the bar in map units. \\
+\hline
+{\em height} & The height of the bar. \\
+\hline
+{\em units} & The number to display on the bar label. \\
+\hline
+{\em color} & The color of the bar. \\
+\hline
+{\em position} & The position of the bar (Top or Bottom, Left or Right) \\
+\hline
+{\em font} & The desired font for the bar label. Draws a scale bar object on the map. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 512 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a9a36051c2e38bc6dd21c1452cabdf56d}{\index{Map\+Data@{Map\+Data}!extract\+\_\+range@{extract\+\_\+range}}
+\index{extract\+\_\+range@{extract\+\_\+range}!Map\+Data@{Map\+Data}}
+\subsubsection[{extract\+\_\+range}]{\setlength{\rightskip}{0pt plus 5cm}uvec Map\+Data\+::extract\+\_\+range (
+\begin{DoxyParamCaption}
+\item[{double}]{lower, }
+\item[{double}]{upper}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a9a36051c2e38bc6dd21c1452cabdf56d}
+
+
+\hyperlink{class_map_data_a9a36051c2e38bc6dd21c1452cabdf56d}{Map\+Data\+::extract\+\_\+range}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lower} & \\
+\hline
+{\em upper} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Finds the rows that fall within a range of values 
+\end{DoxyReturn}
+
+
+Definition at line 861 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a6c73650238e622489f4ba5ae580e0c84}{\index{Map\+Data@{Map\+Data}!first\+\_\+abscissa@{first\+\_\+abscissa}}
+\index{first\+\_\+abscissa@{first\+\_\+abscissa}!Map\+Data@{Map\+Data}}
+\subsubsection[{first\+\_\+abscissa}]{\setlength{\rightskip}{0pt plus 5cm}Q\+Vector$<$ double $>$ Map\+Data\+::first\+\_\+abscissa (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a6c73650238e622489f4ba5ae580e0c84}
+
+
+\hyperlink{class_map_data_a6c73650238e622489f4ba5ae580e0c84}{Map\+Data\+::first\+\_\+abscissa}. 
+
+\begin{DoxyReturn}{Returns}
+The abscissa for the first baseline 
+\end{DoxyReturn}
+
+
+Definition at line 681 of file mapdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_map_data_a6c73650238e622489f4ba5ae580e0c84_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_a02dfe98d659e8eac8bf8eec4c376223f}{\index{Map\+Data@{Map\+Data}!first\+\_\+baseline@{first\+\_\+baseline}}
+\index{first\+\_\+baseline@{first\+\_\+baseline}!Map\+Data@{Map\+Data}}
+\subsubsection[{first\+\_\+baseline}]{\setlength{\rightskip}{0pt plus 5cm}Q\+Vector$<$ double $>$ Map\+Data\+::first\+\_\+baseline (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a02dfe98d659e8eac8bf8eec4c376223f}
+
+
+\hyperlink{class_map_data_a02dfe98d659e8eac8bf8eec4c376223f}{Map\+Data\+::first\+\_\+baseline}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & The index of first\+\_\+baseline\+\_\+ of the spectrum in question. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The values of the first baseline. 
+\end{DoxyReturn}
+
+
+Definition at line 692 of file mapdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_map_data_a02dfe98d659e8eac8bf8eec4c376223f_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_af6a0e12976a942f506035051162e6bac}{\index{Map\+Data@{Map\+Data}!interpolate@{interpolate}}
+\index{interpolate@{interpolate}!Map\+Data@{Map\+Data}}
+\subsubsection[{interpolate}]{\setlength{\rightskip}{0pt plus 5cm}bool Map\+Data\+::interpolate (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_af6a0e12976a942f506035051162e6bac}
+
+
+\hyperlink{class_map_data_af6a0e12976a942f506035051162e6bac}{Map\+Data\+::interpolate}. 
+
+\begin{DoxyReturn}{Returns}
+Whether or not map is interpolated See Q\+Custom\+Plot\+::\+Q\+C\+P\+Color\+Map\+::interpolate(). 
+\end{DoxyReturn}
+
+
+Definition at line 281 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a980161f78d12c23787f6593e0ea79282}{\index{Map\+Data@{Map\+Data}!Lock\+Map\+Display\+Size@{Lock\+Map\+Display\+Size}}
+\index{Lock\+Map\+Display\+Size@{Lock\+Map\+Display\+Size}!Map\+Data@{Map\+Data}}
+\subsubsection[{Lock\+Map\+Display\+Size}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::\+Lock\+Map\+Display\+Size (
+\begin{DoxyParamCaption}
+\item[{bool}]{lock}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a980161f78d12c23787f6593e0ea79282}
+
+
+\hyperlink{class_map_data_a980161f78d12c23787f6593e0ea79282}{Map\+Data\+::\+Lock\+Map\+Display\+Size}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lock} & Whether the window should be locked or unlocked Locks the size of the map window to maintain proportions \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 827 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_aef9546998544f313097d1510b1d2316f}{\index{Map\+Data@{Map\+Data}!Map\+Window\+Visible@{Map\+Window\+Visible}}
+\index{Map\+Window\+Visible@{Map\+Window\+Visible}!Map\+Data@{Map\+Data}}
+\subsubsection[{Map\+Window\+Visible}]{\setlength{\rightskip}{0pt plus 5cm}bool Map\+Data\+::\+Map\+Window\+Visible (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_aef9546998544f313097d1510b1d2316f}
+
+
+\hyperlink{class_map_data_aef9546998544f313097d1510b1d2316f}{Map\+Data\+::\+Map\+Window\+Visible}. 
+
+\begin{DoxyReturn}{Returns}
+Whether or not map window is visible. 
+\end{DoxyReturn}
+
+
+Definition at line 195 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a1abf4b8f0c1cb51017e6dfffd0e4ff99}{\index{Map\+Data@{Map\+Data}!mid\+\_\+line@{mid\+\_\+line}}
+\index{mid\+\_\+line@{mid\+\_\+line}!Map\+Data@{Map\+Data}}
+\subsubsection[{mid\+\_\+line}]{\setlength{\rightskip}{0pt plus 5cm}Q\+Vector$<$ double $>$ Map\+Data\+::mid\+\_\+line (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a1abf4b8f0c1cb51017e6dfffd0e4ff99}
+
+
+\hyperlink{class_map_data_a1abf4b8f0c1cb51017e6dfffd0e4ff99}{Map\+Data\+::mid\+\_\+line}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & The row in the \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} object (and therefore also in mid\+\_\+lines\+\_\+) corresponding the the spectrum in question. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Q\+Vector for a line drawn from one edge of the peak in question to the other at the half-\/maximum of the peak. Used to visualize the F\+W\+H\+M. 
+\end{DoxyReturn}
+
+
+Definition at line 728 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a95f9011ac33e065d58f2bf26b0db9580}{\index{Map\+Data@{Map\+Data}!mid\+\_\+lines@{mid\+\_\+lines}}
+\index{mid\+\_\+lines@{mid\+\_\+lines}!Map\+Data@{Map\+Data}}
+\subsubsection[{mid\+\_\+lines}]{\setlength{\rightskip}{0pt plus 5cm}Q\+Vector$<$ double $>$ Map\+Data\+::mid\+\_\+lines (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a95f9011ac33e065d58f2bf26b0db9580}
+
+
+\hyperlink{class_map_data_a95f9011ac33e065d58f2bf26b0db9580}{Map\+Data\+::mid\+\_\+lines}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & The row in the \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} object (and therefore also in mid\+\_\+lines\+\_\+) that contains the spectrum in question. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns a Q\+Vector for two lines that extend from one edge of two peaks to the other with a vertical position equal to the half maximum of the peak. Used to visualize the F\+W\+H\+M. 
+\end{DoxyReturn}
+
+
+Definition at line 743 of file mapdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=322pt]{class_map_data_a95f9011ac33e065d58f2bf26b0db9580_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_af829b775c94e7036c1ad5cd495c942e8}{\index{Map\+Data@{Map\+Data}!name@{name}}
+\index{name@{name}!Map\+Data@{Map\+Data}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}Q\+String Map\+Data\+::name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_af829b775c94e7036c1ad5cd495c942e8}
+
+
+\hyperlink{class_map_data_af829b775c94e7036c1ad5cd495c942e8}{Map\+Data\+::name}. 
+
+\begin{DoxyReturn}{Returns}
+The name of the map. 
+\end{DoxyReturn}
+
+
+Definition at line 124 of file mapdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=306pt]{class_map_data_af829b775c94e7036c1ad5cd495c942e8_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_ad209dc0ec9935f2d551867af307594d0}{\index{Map\+Data@{Map\+Data}!results\+\_\+at\+\_\+position@{results\+\_\+at\+\_\+position}}
+\index{results\+\_\+at\+\_\+position@{results\+\_\+at\+\_\+position}!Map\+Data@{Map\+Data}}
+\subsubsection[{results\+\_\+at\+\_\+position}]{\setlength{\rightskip}{0pt plus 5cm}double Map\+Data\+::results\+\_\+at\+\_\+position (
+\begin{DoxyParamCaption}
+\item[{double}]{x, }
+\item[{double}]{y}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_ad209dc0ec9935f2d551867af307594d0}
+
+
+\hyperlink{class_map_data_ad209dc0ec9935f2d551867af307594d0}{Map\+Data\+::results\+\_\+at\+\_\+position}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The horizontal position of the mouse click relative to the axes of the map. \\
+\hline
+{\em y} & The vertical position of the mouse click relative to the axes of the map. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value of the data point at x and y. 
+\end{DoxyReturn}
+
+
+Definition at line 672 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_ae913ad8de2631267f8eb7f56a8c7682b}{\index{Map\+Data@{Map\+Data}!save\+Bmp@{save\+Bmp}}
+\index{save\+Bmp@{save\+Bmp}!Map\+Data@{Map\+Data}}
+\subsubsection[{save\+Bmp}]{\setlength{\rightskip}{0pt plus 5cm}bool Map\+Data\+::save\+Bmp (
+\begin{DoxyParamCaption}
+\item[{const Q\+String \&}]{file\+Name, }
+\item[{int}]{width = {\ttfamily 0}, }
+\item[{int}]{height = {\ttfamily 0}, }
+\item[{double}]{scale = {\ttfamily 1.0}}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_ae913ad8de2631267f8eb7f56a8c7682b}
+
+
+\hyperlink{class_map_data_ae913ad8de2631267f8eb7f56a8c7682b}{Map\+Data\+::save\+Bmp}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+Name} & \\
+\hline
+{\em width} & \\
+\hline
+{\em height} & \\
+\hline
+{\em scale} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Saves the map as a bitmap. See Q\+Custom\+Plot\+::save\+Bmp. 
+\end{DoxyReturn}
+
+
+Definition at line 358 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a79f4f199f916d9dbd8368a27070ea3c4}{\index{Map\+Data@{Map\+Data}!save\+Jpg@{save\+Jpg}}
+\index{save\+Jpg@{save\+Jpg}!Map\+Data@{Map\+Data}}
+\subsubsection[{save\+Jpg}]{\setlength{\rightskip}{0pt plus 5cm}bool Map\+Data\+::save\+Jpg (
+\begin{DoxyParamCaption}
+\item[{const Q\+String \&}]{file\+Name, }
+\item[{int}]{width = {\ttfamily 0}, }
+\item[{int}]{height = {\ttfamily 0}, }
+\item[{double}]{scale = {\ttfamily 1.0}, }
+\item[{int}]{quality = {\ttfamily -\/1}}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a79f4f199f916d9dbd8368a27070ea3c4}
+
+
+\hyperlink{class_map_data_a79f4f199f916d9dbd8368a27070ea3c4}{Map\+Data\+::save\+Jpg}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+Name} & \\
+\hline
+{\em width} & \\
+\hline
+{\em height} & \\
+\hline
+{\em scale} & \\
+\hline
+{\em quality} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Saves the map as a J\+P\+E\+G. See Q\+Custom\+Plot\+::save\+Jpg 
+\end{DoxyReturn}
+
+
+Definition at line 412 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_aecfef074535f5fa0586a94125782411a}{\index{Map\+Data@{Map\+Data}!save\+Pdf@{save\+Pdf}}
+\index{save\+Pdf@{save\+Pdf}!Map\+Data@{Map\+Data}}
+\subsubsection[{save\+Pdf}]{\setlength{\rightskip}{0pt plus 5cm}bool Map\+Data\+::save\+Pdf (
+\begin{DoxyParamCaption}
+\item[{const Q\+String \&}]{file\+Name, }
+\item[{int}]{width, }
+\item[{int}]{height}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_aecfef074535f5fa0586a94125782411a}
+
+
+Map\+Data\+::save\+P\+D\+F. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+Name} & \\
+\hline
+{\em width} & \\
+\hline
+{\em height} & \\
+\hline
+{\em scale} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Saves the map as a P\+D\+F. See Q\+Custom\+Plot\+::save\+Bmp. 
+\end{DoxyReturn}
+
+
+Definition at line 378 of file mapdata.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=297pt]{class_map_data_aecfef074535f5fa0586a94125782411a_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_a6bcf8d8f2d6e06079565517934bd24e5}{\index{Map\+Data@{Map\+Data}!save\+Png@{save\+Png}}
+\index{save\+Png@{save\+Png}!Map\+Data@{Map\+Data}}
+\subsubsection[{save\+Png}]{\setlength{\rightskip}{0pt plus 5cm}bool Map\+Data\+::save\+Png (
+\begin{DoxyParamCaption}
+\item[{const Q\+String \&}]{file\+Name, }
+\item[{int}]{width = {\ttfamily 0}, }
+\item[{int}]{height = {\ttfamily 0}, }
+\item[{double}]{scale = {\ttfamily 1.0}, }
+\item[{int}]{quality = {\ttfamily -\/1}}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a6bcf8d8f2d6e06079565517934bd24e5}
+
+
+\hyperlink{class_map_data_a6bcf8d8f2d6e06079565517934bd24e5}{Map\+Data\+::save\+Png}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+Name} & \\
+\hline
+{\em width} & \\
+\hline
+{\em height} & \\
+\hline
+{\em scale} & \\
+\hline
+{\em quality} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Saves map as a png. See Q\+Custom\+Plot\+::save\+Png. 
+\end{DoxyReturn}
+
+
+Definition at line 393 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a4c90d0715c7591975e439d54a4a88e6d}{\index{Map\+Data@{Map\+Data}!save\+Tiff@{save\+Tiff}}
+\index{save\+Tiff@{save\+Tiff}!Map\+Data@{Map\+Data}}
+\subsubsection[{save\+Tiff}]{\setlength{\rightskip}{0pt plus 5cm}bool Map\+Data\+::save\+Tiff (
+\begin{DoxyParamCaption}
+\item[{const Q\+String \&}]{file\+Name, }
+\item[{int}]{width = {\ttfamily 0}, }
+\item[{int}]{height = {\ttfamily 0}, }
+\item[{double}]{scale = {\ttfamily 1.0}, }
+\item[{int}]{quality = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a4c90d0715c7591975e439d54a4a88e6d}
+
+
+\hyperlink{class_map_data_a4c90d0715c7591975e439d54a4a88e6d}{Map\+Data\+::save\+Tiff}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+Name} & \\
+\hline
+{\em width} & \\
+\hline
+{\em height} & \\
+\hline
+{\em scale} & \\
+\hline
+{\em quality} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Saves the map as a tiff. See Q\+Custom\+Plot\+::save\+Rastered. 
+\end{DoxyReturn}
+
+
+Definition at line 431 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a16fba2ab43dd4480662a2a1d76611352}{\index{Map\+Data@{Map\+Data}!second\+\_\+abscissa@{second\+\_\+abscissa}}
+\index{second\+\_\+abscissa@{second\+\_\+abscissa}!Map\+Data@{Map\+Data}}
+\subsubsection[{second\+\_\+abscissa}]{\setlength{\rightskip}{0pt plus 5cm}Q\+Vector$<$ double $>$ Map\+Data\+::second\+\_\+abscissa (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a16fba2ab43dd4480662a2a1d76611352}
+
+
+\hyperlink{class_map_data_a16fba2ab43dd4480662a2a1d76611352}{Map\+Data\+::second\+\_\+abscissa}. 
+
+\begin{DoxyReturn}{Returns}
+The abscissa for the second baseline 
+\end{DoxyReturn}
+
+
+Definition at line 703 of file mapdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_map_data_a16fba2ab43dd4480662a2a1d76611352_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_afd3efd4d5aad351c03f2a68d62deaa4a}{\index{Map\+Data@{Map\+Data}!second\+\_\+baseline@{second\+\_\+baseline}}
+\index{second\+\_\+baseline@{second\+\_\+baseline}!Map\+Data@{Map\+Data}}
+\subsubsection[{second\+\_\+baseline}]{\setlength{\rightskip}{0pt plus 5cm}Q\+Vector$<$ double $>$ Map\+Data\+::second\+\_\+baseline (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_afd3efd4d5aad351c03f2a68d62deaa4a}
+
+
+\hyperlink{class_map_data_afd3efd4d5aad351c03f2a68d62deaa4a}{Map\+Data\+::second\+\_\+baseline}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & index of \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} obejct (and also second\+\_\+baseline\+\_\+) of the spectrum in question. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Q\+Vector representing the second baseline for a two-\/peak map. 
+\end{DoxyReturn}
+
+
+Definition at line 714 of file mapdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_map_data_afd3efd4d5aad351c03f2a68d62deaa4a_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_a5894d1e395e80ba4c15e22438bc21bd3}{\index{Map\+Data@{Map\+Data}!set\+\_\+baseline@{set\+\_\+baseline}}
+\index{set\+\_\+baseline@{set\+\_\+baseline}!Map\+Data@{Map\+Data}}
+\subsubsection[{set\+\_\+baseline}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::set\+\_\+baseline (
+\begin{DoxyParamCaption}
+\item[{vec}]{abscissa, }
+\item[{mat}]{baseline}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a5894d1e395e80ba4c15e22438bc21bd3}
+
+
+\hyperlink{class_map_data_a5894d1e395e80ba4c15e22438bc21bd3}{Map\+Data\+::set\+\_\+baseline}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em abscissa} & \\
+\hline
+{\em baseline} & Sets a single baseline of this object. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 605 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a214dc643b724e8d0094e440e70f66b4b}{\index{Map\+Data@{Map\+Data}!set\+\_\+baselines@{set\+\_\+baselines}}
+\index{set\+\_\+baselines@{set\+\_\+baselines}!Map\+Data@{Map\+Data}}
+\subsubsection[{set\+\_\+baselines}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::set\+\_\+baselines (
+\begin{DoxyParamCaption}
+\item[{vec}]{first\+\_\+abscissa, }
+\item[{vec}]{second\+\_\+abscissa, }
+\item[{mat}]{first\+\_\+baseline, }
+\item[{mat}]{second\+\_\+baseline}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a214dc643b724e8d0094e440e70f66b4b}
+
+
+\hyperlink{class_map_data_a214dc643b724e8d0094e440e70f66b4b}{Map\+Data\+::set\+\_\+baselines}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em first\+\_\+abscissa} & \\
+\hline
+{\em second\+\_\+abscissa} & \\
+\hline
+{\em first\+\_\+baseline} & \\
+\hline
+{\em second\+\_\+baseline} & Sets the baselines of this object \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 619 of file mapdata.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_map_data_a214dc643b724e8d0094e440e70f66b4b_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_a2520ff301a4e5460f9e138f86298b66e}{\index{Map\+Data@{Map\+Data}!set\+\_\+fwhm@{set\+\_\+fwhm}}
+\index{set\+\_\+fwhm@{set\+\_\+fwhm}!Map\+Data@{Map\+Data}}
+\subsubsection[{set\+\_\+fwhm}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::set\+\_\+fwhm (
+\begin{DoxyParamCaption}
+\item[{mat}]{mid\+\_\+lines}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a2520ff301a4e5460f9e138f86298b66e}
+
+
+\hyperlink{class_map_data_a2520ff301a4e5460f9e138f86298b66e}{Map\+Data\+::set\+\_\+fwhm}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mid\+\_\+lines} & the F\+W\+H\+M representations \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 633 of file mapdata.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=322pt]{class_map_data_a2520ff301a4e5460f9e138f86298b66e_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_ab9eff280b000c33226850a6541c81f89}{\index{Map\+Data@{Map\+Data}!set\+\_\+name@{set\+\_\+name}}
+\index{set\+\_\+name@{set\+\_\+name}!Map\+Data@{Map\+Data}}
+\subsubsection[{set\+\_\+name}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::set\+\_\+name (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{name, }
+\item[{Q\+String}]{type}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_ab9eff280b000c33226850a6541c81f89}
+
+
+\hyperlink{class_map_data_ab9eff280b000c33226850a6541c81f89}{Map\+Data\+::set\+\_\+name}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & \\
+\hline
+{\em type} & Sets the title of the window, default name for saved files and display name in main window. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 161 of file mapdata.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=306pt]{class_map_data_ab9eff280b000c33226850a6541c81f89_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_a5ff97fbb20dfca5642ce39e26dde38af}{\index{Map\+Data@{Map\+Data}!set\+\_\+type@{set\+\_\+type}}
+\index{set\+\_\+type@{set\+\_\+type}!Map\+Data@{Map\+Data}}
+\subsubsection[{set\+\_\+type}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::set\+\_\+type (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{type}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a5ff97fbb20dfca5642ce39e26dde38af}
+
+
+\hyperlink{class_map_data_a5ff97fbb20dfca5642ce39e26dde38af}{Map\+Data\+::set\+\_\+type}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & Sets the type description of the map. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 151 of file mapdata.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=295pt]{class_map_data_a5ff97fbb20dfca5642ce39e26dde38af_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_a8d9e7f2a19b116370354f06150af1cbe}{\index{Map\+Data@{Map\+Data}!Set\+Crisp\+Clusters@{Set\+Crisp\+Clusters}}
+\index{Set\+Crisp\+Clusters@{Set\+Crisp\+Clusters}!Map\+Data@{Map\+Data}}
+\subsubsection[{Set\+Crisp\+Clusters}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::\+Set\+Crisp\+Clusters (
+\begin{DoxyParamCaption}
+\item[{bool}]{arg1}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a8d9e7f2a19b116370354f06150af1cbe}
+
+
+\hyperlink{class_map_data_a8d9e7f2a19b116370354f06150af1cbe}{Map\+Data\+::\+Set\+Crisp\+Clusters}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em arg1} & Set whether or not this is a cluster map (which is associated with different color scale legend than maps with wider data ranges). \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 897 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a2a31f4dd7ede95fb61852db6cb815ca9}{\index{Map\+Data@{Map\+Data}!Set\+Data\+Range@{Set\+Data\+Range}}
+\index{Set\+Data\+Range@{Set\+Data\+Range}!Map\+Data@{Map\+Data}}
+\subsubsection[{Set\+Data\+Range}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::\+Set\+Data\+Range (
+\begin{DoxyParamCaption}
+\item[{Q\+C\+P\+Range}]{new\+\_\+range}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a2a31f4dd7ede95fb61852db6cb815ca9}
+
+
+\hyperlink{class_map_data_a2a31f4dd7ede95fb61852db6cb815ca9}{Map\+Data\+::\+Set\+Data\+Range}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+range} & Sets the data range of the map. This is used to allow common data ranges on maps that share the global color scheme, so that for a given numerical value the color is the same on all maps with this scheme. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 799 of file mapdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_map_data_a2a31f4dd7ede95fb61852db6cb815ca9_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_ad9e7fbe1bbb0f16b52eb71e0c7da4fb6}{\index{Map\+Data@{Map\+Data}!set\+Gradient@{set\+Gradient}}
+\index{set\+Gradient@{set\+Gradient}!Map\+Data@{Map\+Data}}
+\subsubsection[{set\+Gradient}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::set\+Gradient (
+\begin{DoxyParamCaption}
+\item[{const Q\+C\+P\+Color\+Gradient \&}]{gradient}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_ad9e7fbe1bbb0f16b52eb71e0c7da4fb6}
+
+
+\hyperlink{class_map_data_ad9e7fbe1bbb0f16b52eb71e0c7da4fb6}{Map\+Data\+::set\+Gradient}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em gradient} & Sets the color gradient of the map. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 495 of file mapdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_map_data_ad9e7fbe1bbb0f16b52eb71e0c7da4fb6_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_a61607dc64ab986d73904ea00a8801284}{\index{Map\+Data@{Map\+Data}!set\+Interpolate@{set\+Interpolate}}
+\index{set\+Interpolate@{set\+Interpolate}!Map\+Data@{Map\+Data}}
+\subsubsection[{set\+Interpolate}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::set\+Interpolate (
+\begin{DoxyParamCaption}
+\item[{bool}]{enabled}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a61607dc64ab986d73904ea00a8801284}
+
+
+\hyperlink{class_map_data_a61607dc64ab986d73904ea00a8801284}{Map\+Data\+::set\+Interpolate}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em enabled} & Whether or not image should be interpolated. Toggles image interpolation on or off. See Q\+Custom\+Plot\+::\+Q\+C\+P\+Color\+Map\+::set\+Interpolate. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 293 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a69f3cc1424820012dd81b21a171b1811}{\index{Map\+Data@{Map\+Data}!Set\+Map\+Data@{Set\+Map\+Data}}
+\index{Set\+Map\+Data@{Set\+Map\+Data}!Map\+Data@{Map\+Data}}
+\subsubsection[{Set\+Map\+Data}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::\+Set\+Map\+Data (
+\begin{DoxyParamCaption}
+\item[{Q\+C\+P\+Color\+Map\+Data $\ast$}]{map\+\_\+data}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a69f3cc1424820012dd81b21a171b1811}
+
+
+\hyperlink{class_map_data_a69f3cc1424820012dd81b21a171b1811}{Map\+Data\+::\+Set\+Map\+Data}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em map\+\_\+data} & Sets the data of the map. See Q\+Custom\+Plot\+::\+Q\+C\+P\+Color\+Map\+::set\+Data(). \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 222 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a83f631070387a73af804b39cd8463c83}{\index{Map\+Data@{Map\+Data}!Set\+X\+Description@{Set\+X\+Description}}
+\index{Set\+X\+Description@{Set\+X\+Description}!Map\+Data@{Map\+Data}}
+\subsubsection[{Set\+X\+Description}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::\+Set\+X\+Description (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{description}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a83f631070387a73af804b39cd8463c83}
+
+
+\hyperlink{class_map_data_a83f631070387a73af804b39cd8463c83}{Map\+Data\+::\+Set\+X\+Description}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em description} & Sets description for the X axis in the spectrum viewer. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 263 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a7c08027239b5dada495ab7087b13a983}{\index{Map\+Data@{Map\+Data}!Set\+Y\+Description@{Set\+Y\+Description}}
+\index{Set\+Y\+Description@{Set\+Y\+Description}!Map\+Data@{Map\+Data}}
+\subsubsection[{Set\+Y\+Description}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::\+Set\+Y\+Description (
+\begin{DoxyParamCaption}
+\item[{Q\+String}]{description}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a7c08027239b5dada495ab7087b13a983}
+
+
+\hyperlink{class_map_data_a7c08027239b5dada495ab7087b13a983}{Map\+Data\+::\+Set\+Y\+Description}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em description} & Sets description for the Y axis in the spectrum viewer. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 272 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a728ba9e61677b4f25c98d2579ec1ac6a}{\index{Map\+Data@{Map\+Data}!Show\+Axes@{Show\+Axes}}
+\index{Show\+Axes@{Show\+Axes}!Map\+Data@{Map\+Data}}
+\subsubsection[{Show\+Axes}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::\+Show\+Axes (
+\begin{DoxyParamCaption}
+\item[{bool}]{enabled}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a728ba9e61677b4f25c98d2579ec1ac6a}
+
+
+\hyperlink{class_map_data_a728ba9e61677b4f25c98d2579ec1ac6a}{Map\+Data\+::\+Show\+Axes}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em enabled} & Whether or not axes should be visible on map. Toggles the axes on and off. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 329 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_af6be86434180cebe257194b25eb3b26b}{\index{Map\+Data@{Map\+Data}!Show\+Color\+Scale@{Show\+Color\+Scale}}
+\index{Show\+Color\+Scale@{Show\+Color\+Scale}!Map\+Data@{Map\+Data}}
+\subsubsection[{Show\+Color\+Scale}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::\+Show\+Color\+Scale (
+\begin{DoxyParamCaption}
+\item[{bool}]{enabled}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_af6be86434180cebe257194b25eb3b26b}
+
+
+\hyperlink{class_map_data_af6be86434180cebe257194b25eb3b26b}{Map\+Data\+::\+Show\+Color\+Scale}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em enabled} & Whether or not color scale should be visible. Toggles the color scale bar on or off. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 306 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_af89b6dafdaa3a857c8c99256efabaa01}{\index{Map\+Data@{Map\+Data}!Show\+Spectrum\+Viewer@{Show\+Spectrum\+Viewer}}
+\index{Show\+Spectrum\+Viewer@{Show\+Spectrum\+Viewer}!Map\+Data@{Map\+Data}}
+\subsubsection[{Show\+Spectrum\+Viewer}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::\+Show\+Spectrum\+Viewer (
+\begin{DoxyParamCaption}
+\item[{bool}]{enabled}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_af89b6dafdaa3a857c8c99256efabaa01}
+
+
+\hyperlink{class_map_data_af89b6dafdaa3a857c8c99256efabaa01}{Map\+Data\+::\+Show\+Spectrum\+Viewer}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em enabled} & Whether or not spectrum viewer should be visible \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 595 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_a24c45edae66512b7a7b7d62be38b91f1}{\index{Map\+Data@{Map\+Data}!source\+\_\+index@{source\+\_\+index}}
+\index{source\+\_\+index@{source\+\_\+index}!Map\+Data@{Map\+Data}}
+\subsubsection[{source\+\_\+index}]{\setlength{\rightskip}{0pt plus 5cm}int Map\+Data\+::source\+\_\+index (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a24c45edae66512b7a7b7d62be38b91f1}
+
+
+\hyperlink{class_map_data_a24c45edae66512b7a7b7d62be38b91f1}{Map\+Data\+::source\+\_\+index}. 
+
+\begin{DoxyReturn}{Returns}
+Sets the index of the map in the list of maps in the \hyperlink{class_vespucci_dataset}{Vespucci\+Dataset} object. 
+\end{DoxyReturn}
+
+
+Definition at line 142 of file mapdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{class_map_data_a24c45edae66512b7a7b7d62be38b91f1_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_ac0606ccd229f86320f5f08838d4d96db}{\index{Map\+Data@{Map\+Data}!Spectrum\+Viewer\+Visible@{Spectrum\+Viewer\+Visible}}
+\index{Spectrum\+Viewer\+Visible@{Spectrum\+Viewer\+Visible}!Map\+Data@{Map\+Data}}
+\subsubsection[{Spectrum\+Viewer\+Visible}]{\setlength{\rightskip}{0pt plus 5cm}bool Map\+Data\+::\+Spectrum\+Viewer\+Visible (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_ac0606ccd229f86320f5f08838d4d96db}
+
+
+\hyperlink{class_map_data_ac0606ccd229f86320f5f08838d4d96db}{Map\+Data\+::\+Spectrum\+Viewer\+Visible}. 
+
+\begin{DoxyReturn}{Returns}
+Whether or not spectrumviewer is visible 
+\end{DoxyReturn}
+
+
+Definition at line 204 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_aa98befcd52daa5ed565fa375c28461d4}{\index{Map\+Data@{Map\+Data}!type@{type}}
+\index{type@{type}!Map\+Data@{Map\+Data}}
+\subsubsection[{type}]{\setlength{\rightskip}{0pt plus 5cm}Q\+String Map\+Data\+::type (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_aa98befcd52daa5ed565fa375c28461d4}
+
+
+\hyperlink{class_map_data_aa98befcd52daa5ed565fa375c28461d4}{Map\+Data\+::type}. 
+
+\begin{DoxyReturn}{Returns}
+A string describing the type of map. 
+\end{DoxyReturn}
+
+
+Definition at line 133 of file mapdata.\+cpp.
+
+
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=300pt]{class_map_data_aa98befcd52daa5ed565fa375c28461d4_icgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{class_map_data_a431880bb19b6845d2e9315306c0af0a2}{\index{Map\+Data@{Map\+Data}!univariate\+\_\+area@{univariate\+\_\+area}}
+\index{univariate\+\_\+area@{univariate\+\_\+area}!Map\+Data@{Map\+Data}}
+\subsubsection[{univariate\+\_\+area}]{\setlength{\rightskip}{0pt plus 5cm}bool Map\+Data\+::univariate\+\_\+area (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_a431880bb19b6845d2e9315306c0af0a2}
+
+
+\hyperlink{class_map_data_a431880bb19b6845d2e9315306c0af0a2}{Map\+Data\+::univariate\+\_\+area}. 
+
+\begin{DoxyReturn}{Returns}
+Whether or not this is a univariate area map 
+\end{DoxyReturn}
+
+
+Definition at line 643 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_af54e11703d6d0d276e056fc5302b5e7c}{\index{Map\+Data@{Map\+Data}!univariate\+\_\+bandwidth@{univariate\+\_\+bandwidth}}
+\index{univariate\+\_\+bandwidth@{univariate\+\_\+bandwidth}!Map\+Data@{Map\+Data}}
+\subsubsection[{univariate\+\_\+bandwidth}]{\setlength{\rightskip}{0pt plus 5cm}bool Map\+Data\+::univariate\+\_\+bandwidth (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_af54e11703d6d0d276e056fc5302b5e7c}
+
+
+\hyperlink{class_map_data_af54e11703d6d0d276e056fc5302b5e7c}{Map\+Data\+::univariate\+\_\+bandwidth}. 
+
+\begin{DoxyReturn}{Returns}
+Whether or not this is a univariate bandwidth map 
+\end{DoxyReturn}
+
+
+Definition at line 661 of file mapdata.\+cpp.
+
+\hypertarget{class_map_data_af30cb1a76812d7904c1f571a8e1fe1e4}{\index{Map\+Data@{Map\+Data}!Use\+Global\+Color\+Scale@{Use\+Global\+Color\+Scale}}
+\index{Use\+Global\+Color\+Scale@{Use\+Global\+Color\+Scale}!Map\+Data@{Map\+Data}}
+\subsubsection[{Use\+Global\+Color\+Scale}]{\setlength{\rightskip}{0pt plus 5cm}void Map\+Data\+::\+Use\+Global\+Color\+Scale (
+\begin{DoxyParamCaption}
+\item[{bool}]{arg1}
+\end{DoxyParamCaption}
+)}}\label{class_map_data_af30cb1a76812d7904c1f571a8e1fe1e4}
+
+
+\hyperlink{class_map_data_af30cb1a76812d7904c1f571a8e1fe1e4}{Map\+Data\+::\+Use\+Global\+Color\+Scale}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em arg1} & Whether or not the global color scale should be used for this map. Set the global color scale on or off. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 753 of file mapdata.\+cpp.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_map_data_af30cb1a76812d7904c1f571a8e1fe1e4_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Vespucci/develop/\+Data/\+Imaging/mapdata.\+h\item 
+C\+:/\+Projects/\+Vespucci/develop/\+Data/\+Imaging/mapdata.\+cpp\end{DoxyCompactItemize}

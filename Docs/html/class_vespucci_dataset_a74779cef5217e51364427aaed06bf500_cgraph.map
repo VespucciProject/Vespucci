@@ -1,0 +1,9 @@
+<map id="VespucciDataset::VertexComponents" name="VespucciDataset::VertexComponents">
+<area shape="rect" id="node2" href="$class_vespucci_dataset.html#a7c685d41d2093602e563f7facaff7f9a" title="VespucciDataset::HySime. " alt="" coords="293,78,468,105"/>
+<area shape="rect" id="node5" href="$class_v_c_a_data.html#a179153e31b69399bd92ade553c9eef05" title="VCAData::Apply Performs vertex component analysis on this object. " alt="" coords="322,135,439,162"/>
+<area shape="rect" id="node3" href="$namespace_vespucci_1_1_math_1_1_dimension_reduction.html#ac96e3dc096295499724e3ecbb63a3f57" title="Vespucci::Math::DimensionReduction::EstimateAdditiveNoise. " alt="" coords="516,5,735,47"/>
+<area shape="rect" id="node4" href="$namespace_vespucci_1_1_math_1_1_dimension_reduction.html#a355295f13e2a14e990b22eb96a33db5c" title="Vespucci::Math::DimensionReduction::HySime. " alt="" coords="534,71,717,112"/>
+<area shape="rect" id="node6" href="$namespace_vespucci_1_1_math_1_1_dimension_reduction.html#a2d46d5cccce427efee376aeeea2da058" title="Vespucci::Math::DimensionReduction::VCA Vertex Component Analysis. " alt="" coords="534,136,717,177"/>
+<area shape="rect" id="node7" href="$namespace_vespucci_1_1_math_1_1_dimension_reduction.html#a37f3a4278bbdfba337f4e776f7d0916b" title="Vespucci::Math Estimates Signal&#45;to&#45;Noise ratio. . " alt="" coords="783,107,965,148"/>
+<area shape="rect" id="node8" href="$namespace_vespucci_1_1_math.html#a3d8f536b4465a4bacce89a51e3854daf" title="Vespucci::Math::max. " alt="" coords="801,173,947,199"/>
+</map>
