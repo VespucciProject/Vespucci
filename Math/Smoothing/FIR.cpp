@@ -19,7 +19,7 @@
 *******************************************************************************/
 #include <Math/Smoothing/smoothing.h>
 
-
+#include <Math/Fitting/linleastsq.h>
 
 
 ///
@@ -168,4 +168,41 @@ arma::vec Vespucci::Math::Smoothing::CreateMovingAverageFilter(arma::uword windo
     arma::vec filter(window_size);
     filter.fill(value);
     return filter;
+}
+
+///
+/// \brief InterpolateToNewAbscissa
+/// \param spectra
+/// \param old_abscissa
+/// \param new_abscissa
+/// \param window_size
+/// \param order
+/// \return
+///
+arma::mat Vespucci::Math::Smoothing::InterpolateToNewAbscissa(const arma::mat &spectra,
+                                                              const arma::vec &old_abscissa,
+                                                              const arma::vec &new_abscissa,
+                                                              const int window_size,
+                                                              const int order)
+{
+    mat new_spectra(new_abscissa.n_rows, spectra.n_cols);
+
+    arma::umat closest_indices = Vespucci::Math::GetClosestValues(new_abscissa,
+                                                                  old_abscissa,
+                                                                  window_size);
+
+
+    for (arma::uword j = 0; j < spectra.n_cols; ++j){
+        arma::vec spectrum = spectra.col(j);
+
+        for (arma::uword i = 0; i < new_abscissa.n_rows; ++i){
+            arma::vec x = old_abscissa(closest_indices.col(i));
+            arma::vec y = spectrum(cloest_indices.col(i));
+            arma::mat X = Vespucci::Math::LinLeastSq::Vandermonde(x, order);
+            arma::vec coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(X, y);
+            new_spectra(i, j) = Vespucci::Math::CalcPoly(new_abscissa(i), coefs);
+        }//over abscissa values
+    }//over spectra
+
+    return new_spectra;
 }

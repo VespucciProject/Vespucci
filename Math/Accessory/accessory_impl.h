@@ -138,4 +138,6 @@ template <typename T> T Vespucci::Math::conv_fft(const T &A, const T &B, std::st
     else
         throw(std::invalid_argument("argument 'type' invalid"));
 }
+
+
 #endif // ACCESSORY_IMPL_H

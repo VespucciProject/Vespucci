@@ -482,3 +482,40 @@ double Vespucci::Math::RecalculateStdDev(double new_value,
                          / std::pow((old_count + 1.0), 2.0));
     return new_stddev;
 }
+
+///
+/// \brief Vespucci::Math::GetClosestValues
+/// \param query
+/// \param target
+/// \param k
+/// \return The indices of the k values in target closest to each value in query
+/// k should be odd in case query and target contain equal values
+arma::umat Vespucci::Math::GetClosestValues(arma::vec query,
+                                            arma::vec target,
+                                            const arma::uword k)
+{
+    //ensure sortedness
+    if(!query.is_sorted()){query = arma::sort(query);}
+    if(!target.is_sorted()){target = arma::sort(target);}
+    arma::umat closest_indices(k, query.n_rows);
+
+    for (arma::uword i = 0; i < query.n_rows; ++i){
+        arma::vec difference = arma::abs(target - query(i));
+        cloest_indices.col(i) = arma::stable_sort_index(difference).rows(0, k-1);
+    }
+    return closest_indices;
+}
+
+///
+/// \brief Vespucci::Math::CalcPoly Calculate the value of a polynomial at particular point
+/// \param x The value at which to evaluate a polynomial.
+/// \param coefs The coefficients of the polynomial ordered from constant to highest order
+/// \return The value of the polynomial at x
+///
+double Vespucci::Math::CalcPoly(const double x, const arma::vec &coefs)
+{
+    if (!coefs.n_rows){throw std::invalid_argument("coefs empty!");}
+    double y = coefs(0);
+    for (arma::uword i = 1; i < coefs.n_rows; ++i){y += coefs(i)*std::pow(x,i);}
+    return y;
+}

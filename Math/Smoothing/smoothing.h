@@ -40,6 +40,11 @@ namespace Vespucci
             arma::vec MedianFilter(const arma::vec &X, arma::uword window_size);
             arma::mat MedianFilterMat(const arma::mat &X, arma::uword window_size);
             arma::vec WhittakerSmooth(const arma::vec &x, double lambda, arma::uword penalty_order);
+            arma::mat InterpolateToNewAbscissa(const arma::mat &spectra,
+                                               const arma::vec &old_abscissa,
+                                               const arma::vec &new_abscissa,
+                                               const int window_size=2,
+                                               const int order=1);
         }
     }
 }

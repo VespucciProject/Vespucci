@@ -1,5 +1,7 @@
 #include "Global/vespucci.h"
 #include <QtSvg>
+#include <minizip/zip.h>
+#include <cstdlib>
 ///
 /// \brief Vespucci::SavePlot
 /// \param plot
@@ -141,4 +143,82 @@ void Vespucci::SetQCPFonts(QCustomPlot *plot, const QFont &font)
     plot->yAxis2->setTickLabelFont(font);
 
     plot->legend->setFont(font);
+}
+
+///
+/// \brief Vespucci::SaveZipped
+/// \param objects
+/// \param filename
+/// \param type
+/// \return
+///
+bool Vespucci::SaveZipped(std::map<std::string, arma::mat *> objects, std::string filename, arma::file_type type)
+{
+    std::vector<std::wstring> paths;
+    for (auto& object : objects){
+        object.second->save(object->first, type);
+        paths.push_back(object.first);
+    }
+    //copy to zip file
+    Vespucci::CreateZipFile(filename, paths);
+
+    //delete the temporary files
+    for (const std::wstring &str : paths){std::remove(str.c_str());}
+
+
+}
+
+
+
+///
+/// \brief Vespucci::CreateZipFile Move files to a zip file.
+/// \param paths Vector of paths to add to file
+/// \return
+/// Credit to StackOverflow user niemiro
+/// http://stackoverflow.com/questions/11370908/how-do-i-use-minizip-on-zlib
+int Vespucci::CreateZipFile(std::string zip_path, std::vector<std::wstring> paths)
+{
+    zipFile zf = zipOpen(zip_path.c_str(), APPEND_STATUS_CREATE);
+        if (zf == NULL)
+            return 1;
+
+        bool _return = true;
+        for (size_t i = 0; i < paths.size(); i++)
+        {
+            std::fstream file(paths[i].c_str(), std::ios::binary | std::ios::in);
+            if (file.is_open())
+            {
+                file.seekg(0, std::ios::end);
+                long size = file.tellg();
+                file.seekg(0, std::ios::beg);
+
+                std::vector<char> buffer(size);
+                if (size == 0 || file.read(&buffer[0], size))
+                {
+                    zip_fileinfo zfi = { 0 };
+                    std::wstring fileName = paths[i].substr(paths[i].rfind('\\')+1);
+
+                    if (S_OK == zipOpenNewFileInZip(zf, std::string(fileName.begin(), fileName.end()).c_str(), &zfi, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION))
+                    {
+                        if (zipWriteInFileInZip(zf, size == 0 ? "" : &buffer[0], size))
+                            _return = false;
+
+                        if (zipCloseFileInZip(zf))
+                            _return = false;
+
+                        file.close();
+                        continue;
+                    }
+                }
+                file.close();
+            }
+            _return = false;
+        }
+
+        if (zipClose(zf, NULL))
+            return 3;
+
+        if (!_return)
+            return 4;
+        return S_OK;
 }

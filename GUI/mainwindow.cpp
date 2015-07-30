@@ -1104,3 +1104,8 @@ void MainWindow::on_actionImport_From_Multiple_Point_Spectra_triggered()
     MultiImportDialog *import_dialog = new MultiImportDialog(this, workspace);
     import_dialog->show();
 }
+
+void MainWindow::on_actionBulk_Dataset_File_Conversion_triggered()
+{
+
+}

@@ -56,6 +56,9 @@ namespace Vespucci
         double RecalculateAverage(double new_value, double old_average, double old_count);
         double RecalculateStdDev(double new_value, double old_mean, double old_stddev, double old_count);
 
+        arma::umat GetClosestValues(arma::vec query, arma::vec target, const arma::uword k=5);
+
+        double CalcPoly(const double x, const arma::vec &coefs);
     }
 }
 

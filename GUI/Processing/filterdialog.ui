@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>209</height>
+    <width>401</width>
+    <height>224</height>
    </rect>
   </property>
   <property name="font">
@@ -43,7 +43,7 @@
      </item>
      <item>
       <property name="text">
-       <string>Derivatize/Savitzky-Golay Smoothing</string>
+       <string>Savitzky-Golay Smoothing/Differentiation</string>
       </property>
      </item>
      <item>
