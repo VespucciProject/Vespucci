@@ -10,8 +10,10 @@
 namespace Vespucci{
     bool SavePlot(QCustomPlot *plot, QString filename);
     void SetQCPFonts(QCustomPlot *plot, const QFont &font);
-    bool SaveHDF5Obj(std::map<std::string, arma::mat*> objects, std::string filename);
-    bool SaveZipped(std::map<std::string, arma::mat*> objects, std::string filename, arma::file_type type);
+    bool SaveHDF5Obj(std::map<std::string, arma::mat*> objects, const std::string filename);
+    bool SaveZipped(std::map<std::string, arma::mat*> objects, const std::string filename, const arma::file_type type);
+    bool SaveZipped(const arma::mat &spectra, const arma::vec &abscissa, const arma::vec &x, const arma::vec &y, const std::string filename, const arma::file_type type);
+    bool SaveVespucciBinary(const arma::mat &spectra, const arma::vec &x, const arma::vec &y, const arma::vec &abscissa);
     int CreateZipFile(std::string zip_path, std::vector<std::wstring> paths);
 }
 

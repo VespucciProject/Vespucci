@@ -152,18 +152,22 @@ void Vespucci::SetQCPFonts(QCustomPlot *plot, const QFont &font)
 /// \param type
 /// \return
 ///
-bool Vespucci::SaveZipped(std::map<std::string, arma::mat *> objects, std::string filename, arma::file_type type)
+bool Vespucci::SaveZipped(std::map<std::string, const arma::mat *> objects, const std::string filename, const arma::file_type type)
 {
     std::vector<std::wstring> paths;
     for (auto& object : objects){
-        object.second->save(object->first, type);
-        paths.push_back(object.first);
+        try{
+            object.second->save(object->first, type);
+            paths.push_back(object.first);
+        }catch(std::exception e){
+            throw e;
+        }
     }
     //copy to zip file
     Vespucci::CreateZipFile(filename, paths);
 
     //delete the temporary files
-    for (const std::wstring &str : paths){std::remove(str.c_str());}
+    for (const std::wstring &str : paths){remove(str.c_str());}
 
 
 }
@@ -221,4 +225,43 @@ int Vespucci::CreateZipFile(std::string zip_path, std::vector<std::wstring> path
         if (!_return)
             return 4;
         return S_OK;
+}
+
+///
+/// \brief Vespucci::SaveVespucciBinary
+/// \param spectra
+/// \param x
+/// \param y
+/// \param abscissa
+/// \return
+///
+bool Vespucci::SaveVespucciBinary(const arma::mat &spectra, const arma::vec &x, const arma::vec &y, const arma::vec &abscissa)
+{
+    try{
+        arma::field<mat> dataset(4);
+        dataset(0) = spectra_;
+        dataset(1) = wavelength_;
+        dataset(2) = x_;
+        dataset(3) = y_;
+        success = dataset.save(filename.toStdString(), arma_binary);
+    }
+    catch(exception e){
+        cerr << "See armadillo exception" << endl;
+
+        char str[50];
+        strcat(str, "VespucciDataset::Save: ");
+        strcat(str, e.what());
+        throw std::runtime_error(str);
+    }
+}
+
+
+bool Vespucci::SaveZipped(const arma::mat &spectra, const arma::vec &abscissa, const arma::vec &x, const arma::vec &y, const std::string filename, const arma::file_type type)
+{
+    std::map<std::string, const arma::mat*> map;
+    map["x"] = &x;
+    map["y"] = &y;
+    map["spectra"] = &spectra;
+    map["abscissa"] = &abscissa;
+    SaveZipped(map, filename, file_type);
 }

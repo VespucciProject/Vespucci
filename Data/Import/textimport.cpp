@@ -26,6 +26,7 @@ bool TextImport::ImportWideText(QString filename,
                                 QProgressDialog *progress,
                                 const QString sep)
 {
+    if (sep == ""){return false;}
     bool comma_decimals;
     bool valid = CheckFileValidity(filename, comma_decimals);
     if(!valid){
