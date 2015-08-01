@@ -150,7 +150,8 @@ SOURCES += main.cpp\
     Global/vespucci.cpp \
     GUI/Processing/multiimportdialog.cpp \
     GUI/Processing/bulkconversiondialog.cpp \
-    GUI/Display/reportmessagedialog.cpp
+    GUI/Display/reportmessagedialog.cpp \
+    GUI/Processing/abscissatransformdialog.cpp
 
 
 HEADERS  += \
@@ -220,7 +221,8 @@ HEADERS  += \
     Global/vespucci.h \
     GUI/Processing/multiimportdialog.h \
     GUI/Processing/bulkconversiondialog.h \
-    GUI/Display/reportmessagedialog.h
+    GUI/Display/reportmessagedialog.h \
+    GUI/Processing/abscissatransformdialog.h
 
 
 FORMS    += \
@@ -257,7 +259,8 @@ FORMS    += \
     GUI/Analysis/haspeaksdialog.ui \
     GUI/Processing/multiimportdialog.ui \
     GUI/Processing/bulkconversiondialog.ui \
-    GUI/Display/reportmessagedialog.ui
+    GUI/Display/reportmessagedialog.ui \
+    GUI/Processing/abscissatransformdialog.ui
 
 RESOURCES += \
     resources.qrc

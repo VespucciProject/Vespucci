@@ -45,6 +45,7 @@
 #include "GUI/Analysis/peakfindingdialog.h"
 #include "GUI/Analysis/haspeaksdialog.h"
 #include "GUI/Processing/multiimportdialog.h"
+#include "GUI/Processing/bulkconversiondialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -1105,7 +1106,9 @@ void MainWindow::on_actionImport_From_Multiple_Point_Spectra_triggered()
     import_dialog->show();
 }
 
-void MainWindow::on_actionBulk_Dataset_File_Conversion_triggered()
-{
 
+void MainWindow::on_actionBatch_File_Conversion_triggered()
+{
+    BulkConversionDialog *conversion_dialog = new BulkConversionDialog(this, workspace);
+    conversion_dialog->show();
 }

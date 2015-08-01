@@ -66,8 +66,10 @@ void BulkConversionDialog::on_buttonBox_accepted()
     switch (intype_box_->currentIndex()){
       case 0:
         intype = wide_text;
+        break;
       case 1:
         intype = long_text;
+        break;
       case 2: default:
         intype = binary;
     }
@@ -76,9 +78,11 @@ void BulkConversionDialog::on_buttonBox_accepted()
     case 0:
         outtype = v_binary;
         type = arma_binary;
+        break;
     case 1:
         outype = z_csv;
         type = csv_ascii;
+        break;
     case 2: default:
         outtype = z_txt;
         type = raw_ascii;
@@ -206,8 +210,10 @@ void BulkConversionDialog::WriteFile(const BulkConversionDialog::outfile_type &t
     switch(type){
     case z_csv:
         Vespucci::SaveZipped(spectra, abscissa, x, y, filename, arma::csv_ascii);
+        break;
     case z_txt:
         Vespucci::SaveZipped(spectra, abscissa, x, y, filename, arma::raw_ascii);
+        break;
     case v_binary: default:
         Vespucci::SaveVespucciBinary(spectra, x, y, abscissa);
     }

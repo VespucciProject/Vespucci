@@ -149,6 +149,8 @@ private slots:
 
     void on_actionBulk_Dataset_File_Conversion_triggered();
 
+    void on_actionBatch_File_Conversion_triggered();
+
 private:
     Ui::MainWindow *ui;
 

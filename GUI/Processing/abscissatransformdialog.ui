@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AbscissaTransformDialog</class>
+ <widget class="QDialog" name="AbscissaTransformDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>179</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Transform Abscissa</string>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="1">
+    <widget class="QComboBox" name="outUnitsComboBox">
+     <item>
+      <property name="text">
+       <string>Wavelength</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Energy</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Wavenumber</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Frequency</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QComboBox" name="comboBox_2">
+     <item>
+      <property name="text">
+       <string>Energy</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Wavenumber</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Frequency</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Wavelength</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Input Units</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Output Units</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Input Factor</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLineEdit" name="inFactorLineEdit">
+     <property name="toolTip">
+      <string extracomment="Conversion factor to convert input units to base units (Hz, J, or m). Must be numerical except for constant eV to convert J to eV. Use asterix to multiply. Use &quot;E&quot; to specify scientific notation."/>
+     </property>
+     <property name="text">
+      <string>1E-9</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLineEdit" name="outFactorLineEdit">
+     <property name="toolTip">
+      <string extracomment="Conversion factor from base units to output factor. Must be numerical except for constant eV to convert J to eV. Use asterix to multiply. Use &quot;E&quot; to specify scientific notation."/>
+     </property>
+     <property name="text">
+      <string>eV</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Output Factor</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLineEdit" name="descriptionLineEdit"/>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Abscissa Label</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>AbscissaTransformDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>302</x>
+     <y>163</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>178</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>AbscissaTransformDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>370</x>
+     <y>169</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>178</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

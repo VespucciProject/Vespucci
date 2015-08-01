@@ -77,7 +77,7 @@
     <addaction name="actionImport_Dataset_from_File"/>
     <addaction name="actionImport_From_Multiple_Point_Spectra"/>
     <addaction name="separator"/>
-    <addaction name="actionBulk_Dataset_File_Conversion"/>
+    <addaction name="actionBatch_File_Conversion"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -109,7 +109,7 @@
      <addaction name="actionRemove_Vectors_of_Zeros"/>
      <addaction name="actionTransform_Abscissa"/>
      <addaction name="actionInterpolate_to_New_Abscissa"/>
-     <addaction name="actionTransform"/>
+     <addaction name="actionFourierTransform"/>
     </widget>
     <widget class="QMenu" name="menuExport_Dataset_Elements">
      <property name="title">
@@ -407,14 +407,19 @@
     <string>Interpolate to New Abscissa</string>
    </property>
   </action>
-  <action name="actionTransform">
+  <action name="actionFourierTransform">
    <property name="text">
-    <string>Transform</string>
+    <string>Fourier Transform</string>
    </property>
   </action>
   <action name="actionBulk_Dataset_File_Conversion">
    <property name="text">
-    <string>Bulk Dataset File Conversion</string>
+    <string>Batch File Conversion</string>
+   </property>
+  </action>
+  <action name="actionBatch_File_Conversion">
+   <property name="text">
+    <string>Batch File Conversion</string>
    </property>
   </action>
  </widget>

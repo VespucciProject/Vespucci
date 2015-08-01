@@ -37,25 +37,34 @@ public:
           double second_left_bound,
           double second_right_bound,
           UnivariateMethod::Method method);
+    void Calibrate(const vec &values, const vec &concentrations);
 
-    vec results();
-    vec *results_ptr();
-    bool band_ratio();
-    double left_bound();
-    double right_bound();
-    double first_left_bound();
-    double first_right_bound();
-    double second_left_bound();
-    double second_right_bound();
-    QString MethodDescription();
+    vec results() const;
+    const vec *results_ptr() const;
+    bool band_ratio() const;
+    double left_bound() const;
+    double right_bound() const;
+    double first_left_bound() const;
+    double first_right_bound() const;
+    double second_left_bound() const;
+    double second_right_bound() const;
+    QString MethodDescription() const;
 
-    mat Midlines();
-    uvec Boundaries();
-    uvec MidlineBoundaries();
-    mat first_baselines();
-    mat second_baselines();
+    mat calibration_curve() const;
+    const mat *calibration_curve_ptr() const;
+    mat calibration_stats() const;
+    const mat *calibration_stats_ptr() const;
+    mat calibration_curve_residuals() const;
+    const mat *calibration_curve_residuals_ptr() const;
 
-    QString name();
+
+    mat Midlines() const;
+    uvec Boundaries() const;
+    uvec MidlineBoundaries() const;
+    mat first_baselines() const;
+    mat second_baselines() const;
+
+    QString name() const;
     void SetName(QString name);
 
 private:
@@ -120,6 +129,9 @@ private:
     QString name_;
 
     uvec boundaries_;
+    mat calibration_curve_;
+    vec calibration_stats_;
+    vec calibration_curve_residuals_;
 };
 
 #endif // UNIVARIATEDATA_H

@@ -54,7 +54,7 @@ bool VespucciDataset::Save(QString filename)
     try{
         arma::field<mat> dataset(4);
         dataset(0) = spectra_;
-        dataset(1) = wavelength_;
+        dataset(1) = abscissa_;
         dataset(2) = x_;
         dataset(3) = y_;
         success = dataset.save(filename.toStdString(), arma_binary);
@@ -136,7 +136,7 @@ void VespucciDataset::SetOldCopies()
     spectra_old_ = spectra_;
     x_old_ = x_;
     y_old_ = y_;
-    wavelength_old_ = wavelength_;
+    abscissa_old_ = abscissa_;
 }
 
 ///
@@ -185,7 +185,7 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
     try{
         BinaryImport::ImportVespucciBinary(vespucci_binary_filename,
                                            spectra_,
-                                           wavelength_,
+                                           abscissa_,
                                            x_, y_);
         indices_.set_size(x_.n_elem);
         for (uword i = 0; i < indices_.n_elem; ++i)
@@ -261,7 +261,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
         try{
             constructor_canceled_ = TextImport::ImportWideText(text_filename,
                                                                    spectra_,
-                                                                   wavelength_,
+                                                                   abscissa_,
                                                                    x_, y_,
                                                                    swap_spatial,
                                                                    &progress,
@@ -282,7 +282,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
         try{
             constructor_canceled_ = TextImport::ImportWideText(text_filename,
                                                                spectra_,
-                                                               wavelength_,
+                                                               abscissa_,
                                                                x_, y_,
                                                                swap_spatial,
                                                                &progress,
@@ -303,7 +303,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
         try{
             constructor_canceled_ = TextImport::ImportLongText(text_filename,
                                                                spectra_,
-                                                               wavelength_,
+                                                               abscissa_,
                                                                x_, y_,
                                                                swap_spatial,
                                                                &progress);
@@ -363,7 +363,7 @@ VespucciDataset::VespucciDataset(QMap<QPair<int, int>, QString> text_filenames,
         constructor_canceled_ = TextImport::ImportMultiplePoints(text_filenames,
                                                                  rows, cols,
                                                                  spectra_,
-                                                                 wavelength_,
+                                                                 abscissa_,
                                                                  x_,
                                                                  y_);
 
@@ -421,7 +421,7 @@ VespucciDataset::VespucciDataset(QString name,
 
     try{
         spectra_ = original->spectra(indices);
-        wavelength_ = original->wavelength();
+        abscissa_ = original->wavelength();
         x_ = original->x(indices);
         y_ = original->y(indices);
         parent_indices = original->indices();
@@ -483,22 +483,22 @@ void VespucciDataset::Undo()
         mat spectra_buffer = spectra_;
         colvec x_buffer = x_;
         colvec y_buffer = y_;
-        vec wavelength_buffer = wavelength_;
+        vec abscissa_buffer = abscissa_;
 
         spectra_.swap(spectra_old_);
         x_.swap(x_old_);
         y_.swap(y_old_);
-        wavelength_.swap(wavelength_old_);
+        abscissa_.swap(abscissa_old_);
 
         //spectra_ = spectra_old_;
         //x_ = x_old_;
         //y_ = y_old_;
-        //wavelength_ = wavelength_old_;
+        //abscissa_ = abscissa_old_;
 
         //spectra_old_ = spectra_buffer;
         //x_old_ = x_buffer;
         //y_old_ = y_buffer;
-        //wavelength_old_ = wavelength_buffer;
+        //abscissa_old_ = abscissa_buffer;
 
 
     }
@@ -547,10 +547,10 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
         }
     }
     if (!std::isnan(wl_min) && !std::isnan(wl_max)){
-        uvec valid_indices = find(wavelength_ >= wl_min && wavelength_ <= wl_max);
+        uvec valid_indices = find(abscissa_ >= wl_min && abscissa_ <= wl_max);
         try{
             spectra_ = spectra_.rows(valid_indices);
-            wavelength_ = wavelength_.rows(valid_indices);
+            abscissa_ = abscissa_.rows(valid_indices);
 
         }catch(exception e){
             char str[50];
@@ -674,7 +674,7 @@ void VespucciDataset::PeakIntensityNormalize(double left_bound, double right_bou
 {
     SetOldCopies();
     vec positions;
-    vec peak_maxes = Vespucci::Math::Quantification::FindPeakMaxMat(spectra_, wavelength_, left_bound, right_bound, positions);
+    vec peak_maxes = Vespucci::Math::Quantification::FindPeakMaxMat(spectra_, abscissa_, left_bound, right_bound, positions);
     for (uword j = 0; j < spectra_.n_cols; ++j){
         spectra_.col(j) /= peak_maxes(j);
     }
@@ -777,7 +777,7 @@ void VespucciDataset::ShedZeroWavelengths()
     }
     try{
         spectra_ = spectra_.rows(indices);
-        wavelength_ = wavelength_.rows(indices);
+        abscissa_ = abscissa_.rows(indices);
     }
     catch(exception e){
         main_window_->DisplayExceptionWarning(e);
@@ -1227,6 +1227,110 @@ int VespucciDataset::HySime()
     return k;
 }
 
+///
+/// \brief VespucciDataset::TransformAbscissa
+/// \param input_units
+/// \param input_factor
+/// \param output_units
+/// \param output_factor
+///
+void VespucciDataset::TransformAbscissa(QString input_units, double input_factor, QString output_units, double output_factor, QString description)
+{
+    if (input_units == "Wavelength"){
+        if (output_units == "Energy"){
+            SetOldCopies();
+            abscissa_ = Vespucci::Math::WavelengthToEnergy(abscissa_, output_factor, input_factor);
+            x_axis_description_ = description;
+        }
+        else if (output_units == "Wavenumber"){
+            SetOldCopies();
+            abscissa_ = Vespucci::Math::WavelengthToWavenumber(abscissa_, output_factor, input_factor);
+            x_axis_description_ = description;
+        }
+        else if (output_units == "Frequency"){
+            SetOldCopies();
+            abscissa_ = Vespucci::Math::WavelengthToFrequency(abscissa_, output_factor, input_factor);
+            x_axis_description_ = description;
+        }
+        else if (output_units == "Wavelength"){
+            SetOldCopies();
+            abscissa_ = (input_factor * output_factor) * abscissa_;
+            x_axis_description_ = description;
+        }
+        else{return;}
+    }
+    else if (input_units == "Energy"){
+        if (output_units == "Energy"){
+            SetOldCopies();
+            abscissa_ = (input_factor * output_factor) * abscissa_;
+            x_axis_description_ = description;
+        }
+        else if (output_units == "Wavenumber"){
+            SetOldCopies();
+            abscissa_ = Vespucci::Math::EnergyToWavenumber(abscissa_, output_factor, input_factor);
+            x_axis_description_ = description;
+        }
+        else if (output_units == "Frequency"){
+            SetOldCopies();
+            abscissa_ = Vespucci::Math::EnergyToFrequency(abscissa_, output_factor, input_factor);
+            x_axis_description_ = description;
+        }
+        else if (output_units == "Wavelength"){
+            SetOldCopies();
+            abscissa_ = Vespucci::Math::EnergyToWavelength(abscissa_, output_factor, input_factor);
+            x_axis_description_ = description;
+        }
+        else{return;}
+    }
+    else if (input_units == "Wavenumber"){
+        if (output_units == "Energy"){
+            SetOldCopies();
+            abscissa_ = Vespucci::Math::WavenumberToEnergy(abscissa_, output_factor, input_factor);
+            x_axis_description_ = description;
+        }
+        else if (output_units == "Wavenumber"){
+            SetOldCopies();
+            abscissa_ = (input_factor * output_factor) * abscissa_;
+            x_axis_description_ = description;
+        }
+        else if (output_units == "Frequency"){
+            SetOldCopies();
+            abscissa_ = Vespucci::Math::WavenumberToFrequency(abscissa_, output_factor, input_factor);
+            x_axis_description_ = description;
+        }
+        else if (output_units == "Wavelength"){
+            SetOldCopies();
+            abscissa_ = Vespucci::Math::WavenumberToWavelength(abscissa_, output_factor, input_factor);
+            x_axis_description_ = description;
+        }
+        else{return;}
+    }
+    else if (input_units == "Frequency"){
+        if (output_units == "Energy"){
+            SetOldCopies();
+            abscissa_ = Vespucci::Math::FrequencyToEnergy(abscissa_, output_factor, input_factor);
+            x_axis_description_ = description;
+        }
+        else if (output_units == "Wavenumber"){
+            SetOldCopies();
+            abscissa_ = Vespucci::Math::FrequencyToWavenumber(abscissa_, output_factor, input_factor);
+            x_axis_description_ = description;
+        }
+        else if (output_units == "Frequency"){
+            SetOldCopies();
+            abscissa_ = (input_factor * output_factor) * abscissa_;
+            x_axis_description_ = description;
+        }
+        else if (output_units == "Wavelength"){
+            SetOldCopies();
+            abscissa_ = Vespucci::Math::FrequencyToWavelength(abscissa_, output_factor, input_factor);
+            x_axis_description_ = description;
+        }
+        else{return;}//do nothing for invalid input
+    }
+    else{return;}
+}
+
 // MAPPING FUNCTIONS //
 
 ///
@@ -1284,7 +1388,7 @@ void VespucciDataset::Univariate(double min,
     uvec boundaries;
     if(method == UnivariateMethod::Area || method == UnivariateMethod::FWHM){
         boundaries = univariate_data->Boundaries();
-        new_map->set_baseline(wavelength_.subvec(boundaries(0), boundaries(1)),
+        new_map->set_baseline(abscissa_.subvec(boundaries(0), boundaries(1)),
                               univariate_data->first_baselines());
     }
 
@@ -1420,8 +1524,8 @@ void VespucciDataset::BandRatio(double first_min, double first_max,
     uvec boundaries = univariate_data->Boundaries();
 
     if (method == UnivariateMethod::AreaRatio){
-        new_map->set_baselines(wavelength_.subvec(boundaries(0), boundaries(1)),
-                               wavelength_.subvec(boundaries(2), boundaries(3)),
+        new_map->set_baselines(abscissa_.subvec(boundaries(0), boundaries(1)),
+                               abscissa_.subvec(boundaries(2), boundaries(3)),
                                univariate_data->first_baselines(),
                                univariate_data->second_baselines());
     }
@@ -1882,7 +1986,7 @@ void VespucciDataset::PartialLeastSquares(uword components,
         if (recalculate || !partial_least_squares_calculated_){
             map_type += QString::number(components);
             partial_least_squares_data_ = new PLSData(QSharedPointer<VespucciDataset>(this), directory_);
-            bool success = partial_least_squares_data_->Apply(spectra_, wavelength_, components);
+            bool success = partial_least_squares_data_->Apply(spectra_, abscissa_, components);
             if (success){
                 partial_least_squares_calculated_ = true;
             }
@@ -1950,7 +2054,7 @@ void VespucciDataset::PartialLeastSquares(uword components)
 
     try{
         partial_least_squares_data_ = new PLSData(QSharedPointer<VespucciDataset>(this), directory_);
-        bool success = partial_least_squares_data_->Apply(spectra_, wavelength_, components);
+        bool success = partial_least_squares_data_->Apply(spectra_, abscissa_, components);
         if (success){
             partial_least_squares_calculated_ = true;
         }
@@ -2213,19 +2317,19 @@ QVector<double> VespucciDataset::PointSpectrum(const uword index)
 
 QVector<double> VespucciDataset::WavelengthQVector()
 {
-    std::vector<double> wavelength_stdvector =
-            conv_to< std::vector<double> >::from(wavelength_);
+    std::vector<double> abscissa_stdvector =
+            conv_to< std::vector<double> >::from(abscissa_);
 
-    QVector<double> wavelength_qvector =
-            QVector<double>::fromStdVector(wavelength_stdvector);
+    QVector<double> abscissa_qvector =
+            QVector<double>::fromStdVector(abscissa_stdvector);
 
-    return wavelength_qvector;
+    return abscissa_qvector;
 }
 
 uword VespucciDataset::FindIndex(double abscissa_value)
 {
-    double delta = std::fabs(wavelength_(1) - wavelength_(0));
-    uvec indices = find((abscissa_value - delta) < wavelength_ <= (abscissa_value + delta));
+    double delta = std::fabs(abscissa_(1) - abscissa_(0));
+    uvec indices = find((abscissa_value - delta) < abscissa_ <= (abscissa_value + delta));
     return indices(0);
 }
 
@@ -2336,16 +2440,16 @@ int VespucciDataset::ValueSize()
 // MEMBER ACCESS FUNCTIONS //
 ///
 /// \brief VespucciDataset::wavelength
-/// \return member wavelength_ (spectrum key values)
+/// \return member abscissa_ (spectrum key values)
 ///
 vec VespucciDataset::wavelength()
 {
-    return wavelength_;
+    return abscissa_;
 }
 
 vec VespucciDataset::wavelength(uvec indices)
 {
-    return wavelength_.rows(indices);
+    return abscissa_.rows(indices);
 }
 
 ///
@@ -2478,7 +2582,7 @@ void VespucciDataset::SetName(QString new_name)
 void VespucciDataset::SetData(mat spectra, vec wavelength, colvec x, colvec y)
 {
     spectra_ = spectra;
-    wavelength_ = wavelength;
+    abscissa_ = wavelength;
     x_ = x;
     y_ = y;
 }
@@ -2529,8 +2633,8 @@ void VespucciDataset::AddMap(QSharedPointer<MapData> map)
 ///
 QCPRange VespucciDataset::WavelengthRange()
 {
-    double min = wavelength_.min();
-    double max = wavelength_.max();
+    double min = abscissa_.min();
+    double max = abscissa_.max();
     QCPRange range(min, max);
     return range;
 }
@@ -2828,12 +2932,12 @@ int VespucciDataset::UnivariateCount()
 }
 
 ///
-/// \brief VespucciDataset::wavelength_ptr
+/// \brief VespucciDataset::abscissa_ptr
 /// \return
 ///
-mat* VespucciDataset::wavelength_ptr()
+mat* VespucciDataset::abscissa_ptr()
 {
-    return &wavelength_;
+    return &abscissa_;
 }
 
 ///

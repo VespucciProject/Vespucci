@@ -59,6 +59,20 @@ namespace Vespucci
         arma::umat GetClosestValues(arma::vec query, arma::vec target, const arma::uword k=5);
 
         double CalcPoly(const double x, const arma::vec &coefs);
+
+        arma::vec WavelengthToFrequency(const arma::vec &x, double freq_factor, double wl_factor);
+        arma::vec FrequencyToWavelength(const arma::vec &x, double wl_factor, double freq_factor);
+        arma::vec FrequencyToEnergy(const arma::vec &x, double energy_factor, double freq_factor);
+        arma::vec EnergyToFrequency(const arma::vec &x, double freq_factor, double energy_factor);
+        arma::vec WavenumberToFrequency(const arma::vec &x, double freq_factor, double wn_factor);
+        arma::vec FrequencyToWavenumber(const arma::vec &x, double wn_factor, double freq_factor);
+        arma::vec WavenumberToWavelength(const arma::vec &x, double wn_factor, double wl_factor);
+        arma::vec WavelengthToWavenumber(const arma::vec &x, double wl_factor, double wn_factor);
+        arma::vec WavelengthToEnergy(const arma::vec &x, double energy_factor, double wl_factor);
+        arma::vec EnergyToWavelength(const arma::vec &x, double wl_factor, double energy_factor);
+        arma::vec EnergyToWavenumber(const arma::vec &x, double wn_factor, double energy_factor);
+        arma::vec WavenumberToEnergy(const arma::vec &x, double energy_factor, double wn_factor);
+
     }
 }
 

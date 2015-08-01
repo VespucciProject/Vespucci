@@ -519,3 +519,175 @@ double Vespucci::Math::CalcPoly(const double x, const arma::vec &coefs)
     for (arma::uword i = 1; i < coefs.n_rows; ++i){y += coefs(i)*std::pow(x,i);}
     return y;
 }
+
+///
+/// \brief Vespucci::Math::WavelengthToFrequency
+/// \param x
+/// \param freq_factor
+/// \param wl_factor
+/// \return
+///
+arma::vec Vespucci::Math::WavelengthToFrequency(const arma::vec &x, double freq_factor, double wl_factor)
+{
+
+    //convert input to meters, then Hz, then preferred wavelength
+    //nu = lambda/c
+    return (wl_factor * (1.0/datum::c_0) * freq_factor) * x;
+}
+
+///
+/// \brief Vespucci::Math::FrequencyToWavelength
+/// \param x
+/// \param wl_factor
+/// \param freq_factor
+/// \return
+///
+arma::vec Vespucci::Math::FrequencyToWavelength(const arma::vec &x, double wl_factor, double freq_factor)
+{
+    //convert input to Hz then to wavelength in meters, then to wavelength in perferred units
+    //lambda = nu * c
+    return (freq_factor * datum::c_0 * wl_factor) * x;
+}
+
+///
+/// \brief Vespucci::Math::FrequencyToEnergy
+/// \param x
+/// \param energy_factor
+/// \param freq_factor
+/// \return
+///
+arma::vec Vespucci::Math::FrequencyToEnergy(const arma::vec &x, double energy_factor, double freq_factor)
+{
+    //convert input to Hz then to energy in J, then to energy in preferred units
+    //E = h * nu
+    return (freq_factor * datum::h * energy_factor) * x;
+}
+
+///
+/// \brief Vespucci::Math::EnergyToFrequency
+/// \param x
+/// \param freq_factor
+/// \param energy_factor
+/// \return
+///
+arma::vec Vespucci::Math::EnergyToFrequency(const arma::vec &x, double freq_factor, double energy_factor)
+{
+    //convert input to Hz then to energy in J, then to energy in preferred units
+    //nu = E/h
+    return (energy_factor * (1.0/datum::h) * freq_factor) * x;
+}
+
+///
+/// \brief Vespucci::Math::WavenumberToFrequency
+/// \param x
+/// \param freq_factor
+/// \param wn_factor
+/// \return
+///
+arma::vec Vespucci::Math::WavenumberToFrequency(const arma::vec &x, double freq_factor, double wn_factor)
+{
+    //convert input to inverse meters, then meters, then preferred units
+    arma::vec foo = x * wn_factor;
+    foo.transform( [](double val) {return (1.0/val); } );
+    return freq_factor * foo;
+}
+
+///
+/// \brief Vespucci::Math::FrequencyToWavenumber
+/// \param x
+/// \param wn_factor
+/// \param freq_factor
+/// \return
+///
+arma::vec Vespucci::Math::FrequencyToWavenumber(const arma::vec &x, double wn_factor, double freq_factor)
+{
+    //convert input to meters, then inverse meters, then preferred units
+    arma::vec foo = x * freq_factor;
+    foo.transform( [](double val) {return (1.0/val); } );
+    return wn_factor * foo;
+}
+
+///
+/// \brief Vespucci::Math::WavenumberToWavelength
+/// \param x
+/// \param wn_factor
+/// \param wl_factor
+/// \return
+///
+arma::vec Vespucci::Math::WavenumberToWavelength(const arma::vec &x, double wn_factor, double wl_factor)
+{
+    //convert input to inverse meters, then to meters, then to preferred units
+    arma::vec foo = x * wn_factor;
+    foo.transform( [](double val) {return (1.0/val); } );
+    return wl_factor * foo;
+}
+
+///
+/// \brief Vespucci::Math::WavelengthToWavenumber
+/// \param x
+/// \param wl_factor
+/// \param wn_factor
+/// \return
+///
+arma::vec Vespucci::Math::WavelengthToWavenumber(const arma::vec &x, double wl_factor, double wn_factor)
+{
+    //convert to meters, then inverse meters, then desired units
+    arma::vec foo = wl_factor * x;
+    foo.transform( [](double val) {return (1.0/val); } );
+    return wn_factor * foo;
+}
+
+///
+/// \brief Vespucci::Math::WavelengthToEnergy
+/// \param x
+/// \param energy_factor
+/// \param wl_factor
+/// \return
+///
+arma::vec Vespucci::Math::WavelengthToEnergy(const arma::vec &x, double energy_factor, double wl_factor)
+{
+    arma::vec foo = wl_factor * x;
+    //convert to frequency, then to energy
+    foo = Vespucci::Math::WavelengthToFrequency(foo, 1, 1);
+    return Vespucci::Math::FrequencyToEnergy(foo, energy_factor, 1);
+}
+
+///
+/// \brief Vespucci::Math::EnergyToWavelength
+/// \param x
+/// \param wl_factor
+/// \param energy_factor
+/// \return
+///
+arma::vec Vespucci::Math::EnergyToWavelength(const arma::vec &x, double wl_factor, double energy_factor)
+{
+    arma::vec foo = energy_factor * x;
+    foo = Vespucci::Math::EnergyToFrequency(x, 1, 1);
+    return Vespucci::Math::FrequencyToWavelength(foo, wl_factor, 1);
+}
+
+///
+/// \brief Vespucci::Math::EnergyToWavenumber
+/// \param x
+/// \param wn_factor
+/// \param energy_factor
+/// \return
+///
+arma::vec Vespucci::Math::EnergyToWavenumber(const arma::vec &x, double wn_factor, double energy_factor)
+{
+    arma::vec foo = Vespucci::Math::EnergyToWavelength(x, 1, energy_factor);
+    return Vespucci::Math::WavelengthToWavenumber(foo, 1, wn_factor);
+}
+
+///
+/// \brief Vespucci::Math::WavenumberToEnergy
+/// \param x
+/// \param energy_factor
+/// \param wn_factor
+/// \return
+///
+arma::vec Vespucci::Math::WavenumberToEnergy(const arma::vec &x, double energy_factor, double wn_factor)
+{
+    arma::vec foo = Vespucci::Math::WavenumberToWavelength(x, wn_factor, 1);
+    return Vespucci::Math::WavelengthToEnergy(x, energy_factor, 1);
+}

@@ -161,7 +161,11 @@ public:
     void Scale(double scaling_factor);
     void ShedSpectrum(const uword index);
     int HySime();
-
+    void TransformAbscissa(QString input_units, double input_factor,
+                           QString output_units, double output_factor, QString description);
+    void InterpolateToNewAbscissa(vec &new_abscissa,
+                                  unsigned_int polynomial_order,
+                                  unsigned int window_size);
 
 
     // HELPER FUNCTIONS //
@@ -250,6 +254,10 @@ public:
     void Agglomerative(int clusters,
                       QString distance_metric,
                       QString name);
+    void LinearDiscriminantAnalysis(mat in_spectra);
+    void PLS_DA();
+    void ClassicalLeastSquares(mat control_spectra);
+
     //Analysis functions (overloads of imaging functions)
     void PartialLeastSquares(uword components);
     void VertexComponents(uword endmembers);
@@ -277,6 +285,7 @@ public:
 
     //MEMBER ACCESS FUNCTIONS:
     vec wavelength();
+    vec abscissa();
     colvec x();
     colvec y();
     colvec x(uvec indices);
@@ -367,23 +376,21 @@ public:
 private:
 
     ///
-    /// \brief wavelength_
+    /// \brief abscissa_
     /// The spectral abscissa of the spectra in spectra_
-    vec wavelength_;
-
-    vec wavelength_old_;
+    vec abscissa_;
+    vec abscissa_old_;
 
     ///
     /// \brief x_
     /// The spatial horizontal position
     colvec x_;
-
     colvec x_old_;
+
     ///
     /// \brief y_
     /// The spatial vertical position
     colvec y_;
-
     colvec y_old_;
 
     ///
@@ -398,6 +405,12 @@ private:
     /// until another pre-processing function is called. This allows for undoing
     /// pre-processing functions.
     mat spectra_old_;
+
+    ///
+    /// \brief spectra_imag_
+    /// The imaginary part of the spectra after fft (makes ifft more consistent)
+    cx_mat spectra_imag_;
+
 
     ///
     /// \brief baselines_

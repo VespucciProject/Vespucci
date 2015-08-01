@@ -1,4 +1,5 @@
 #include "Data/Analysis/univariatedata.h"
+#include "Math/Fitting/linleastsq.h"
 
 UnivariateData::UnivariateData(QSharedPointer<VespucciDataset> parent, QString name) : baselines_(2)
 {
@@ -96,13 +97,71 @@ void UnivariateData::Apply(double first_left_bound,
     results_ = results.col(0) / results.col(1);
 }
 
+///
+/// \brief UnivariateData::Calibrate
+/// \param values Intensity (or band ratio, or areas) of calibration curve)
+/// \param conentrations
+///
+void UnivariateData::Calibrate(const vec &values, const vec &concentrations)
+{
+    if (values.n_rows != concentrations.n_rows){
+        throw std::invalid_argument("Values and concentrations must have same size!");
+    }
 
-vec UnivariateData::results()
+    double n = values.n_rows;
+    double dof = n - 2; //for linear fit
+    double x_bar = mean(concentrations);
+    double y_bar = mean(values);
+
+    mat X = Vespucci::Math::LinLeastSq::Vandermonde(concentrations, 1);
+    vec coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(X, values);
+    vec fit = Vespucci::Math::LinLeastSq::CalcPoly(coefs, concentrations);
+    calibration_curve_residuals_ = values - fit;
+    vec centered = values - y_bar;
+    double residual_sumsq = sum(pow(calibration_curve_residuals_, 2.0));
+    double total_sumsq = sum(pow(centered, 2.0));
+    double regression_sumsq = sum(pow((fit - y_bar), 2.0));
+    double R_squared = 1.0 - (residual_sumsq/total_sumsq);
+    double adj_R_squared = 1 - (1 - R_squared)*(n - 1)/dof; //p==1 for deg-1 polynomial
+
+    mat var_hat = (residual_sumsq / dof) * inv(X.t() * X);
+
+    double s_m = var_hat(1,1);
+    double s_b = var_hat(0,0);
+    double s_y = std::sqrt(regression_sumsq / n);
+    double F = (regression_sumsq) / (residual_sumsq/dof);
+    //format of calibration_stats_ is that of Excel's linest function, plus one extra line:
+    // m        b
+    // s_m      s_b
+    // Rsq      s(y)
+    // F        DOF
+    // SSreg    SSres
+    // adj Rsq  norm of residuals
+    calibration_stats_.set_size(6, 2);
+    calibration_stats_(0,0) = coefs(1);
+    calibration_stats_(0,1) = coefs(0);
+    calibration_stats_(1,0) = s_m;
+    calibration_stats_(1,1) = s_b;
+    calibration_stats_(2,0) = R_squared;
+    calibration_stats_(2,1) = s_y;
+    calibration_stats_(3,0) = F;
+    calibration_stats_(3,1) = dof;
+    calibration_stats_(4,0) = regression_sumsq;
+    calibration_stats_(4,1) = residual_sumsq;
+    calibration_stats_(5,0) = adj_R_squared;
+    calibration_stats_(5,1) = std::sqrt(residual_sumsq);
+
+
+
+}
+
+
+vec UnivariateData::results() const
 {
     return results_;
 }
 
-vec *UnivariateData::results_ptr()
+const vec *UnivariateData::results_ptr() const
 {
     return &results_;
 }
@@ -117,37 +176,67 @@ double UnivariateData::left_bound()
     return left_bound_;
 }
 
-double UnivariateData::right_bound()
+double UnivariateData::right_bound() const
 {
     return right_bound_;
 }
 
-double UnivariateData::first_left_bound()
+double UnivariateData::first_left_bound() const
 {
     return first_left_bound_;
 }
 
-double UnivariateData::first_right_bound()
+double UnivariateData::first_right_bound() const
 {
     return first_right_bound_;
 }
 
-double UnivariateData::second_left_bound()
+double UnivariateData::second_left_bound() const
 {
     return second_left_bound_;
 }
 
-double UnivariateData::second_right_bound()
+double UnivariateData::second_right_bound() const
 {
     return second_right_bound_;
 }
 
-QString UnivariateData::MethodDescription()
+QString UnivariateData::MethodDescription() const
 {
     return method_description_;
 }
 
-mat UnivariateData::first_baselines()
+mat UnivariateData::calibration_curve() const
+{
+    return calibration_curve_;
+}
+
+const mat *UnivariateData::calibration_curve_ptr() const
+{
+    return &calibration_curve_;
+}
+
+mat UnivariateData::calibration_stats() const
+{
+    return calibration_stats_;
+}
+
+const mat *UnivariateData::calibration_stats_ptr() const
+{
+    return &calibration_stats_;
+}
+
+mat UnivariateData::calibration_curve_residuals() const
+{
+    return calibration_curve_residuals_;
+}
+
+const mat *UnivariateData::calibration_curve_residuals_ptr() const
+{
+    return &calibration_curve_residuals_;
+}
+
+mat UnivariateData::first_baselines() const
 {
     return first_baselines_;
 }
@@ -162,7 +251,7 @@ mat UnivariateData::Midlines()
     return midlines_;
 }
 
-uvec UnivariateData::Boundaries()
+uvec UnivariateData::Boundaries() const
 {
     return boundaries_;
 }
@@ -172,7 +261,7 @@ void UnivariateData::SetName(QString name)
     name_ = name;
 }
 
-QString UnivariateData::name()
+QString UnivariateData::name() const
 {
     return name_;
 }
