@@ -2220,6 +2220,12 @@ void VespucciDataset::PLS_DA(vec labels, uword components, QString name)
 
 }
 
+void VespucciDataset::ClassicalLeastSquares(mat standards, QString name)
+{
+    mat coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(standards, spectra_);
+    AddAnalysisResult("CLS Coefficients", coefs);
+}
+
 ///
 /// \brief VespucciDataset::KMeans
 /// \param clusters

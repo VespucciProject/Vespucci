@@ -259,7 +259,7 @@ public:
                       QString name);
     void LinearDiscriminantAnalysis(mat in_spectra);
     void PLS_DA(vec labels, uword components, QString name);
-    void ClassicalLeastSquares(mat control_spectra);
+    void ClassicalLeastSquares(mat standards, QString name);
 
     //Analysis functions (overloads of imaging functions)
     void PartialLeastSquares(uword components);

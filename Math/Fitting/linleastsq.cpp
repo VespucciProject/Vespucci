@@ -145,7 +145,7 @@ arma::vec Vespucci::Math::LinLeastSq::CalcPoly(const arma::vec &coefs, const arm
 /// \param y The response vector
 /// \return
 ///
-arma::vec Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(const arma::mat &X, const arma::vec &y)
+arma::vec Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(const arma::mat &X, const arma::mat &y)
 {
     arma::mat Q, R;
     arma::qr(Q, R, X);
