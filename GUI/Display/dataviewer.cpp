@@ -70,6 +70,15 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
         for (int i = 0; i < univariate_data_list.size(); ++i){
             matrix = (mat *) univariate_data_list[i]->results_ptr();
             data_objects_.insert(univariate_data_list[i]->name(), matrix);
+            if(univariate_data_list[i]->calibrated()){
+                metadata_objects_.insert(univaraite_data_list[i]->name() +
+                                         "Calibration Statistics",
+                                         univariate_data_list[i]->calibration_stats());
+                matrix = univariate_data_list[i]->calibration_curve_ptr();
+                data_objects_.insert(univariate_data_list[i]->name() +
+                                     "Calibration Curve",
+                                     matrix);
+            }
         }
     }
 
@@ -164,11 +173,15 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
         }
 
 
-        if (arg1 == "VCA Endmembers")
+        if (current_data_->n_rows == dataset_->spectra_ptr()->n_rows)
             plot_button_->setDisabled(false);
         else
             plot_button_->setDisabled(true);
 
+    }
+    else if (metadata_objects_.contains(arg1)){
+        extract_button_->setDisabled(true);
+        stats_button_->setDisabled(true);
     }
     else{
         current_data_ = data_objects_["Spectral Abscissa"];
@@ -197,10 +210,25 @@ void DataViewer::on_plotToolButton_clicked()
         endmember--; //fix indexing from human-intuitve 1 to programmer-intuitive 0
 
         if (ok){
+
             spectrum_viewer_ = new SpectrumViewer(this, dataset_, endmember, directory_, "VCA");
             spectrum_viewer_->show();
         }
     }
+    else{
+        int column = QInputDialog::getInt(this,
+                                          "Select Column",
+                                          "Column", 1, 1,
+                                          current_data_->n_cols,
+                                          1 &ok, 0);
+        if(ok){
+            vec data = current_data_->col(column);
+            spectrum_viewer_ = new SpectrumViewer(this, dataset_, data, current_text_);
+            spectrum_viewer_->show();
+        }
+
+    }
+
 }
 
 ///

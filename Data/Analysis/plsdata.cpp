@@ -31,20 +31,31 @@ PLSData::PLSData(QSharedPointer<VespucciDataset> parent, QString *directory)
 /// \param wavelength Spectral abscissa
 /// \param components Number of components to calculate
 /// \return
-/// Performs PLS analysis on a copy of the spectra matrix (transposed).
+/// Performs PLS analysis on a copy of the spectra matrix.
 bool PLSData::Apply(mat spectra, vec wavelength, int components)
 {
-    mat Y;
-    Y.set_size(wavelength.n_elem, components);
-    for (int i = 0; i < components; ++i)
-        Y.col(i) = wavelength;
+    mat Y = repmat(wavelength, 1, components);
     bool success = Vespucci::Math::DimensionReduction::plsregress(spectra, Y, components,
                                         X_loadings_, Y_loadings_,
                                         X_scores_, Y_scores_,
                                         coefficients_, percent_variance_,
                                         fitted_);
+
     return success;
 
+}
+
+///
+/// \brief DiscriminantAnalysis
+/// \param spectra
+/// \param labels
+/// \param components
+/// \return
+/// Perform PLS-DA
+bool DiscriminantAnalysis(mat spectra, vec labels, int components)
+{
+    mat Y = repmat(labels, components);
+    bool success = ;
 }
 
 mat *PLSData::X_loadings()

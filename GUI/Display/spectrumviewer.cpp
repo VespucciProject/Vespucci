@@ -102,6 +102,7 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
     if (type == "VCA"){
         plot_data = dataset_->vertex_components_data()->EndmemberQVec(endmember);
     }
+
     QVector<double> wavelength = dataset->WavelengthQVector();
     coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
     value_label_ = this->findChild<QLabel *>("valueLabel");
@@ -147,6 +148,43 @@ SpectrumViewer::SpectrumViewer(SpectrumSelectionDialog *parent,
     spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
     spectrum_plot_->rescaleAxes();
     cout << "end of constructor" << endl;
+}
+
+SpectrumViewer::SpectrumViewer(DataViewer *parent,
+                               QSharedPointer<VespucciDataset> dataset,
+                               vec y, QString ordinate_label):
+    QDialog(parent),
+    ui(new Ui::SpectrumViewer)
+{
+    ui->setupUi(this);
+    cout << "alternative SpectrumViewer constructor" << endl;
+    dataset_ = dataset;
+
+    cout << "find labels " << endl;
+    coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
+    value_label_ = this->findChild<QLabel *>("valueLabel");
+    cout << "edit labels" << endl;
+    coordinate_label_->setVisible(false);
+    value_label_->setVisible(false);
+
+    cout << "find plot" << endl;
+    spectrum_plot_ = this->findChild<QCustomPlot *>("spectrum");
+
+    cout << "set labels" << endl;
+    spectrum_plot_->addGraph();
+    spectrum_plot_->xAxis->setLabel(dataset->x_axis_description());
+    spectrum_plot_->yAxis->setLabel(ordinate_label);
+
+    cout << "set data" << endl;
+    QVector<double> wavelength = dataset->WavelengthQVector();
+    QVector<double> plot_data =
+            QVector<double>::fromStdVector(conv_to<std::vector<double> >::from(y));
+    spectrum_plot_->graph(0)->addData(wavelength, plot_data);
+    dataset_ = dataset;
+
+    spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
+    spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
+    spectrum_plot_->rescaleAxes();
 }
 
 \

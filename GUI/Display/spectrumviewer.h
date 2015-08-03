@@ -57,6 +57,10 @@ public:
     SpectrumViewer(SpectrumSelectionDialog *parent,
                    QSharedPointer<VespucciDataset> dataset);
 
+    SpectrumViewer(DataViewer *parent,
+                   QSharedPointer<VespucciDataset> dataset,
+                   vec y, QString ordinate_label);
+
     ~SpectrumViewer();
     void SetPlot(QVector<double> wavelength,
                  QVector<double> intensity);

@@ -52,10 +52,7 @@ public:
 
     mat calibration_curve() const;
     const mat *calibration_curve_ptr() const;
-    mat calibration_stats() const;
-    const mat *calibration_stats_ptr() const;
-    mat calibration_curve_residuals() const;
-    const mat *calibration_curve_residuals_ptr() const;
+    const map<string, double> calibration_stats() const;
 
 
     mat Midlines() const;
@@ -66,6 +63,8 @@ public:
 
     QString name() const;
     void SetName(QString name);
+
+    bool calibrated() const;
 
 private:
     QString method_description_;
@@ -130,8 +129,9 @@ private:
 
     uvec boundaries_;
     mat calibration_curve_;
-    vec calibration_stats_;
-    vec calibration_curve_residuals_;
+
+    map<string, double> calibration_stats_;
+    bool calibrated_;
 };
 
 #endif // UNIVARIATEDATA_H

@@ -2214,6 +2214,12 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
 
 }
 
+void VespucciDataset::PLS_DA(vec labels, uword components, QString name)
+{
+    PLSData pls_data(this, workspace->directory_ptr());
+
+}
+
 ///
 /// \brief VespucciDataset::KMeans
 /// \param clusters

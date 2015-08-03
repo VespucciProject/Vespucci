@@ -166,6 +166,9 @@ public:
     void InterpolateToNewAbscissa(vec &new_abscissa,
                                   unsigned_int polynomial_order,
                                   unsigned int window_size);
+    void FourierTransform(int n);
+    void ApplyFTWeight(QString type, double cut_after = -1);
+
 
 
     // HELPER FUNCTIONS //
@@ -255,7 +258,7 @@ public:
                       QString distance_metric,
                       QString name);
     void LinearDiscriminantAnalysis(mat in_spectra);
-    void PLS_DA();
+    void PLS_DA(vec labels, uword components, QString name);
     void ClassicalLeastSquares(mat control_spectra);
 
     //Analysis functions (overloads of imaging functions)

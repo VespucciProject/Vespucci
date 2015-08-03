@@ -58,6 +58,7 @@ private:
     Ui::DataViewer *ui;
 
     QMap<QString, mat*> data_objects_;
+    QMap<QString, map<string, double>> metadata_objects_;
 
     ///
     /// \brief current_text_

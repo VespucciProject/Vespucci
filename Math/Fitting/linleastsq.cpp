@@ -178,3 +178,44 @@ double Vespucci::Math::LinLeastSq::CalcErr(const double &dev, const double &prev
 {
     return std::abs( (dev - prev_dev) / dev );
 }
+
+
+arma::vec Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(const arma::mat &X,
+                                                           const arma::vec &y,
+                                                           arma::vec &fit,
+                                                           std::map<std::string, double> stats)
+{
+    double n = X.n_rows;
+    double dof = n - 2; //for linear fit
+    double y_bar = mean(y);
+
+    arma::vec coefs = OrdinaryLeastSquares(X, y);
+    fit = Vespucci::Math::LinLeastSq::CalcPoly(coefs, concentrations);
+
+    vec residuals = values - fit;
+
+    vec centered = values - y_bar;
+    double residual_sumsq = sum(pow(residuals, 2.0));
+    double total_sumsq = sum(pow(centered, 2.0));
+    double regression_sumsq = sum(pow((fit - y_bar), 2.0));
+    double R_squared = 1.0 - (residual_sumsq/total_sumsq);
+    double adj_R_squared = 1 - (1 - R_squared)*(n - 1)/dof; //p==1 for deg-1 polynomial
+
+    mat var_hat = (residual_sumsq / dof) * inv(X.t() * X);
+
+    std::string param_name;
+    for(arma::uword i = 0; i < coefs.n_rows; ++i){
+        param_name = "a" + std::to_string(i);
+        stats[param_name] = coefs(i);
+        stats["s_" + param_name] = var_hat(i,i);
+    }
+    stats["R squared"] = R_squared;
+    stats["Adjusted R squared"] = adj_R_squared;
+    stats["s(y)"] = std::sqrt(regression_sumsq / n);
+    stats["F"] =(regression_sumsq) / (residual_sumsq/dof);
+    stats["Degrees of Freedom"] = dof;
+    stats["SSreg"] = regression_sumsq;
+    stats["SSres"] = residual_sumsq;
+    stats["Norm of residuals"] = std::sqrt(residual_sumsq);
+    return coefs;
+}

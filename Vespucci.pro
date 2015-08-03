@@ -110,7 +110,6 @@ SOURCES += main.cpp\
     GUI/Display/mapviewer.cpp \
     GUI/Processing/metadatasetdialog.cpp \
     GUI/Analysis/plotmakerdialog.cpp \
-    GUI/Display/plotviewer.cpp \
     GUI/Analysis/plsdialog.cpp \
     GUI/Analysis/principalcomponentsdialog.cpp \
     GUI/Processing/rangedialog.cpp \
@@ -151,7 +150,8 @@ SOURCES += main.cpp\
     GUI/Processing/multiimportdialog.cpp \
     GUI/Processing/bulkconversiondialog.cpp \
     GUI/Display/reportmessagedialog.cpp \
-    GUI/Processing/abscissatransformdialog.cpp
+    GUI/Processing/abscissatransformdialog.cpp \
+    GUI/Processing/fouriertransformdialog.cpp
 
 
 HEADERS  += \
@@ -185,7 +185,6 @@ HEADERS  += \
     GUI/QAbstractItemModel/maplistmodel.h \
     GUI/Display/mapviewer.h \
     GUI/Processing/metadatasetdialog.h \
-    GUI/Display/plotviewer.h \
     GUI/Analysis/plsdialog.h \
     GUI/Analysis/principalcomponentsdialog.h \
     GUI/Processing/rangedialog.h \
@@ -222,7 +221,8 @@ HEADERS  += \
     GUI/Processing/multiimportdialog.h \
     GUI/Processing/bulkconversiondialog.h \
     GUI/Display/reportmessagedialog.h \
-    GUI/Processing/abscissatransformdialog.h
+    GUI/Processing/abscissatransformdialog.h \
+    GUI/Processing/fouriertransformdialog.h
 
 
 FORMS    += \
@@ -242,7 +242,6 @@ FORMS    += \
     GUI/Display/mapviewer.ui \
     GUI/Processing/metadatasetdialog.ui \
     GUI/Analysis/plotmakerdialog.ui \
-    GUI/Display/plotviewer.ui \
     GUI/Analysis/plsdialog.ui \
     GUI/Analysis/principalcomponentsdialog.ui \
     GUI/Processing/rangedialog.ui \
@@ -260,7 +259,8 @@ FORMS    += \
     GUI/Processing/multiimportdialog.ui \
     GUI/Processing/bulkconversiondialog.ui \
     GUI/Display/reportmessagedialog.ui \
-    GUI/Processing/abscissatransformdialog.ui
+    GUI/Processing/abscissatransformdialog.ui \
+    GUI/Processing/fouriertransformdialog.ui
 
 RESOURCES += \
     resources.qrc
