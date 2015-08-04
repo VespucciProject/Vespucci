@@ -54,6 +54,7 @@ private slots:
 private:
     Ui::UnivariateDialog *ui;
 
+    QCheckBox *map_check_box_;
     ///
     /// \brief range_label_
     /// Displays the range of the spectral abscissa.
@@ -88,6 +89,11 @@ private:
     /// \brief file_name_box_
     /// The user enteres the filename of the "control" spectrum for correlation map here.
     QLineEdit *file_name_box_;
+
+    ///
+    /// \brief browse_button_
+    ///
+    QLineEdit *browse_button_;
 
     ///
     /// \brief color_selector_

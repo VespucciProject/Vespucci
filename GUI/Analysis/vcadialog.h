@@ -44,6 +44,8 @@ private slots:
 
     void on_predictionCheckBox_clicked(bool checked);
 
+    void on_mapCheckBox_stateChanged(int arg1);
+
 private:
     Ui::VCADialog *ui;
     ///
@@ -85,6 +87,8 @@ private:
     /// \brief data_index_
     /// Index of the current dataset in the relevant lists
     int data_index_;
+
+    QCheckBox *map_check_box_;
 
     ///
     /// \brief data_

@@ -38,7 +38,8 @@ namespace Vespucci{
             double CalcDev(const arma::vec &spectrum, const arma::vec &fit);
             arma::uvec NonPeakInd(const arma::vec &spectrum, const double dev);
             arma::vec CalcPoly(const arma::vec &coefs, const arma::vec &x);
-            arma::vec OrdinaryLeastSquares(const arma::mat &X, const arma::mat &y);
+            arma::mat OrdinaryLeastSquares(const arma::mat &X, const arma::mat &y);
+            arma::mat OrdinaryLeastSquares(const arma::mat &X, const arma::mat &y, arma::mat &coef_errors, arma::mat &predicted);
             arma::vec OrdinaryLeastSquares(const arma::mat &X, const arma::vec &y, arma::vec &fit, std::map<std::string, double> stats);
             arma::mat Vandermonde(const arma::vec &x, const int poly_order);
             double CalcErr(const double &dev, const double &prev_dev);

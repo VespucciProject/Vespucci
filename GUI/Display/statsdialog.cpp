@@ -6,11 +6,11 @@ StatsDialog::StatsDialog(QWidget *parent, vec data) :
     ui(new Ui::StatsDialog)
 {
     ui->setupUi(this);
-    min_line_edit_ = this->findChild<QLineEdit *>("minLineEdit");
-    max_line_edit_ = this->findChild<QLineEdit *>("maxLineEdit");
-    median_line_edit_ = this->findChild<QLineEdit *>("medLineEdit");
-    stddev_line_edit_ = this->findChild<QLineEdit *>("stddevLineEdit");
-    mean_line_edit_ = this->findChild<QLineEdit *>("meanLineEdit");
+    min_line_edit_ = findChild<QLineEdit *>("minLineEdit");
+    max_line_edit_ = findChild<QLineEdit *>("maxLineEdit");
+    median_line_edit_ = findChild<QLineEdit *>("medLineEdit");
+    stddev_line_edit_ = findChild<QLineEdit *>("stddevLineEdit");
+    mean_line_edit_ = findChild<QLineEdit *>("meanLineEdit");
 
     //we find the median this way because there is an error in the stdlib in MinGW-w64, maybe?
 

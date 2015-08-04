@@ -41,5 +41,5 @@ CitationDialog::~CitationDialog()
 /// Window closes when user clicks "Close"
 void CitationDialog::on_pushButton_clicked()
 {
-    this->close();
+    close();
 }

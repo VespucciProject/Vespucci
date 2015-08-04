@@ -35,9 +35,9 @@ DataExtractorDialog::DataExtractorDialog(QWidget *parent, MapData *map, QSharedP
     ui->setupUi(this);
     main_window_ = main_window;
     workspace = main_window->workspace_ptr();
-    name_line_edit_ = this->findChild<QLineEdit*>("nameLineEdit");
-    upper_box_ = this->findChild<QDoubleSpinBox*>("upperDoubleSpinBox");
-    lower_box_ = this->findChild<QDoubleSpinBox*>("lowerDoubleSpinBox");
+    name_line_edit_ = findChild<QLineEdit*>("nameLineEdit");
+    upper_box_ = findChild<QDoubleSpinBox*>("upperDoubleSpinBox");
+    lower_box_ = findChild<QDoubleSpinBox*>("lowerDoubleSpinBox");
     map_ = map;
     condition_ = map_->results_;
     dataset_ = dataset;
@@ -63,11 +63,11 @@ DataExtractorDialog::DataExtractorDialog(QWidget *parent,
 
     main_window_ = main_window;
     workspace = main_window->workspace_ptr();
-    name_line_edit_ = this->findChild<QLineEdit*>("nameLineEdit");
-    filename_line_edit_ = this->findChild<QLineEdit *>("filenameLineEdit");
-    upper_box_ = this->findChild<QDoubleSpinBox*>("upperDoubleSpinBox");
-    lower_box_ = this->findChild<QDoubleSpinBox*>("lowerDoubleSpinBox");
-    method_combo_box_ = this->findChild<QComboBox *>("methodComboBox");
+    name_line_edit_ = findChild<QLineEdit*>("nameLineEdit");
+    filename_line_edit_ = findChild<QLineEdit *>("filenameLineEdit");
+    upper_box_ = findChild<QDoubleSpinBox*>("upperDoubleSpinBox");
+    lower_box_ = findChild<QDoubleSpinBox*>("lowerDoubleSpinBox");
+    method_combo_box_ = findChild<QComboBox *>("methodComboBox");
     dataset_ = dataset;
 
     data_range_.lower = data.min();
@@ -126,7 +126,7 @@ void DataExtractorDialog::on_buttonBox_accepted()
         main_window_->DisplayExceptionWarning(e);
     }
 
-    this->close();
+    close();
     dataset_.clear();
 }
 
@@ -135,7 +135,7 @@ void DataExtractorDialog::on_buttonBox_accepted()
 /// Closes the window when the user selects "Cancel"
 void DataExtractorDialog::on_buttonBox_rejected()
 {
-    this->close();
+    close();
     dataset_.clear();
 }
 

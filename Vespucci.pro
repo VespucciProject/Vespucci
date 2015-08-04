@@ -151,7 +151,8 @@ SOURCES += main.cpp\
     GUI/Processing/bulkconversiondialog.cpp \
     GUI/Display/reportmessagedialog.cpp \
     GUI/Processing/abscissatransformdialog.cpp \
-    GUI/Processing/fouriertransformdialog.cpp
+    GUI/Processing/fouriertransformdialog.cpp \
+    GUI/Analysis/classicaleastsquaresdialog.cpp
 
 
 HEADERS  += \
@@ -222,7 +223,8 @@ HEADERS  += \
     GUI/Processing/bulkconversiondialog.h \
     GUI/Display/reportmessagedialog.h \
     GUI/Processing/abscissatransformdialog.h \
-    GUI/Processing/fouriertransformdialog.h
+    GUI/Processing/fouriertransformdialog.h \
+    GUI/Analysis/classicaleastsquaresdialog.h
 
 
 FORMS    += \
@@ -260,7 +262,8 @@ FORMS    += \
     GUI/Processing/bulkconversiondialog.ui \
     GUI/Display/reportmessagedialog.ui \
     GUI/Processing/abscissatransformdialog.ui \
-    GUI/Processing/fouriertransformdialog.ui
+    GUI/Processing/fouriertransformdialog.ui \
+    GUI/Analysis/classicaleastsquaresdialog.ui
 
 RESOURCES += \
     resources.qrc

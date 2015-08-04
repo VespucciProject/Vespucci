@@ -45,6 +45,10 @@ private slots:
 
     void on_predictionCheckBox_clicked(bool checked);
 
+    void on_checkBox_stateChanged(int arg1);
+
+    void on_mapCheckBox_stateChanged(int arg1);
+
 private:
     Ui::KMeansDialog *ui;
     ///
@@ -61,6 +65,8 @@ private:
     /// \brief prediction_box_
     /// User selects whether or not to allow prediction of dimensionality
     QCheckBox *prediction_box_;
+
+    QCheckBox *map_check_box_;
 
     ///
     /// \brief name_line_edit_

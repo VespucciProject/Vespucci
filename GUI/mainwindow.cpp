@@ -58,8 +58,8 @@ MainWindow::MainWindow(QWidget *parent, VespucciWorkspace *ws) :
 {
     workspace = ws;
     ui->setupUi(this);
-    map_list_view_ = this->findChild<QListView *>("mapsListView");
-    dataset_list_view_ = this->findChild<QListView *>("datasetsListView");
+    map_list_view_ = findChild<QListView *>("mapsListView");
+    dataset_list_view_ = findChild<QListView *>("datasetsListView");
     dataset_list_model_ = new DatasetListModel(0, workspace);
     workspace->SetListWidgetModel(dataset_list_model_);
     dataset_list_view_->setModel(dataset_list_model_);

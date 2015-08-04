@@ -70,7 +70,7 @@ MapData::MapData(QString x_axis_description,
     }
     map_->rescaleDataRange();
     map_qcp_->rescaleAxes();
-    this->CreateImage(gradient, false, tick_count);
+    CreateImage(gradient, false, tick_count);
     x_axis_description_ = x_axis_description;
     y_axis_description_ = y_axis_description;
     dataset_ = parent;
@@ -377,7 +377,7 @@ bool MapData::saveBmp(const QString &fileName, int width, int height, double sca
 /// Saves the map as a PDF. See QCustomPlot::saveBmp.
 bool MapData::savePdf(const QString &fileName, int width, int height)
 {
-    bool success = map_qcp_->savePdf(fileName, true, width, height, "Vespucci", this->name());
+    bool success = map_qcp_->savePdf(fileName, true, width, height, "Vespucci", name());
     return success;
 }
 

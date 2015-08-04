@@ -31,13 +31,15 @@ KMeansDialog::KMeansDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     ui(new Ui::KMeansDialog)
 {
     ui->setupUi(this);
-    name_line_edit_ = this->findChild<QLineEdit *>("nameLineEdit");
-    cluster_spin_box_ = this->findChild<QSpinBox *>("clustersSpinBox");
-    prediction_box_ = this->findChild<QCheckBox *>("predictionCheckBox");
-    metric_combo_box_ = this->findChild<QComboBox *>("metricComboBox");
+    name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
+    cluster_spin_box_ = findChild<QSpinBox *>("clustersSpinBox");
+    prediction_box_ = findChild<QCheckBox *>("predictionCheckBox");
+    metric_combo_box_ = findChild<QComboBox *>("metricComboBox");
+    map_check_box_ = findChild<QCheckBox *>("mapCheckBox");
     workspace = ws;
     data_ = workspace->DatasetAt(row);
     data_index_ = row;
+    name_line_edit_->setEnabled(false);
 }
 
 KMeansDialog::~KMeansDialog()
@@ -50,6 +52,7 @@ KMeansDialog::~KMeansDialog()
 /// Triggers K-means method of dataset when "Ok" selected
 void KMeansDialog::on_buttonBox_accepted()
 {
+
     QString metric_text = metric_combo_box_->currentText();
     int clusters;
     if (prediction_box_->isChecked())
@@ -57,17 +60,25 @@ void KMeansDialog::on_buttonBox_accepted()
     else
         clusters = cluster_spin_box_->value();
 
-    QString name = name_line_edit_->text();
-    try{
-        data_->KMeans(clusters, metric_text, name);
-    }
-    catch(exception e){
-        workspace->main_window()->DisplayExceptionWarning(e);
-    }
+    if (map_check_box_->isChecked()){
+        QString name = name_line_edit_->text();
+        try{
+            data_->KMeans(clusters, metric_text, name);
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
 
-
+    }
+    else{
+        try{
+            data_->KMeans(clusters);
+        }catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
+    }
     data_.clear();
-    this->close();
+    close();
 }
 
 ///
@@ -75,11 +86,16 @@ void KMeansDialog::on_buttonBox_accepted()
 /// Closes window when "Cancel" selected.
 void KMeansDialog::on_buttonBox_rejected()
 {
-    this->close();
+    close();
     data_.clear();
 }
 
 void KMeansDialog::on_predictionCheckBox_clicked(bool checked)
 {
     cluster_spin_box_->setEnabled(!checked);
+}
+
+void KMeansDialog::on_checkBox_stateChanged(int arg1)
+{
+    name_line_edit_->setEnabled(arg1);
 }

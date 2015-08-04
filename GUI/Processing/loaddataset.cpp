@@ -35,23 +35,23 @@ LoadDataset::LoadDataset(QWidget *parent, VespucciWorkspace *ws) :
     ui->setupUi(this);
     workspace = ws;
     directory_ = ws->directory_ptr();
-    QLineEdit *name_box = this->findChild<QLineEdit *>("nameBox");
+    QLineEdit *name_box = findChild<QLineEdit *>("nameBox");
     QString name = "Dataset" + QString::number(workspace->dataset_loading_count());
     name_box->setText(name); //puts in default name
 
-    QDialogButtonBox *button_box = this->findChild<QDialogButtonBox *>("buttonBox");
+    QDialogButtonBox *button_box = findChild<QDialogButtonBox *>("buttonBox");
     QPushButton *ok_button = button_box->button(QDialogButtonBox::Ok);
     ok_button->setDisabled(true);
 
 
-    swap_check_box_ = this->findChild<QCheckBox *>("swapCheckBox");
-    filename_line_edit_ = this->findChild<QLineEdit *>("filenameBox");
-    name_box_ = this->findChild<QLineEdit *>("nameBox");
-    y_description_box_ = this->findChild<QLineEdit *>("yDescription");
-    x_description_box_ = this->findChild<QLineEdit *>("xDescription");
-    y_units_box_ = this->findChild<QLineEdit *>("yUnits");
-    x_units_box_ = this->findChild<QLineEdit *>("xUnits");
-    data_format_box_ = this->findChild<QComboBox *>("dataFormatBox");
+    swap_check_box_ = findChild<QCheckBox *>("swapCheckBox");
+    filename_line_edit_ = findChild<QLineEdit *>("filenameBox");
+    name_box_ = findChild<QLineEdit *>("nameBox");
+    y_description_box_ = findChild<QLineEdit *>("yDescription");
+    x_description_box_ = findChild<QLineEdit *>("xDescription");
+    y_units_box_ = findChild<QLineEdit *>("yUnits");
+    x_units_box_ = findChild<QLineEdit *>("xUnits");
+    data_format_box_ = findChild<QComboBox *>("dataFormatBox");
 }
 
 LoadDataset::~LoadDataset()
@@ -65,7 +65,7 @@ LoadDataset::~LoadDataset()
 void LoadDataset::on_browseButton_clicked()
 {
     QString filename;
-    QLineEdit *filename_line_edit = this->findChild<QLineEdit *>("filenameBox");
+    QLineEdit *filename_line_edit = findChild<QLineEdit *>("filenameBox");
 
     filename = QFileDialog::getOpenFileName(this, tr("Open Data File"),
                                             workspace->directory(),
@@ -182,7 +182,7 @@ void LoadDataset::on_buttonBox_accepted()
         }
 
     }
-    this->close();
+    close();
 
 }
 
@@ -193,9 +193,9 @@ void LoadDataset::on_buttonBox_accepted()
 /// Changes file info displays when file name is changed
 void LoadDataset::on_filenameBox_textChanged(const QString &arg1)
 {
-    QLabel *file_size_label = this->findChild<QLabel *>("fileSize");
+    QLabel *file_size_label = findChild<QLabel *>("fileSize");
     QFileInfo file_info(arg1);
-    QDialogButtonBox *button_box = this->findChild<QDialogButtonBox *>("buttonBox");
+    QDialogButtonBox *button_box = findChild<QDialogButtonBox *>("buttonBox");
     QPushButton *ok_button = button_box->button(QDialogButtonBox::Ok);
 
     if(file_info.exists()){
@@ -217,5 +217,5 @@ void LoadDataset::on_filenameBox_textChanged(const QString &arg1)
 /// Closes window when "Cancel" is selected.
 void LoadDataset::on_buttonBox_rejected()
 {
-    this->close();
+    close();
 }

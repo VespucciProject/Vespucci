@@ -27,7 +27,7 @@ AnalysisDialog::AnalysisDialog(QWidget *parent, VespucciWorkspace *ws, int row) 
     ui->setupUi(this);
     method_selection_box_ = findChild<QComboBox*>("methodComboBox");
     components_box_ = findChild<QSpinBox*>("componentsSpinBox");
-    prediction_box_ = this->findChild<QCheckBox *>("predictionCheckBox");
+    prediction_box_ = findChild<QCheckBox *>("predictionCheckBox");
     dataset_ = ws->DatasetAt(row);
     workspace = ws;
 }

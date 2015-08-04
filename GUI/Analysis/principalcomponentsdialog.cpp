@@ -33,11 +33,16 @@ PrincipalComponentsDialog::PrincipalComponentsDialog(QWidget *parent, VespucciWo
     ui->setupUi(this);
     workspace = ws;
     data_ = workspace->DatasetAt(row);
-    component_selector_ = this->findChild<QSpinBox *>("componentSpinBox");
-    color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
-    recalculate_box_ = this->findChild<QCheckBox *>("recalculateCheckBox");
-    name_box_ = this->findChild<QLineEdit*>("nameLineEdit");
+    component_selector_ = findChild<QSpinBox *>("componentSpinBox");
+    color_selector_ = findChild<QComboBox *>("gradientComboBox");
+    recalculate_box_ = findChild<QCheckBox *>("recalculateCheckBox");
+    name_box_ = findChild<QLineEdit*>("nameLineEdit");
+    map_check_box_ = findChild<QCheckBox*>("mapCheckBox");
     data_index_ = row;
+
+    component_selector_->setEnabled(false);
+    color_selector_->setEnabled(false);
+    recalculate_box_->setEnabled(false);
 }
 
 PrincipalComponentsDialog::~PrincipalComponentsDialog()
@@ -50,17 +55,27 @@ PrincipalComponentsDialog::~PrincipalComponentsDialog()
 /// Trigger appropriate method of dataset when user clicks "Ok"
 void PrincipalComponentsDialog::on_buttonBox_accepted()
 {
-    int component = component_selector_->value();
-    QString name = name_box_->text();
-    bool recalculate = recalculate_box_->isChecked();
-    int gradient_index = color_selector_->currentIndex();
-    try{
-        data_->PrincipalComponents(component, name, gradient_index, recalculate);
+
+    if (map_check_box_->isChecked()){
+        int component = component_selector_->value();
+        QString name = name_box_->text();
+        bool recalculate = recalculate_box_->isChecked();
+        int gradient_index = color_selector_->currentIndex();
+        try{
+            data_->PrincipalComponents(component, name, gradient_index, recalculate);
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
     }
-    catch(exception e){
-        workspace->main_window()->DisplayExceptionWarning(e);
+    else{
+        try{
+            data_->PrincipalComponents();
+        }catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
     }
-    this->close();
+    close();
     data_.clear();
 }
 
@@ -69,6 +84,13 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
 /// Close window when user selects "Cancel"
 void PrincipalComponentsDialog::on_buttonBox_rejected()
 {
-    this->close();
+    close();
     data_.clear();
+}
+
+void PrincipalComponentsDialog::on_mapCheckBox_stateChanged(int arg1)
+{
+    component_selector_->setEnabled(arg1);
+    color_selector_->setEnabled(arg1);
+    recalculate_box_->setEnabled(arg1);
 }

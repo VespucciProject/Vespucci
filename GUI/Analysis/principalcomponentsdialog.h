@@ -44,6 +44,8 @@ private slots:
 
     void on_buttonBox_rejected();
 
+    void on_mapCheckBox_stateChanged(int arg1);
+
 private:
     Ui::PrincipalComponentsDialog *ui;
 
@@ -76,6 +78,8 @@ private:
     /// \brief data_index_
     /// Index of current dataset in relevant lists
     int data_index_;
+
+    QCheckBox *map_check_box_;
 
     ///
     /// \brief data_

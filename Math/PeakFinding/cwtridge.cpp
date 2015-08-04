@@ -131,7 +131,7 @@ double Vespucci::Math::CWTRidge::EstimateSNR(std::string method, arma::uword win
     double signal = coefs_.max();
     arma::uword start, end, center;
     try{
-        center = this->PeakCenter();
+        center = PeakCenter();
     }
     catch(std::exception e){
         std::cerr << "SNR(): error finding peak center" << std::endl;

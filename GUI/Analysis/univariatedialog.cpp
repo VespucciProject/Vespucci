@@ -36,25 +36,30 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
 
 
     if(data_->non_spatial()){
-        QMessageBox::warning(this,
-                             "Non-spatial or Non-contiguous Dataset",
-                             "Images cannot be created from non-spatial or "
-                             "non-contiguous datasets.");
-        this->close();
-        data_.clear();
+        map_check_box_->setDisabled(true);
+        map_check_box_->setToolTip("Images cannot be created from non-spatial or "
+                                   "non-contiguous datasets.");
     }
-    min_box_ = this->findChild<QLineEdit *>("minLineEdit");
-    max_box_ = this->findChild<QLineEdit *>("maxLineEdit");
-    name_box_ = this->findChild<QLineEdit *>("nameLineEdit");
-    file_name_box_ = this->findChild<QLineEdit *>("filenameLineEdit");
-    spectrum_plot_ = this->findChild<QCustomPlot *>("spectrumPlot");
-    value_method_selector_ = this->findChild<QComboBox *>("peakComboBox");
-    color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
-    negative_box_ = this->findChild<QCheckBox *>("negativeScoresCheckBox");
 
-    integration_method_selector_ = this->findChild<QComboBox *>("integrationComboBox");
-    integration_method_label_ = this->findChild<QLabel *>("integrationLabel");
-    range_label_ = this->findChild<QLabel *>("rangeLabel");
+    min_box_ = findChild<QLineEdit *>("minLineEdit");
+    max_box_ = findChild<QLineEdit *>("maxLineEdit");
+    name_box_ = findChild<QLineEdit *>("nameLineEdit");
+    file_name_box_ = findChild<QLineEdit *>("filenameLineEdit");
+    spectrum_plot_ = findChild<QCustomPlot *>("spectrumPlot");
+    value_method_selector_ = findChild<QComboBox *>("peakComboBox");
+    color_selector_ = findChild<QComboBox *>("gradientComboBox");
+    negative_box_ = findChild<QCheckBox *>("negativeScoresCheckBox");
+
+    integration_method_selector_ = findChild<QComboBox *>("integrationComboBox");
+    integration_method_label_ = findChild<QLabel *>("integrationLabel");
+    range_label_ = findChild<QLabel *>("rangeLabel");
+    browse_button_ = findChild<QPushButton *>("browseButton");
+    map_check_box_ = findChild<QCheckBox *>("mapCheckBox");
+
+    integration_method_selector_->setDisabled(true);
+    integration_method_label_->setDisabled(true);
+    browse_button_->setDisabled(true);
+    file_name_box_->setDisabled(true);
 
     min_line_ = new QCPItemStraightLine(spectrum_plot_);
     min_line_->point1->setCoords(0, 0);
@@ -115,10 +120,13 @@ void UnivariateDialog::on_buttonBox_accepted()
     }
     double entered_min = min_box_->text().toDouble();
     double entered_max = max_box_->text().toDouble();
+    bool make_map = map_check_box_->isChecked();
 
     QString name = name_box_->text();
+    if(!name.size()){
+        name = "Univariate " + QString::number(dataset_->UnivariateCount());
+    }
     QString value_method = value_method_selector_->currentText();
-    cout << "Method selection" << endl;
     UnivariateMethod::Method method;
     if (value_method == "Area")
         method = UnivariateMethod::Area;
@@ -130,39 +138,54 @@ void UnivariateDialog::on_buttonBox_accepted()
         method = UnivariateMethod::Intensity;
 
     QString integration_method = integration_method_selector_->currentText();
-    int gradient_index = color_selector_->currentIndex();
-/*
-    if (entered_min < workspace->GetWavelengthMin(data_index_)){
-        QMessageBox::warning(this, "Invalid Input!", "You have entered a left bound that is smaller than the smallest number on the spectral abscissa");
-        return;
-    }
 
-    if (entered_max > workspace->GetWavelengthMax(data_index_)){
-        QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abscissa");
-        return;
-    }
-*/
-    if (method != UnivariateMethod::Correlation){
-        try{
-            data_->Univariate(entered_min, entered_max, name, method, integration_method, gradient_index);
+    int gradient_index = color_selector_->currentIndex();
+
+    if (make_map){
+        if (method != UnivariateMethod::Correlation){
+            try{
+                data_->Univariate(entered_min, entered_max, name, method, integration_method, gradient_index);
+            }
+            catch(exception e){
+                workspace->main_window()->DisplayExceptionWarning(e);
+            }
         }
-        catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+        else{
+            vec control;
+            QFileInfo file_info(file_name_box_->text());
+            workspace->set_directory(file_info.dir().path());
+            try{
+                control.load(file_name_box_->text().toStdString());
+                data_->CorrelationMap(control, name, gradient_index);
+            }
+            catch(exception e){
+                workspace->main_window()->DisplayExceptionWarning(e);
+            }
         }
     }
     else{
-        vec control;
-        QFileInfo file_info(file_name_box_->text());
-        workspace->set_directory(file_info.dir().path());
-        try{
-            control.load(file_name_box_->text().toStdString());
-            data_->CorrelationMap(control, name, gradient_index);
+        if (method != UnivariateMethod::Correlation){
+            try{
+                data_->Univariate(entered_min, entered_max, name, method, integration_method);
+            }
+            catch(exception e){
+                workspace->main_window()->DisplayExceptionWarning(e);
+            }
         }
-        catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+        else{
+            vec control;
+            QFileInfo file_info(file_name_box_->text());
+            workspace->set_directory(file_info.dir().path());
+            try{
+                control.load(file_name_box_->text().toStdString());
+                data_->CorrelationAnalysis(control, name);
+            }
+            catch(exception e){
+                workspace->main_window()->DisplayExceptionWarning(e);
+            }
         }
     }
-    this->close();
+    close();
     data_.clear();
 }
 
@@ -172,14 +195,12 @@ void UnivariateDialog::on_buttonBox_accepted()
 /// Turn options on and off when peak determination method is changed
 void UnivariateDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
 {
-    if (arg1 == "Area"){
-        integration_method_selector_->setEnabled(true);
-        integration_method_label_->setEnabled(true);
-    }
-    else{
-        integration_method_selector_->setEnabled(false);
-        integration_method_label_->setEnabled(false);
-    }
+    integration_method_selector_->setEnabled(arg1 == "Area");
+    integration_method_label_->setEnabled(arg1 == "Area");
+    browse_button_->setEnabled(arg1 == "Correlation");
+    file_name_box_->setEnabled(arg1 == "Correlation");
+    min_box_->setDisabled(arg1 == "Correlation");
+    max_box_->setDisabled(arg1 == "Correlation");
 }
 
 ///

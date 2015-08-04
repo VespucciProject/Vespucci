@@ -6,13 +6,13 @@ UnivariateAnalysisDialog::UnivariateAnalysisDialog(QWidget *parent, VespucciWork
     ui(new Ui::UnivariateAnalysisDialog)
 {
     ui->setupUi(this);
-    first_min_box_ = this->findChild<QLineEdit *>("firstMinLineEdit_2");
-    first_max_box_ = this->findChild<QLineEdit *>("firstMaxLineEdit_2");
-    second_min_box_ = this->findChild<QLineEdit *>("secondMinLineEdit_2");
-    second_max_box_ = this->findChild<QLineEdit *>("secondMaxLineEdit_2");
-    integration_method_selector_ = this->findChild<QComboBox *>("integrationComboBox");
-    range_label_ = this->findChild<QLabel *>("rangeLabel_2");
-    value_method_selector_ = this->findChild<QComboBox *>("peakComboBox");
+    first_min_box_ = findChild<QLineEdit *>("firstMinLineEdit_2");
+    first_max_box_ = findChild<QLineEdit *>("firstMaxLineEdit_2");
+    second_min_box_ = findChild<QLineEdit *>("secondMinLineEdit_2");
+    second_max_box_ = findChild<QLineEdit *>("secondMaxLineEdit_2");
+    integration_method_selector_ = findChild<QComboBox *>("integrationComboBox");
+    range_label_ = findChild<QLabel *>("rangeLabel_2");
+    value_method_selector_ = findChild<QComboBox *>("peakComboBox");
 
     workspace = ws;
     data_ = workspace->DatasetAt(row);

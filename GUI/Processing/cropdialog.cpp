@@ -36,12 +36,12 @@ CropDialog::CropDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     workspace = ws;
     dataset_ = workspace->DatasetAt(row);
 
-    x_min_box_ = this->findChild<QDoubleSpinBox*>("xMinDoubleSpinBox");
-    x_max_box_ = this->findChild<QDoubleSpinBox*>("xMaxDoubleSpinBox");
-    y_min_box_ = this->findChild<QDoubleSpinBox*>("yMinDoubleSpinBox");
-    y_max_box_ = this->findChild<QDoubleSpinBox*>("yMaxDoubleSpinBox");
-    wl_min_box_ = this->findChild<QDoubleSpinBox*>("wlMinDoubleSpinBox");
-    wl_max_box_ = this->findChild<QDoubleSpinBox*>("wlMaxDoubleSpinBox");
+    x_min_box_ = findChild<QDoubleSpinBox*>("xMinDoubleSpinBox");
+    x_max_box_ = findChild<QDoubleSpinBox*>("xMaxDoubleSpinBox");
+    y_min_box_ = findChild<QDoubleSpinBox*>("yMinDoubleSpinBox");
+    y_max_box_ = findChild<QDoubleSpinBox*>("yMaxDoubleSpinBox");
+    wl_min_box_ = findChild<QDoubleSpinBox*>("wlMinDoubleSpinBox");
+    wl_max_box_ = findChild<QDoubleSpinBox*>("wlMaxDoubleSpinBox");
 
     if (dataset_->non_spatial()){
         x_min_box_->setDisabled(true);
@@ -106,7 +106,7 @@ void CropDialog::on_buttonBox_accepted()
     else{
         dataset_->CropSpectra(x_min, x_max, y_min, y_max, wl_min, wl_max);
     }
-    this->close();
+    close();
     dataset_.clear();
 
 }
@@ -116,6 +116,6 @@ void CropDialog::on_buttonBox_accepted()
 /// Closes window when user clicks "Cancel"
 void CropDialog::on_buttonBox_rejected()
 {
-    this->close();
+    close();
     dataset_.clear();
 }

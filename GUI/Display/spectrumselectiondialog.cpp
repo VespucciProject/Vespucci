@@ -11,7 +11,7 @@ SpectrumSelectionDialog::SpectrumSelectionDialog(QWidget *parent, MainWindow *ma
     main_window_ = main_window;
     spectrum_viewer_ = new SpectrumViewer(this, dataset);
     spectrum_viewer_->show();
-    table_view_ = this->findChild<QTableView *>("tableView");
+    table_view_ = findChild<QTableView *>("tableView");
     table_view_->setModel(table_model_);
     workspace = main_window->workspace_ptr();
 }

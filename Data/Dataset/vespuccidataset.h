@@ -259,10 +259,15 @@ public:
                       QString name);
     void LinearDiscriminantAnalysis(mat in_spectra);
     void PLS_DA(vec labels, uword components, QString name);
-    void ClassicalLeastSquares(mat standards, QString name);
+    void ClassicalLeastSquares(const mat &standards, QString name);
+    void ClassicalLeastSquares(const mat &standards,
+                               uword image_component,
+                               QString name,
+                               int gradient_index);
 
     //Analysis functions (overloads of imaging functions)
     void PartialLeastSquares(uword components);
+    void CorrelationAnalysis(vec control, QString name);
     void VertexComponents(uword endmembers);
     void KMeans(size_t clusters);
     void PrincipalComponents();

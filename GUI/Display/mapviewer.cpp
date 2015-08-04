@@ -35,8 +35,8 @@ MapViewer::MapViewer(QString name, QString *directory, MapData *parent):
     name_ = name;
     directory_ = directory;
 
-    qcp_= this->findChild<QCustomPlot *>("mapView");
-    qcp_->setBackground(this->palette().window());
+    qcp_= findChild<QCustomPlot *>("mapView");
+    qcp_->setBackground(palette().window());
 
     parent_ = parent;
     //color_map_ = qobject_cast<QCPColorMap *>(color_map_abs);

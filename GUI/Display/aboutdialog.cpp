@@ -34,5 +34,5 @@ AboutDialog::~AboutDialog()
 
 void AboutDialog::on_closeButton_clicked()
 {
-    this->close();
+    close();
 }

@@ -1378,7 +1378,7 @@ void VespucciDataset::Univariate(double min,
                                             x_, y_, univariate_data->results(),
                                             QSharedPointer<VespucciDataset>(this),
                                             directory_,
-                                            this->GetGradient(gradient_index),
+                                            GetGradient(gradient_index),
                                             map_list_model_->rowCount(QModelIndex()),
                                             6,
                                             main_window_));
@@ -1451,7 +1451,7 @@ void VespucciDataset::CorrelationMap(vec control, QString name, uword gradient_i
                                             x_, y_, univariate_data->results(),
                                             QSharedPointer<VespucciDataset>(this),
                                             directory_,
-                                            this->GetGradient(gradient_index),
+                                            GetGradient(gradient_index),
                                             map_list_model_->rowCount(QModelIndex()),
                                             6,
                                             main_window_));
@@ -1515,7 +1515,7 @@ void VespucciDataset::BandRatio(double first_min, double first_max,
                                             y_axis_description_,
                                             x_, y_, univariate_data->results(),
                                             QSharedPointer<VespucciDataset>(this), directory_,
-                                            this->GetGradient(gradient_index),
+                                            GetGradient(gradient_index),
                                             map_list_model_->rowCount(QModelIndex()),
                                             6,
                                             main_window_));
@@ -1855,7 +1855,7 @@ void VespucciDataset::VertexComponents(uword endmembers,
             return;
         }
 
-        endmembers = this->HySime();
+        endmembers = HySime();
         log_stream_ << endmembers << endl;
     }
 
@@ -1924,7 +1924,7 @@ void VespucciDataset::VertexComponents(uword endmembers)
         if (ret == QMessageBox::Cancel){
             return;
         }
-        endmembers = this->HySime();
+        endmembers = HySime();
         log_stream_ << endmembers << endl;
     }
 
@@ -1973,7 +1973,7 @@ void VespucciDataset::PartialLeastSquares(uword components,
 
     if(components == 0){
         log_stream_ << "Component count predicted using HySime algorithm: ";
-        components = this->HySime();
+        components = HySime();
         log_stream_ << components << endl;
         if (image_component > components){
             image_component = components;
@@ -2027,7 +2027,7 @@ void VespucciDataset::PartialLeastSquares(uword components,
                                             y_axis_description_,
                                             x_, y_, results,
                                             QSharedPointer<VespucciDataset>(this), directory_,
-                                            this->GetGradient(gradient_index),
+                                            GetGradient(gradient_index),
                                             map_list_model_->rowCount(QModelIndex()),
                                             6,
                                             main_window_));
@@ -2047,7 +2047,7 @@ void VespucciDataset::PartialLeastSquares(uword components)
 
     if(components == 0){
         log_stream_ << "Component count predicted using HySime algorithm: ";
-        components = this->HySime();
+        components = HySime();
         log_stream_ << components << endl;
     }
 
@@ -2066,6 +2066,18 @@ void VespucciDataset::PartialLeastSquares(uword components)
     }
 }
 
+void VespucciDataset::CorrelationAnalysis(vec control, QString name)
+{
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name, control));
+    univariate_data->Apply(0, 0, UnivariateMethod::Correlation);
+
+    log_stream_ << "Univariate" << endl;
+    log_stream_ << "name == " << name << endl;
+    log_stream_ << "method == Correlation" << endl;
+    log_stream_ << "gradient_index == " << gradient_index << endl;
+    univariate_datas_.append(univariate_data);
+}
+
 
 ///
 /// \brief VespucciDataset::KMeans
@@ -2078,7 +2090,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
 {
     if(clusters == 0){
         log_stream_ << "Cluster count predicted using HySime algorithm: ";
-        clusters = this->HySime();
+        clusters = HySime();
         log_stream_ << clusters << endl;
     }
 
@@ -2189,7 +2201,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
 
     if(clusters == 0){
         log_stream_ << "Cluster count predicted using HySime algorithm: ";
-        clusters = this->HySime();
+        clusters = HySime();
         log_stream_ << clusters << endl;
     }
 
@@ -2220,10 +2232,42 @@ void VespucciDataset::PLS_DA(vec labels, uword components, QString name)
 
 }
 
-void VespucciDataset::ClassicalLeastSquares(mat standards, QString name)
+void VespucciDataset::ClassicalLeastSquares(const mat &standards, QString name)
 {
+    log_stream_ << "Classical Least Squares" << endl;
+    log_stream_ << "name == " << name << endl << endl;
     mat coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(standards, spectra_);
     AddAnalysisResult("CLS Coefficients", coefs);
+
+
+
+}
+
+void VespucciDataset::ClassicalLeastSquares(const mat &standards, uword image_component, QString name, int gradient_index)
+{
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
+    log_stream_ << "Classical Least Squares" << endl;
+    log_stream_ << "name == " << name << endl << endl;
+    mat coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(standards, spectra_);
+    AddAnalysisResult("CLS Coefficients", coefs);
+
+    QString map_type = "CLS Map " + QString::number(image_component);
+    QCPColorGradient gradient = GetGradient(gradient_index);
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, coefs.col(image_component),
+                                            QSharedPointer<VespucciDataset>(this), directory_,
+                                            gradient,
+                                            map_list_model_->rowCount(QModelIndex()),
+                                            clusters,
+                                            main_window_));
+    new_map->set_name(name, map_type);
+    new_map->SetCrispClusters(true);
+    map_list_model_->AddMap(new_map);
+    new_map->ShowMapWindow();
 }
 
 ///
@@ -2237,7 +2281,7 @@ void VespucciDataset::KMeans(size_t clusters)
 
     if(clusters == 0){
         log_stream_ << "Cluster count predicted using HySime algorithm: ";
-        clusters = this->HySime();
+        clusters = HySime();
         log_stream_ << clusters << endl;
     }
 

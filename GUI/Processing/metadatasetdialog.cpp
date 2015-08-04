@@ -25,7 +25,7 @@ MetaDatasetDialog::MetaDatasetDialog(QWidget *parent, VespucciWorkspace *ws) :
     ui(new Ui::MetaDatasetDialog)
 {
     ui->setupUi(this);
-    dataset_list_view_ = this->findChild<QListView*>("datasetListView");
+    dataset_list_view_ = findChild<QListView*>("datasetListView");
     workspace = ws;
     dataset_list_model_ = ws->dataset_list_model();
     dataset_list_view_->setModel(dataset_list_model_);
@@ -41,7 +41,7 @@ MetaDatasetDialog::~MetaDatasetDialog()
 
 void MetaDatasetDialog::on_buttonBox_rejected()
 {
-    this->close();
+    close();
 }
 
 void MetaDatasetDialog::on_buttonBox_accepted()

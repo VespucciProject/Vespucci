@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>142</height>
+    <height>158</height>
    </rect>
   </property>
   <property name="font">
@@ -19,24 +19,24 @@
    <string>Principal Components Image</string>
   </property>
   <layout class="QFormLayout" name="formLayout">
-   <item row="0" column="0">
+   <item row="1" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>Map Name</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="1" column="1">
     <widget class="QLineEdit" name="nameLineEdit"/>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <widget class="QLabel" name="label_2">
      <property name="text">
       <string>Component Number</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="2" column="1">
     <widget class="QSpinBox" name="componentSpinBox">
      <property name="minimum">
       <number>1</number>
@@ -46,14 +46,14 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="3" column="0">
     <widget class="QLabel" name="label_3">
      <property name="text">
       <string>Color Sheme</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="3" column="1">
     <widget class="QComboBox" name="gradientComboBox">
      <property name="toolTip">
       <string>An asterix by the color scheme name indicates a divergent color scheme particularly suited for this kind of map.</string>
@@ -258,14 +258,14 @@
      </item>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="4" column="1">
     <widget class="QCheckBox" name="recalculateCheckBox">
      <property name="text">
       <string>Recalculate PCA Data?</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="5" column="1">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="font">
       <font>
@@ -277,6 +277,13 @@
      </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QCheckBox" name="mapCheckBox">
+     <property name="text">
+      <string>Create Map</string>
      </property>
     </widget>
    </item>

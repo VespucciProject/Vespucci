@@ -31,17 +31,17 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     workspace = ws;
     data_ = workspace->DatasetAt(row);
 
-    spectrum_plot_ = this->findChild<QCustomPlot *>("spectrumPlot");
-    first_min_box_ = this->findChild<QLineEdit *>("firstMinLineEdit");
-    first_max_box_ = this->findChild<QLineEdit *>("firstMaxLineEdit");
-    second_min_box_ = this->findChild<QLineEdit *>("secondMinLineEdit");
-    second_max_box_ = this->findChild<QLineEdit *>("secondMaxLineEdit");
-    name_box_ = this->findChild<QLineEdit *>("nameLineEdit");
-    color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
-    value_method_selector_ = this->findChild<QComboBox *>("peakComboBox");
-    integration_method_selector_ = this->findChild<QComboBox *>("integrationComboBox");
-    integration_method_label_ = this->findChild<QLabel *>("integrationLabel");
-    range_label_ = this->findChild<QLabel *>("rangeLabel");
+    spectrum_plot_ = findChild<QCustomPlot *>("spectrumPlot");
+    first_min_box_ = findChild<QLineEdit *>("firstMinLineEdit");
+    first_max_box_ = findChild<QLineEdit *>("firstMaxLineEdit");
+    second_min_box_ = findChild<QLineEdit *>("secondMinLineEdit");
+    second_max_box_ = findChild<QLineEdit *>("secondMaxLineEdit");
+    name_box_ = findChild<QLineEdit *>("nameLineEdit");
+    color_selector_ = findChild<QComboBox *>("gradientComboBox");
+    value_method_selector_ = findChild<QComboBox *>("peakComboBox");
+    integration_method_selector_ = findChild<QComboBox *>("integrationComboBox");
+    integration_method_label_ = findChild<QLabel *>("integrationLabel");
+    range_label_ = findChild<QLabel *>("rangeLabel");
 
     data_index_ = row;
 
@@ -144,7 +144,7 @@ void BandRatioDialog::on_buttonBox_accepted()
         workspace->main_window()->DisplayExceptionWarning(e);
     }
 
-    this->close();
+    close();
     data_.clear();
 }
 
@@ -170,7 +170,7 @@ void BandRatioDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
 /// The window closes when the user clicks "Cancel"
 void BandRatioDialog::on_buttonBox_rejected()
 {
-    this->close();
+    close();
     data_.clear();
 }
 

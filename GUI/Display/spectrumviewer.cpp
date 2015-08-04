@@ -45,7 +45,7 @@ SpectrumViewer::SpectrumViewer(MapViewer *parent,
     ui->setupUi(this);
     linked_to_map_ = true;
     map_data_ = map_data;
-    spectrum_plot_ = this->findChild<QCustomPlot *>("spectrum");
+    spectrum_plot_ = findChild<QCustomPlot *>("spectrum");
     spectrum_plot_->addGraph();
     spectrum_plot_->xAxis->setLabel(x_axis_description);
     spectrum_plot_->yAxis->setLabel(y_axis_description);
@@ -55,8 +55,8 @@ SpectrumViewer::SpectrumViewer(MapViewer *parent,
     QVector<double> plot_data = dataset->PointSpectrum(0);
     QVector<double> wavelength = dataset->WavelengthQVector();
 
-    coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
-    value_label_ = this->findChild<QLabel *>("valueLabel");
+    coordinate_label_ = findChild<QLabel *>("coordinateLabel");
+    value_label_ = findChild<QLabel *>("valueLabel");
 
     spectrum_plot_->graph(0)->addData(wavelength, plot_data);
 
@@ -89,11 +89,11 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
 {
     ui->setupUi(this);
     dataset_ = dataset;
-    coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
-    value_label_ = this->findChild<QLabel *>("valueLabel");
+    coordinate_label_ = findChild<QLabel *>("coordinateLabel");
+    value_label_ = findChild<QLabel *>("valueLabel");
     coordinate_label_->setVisible(false);
     value_label_->setVisible(false);
-    spectrum_plot_ = this->findChild<QCustomPlot *>("spectrum");
+    spectrum_plot_ = findChild<QCustomPlot *>("spectrum");
     spectrum_plot_->addGraph();
     spectrum_plot_->xAxis->setLabel(dataset->x_axis_description());
     spectrum_plot_->yAxis->setLabel(dataset->y_axis_description());
@@ -104,8 +104,8 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
     }
 
     QVector<double> wavelength = dataset->WavelengthQVector();
-    coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
-    value_label_ = this->findChild<QLabel *>("valueLabel");
+    coordinate_label_ = findChild<QLabel *>("coordinateLabel");
+    value_label_ = findChild<QLabel *>("valueLabel");
     spectrum_plot_->graph(0)->addData(wavelength, plot_data);
     directory_ = directory;
 
@@ -124,14 +124,14 @@ SpectrumViewer::SpectrumViewer(SpectrumSelectionDialog *parent,
     dataset_ = dataset;
 
     cout << "find labels " << endl;
-    coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
-    value_label_ = this->findChild<QLabel *>("valueLabel");
+    coordinate_label_ = findChild<QLabel *>("coordinateLabel");
+    value_label_ = findChild<QLabel *>("valueLabel");
     cout << "edit labels" << endl;
     coordinate_label_->setVisible(false);
     value_label_->setVisible(false);
 
     cout << "find plot" << endl;
-    spectrum_plot_ = this->findChild<QCustomPlot *>("spectrum");
+    spectrum_plot_ = findChild<QCustomPlot *>("spectrum");
 
     cout << "set labels" << endl;
     spectrum_plot_->addGraph();
@@ -161,14 +161,14 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
     dataset_ = dataset;
 
     cout << "find labels " << endl;
-    coordinate_label_ = this->findChild<QLabel *>("coordinateLabel");
-    value_label_ = this->findChild<QLabel *>("valueLabel");
+    coordinate_label_ = findChild<QLabel *>("coordinateLabel");
+    value_label_ = findChild<QLabel *>("valueLabel");
     cout << "edit labels" << endl;
     coordinate_label_->setVisible(false);
     value_label_->setVisible(false);
 
     cout << "find plot" << endl;
-    spectrum_plot_ = this->findChild<QCustomPlot *>("spectrum");
+    spectrum_plot_ = findChild<QCustomPlot *>("spectrum");
 
     cout << "set labels" << endl;
     spectrum_plot_->addGraph();

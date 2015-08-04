@@ -7,10 +7,10 @@ BooleanizeDialog::BooleanizeDialog(QWidget *parent, VespucciWorkspace *ws, int r
 {
     ui->setupUi(this);
 
-    min_box_ = this->findChild<QDoubleSpinBox*>("minDoubleSpinBox");
-    max_box_ = this->findChild<QDoubleSpinBox*>("maxDoubleSpinBox");
-    oneify_box_ = this->findChild<QCheckBox*>("oneifyCheckBox");
-    behavior_box_ = this->findChild<QComboBox*>("behaviorComboBox");
+    min_box_ = findChild<QDoubleSpinBox*>("minDoubleSpinBox");
+    max_box_ = findChild<QDoubleSpinBox*>("maxDoubleSpinBox");
+    oneify_box_ = findChild<QCheckBox*>("oneifyCheckBox");
+    behavior_box_ = findChild<QComboBox*>("behaviorComboBox");
     workspace = ws;
     dataset_ = workspace->DatasetAt(row);
     //not encapsulated, but this is basically research code anyway...
@@ -53,5 +53,5 @@ void BooleanizeDialog::on_buttonBox_accepted()
 void BooleanizeDialog::on_buttonBox_rejected()
 {
     dataset_.clear();
-    this->close();
+    close();
 }

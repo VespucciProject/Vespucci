@@ -9,10 +9,10 @@ ScriptDialog::ScriptDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
 {
     ui->setupUi(this);
     dataset_ = ws->DatasetAt(row);
-    code_box_ = this->findChild<QPlainTextEdit *>("codePlainTextEdit");
-    receive_box_ = this->findChild<QPlainTextEdit *>("receivePlainTextEdit");
-    send_box_ = this->findChild<QPlainTextEdit *>("sendPlainTextEdit");
-    interpreter_selector_ = this->findChild<QComboBox *>("interpreterComboBox");
+    code_box_ = findChild<QPlainTextEdit *>("codePlainTextEdit");
+    receive_box_ = findChild<QPlainTextEdit *>("receivePlainTextEdit");
+    send_box_ = findChild<QPlainTextEdit *>("sendPlainTextEdit");
+    interpreter_selector_ = findChild<QComboBox *>("interpreterComboBox");
 }
 
 ScriptDialog::~ScriptDialog()

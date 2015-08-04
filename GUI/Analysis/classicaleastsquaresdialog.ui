@@ -1,154 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>UnivariateDialog</class>
- <widget class="QDialog" name="UnivariateDialog">
+ <class>ClassicaLeastSquaresDialog</class>
+ <widget class="QDialog" name="ClassicaLeastSquaresDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>700</width>
-    <height>688</height>
+    <width>359</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>New Univariate Image</string>
+   <string>Dialog</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
     <widget class="QGroupBox" name="groupBox">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
      <property name="title">
-      <string>Analysis Options</string>
+      <string>Reference Spectra</string>
      </property>
-     <layout class="QFormLayout" name="formLayout_2">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <item row="2" column="1">
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="datasetRadioButton">
+        <property name="text">
+         <string>Use Dataset</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="fileRadioButton">
+        <property name="text">
+         <string>Import From File</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QLineEdit" name="minLineEdit">
-          <property name="placeholderText">
-           <string>Left Bound</string>
-          </property>
-         </widget>
+         <widget class="QLineEdit" name="filenameLineEdit"/>
         </item>
         <item>
-         <widget class="QLineEdit" name="maxLineEdit">
-          <property name="placeholderText">
-           <string>Right Bound</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Abscissa Range</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="rangeLabel">
-        <property name="text">
-         <string>200-2000 cm-1</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Region</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Determination Method</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QComboBox" name="peakComboBox">
-        <item>
-         <property name="text">
-          <string>Intensity</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Area</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Derivative</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Correlation</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="integrationLabel">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Integration Method</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QComboBox" name="integrationComboBox">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>Riemann Sum</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="label">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Spectrum to Compare</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
-        <item>
-         <widget class="QLineEdit" name="filenameLineEdit">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="browseButton">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>8</pointsize>
-           </font>
-          </property>
+         <widget class="QPushButton" name="browsePushButton">
           <property name="text">
            <string>Browse...</string>
           </property>
@@ -156,59 +48,46 @@
         </item>
        </layout>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QGroupBox" name="groupBox_4">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="title">
-      <string>Spectrum Preview (At Spatial Origin)</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QCustomPlot" name="spectrumPlot" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>600</width>
-          <height>225</height>
-         </size>
-        </property>
-       </widget>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="datasetComboBox"/>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="4" column="0">
+   <item>
     <widget class="QGroupBox" name="groupBox_2">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
      <property name="title">
-      <string>Map Settings</string>
+      <string>Image</string>
      </property>
-     <layout class="QFormLayout" name="formLayout">
+     <layout class="QFormLayout" name="formLayout_2">
       <item row="0" column="0">
-       <widget class="QCheckBox" name="mapCheckBox">
+       <widget class="QCheckBox" name="imageCheckBox">
         <property name="text">
-         <string>Create Map</string>
+         <string>Create Image</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_6">
+       <widget class="QLabel" name="label">
         <property name="text">
-         <string>Color Gradient</string>
+         <string>Name</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
+       <widget class="QLineEdit" name="nameLineEdit"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Reference Spectrum</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QSpinBox" name="componentSpinBox"/>
+      </item>
+      <item row="3" column="1">
        <widget class="QComboBox" name="gradientComboBox">
         <property name="toolTip">
          <string>An asterix by the color scheme name indicates a divergent color scheme particularly suited for this kind of map.</string>
@@ -413,46 +292,18 @@
         </item>
        </widget>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="title">
-      <string>Map Name</string>
-     </property>
-     <layout class="QFormLayout" name="formLayout_3">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If no name entered, default &amp;quot;Univariate Analysis n&amp;quot; where n is the number performed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Name</string>
+         <string>Color Gradient</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="nameLineEdit"/>
-      </item>
      </layout>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="font">
-      <font>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -463,20 +314,12 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QCustomPlot</class>
-   <extends>QWidget</extends>
-   <header>qcustomplot.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>UnivariateDialog</receiver>
+   <receiver>ClassicaLeastSquaresDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -492,7 +335,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>UnivariateDialog</receiver>
+   <receiver>ClassicaLeastSquaresDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

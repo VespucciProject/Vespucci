@@ -34,9 +34,9 @@ BaselineDialog::BaselineDialog(QWidget *parent, VespucciWorkspace *ws, int row) 
     workspace = ws;
     dataset_ = workspace->DatasetAt(row);
 
-    window_size_box_ = this->findChild<QSpinBox *>("windowSpinBox");
-    method_box_ = this->findChild<QComboBox *>("methodComboBox");
-    iterations_box_ = this->findChild<QSpinBox *>("iterationsSpinBox");
+    window_size_box_ = findChild<QSpinBox *>("windowSpinBox");
+    method_box_ = findChild<QComboBox *>("methodComboBox");
+    iterations_box_ = findChild<QSpinBox *>("iterationsSpinBox");
 }
 
 BaselineDialog::~BaselineDialog()
@@ -57,7 +57,7 @@ void BaselineDialog::on_buttonBox_accepted()
     for (int i = 0; i < iterations; ++i)
         dataset_->Baseline(method, window_size);
 
-    this->close();
+    close();
     dataset_.clear();
 }
 
@@ -66,6 +66,6 @@ void BaselineDialog::on_buttonBox_accepted()
 /// Window closes when user clicks "Cancel"
 void BaselineDialog::on_buttonBox_rejected()
 {
-    this->close();
+    close();
     dataset_.clear();
 }

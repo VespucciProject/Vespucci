@@ -79,6 +79,7 @@
     <addaction name="separator"/>
     <addaction name="actionBatch_File_Conversion"/>
     <addaction name="separator"/>
+    <addaction name="actionSet_Global_Color_Scale"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -104,7 +105,6 @@
      <addaction name="actionCorrect_Baseline"/>
      <addaction name="actionCrop"/>
      <addaction name="actionReject_Clipped_Spectra"/>
-     <addaction name="actionView_Edit_Spectra"/>
      <addaction name="actionBooleanize_Clamp"/>
      <addaction name="actionRemove_Vectors_of_Zeros"/>
      <addaction name="actionTransform_Abscissa"/>
@@ -127,41 +127,54 @@
     <addaction name="actionUndo"/>
     <addaction name="separator"/>
     <addaction name="menuData_Pre_Processing"/>
+    <addaction name="actionRun_script"/>
     <addaction name="separator"/>
     <addaction name="menuExport_Dataset_Elements"/>
+    <addaction name="actionView_Edit_Spectra"/>
     <addaction name="actionView_Dataset_Elements"/>
     <addaction name="separator"/>
     <addaction name="actionNew_Composite_Dataset"/>
-    <addaction name="actionUnivariate_Analysis"/>
-    <addaction name="actionMultivariate_Analysis"/>
-    <addaction name="actionDetect_Peaks"/>
-    <addaction name="actionCalculate_Peak_Populations"/>
+    <addaction name="separator"/>
+    <addaction name="actionCreate_Plot"/>
     <addaction name="separator"/>
     <addaction name="actionClose_Dataset"/>
-    <addaction name="actionCreate_Plot"/>
-    <addaction name="actionRun_script"/>
    </widget>
    <widget class="QMenu" name="menuMap">
     <property name="title">
-     <string>Map</string>
+     <string>Analysis</string>
     </property>
     <widget class="QMenu" name="menuNew_Multivariate_Map">
      <property name="enabled">
       <bool>true</bool>
      </property>
      <property name="title">
-      <string>New Multivariate Map...</string>
+      <string>Multiviariate Analysis</string>
      </property>
      <addaction name="actionPrincipal_Components_Analysis"/>
      <addaction name="actionPartial_Least_Squares"/>
      <addaction name="actionVertex_Components"/>
      <addaction name="actionK_Means_Clustering"/>
+     <addaction name="actionClassical_Least_Squares"/>
     </widget>
-    <addaction name="actionNew_Univariate_Map"/>
-    <addaction name="actionNew_Band_Ratio_Map"/>
-    <addaction name="menuNew_Multivariate_Map"/>
+    <widget class="QMenu" name="menuPeak_Detection">
+     <property name="title">
+      <string>Peak Detection</string>
+     </property>
+     <addaction name="actionDetect_Peaks"/>
+     <addaction name="actionCalculate_Peak_Populations"/>
+    </widget>
+    <widget class="QMenu" name="menuUnivariate_Analysis">
+     <property name="title">
+      <string>Univariate Analysis...</string>
+     </property>
+     <addaction name="actionNew_Univariate_Map"/>
+     <addaction name="actionNew_Band_Ratio_Map"/>
+    </widget>
     <addaction name="separator"/>
-    <addaction name="actionSet_Global_Color_Scale"/>
+    <addaction name="menuUnivariate_Analysis"/>
+    <addaction name="menuNew_Multivariate_Map"/>
+    <addaction name="menuPeak_Detection"/>
+    <addaction name="separator"/>
     <addaction name="actionDelete_Map"/>
    </widget>
    <addaction name="menuFile"/>
@@ -201,7 +214,7 @@
   </action>
   <action name="actionNew_Univariate_Map">
    <property name="text">
-    <string>New Univariate Map...</string>
+    <string>Univariate</string>
    </property>
   </action>
   <action name="actionNew_Band_Ratio_Map">
@@ -209,7 +222,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>New Band Ratio Map...</string>
+    <string>Band Ratio</string>
    </property>
   </action>
   <action name="actionCiting_Vespucci">
@@ -352,11 +365,6 @@
     <string>Spectra (as Columns)</string>
    </property>
   </action>
-  <action name="actionUnivariate_Analysis">
-   <property name="text">
-    <string>Univariate Analysis...</string>
-   </property>
-  </action>
   <action name="actionLarge_Matrices">
    <property name="text">
     <string>Large Matrices...</string>
@@ -364,7 +372,7 @@
   </action>
   <action name="actionView_Edit_Spectra">
    <property name="text">
-    <string>View/Edit Spectra</string>
+    <string>View/Remove Spectra</string>
    </property>
   </action>
   <action name="actionBooleanize_Clamp">
@@ -420,6 +428,21 @@
   <action name="actionBatch_File_Conversion">
    <property name="text">
     <string>Batch File Conversion</string>
+   </property>
+  </action>
+  <action name="actionClassical_Least_Squares">
+   <property name="text">
+    <string>Classical Least Squares</string>
+   </property>
+  </action>
+  <action name="actionUnivariate">
+   <property name="text">
+    <string>Univariate</string>
+   </property>
+  </action>
+  <action name="actionBand_Ratio">
+   <property name="text">
+    <string>Band Ratio</string>
    </property>
   </action>
  </widget>

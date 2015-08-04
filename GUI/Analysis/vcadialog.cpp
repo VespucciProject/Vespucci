@@ -33,13 +33,18 @@ VCADialog::VCADialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     ui->setupUi(this);
     workspace = ws;
     data_ = workspace->DatasetAt(row);
-    components_selector_ = this->findChild<QSpinBox *>("endmembersSpinBox");
-    image_component_selector_ = this->findChild<QSpinBox *>("componentSpinBox");
-    color_selector_ = this->findChild<QComboBox *>("gradientComboBox");
-    recalculate_box_ = this->findChild<QCheckBox *>("recalculateCheckBox");
-    prediction_box_ = this->findChild<QCheckBox *>("predictionCheckBox");
-    name_box_ = this->findChild<QLineEdit*>("nameLineEdit");
+    components_selector_ = findChild<QSpinBox *>("endmembersSpinBox");
+    image_component_selector_ = findChild<QSpinBox *>("componentSpinBox");
+    color_selector_ = findChild<QComboBox *>("gradientComboBox");
+    recalculate_box_ = findChild<QCheckBox *>("recalculateCheckBox");
+    prediction_box_ = findChild<QCheckBox *>("predictionCheckBox");
+    name_box_ = findChild<QLineEdit*>("nameLineEdit");
+    map_check_box_ = findChild<QCheckBox *>("mapCheckBox");
     data_index_ = row;
+
+    image_component_selector_->setEnabled(false);
+    recalculate_box_->setEnabled(false);
+    color_selector_->setEnabled(false);
 }
 
 VCADialog::~VCADialog()
@@ -58,23 +63,34 @@ void VCADialog::on_buttonBox_accepted()
     else
         endmembers = components_selector_->value();
 
-    int image_component = image_component_selector_->value();
+    if (map_check_box_->isChecked()){
+        int image_component = image_component_selector_->value();
 
-    QString name = name_box_->text();
-    bool recalculate = recalculate_box_->isChecked();
-    int gradient_index = color_selector_->currentIndex();
+        QString name = name_box_->text();
+        bool recalculate = recalculate_box_->isChecked();
+        int gradient_index = color_selector_->currentIndex();
 
-    try{
-        data_->VertexComponents(endmembers,
-                                image_component,
-                                name,
-                                gradient_index,
-                                recalculate);
+        try{
+            data_->VertexComponents(endmembers,
+                                    image_component,
+                                    name,
+                                    gradient_index,
+                                    recalculate);
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
     }
-    catch(exception e){
-        workspace->main_window()->DisplayExceptionWarning(e);
+    else{
+        try{
+            data_->VertexComponents(endmembers);
+        }catch(excpetion e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
     }
-    this->close();
+
+
+    close();
     data_.clear();
 }
 
@@ -83,7 +99,7 @@ void VCADialog::on_buttonBox_accepted()
 /// Closes window when "Cancel" clicked.
 void VCADialog::on_buttonBox_rejected()
 {
-    this->close();
+    close();
     data_.clear();
 }
 
@@ -91,4 +107,11 @@ void VCADialog::on_predictionCheckBox_clicked(bool checked)
 {
     components_selector_->setEnabled(!checked);
 
+}
+
+void VCADialog::on_mapCheckBox_stateChanged(int arg1)
+{
+    image_component_selector_->setEnabled(arg1);
+    recalculate_box_->setEnabled(arg1);
+    color_selector_->setEnabled(arg1);
 }

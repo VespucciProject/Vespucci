@@ -37,19 +37,19 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
     dataset_ = workspace->DatasetAt(row);
 
     QString title = "Data Viewer (" + dataset_->name() + ")";
-    this->setWindowTitle(title);
+    setWindowTitle(title);
 
     directory_ = workspace->directory();
 
-    export_button_ = this->findChild<QToolButton *>("exportToolButton");
-    plot_button_ = this->findChild<QToolButton *>("plotToolButton");
-    data_selector_ = this->findChild<QComboBox *>("comboBox");
-    extract_button_ = this->findChild<QToolButton *>("extractToolButton");
-    stats_button_ = this->findChild<QToolButton *>("statsToolButton");
+    export_button_ = findChild<QToolButton *>("exportToolButton");
+    plot_button_ = findChild<QToolButton *>("plotToolButton");
+    data_selector_ = findChild<QComboBox *>("comboBox");
+    extract_button_ = findChild<QToolButton *>("extractToolButton");
+    stats_button_ = findChild<QToolButton *>("statsToolButton");
     plot_button_->setDisabled(true);
     export_button_->setDisabled(true);
     extract_button_->setDisabled(true);
-    table_ = this->findChild<QTableView *>("tableView");  
+    table_ = findChild<QTableView *>("tableView");
 
     mat *matrix;
     matrix = dataset_->wavelength_ptr();

@@ -33,12 +33,12 @@ FilterDialog::FilterDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     ui->setupUi(this);
     workspace = ws;
     dataset_ = workspace->DatasetAt(row);
-    method_box_ = this->findChild<QComboBox *>("methodComboBox");
-    derivative_box_ = this->findChild<QSpinBox *>("derivativeSpinBox");
-    polynomial_box_ = this->findChild<QSpinBox *>("polynomialSpinBox");
-    window_box_ = this->findChild<QSpinBox *>("windowSpinBox");
-    singular_values_box_ = this->findChild<QSpinBox *>("singularValuesSpinBox");
-    epsilon_box_ = this->findChild<QDoubleSpinBox *>("epsilonSpinBox");
+    method_box_ = findChild<QComboBox *>("methodComboBox");
+    derivative_box_ = findChild<QSpinBox *>("derivativeSpinBox");
+    polynomial_box_ = findChild<QSpinBox *>("polynomialSpinBox");
+    window_box_ = findChild<QSpinBox *>("windowSpinBox");
+    singular_values_box_ = findChild<QSpinBox *>("singularValuesSpinBox");
+    epsilon_box_ = findChild<QDoubleSpinBox *>("epsilonSpinBox");
 }
 
 FilterDialog::~FilterDialog()
@@ -135,7 +135,7 @@ void FilterDialog::on_buttonBox_accepted()
     default:
         return;
     }
-    this->close();
+    close();
     dataset_.clear(); //let go of pointer to dataset
 
 }
@@ -145,6 +145,6 @@ void FilterDialog::on_buttonBox_accepted()
 /// Close window when "Cancel" selected.
 void FilterDialog::on_buttonBox_rejected()
 {
-    this->close();
+    close();
     dataset_.clear(); //let go of pointer to dataset
 }
