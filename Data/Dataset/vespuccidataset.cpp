@@ -949,7 +949,7 @@ void VespucciDataset::IModPolyBaseline(const uword poly_order, const uword max_i
     double err;
     try{
         for (uword i = 0; i < spectra_.n_cols; ++i){
-            Vespucci::Math::LinLeastSq::IModPoly(spectrum_.col(i),
+            Vespucci::Math::LinLeastSq::IModPoly(spectra_.col(i),
                                                  abscissa_, baseline,
                                                  corrected, err,
                                                  poly_order, max_it, threshold);
