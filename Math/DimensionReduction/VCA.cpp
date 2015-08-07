@@ -48,7 +48,7 @@ bool Vespucci::Math::DimensionReduction::VCA(const arma::mat &R, arma::uword p,
         std::cerr << "set to 5 or one less than number of spectra" << std::endl;
         p = (L < 5? 5: L-1);
     }
-//mat::mations of SNR
+//mat of SNR
     arma::mat r_m = mean(R, 1);
     arma::mat R_m = arma::repmat(r_m, 1, N); //the mean of each spectral band
     arma::mat R_o = R - R_m; //mean-center the data
@@ -56,7 +56,14 @@ bool Vespucci::Math::DimensionReduction::VCA(const arma::mat &R, arma::uword p,
     arma::vec Sd;
     arma::mat Vd;
     arma::svds(Ud, Sd, Vd, arma::sp_mat(arma::cov(R_o)/N), p);
-    arma::mat x_p = trans(Ud) * R_o;
+
+    arma::mat x_p;
+    try{
+    x_p = Ud.t() * R_o;
+    }catch(std::exception e){
+        std::cout << "Ud.t() * R_o" << std::endl;
+    }
+
     double SNR = Vespucci::Math::DimensionReduction::estimate_snr(R, r_m, x_p);
     double SNR_th = 15 + 10*log10(p);
 
@@ -71,12 +78,12 @@ bool Vespucci::Math::DimensionReduction::VCA(const arma::mat &R, arma::uword p,
         arma::mat sum_squares = sum(pow(x, 2));
         double c = sum_squares.max();
         c = std::sqrt(c);
-        y = join_vert(x, c*arma::ones(1, N));
+        y = arma::join_vert(x, c*arma::ones(1, N));
       }
     else{
         arma::uword d = p;
         arma::svds(Ud, Sd, Vd, arma::sp_mat(arma::cov(R)/N), d);//R_o is a mean centered version...
-        x_p = trans(Ud)*R;
+        x_p = arma::trans(Ud)*R;
         projected_data = Ud * x_p.rows(0, d-1);
         arma::mat x = trans(Ud) * R;
         arma::mat u = mean(x, 1);
@@ -101,17 +108,17 @@ bool Vespucci::Math::DimensionReduction::VCA(const arma::mat &R, arma::uword p,
     A(p-1, 0) = 1;
     for (arma::uword i = 0; i < p; ++i){
         w.randu();
-        f = w - A*pinv(A)*w;
+        f = w - A*arma::pinv(A)*w;
         sum_squares = sqrt(sum(square(f)));
         f /= sum_squares;
-        v = trans(f) * y;
-        v_max = max(abs(v));
+        v = f.t() * y;
+        v_max = arma::max(abs(v));
         q1 = arma::find(abs(v) == v_max, 1);
         indices(i) = q1(0);
         A.col(i) = y.col(indices(i)); //same as x.col(indices(i));
     }
     endmember_spectra = projected_data.cols(indices);
-    fractional_abundances = trans(pinv(endmember_spectra) * projected_data);
+    fractional_abundances = arma::trans(pinv(endmember_spectra) * projected_data);
     return true;
 }
 

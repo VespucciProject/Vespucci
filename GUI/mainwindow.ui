@@ -420,11 +420,6 @@
     <string>Fourier Transform</string>
    </property>
   </action>
-  <action name="actionBulk_Dataset_File_Conversion">
-   <property name="text">
-    <string>Batch File Conversion</string>
-   </property>
-  </action>
   <action name="actionBatch_File_Conversion">
    <property name="text">
     <string>Batch File Conversion</string>

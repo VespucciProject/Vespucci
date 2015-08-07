@@ -185,7 +185,7 @@ arma::mat Vespucci::Math::Smoothing::InterpolateToNewAbscissa(const arma::mat &s
                                                               const int window_size,
                                                               const int order)
 {
-    mat new_spectra(new_abscissa.n_rows, spectra.n_cols);
+    arma::mat new_spectra(new_abscissa.n_rows, spectra.n_cols);
 
     arma::umat closest_indices = Vespucci::Math::GetClosestValues(new_abscissa,
                                                                   old_abscissa,
@@ -197,7 +197,7 @@ arma::mat Vespucci::Math::Smoothing::InterpolateToNewAbscissa(const arma::mat &s
 
         for (arma::uword i = 0; i < new_abscissa.n_rows; ++i){
             arma::vec x = old_abscissa(closest_indices.col(i));
-            arma::vec y = spectrum(cloest_indices.col(i));
+            arma::vec y = spectrum(closest_indices.col(i));
             arma::mat X = Vespucci::Math::LinLeastSq::Vandermonde(x, order);
             arma::vec coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(X, y);
             new_spectra(i, j) = Vespucci::Math::CalcPoly(new_abscissa(i), coefs);

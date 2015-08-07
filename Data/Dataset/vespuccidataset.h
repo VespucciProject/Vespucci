@@ -156,6 +156,8 @@ public:
     void SingularValue(unsigned int singular_values);
     int QUIC_SVD(double epsilon);
     void Baseline(QString method, int parameter);
+    void CWTBaseline(int parameter);
+    void IModPolyBaseline(const uword poly_order, const uword max_it, double threshold);
     void RemoveClippedSpectra(double threshold);
     void RemoveFlatSpectra(double threshold);
     void Scale(double scaling_factor);
@@ -164,7 +166,7 @@ public:
     void TransformAbscissa(QString input_units, double input_factor,
                            QString output_units, double output_factor, QString description);
     void InterpolateToNewAbscissa(vec &new_abscissa,
-                                  unsigned_int polynomial_order,
+                                  unsigned int polynomial_order,
                                   unsigned int window_size);
     void FourierTransform(int n);
     void ApplyFTWeight(QString type, double cut_after = -1);
@@ -354,6 +356,7 @@ public:
     mat *x_ptr();
     mat *y_ptr();
     mat *wavelength_ptr();
+    mat *abscissa_ptr();
     mat *spectra_ptr();
     mat *spectra_old_ptr(bool *ok);
     bool non_spatial();

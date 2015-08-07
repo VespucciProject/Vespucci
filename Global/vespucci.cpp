@@ -2,6 +2,7 @@
 #include <QtSvg>
 #include <minizip/zip.h>
 #include <cstdlib>
+#include <QProcess>
 ///
 /// \brief Vespucci::SavePlot
 /// \param plot
@@ -154,10 +155,10 @@ void Vespucci::SetQCPFonts(QCustomPlot *plot, const QFont &font)
 ///
 bool Vespucci::SaveZipped(std::map<std::string, const arma::mat *> objects, const std::string filename, const arma::file_type type)
 {
-    std::vector<std::wstring> paths;
+    std::vector<std::string> paths;
     for (auto& object : objects){
         try{
-            object.second->save(object->first, type);
+            object.second->save(object.first, type);
             paths.push_back(object.first);
         }catch(std::exception e){
             throw e;
@@ -167,9 +168,8 @@ bool Vespucci::SaveZipped(std::map<std::string, const arma::mat *> objects, cons
     Vespucci::CreateZipFile(filename, paths);
 
     //delete the temporary files
-    for (const std::wstring &str : paths){remove(str.c_str());}
-
-
+    for (const std::string &str : paths)
+        remove(str.c_str());
 }
 
 
@@ -178,53 +178,19 @@ bool Vespucci::SaveZipped(std::map<std::string, const arma::mat *> objects, cons
 /// \brief Vespucci::CreateZipFile Move files to a zip file.
 /// \param paths Vector of paths to add to file
 /// \return
-/// Credit to StackOverflow user niemiro
-/// http://stackoverflow.com/questions/11370908/how-do-i-use-minizip-on-zlib
-int Vespucci::CreateZipFile(std::string zip_path, std::vector<std::wstring> paths)
+/// 7za needs to be in path (is included in Windows distribution, p7zip can be installed for posix)
+int Vespucci::CreateZipFile(std::string zip_filename, std::vector<std::string> paths)
 {
-    zipFile zf = zipOpen(zip_path.c_str(), APPEND_STATUS_CREATE);
-        if (zf == NULL)
-            return 1;
-
-        bool _return = true;
-        for (size_t i = 0; i < paths.size(); i++)
-        {
-            std::fstream file(paths[i].c_str(), std::ios::binary | std::ios::in);
-            if (file.is_open())
-            {
-                file.seekg(0, std::ios::end);
-                long size = file.tellg();
-                file.seekg(0, std::ios::beg);
-
-                std::vector<char> buffer(size);
-                if (size == 0 || file.read(&buffer[0], size))
-                {
-                    zip_fileinfo zfi = { 0 };
-                    std::wstring fileName = paths[i].substr(paths[i].rfind('\\')+1);
-
-                    if (S_OK == zipOpenNewFileInZip(zf, std::string(fileName.begin(), fileName.end()).c_str(), &zfi, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION))
-                    {
-                        if (zipWriteInFileInZip(zf, size == 0 ? "" : &buffer[0], size))
-                            _return = false;
-
-                        if (zipCloseFileInZip(zf))
-                            _return = false;
-
-                        file.close();
-                        continue;
-                    }
-                }
-                file.close();
-            }
-            _return = false;
-        }
-
-        if (zipClose(zf, NULL))
-            return 3;
-
-        if (!_return)
-            return 4;
-        return S_OK;
+    QProcess *process = new QProcess(0);
+    QString program = "7z";
+    QStringList args;
+    args << "a" << QString::fromStdString(zip_filename);
+    std::vector<std::string>::iterator it = paths.begin();
+    while(it!=paths.end())
+        args << QString::fromStdString(*it);
+    //call 7z to make archive
+    process->start(program, args);
+    return process->exitCode();
 }
 
 ///
@@ -235,22 +201,20 @@ int Vespucci::CreateZipFile(std::string zip_path, std::vector<std::wstring> path
 /// \param abscissa
 /// \return
 ///
-bool Vespucci::SaveVespucciBinary(const arma::mat &spectra, const arma::vec &x, const arma::vec &y, const arma::vec &abscissa)
+bool Vespucci::SaveVespucciBinary(std::string filename, const arma::mat &spectra, const arma::vec &x, const arma::vec &y, const arma::vec &abscissa)
 {
+    bool success;
     try{
-        arma::field<mat> dataset(4);
-        dataset(0) = spectra_;
-        dataset(1) = wavelength_;
-        dataset(2) = x_;
-        dataset(3) = y_;
-        success = dataset.save(filename.toStdString(), arma_binary);
+        arma::field<arma::mat> dataset(4);
+        dataset(0) = spectra;
+        dataset(1) = abscissa;
+        dataset(2) = x;
+        dataset(3) = y;
+        success = dataset.save(filename, arma::arma_binary);
     }
-    catch(exception e){
-        cerr << "See armadillo exception" << endl;
-
-        char str[50];
-        strcat(str, "VespucciDataset::Save: ");
-        strcat(str, e.what());
+    catch(std::exception e){
+        std::cerr << "See armadillo exception" << endl;
+        std::string str = "Vespucci::SaveVespucciBinary: " + std::string(e.what());
         throw std::runtime_error(str);
     }
 }
@@ -263,5 +227,5 @@ bool Vespucci::SaveZipped(const arma::mat &spectra, const arma::vec &abscissa, c
     map["y"] = &y;
     map["spectra"] = &spectra;
     map["abscissa"] = &abscissa;
-    SaveZipped(map, filename, file_type);
+    SaveZipped(map, filename, type);
 }

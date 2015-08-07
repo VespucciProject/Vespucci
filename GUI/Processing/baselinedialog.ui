@@ -24,7 +24,7 @@
      <x>10</x>
      <y>340</y>
      <width>681</width>
-     <height>109</height>
+     <height>115</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -44,12 +44,12 @@
       </item>
       <item>
        <property name="text">
-        <string>CWT Test</string>
+        <string>Vancouver Raman Algorithm (IModPoly)</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>CWT-SPDBC</string>
+        <string>CWT</string>
        </property>
       </item>
      </widget>

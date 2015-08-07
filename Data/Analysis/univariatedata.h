@@ -52,7 +52,7 @@ public:
 
     mat calibration_curve() const;
     const mat *calibration_curve_ptr() const;
-    const map<string, double> calibration_stats() const;
+    const std::map<std::string, double> calibration_stats() const;
 
 
     mat Midlines() const;
@@ -130,7 +130,7 @@ private:
     uvec boundaries_;
     mat calibration_curve_;
 
-    map<string, double> calibration_stats_;
+    std::map<std::string, double> calibration_stats_;
     bool calibrated_;
 };
 

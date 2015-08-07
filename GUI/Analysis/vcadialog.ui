@@ -19,7 +19,7 @@
    <string>Vertex Component Analysis Image</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../resources.qrc">
+   <iconset>
     <normaloff>:/icons/vespuccilogo.ico</normaloff>:/icons/vespuccilogo.ico</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -327,8 +327,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

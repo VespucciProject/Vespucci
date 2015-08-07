@@ -54,6 +54,8 @@ private slots:
 
     void on_secondMaxLineEdit_textChanged(const QString &arg1);
 
+    void on_mapCheckBox_stateChanged(int arg1);
+
 private:
     Ui::BandRatioDialog *ui;
 
@@ -145,6 +147,8 @@ private:
     /// \brief data_
     /// Points to the dataset we're working with.
     QSharedPointer<VespucciDataset> data_;
+
+    QCheckBox *map_check_box_;
 };
 
 #endif // BANDRATIODIALOG_H

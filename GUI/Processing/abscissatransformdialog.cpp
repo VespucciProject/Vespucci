@@ -9,11 +9,11 @@ AbscissaTransformDialog::AbscissaTransformDialog(QWidget *parent, VespucciWorksp
     ui->setupUi(this);
     workspace = ws;
     dataset_ = workspace->DatasetAt(row);
-    out_factor_edit_ = FindChild<QLineEdit *>("outFactorLineEdit");
-    in_factor_edit_ = FindChild<QLineEdit *>("inFactorLineEdit");
-    out_units_combo_box_ = FindChild<QComboBox *>("outUnitsComboBox");
-    in_units_combo_box_ = FindChild<QComboBox *>("inUnitsComboBox");
-    description_edit_=  FindChild<QLinEdit *>("descriptionLineEdit");
+    out_factor_edit_ = findChild<QLineEdit *>("outFactorLineEdit");
+    in_factor_edit_ = findChild<QLineEdit *>("inFactorLineEdit");
+    out_units_combo_box_ = findChild<QComboBox *>("outUnitsComboBox");
+    in_units_combo_box_ = findChild<QComboBox *>("inUnitsComboBox");
+    description_edit_=  findChild<QLineEdit *>("descriptionLineEdit");
     description_edit_->setText(dataset_->x_axis_description());
 }
 
@@ -50,6 +50,7 @@ double AbscissaTransformDialog::ParseInput(QString text) const
 double AbscissaTransformDialog::TextToDouble(QString text) const
 {
     double val;
+    bool ok;
     if (text == "eV"){val = arma::datum::eV; ok = true;}
     else{val = text.toDouble(&ok);}
     return (ok ? val : 0);

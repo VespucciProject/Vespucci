@@ -45,8 +45,6 @@ private slots:
 
     void on_predictionCheckBox_clicked(bool checked);
 
-    void on_checkBox_stateChanged(int arg1);
-
     void on_mapCheckBox_stateChanged(int arg1);
 
 private:

@@ -11,12 +11,12 @@ ReportMessageDialog::ReportMessageDialog(QWidget *parent, const QString &title) 
     setWindowTitle(title);
 }
 
-ReportMessageDialog::setLabel(const QString &new_label)
+void ReportMessageDialog::setLabel(const QString &new_label)
 {
     label_->setText(new_label);
 }
 
-ReportMessageDialog::appendPlainText(const QString &text)
+void ReportMessageDialog::appendPlainText(const QString &text)
 {
     text_edit_->appendPlainText(text);
 }

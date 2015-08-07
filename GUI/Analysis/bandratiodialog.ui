@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>725</width>
-    <height>625</height>
+    <height>629</height>
    </rect>
   </property>
   <property name="font">
@@ -27,7 +27,7 @@
       </font>
      </property>
      <property name="title">
-      <string>Map Name</string>
+      <string>Name</string>
      </property>
      <layout class="QFormLayout" name="formLayout_4">
       <property name="fieldGrowthPolicy">
@@ -157,6 +157,46 @@
         </item>
        </layout>
       </item>
+      <item row="3" column="1">
+       <widget class="QComboBox" name="peakComboBox">
+        <item>
+         <property name="text">
+          <string>Intensity</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Area</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="integrationComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>Riemann Sum</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Peak Determination</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="integrationLabel">
+        <property name="text">
+         <string>Integration Method</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -174,7 +214,7 @@
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
-      <item row="0" column="1">
+      <item row="1" column="1">
        <widget class="QComboBox" name="gradientComboBox">
         <property name="toolTip">
          <string>An asterix by the color scheme name indicates a divergent color scheme particularly suited for this kind of map.</string>
@@ -380,49 +420,16 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Peak Determination</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="peakComboBox">
-        <item>
-         <property name="text">
-          <string>Intensity</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Area</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="integrationLabel">
-        <property name="text">
-         <string>Integration Method</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="integrationComboBox">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>Riemann Sum</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="0" column="0">
        <widget class="QLabel" name="label_6">
         <property name="text">
          <string>Color Gradient</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="mapCheckBox">
+        <property name="text">
+         <string>Create Map</string>
         </property>
        </widget>
       </item>

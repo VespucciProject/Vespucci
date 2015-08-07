@@ -25,6 +25,8 @@ private slots:
 
     void on_buttonBox_accepted();
 
+    void on_BrowsePushButton_clicked();
+
 private:
     Ui::BulkConversionDialog *ui;
     QListWidget *filename_list_widget_;

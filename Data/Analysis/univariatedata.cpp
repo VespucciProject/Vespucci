@@ -116,14 +116,12 @@ void UnivariateData::Calibrate(const vec &values, const vec &concentrations)
                                                                  calibration_stats_);
 
     calibration_stats_["Calibrated"] = 1;
-    residuals = values - calibration_y;
+    vec residuals = values - calibration_y;
     calibration_curve_ = join_horiz(concentrations, join_horiz(calibration_y, residuals));
 
     double b = coefs(0);
     double m = coefs(1);
-    results_.transform([](double val){return (val - b)/m;});
-
-
+    results_.transform([m, b](double val){return (val - b)/m;});
 }
 
 
@@ -137,12 +135,12 @@ const vec *UnivariateData::results_ptr() const
     return &results_;
 }
 
-bool UnivariateData::band_ratio()
+bool UnivariateData::band_ratio() const
 {
     return band_ratio_;
 }
 
-double UnivariateData::left_bound()
+double UnivariateData::left_bound() const
 {
     return left_bound_;
 }
@@ -197,12 +195,12 @@ mat UnivariateData::first_baselines() const
     return first_baselines_;
 }
 
-mat UnivariateData::second_baselines()
+mat UnivariateData::second_baselines() const
 {
     return second_baselines_;
 }
 
-mat UnivariateData::Midlines()
+mat UnivariateData::Midlines() const
 {
     return midlines_;
 }

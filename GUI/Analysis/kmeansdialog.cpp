@@ -95,7 +95,8 @@ void KMeansDialog::on_predictionCheckBox_clicked(bool checked)
     cluster_spin_box_->setEnabled(!checked);
 }
 
-void KMeansDialog::on_checkBox_stateChanged(int arg1)
+
+void KMeansDialog::on_mapCheckBox_stateChanged(int arg1)
 {
     name_line_edit_->setEnabled(arg1);
 }

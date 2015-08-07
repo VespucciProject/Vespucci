@@ -54,8 +54,8 @@ bool PLSData::Apply(mat spectra, vec wavelength, int components)
 /// Perform PLS-DA
 bool DiscriminantAnalysis(mat spectra, vec labels, int components)
 {
-    mat Y = repmat(labels, components);
-    bool success = ;
+    //mat Y = repmat(labels, components);
+    //bool success = ;
 }
 
 mat *PLSData::X_loadings()

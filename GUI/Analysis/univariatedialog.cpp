@@ -124,7 +124,7 @@ void UnivariateDialog::on_buttonBox_accepted()
 
     QString name = name_box_->text();
     if(!name.size()){
-        name = "Univariate " + QString::number(dataset_->UnivariateCount());
+        name = "Univariate " + QString::number(data_->UnivariateCount());
     }
     QString value_method = value_method_selector_->currentText();
     UnivariateMethod::Method method;

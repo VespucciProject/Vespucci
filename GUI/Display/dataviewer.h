@@ -57,8 +57,8 @@ private slots:
 private:
     Ui::DataViewer *ui;
 
-    QMap<QString, mat*> data_objects_;
-    QMap<QString, map<string, double>> metadata_objects_;
+    QMap<QString, const mat*> data_objects_;
+    QMap<QString, std::map<std::string, double> > metadata_objects_;
 
     ///
     /// \brief current_text_
@@ -93,7 +93,7 @@ private:
     ///
     /// \brief current_data_
     /// The current contents of the tableview
-    mat *current_data_;
+    const mat *current_data_;
 
     ///
     /// \brief export_button_

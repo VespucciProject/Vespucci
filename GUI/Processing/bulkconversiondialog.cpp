@@ -18,6 +18,7 @@ BulkConversionDialog::BulkConversionDialog(MainWindow *parent,
     outtype_box_ = findChild<QComboBox*>("outputComboBox");
     target_line_edit_ = findChild<QLineEdit*>("targetLineEdit");
 
+    filename_list_widget_->setSelectionMode(QAbstractItemView::MultiSelection);
     //so delete key can be used to remove filenames from list
     QShortcut *shortcut =
             new QShortcut(QKeySequence(Qt::Key_Delete), filename_list_widget_);
@@ -50,6 +51,7 @@ void BulkConversionDialog::DeleteItem()
 
 void BulkConversionDialog::on_buttonBox_accepted()
 {
+    close();
     using namespace arma;
     filename_list_widget_->selectAll();
     QList<QListWidgetItem *> items = filename_list_widget_->selectedItems();
@@ -59,7 +61,6 @@ void BulkConversionDialog::on_buttonBox_accepted()
         infile_names.push_back(item->text().toStdString());
 
     string outfile_path = target_line_edit_->text().toStdString();
-    file_type type;
     infile_type intype;
     outfile_type outtype;
 
@@ -77,22 +78,19 @@ void BulkConversionDialog::on_buttonBox_accepted()
     switch (outtype_box_->currentIndex()){
     case 0:
         outtype = v_binary;
-        type = arma_binary;
         break;
     case 1:
-        outype = z_csv;
-        type = csv_ascii;
+        outtype = z_csv;
         break;
     case 2: default:
         outtype = z_txt;
-        type = raw_ascii;
     }
     vector<string> skipped = SaveFiles(infile_names, outfile_path, intype, outtype);
     if(skipped.size()){
         ReportMessageDialog *report_dialog = new ReportMessageDialog(this, "Files Not Imported");
         report_dialog->setLabel("Import or export failed for the following files:");
         for (auto& skipped_name : skipped)
-            report_dialog->appendPlainText(QString(skipped_name));
+            report_dialog->appendPlainText(QString::fromStdString(skipped_name));
         report_dialog->show();
     }
 }
@@ -106,16 +104,16 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
     typedef vector<string>::iterator strvec_it;
     mat spectra;
     vec x, y, abscissa;
-    QProgressDialog *progress = new QProgressDialog("Loading file", "Cancel", 0, 100, this);
-
+    bool comma_decimals = false;
+    QProgressDialog *progress = new QProgressDialog("Loading file", "Cancel", 0, 100);
     switch (intype){
       case wide_text:
         for(strvec_it it = infile_names.begin(); it!=infile_names.end(); ++it){
-            QString sep = GetSep(QString(*it));
-            bool valid = CheckFileValidity(filename, comma_decimals);
+            QString sep = GetSep(QString::fromStdString(*it));
+            bool valid = TextImport::CheckFileValidity(QString::fromStdString(*it), comma_decimals);
 
             if (valid){
-                ok = TextImport::ImportWideText(QString(*it),
+                ok = TextImport::ImportWideText(QString::fromStdString(*it),
                                                 spectra,
                                                 abscissa,
                                                 x, y,
@@ -130,16 +128,18 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
 
             string outfilename =
                     outfile_path + "/" +
-                    QFileInfo(QString(*it)).fileName().toStdString();
-            WriteFile(outfile_type, outfilename, spectra, abscissa, x, y);
+                    QFileInfo(QString::fromStdString(*it)).baseName().toStdString();
+            WriteFile(outtype, outfilename, spectra, abscissa, x, y);
         }//for (infile)
+        progress->close();
+        break;
 
       case long_text:
         for(strvec_it it = infile_names.begin(); it!=infile_names.end(); ++it){
-            valid = CheckFileValidity(filename, comma_decimals);
+            valid = TextImport::CheckFileValidity(QString::fromStdString(*it), comma_decimals);
 
             if (valid){
-                ok = TextImport::ImportLongText(QString(infile_name),
+                ok = TextImport::ImportLongText(QString::fromStdString(*it),
                                                 spectra,
                                                 abscissa,
                                                 x, y,
@@ -154,14 +154,16 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
 
             string outfilename =
                     outfile_path + "/" +
-                    QFileInfo(QString(*it)).fileName().toStdString();
+                    QFileInfo(QString::fromStdString(*it)).baseName().toStdString();
 
-            WriteFile(outfile_type, outfilename, spectra, abscissa, x, y);
+            WriteFile(outtype, outfilename, spectra, abscissa, x, y);
         }//for (infiles)
+        progress->close();
+        break;
 
       case binary: default:
         for(strvec_it it = infile_names.begin(); it!=infile_names.end(); ++it){
-            ok = BinaryImport::ImportVespucciBinary(QString(infile_name),
+            ok = BinaryImport::ImportVespucciBinary(QString::fromStdString(*it),
                                                spectra,
                                                abscissa,
                                                x, y);
@@ -172,8 +174,8 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
 
             string outfilename =
                     outfile_path + "/" +
-                    QFileInfo(QString(*it)).fileName().toStdString();
-            WriteFile(outfile_type, outfilename, spectra, abscissa, x, y);
+                    QFileInfo(QString::fromStdString(*it)).fileName().toStdString();
+            WriteFile(outtype, outfilename, spectra, abscissa, x, y);
         }//for (infiles)
     }//switch (intype)
     return skipped_files;
@@ -187,9 +189,10 @@ const QString BulkConversionDialog::GetSep(const QString &filename) const
     QString line = inputstream.readLine();
     inputfile.close();
 
-    bool has_tab = -1 != inputfile.indexOf("\t");
-    bool has_comma = -1 != inputfile.indexOf(",");
-    bool has_space = -1 !=inputfile.indexOf(" ");
+
+    bool has_tab = -1 != line.indexOf("\t");
+    bool has_comma = -1 != line.indexOf(",");
+    bool has_space = -1 !=line.indexOf(" ");
 
     QString out;
     //check for tabs first, then spaces if no ta
@@ -209,12 +212,19 @@ void BulkConversionDialog::WriteFile(const BulkConversionDialog::outfile_type &t
 {
     switch(type){
     case z_csv:
-        Vespucci::SaveZipped(spectra, abscissa, x, y, filename, arma::csv_ascii);
+        Vespucci::SaveZipped(spectra, abscissa, x, y, filename + ".zip", arma::csv_ascii);
         break;
     case z_txt:
-        Vespucci::SaveZipped(spectra, abscissa, x, y, filename, arma::raw_ascii);
+        Vespucci::SaveZipped(spectra, abscissa, x, y, filename + ".zip", arma::raw_ascii);
         break;
     case v_binary: default:
-        Vespucci::SaveVespucciBinary(spectra, x, y, abscissa);
+        Vespucci::SaveVespucciBinary(filename + ".vds", spectra, x, y, abscissa);
     }
+}
+
+void BulkConversionDialog::on_BrowsePushButton_clicked()
+{
+    QString path = QFileDialog::getExistingDirectory(this, "Select Folder",
+                                                     workspace->directory());
+    target_line_edit_->setText(path);
 }

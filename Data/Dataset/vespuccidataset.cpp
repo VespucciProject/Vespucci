@@ -920,34 +920,11 @@ void VespucciDataset::Baseline(QString method, int parameter)
     log_stream_ << "parameter == " << parameter << endl;
     SetOldCopies();
     uword i, j;
-    umat positions;
     try{
         if (method == "Median Filter"){
             baselines_ = Vespucci::Math::Smoothing::MedianFilterMat(spectra_, parameter);
 
             spectra_ -= baselines_;
-        }
-        else if (method == "CWT Test"){
-            uvec scales(70);
-            for (uword i = 0; i<70; ++i){
-                scales(i) = i+1;
-            }
-            Vespucci::Math::Transform::cwt(spectra_.col(1), "haar", scales);
-            Vespucci::Math::Transform::cwt(spectra_.col(1), "mexh", scales);
-        }
-        else if(method == "CWT-SPDBC"){
-            arma::field<umat> peak_positions;
-            spectra_ = Vespucci::Math::Transform::cwt_spdbc_mat(spectra_, "mexh", 128, parameter, "count", 15, peak_positions, baselines_);
-            mat peak_populations = zeros(spectra_.n_rows, spectra_.n_cols);
-            //set peak_populations matrix to ones;
-            for (i = 0; i<peak_positions.n_elem; ++i){
-                positions = peak_positions(i);
-                peak_populations.col(i) = Vespucci::Math::PeakFinding::PeakExtrema(spectra_.n_rows, positions);
-            }
-            QSharedPointer<AnalysisResults> results(new AnalysisResults(peak_populations));
-            QSharedPointer<AnalysisResults> bl(new AnalysisResults(baselines_));
-            analysis_results_.insert("CWT-SPDBC Peak Extrema", results);
-            analysis_results_.insert("CWT-SPDBC Baselines", bl);
         }
     }
     catch(exception e){
@@ -958,6 +935,31 @@ void VespucciDataset::Baseline(QString method, int parameter)
     }
 
     last_operation_ = "baseline correction";
+}
+
+void VespucciDataset::IModPolyBaseline(const uword poly_order, const uword max_it, double threshold)
+{
+    log_stream_ << "IModPolyBaseline" << endl;
+    log_stream_ << "poly_order == " << poly_order << endl;
+    log_stream_ << "max_it == " << max_it << endl;
+    log_stream_ << "threshold == " << threshold << endl;
+    SetOldCopies();
+    mat baselines(spectra_.n_rows, spectra_.n_cols);
+    vec baseline, corrected;
+    double err;
+    try{
+        for (uword i = 0; i < spectra_.n_cols; ++i){
+            Vespucci::Math::LinLeastSq::IModPoly(spectrum_.col(i),
+                                                 abscissa_, baseline,
+                                                 corrected, err,
+                                                 poly_order, max_it, threshold);
+            baselines.col(i) = baseline;
+            spectra_.col(i) = corrected;
+        }
+    }catch(exception e){
+          main_window_->DisplayExceptionWarning(e);
+    }
+    AddAnalysisResult("IModPoly BAselines", baselines);
 }
 
 ///
@@ -1845,7 +1847,7 @@ void VespucciDataset::VertexComponents(uword endmembers,
         alert.setInformativeText("OK to continue");
 
         alert.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-        alert.setWindowTitle("Principal Components Analysis");
+        alert.setWindowTitle("Vertexf Components Analysis");
         alert.setIcon(QMessageBox::Question);
 
         int ret = alert.exec();
@@ -2074,7 +2076,6 @@ void VespucciDataset::CorrelationAnalysis(vec control, QString name)
     log_stream_ << "Univariate" << endl;
     log_stream_ << "name == " << name << endl;
     log_stream_ << "method == Correlation" << endl;
-    log_stream_ << "gradient_index == " << gradient_index << endl;
     univariate_datas_.append(univariate_data);
 }
 
@@ -2228,7 +2229,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
 
 void VespucciDataset::PLS_DA(vec labels, uword components, QString name)
 {
-    PLSData pls_data(this, workspace->directory_ptr());
+    //PLSData pls_data(this, workspace->directory_ptr());
 
 }
 
@@ -2256,14 +2257,15 @@ void VespucciDataset::ClassicalLeastSquares(const mat &standards, uword image_co
 
     QString map_type = "CLS Map " + QString::number(image_component);
     QCPColorGradient gradient = GetGradient(gradient_index);
+
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
-                                            y_axis_description_,
-                                            x_, y_, coefs.col(image_component),
-                                            QSharedPointer<VespucciDataset>(this), directory_,
-                                            gradient,
-                                            map_list_model_->rowCount(QModelIndex()),
-                                            clusters,
-                                            main_window_));
+                                                y_axis_description_,
+                                                x_, y_,
+                                                coefs.col(image_component),
+                                                QSharedPointer<VespucciDataset>(this),
+                                                directory_, gradient,
+                                                map_list_model_->rowCount(QModelIndex()),
+                                                5, main_window_));
     new_map->set_name(name, map_type);
     new_map->SetCrispClusters(true);
     map_list_model_->AddMap(new_map);
@@ -2992,6 +2994,11 @@ int VespucciDataset::UnivariateCount()
 /// \return
 ///
 mat* VespucciDataset::abscissa_ptr()
+{
+    return &abscissa_;
+}
+
+mat* VespucciDataset::wavelength_ptr()
 {
     return &abscissa_;
 }

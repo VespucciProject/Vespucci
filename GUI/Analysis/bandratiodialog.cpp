@@ -42,7 +42,7 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     integration_method_selector_ = findChild<QComboBox *>("integrationComboBox");
     integration_method_label_ = findChild<QLabel *>("integrationLabel");
     range_label_ = findChild<QLabel *>("rangeLabel");
-
+    map_check_box_ = findChild<QCheckBox*>("mapCheckBox");
     data_index_ = row;
 
     first_min_line_ = new QCPItemStraightLine(spectrum_plot_);
@@ -85,6 +85,8 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     spectrum_plot_->rescaleAxes();
     spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
     spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
+
+    color_selector_->setEnabled(false);
 }
 
 BandRatioDialog::~BandRatioDialog()
@@ -132,16 +134,27 @@ void BandRatioDialog::on_buttonBox_accepted()
         method = UnivariateMethod::IntensityRatio;
 
     int gradient_index = color_selector_->currentIndex();
-    try{
-        data_->BandRatio(first_entered_min,
-                         first_entered_max,
-                         second_entered_min,
-                         second_entered_max,
-                         name,
-                         method,
-                         gradient_index);
-    }catch(exception e){
-        workspace->main_window()->DisplayExceptionWarning(e);
+    if (map_check_box_->isChecked()){
+        try{
+            data_->BandRatio(first_entered_min,
+                             first_entered_max,
+                             second_entered_min,
+                             second_entered_max,
+                             name,
+                             method,
+                             gradient_index);
+        }catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
+    }
+    else{
+        try{
+            data_->BandRatio(first_entered_min, first_entered_max,
+                             second_entered_min, second_entered_max,
+                             name, method);
+        }catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
     }
 
     close();
@@ -222,4 +235,9 @@ void BandRatioDialog::on_secondMaxLineEdit_textChanged(const QString &arg1)
     second_max_line_->point2->setCoords(value, 1);
     if (!spectrum_plot_->hasItem(second_max_line_))
         spectrum_plot_->addItem(second_max_line_);
+}
+
+void BandRatioDialog::on_mapCheckBox_stateChanged(int arg1)
+{
+    color_selector_->setEnabled(arg1);
 }

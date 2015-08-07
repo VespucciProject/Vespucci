@@ -32,12 +32,12 @@ class VespucciTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit VespucciTableModel(QObject *parent, mat *input_data);
+    explicit VespucciTableModel(QObject *parent, const mat *input_data);
     VespucciTableModel(QObject *parent, QSharedPointer<VespucciDataset> dataset, QString type);
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
-    mat* GetData();
+    const mat* GetData() const;
 
 signals:
 
@@ -57,7 +57,7 @@ private:
     ///
     /// \brief data_
     /// Pointer to the object being displayed
-    mat *data_;
+    const mat *data_;
 
     ///
     /// \brief dataset_

@@ -51,7 +51,7 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
     extract_button_->setDisabled(true);
     table_ = findChild<QTableView *>("tableView");
 
-    mat *matrix;
+    const mat *matrix;
     matrix = dataset_->wavelength_ptr();
     data_objects_.insert("Spectral Abscissa", matrix);
     matrix = dataset_->x_ptr();
@@ -71,7 +71,7 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
             matrix = (mat *) univariate_data_list[i]->results_ptr();
             data_objects_.insert(univariate_data_list[i]->name(), matrix);
             if(univariate_data_list[i]->calibrated()){
-                metadata_objects_.insert(univaraite_data_list[i]->name() +
+                metadata_objects_.insert(univariate_data_list[i]->name() +
                                          "Calibration Statistics",
                                          univariate_data_list[i]->calibration_stats());
                 matrix = univariate_data_list[i]->calibration_curve_ptr();
@@ -201,8 +201,8 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
 /// Triggers a dialog that allows the plotting of data
 void DataViewer::on_plotToolButton_clicked()
 {
+    bool ok;
     if (current_text_ == "VCA Endmembers"){
-        bool ok;
         int endmember = QInputDialog::getInt(this,
                                              tr("Select Endmember"),
                                              tr("Endmember"), 1, 1,
@@ -220,7 +220,7 @@ void DataViewer::on_plotToolButton_clicked()
                                           "Select Column",
                                           "Column", 1, 1,
                                           current_data_->n_cols,
-                                          1 &ok, 0);
+                                          1, &ok, 0);
         if(ok){
             vec data = current_data_->col(column);
             spectrum_viewer_ = new SpectrumViewer(this, dataset_, data, current_text_);

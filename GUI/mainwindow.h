@@ -147,8 +147,6 @@ private slots:
 
     void on_actionImport_From_Multiple_Point_Spectra_triggered();
 
-    void on_actionBulk_Dataset_File_Conversion_triggered();
-
     void on_actionBatch_File_Conversion_triggered();
 
 private:

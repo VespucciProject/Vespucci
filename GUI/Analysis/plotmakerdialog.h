@@ -19,6 +19,8 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
+    void on_variablesComboBox_currentTextChanged(const QString &arg1);
+
 private:
     Ui::PlotMakerDialog *ui;
     QSharedPointer<VespucciDataset> dataset_;

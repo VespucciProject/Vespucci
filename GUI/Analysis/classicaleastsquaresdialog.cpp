@@ -27,7 +27,7 @@ ClassicaLeastSquaresDialog::ClassicaLeastSquaresDialog(QWidget *parent, Vespucci
     workspace = ws;
     dataset_ = workspace->DatasetAt(row);
 
-    dataset_combo_box_->addItems(workspace->dataset_names())
+    dataset_combo_box_->addItems(workspace->dataset_names());
 
 }
 
@@ -68,7 +68,7 @@ void ClassicaLeastSquaresDialog::on_buttonBox_accepted()
     QSharedPointer<VespucciDataset> control_dataset;
     if (dataset_radio_button_->isChecked()){
         dataset_row = dataset_combo_box_->currentIndex();
-        control_dataset = workspace->DatasetAt(row);
+        control_dataset = workspace->DatasetAt(dataset_row);
         control_spectra = control_dataset->spectra();
     }
     else if (file_radio_button_->isChecked()){

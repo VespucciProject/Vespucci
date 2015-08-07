@@ -190,18 +190,18 @@ arma::vec Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(const arma::mat &X,
     double y_bar = mean(y);
 
     arma::vec coefs = OrdinaryLeastSquares(X, y);
-    fit = Vespucci::Math::LinLeastSq::CalcPoly(coefs, concentrations);
+    fit = Vespucci::Math::LinLeastSq::CalcPoly(coefs, X.col(1));
 
-    vec residuals = values - fit;
+    arma::vec residuals = y - fit;
 
-    vec centered = values - y_bar;
-    double residual_sumsq = sum(pow(residuals, 2.0));
-    double total_sumsq = sum(pow(centered, 2.0));
-    double regression_sumsq = sum(pow((fit - y_bar), 2.0));
+    arma::vec centered = y - y_bar;
+    double residual_sumsq = arma::as_scalar(arma::sum(arma::pow(residuals, 2.0)));
+    double total_sumsq = arma::as_scalar(arma::sum(arma::pow(centered, 2.0)));
+    double regression_sumsq = arma::as_scalar(arma::sum(arma::pow((fit - y_bar), 2.0)));
     double R_squared = 1.0 - (residual_sumsq/total_sumsq);
     double adj_R_squared = 1 - (1 - R_squared)*(n - 1)/dof; //p==1 for deg-1 polynomial
 
-    mat var_hat = (residual_sumsq / dof) * inv(X.t() * X);
+    arma::mat var_hat = (residual_sumsq / dof) * inv(X.t() * X);
 
     std::string param_name;
     for(arma::uword i = 0; i < coefs.n_rows; ++i){
@@ -220,8 +220,9 @@ arma::vec Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(const arma::mat &X,
     return coefs;
 }
 
-
+/*
 arma::mat Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(const arma::mat &X, const arma::mat &y, arma::mat &coef_errors, arma::mat &predicted)
 {
 
 }
+*/

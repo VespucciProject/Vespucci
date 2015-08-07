@@ -501,7 +501,8 @@ arma::umat Vespucci::Math::GetClosestValues(arma::vec query,
 
     for (arma::uword i = 0; i < query.n_rows; ++i){
         arma::vec difference = arma::abs(target - query(i));
-        cloest_indices.col(i) = arma::stable_sort_index(difference).rows(0, k-1);
+        arma::uvec ind = arma::stable_sort_index(difference);
+        closest_indices.col(i) = ind.rows(0, k-1);
     }
     return closest_indices;
 }
@@ -532,7 +533,7 @@ arma::vec Vespucci::Math::WavelengthToFrequency(const arma::vec &x, double freq_
 
     //convert input to meters, then Hz, then preferred wavelength
     //nu = lambda/c
-    return (wl_factor * (1.0/datum::c_0) * freq_factor) * x;
+    return (wl_factor * (1.0/arma::datum::c_0) * freq_factor) * x;
 }
 
 ///
@@ -546,7 +547,7 @@ arma::vec Vespucci::Math::FrequencyToWavelength(const arma::vec &x, double wl_fa
 {
     //convert input to Hz then to wavelength in meters, then to wavelength in perferred units
     //lambda = nu * c
-    return (freq_factor * datum::c_0 * wl_factor) * x;
+    return (freq_factor * arma::datum::c_0 * wl_factor) * x;
 }
 
 ///
@@ -560,7 +561,7 @@ arma::vec Vespucci::Math::FrequencyToEnergy(const arma::vec &x, double energy_fa
 {
     //convert input to Hz then to energy in J, then to energy in preferred units
     //E = h * nu
-    return (freq_factor * datum::h * energy_factor) * x;
+    return (freq_factor * arma::datum::h * energy_factor) * x;
 }
 
 ///
@@ -574,7 +575,7 @@ arma::vec Vespucci::Math::EnergyToFrequency(const arma::vec &x, double freq_fact
 {
     //convert input to Hz then to energy in J, then to energy in preferred units
     //nu = E/h
-    return (energy_factor * (1.0/datum::h) * freq_factor) * x;
+    return (energy_factor * (1.0/arma::datum::h) * freq_factor) * x;
 }
 
 ///

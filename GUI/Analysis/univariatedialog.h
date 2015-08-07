@@ -93,7 +93,7 @@ private:
     ///
     /// \brief browse_button_
     ///
-    QLineEdit *browse_button_;
+    QPushButton *browse_button_;
 
     ///
     /// \brief color_selector_

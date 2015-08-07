@@ -77,14 +77,14 @@ void VCADialog::on_buttonBox_accepted()
                                     gradient_index,
                                     recalculate);
         }
-        catch(exception e){
+        catch(std::exception e){
             workspace->main_window()->DisplayExceptionWarning(e);
         }
     }
     else{
         try{
             data_->VertexComponents(endmembers);
-        }catch(excpetion e){
+        }catch(std::exception e){
             workspace->main_window()->DisplayExceptionWarning(e);
         }
     }
