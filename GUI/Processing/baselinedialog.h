@@ -44,6 +44,8 @@ private slots:
 
     void on_buttonBox_rejected();
 
+    void on_methodComboBox_currentTextChanged(const QString &arg1);
+
 private:
     Ui::BaselineDialog *ui;
 
@@ -60,7 +62,7 @@ private:
     ///
     /// \brief iterations_box_
     /// Number of iterations to perform filtering to find baseline
-    QSpinBox *iterations_box_;
+    QSpinBox *param_1_spin_box_;
 
     ///
     /// \brief method_box_
@@ -70,7 +72,15 @@ private:
     ///
     /// \brief window_size_box_
     /// User chooses the window size (if using filtering to find baseline) here.
-    QSpinBox *window_size_box_;
+    QSpinBox *param_0_spin_box_;
+
+    QDoubleSpinBox *param_2_double_spin_box_;
+    QDoubleSpinBox *param_3_double_spin_box_;
+
+    QLabel *param_0_label_;
+    QLabel *param_1_label_;
+    QLabel *param_2_label_;
+    QLabel *param_3_label_;
 };
 
 #endif // BASELINEDIALOG_H

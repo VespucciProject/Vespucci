@@ -155,8 +155,8 @@ public:
                     unsigned int window_size);
     void SingularValue(unsigned int singular_values);
     int QUIC_SVD(double epsilon);
-    void Baseline(QString method, int parameter);
-    void CWTBaseline(int parameter);
+    void Baseline(QString method, int parameter, int iterations);
+    void CWTBaseline(int lambda, int penalty_order, double SNR_threshold, double peak_shape_threshold);
     void IModPolyBaseline(const uword poly_order, const uword max_it, double threshold);
     void RemoveClippedSpectra(double threshold);
     void RemoveFlatSpectra(double threshold);

@@ -146,52 +146,6 @@ void Vespucci::SetQCPFonts(QCustomPlot *plot, const QFont &font)
     plot->legend->setFont(font);
 }
 
-///
-/// \brief Vespucci::SaveZipped
-/// \param objects
-/// \param filename
-/// \param type
-/// \return
-///
-bool Vespucci::SaveZipped(std::map<std::string, const arma::mat *> objects, const std::string filename, const arma::file_type type)
-{
-    std::vector<std::string> paths;
-    for (auto& object : objects){
-        try{
-            object.second->save(object.first, type);
-            paths.push_back(object.first);
-        }catch(std::exception e){
-            throw e;
-        }
-    }
-    //copy to zip file
-    Vespucci::CreateZipFile(filename, paths);
-
-    //delete the temporary files
-    for (const std::string &str : paths)
-        remove(str.c_str());
-}
-
-
-
-///
-/// \brief Vespucci::CreateZipFile Move files to a zip file.
-/// \param paths Vector of paths to add to file
-/// \return
-/// 7za needs to be in path (is included in Windows distribution, p7zip can be installed for posix)
-int Vespucci::CreateZipFile(std::string zip_filename, std::vector<std::string> paths)
-{
-    QProcess *process = new QProcess(0);
-    QString program = "7z";
-    QStringList args;
-    args << "a" << QString::fromStdString(zip_filename);
-    std::vector<std::string>::iterator it = paths.begin();
-    while(it!=paths.end())
-        args << QString::fromStdString(*it);
-    //call 7z to make archive
-    process->start(program, args);
-    return process->exitCode();
-}
 
 ///
 /// \brief Vespucci::SaveVespucciBinary
@@ -213,19 +167,30 @@ bool Vespucci::SaveVespucciBinary(std::string filename, const arma::mat &spectra
         success = dataset.save(filename, arma::arma_binary);
     }
     catch(std::exception e){
-        std::cerr << "See armadillo exception" << endl;
+        std::cerr << "See armadillo exception" << std::endl;
         std::string str = "Vespucci::SaveVespucciBinary: " + std::string(e.what());
         throw std::runtime_error(str);
     }
+    return success;
 }
 
 
-bool Vespucci::SaveZipped(const arma::mat &spectra, const arma::vec &abscissa, const arma::vec &x, const arma::vec &y, const std::string filename, const arma::file_type type)
+
+
+
+bool Vespucci::SaveText(std::string basename, const arma::mat &spectra, const arma::vec &x, const arma::vec &y, const arma::vec &abscissa, arma::file_type type)
 {
-    std::map<std::string, const arma::mat*> map;
-    map["x"] = &x;
-    map["y"] = &y;
-    map["spectra"] = &spectra;
-    map["abscissa"] = &abscissa;
-    SaveZipped(map, filename, type);
+    std::string extension;
+    switch (type){
+    case arma::csv_ascii:
+        extension = ".csv";
+    case arma::raw_ascii: default:
+        extension = ".txt";
+    }
+    bool x_success, y_success, spectra_success, abscissa_success;
+    spectra_success = spectra.save(basename + "_spectra" + extension, type);
+    abscissa_success = abscissa.save(basename + "_abscissa" + extension, type);
+    x_success = x.save(basename + "_x" + extension, type);
+    y_success = y.save(basename + "_y" + extension, type);
+    return (x_success && y_success && spectra_success && abscissa_success);
 }

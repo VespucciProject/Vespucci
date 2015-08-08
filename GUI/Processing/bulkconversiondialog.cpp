@@ -62,7 +62,7 @@ void BulkConversionDialog::on_buttonBox_accepted()
 
     string outfile_path = target_line_edit_->text().toStdString();
     infile_type intype;
-    outfile_type outtype;
+    arma::file_type outtype;
 
     switch (intype_box_->currentIndex()){
       case 0:
@@ -77,13 +77,13 @@ void BulkConversionDialog::on_buttonBox_accepted()
 
     switch (outtype_box_->currentIndex()){
     case 0:
-        outtype = v_binary;
+        outtype = arma::arma_binary;
         break;
     case 1:
-        outtype = z_csv;
+        outtype = arma::csv_ascii;
         break;
     case 2: default:
-        outtype = z_txt;
+        outtype = arma::raw_ascii;
     }
     vector<string> skipped = SaveFiles(infile_names, outfile_path, intype, outtype);
     if(skipped.size()){
@@ -95,7 +95,7 @@ void BulkConversionDialog::on_buttonBox_accepted()
     }
 }
 
-vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, string outfile_path, BulkConversionDialog::infile_type intype, BulkConversionDialog::outfile_type outtype, bool swap_spatial) const
+vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, string outfile_path, BulkConversionDialog::infile_type intype, arma::file_type outtype, bool swap_spatial) const
 {
 
     bool valid, ok;
@@ -203,7 +203,7 @@ const QString BulkConversionDialog::GetSep(const QString &filename) const
 
 }
 
-void BulkConversionDialog::WriteFile(const BulkConversionDialog::outfile_type &type,
+void BulkConversionDialog::WriteFile(const arma::file_type &type,
                                      const string filename,
                                      const arma::mat &spectra,
                                      const arma::vec &abscissa,
@@ -211,13 +211,10 @@ void BulkConversionDialog::WriteFile(const BulkConversionDialog::outfile_type &t
                                      const arma::vec &y) const
 {
     switch(type){
-    case z_csv:
-        Vespucci::SaveZipped(spectra, abscissa, x, y, filename + ".zip", arma::csv_ascii);
+    case csv_ascii: case raw_ascii:
+        Vespucci::SaveText(filename, spectra, x, y, abscissa, type);
         break;
-    case z_txt:
-        Vespucci::SaveZipped(spectra, abscissa, x, y, filename + ".zip", arma::raw_ascii);
-        break;
-    case v_binary: default:
+    case arma_binary: default:
         Vespucci::SaveVespucciBinary(filename + ".vds", spectra, x, y, abscissa);
     }
 }

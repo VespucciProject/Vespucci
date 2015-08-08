@@ -913,7 +913,7 @@ void VespucciDataset::SubtractBackground(mat background, QString filename)
 /// \param method
 /// \param window_size
 ///
-void VespucciDataset::Baseline(QString method, int parameter)
+void VespucciDataset::Baseline(QString method, int parameter, int iterations)
 {
     log_stream_ << "Baseline" << endl;
     log_stream_ << "method == " << method << endl;
@@ -935,6 +935,11 @@ void VespucciDataset::Baseline(QString method, int parameter)
     }
 
     last_operation_ = "baseline correction";
+}
+
+void VespucciDataset::CWTBaseline(int lambda, int penalty_order, double SNR_threshold, double peak_shape_threshold)
+{
+
 }
 
 void VespucciDataset::IModPolyBaseline(const uword poly_order, const uword max_it, double threshold)

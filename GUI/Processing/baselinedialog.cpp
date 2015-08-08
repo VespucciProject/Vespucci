@@ -34,9 +34,30 @@ BaselineDialog::BaselineDialog(QWidget *parent, VespucciWorkspace *ws, int row) 
     workspace = ws;
     dataset_ = workspace->DatasetAt(row);
 
-    window_size_box_ = findChild<QSpinBox *>("windowSpinBox");
+    param_0_spin_box_ = findChild<QSpinBox *>("param_0SpinBox");
     method_box_ = findChild<QComboBox *>("methodComboBox");
-    iterations_box_ = findChild<QSpinBox *>("iterationsSpinBox");
+    param_1_spin_box_ = findChild<QSpinBox *>("param_1SpinBox");
+    param_2_double_spin_box_ = findChild<QDoubleSpinBox *>("param_2DoubleSpinBox");
+    param_3_double_spin_box_ = findChild<QDoubleSpinBox *>("param_3DoubleSpinBox");
+
+    param_0_label_ = findChild<QLabel *>("param_0Label");
+    param_1_label_ = findChild<QLabel *>("param_1Label");
+    param_2_label_ = findChild<QLabel *>("param_2Label");
+    param_3_label_ = findChild<QLabel *>("param_3Label");
+
+    param_0_label_->setText("Window Size");
+    param_1_label_->setText("Iterations");
+    param_0_label_->setVisible(true);
+    param_1_label_->setVisible(true);
+    param_0_spin_box_->setVisible(true);
+    param_1_spin_box_->setVisible(true);
+
+    param_2_double_spin_box_->setVisible(false);
+    param_3_double_spin_box_->setVisible(false);
+    param_2_label_->setVisible(false);
+    param_3_label_->setVisible(false);
+
+    workspace = ws;
 }
 
 BaselineDialog::~BaselineDialog()
@@ -50,12 +71,43 @@ BaselineDialog::~BaselineDialog()
 /// correct the baseline of each spectrum.
 void BaselineDialog::on_buttonBox_accepted()
 {
-    int window_size = window_size_box_->value();
-    QString method = method_box_->currentText();
-    int iterations = iterations_box_->value();
 
-    for (int i = 0; i < iterations; ++i)
-        dataset_->Baseline(method, window_size);
+    QString method = method_box_->currentText();
+
+    if (method == "Median Filter"){
+        int window_size = param_0_spin_box_->value();
+        int iterations = param_1_spin_box_->value();
+        try{
+            dataset_->Baseline(method, window_size, iterations);
+        }
+        catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
+    }
+    else if (method == "Vancouver Raman Algorithm (IModPoly)"){
+        int poly_order = param_0_spin_box_->value();
+        int max_it = param_1_spin_box_->value();
+        double threshold = param_2_double_spin_box_->value();
+        try{
+            dataset_->IModPolyBaseline(poly_order, max_it, threshold);
+        }catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
+    }
+    else if (method == "CWT"){
+        int lambda = param_0_spin_box_->value();
+        int penalty_order = param_1_spin_box_->value();
+        double SNR_threshold = param_2_double_spin_box_->value();
+        double peak_shape_threshold = param_3_double_spin_box_->value();
+        try{
+            dataset_->CWTBaseline(lambda, penalty_order, SNR_threshold, peak_shape_threshold);
+        }catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
+    }
+    else{
+        QMessageBox::warning(this, "Error", "An Error Occurred in BaselineDialog");
+    }
 
     close();
     dataset_.clear();
@@ -68,4 +120,54 @@ void BaselineDialog::on_buttonBox_rejected()
 {
     close();
     dataset_.clear();
+}
+
+void BaselineDialog::on_methodComboBox_currentTextChanged(const QString &arg1)
+{
+    if (arg1 == "Median Filter"){
+        param_0_label_->setText("Window Size");
+        param_1_label_->setText("Iterations");
+        param_0_label_->setVisible(true);
+        param_1_label_->setVisible(true);
+        param_0_spin_box_->setVisible(true);
+        param_1_spin_box_->setVisible(true);
+
+        param_2_double_spin_box_->setVisible(false);
+        param_3_double_spin_box_->setVisible(false);
+        param_2_label_->setVisible(false);
+        param_3_label_->setVisible(false);
+    }
+    else if (arg1 == "Vancouver Raman Algorithm (IModPoly)"){
+        param_0_label_->setText("Polynomial Order");
+        param_0_label_->setVisible(true);
+        param_0_spin_box_->setVisible(true);
+
+        param_1_label_->setText("Maximum Iterations");
+        param_1_label_->setVisible(true);
+        param_1_spin_box_->setVisible(true);
+
+        param_2_label_->setText("Threshold");
+        param_2_label_->setVisible(true);
+        param_2_double_spin_box_->setVisible(true);
+
+        param_3_label_->setVisible(false);
+        param_3_double_spin_box_->setVisible(false);
+    }
+    else if (arg1 == "CWT"){
+        param_0_label_->setText("Whittaker Lambda");
+        param_0_label_->setVisible(true);
+        param_0_spin_box_->setVisible(true);
+
+        param_1_label_->setText("Whittaker Penalty Order");
+        param_1_label_->setVisible(true);
+        param_1_spin_box_->setVisible(true);
+
+        param_2_label_->setText("Peak SNR Threshold");
+        param_2_label_->setVisible(true);
+        param_2_double_spin_box_->setVisible(true);
+
+        param_3_lable_->setText("Peak Shape Threshold");
+        param_3_label_->setVisible(false);
+        param_3_double_spin_box_->setVisible(false);
+    }
 }

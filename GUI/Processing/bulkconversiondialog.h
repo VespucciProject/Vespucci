@@ -37,15 +37,14 @@ private:
     VespucciWorkspace *workspace;
 
     enum infile_type{long_text, wide_text, binary};
-    enum outfile_type{v_binary, z_csv, z_txt};
-
+    enum outfile_type{v_binary, text};
     vector<string> SaveFiles(vector<string> infile_names,
                              string outfile_path,
-                             infile_type intype, outfile_type outtype,
+                             infile_type intype, arma::file_type outtype,
                              bool swap_spatial = false) const;
 
     const QString GetSep(const QString &filename) const;
-    void WriteFile(const outfile_type & type,
+    void WriteFile(const arma::file_type &type,
                    const string filename,
                    const arma::mat &spectra,
                    const arma::vec &abscissa,

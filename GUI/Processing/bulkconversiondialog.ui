@@ -96,16 +96,6 @@
        <string>Vespucci Binary</string>
       </property>
      </item>
-     <item>
-      <property name="text">
-       <string>Zipped Comma Separated Variables</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Zipped Plain Text</string>
-      </property>
-     </item>
     </widget>
    </item>
    <item row="6" column="1">
@@ -136,8 +126,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>342</x>
+     <y>306</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -152,8 +142,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>390</x>
+     <y>306</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
