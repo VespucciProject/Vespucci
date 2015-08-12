@@ -1,5 +1,5 @@
 /*******************************************************************************
-    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Copyright (C) 2015 Wright State University - All Rights Reserved
     Daniel P. Foose - Author
 
     This file is part of Vespucci.
@@ -913,28 +913,26 @@ void VespucciDataset::SubtractBackground(mat background, QString filename)
 /// \param method
 /// \param window_size
 ///
-void VespucciDataset::Baseline(QString method, int parameter, int iterations)
+void VespucciDataset::MFBaseline(int window_size, int iterations)
 {
-    log_stream_ << "Baseline" << endl;
-    log_stream_ << "method == " << method << endl;
-    log_stream_ << "parameter == " << parameter << endl;
+    log_stream_ << "MFBaseline" << endl;
+    log_stream_ << "window_size == " << window_size << endl;
     SetOldCopies();
-    uword i, j;
     try{
-        if (method == "Median Filter"){
-            baselines_ = Vespucci::Math::Smoothing::MedianFilterMat(spectra_, parameter);
-
-            spectra_ -= baselines_;
+        baselines_ = spectra_;
+        for (uword i = 0; i < iterations; ++i){
+            baselines_ = Vespucci::Math::Smoothing::MedianFilterMat(baselines_, window_size);
         }
+        spectra_ -= baselines_;
     }
     catch(exception e){
         char str[50];
-        strcat(str, "Baseline: ");
+        strcat(str, "MFBaseline: ");
         strcat(str, e.what());
         throw std::runtime_error(str);
     }
 
-    last_operation_ = "baseline correction";
+    last_operation_ = "baseline correction (median filter)";
 }
 
 void VespucciDataset::CWTBaseline(int lambda, int penalty_order, double SNR_threshold, double peak_shape_threshold)
@@ -951,20 +949,40 @@ void VespucciDataset::IModPolyBaseline(const uword poly_order, const uword max_i
     SetOldCopies();
     mat baselines(spectra_.n_rows, spectra_.n_cols);
     vec baseline, corrected;
+    QProgressDialog *progress = new QProgressDialog();
+    progress->setMinimum(0);
+    progress->setMaximum(spectra_.n_cols-1);
+    progress->setWindowTitle("Correcting Baseline");
+    progress->setWindowModality(Qt::WindowModal);
+    QString colcount = " of " + QString::number(spectra_.n_cols);
+    progress->setLabelText("Spectrum 0" + colcount);
+    progress->show();
     double err;
     try{
         for (uword i = 0; i < spectra_.n_cols; ++i){
+            progress->setValue(i);
+            progress->setLabelText("Spectrum " + QString::number(i+1) + colcount);
+            //cout << "." << endl;
             Vespucci::Math::LinLeastSq::IModPoly(spectra_.col(i),
                                                  abscissa_, baseline,
                                                  corrected, err,
                                                  poly_order, max_it, threshold);
             baselines.col(i) = baseline;
             spectra_.col(i) = corrected;
+            if (progress->wasCanceled()){
+                progress->close();
+                break;
+                Undo();
+            }
         }
     }catch(exception e){
           main_window_->DisplayExceptionWarning(e);
     }
-    AddAnalysisResult("IModPoly BAselines", baselines);
+    progress->close();
+    if (!progress->wasCanceled()){
+        AddAnalysisResult("IModPoly Baselines", baselines);
+    }
+
 }
 
 ///
@@ -2506,6 +2524,11 @@ int VespucciDataset::ValueSize()
 /// \return member abscissa_ (spectrum key values)
 ///
 vec VespucciDataset::wavelength()
+{
+    return abscissa_;
+}
+
+vec VespucciDataset::abscissa()
 {
     return abscissa_;
 }

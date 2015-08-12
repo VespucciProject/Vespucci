@@ -1,5 +1,5 @@
 /*******************************************************************************
-    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Copyright (C) 2015 Wright State University - All Rights Reserved
     Daniel P. Foose - Author
 
     This file is part of Vespucci.
@@ -34,8 +34,13 @@ namespace Vespucci
         arma::sp_mat LocalMinima(const arma::mat &X, const arma::mat &dX, const arma::mat &d2X);
         arma::sp_mat LocalMinima(const arma::mat &dX, const arma::mat &d2X);
 
+        arma::sp_mat LocalMinimaWindow(const arma::mat &X, const int window_size);
+        arma::sp_mat LocalMaximaWindow(const arma::mat &X, const int window_size);
 
-        arma::sp_mat LocalMaximaCWT(arma::mat coefs, arma::uvec scales, arma::uword min_window_size, double amplitude_threshold);
+
+        arma::sp_mat LocalMinimaCWT(arma::mat coefs, arma::uvec scales, arma::uword min_window_size, double amplitude_threshold);
+        arma::sp_mat LocalMaximaCWT(arma::mat coefs, arma::uvec scales, arma::uword min_window_size);
+
         double quantile (arma::vec &data, double probs);
         double mad (arma::vec &data);
         arma::vec ExtendToNextPow(arma::vec X, arma::uword n);

@@ -35,8 +35,6 @@ QT       += core gui
 QT       += widgets printsupport
 QT       += svg
 CONFIG   += static
-mac: CONFIG += app_bundle
-mac: ICON = vespuccilogo.icns
 # Set the installation directory
 isEmpty(PREFIX) {
     PREFIX = $$PWD/../../Vespucci-install
@@ -147,7 +145,8 @@ SOURCES += main.cpp\
     Math/Fitting/nonlinleastsq.cpp \
     GUI/Analysis/peakfindingdialog.cpp \
     GUI/Analysis/haspeaksdialog.cpp \
-    Global/vespucci.cpp
+    Global/vespucci.cpp \
+    Data/Import/textimportqpd.cpp
 
 
 HEADERS  += \
@@ -214,7 +213,8 @@ HEADERS  += \
     Math/Fitting/nonlinleastsq.h \
     GUI/Analysis/peakfindingdialog.h \
     GUI/Analysis/haspeaksdialog.h \
-    Global/vespucci.h
+    Global/vespucci.h \
+    Data/Import/textimportqpd.h
 
 
 FORMS    += \
@@ -418,11 +418,11 @@ win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRiconv
 win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRzlib
 win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRgraphapp
 
-#levmar
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -llevmar
-INCLUDEPATH += $$PWD/../MinGW_libs/include/levmar
-DEPENDPATH += $$PWD/../MinGW_libs/include/levmar
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/liblevmar.a
+#CMinpack
+win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lcminpack
+INCLUDEPATH += $$PWD/../MinGW_libs/include/cminpack-1
+DEPENDPATH += $$PWD/../MinGW_libs/include/cminpack-1
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libcminpack.a
 
 
 

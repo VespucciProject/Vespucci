@@ -1,5 +1,5 @@
 /*******************************************************************************
-    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Copyright (C) 2015 Wright State University - All Rights Reserved
     Daniel P. Foose - Author
 
     This file is part of Vespucci.
@@ -691,4 +691,77 @@ arma::vec Vespucci::Math::WavenumberToEnergy(const arma::vec &x, double energy_f
 {
     arma::vec foo = Vespucci::Math::WavenumberToWavelength(x, wn_factor, 1);
     return Vespucci::Math::WavelengthToEnergy(x, energy_factor, 1);
+}
+
+
+arma::sp_mat Vespucci::Math::LocalMaximaCWT(arma::mat coefs, arma::uvec scales, arma::uword min_window_size)
+{
+    arma::uword window_size;
+    arma::vec current_coefs;
+    arma::sp_mat local_maxima_col;
+    arma::sp_mat local_maxima(coefs.n_rows, coefs.n_cols);
+    for (arma::uword i = 0; i < scales.n_rows; ++i){
+        current_coefs = coefs.col(scales(i));
+        window_size = scales(i)*2 + 1;
+        window_size = (min_window_size < window_size ? window_size: min_window_size);
+        local_maxima.col(i) = Vespucci::Math::LocalMaximaWindow(current_coefs, window_size);
+    }
+    return local_maxima;
+}
+
+///
+/// \brief Vespucci::Math::LocalMinimaWindow
+/// \param X
+/// \param window_size
+/// \return
+///
+arma::sp_mat Vespucci::Math::LocalMinimaWindow(const arma::mat &X, const int window_size)
+{
+    arma::sp_mat local_mins = Vespucci::Math::LocalMinima(X);
+    //keep only the highest value in each window:
+    arma::mat local_min_col;
+    arma::uword length = std::ceil(X.n_rows/window_size);
+    arma::uword old_len = X.n_rows;
+    for (arma::uword j = 0; j < X.n_cols; ++j){
+        local_min_col = local_mins.col(j);
+        local_min_col.resize(length, window_size);
+        arma::vec lowest = arma::min(local_min_col, 1);
+        for (arma::uword i = 0; i < local_min_col.n_rows; ++i){
+            arma::uvec ind = arma::find(local_min_col.row(i) != arma::as_scalar(lowest.row(i)));
+            local_min_col.elem(ind).zeros();
+        }
+        local_min_col.resize(old_len, 1);
+        local_mins.col(j) = arma::sp_vec(local_min_col);
+    }
+
+    return local_mins;
+}
+
+///
+/// \brief Vespucci::Math::LocalMaximaWindow
+/// "Cleans" local maximum by window search to remove extraneous values.
+/// \param X
+/// \param window_size
+/// \return
+///
+arma::sp_mat Vespucci::Math::LocalMaximaWindow(const arma::mat &X, const int window_size)
+{
+    arma::sp_mat local_maxes = Vespucci::Math::LocalMaxima(X);
+    //keep only the highest value in each window:
+    arma::mat local_max_col;
+    arma::uword length = std::ceil(X.n_rows/window_size);
+    arma::uword old_len = X.n_rows;
+    for (arma::uword j = 0; j < X.n_cols; ++j){
+        local_max_col = local_maxes.col(j);
+        local_max_col.resize(length, window_size);
+        arma::vec highest = arma::max(local_max_col, 1);
+        for (arma::uword i = 0; i < local_max_col.n_rows; ++i){
+            arma::uvec ind = arma::find(local_max_col.row(i) != arma::as_scalar(highest.row(i)));
+            local_max_col.elem(ind).zeros();
+        }
+        local_max_col.resize(old_len, 1);
+        local_maxes.col(j) = arma::sp_mat(local_max_col);
+    }
+
+    return local_maxes;
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
-    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Copyright (C) 2015 Wright State University - All Rights Reserved
     Daniel P. Foose - Author
 
     This file is part of Vespucci.
@@ -441,7 +441,8 @@ std::vector<Vespucci::Math::CWTRidge>
 {
     arma::sp_mat maxima;
     try{
-        maxima = Vespucci::Math::LocalMaxima(coefs);
+        maxima = Vespucci::Math::LocalMaximaCWT(coefs, scales, 7);
+        //maxima = Vespucci::Math::LocalMaxima(coefs);
     }catch(std::exception e){
         std::cerr << "LocalMaxima" << std::endl;
         std::cerr << e.what() << std::endl;

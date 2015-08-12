@@ -79,7 +79,7 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="paramLabel_0">
+      <widget class="QLabel" name="param_0Label">
        <property name="text">
         <string>Window Size</string>
        </property>
@@ -102,7 +102,7 @@
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="paramLabel_1">
+      <widget class="QLabel" name="param_1Label">
        <property name="text">
         <string>Iterations</string>
        </property>
@@ -114,12 +114,12 @@
         <number>1</number>
        </property>
        <property name="maximum">
-        <number>10</number>
+        <number>100000</number>
        </property>
       </widget>
      </item>
      <item row="3" column="0">
-      <widget class="QLabel" name="paramLabel_2">
+      <widget class="QLabel" name="param_2Label">
        <property name="text">
         <string>Threshold</string>
        </property>
@@ -145,7 +145,7 @@
       </widget>
      </item>
      <item row="4" column="0">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="param_3Label">
        <property name="text">
         <string>Threshold</string>
        </property>
@@ -199,8 +199,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>247</x>
+     <y>451</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -215,8 +215,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>315</x>
+     <y>451</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

@@ -1,5 +1,5 @@
 /*******************************************************************************
-    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Copyright (C) 2015 Wright State University - All Rights Reserved
     Daniel P. Foose - Author
 
     This file is part of Vespucci.
@@ -46,6 +46,8 @@ private slots:
 
     void on_methodComboBox_currentTextChanged(const QString &arg1);
 
+    void on_pushButton_clicked();
+
 private:
     Ui::BaselineDialog *ui;
 
@@ -81,6 +83,13 @@ private:
     QLabel *param_1_label_;
     QLabel *param_2_label_;
     QLabel *param_3_label_;
+
+    QCustomPlot *spectrum_plot_;
+
+    QVector<double> abscissa_q_;
+    QVector<double> spectrum_q_;
+    arma::vec abscissa_;
+    arma::vec spectrum_;
 };
 
 #endif // BASELINEDIALOG_H

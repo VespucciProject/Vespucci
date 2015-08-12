@@ -17,30 +17,36 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef TEXTIMPORT_H
-#define TEXTIMPORT_H
 
-#include <armadillo>
-#include <QtCore>
-
-
-namespace TextImport
-{
-
-    bool ImportWideText(std::string filename,
+#ifndef TEXTIMPORTQPD_H
+#define TEXTIMPORTQPD_H
+#include "Global/vespucciworkspace.h"
+#include "Data/Import/textimport.h"
+namespace TextImport{
+    bool ImportLongText(QString filename,
                         arma::mat &spectra,
                         arma::vec &wavelength,
                         arma::vec &x, arma::vec &y,
-                        bool swap_spatial);
+                        bool swap_spatial,
+                        QProgressDialog *progress);
 
-    bool ImportMultiplePoints(QMap<QPair<int,int>, QString> filenames,
-                              int rows,
-                              int cols,
-                              arma::mat& spectra,
-                              arma::vec& wavelength,
-                              arma::vec& x, arma::vec& y);
+    bool ImportWitecText(QString x_filename,
+                         QString y_filename,
+                         QString spectra_filename,
+                         arma::mat &spectra,
+                         arma::vec &wavelength,
+                         arma::vec &x, arma::vec &y,
+                         bool swap_spatial,
+                         QProgressDialog *progress);
 
-    bool CheckFileValidity(QString filename, bool &comma_decimals);
+    bool ImportWideText(QString filename,
+                        arma::mat &spectra,
+                        arma::vec &wavelength,
+                        arma::vec &x, arma::vec &y,
+                        bool swap_spatial,
+                        QProgressDialog *progress,
+                        const QString sep);
 }
 
-#endif // TEXTIMPORT_H
+#endif // TEXTIMPORTQPD_H
+
