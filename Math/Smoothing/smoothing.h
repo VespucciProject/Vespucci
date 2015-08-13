@@ -21,7 +21,7 @@
 #ifndef SMOOTHING_H
 #define SMOOTHING_H
 #include <Math/Accessory/accessory.h>
-
+#include <Global/libvespucci.h>
 namespace Vespucci
 {
     namespace Math
@@ -32,15 +32,15 @@ namespace Vespucci
     ///
         namespace Smoothing
         {
-            arma::mat sgolay(arma::uword poly_order, arma::uword window_size, arma::uword deriv_order, arma::uword scaling_factor);
-            arma::mat sgolayfilt(const arma::mat &x, arma::uword poly_order, arma::uword window_size, arma::uword deriv_order, arma::uword scaling_factor);
-            arma::vec ApplyFilter(const arma::vec &x, arma::mat coefficients, arma::uword window_size);
-            arma::vec ApplyFilter(const arma::vec &x, arma::vec filter);
-            arma::vec CreateMovingAverageFilter(arma::uword window_size);
-            arma::vec MedianFilter(const arma::vec &X, arma::uword window_size);
-            arma::mat MedianFilterMat(const arma::mat &X, arma::uword window_size);
-            arma::vec WhittakerSmooth(const arma::vec &x, double lambda, arma::uword penalty_order);
-            arma::mat InterpolateToNewAbscissa(const arma::mat &spectra,
+            VESPUCCI_EXPORT arma::mat sgolay(arma::uword poly_order, arma::uword window_size, arma::uword deriv_order, arma::uword scaling_factor);
+            VESPUCCI_EXPORT arma::mat sgolayfilt(const arma::mat &x, arma::uword poly_order, arma::uword window_size, arma::uword deriv_order, arma::uword scaling_factor);
+            VESPUCCI_EXPORT arma::vec ApplyFilter(const arma::vec &x, arma::mat coefficients, arma::uword window_size);
+            VESPUCCI_EXPORT arma::vec ApplyFilter(const arma::vec &x, arma::vec filter);
+            VESPUCCI_EXPORT arma::vec CreateMovingAverageFilter(arma::uword window_size);
+            VESPUCCI_EXPORT arma::vec MedianFilter(const arma::vec &X, arma::uword window_size);
+            VESPUCCI_EXPORT arma::mat MedianFilterMat(const arma::mat &X, arma::uword window_size);
+            VESPUCCI_EXPORT arma::vec WhittakerSmooth(const arma::vec &x, double lambda, arma::uword penalty_order);
+            VESPUCCI_EXPORT arma::mat InterpolateToNewAbscissa(const arma::mat &spectra,
                                                const arma::vec &old_abscissa,
                                                const arma::vec &new_abscissa,
                                                const int window_size=2,

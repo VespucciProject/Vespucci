@@ -1,14 +1,14 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2015-08-12T11:27:52
+# Project created by QtCreator 2015-08-12T18:10:12
 #
 #-------------------------------------------------
 
 QT       += core
 
-#QT       -= gui
+QT       -= gui
 
-TARGET = BatchVCA
+TARGET = MathTest
 CONFIG   += console
 CONFIG   -= app_bundle
 
@@ -16,8 +16,6 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp
-
-
 #Windows Libraries
 #Binaries for windows libraries are included in the MinGW_libs branch of the repository
 win32: INCLUDEPATH += $$PWD/../../../MinGW_libs/include
@@ -95,5 +93,3 @@ win32: LIBS += -L$$PWD/../../../MinGW_libs/lib/ -lcminpack
 INCLUDEPATH += $$PWD/../../../MinGW_libs/include/cminpack-1
 DEPENDPATH += $$PWD/../../../MinGW_libs/include/cminpack-1
 win32-g++: PRE_TARGETDEPS += $$PWD/../../../MinGW_libs/lib/libcminpack.a
-
-

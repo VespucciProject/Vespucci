@@ -20,6 +20,7 @@
 #ifndef LINLEASTSQ_H
 #define LINLEASTSQ_H
 #include "Math/VespucciMath.h"
+#include "Global/libvespucci.h"
 namespace Vespucci{
     namespace Math{
         /// \namespace Vespucci::Math:::LinLeastSq
@@ -28,7 +29,7 @@ namespace Vespucci{
         ///
         ///
         namespace LinLeastSq{
-            arma::uword IModPoly(const arma::vec &spectrum, const arma::vec &abscissa,
+            VESPUCCI_EXPORT arma::uword IModPoly(const arma::vec &spectrum, const arma::vec &abscissa,
                            arma::vec &baseline, arma::vec &corrected,
                            double &err,
                            const arma::uword poly_order,
@@ -38,10 +39,10 @@ namespace Vespucci{
             double CalcDev(const arma::vec &spectrum, const arma::vec &fit);
             arma::uvec NonPeakInd(const arma::vec &spectrum, const double dev);
             arma::vec CalcPoly(const arma::vec &coefs, const arma::vec &x);
-            arma::mat OrdinaryLeastSquares(const arma::mat &X, const arma::mat &y);
-            arma::mat OrdinaryLeastSquares(const arma::mat &X, const arma::mat &y, arma::mat &coef_errors, arma::mat &predicted);
-            arma::vec OrdinaryLeastSquares(const arma::mat &X, const arma::vec &y, arma::vec &fit, std::map<std::string, double> stats);
-            arma::mat Vandermonde(const arma::vec &x, const int poly_order);
+            VESPUCCI_EXPORT arma::mat OrdinaryLeastSquares(const arma::mat &X, const arma::mat &y);
+            VESPUCCI_EXPORT arma::mat OrdinaryLeastSquares(const arma::mat &X, const arma::mat &y, arma::mat &coef_errors, arma::mat &predicted);
+            VESPUCCI_EXPORT arma::vec OrdinaryLeastSquares(const arma::mat &X, const arma::vec &y, arma::vec &fit, std::map<std::string, double> stats);
+            VESPUCCI_EXPORT arma::mat Vandermonde(const arma::vec &x, const int poly_order);
             double CalcErr(const double &dev, const double &prev_dev);
         }
     }

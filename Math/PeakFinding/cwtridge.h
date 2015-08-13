@@ -20,9 +20,10 @@
 #ifndef CWTRIDGE_H
 #define CWTRIDGE_H
 #include <mlpack/core.hpp>
+#include "Global/libvespucci.h"
 namespace Vespucci{
 namespace Math{
-class CWTRidge
+class VESPUCCI_EXPORT CWTRidge
 {
 public:
     CWTRidge(int id);

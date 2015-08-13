@@ -20,12 +20,12 @@
 #ifndef BINARYIMPORT_H
 #define BINARYIMPORT_H
 #include "Global/vespucciworkspace.h"
-
+#include "Global/libvespucci.h"
 
 
 namespace BinaryImport
 {
-    bool ImportVespucciBinary(QString filename,
+    VESPUCCI_EXPORT bool ImportVespucciBinary(QString filename,
                               arma::mat &spectra,
                               arma::vec &wavelength,
                               arma::vec &x, arma::colvec &y);

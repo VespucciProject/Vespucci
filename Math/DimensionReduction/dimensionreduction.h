@@ -20,7 +20,7 @@
 #ifndef DIMENSION_REDUCTION_H
 #define DIMENSION_REDUCTION_H
 #include <Math/Accessory/accessory.h>
-
+#include <Global/libvespucci.h>
 namespace Vespucci
 {
     namespace Math
@@ -31,11 +31,11 @@ namespace Vespucci
         ///
         namespace DimensionReduction
         {
-            bool plsregress(arma::mat X, arma::mat Y, int components,
+            VESPUCCI_EXPORT bool plsregress(arma::mat X, arma::mat Y, int components,
                           arma::mat &X_loadings, arma::mat &Y_loadings,
                           arma::mat &X_scores, arma::mat &Y_scores,
                           arma::mat &coefficients, arma::mat &percent_variance, arma::mat &fitted);
-            bool VCA(const arma::mat &R, arma::uword p, arma::uvec &indices, arma::mat &endmember_spectra,
+            VESPUCCI_EXPORT bool VCA(const arma::mat &R, arma::uword p, arma::uvec &indices, arma::mat &endmember_spectra,
                      arma::mat &projected_data, arma::mat &fractional_abundances);
             double estimate_snr(const arma::mat &R, arma::vec r_m, arma::mat x);
             //deprected by arma::svds() in armadillo 5+

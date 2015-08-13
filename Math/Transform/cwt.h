@@ -20,6 +20,7 @@
 #ifndef CWT_H
 #define CWT_H
 #include <Math/Accessory/accessory.h>
+#include "Global/libvespucci.h"
 namespace Vespucci
 {
     namespace Math
@@ -30,17 +31,17 @@ namespace Vespucci
     ///
         namespace Transform
         {
-            arma::mat cwt(arma::vec X, std::string wavelet, arma::uvec scales);
-            arma::mat cwt_mat(arma::mat X, std::string wavelet, arma::uword qscale);
-            arma::vec cwt_spdbc(const arma::vec &X, std::string wavelet, arma::uword qscale, double threshold, std::string threshold_method, arma::uword window_size, arma::umat &peak_extrema, arma::vec &baseline);
-            arma::mat cwt_spdbc_mat(const arma::mat &X, std::string wavelet, arma::uword qscale, double threshold, std::string threshold_method, arma::uword window_size, arma::field<arma::umat> &peak_positions, arma::mat &baselines);
-            arma::field<arma::mat> cwt_multi_mat(arma::mat X, std::string wavelet, arma::uvec scales);
-            arma::field<arma::mat> cwt_multi(const arma::mat &X, std::string wavelet, arma::uvec scales);
-            arma::mat cwtPeakAnalysis(const arma::mat &X,
+            VESPUCCI_EXPORT arma::mat cwt(arma::vec X, std::string wavelet, arma::uvec scales);
+            VESPUCCI_EXPORT arma::mat cwt_mat(arma::mat X, std::string wavelet, arma::uword qscale);
+            VESPUCCI_EXPORT arma::vec cwt_spdbc(const arma::vec &X, std::string wavelet, arma::uword qscale, double threshold, std::string threshold_method, arma::uword window_size, arma::umat &peak_extrema, arma::vec &baseline);
+            VESPUCCI_EXPORT arma::mat cwt_spdbc_mat(const arma::mat &X, std::string wavelet, arma::uword qscale, double threshold, std::string threshold_method, arma::uword window_size, arma::field<arma::umat> &peak_positions, arma::mat &baselines);
+            VESPUCCI_EXPORT arma::field<arma::mat> cwt_multi_mat(arma::mat X, std::string wavelet, arma::uvec scales);
+            VESPUCCI_EXPORT arma::field<arma::mat> cwt_multi(const arma::mat &X, std::string wavelet, arma::uvec scales);
+            VESPUCCI_EXPORT arma::mat cwtPeakAnalysis(const arma::mat &X,
                                       std::string wavelet, arma::uword qscale,
                                       double threshold, std::string threshold_method,
                                       arma::mat &transform);
-            arma::mat FindRidges(arma::mat coefs);
+            VESPUCCI_EXPORT arma::mat FindRidges(arma::mat coefs);
         }
     }
 }

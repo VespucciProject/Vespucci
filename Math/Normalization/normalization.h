@@ -20,7 +20,7 @@
 #ifndef NORMALIZATION_H
 #define NORMALIZATION_H
 #include <Math/Accessory/accessory.h>
-
+#include <Global/libvespucci.h>
 namespace Vespucci
 {
     namespace Math
@@ -31,10 +31,10 @@ namespace Vespucci
     ///
         namespace Normalization
         {
-            arma::vec StandardScore(const arma::vec &X);
-            arma::mat StandardScoreMat(const arma::mat &X);
+            VESPUCCI_EXPORT arma::vec StandardScore(const arma::vec &X);
+            VESPUCCI_EXPORT arma::mat StandardScoreMat(const arma::mat &X);
 
-            arma::mat SNVNorm(const arma::mat &X, const double offset);
+            VESPUCCI_EXPORT arma::mat SNVNorm(const arma::mat &X, const double offset);
         }
     }
 }

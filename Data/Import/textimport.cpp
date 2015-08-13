@@ -22,7 +22,7 @@
 #include <QtCore>
 
 
-
+using namespace arma;
 bool TextImport::CheckFileValidity(QString filename, bool &comma_decimals)
 {
     QFile inputfile(filename);
@@ -149,7 +149,7 @@ bool TextImport::ImportMultiplePoints(QMap<QPair<int, int>, QString> filenames,
 }
 
 
-bool TextImport::ImportWideText(string filename, arma::mat &spectra, arma::vec &wavelength, arma::vec &x, arma::vec &y, bool swap_spatial)
+bool TextImport::ImportWideText(std::string filename, arma::mat &spectra, arma::vec &wavelength, arma::vec &x, arma::vec &y, bool swap_spatial)
 {
     std::ifstream file_stream(filename);
     std::string current_line;

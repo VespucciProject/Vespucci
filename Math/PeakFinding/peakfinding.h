@@ -21,6 +21,7 @@
 #define PEAKFINDING_H
 #include <Math/Accessory/accessory.h>
 #include <Math/PeakFinding/cwtridge.h>
+#include <Global/libvespucci.h>
 namespace Vespucci
 {
     namespace Math
@@ -32,47 +33,47 @@ namespace Vespucci
     ///
         namespace PeakFinding
         {
-            std::vector<Vespucci::Math::CWTRidge> FindRidges(arma::mat &coefs,
+            VESPUCCI_EXPORT std::vector<Vespucci::Math::CWTRidge> FindRidges(arma::mat &coefs,
                                                              arma::uvec scales,
                                                              arma::uword gap_threshold,
                                                              arma::uword ridge_length,
                                                              arma::uword search_width, double noise_threshold, std::string noise_method, arma::uword noise_window);
 
 
-            std::vector<Vespucci::Math::CWTRidge> LinkRidges(const arma::sp_mat &maxima,
+            VESPUCCI_EXPORT std::vector<Vespucci::Math::CWTRidge> LinkRidges(const arma::sp_mat &maxima,
                                                              arma::uvec scales,
                                                              arma::mat &coefs,
                                                              arma::uword min_window_size,
                                                              arma::uword gap_threshold);
-            void EstimateWidth(const arma::vec &spectrum, const arma::vec &abscissa, std::vector<Vespucci::Math::CWTRidge> &ridges);
+            VESPUCCI_EXPORT void EstimateWidth(const arma::vec &spectrum, const arma::vec &abscissa, std::vector<Vespucci::Math::CWTRidge> &ridges);
 
-            arma::vec FindPeaks(arma::vec X, arma::vec dX,
+            VESPUCCI_EXPORT arma::vec FindPeaks(arma::vec X, arma::vec dX,
                           double sel,
                           double threshold,
                           arma::vec &peak_magnitudes);
 
-            arma::uvec FindPeakPositions(arma::vec X, arma::vec dX,
+            VESPUCCI_EXPORT arma::uvec FindPeakPositions(arma::vec X, arma::vec dX,
                                    double sel,
                                    double threshold,
                                    arma::uvec &local_minima);
 
-            arma::mat FindPeaksMat(arma::mat X,
+            VESPUCCI_EXPORT arma::mat FindPeaksMat(arma::mat X,
                              double sel,
                              double threshold,
                              arma::uword poly_order, arma::uword window_size,
                              arma::mat &peak_magnitudes);
 
 
-            arma::vec EstimateBaseline(arma::vec X,
+            VESPUCCI_EXPORT arma::vec EstimateBaseline(arma::vec X,
                                  arma::umat peaks,
                                  arma::uword window_size);
-            arma::umat FindPeakPositions(arma::vec X, arma::vec dX,
+            VESPUCCI_EXPORT arma::umat FindPeakPositions(arma::vec X, arma::vec dX,
                                    double threshold,
                                    std::string threshold_method,
                                    arma::vec &peak_magnitudes);
-            arma::vec PeakPopulation(arma::uword vector_size, arma::umat peak_positions);
-            arma::vec PeakExtrema(arma::uword vector_size, arma::umat peak_positions);
-            arma::mat CWTPeakAnalysis(arma::mat X,
+            VESPUCCI_EXPORT arma::vec PeakPopulation(arma::uword vector_size, arma::umat peak_positions);
+            VESPUCCI_EXPORT arma::vec PeakExtrema(arma::uword vector_size, arma::umat peak_positions);
+            VESPUCCI_EXPORT arma::mat CWTPeakAnalysis(arma::mat X,
                                 std::string wavelet, arma::uvec scales,
                                 double threshold, std::string threshold_method,
                                 arma::mat &transform);

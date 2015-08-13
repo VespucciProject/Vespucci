@@ -1,5 +1,5 @@
 /*******************************************************************************
-    Copyright (C) 2015 Wright State University - All Rights Reserved
+    Copyright (C) 2014 Wright State University - All Rights Reserved
     Daniel P. Foose - Author
 
     This file is part of Vespucci.
@@ -22,25 +22,26 @@
 
 #include <armadillo>
 #include <QtCore>
+#include "Global/libvespucci.h"
 
 
 namespace TextImport
 {
 
-    bool ImportWideText(std::string filename,
+    VESPUCCI_EXPORT bool ImportWideText(std::string filename,
                         arma::mat &spectra,
                         arma::vec &wavelength,
                         arma::vec &x, arma::vec &y,
                         bool swap_spatial);
 
-    bool ImportMultiplePoints(QMap<QPair<int,int>, QString> filenames,
+    VESPUCCI_EXPORT bool ImportMultiplePoints(QMap<QPair<int,int>, QString> filenames,
                               int rows,
                               int cols,
                               arma::mat& spectra,
                               arma::vec& wavelength,
                               arma::vec& x, arma::vec& y);
 
-    bool CheckFileValidity(QString filename, bool &comma_decimals);
+    VESPUCCI_EXPORT bool CheckFileValidity(QString filename, bool &comma_decimals);
 }
 
 #endif // TEXTIMPORT_H

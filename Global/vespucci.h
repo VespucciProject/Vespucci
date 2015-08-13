@@ -2,7 +2,11 @@
 #define VESPUCCI_H
 #include <qcustomplot.h>
 #include <armadillo>
-
+#if defined(VESPUCCI_EXPORT)
+#  define VESPUCCI_EXPORT Q_DECL_EXPORT
+#else
+#  define VESPUCCI_EXPORT Q_DECL_IMPORT
+#endif
 /// \namespace Vespucci
 /// \brief A namespace for "global" functions, including math functions
 ///

@@ -40,9 +40,9 @@ isEmpty(PREFIX) {
     PREFIX = $$PWD/../../Vespucci-install
 }
 # it is assumed that casual windows users will not use the build system to install
-TARGET = libvespucci
+TARGET = vespucci
 TEMPLATE = lib
-
+DEFINES += VESPUCCI_LIBRARY
 
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
 unix: !macx: QMAKE_CXXFLAGS += -std=c++11 \
@@ -214,7 +214,8 @@ HEADERS  += \
     GUI/Analysis/peakfindingdialog.h \
     GUI/Analysis/haspeaksdialog.h \
     Global/vespucci.h \
-    Data/Import/textimportqpd.h
+    Data/Import/textimportqpd.h \
+    Global/libvespucci.h
 
 
 FORMS    += \
