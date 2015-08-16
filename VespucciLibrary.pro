@@ -34,7 +34,7 @@
 QT       += core gui
 QT       += widgets printsupport
 QT       += svg
-CONFIG   += static
+CONFIG   += shared
 # Set the installation directory
 isEmpty(PREFIX) {
     PREFIX = $$PWD/../../Vespucci-install
@@ -108,7 +108,6 @@ SOURCES += main.cpp\
     GUI/Display/mapviewer.cpp \
     GUI/Processing/metadatasetdialog.cpp \
     GUI/Analysis/plotmakerdialog.cpp \
-    GUI/Display/plotviewer.cpp \
     GUI/Analysis/plsdialog.cpp \
     GUI/Analysis/principalcomponentsdialog.cpp \
     GUI/Processing/rangedialog.cpp \
@@ -146,6 +145,13 @@ SOURCES += main.cpp\
     GUI/Analysis/peakfindingdialog.cpp \
     GUI/Analysis/haspeaksdialog.cpp \
     Global/vespucci.cpp \
+    GUI/Processing/multiimportdialog.cpp \
+    GUI/Processing/bulkconversiondialog.cpp \
+    GUI/Display/reportmessagedialog.cpp \
+    GUI/Processing/abscissatransformdialog.cpp \
+    GUI/Processing/fouriertransformdialog.cpp \
+    GUI/Analysis/classicaleastsquaresdialog.cpp \
+    GUI/Display/plotviewer.cpp \
     Data/Import/textimportqpd.cpp
 
 
@@ -180,7 +186,6 @@ HEADERS  += \
     GUI/QAbstractItemModel/maplistmodel.h \
     GUI/Display/mapviewer.h \
     GUI/Processing/metadatasetdialog.h \
-    GUI/Display/plotviewer.h \
     GUI/Analysis/plsdialog.h \
     GUI/Analysis/principalcomponentsdialog.h \
     GUI/Processing/rangedialog.h \
@@ -214,6 +219,13 @@ HEADERS  += \
     GUI/Analysis/peakfindingdialog.h \
     GUI/Analysis/haspeaksdialog.h \
     Global/vespucci.h \
+    GUI/Processing/multiimportdialog.h \
+    GUI/Processing/bulkconversiondialog.h \
+    GUI/Display/reportmessagedialog.h \
+    GUI/Processing/abscissatransformdialog.h \
+    GUI/Processing/fouriertransformdialog.h \
+    GUI/Analysis/classicaleastsquaresdialog.h \
+    GUI/Display/plotviewer.h \
     Data/Import/textimportqpd.h \
     Global/libvespucci.h
 
@@ -235,7 +247,6 @@ FORMS    += \
     GUI/Display/mapviewer.ui \
     GUI/Processing/metadatasetdialog.ui \
     GUI/Analysis/plotmakerdialog.ui \
-    GUI/Display/plotviewer.ui \
     GUI/Analysis/plsdialog.ui \
     GUI/Analysis/principalcomponentsdialog.ui \
     GUI/Processing/rangedialog.ui \
@@ -249,12 +260,20 @@ FORMS    += \
     GUI/Analysis/vcadialog.ui \
     GUI/scriptdialog.ui \
     GUI/Analysis/peakfindingdialog.ui \
-    GUI/Analysis/haspeaksdialog.ui
+    GUI/Analysis/haspeaksdialog.ui \
+    GUI/Processing/multiimportdialog.ui \
+    GUI/Processing/bulkconversiondialog.ui \
+    GUI/Display/reportmessagedialog.ui \
+    GUI/Processing/abscissatransformdialog.ui \
+    GUI/Processing/fouriertransformdialog.ui \
+    GUI/Analysis/classicaleastsquaresdialog.ui \
+    GUI/Display/plotviewer.ui
 
 RESOURCES += \
     resources.qrc
 
 RC_ICONS = "vespuccilogo.ico"
+RESOURCES += \
 
 #linux libraries, specific to my own install. This will be handled by CMake later
 #I hope...

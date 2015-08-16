@@ -1,3 +1,5 @@
+#include <Global/libvespucci.h>
+
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QDir>

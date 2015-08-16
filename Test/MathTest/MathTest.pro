@@ -13,9 +13,17 @@ CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
+unix: !macx: QMAKE_CXXFLAGS += -std=c++11 \
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    ../../Data/Import/textimport.cpp \
+    ../../Math/DimensionReduction/VCA.cpp \
+    ../../Math/Accessory/accessory.cpp \
+    ../../Math/Smoothing/FIR.cpp \
+    ../../Math/Smoothing/nonlinear.cpp \
+    ../../Math/Smoothing/whittaker.cpp \
+    ../../Math/Normalization/normalization.cpp
 #Windows Libraries
 #Binaries for windows libraries are included in the MinGW_libs branch of the repository
 win32: INCLUDEPATH += $$PWD/../../../MinGW_libs/include
@@ -93,3 +101,11 @@ win32: LIBS += -L$$PWD/../../../MinGW_libs/lib/ -lcminpack
 INCLUDEPATH += $$PWD/../../../MinGW_libs/include/cminpack-1
 DEPENDPATH += $$PWD/../../../MinGW_libs/include/cminpack-1
 win32-g++: PRE_TARGETDEPS += $$PWD/../../../MinGW_libs/lib/libcminpack.a
+
+HEADERS += \
+    ../../Data/Import/textimport.h \
+    ../../Math/DimensionReduction/dimensionreduction.h \
+    ../../Math/Accessory/accessory.h \
+    ../../Math/Accessory/accessory_impl.h \
+    ../../Math/Smoothing/smoothing.h \
+    ../../Math/Normalization/normalization.h

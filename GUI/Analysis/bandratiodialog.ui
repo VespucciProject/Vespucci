@@ -16,7 +16,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Band Ratio Image</string>
+   <string>Band Ratio Analysis</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>

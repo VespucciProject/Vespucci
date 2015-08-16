@@ -19,6 +19,7 @@
 *******************************************************************************/
 
 #include <Data/Import/textimport.h>
+#include <Data/Import/textimportqpd.h>
 
 bool TextImport::ImportWideText(QString filename,
                                 mat &spectra,

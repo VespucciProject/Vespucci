@@ -228,7 +228,8 @@ HEADERS  += \
     GUI/Processing/fouriertransformdialog.h \
     GUI/Analysis/classicaleastsquaresdialog.h \
     GUI/Display/plotviewer.h \
-    Data/Import/textimportqpd.h
+    Data/Import/textimportqpd.h \
+    Global/libvespucci.h
 
 
 FORMS    += \

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>407</width>
-    <height>306</height>
+    <height>334</height>
    </rect>
   </property>
   <property name="font">
@@ -16,10 +16,10 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Vertex Component Analysis Image</string>
+   <string>Vertex Component Analysis</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="../../resources.qrc">
     <normaloff>:/icons/vespuccilogo.ico</normaloff>:/icons/vespuccilogo.ico</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -327,6 +327,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

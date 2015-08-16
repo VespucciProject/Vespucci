@@ -280,7 +280,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
     }
     else if (format == "WideCSV"){
         try{
-            constructor_canceled_ = TextImport::ImportWideText(text_filename.tostd,
+            constructor_canceled_ = TextImport::ImportWideText(text_filename,
                                                                spectra_,
                                                                abscissa_,
                                                                x_, y_,

@@ -8,7 +8,7 @@ QT       += core
 
 #QT       -= gui
 
-TARGET = BatchVCA
+TARGET = batchvca
 CONFIG   += console
 CONFIG   -= app_bundle
 
@@ -16,7 +16,7 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp
-
+QMAKE_CXXFLAGS += -std=c++11
 
 #Windows Libraries
 #Binaries for windows libraries are included in the MinGW_libs branch of the repository
@@ -29,9 +29,8 @@ win32: DEPENDPATH += $$PWD/../../../MinGW_libs/boost/
 win32: INCLUDEPATH += $$PWD/../../
 win32: DEPENDPATH += $$PWD/../../
 
-#libvespucci
-win32: LIBS += -L$$PWD/../../../build-VespucciLibrary-MinGW_w64_4_9_1-Release/release/ -llibvespucci
-win32-g++: PRE_TARGETDEPS += $$PWD/../../../build-VespucciLibrary-MinGW_w64_4_9_1-Release/release/liblibvespucci.a
+win32: LIBS += -L$$PWD/../../../build-VespucciLibrary-MinGW_w64_4_9_1-Release/release/ -lvespucci
+else:win32-g++: PRE_TARGETDEPS += $$PWD/../../../build-VespucciLibrary-MinGW_w64_4_9_1-Release/release/libvespucci.a
 
 #MLPACK
 win32: LIBS += -L$$PWD/../../../MinGW_libs/lib/ -lmlpack
@@ -97,3 +96,6 @@ DEPENDPATH += $$PWD/../../../MinGW_libs/include/cminpack-1
 win32-g++: PRE_TARGETDEPS += $$PWD/../../../MinGW_libs/lib/libcminpack.a
 
 
+
+win32: LIBS += -L$$PWD/../../../build-VespucciLibrary-MinGW_w64_4_9_1-Release/release/ -lvespucci
+else:win32-g++: PRE_TARGETDEPS += $$PWD/../../../build-VespucciLibrary-MinGW_w64_4_9_1-Release/release/libvespucci.a

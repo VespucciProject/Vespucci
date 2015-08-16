@@ -21,7 +21,6 @@
 #ifndef TEXTIMPORTQPD_H
 #define TEXTIMPORTQPD_H
 #include "Global/vespucciworkspace.h"
-#include "Data/Import/textimport.h"
 namespace TextImport{
     bool ImportLongText(QString filename,
                         arma::mat &spectra,

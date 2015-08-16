@@ -249,12 +249,13 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
             double min = data->wavelength_ptr()->min();
             double max = data->wavelength_ptr()->max();
             RangeDialog *range_dialog = new RangeDialog(this, min, max);
+            range_dialog->setWindowTitle("Peak Intensity Normalization");
             QObject::connect(range_dialog, SIGNAL(DialogAccepted(double,double)), this, SLOT(RangeDialogAccepted(double,double)));
             range_dialog->show();
         }
         else if (ok && item == "Scale Spectra"){
-            scaling_factor = QInputDialog::getDouble(this, tr("Enter Scaling Factor"),
-                                                     tr("Factor"), 1, -100, 100, 2, &ok);
+            scaling_factor = QInputDialog::getDouble(this, "Enter Scaling Factor",
+                                                     "Factor", 1, -100, 100, 2, &ok);
             data->Scale(scaling_factor);
         }
         else if (ok && item == "Standard Normal Variate"){

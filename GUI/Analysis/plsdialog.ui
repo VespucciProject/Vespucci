@@ -16,7 +16,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Partial Least Squares Image</string>
+   <string>Partial Least Squares</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
