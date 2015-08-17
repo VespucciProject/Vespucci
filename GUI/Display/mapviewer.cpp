@@ -20,6 +20,7 @@
 #include "GUI/Display/mapviewer.h"
 #include "ui_mapviewer.h"
 #include "Global/vespucci.h"
+#include "Global/global.h"
 
 ///
 /// \brief MapViewer::MapViewer

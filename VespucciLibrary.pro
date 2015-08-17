@@ -77,50 +77,9 @@ win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
 
 
 
-SOURCES += main.cpp\
-    GUI/mainwindow.cpp \
-    Global/vespucciworkspace.cpp \
-    Data/Analysis/analysisresults.cpp \
-    Data/Imaging/mapdata.cpp \
-    Data/Analysis/mlpackpcadata.cpp \
-    Data/Analysis/plsdata.cpp \
-    Data/Analysis/principalcomponentsdata.cpp \
-    Data/Analysis/vcadata.cpp \
-    Data/Analysis/univariatedata.cpp \
+SOURCES +=\
     Data/Import/binaryimport.cpp \
     Data/Import/textimport.cpp \
-    Data/Dataset/metadataset.cpp \
-    Data/Dataset/vespuccidataset.cpp \
-    GUI/Display/aboutdialog.cpp \
-    GUI/Analysis/analysisdialog.cpp \
-    GUI/Analysis/bandratiodialog.cpp \
-    GUI/Processing/baselinedialog.cpp \
-    GUI/Processing/booleanizedialog.cpp \
-    GUI/Display/citationdialog.cpp \
-    GUI/Processing/cropdialog.cpp \
-    GUI/Processing/dataextractordialog.cpp \
-    GUI/QAbstractItemModel/datasetlistmodel.cpp \
-    GUI/Display/dataviewer.cpp \
-    GUI/Processing/filterdialog.cpp \
-    GUI/Analysis/kmeansdialog.cpp \
-    GUI/Processing/loaddataset.cpp \
-    GUI/QAbstractItemModel/maplistmodel.cpp \
-    GUI/Display/mapviewer.cpp \
-    GUI/Processing/metadatasetdialog.cpp \
-    GUI/Analysis/plotmakerdialog.cpp \
-    GUI/Analysis/plsdialog.cpp \
-    GUI/Analysis/principalcomponentsdialog.cpp \
-    GUI/Processing/rangedialog.cpp \
-    GUI/Display/scalebardialog.cpp \
-    GUI/QAbstractItemModel/spectratablemodel.cpp \
-    GUI/Display/spectrumselectiondialog.cpp \
-    GUI/Display/spectrumviewer.cpp \
-    GUI/Display/statsdialog.cpp \
-    GUI/Processing/thresholddialog.cpp \
-    GUI/Analysis/univariateanalysisdialog.cpp \
-    GUI/Analysis/univariatedialog.cpp \
-    GUI/Analysis/vcadialog.cpp \
-    GUI/QAbstractItemModel/vespuccitablemodel.cpp \
     Math/Accessory/accessory.cpp \
     Math/DimensionReduction/pls.cpp \
     Math/DimensionReduction/svds.cpp \
@@ -135,71 +94,16 @@ SOURCES += main.cpp\
     Math/Transform/cwt.cpp \
     Math/PeakFinding/peakfinding.cpp \
     Math/Quantification/misc.cpp \
-    External/R/VespucciR.cpp \
-    External/Octave/VespucciOctave.cpp \
-    GUI/scriptdialog.cpp \
     Math/PeakFinding/cwtridge.cpp \
-    Data/Analysis/cwtdata.cpp \
     Math/Fitting/linleastsq.cpp \
     Math/Fitting/nonlinleastsq.cpp \
-    GUI/Analysis/peakfindingdialog.cpp \
-    GUI/Analysis/haspeaksdialog.cpp \
-    Global/vespucci.cpp \
-    GUI/Processing/multiimportdialog.cpp \
-    GUI/Processing/bulkconversiondialog.cpp \
-    GUI/Display/reportmessagedialog.cpp \
-    GUI/Processing/abscissatransformdialog.cpp \
-    GUI/Processing/fouriertransformdialog.cpp \
-    GUI/Analysis/classicaleastsquaresdialog.cpp \
-    GUI/Display/plotviewer.cpp \
-    Data/Import/textimportqpd.cpp
+    Global/vespucci.cpp
 
 
 HEADERS  += \
     Global/enums.h \
-    GUI/mainwindow.h \
-    Global/vespucciworkspace.h \
-    Data/Analysis/analysisresults.h \
     Data/Import/binaryimport.h \
-    Data/Imaging/mapdata.h \
-    Data/Analysis/mlpackpcadata.h \
-    Data/Analysis/plsdata.h \
-    Data/Analysis/principalcomponentsdata.h \
     Data/Import/textimport.h \
-    Data/Analysis/univariatedata.h \
-    Data/Analysis/vcadata.h \
-    Data/Dataset/metadataset.h \
-    Data/Dataset/vespuccidataset.h \
-    GUI/Analysis/analysisdialog.h \
-    GUI/Analysis/bandratiodialog.h \
-    GUI/Processing/baselinedialog.h \
-    GUI/Processing/booleanizedialog.h \
-    GUI/Processing/cropdialog.h \
-    GUI/Processing/dataextractordialog.h \
-    GUI/QAbstractItemModel/datasetlistmodel.h \
-    GUI/Display/aboutdialog.h \
-    GUI/Display/citationdialog.h \
-    GUI/Display/dataviewer.h \
-    GUI/Processing/filterdialog.h \
-    GUI/Analysis/kmeansdialog.h \
-    GUI/Processing/loaddataset.h \
-    GUI/QAbstractItemModel/maplistmodel.h \
-    GUI/Display/mapviewer.h \
-    GUI/Processing/metadatasetdialog.h \
-    GUI/Analysis/plsdialog.h \
-    GUI/Analysis/principalcomponentsdialog.h \
-    GUI/Processing/rangedialog.h \
-    GUI/Display/scalebardialog.h \
-    GUI/QAbstractItemModel/spectratablemodel.h \
-    GUI/Display/spectrumselectiondialog.h \
-    GUI/Display/spectrumviewer.h \
-    GUI/Display/statsdialog.h \
-    GUI/Processing/thresholddialog.h \
-    GUI/Analysis/univariateanalysisdialog.h \
-    GUI/Analysis/univariatedialog.h \
-    GUI/Analysis/vcadialog.h \
-    GUI/QAbstractItemModel/vespuccitablemodel.h \
-    GUI/Analysis/plotmakerdialog.h \
     Math/VespucciMath.h \
     Math/Accessory/accessory.h \
     Math/DimensionReduction/dimensionreduction.h \
@@ -209,71 +113,11 @@ HEADERS  += \
     Math/Transform/cwt.h \
     Math/PeakFinding/peakfinding.h \
     Math/Accessory/accessory_impl.h \
-    External/R/VespucciR.h \
-    External/Octave/VespucciOctave.h \
-    GUI/scriptdialog.h \
     Math/PeakFinding/cwtridge.h \
-    Data/Analysis/cwtdata.h \
     Math/Fitting/linleastsq.h \
     Math/Fitting/nonlinleastsq.h \
-    GUI/Analysis/peakfindingdialog.h \
-    GUI/Analysis/haspeaksdialog.h \
     Global/vespucci.h \
-    GUI/Processing/multiimportdialog.h \
-    GUI/Processing/bulkconversiondialog.h \
-    GUI/Display/reportmessagedialog.h \
-    GUI/Processing/abscissatransformdialog.h \
-    GUI/Processing/fouriertransformdialog.h \
-    GUI/Analysis/classicaleastsquaresdialog.h \
-    GUI/Display/plotviewer.h \
-    Data/Import/textimportqpd.h \
     Global/libvespucci.h
-
-
-FORMS    += \
-    GUI/mainwindow.ui \
-    GUI/Display/aboutdialog.ui \
-    GUI/Analysis/analysisdialog.ui \
-    GUI/Analysis/bandratiodialog.ui \
-    GUI/Processing/booleanizedialog.ui \
-    GUI/Processing/baselinedialog.ui \
-    GUI/Display/citationdialog.ui \
-    GUI/Processing/cropdialog.ui \
-    GUI/Processing/dataextractordialog.ui \
-    GUI/Display/dataviewer.ui \
-    GUI/Processing/filterdialog.ui \
-    GUI/Analysis/kmeansdialog.ui \
-    GUI/Processing/loaddataset.ui \
-    GUI/Display/mapviewer.ui \
-    GUI/Processing/metadatasetdialog.ui \
-    GUI/Analysis/plotmakerdialog.ui \
-    GUI/Analysis/plsdialog.ui \
-    GUI/Analysis/principalcomponentsdialog.ui \
-    GUI/Processing/rangedialog.ui \
-    GUI/Display/scalebardialog.ui \
-    GUI/Display/spectrumselectiondialog.ui \
-    GUI/Display/spectrumviewer.ui \
-    GUI/Display/statsdialog.ui \
-    GUI/Processing/thresholddialog.ui \
-    GUI/Analysis/univariateanalysisdialog.ui \
-    GUI/Analysis/univariatedialog.ui \
-    GUI/Analysis/vcadialog.ui \
-    GUI/scriptdialog.ui \
-    GUI/Analysis/peakfindingdialog.ui \
-    GUI/Analysis/haspeaksdialog.ui \
-    GUI/Processing/multiimportdialog.ui \
-    GUI/Processing/bulkconversiondialog.ui \
-    GUI/Display/reportmessagedialog.ui \
-    GUI/Processing/abscissatransformdialog.ui \
-    GUI/Processing/fouriertransformdialog.ui \
-    GUI/Analysis/classicaleastsquaresdialog.ui \
-    GUI/Display/plotviewer.ui
-
-RESOURCES += \
-    resources.qrc
-
-RC_ICONS = "vespuccilogo.ico"
-RESOURCES += \
 
 #linux libraries, specific to my own install. This will be handled by CMake later
 #I hope...

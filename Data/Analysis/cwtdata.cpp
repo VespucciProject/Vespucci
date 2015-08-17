@@ -1,4 +1,5 @@
 #include "Data/Analysis/cwtdata.h"
+#include "Global/global.h"
 CWTData::CWTData(QSharedPointer<VespucciDataset> dataset)
 {
     dataset_ = dataset;

@@ -1,5 +1,5 @@
-#    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
-
+#    Copyright (C) 2015 Wright State University - All Rights Reserved
+#    Daniel P. Foose, author
 #    This file is part of Vespucci.
 
 #    Vespucci is free software: you can redistribute it and/or modify
@@ -89,8 +89,6 @@ SOURCES += main.cpp\
     Data/Analysis/principalcomponentsdata.cpp \
     Data/Analysis/vcadata.cpp \
     Data/Analysis/univariatedata.cpp \
-    Data/Import/binaryimport.cpp \
-    Data/Import/textimport.cpp \
     Data/Dataset/metadataset.cpp \
     Data/Dataset/vespuccidataset.cpp \
     GUI/Display/aboutdialog.cpp \
@@ -123,30 +121,12 @@ SOURCES += main.cpp\
     GUI/Analysis/univariatedialog.cpp \
     GUI/Analysis/vcadialog.cpp \
     GUI/QAbstractItemModel/vespuccitablemodel.cpp \
-    Math/Accessory/accessory.cpp \
-    Math/DimensionReduction/pls.cpp \
-    Math/DimensionReduction/svds.cpp \
-    Math/DimensionReduction/VCA.cpp \
-    Math/Normalization/normalization.cpp \
-    Math/Quantification/bandwidth.cpp \
-    Math/Quantification/integration.cpp \
-    Math/Quantification/maximum.cpp \
-    Math/Smoothing/FIR.cpp \
-    Math/Smoothing/nonlinear.cpp \
-    Math/Smoothing/whittaker.cpp \
-    Math/Transform/cwt.cpp \
-    Math/PeakFinding/peakfinding.cpp \
-    Math/Quantification/misc.cpp \
     External/R/VespucciR.cpp \
     External/Octave/VespucciOctave.cpp \
     GUI/scriptdialog.cpp \
-    Math/PeakFinding/cwtridge.cpp \
     Data/Analysis/cwtdata.cpp \
-    Math/Fitting/linleastsq.cpp \
-    Math/Fitting/nonlinleastsq.cpp \
     GUI/Analysis/peakfindingdialog.cpp \
     GUI/Analysis/haspeaksdialog.cpp \
-    Global/vespucci.cpp \
     GUI/Processing/multiimportdialog.cpp \
     GUI/Processing/bulkconversiondialog.cpp \
     GUI/Display/reportmessagedialog.cpp \
@@ -154,7 +134,8 @@ SOURCES += main.cpp\
     GUI/Processing/fouriertransformdialog.cpp \
     GUI/Analysis/classicaleastsquaresdialog.cpp \
     GUI/Display/plotviewer.cpp \
-    Data/Import/textimportqpd.cpp
+    Data/Import/textimportqpd.cpp \
+    Global/global.cpp
 
 
 HEADERS  += \
@@ -162,12 +143,10 @@ HEADERS  += \
     GUI/mainwindow.h \
     Global/vespucciworkspace.h \
     Data/Analysis/analysisresults.h \
-    Data/Import/binaryimport.h \
     Data/Imaging/mapdata.h \
     Data/Analysis/mlpackpcadata.h \
     Data/Analysis/plsdata.h \
     Data/Analysis/principalcomponentsdata.h \
-    Data/Import/textimport.h \
     Data/Analysis/univariatedata.h \
     Data/Analysis/vcadata.h \
     Data/Dataset/metadataset.h \
@@ -202,25 +181,11 @@ HEADERS  += \
     GUI/Analysis/vcadialog.h \
     GUI/QAbstractItemModel/vespuccitablemodel.h \
     GUI/Analysis/plotmakerdialog.h \
-    Math/VespucciMath.h \
-    Math/Accessory/accessory.h \
-    Math/DimensionReduction/dimensionreduction.h \
-    Math/Normalization/normalization.h \
-    Math/Quantification/quantification.h \
-    Math/Smoothing/smoothing.h \
-    Math/Transform/cwt.h \
-    Math/PeakFinding/peakfinding.h \
-    Math/Accessory/accessory_impl.h \
-    External/R/VespucciR.h \
     External/Octave/VespucciOctave.h \
     GUI/scriptdialog.h \
-    Math/PeakFinding/cwtridge.h \
     Data/Analysis/cwtdata.h \
-    Math/Fitting/linleastsq.h \
-    Math/Fitting/nonlinleastsq.h \
     GUI/Analysis/peakfindingdialog.h \
     GUI/Analysis/haspeaksdialog.h \
-    Global/vespucci.h \
     GUI/Processing/multiimportdialog.h \
     GUI/Processing/bulkconversiondialog.h \
     GUI/Display/reportmessagedialog.h \
@@ -229,7 +194,7 @@ HEADERS  += \
     GUI/Analysis/classicaleastsquaresdialog.h \
     GUI/Display/plotviewer.h \
     Data/Import/textimportqpd.h \
-    Global/libvespucci.h
+    Global/global.h
 
 
 FORMS    += \
@@ -275,6 +240,10 @@ RESOURCES += \
     resources.qrc
 
 RC_ICONS = "vespuccilogo.ico"
+
+#for inclusion of LibVespucci headers
+INCLUDEPATH += $$PWD/
+DEPENDPATH += $$PWD/
 
 #linux libraries, specific to my own install. This will be handled by CMake later
 #I hope...
@@ -449,3 +418,10 @@ win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lcminpack
 INCLUDEPATH += $$PWD/../MinGW_libs/include/cminpack-1
 DEPENDPATH += $$PWD/../MinGW_libs/include/cminpack-1
 win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libcminpack.a
+
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build/release -lvespucci
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../build/release/libvespucci.a
+
+win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build/debug -lvespucci
+win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../build/debug/libvespucci.a

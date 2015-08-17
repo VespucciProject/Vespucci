@@ -18,6 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "Data/Imaging/mapdata.h"
+#include "Global/global.h"
 #include <QtSvg>
 
 ///

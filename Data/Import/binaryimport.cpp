@@ -18,19 +18,19 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "Data/Import/binaryimport.h"
-bool BinaryImport::ImportVespucciBinary(QString filename,
-                                        mat &spectra,
-                                        vec &wavelength,
-                                        vec &x, vec &y)
+bool BinaryImport::ImportVespucciBinary(std::string filename,
+                                        arma::mat &spectra,
+                                        arma::vec &wavelength,
+                                        arma::vec &x, arma::vec &y)
 {
-    arma::field<mat> input_data;
-    bool success = input_data.load(filename.toStdString());
-    cout << (success ? "success" : "failure") << endl;
+    arma::field<arma::mat> input_data;
+    bool success = input_data.load(filename);
+    std::cout << (success ? "success" : "failure") << std::endl;
     if(success){
         spectra = input_data(0);
-        mat wl= input_data(1);
-        mat xm = input_data(2);
-        mat ym = input_data(3);
+        arma::mat wl= input_data(1);
+        arma::mat xm = input_data(2);
+        arma::mat ym = input_data(3);
 
         //field subview doesn't properly convert to vec forms
         wavelength = wl;

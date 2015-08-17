@@ -19,6 +19,7 @@
 *******************************************************************************/
 #include "GUI/Display/spectrumviewer.h"
 #include "Global/vespucci.h"
+#include "Global/global.h"
 #include "ui_spectrumviewer.h"
 
 ///

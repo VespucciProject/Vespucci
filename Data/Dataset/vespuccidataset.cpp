@@ -183,7 +183,7 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
     y_axis_description_ = y_axis_description;
     name_ = name;
     try{
-        BinaryImport::ImportVespucciBinary(vespucci_binary_filename,
+        BinaryImport::ImportVespucciBinary(vespucci_binary_filename.toStdString(),
                                            spectra_,
                                            abscissa_,
                                            x_, y_);

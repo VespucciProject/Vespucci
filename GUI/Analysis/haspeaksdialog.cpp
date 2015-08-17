@@ -30,7 +30,7 @@ void HasPeaksDialog::on_buttonBox_accepted()
     mat points(table_widget_->rowCount(), 2);
     bool ok = true;
     double left, right;
-    for (unsigned int i = 0; i < table_widget_->rowCount(); ++i){
+    for (int i = 0; i < table_widget_->rowCount(); ++i){
         if (!table_widget_->item(i,0) || !table_widget_->item(i,1)){
             ok = false;
         }

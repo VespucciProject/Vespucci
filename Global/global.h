@@ -17,19 +17,12 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef BINARYIMPORT_H
-#define BINARYIMPORT_H
-#include <armadillo>
-#include <QtCore>
-#include "Global/libvespucci.h"
-
-
-namespace BinaryImport
-{
-    VESPUCCI_EXPORT bool ImportVespucciBinary(std::string filename,
-                              arma::mat &spectra,
-                              arma::vec &wavelength,
-                              arma::vec &x, arma::colvec &y);
+#ifndef GLOBAL
+#define GLOBAL
+#include "qcustomplot.h"
+namespace Vespucci{
+    bool SavePlot(QCustomPlot *plot, QString filename);
+    void SetQCPFonts(QCustomPlot *plot, const QFont &font);
 }
+#endif // GLOBAL
 
-#endif // BINARYIMPORT_H

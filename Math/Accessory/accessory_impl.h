@@ -26,9 +26,9 @@ namespace Vespucci
 {
     namespace Math
     {
-        template <typename T> VESPUCCI_EXPORT T conv_fft(const T &A, const T &B, std::string type);
-        template <typename T> VESPUCCI_EXPORT T rotate(const T &X, arma::uword shift_by, bool slide_back = true);
-        template <typename T> VESPUCCI_EXPORT T diff(const T &X, arma::uword deriv_order = 1);
+        template <typename T> T conv_fft(const T &A, const T &B, std::string type);
+        template <typename T> T rotate(const T &X, arma::uword shift_by, bool slide_back = true);
+        template <typename T> T diff(const T &X, arma::uword deriv_order = 1);
     }
 }
 
