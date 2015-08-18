@@ -136,7 +136,7 @@ public:
     void VectorNormalize();
     void MeanCenter();
     void ZScoreNormalize();
-    void SNVNormalize(double offset);
+    void SNVNormalize(double offset, bool center);
     void AbsoluteValue();
     void UnitAreaNormalize();
     void PeakIntensityNormalize(double peak_position);

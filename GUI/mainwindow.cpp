@@ -244,7 +244,11 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
         else if (ok && item == "Vector Norm"){data->VectorNormalize();}
         else if (ok && item == "Mean Center"){data->MeanCenter();}
         else if (ok && item == "Unit Area"){data->UnitAreaNormalize();}
-        else if (ok && item == "Z-score"){data->ZScoreNormalize();}
+        else if (ok && item == "Z-score"){
+            offset = QInputDialog::getDouble(this, "Enter Offset", "Offset",
+                                             0, -2147483647, 2147483647, 4, &ok);
+            data->SNVNormalize(offset, true);
+        }
         else if (ok && item == "Peak Intensity"){
             double min = data->wavelength_ptr()->min();
             double max = data->wavelength_ptr()->max();
@@ -261,7 +265,7 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
         else if (ok && item == "Standard Normal Variate"){
             offset = QInputDialog::getDouble(this, "Enter Offset", "Offset",
                                              0, -2147483647, 2147483647, 4, &ok);
-            data->SNVNormalize(offset);
+            data->SNVNormalize(offset, false);
         }
         else if (ok && item == "Absolute Value"){data->AbsoluteValue();}
         else

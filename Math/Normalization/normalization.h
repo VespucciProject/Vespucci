@@ -34,7 +34,7 @@ namespace Vespucci
             VESPUCCI_EXPORT arma::vec StandardScore(const arma::vec &X);
             VESPUCCI_EXPORT arma::mat StandardScoreMat(const arma::mat &X);
 
-            VESPUCCI_EXPORT arma::mat SNVNorm(const arma::mat &X, const double offset);
+            VESPUCCI_EXPORT arma::mat SNVNorm(const arma::mat &X, const double offset, bool center);
         }
     }
 }
