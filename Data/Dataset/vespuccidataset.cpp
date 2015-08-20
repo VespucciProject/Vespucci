@@ -32,19 +32,20 @@ using namespace std;
 VespucciDataset::~VespucciDataset()
 {
     //Delete heap-allocated objects that are not stored in smart pointers
+    /*
     if (principal_components_calculated_)
         delete principal_components_data_;
     if (partial_least_squares_calculated_)
         delete partial_least_squares_data_;
     if (vertex_components_calculated_)
         delete vertex_components_data_;
-
-    //make sure all maps are delted properly.
+    */
+    //make sure all mfaps are delted properly.
     map_list_model_->ClearMaps();
 
     //This will be called for each dataset in the list model when it is removed.
-    //DestroyLogFile();
-    delete map_list_model_;
+    DestroyLogFile();
+    //delete map_list_model_;
 
 }
 
@@ -62,9 +63,7 @@ bool VespucciDataset::Save(QString filename)
     catch(exception e){
         cerr << "See armadillo exception" << endl;
 
-        char str[50];
-        strcat(str, "VespucciDataset::Save: ");
-        strcat(str, e.what());
+        string str = "VespucciDataset::Save: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -193,9 +192,7 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
 
     }
     catch(exception e) {
-        char str[50];
-        strcat(str, "BinaryImport: ");
-        strcat(str, e.what());
+        string str = "BinaryImport: " + string(e.what());
         throw std::runtime_error(str);
 
     }
@@ -272,9 +269,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
 
         }
         catch(exception e){
-            char str[50];
-            strcat(str, "Text import constructor: ");
-            strcat(str, e.what());
+            string str = "Text import constructor:" +  string(e.what());
             throw std::runtime_error(str);
         }
     }
@@ -293,9 +288,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
 
         }
         catch(exception e){
-            char str[50];
-            strcat(str, "Text import constructor: ");
-            strcat(str, e.what());
+            string str = "Text import constructor: " + string(e.what());
             throw std::runtime_error(str);
         }
     }
@@ -312,9 +305,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
                 indices_(i) = i;
         }
         catch(exception e){
-            char str[50];
-            strcat(str, "Text import constructor: ");
-            strcat(str, e.what());
+            string str = "Text import constructor: " + string(e.what());
             throw std::runtime_error(str);
         }
     }
@@ -428,9 +419,7 @@ VespucciDataset::VespucciDataset(QString name,
         indices_ = parent_indices(indices);
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "Extraction constructor: ");
-        strcat(str, e.what());
+        string str = "Extraction constructor: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -503,9 +492,7 @@ void VespucciDataset::Undo()
 
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "Undo: ");
-        strcat(str, e.what());
+        string str = "Undo: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -540,9 +527,7 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
             x_ = x_.rows(valid_indices);
             spectra_ = spectra_.cols(valid_indices);
         }catch(exception e){
-            char str[50];
-            strcat(str, "CropSpectra: ");
-            strcat(str, e.what());
+            string str = "CropSpectra: " + string(e.what());
             throw std::runtime_error(str);
         }
     }
@@ -553,9 +538,7 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
             abscissa_ = abscissa_.rows(valid_indices);
 
         }catch(exception e){
-            char str[50];
-            strcat(str, "CropSpectra: ");
-            strcat(str, e.what());
+            string str = "CropSpectra: " + string(e.what());
             throw std::runtime_error(str);
         }
     }
@@ -591,9 +574,7 @@ void VespucciDataset::MinMaxNormalize()
         }
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "MinMaxNormalize: ");
-        strcat(str, e.what());
+        string str = "MinMaxNormalize: " + string(e.what());
         throw std::runtime_error(str);
     }
     last_operation_ = "min/max normalize";
@@ -610,9 +591,7 @@ void VespucciDataset::VectorNormalize()
         spectra_ = spectra_;
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "VectorNormalize()");
-        strcat(str, e.what());
+        string str = "VectorNormalize()" + string(e.what());
         throw std::runtime_error(str);
     }
     last_operation_ = "vector normalize";
@@ -656,9 +635,7 @@ void VespucciDataset::UnitAreaNormalize()
         }
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "UnitAreaNormalize: ");
-        strcat(str, e.what());
+        string str = "UnitAreaNormalize: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -798,9 +775,7 @@ mat VespucciDataset::ZScoreNormCopy()
         normalized = Vespucci::Math::Normalization::StandardScore(spectra_);
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "ZScoreNormCopy: ");
-        strcat(str, e.what());
+        string str = "ZScoreNormCopy: " + string(e.what());
         throw std::runtime_error(str);
     }
     return trans(normalized);
@@ -820,9 +795,7 @@ void VespucciDataset::ZScoreNormalize()
         spectra_ = Vespucci::Math::Normalization::StandardScoreMat(spectra_);
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "ZScoreNormalize: ");
-        strcat(str, e.what());
+        string str = "ZScoreNormalize: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -842,9 +815,7 @@ void VespucciDataset::SNVNormalize(double offset, bool center)
         spectra_ = Vespucci::Math::Normalization::SNVNorm(spectra_, offset, center);
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "SNVNormalize: ");
-        strcat(str, e.what());
+        string str = "SNVNormalize: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -860,9 +831,8 @@ void VespucciDataset::AbsoluteValue()
         spectra_ = arma::abs(spectra_);
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "AbsoluteValue: ");
-        strcat(str, e.what());
+        string str =
+        "AbsoluteValue: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -897,9 +867,7 @@ void VespucciDataset::SubtractBackground(mat background, QString filename)
             spectra_.each_col() -= background.col(0);
         }
         catch(exception e){
-            char str[50];
-            strcat(str, "SubtractBackground: ");
-            strcat(str, e.what());
+            string str = "SubtractBackground: " + string(e.what());
             throw std::runtime_error(str);
         }
     }
@@ -929,9 +897,7 @@ void VespucciDataset::MFBaseline(int window_size, int iterations)
         spectra_ -= baselines_;
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "MFBaseline: ");
-        strcat(str, e.what());
+        string str = "MFBaseline: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -952,7 +918,7 @@ void VespucciDataset::IModPolyBaseline(const uword poly_order, const uword max_i
     SetOldCopies();
     mat baselines(spectra_.n_rows, spectra_.n_cols);
     vec baseline, corrected;
-    QProgressDialog *progress = new QProgressDialog();
+    QProgressDialog *progress = new QProgressDialog(main_window_);
     progress->setMinimum(0);
     progress->setMaximum(spectra_.n_cols-1);
     progress->setWindowTitle("Correcting Baseline");
@@ -1007,9 +973,7 @@ void VespucciDataset::RemoveClippedSpectra(double threshold)
         y_ = y_.rows(valid_indices);
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "RemoveClipped Spectra: ");
-        strcat(str, e.what());
+        string str = "RemoveClipped Spectra: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -1036,9 +1000,7 @@ void VespucciDataset::RemoveFlatSpectra(double threshold)
         y_ = y_.rows(valid_indices);
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "RemoveClipped Spectra: ");
-        strcat(str, e.what());
+        string str = "RemoveClipped Spectra: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -1064,9 +1026,7 @@ void VespucciDataset::MedianFilter(unsigned int window_size)
         spectra_ = processed;
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "MedianFilter: ");
-        strcat(str, e.what());
+        string str = "MedianFilter: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -1092,9 +1052,7 @@ void VespucciDataset::LinearMovingAverage(unsigned int window_size)
         }
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "LinearMovingAverage: ");
-        strcat(str, e.what());
+        string str = "LinearMovingAverage: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -1122,9 +1080,7 @@ void VespucciDataset::SingularValue(unsigned int singular_values)
         spectra_ = -1 * U * diagmat(s) * V.t();
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "SingularValue: ");
-        strcat(str, e.what());
+        string str = "SingularValue: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -1182,9 +1138,7 @@ void VespucciDataset::SavitzkyGolay(unsigned int derivative_order,
                                         1);
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "SavitzkyGolay: ");
-        strcat(str, e.what());
+        string str = "SavitzkyGolay: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -1200,9 +1154,7 @@ void VespucciDataset::Scale(double scaling_factor)
     try{
         spectra_ = spectra_ * scaling_factor;
     }catch(exception e){
-     char str[50];
-     strcat(str, "Scale(): ");
-     strcat(str, e.what());
+     string str = "Scale(): " + string(e.what());
      throw std::runtime_error(str);
     }
 
@@ -1357,6 +1309,11 @@ void VespucciDataset::TransformAbscissa(QString input_units, double input_factor
         else{return;}//do nothing for invalid input
     }
     else{return;}
+}
+
+void VespucciDataset::InterpolateToNewAbscissa(vec &new_abscissa, unsigned int polynomial_order, unsigned int window_size)
+{
+    
 }
 
 // MAPPING FUNCTIONS //
@@ -1537,7 +1494,6 @@ void VespucciDataset::BandRatio(double first_min, double first_max,
     univariate_datas_.append(univariate_data);
 
     univariate_data->Apply(first_min, first_max, second_min, second_max, method);
-\
 
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                             y_axis_description_,
@@ -1645,15 +1601,16 @@ void VespucciDataset::PrincipalComponents(int component,
             cout << "call to arma::princomp" << endl;
             wall_clock timer;
             timer.tic();
-            principal_components_data_ = new PrincipalComponentsData(QSharedPointer<VespucciDataset>(this),
-                                                                     directory_);
+            principal_components_data_ =
+                    QSharedPointer<PrincipalComponentsData>
+                    (new PrincipalComponentsData(
+                         QSharedPointer<VespucciDataset>(this),
+                         directory_));
             try{
                 principal_components_data_->Apply(spectra_);
             }
             catch(exception e){
-                char str[50];
-                strcat(str, "PrincipalComponents: ");
-                strcat(str, e.what());
+                string str = "PrincipalComponents: " + string(e.what());
                 throw std::runtime_error(str);
             }
 
@@ -1671,9 +1628,7 @@ void VespucciDataset::PrincipalComponents(int component,
         results = principal_components_data_->Results(component);
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "PrincipalComponents: ");
-        strcat(str, e.what());
+        string str = "PrincipalComponents: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -1698,7 +1653,7 @@ void VespucciDataset::PrincipalComponents(int component,
 /// reduction, not classification, so there is no corresponding imaging function
 void VespucciDataset::PrincipalComponents(bool scaleData)
 {
-    mlpack_pca_data_ = new MLPACKPCAData(scaleData);
+    mlpack_pca_data_ = QSharedPointer<MLPACKPCAData>(new MLPACKPCAData(scaleData));
     try{
         mlpack_pca_data_->Apply(spectra_);
     }
@@ -1725,14 +1680,14 @@ void VespucciDataset::PrincipalComponents()
 
 
     principal_components_data_ =
-            new PrincipalComponentsData(QSharedPointer<VespucciDataset>(this), directory_);
+            QSharedPointer<PrincipalComponentsData>(
+                new PrincipalComponentsData(QSharedPointer<VespucciDataset>(this),
+                                            directory_));
     try{
         principal_components_data_->Apply(spectra_);
         principal_components_calculated_ = true;
     }catch(exception e){
-        char str[50];
-        strcat(str, "PrincipalComponents: ");
-        strcat(str, e.what());
+        string str = "PrincipalComponents: " + string(e.what());
         throw std::runtime_error(str);
     }
 }
@@ -1789,7 +1744,7 @@ void VespucciDataset::FindPeaksCWT(string wavelet,
                                    QString image_format,
                                    QCPColorGradient gradient)
 {
-    cwt_peak_data_ = new CWTData(QSharedPointer<VespucciDataset>(this));
+    cwt_peak_data_ = QSharedPointer<CWTData>(new CWTData(QSharedPointer<VespucciDataset>(this)));
     try{
         cwt_peak_data_->Apply(wavelet,
                               max_scale,
@@ -1891,16 +1846,18 @@ void VespucciDataset::VertexComponents(uword endmembers,
     QTextStream(&map_type) << "(Vertex Component " << image_component << ")";
     try{
         if (recalculate || !vertex_components_calculated_){
-            vertex_components_data_ = new VCAData(QSharedPointer<VespucciDataset>(this), directory_);
+            vertex_components_data_ =
+                    QSharedPointer<VCAData>(
+                        new VCAData(QSharedPointer<VespucciDataset>(this),
+                                    directory_));
+
             vertex_components_data_->Apply(spectra_, endmembers);
             vertex_components_calculated_ = true;
         }
     }
     catch(exception e){
-        char str[50];
         cout << "VespucciDataset::VertexComponents()" << endl;
-        strcat(str, "VertexComponents: ");
-        strcat(str, e.what());
+        string str = "VertexComponents: " + string(e.what());
         throw std::runtime_error(str);
     }
     colvec results;
@@ -1908,9 +1865,7 @@ void VespucciDataset::VertexComponents(uword endmembers,
         results = vertex_components_data_->Results(image_component-1);
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "VertexComponents: ");
-        strcat(str, e.what());
+        string str = "VertexComponents: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -1957,14 +1912,14 @@ void VespucciDataset::VertexComponents(uword endmembers)
     }
 
     try{
-        vertex_components_data_ = new VCAData(QSharedPointer<VespucciDataset>(this), directory_);
+        vertex_components_data_ =
+                QSharedPointer<VCAData>(new VCAData(QSharedPointer<VespucciDataset>(this),
+                                                    directory_));
         vertex_components_data_->Apply(spectra_, endmembers);
         vertex_components_calculated_ = true;
     }catch(exception e){
         cerr << "VespucciDataset::VertexComponents()" << endl;
-        char str[50];
-        strcat(str, "VertexComponents: ");
-        strcat(str, e.what());
+        string str = "VertexComponents: " + string(e.what());
         throw std::runtime_error(str);
     }
 }
@@ -2013,7 +1968,9 @@ void VespucciDataset::PartialLeastSquares(uword components,
     try{
         if (recalculate || !partial_least_squares_calculated_){
             map_type += QString::number(components);
-            partial_least_squares_data_ = new PLSData(QSharedPointer<VespucciDataset>(this), directory_);
+            partial_least_squares_data_ =
+                    QSharedPointer<PLSData>(new PLSData(QSharedPointer<VespucciDataset>(this),
+                                                        directory_));
             bool success = partial_least_squares_data_->Apply(spectra_, abscissa_, components);
             if (success){
                 partial_least_squares_calculated_ = true;
@@ -2021,9 +1978,7 @@ void VespucciDataset::PartialLeastSquares(uword components,
         }
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "PartialLeastSquares: ");
-        strcat(str, e.what());
+        string str = "PartialLeastSquares: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -2041,9 +1996,7 @@ void VespucciDataset::PartialLeastSquares(uword components,
         }
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "PartialLeastSquares: ");
-        strcat(str, e.what());
+        string str = "PartialLeastSquares: " + string(e.what());
         throw std::runtime_error(str);
     }
 
@@ -2081,15 +2034,15 @@ void VespucciDataset::PartialLeastSquares(uword components)
 
 
     try{
-        partial_least_squares_data_ = new PLSData(QSharedPointer<VespucciDataset>(this), directory_);
+        partial_least_squares_data_ =
+                QSharedPointer<PLSData>(new PLSData(QSharedPointer<VespucciDataset>(this),
+                                                    directory_));
         bool success = partial_least_squares_data_->Apply(spectra_, abscissa_, components);
         if (success){
             partial_least_squares_calculated_ = true;
         }
     }catch(exception e){
-        char str[50];
-        strcat(str, "PartialLeastSquares: ");
-        strcat(str, e.what());
+        string str = "PartialLeastSquares: " + string(e.what());
         throw std::runtime_error(str);
     }
 }
@@ -2137,9 +2090,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
             }
         }
         catch(exception e){
-            char str[50];
-            strcat(str, "KMeans: ");
-            strcat(str, e.what());
+            string str = "KMeans: " + string(e.what());
             throw std::runtime_error(str);
         }
 
@@ -2161,9 +2112,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
             }
         }
         catch(exception e){
-            char str[50];
-            strcat(str, "KMeans: ");
-            strcat(str, e.what());
+            string str = "KMeans: " + string(e.what());
             throw std::runtime_error(str);
         }
 
@@ -2185,9 +2134,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
             }
         }
         catch(exception e){
-            char str[50];
-            strcat(str, "KMeans: ");
-            strcat(str, e.what());
+            string str = "KMeans: " + string(e.what());
             throw std::runtime_error(str);
         }
 
@@ -2209,9 +2156,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
             }
         }
         catch(exception e){
-            char str[50];
-            strcat(str, "KMeans: ");
-            strcat(str, e.what());
+            string str = "KMeans: " + string(e.what());
             throw std::runtime_error(str);
         }
 
@@ -2263,10 +2208,15 @@ void VespucciDataset::ClassicalLeastSquares(const mat &standards, QString name)
 {
     log_stream_ << "Classical Least Squares" << endl;
     log_stream_ << "name == " << name << endl << endl;
-    mat coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(standards, spectra_);
+    mat coefs;
+    try{
+        coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(standards, spectra_);
+    }catch(exception e){
+        string str = "Vespucci::Math::LinLeastSq::OrdinaryLeastSquares" + string(e.what());
+        throw runtime_error(str);
+    }
+
     AddAnalysisResult("CLS Coefficients", coefs);
-
-
 
 }
 
@@ -2278,7 +2228,14 @@ void VespucciDataset::ClassicalLeastSquares(const mat &standards, uword image_co
     }
     log_stream_ << "Classical Least Squares" << endl;
     log_stream_ << "name == " << name << endl << endl;
-    mat coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(standards, spectra_);
+    mat coefs;
+    try{
+        coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(standards, spectra_);
+    }catch(exception e){
+        string str = "Vespucci::Math::LinLeastSq::OrdinaryLeastSquares" + string(e.what());
+        throw runtime_error(str);
+    }
+
     AddAnalysisResult("CLS Coefficients", coefs);
 
     QString map_type = "CLS Map " + QString::number(image_component);
@@ -2287,7 +2244,7 @@ void VespucciDataset::ClassicalLeastSquares(const mat &standards, uword image_co
     QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
                                                 y_axis_description_,
                                                 x_, y_,
-                                                coefs.col(image_component),
+                                                coefs.row(image_component).t(),
                                                 QSharedPointer<VespucciDataset>(this),
                                                 directory_, gradient,
                                                 map_list_model_->rowCount(QModelIndex()),
@@ -2325,9 +2282,7 @@ void VespucciDataset::KMeans(size_t clusters)
         }
     }
     catch(exception e){
-        char str[50];
-        strcat(str, "KMeans: ");
-        strcat(str, e.what());
+        string str = "KMeans: " + string(e.what());
         throw std::runtime_error(str);
     }
 }
@@ -2943,12 +2898,12 @@ bool VespucciDataset::k_means_calculated()
 /// Accessor for principal_components_data_
 /// \return Pointer to the class that handles the output of arma::princomp
 ///
-PrincipalComponentsData* VespucciDataset::principal_components_data()
+QSharedPointer<PrincipalComponentsData> VespucciDataset::principal_components_data()
 {
     return principal_components_data_;
 }
 
-MLPACKPCAData *VespucciDataset::mlpack_pca_data()
+QSharedPointer<MLPACKPCAData> VespucciDataset::mlpack_pca_data()
 {
     return mlpack_pca_data_;
 }
@@ -2958,7 +2913,7 @@ MLPACKPCAData *VespucciDataset::mlpack_pca_data()
 /// Accessor for vertex_components_data_
 /// \return
 ///
-VCAData* VespucciDataset::vertex_components_data()
+QSharedPointer<VCAData> VespucciDataset::vertex_components_data()
 {
     return vertex_components_data_;
 }
@@ -2968,7 +2923,7 @@ VCAData* VespucciDataset::vertex_components_data()
 /// Accessor for partial_least_squares_data_;
 /// \return
 ///
-PLSData* VespucciDataset::partial_least_squares_data()
+QSharedPointer<PLSData> VespucciDataset::partial_least_squares_data()
 {
     return partial_least_squares_data_;
 }

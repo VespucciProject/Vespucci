@@ -114,6 +114,7 @@ UnivariateDialog::~UnivariateDialog()
 /// Call the appropriate method of the dataset when "Ok" is clicked
 void UnivariateDialog::on_buttonBox_accepted()
 {
+    close();
     if (min_box_->text().isEmpty() || max_box_->text().isEmpty()){
         QMessageBox::warning(this, "Invalid Input!", "You must enter numbers for left and right bounds.");
         return;
@@ -185,7 +186,6 @@ void UnivariateDialog::on_buttonBox_accepted()
             }
         }
     }
-    close();
     data_.clear();
 }
 

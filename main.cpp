@@ -45,10 +45,7 @@ int main(int argc, char *argv[])
     //stdout output directly when debugging.
 
 
-#ifdef QT_NO_DEBUG
-    std::freopen("stdout_log.txt", "w", stdout);
-    std::freopen("stderr_log.txt", "w", stderr);
-#endif
+
 
     //parse the config file
     /*
@@ -61,12 +58,21 @@ int main(int argc, char *argv[])
     */
 
     //Launch QApplication instance
-
+    QCoreApplication::setOrganizationName("Wright State University");
+    QCoreApplication::setOrganizationDomain("chm.wright.edu");
+    QCoreApplication::setApplicationName("Vespucci");
     QApplication a(argc, argv);
     //A pointer to this goes by "workspace" in every window that needs it
     VespucciWorkspace ws;
+
     //Clean up dataset log files from when it crashed last
     ws.CleanLogFiles();
+
+
+#ifdef QT_NO_DEBUG
+    std::freopen("stdout_log.txt", "w", stdout);
+    std::freopen("stderr_log.txt", "w", stderr);
+#endif
 
     //Instantiate main window
     MainWindow w(0, &ws);

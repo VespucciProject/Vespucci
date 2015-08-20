@@ -31,7 +31,7 @@ class PrincipalComponentsData {
 public:
     PrincipalComponentsData(QSharedPointer<VespucciDataset> parent, QString *directory);
 
-    void Apply(mat spectra);
+    void Apply(const mat &spectra);
 
     bool SaveCoefficientMatrix();
 

@@ -35,7 +35,7 @@ PrincipalComponentsData::PrincipalComponentsData(QSharedPointer<VespucciDataset>
 /// \brief PrincipalComponentsData::Apply
 /// \param spectra
 /// Perform analysis using arma::princomp
-void PrincipalComponentsData::Apply(mat spectra)
+void PrincipalComponentsData::Apply(const mat &spectra)
 {
     princomp(coeff_, score_, latent_, tsquared_, spectra.t());
     double eigenvalue_sum = sum(latent_);

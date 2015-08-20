@@ -3,4 +3,7 @@
         <file>vespuccilogo.svg</file>
         <file>vespuccilogo.ico</file>
     </qresource>
+    <qresource prefix="/">
+        <file>Docs/API_docs/html/vespuccilogo150.png</file>
+    </qresource>
 </RCC>

@@ -1,9 +1,9 @@
-#include "classicaleastsquaresdialog.h"
-#include "ui_classicaleastsquaresdialog.h"
+#include "classicalleastsquaresdialog.h"
+#include "ui_classicalleastsquaresdialog.h"
 
-ClassicaLeastSquaresDialog::ClassicaLeastSquaresDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
+ClassicalLeastSquaresDialog::ClassicalLeastSquaresDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
-    ui(new Ui::ClassicaLeastSquaresDialog)
+    ui(new Ui::ClassicalLeastSquaresDialog)
 {
     ui->setupUi(this);
     dataset_combo_box_ = findChild<QComboBox *>("datasetComboBox");
@@ -26,17 +26,17 @@ ClassicaLeastSquaresDialog::ClassicaLeastSquaresDialog(QWidget *parent, Vespucci
 
     workspace = ws;
     dataset_ = workspace->DatasetAt(row);
-
-    dataset_combo_box_->addItems(workspace->dataset_names());
+    QStringList dataset_names = workspace->dataset_names();
+    dataset_combo_box_->addItems(dataset_names);
 
 }
 
-ClassicaLeastSquaresDialog::~ClassicaLeastSquaresDialog()
+ClassicalLeastSquaresDialog::~ClassicalLeastSquaresDialog()
 {
     delete ui;
 }
 
-void ClassicaLeastSquaresDialog::on_datasetRadioButton_clicked()
+void ClassicalLeastSquaresDialog::on_datasetRadioButton_clicked()
 {
     dataset_combo_box_->setEnabled(true);
     file_radio_button_->setChecked(false);
@@ -44,7 +44,7 @@ void ClassicaLeastSquaresDialog::on_datasetRadioButton_clicked()
     browse_push_button_->setDisabled(true);
 }
 
-void ClassicaLeastSquaresDialog::on_fileRadioButton_clicked()
+void ClassicalLeastSquaresDialog::on_fileRadioButton_clicked()
 {
     filename_line_edit_->setEnabled(true);
     browse_push_button_->setEnabled(true);
@@ -52,7 +52,7 @@ void ClassicaLeastSquaresDialog::on_fileRadioButton_clicked()
     dataset_radio_button_->setChecked(false);
 }
 
-void ClassicaLeastSquaresDialog::on_imageCheckBox_stateChanged(int arg1)
+void ClassicalLeastSquaresDialog::on_imageCheckBox_stateChanged(int arg1)
 {
     component_spin_box_->setEnabled(arg1);
     gradient_combo_box_->setEnabled(arg1);
@@ -60,7 +60,7 @@ void ClassicaLeastSquaresDialog::on_imageCheckBox_stateChanged(int arg1)
 
 }
 
-void ClassicaLeastSquaresDialog::on_buttonBox_accepted()
+void ClassicalLeastSquaresDialog::on_buttonBox_accepted()
 {
     QString filename;
     int dataset_row;
@@ -79,6 +79,9 @@ void ClassicaLeastSquaresDialog::on_buttonBox_accepted()
     if (image_check_box_->isChecked()){
         int gradient_index = gradient_combo_box_->currentIndex();
         int component = component_spin_box_->value();
+        if (component > control_spectra.n_cols)
+            component = control_spectra.n_cols;
+        component--; //accounting for indexing at 0.
         QString name = name_line_edit_->text();
         try{
             dataset_->ClassicalLeastSquares(control_spectra, component, name, gradient_index);
@@ -95,4 +98,15 @@ void ClassicaLeastSquaresDialog::on_buttonBox_accepted()
         }
     }
 
+}
+
+void ClassicalLeastSquaresDialog::on_browsePushButton_clicked()
+{
+    QString filename =
+            QFileDialog::getOpenFileName(this,
+                                         "Select Control File",
+                                         workspace->directory(),
+                                         "Data files (.csv .txt .arma);; "
+                                         "All Files");
+    filename_line_edit_->setText(filename);
 }

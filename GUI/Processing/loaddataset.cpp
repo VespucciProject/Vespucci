@@ -52,11 +52,22 @@ LoadDataset::LoadDataset(QWidget *parent, VespucciWorkspace *ws) :
     y_units_box_ = findChild<QLineEdit *>("yUnits");
     x_units_box_ = findChild<QLineEdit *>("xUnits");
     data_format_box_ = findChild<QComboBox *>("dataFormatBox");
+    QObject::connect(filename_line_edit_,
+                     SIGNAL(textChanged(QString)),
+                     this,
+                     SLOT(FilenameChanged(QString)));
 }
 
 LoadDataset::~LoadDataset()
 {
     delete ui;
+}
+
+void LoadDataset::FilenameChanged(QString new_filename)
+{
+    QFileInfo info(new_filename);
+    QString basename = info.baseName();
+    name_box_->setText(basename);
 }
 
 ///

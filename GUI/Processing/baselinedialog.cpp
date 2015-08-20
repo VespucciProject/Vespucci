@@ -147,6 +147,11 @@ void BaselineDialog::on_methodComboBox_currentTextChanged(const QString &arg1)
         param_1_spin_box_->setVisible(true);
         param_1_spin_box_->setValue(1);
         param_0_spin_box_->setValue(35);
+        param_0_spin_box_->setSingleStep(2);
+        param_0_spin_box_->setToolTip("Only odd window sizes are allowed. "
+                                      "If you enter an even number, "
+                                      "it will be rounded up.");
+        param_0_spin_box_->setMinimum(3);
 
         param_2_double_spin_box_->setVisible(false);
         param_3_double_spin_box_->setVisible(false);
@@ -158,6 +163,8 @@ void BaselineDialog::on_methodComboBox_currentTextChanged(const QString &arg1)
         param_0_label_->setVisible(true);
         param_0_spin_box_->setVisible(true);
         param_0_spin_box_->setValue(5);
+        param_0_spin_box_->setSingleStep(1);
+        param_0_spin_box_->setMinimum(1);
 
         param_1_label_->setText("Maximum Iterations");
         param_1_label_->setVisible(true);
@@ -216,6 +223,7 @@ void BaselineDialog::on_pushButton_clicked()
 
     if (method == "Median Filter"){
         int window_size = param_0_spin_box_->value();
+        if (!(window_size % 2)){window_size += 1;} //round up if even.
         int iterations = param_1_spin_box_->value();
         vec baseline = spectrum_;
 

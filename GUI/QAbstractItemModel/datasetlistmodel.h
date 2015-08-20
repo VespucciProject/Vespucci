@@ -39,6 +39,7 @@ public:
     QSharedPointer<VespucciDataset> DatasetAt(int row);
     QVariant data(const QModelIndex &index, int role) const;
     void ClearDatasets();
+    const QStringList dataset_names();
 
 signals:
     void DatasetAdded(const QModelIndex &index);

@@ -23,14 +23,13 @@
 ///
 /// \brief VespucciWorkspace::VespucciWorkspace
 /// Constructor
-VespucciWorkspace::VespucciWorkspace()
+VespucciWorkspace::VespucciWorkspace() :
+    settings_("settings.ini", QSettings::IniFormat)
 {
     dataset_loading_count_ = 0;
     directory_ = QDir::homePath();
     //only datarange and colors need to be set.
     //need to call a function here or in mainwindow to evaluate values.
-
-
 }
 
 ///
@@ -119,7 +118,7 @@ void VespucciWorkspace::set_directory(QString directory)
 /// \return List of names of all the workspaces
 QStringList VespucciWorkspace::dataset_names() const
 {
-    return dataset_names_;
+    return dataset_list_model_->dataset_names();
 }
 
 ///
@@ -297,11 +296,16 @@ DatasetListModel* VespucciWorkspace::dataset_list_model() const
 
 void VespucciWorkspace::CleanLogFiles()
 {
-    QDir current_dir(QCoreApplication::applicationDirPath());
+    QDir current_dir = QDir::current();
     QStringList filters;
     filters << "*.txt";
     foreach (QString filename, current_dir.entryList(filters, QDir::Files))
         QFile::remove(filename);
+}
+
+void VespucciWorkspace::ResetSettings()
+{
+
 }
 
 

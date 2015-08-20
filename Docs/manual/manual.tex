@@ -88,8 +88,9 @@ Vespucci can theoretically handle any dataset consisting of spatial data
 combined with a corresponding digital signal. \end{itemize}
 
 
-%Setup% \newpage \section{Setup} Vespucci is easy to set-up on three major
-operating systems.
+%Setup% \newpage 
+\section{Setup} 
+Vespucci is easy to set-up on three major operating systems.
 
 \subsection{Windows} Portable packages for Windows are provided and updated
 regularly. These packages include all files necessary to run the program. This
@@ -116,7 +117,8 @@ program links to this library. The Vespucci Octave interface is compiled
 separately by the mkoctfile system in Octave.
 
 
-%Datasets% \section{Datasets} Vespucci can import hyperspectral datasets in
+%Datasets% 
+\section{Datasets} Vespucci can import hyperspectral datasets in
 several formats: long text, wide text, and Vespucci binary (which is an
 Armadillo binary file format).
 
@@ -168,8 +170,9 @@ Dataset Elements" in the Data menu). Larger dataset elements which may not be
 displayed in the Data Viewer can be saved by selecting "Large Matrices..." from
 the
 
-%Data Pre-Processing% \newpage \section{Data Pre-Processing} Vespucci provides a
-variety of basic data processing methods.
+%Data Pre-Processing% \newpage 
+\section{Data Pre-Processing} 
+Vespucci provides a variety of basic data processing methods.
 
 \subsection{Background Subtraction} Background subtraction subtracts a vector of
 the same dimensions as the spectra from every spectra in the map. The input must
@@ -211,7 +214,7 @@ noise such as cosmic ray spikes. This procedure reduces the rank of the spectra
 matrix to the number of singular values selected. 
 
 \subsubsection{QUIC-SVD} The
-QUIC-SVD method performs a SVD, but with the intent of maintaining a certain
+\emph{QUIC-SVD} method performs a SVD, but with the intent of maintaining a certain
 amount of variance rather than maintaining a certain number of singular values.
 
 \subsection{Normalization} Normalization manipulates the spectra so that the sum
@@ -295,13 +298,16 @@ baseline. The fastest method (Riemann sum) takes the sum of the differences
 between the points in that region and the local baseline, defined as a straight
 line through the points on the left and right boundaries of the region of
 interest. This sum is multiplied by the distance between points (in spectral
-abcissa units), to give the area under the curve. Peak fitting may be availible
+abscissa units), to give the area under the curve. Peak fitting may be available
 in later releases.
 
 \subsubsection{Derivative} The derivative method detects the edges of the peaks
 close to the peak region.
 
-%Multivarite Analysis% 
+\subsubsection{Correlation} The correlation model calculates the correlation between 
+a control spectrum and the spectra in the dataset.
+
+%Multivariate Analysis% 
 \newpage 
 \section{Multivariate Imaging and Analysis}
 Vespucci is capable of several multivariate analysis techniques. These methods
@@ -319,7 +325,7 @@ analysis operations that do not produce maps (Data->Multivariate Analysis).
 \subsection{Principal Component Analysis} PCA is performed using a complete
 singular value decomposition. This involves finding the eigenvalues of a large
 sparse matrix formed by the matrix and its transpose, then a large matrix
-multiplcation to find principal components. For large matrices, this process is
+multiplication to find principal components. For large matrices, this process is
 computationally expensive. For this reason, the program may appear to freeze
 during this process. On a 2 GHz Intel Core 2 Duo with 4 GB RAM on Windows 8.1,
 this process takes about a minute for a 3524\(\times\)1694 matrix. Vespucci uses
@@ -341,8 +347,7 @@ particular number of components referred to as \emph{endmembers}
 \cite{Nascimento2005}. Each of these endmembers represents a particular spectrum
 that is responsible for a certain amount of variance in the dataset, usually
 larger than 95%. VCA results are generally similar to PLS and PCA results.
-Vespucci's implementation of this algorithm is found in
-\texttt{arma\textunderscore ext::VCA()}.
+
 
 \subsubsection{Imaging} VCA images are based on the extent to which an endmember
 is responsible for the spectrum.
@@ -355,8 +360,7 @@ may also be saved.
 the number of variables in the spectra matrix. PLS provides similar results to
 PCA, but with less computational expense. To maintain similarity to the MATLAB
 code used previously by my group, PLS is implemented using the SIMPLS algorithm
-\cite{deJong1993}. Vespucci's implementation of this algorithm is found in
-\texttt{arma\textunderscore ext::plsregres()}.
+\cite{deJong1993}. PLS for discrimination and calibration will be available in later releases.
 
 \subsubsection{Imaging} PLS Images, like PCA images, are formed based on the
 coefficient.
@@ -368,17 +372,28 @@ Viewer (Data->View Dataset Elements).
 
 \subsubsection{\emph{k}-Means Clustering} \emph{k}-Means clustering orders every
 spectra into one of several categories based on the \emph{k}-nearest neighbors
-algorithm. Vespucci perfoms this using \texttt{mlpack::kmeans::Kmeans}.
+algorithm. Vespucci performs this using MLPACK.
 
-
+\subsection{Peak Detection}
+Vespucci contains an implementation of a kernel-based peak detection method introduced by 
+Zhang \emph{et. al.} \cite{Zhang2010}. This method involves a scaled convolution with a Mexican-hat
+ wavelet and is mathematically identical to the continuous wavelet transform. This method can be accessed 
+from Analysis->Peak Detection menu. Additionally, peak populations (the presence or absence of peaks in a certain range) 
+may be examined.
 
 %Viewing Images and Spectra % 
 \newpage 
 \section{Viewing and Saving Images and Spectra} 
 Images can be saved in a variety of formats (File->Save Image As from
 the map viewer). Double-clicking on a map name in the map list will open or
-close the map window. \subsection{The Map Viewer} \subsubsection{The Display
-Menu} Images created by Vespucci are created to fairly arbitrary pre-defined
+close the map window. When creating a map, several color schemes are available.
+Color schemes from the ColorBrewer project \cite{ColorBrewer} are included. These
+color schemes scale linearly in perceived brightness and retain interpretability when 
+rendered in grayscale.
+
+\subsection{The Map Viewer} 
+\subsubsection{The Display Menu} 
+Images created by Vespucci are created to fairly arbitrary pre-defined
 size (designed to make a 50 by 50 map fit in the middle third of a 1280x720
 screen. Normally, resizing the window is locked. Deselecting the "Lock Size"
 option allows the window to be resized. To make the window size proportional to
@@ -392,19 +407,34 @@ The axes and color scale can be enabled or disabled.
 
 The map can be attached to the global color scale.
 
+A scale bar can be added, but not removed.
+
 \subsubsection{The Data Menu} A new dataset can be produced from a map by
 selecting (Data->New Dataset from Map...). The new dataset will contain only
 those spectra with a map value between the two bounds specified.
+
 \subsubsection{The Spectrum Viewer} When the Spectrum Viewer is open
 (Display->Spectrum Viewer), the spectrum at a particular point in the map may be
 viewed by clicking on the map. The bottom left corner displays the spatial data
 as an X-Y pair. The bottom center displays the value of the map at that point.
 The Export button can be used to save the image of the spectrum or the spectrum
-itself as CSV, text, or binary. \subsubsection{Saving Images} Images are saved
+itself as CSV, text, or binary. 
+
+\subsubsection{Saving Images} Images are saved
 using (File->Save Image As...). Everything visible in the Map Viewer will be
 saved.
 
+\subsection{Plotting and Exporting Analysis Results}
+\subsubsection{The Data Viewer}
+The data viewer allows the viewing, plotting and exporting of dataset elements. Additionally, 
+new color maps can be created from data objects having the same number of rows as the dataset has spectra.
+ New value/abscissa plots can be created from data objects having the same number of rows as the dataset has 
+abscissa values, such as PCA and PLS loadings and VCA endmembers.
+ Score-Score plots from PCA, PLS, and VCA can be constructed for those data types, with the color mapped to 
+imported meta data or to parent dataset index. 
 
-
+\section{Contact}
+Vespucci's developer can be contacted through the github page at \url{https://github.com/dpfoose/Vespucci} or via email
+ at \url{foose.3@wright.edu}
 
 \bibliography{references} \end{document}

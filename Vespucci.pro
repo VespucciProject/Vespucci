@@ -132,10 +132,10 @@ SOURCES += main.cpp\
     GUI/Display/reportmessagedialog.cpp \
     GUI/Processing/abscissatransformdialog.cpp \
     GUI/Processing/fouriertransformdialog.cpp \
-    GUI/Analysis/classicaleastsquaresdialog.cpp \
     GUI/Display/plotviewer.cpp \
     Data/Import/textimportqpd.cpp \
-    Global/global.cpp
+    Global/global.cpp \
+    GUI/Analysis/classicalleastsquaresdialog.cpp
 
 
 HEADERS  += \
@@ -191,10 +191,10 @@ HEADERS  += \
     GUI/Display/reportmessagedialog.h \
     GUI/Processing/abscissatransformdialog.h \
     GUI/Processing/fouriertransformdialog.h \
-    GUI/Analysis/classicaleastsquaresdialog.h \
     GUI/Display/plotviewer.h \
     Data/Import/textimportqpd.h \
-    Global/global.h
+    Global/global.h \
+    GUI/Analysis/classicalleastsquaresdialog.h
 
 
 FORMS    += \
@@ -233,8 +233,8 @@ FORMS    += \
     GUI/Display/reportmessagedialog.ui \
     GUI/Processing/abscissatransformdialog.ui \
     GUI/Processing/fouriertransformdialog.ui \
-    GUI/Analysis/classicaleastsquaresdialog.ui \
-    GUI/Display/plotviewer.ui
+    GUI/Display/plotviewer.ui \
+    GUI/Analysis/classicalleastsquaresdialog.ui
 
 RESOURCES += \
     resources.qrc

@@ -55,8 +55,8 @@ bool Vespucci::Math::DimensionReduction::VCA(const arma::mat &R, arma::uword p,
     arma::mat Ud;
     arma::vec Sd;
     arma::mat Vd;
-    arma::svds(Ud, Sd, Vd, arma::sp_mat(arma::cov(R_o)/N), p);
-
+    //arma::svds(Ud, Sd, Vd, arma::sp_mat(R_o * R_o.t()/N), p);
+    Vespucci::Math::DimensionReduction::svds(R_o*R_o.t()/N, p, Ud, Sd, Vd);
     arma::mat x_p;
     try{
     x_p = Ud.t() * R_o;
@@ -82,11 +82,12 @@ bool Vespucci::Math::DimensionReduction::VCA(const arma::mat &R, arma::uword p,
       }
     else{
         arma::uword d = p;
-        arma::svds(Ud, Sd, Vd, arma::sp_mat(arma::cov(R)/N), d);//R_o is a mean centered version...
-        x_p = arma::trans(Ud)*R;
+        Vespucci::Math::DimensionReduction::svds(R*R.t()/N, p, Ud, Sd, Vd);
+        arma::svds(Ud, Sd, Vd, arma::sp_mat(R*R.t()/N), d);//R_o is a mean centered version...
+        x_p = Ud.t() * R;
         projected_data = Ud * x_p.rows(0, d-1);
-        arma::mat x = trans(Ud) * R;
-        arma::mat u = mean(x, 1);
+        arma::mat x = Ud.t() * R;
+        arma::mat u = arma::mean(x, 1);
         y = x / arma::repmat(sum(x % arma::repmat(u, 1, N)), d, 1);
     }
 

@@ -1,7 +1,7 @@
 #include <Math/DimensionReduction/dimensionreduction.h>
 ///
 /// \brief Vespucci::Math::DimensionReduction::svds Finds a few largest singular values of the arma::matrix X.
-/// This is based on the arma::matlab/Octave function svds(), a truncated singular
+/// This is based on the Matlab/Octave function svds(), a truncated singular
 /// value decomposition. This is designed to only take the kinds of inputs
 /// Vespucci will need (It only works on arma::mat types, and only returns the k
 /// largest singular values (none of that sigma business). U and V tolerances
@@ -9,15 +9,16 @@
 /// A sparse arma::matrix [0 X; X.t() 0] is formed.
 /// The eigenvalues of this arma::matrix are then found using arma::eigs_sym, a wrapper
 /// for ARPACK.
-/// If X is square, it can be "reconstructed" using X = U*diagarma::mat(s)*V.t(). This
+/// If X is square, it can be "reconstructed" using X = U*diamat(s)*V.t(). This
 /// "reconstruction" will have lower noise.
+///
+/// This version is different from the armadillo version because it handles dense matrices.
 /// \param X An m \times n arma::matrix.
 /// \param k The number of eigenvalues to be found.
 /// \param U An m \times k unitary arma::matrix
 /// \param s a vector with n
 /// \param V
 /// \return Whether or not algorithm converged.
-/*
 bool Vespucci::Math::DimensionReduction::svds(const arma::mat &X, arma::uword k, arma::mat &U, arma::vec &s, arma::mat &V)
 {
     if (X.n_cols < 2){
@@ -70,9 +71,9 @@ bool Vespucci::Math::DimensionReduction::svds(const arma::mat &X, arma::uword k,
     //sort eigvec from largest to smallest:
     eigvec = eigvec.cols(sort_index(eigval, "descend"));
 
-    //the negative eigenvalues are artifacts of how the arma::matrix is constructed
+    //the negative eigenvalues are artifacts of how the matrix is constructed
     //it is possible that there are two 0 eigenvalues. Only the first is taken
-    //The octave and arma::matlab svds routines are a little more precise with this...
+    //The octave and matlab svds routines are a little more precise with this...
     //It is highly unlikely that a 0 eigenvalue will occur with the types of data
     //processed by Vespucci
     arma::uvec return_indices = find(eigval >= 0, k, "first");
@@ -92,4 +93,4 @@ bool Vespucci::Math::DimensionReduction::svds(const arma::mat &X, arma::uword k,
     V = V.cols(indices);
     return eigs_success;
 }
-*/
+

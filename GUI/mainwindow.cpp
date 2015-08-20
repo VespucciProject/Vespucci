@@ -46,6 +46,7 @@
 #include "GUI/Analysis/haspeaksdialog.h"
 #include "GUI/Processing/multiimportdialog.h"
 #include "GUI/Processing/bulkconversiondialog.h"
+#include "GUI/Analysis/classicalleastsquaresdialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -1116,4 +1117,11 @@ void MainWindow::on_actionBatch_File_Conversion_triggered()
 {
     BulkConversionDialog *conversion_dialog = new BulkConversionDialog(this, workspace);
     conversion_dialog->show();
+}
+
+void MainWindow::on_actionClassical_Least_Squares_triggered()
+{
+    int row = dataset_list_view_->currentIndex().row();
+    ClassicalLeastSquaresDialog *cls_dialog = new ClassicalLeastSquaresDialog(this, workspace, row);
+    cls_dialog->show();
 }

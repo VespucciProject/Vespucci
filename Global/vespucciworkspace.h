@@ -92,6 +92,8 @@ public:
     DatasetListModel *dataset_list_model() const;
     void CleanLogFiles();
 
+    void ResetSettings();
+
     //bool SavePlot(QCustomPlot *plot, const QString filename) const;
 
 
@@ -125,7 +127,7 @@ private:
     ///
     /// \brief dataset_names_
     /// A list of dataset names, which is displayed by the list widget in the main window
-    QStringList dataset_names_;
+    //QStringList dataset_names_;
 
     ///
     /// \brief dataset_loading_count_
@@ -142,6 +144,10 @@ private:
     /// The global color gradient
     QCPColorGradient global_gradient_;
 
+    ///
+    /// \brief settings_
+    /// The software's settings
+    QSettings settings_;
 
     ///
     /// \brief datasets_

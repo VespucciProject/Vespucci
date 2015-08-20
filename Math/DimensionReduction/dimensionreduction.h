@@ -40,6 +40,7 @@ namespace Vespucci
             VESPUCCI_EXPORT double estimate_snr(const arma::mat &R, arma::vec r_m, arma::mat x);
             VESPUCCI_EXPORT int HySime(arma::mat y, arma::mat n, arma::mat Rn, arma::mat &Ek);
             VESPUCCI_EXPORT void EstimateAdditiveNoise(arma::mat &noise, arma::mat &noise_correlation, const arma::mat &sample);
+            VESPUCCI_EXPORT bool svds(const arma::mat &X, arma::uword k, arma::mat &U, arma::vec &s, arma::mat &V);
         }
     }
 }

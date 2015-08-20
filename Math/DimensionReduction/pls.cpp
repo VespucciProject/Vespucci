@@ -88,19 +88,19 @@ bool Vespucci::Math::DimensionReduction::plsregress(arma::mat X, arma::mat Y,
         r = S*q; //X block factor weights
         t = X*r; //X block factor weights
         t.each_row() -= mean(t); //center t
-        nt = arma::sqrt(trans(t)*t); //compute norm (is arma::norm() the same?)
+        nt = arma::sqrt(t.t()*t); //compute norm (is arma::norm() the same?)
         t.each_row() /= nt;
         r.each_row() /= nt; //normalize
 
-        p = trans(X)*t; //X block factor loadings
-        q = trans(Y)*t; //Y block factor loadings
+        p = X.t()*t; //X block factor loadings
+        q = Y.t()*t; //Y block factor loadings
         u = Y*q; //Y block factor scores
         v = p;
 
         //Ensure orthogonality
         if (i > 0){
-            v = v - V*(trans(V)*p);
-            u = u - T*(trans(T)*u);
+            v = v - V*(V.t()*p);
+            u = u - T*(T.t()*u);
         }
         v.each_row() /= arma::sqrt(trans(v) * v); //normalize orthogonal loadings
         S = S - v * (trans(v)*S); //deflate S wrt loadings

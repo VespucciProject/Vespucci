@@ -317,11 +317,11 @@ public:
     bool k_means_calculated();
     bool radical_calculated();
 
-    PrincipalComponentsData *principal_components_data();
-    MLPACKPCAData *mlpack_pca_data();
-    VCAData *vertex_components_data();
-    PLSData *partial_least_squares_data();
-    mat *k_means_data();
+    QSharedPointer<PrincipalComponentsData> principal_components_data();
+    QSharedPointer<MLPACKPCAData> mlpack_pca_data();
+    QSharedPointer<VCAData> vertex_components_data();
+    QSharedPointer<PLSData> partial_least_squares_data();
+    mat* k_means_data();
     QList<QSharedPointer<UnivariateData> > univariate_datas();
     const QString x_axis_description();
     const QString y_axis_description();
@@ -461,27 +461,29 @@ private:
     QList<QSharedPointer<MapData> > *maps_;
 
 
-    CWTData *cwt_peak_data_;
+    //CWTData *cwt_peak_data_;
+    QSharedPointer<CWTData> cwt_peak_data_;
 
     ///
     /// \brief principal_components_data_
     /// A pointer to a container holding all PCA data and stats.
-    PrincipalComponentsData *principal_components_data_;
+    //PrincipalComponentsData *principal_components_data_;
+    QSharedPointer<PrincipalComponentsData> principal_components_data_;
 
     ///
     /// \brief mlpack_pca_data_
     /// A pointer to a container holding MLPACK PCA data and stats
-    MLPACKPCAData *mlpack_pca_data_;
+    QSharedPointer<MLPACKPCAData> mlpack_pca_data_;
 
     ///
     /// \brief partial_least_squares_data_
     /// A pointer to a container holding all PLS data and stats
-    PLSData *partial_least_squares_data_;
+    QSharedPointer<PLSData> partial_least_squares_data_;
 
     ///
     /// \brief vertex_components_data_
     /// A pointer to a container (on the heap) holding all VCA data and stats.
-    VCAData *vertex_components_data_;
+    QSharedPointer<VCAData> vertex_components_data_;
 
     ///
     /// \brief k_means_data_

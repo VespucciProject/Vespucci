@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ClassicaLeastSquaresDialog</class>
- <widget class="QDialog" name="ClassicaLeastSquaresDialog">
+ <class>ClassicalLeastSquaresDialog</class>
+ <widget class="QDialog" name="ClassicalLeastSquaresDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -85,7 +85,11 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QSpinBox" name="componentSpinBox"/>
+       <widget class="QSpinBox" name="componentSpinBox">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+       </widget>
       </item>
       <item row="3" column="1">
        <widget class="QComboBox" name="gradientComboBox">
@@ -319,7 +323,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>ClassicaLeastSquaresDialog</receiver>
+   <receiver>ClassicalLeastSquaresDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -335,7 +339,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>ClassicaLeastSquaresDialog</receiver>
+   <receiver>ClassicalLeastSquaresDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
