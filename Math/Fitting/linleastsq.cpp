@@ -136,11 +136,10 @@ arma::vec Vespucci::Math::LinLeastSq::CalcPoly(const arma::vec &coefs, const arm
             y += coefs(i) * arma::pow(x, i);
     }
     return y;
-
 }
 
 ///
-/// \brief Vespucci::Math::LinLeastSq::OrdinaryLeastSquares Perform Ordinary Least Squares
+/// \brief Vespucci::Math::LinLeastSq::OrdinaryLeastSquares Perform Squares
 /// \param X The design matrix of the regression
 /// \param y The response vector
 /// \return

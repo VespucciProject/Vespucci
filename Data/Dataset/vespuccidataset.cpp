@@ -931,7 +931,6 @@ void VespucciDataset::IModPolyBaseline(const uword poly_order, const uword max_i
         for (uword i = 0; i < spectra_.n_cols; ++i){
             progress->setValue(i);
             progress->setLabelText("Spectrum " + QString::number(i+1) + colcount);
-            //cout << "." << endl;
             Vespucci::Math::LinLeastSq::IModPoly(spectra_.col(i),
                                                  abscissa_, baseline,
                                                  corrected, err,
