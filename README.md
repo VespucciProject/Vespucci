@@ -4,7 +4,6 @@ This branch is the active branch and is **probably not stable**.
 
 Vespucci is a free/libre/open-source, cross-platform tool for spectroscopic
 imaging
-
 Vespucci is distributed under the terms of the GNU General Public License version 3.
 A copy of this license is provided in LICENSE
 
