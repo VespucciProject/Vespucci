@@ -67,12 +67,12 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>20</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>Fi&amp;le</string>
     </property>
     <addaction name="actionImport_Dataset_from_File"/>
     <addaction name="actionImport_From_Multiple_Point_Spectra"/>
@@ -93,27 +93,11 @@
    </widget>
    <widget class="QMenu" name="menuData">
     <property name="title">
-     <string>Data</string>
+     <string>Dataset</string>
     </property>
-    <widget class="QMenu" name="menuData_Pre_Processing">
-     <property name="title">
-      <string>Data Pre-Processing</string>
-     </property>
-     <addaction name="actionFilter_Derivatize"/>
-     <addaction name="actionNormalize_Standardize"/>
-     <addaction name="actionSubtract_Background"/>
-     <addaction name="actionCorrect_Baseline"/>
-     <addaction name="actionCrop"/>
-     <addaction name="actionReject_Clipped_Spectra"/>
-     <addaction name="actionBooleanize_Clamp"/>
-     <addaction name="actionRemove_Vectors_of_Zeros"/>
-     <addaction name="actionTransform_Abscissa"/>
-     <addaction name="actionInterpolate_to_New_Abscissa"/>
-     <addaction name="actionFourierTransform"/>
-    </widget>
     <widget class="QMenu" name="menuExport_Dataset_Elements">
      <property name="title">
-      <string>Export Dataset Elements</string>
+      <string>&amp;Export Dataset Elements</string>
      </property>
      <addaction name="actionSpectra"/>
      <addaction name="actionAverage_Spectra"/>
@@ -126,7 +110,6 @@
     </widget>
     <addaction name="actionUndo"/>
     <addaction name="separator"/>
-    <addaction name="menuData_Pre_Processing"/>
     <addaction name="actionRun_script"/>
     <addaction name="separator"/>
     <addaction name="menuExport_Dataset_Elements"/>
@@ -141,14 +124,14 @@
    </widget>
    <widget class="QMenu" name="menuMap">
     <property name="title">
-     <string>Analysis</string>
+     <string>A&amp;nalysis</string>
     </property>
     <widget class="QMenu" name="menuNew_Multivariate_Map">
      <property name="enabled">
       <bool>true</bool>
      </property>
      <property name="title">
-      <string>Multiviariate Analysis</string>
+      <string>&amp;Multiviariate Analysis</string>
      </property>
      <addaction name="actionPrincipal_Components_Analysis"/>
      <addaction name="actionPartial_Least_Squares"/>
@@ -158,14 +141,14 @@
     </widget>
     <widget class="QMenu" name="menuPeak_Detection">
      <property name="title">
-      <string>Peak Detection</string>
+      <string>&amp;Peak Detection</string>
      </property>
      <addaction name="actionDetect_Peaks"/>
      <addaction name="actionCalculate_Peak_Populations"/>
     </widget>
     <widget class="QMenu" name="menuUnivariate_Analysis">
      <property name="title">
-      <string>Univariate Analysis...</string>
+      <string>&amp;Univariate Analysis...</string>
      </property>
      <addaction name="actionNew_Univariate_Map"/>
      <addaction name="actionNew_Band_Ratio_Map"/>
@@ -183,21 +166,38 @@
     </property>
     <addaction name="actionSettings"/>
    </widget>
+   <widget class="QMenu" name="menuProcessing">
+    <property name="title">
+     <string>Processin&amp;g</string>
+    </property>
+    <addaction name="actionFilter_Derivatize"/>
+    <addaction name="actionNormalize_Standardize"/>
+    <addaction name="actionSubtract_Background"/>
+    <addaction name="actionCorrect_Baseline"/>
+    <addaction name="actionCrop"/>
+    <addaction name="actionReject_Clipped_Spectra"/>
+    <addaction name="actionBooleanize_Clamp"/>
+    <addaction name="actionRemove_Vectors_of_Zeros"/>
+    <addaction name="actionTransform_Abscissa"/>
+    <addaction name="actionFourierTransform"/>
+    <addaction name="actionInterpolate_to_New_Abscissa"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuData"/>
+   <addaction name="menuProcessing"/>
    <addaction name="menuMap"/>
-   <addaction name="menuHelp"/>
    <addaction name="menuTools"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>&amp;Exit</string>
    </property>
   </action>
   <action name="actionImport_Dataset_from_File">
    <property name="text">
-    <string>Import Dataset from File</string>
+    <string>&amp;Import Dataset from File</string>
    </property>
    <property name="toolTip">
     <string>Import a hyperspectral dataset from a text or instrument file</string>
@@ -208,7 +208,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Vespucci Webpage</string>
+    <string>&amp;Vespucci Webpage</string>
    </property>
   </action>
   <action name="actionAbout_Vespucci">
@@ -216,12 +216,12 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>About Vespucci</string>
+    <string>&amp;About Vespucci</string>
    </property>
   </action>
   <action name="actionNew_Univariate_Map">
    <property name="text">
-    <string>Univariate</string>
+    <string>&amp;Univariate</string>
    </property>
   </action>
   <action name="actionNew_Band_Ratio_Map">
@@ -229,17 +229,17 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Band Ratio</string>
+    <string>&amp;Band Ratio</string>
    </property>
   </action>
   <action name="actionCiting_Vespucci">
    <property name="text">
-    <string>Citing Vespucci</string>
+    <string>&amp;Citing Vespucci</string>
    </property>
   </action>
   <action name="actionPrincipal_Components_Analysis">
    <property name="text">
-    <string>Principal Components</string>
+    <string>&amp;Principal Components</string>
    </property>
   </action>
   <action name="actionPartial_Least_Squares">
@@ -247,7 +247,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Partial Least Squares</string>
+    <string>Partial &amp;Least Squares</string>
    </property>
   </action>
   <action name="actionVertex_Components">
@@ -255,22 +255,22 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Vertex Components</string>
+    <string>&amp;Vertex Components</string>
    </property>
   </action>
   <action name="actionFilter_Derivatize">
    <property name="text">
-    <string>Filter/Derivatize</string>
+    <string>&amp;Filter/Derivatize</string>
    </property>
   </action>
   <action name="actionNormalize_Standardize">
    <property name="text">
-    <string>Normalize/Standardize</string>
+    <string>&amp;Normalize/Standardize</string>
    </property>
   </action>
   <action name="actionSubtract_Background">
    <property name="text">
-    <string>Subtract Background</string>
+    <string>&amp;Subtract Background</string>
    </property>
   </action>
   <action name="actionCorrect_Baseline">
@@ -278,17 +278,17 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Correct Baseline</string>
+    <string>&amp;Correct Baseline</string>
    </property>
   </action>
   <action name="actionSpectra">
    <property name="text">
-    <string>Spectra</string>
+    <string>&amp;Spectra</string>
    </property>
   </action>
   <action name="actionSpectral_Abscissa">
    <property name="text">
-    <string>Spectral Abscissa</string>
+    <string>S&amp;pectral Abscissa</string>
    </property>
    <property name="toolTip">
     <string>Spectral Abscissa</string>
@@ -296,17 +296,17 @@
   </action>
   <action name="actionAll_Data">
    <property name="text">
-    <string>All Data</string>
+    <string>All &amp;Data</string>
    </property>
   </action>
   <action name="actionAverage_Spectra">
    <property name="text">
-    <string>Average Spectra</string>
+    <string>&amp;Average Spectra</string>
    </property>
   </action>
   <action name="actionAverage_Spectra_with_Abscissa">
    <property name="text">
-    <string>Average Spectra (with Abscissa)</string>
+    <string>Average Spectra (&amp;with Abscissa)</string>
    </property>
    <property name="toolTip">
     <string>Average Spectra (with Abscissa)</string>
@@ -314,47 +314,47 @@
   </action>
   <action name="actionClose_Dataset">
    <property name="text">
-    <string>Close Dataset</string>
+    <string>C&amp;lose Dataset</string>
    </property>
   </action>
   <action name="actionCrop">
    <property name="text">
-    <string>Crop</string>
+    <string>Cro&amp;p</string>
    </property>
   </action>
   <action name="actionView_Dataset_Elements">
    <property name="text">
-    <string>View Dataset Elements</string>
+    <string>V&amp;iew Dataset Elements</string>
    </property>
   </action>
   <action name="actionSet_Global_Color_Scale">
    <property name="text">
-    <string>Set Global Color Scale...</string>
+    <string>&amp;Set Global Color Scale...</string>
    </property>
   </action>
   <action name="actionK_Means_Clustering">
    <property name="text">
-    <string>K-Means Clustering</string>
+    <string>&amp;K-Means Clustering</string>
    </property>
   </action>
   <action name="actionUndo">
    <property name="text">
-    <string>Undo/Redo</string>
+    <string>&amp;Undo/Redo</string>
    </property>
   </action>
   <action name="actionCreate_Plot">
    <property name="text">
-    <string>Create Plot...</string>
+    <string>&amp;Create Plot...</string>
    </property>
   </action>
   <action name="actionDelete_Map">
    <property name="text">
-    <string>Delete Map</string>
+    <string>&amp;Delete Map</string>
    </property>
   </action>
   <action name="actionNew_Composite_Dataset">
    <property name="text">
-    <string>New Composite Dataset...</string>
+    <string>&amp;New Composite Dataset...</string>
    </property>
   </action>
   <action name="actionMultivariate_Analysis">
@@ -364,7 +364,7 @@
   </action>
   <action name="actionReject_Clipped_Spectra">
    <property name="text">
-    <string>Reject Spectra by Threshold</string>
+    <string>&amp;Reject Spectra by Threshold</string>
    </property>
   </action>
   <action name="actionSpectra_as_Columns">
@@ -374,67 +374,67 @@
   </action>
   <action name="actionLarge_Matrices">
    <property name="text">
-    <string>Large Matrices...</string>
+    <string>&amp;Large Matrices...</string>
    </property>
   </action>
   <action name="actionView_Edit_Spectra">
    <property name="text">
-    <string>View/Remove Spectra</string>
+    <string>&amp;View/Remove Spectra</string>
    </property>
   </action>
   <action name="actionBooleanize_Clamp">
    <property name="text">
-    <string>Booleanize/Clamp</string>
+    <string>&amp;Booleanize/Clamp</string>
    </property>
   </action>
   <action name="actionRemove_Vectors_of_Zeros">
    <property name="text">
-    <string>Remove Vectors of Zeros</string>
+    <string>Remove &amp;Vectors of Zeros</string>
    </property>
   </action>
   <action name="actionRun_script">
    <property name="text">
-    <string>Run Script...</string>
+    <string>&amp;Run Script...</string>
    </property>
   </action>
   <action name="actionDetect_Peaks">
    <property name="text">
-    <string>Detect Peaks...</string>
+    <string>&amp;Detect Peaks...</string>
    </property>
   </action>
   <action name="actionCalculate_Peak_Populations">
    <property name="text">
-    <string>Calculate Peak Populations</string>
+    <string>&amp;Calculate Peak Populations</string>
    </property>
   </action>
   <action name="actionImport_From_Multiple_Point_Spectra">
    <property name="text">
-    <string>Import From Multiple Point Spectra</string>
+    <string>Import &amp;From Multiple Point Spectra</string>
    </property>
   </action>
   <action name="actionTransform_Abscissa">
    <property name="text">
-    <string>Transform Abscissa</string>
+    <string>&amp;Transform Abscissa</string>
    </property>
   </action>
   <action name="actionInterpolate_to_New_Abscissa">
    <property name="text">
-    <string>Interpolate to New Abscissa</string>
+    <string>&amp;Interpolate to New Abscissa</string>
    </property>
   </action>
   <action name="actionFourierTransform">
    <property name="text">
-    <string>Fourier Transform</string>
+    <string>F&amp;ourier Transform</string>
    </property>
   </action>
   <action name="actionBatch_File_Conversion">
    <property name="text">
-    <string>Batch File Conversion</string>
+    <string>&amp;Batch File Conversion</string>
    </property>
   </action>
   <action name="actionClassical_Least_Squares">
    <property name="text">
-    <string>Classical Least Squares</string>
+    <string>&amp;Classical Least Squares</string>
    </property>
   </action>
   <action name="actionUnivariate">
@@ -449,7 +449,7 @@
   </action>
   <action name="actionSettings">
    <property name="text">
-    <string>Settings</string>
+    <string>&amp;Settings</string>
    </property>
   </action>
  </widget>

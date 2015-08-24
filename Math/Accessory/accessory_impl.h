@@ -46,25 +46,18 @@ namespace Vespucci
 ///
 template <typename T> T Vespucci::Math::diff(const T &X, arma::uword deriv_order)
 {
-        T return_value;
-        if (deriv_order == 0){
-            return_value = X;
+        T difference = X;
+        if (deriv_order > 0){ //perform first derivative of input
+            for (arma::uword i = 0; i < deriv_order; ++i){
+                T offset(difference.n_rows, difference.n_cols);
+                offset.zeros();
+                offset.rows(1, offset.n_rows - 1) = difference.rows(0, difference.n_rows - 2);
+                difference = difference - offset;
+                difference.shed_row(0); //difference will have one less row
+            }
         }
 
-        else if (deriv_order > 0){ //perform first derivative of input
-            T offset(X.n_rows, X.n_cols);
-            offset.zeros();
-            offset.rows(1, offset.n_rows - 1) = X.rows(0, X.n_rows - 2);
-            //offset.insert_rows(0, 1);
-            //offset.row(0) = arma::zeros(1, X.n_cols);
-            //offset.shed_row(offset.n_rows - 1);
-            T difference;
-            difference = X - offset;
-            difference.shed_row(0); //difference will have one less row
-            return_value = diff(difference, deriv_order - 1);
-        }
-
-        return return_value;
+        return difference;
 }
 
 

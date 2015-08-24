@@ -29,8 +29,10 @@
 
 
 # Configuration settings for unix systems are based on my own personal environment
-# I use Clang on linux for the diagnostics.
-
+# Default install paths for armadillo and mlpack (from make install).
+# Others based on Ubuntu 15.04 package manager install directories
+# Libvespucci should be built and linked.
+# Vespucci-QCP should be checked out, built and linked.
 QT       += core gui
 QT       += widgets printsupport
 QT       += svg
@@ -135,7 +137,8 @@ SOURCES += main.cpp\
     GUI/Display/plotviewer.cpp \
     Data/Import/textimportqpd.cpp \
     Global/global.cpp \
-    GUI/Analysis/classicalleastsquaresdialog.cpp
+    GUI/Analysis/classicalleastsquaresdialog.cpp \
+    GUI/settingsdialog.cpp
 
 
 HEADERS  += \
@@ -194,7 +197,8 @@ HEADERS  += \
     GUI/Display/plotviewer.h \
     Data/Import/textimportqpd.h \
     Global/global.h \
-    GUI/Analysis/classicalleastsquaresdialog.h
+    GUI/Analysis/classicalleastsquaresdialog.h \
+    GUI/settingsdialog.h
 
 
 FORMS    += \
@@ -234,7 +238,8 @@ FORMS    += \
     GUI/Processing/abscissatransformdialog.ui \
     GUI/Processing/fouriertransformdialog.ui \
     GUI/Display/plotviewer.ui \
-    GUI/Analysis/classicalleastsquaresdialog.ui
+    GUI/Analysis/classicalleastsquaresdialog.ui \
+    GUI/settingsdialog.ui
 
 RESOURCES += \
     resources.qrc
@@ -247,48 +252,55 @@ DEPENDPATH += $$PWD/
 
 #linux libraries, specific to my own install. This will be handled by CMake later
 #I hope...
-unix:!macx: INCLUDEPATH += $$PWD/../../libraries/include
-unix:!macx: DEPENDPATH += $$PWD/../../libraries/include
-unix:!macx: INCLUDEPATH += $$PWD/../../libraries/include/levmar
-unix:!macx: DEPENDPATH += $$PWD/../../libraries/include/levmar
 
-unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/Rcpp/include
-unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/Rcpp/include
-unix:!macx: INCLUDEPATH+= $$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RcppArmadillo/include
-unix:!macx: DEPENDPATH+= $$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RcppArmadillo/include
-unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RInside/include
-unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RInside/include
-unix:!macx: INCLUDEPATH += /usr/share/R/include
-unix:!macx: DEPENDPATH += /usr/share/R/include
+unix:!macx: INCLUDEPATH += /usr/include
+unix:!macx: DEPENDPATH += /usr/include
+unix:!macx: INCLUDEPATH += /usr/local/include
+unix:!macx: DEPENDPATH += /usr/local/include
+unix:!macx: INCLUDEPATH += /usr/local/include/cminpack-1
+unix:!macx: DEPENDPATH += /usr/local/include/cminpack-1
+unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RInside/include
+unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RInside/include
+unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/include
+unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/include
+unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/Rcpp/include
+unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RCpp/include
 
-#levmar for fitting
-unix:!macx: LIBS += -L$$PWD/../../libraries/lib/ -llevmar
-unix:!macx: PRE_TARGETDEPS += $$PWD/../../libraries/lib/liblevmar.a
+unix:!macx: INCLUDEPATH += $$PWD/../Vespucci-QCP-sharedlib/include
+unix:!macx: DEPENDPATH += $$PWD/../Vespucci-QCP-sharedlib/include
+
 
 #mlpack and dependencies
-unix:!macx: LIBS += -L$$PWD/../../libraries/lib/ -lmlpack
-unix:!macx: LIBS += -L$$PWD/../../libraries/lib/ -larmadillo
-unix:!macx: LIBS += -L$$PWD/../../libraries/lib/ -larpack
-unix:!macx: PRE_TARGETDEPS += $$PWD/../../libraries/lib/libarpack.la
-unix:!macx: LIBS += -L$$PWD/../../libraries/lib/ -lopenblas
+unix:!macx: LIBS += -L/usr/local/lib/ -lmlpack
+unix:!macx: LIBS += -L/usr/lib/ -larmadillo
+unix:!macx: LIBS += -L/usr/local/lib/ -larpack
+unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
+unix:!macx: LIBS += -L/usr/lib/ -lopenblas
+unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
+unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
+unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
 
-
-unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RInside/lib/ -lRInside
-#unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/Rcpp/libs/ -lRcpp
-#unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.0/RcppArmadillo/libs/ -lRCppArmadillo
-unix:!macx: LIBS += -L/usr/share/lib/R/lib/ -lR
-
-
-unix:!macx:CONFIG(release, debug|release): LIBS += -L$$PWD/../../libraries/lib/ -lqcustomplot
-else:unix:!macx:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libraries/lib/ -lqcustomplotd
-unix:!macx:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../libraries/lib/libqcustomplot.a
-else:unix:!macx:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../libraries/lib/libqcustomplotd.a
+unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RInside/lib/ -lRInside
+#unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/Rcpp/libs/ -lRcpp
+#unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/libs/ -lRCppArmadillo
+unix:!macx: LIBS += -L/usr/lib/R/lib/ -lR
+unix:!macx:CONFIG(release, debug|release): LIBS += -L$$PWD/../Vespucci-QCP-sharedlib/lib/ -lqcustomplot
+else:unix:!macx:CONFIG(debug, debug|release): LIBS += -L$$PWD/../Vespucci-QCP-sharedlib/lib/ -lqcustomplotd
 
 unix:!macx: INCLUDEPATH += /usr/include
 unix:!macx: DEPENDPATH += /usr/include
 
 unix:!macx: INCLUDEPATH += /usr/include/libxml2
 unix:!macx: DEPENDPATH += /usr/include/libxml2
+
+
+unix:!macx:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary-Desktop-Release/ -lvespucci
+unix:!macx:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary-Desktop-Debug/ -lvespucci
+
+unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RInside/lib/ -lRInside
+unix:!macx: PRE_TARGETDEPS += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RInside/lib/libRInside.a
+
+
 
 #Mac Libraries
 #include paths
@@ -419,7 +431,7 @@ INCLUDEPATH += $$PWD/../MinGW_libs/include/cminpack-1
 DEPENDPATH += $$PWD/../MinGW_libs/include/cminpack-1
 win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libcminpack.a
 
-
+#libvespucci
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-library/release -lvespucci
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../build/release/libvespucci.a
 

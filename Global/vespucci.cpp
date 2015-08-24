@@ -20,7 +20,6 @@
 
 #include "Global/vespucci.h"
 #include <QtSvg>
-#include <minizip/zip.h>
 #include <cstdlib>
 #include <QProcess>
 
