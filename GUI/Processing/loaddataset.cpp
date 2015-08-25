@@ -43,10 +43,6 @@ LoadDataset::LoadDataset(QWidget *parent, VespucciWorkspace *ws) :
     QPushButton *ok_button = button_box->button(QDialogButtonBox::Ok);
     ok_button->setDisabled(true);
 
-
-
-
-
     swap_check_box_ = findChild<QCheckBox *>("swapCheckBox");
     filename_line_edit_ = findChild<QLineEdit *>("filenameBox");
     name_box_ = findChild<QLineEdit *>("nameBox");
@@ -57,19 +53,16 @@ LoadDataset::LoadDataset(QWidget *parent, VespucciWorkspace *ws) :
     data_format_box_ = findChild<QComboBox *>("dataFormatBox");
 
     ws->settings()->beginGroup("specdata");
-    QString abs_label = ws->settings()->value("absLabel");
-    QString abs_units = ws->settings()->value("absUnit");
-    QString ord_label = ws->settings()->value("ordLabel");
-    QString ord_units = ws->settings()->value("ordUnits");
+    QString abs_label = ws->settings()->value("absLabel").toString();
+    QString abs_units = ws->settings()->value("absUnits").toString();
+    QString ord_label = ws->settings()->value("ordLabel").toString();
+    QString ord_units = ws->settings()->value("ordUnits").toString();
     ws->settings()->endGroup();
 
     y_description_box_->setText(ord_label);
     y_units_box_->setText(ord_units);
     x_description_box_->setText(abs_label);
     x_units_box_->setText(abs_units);
-
-
-
 
     QObject::connect(filename_line_edit_,
                      SIGNAL(textChanged(QString)),

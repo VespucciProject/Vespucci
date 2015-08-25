@@ -15,11 +15,11 @@ SettingsDialog::SettingsDialog(QWidget *parent, VespucciWorkspace *ws) :
 
     settings_ = workspace->settings();
 
-    QString r_home = settings_->value("R_HOME");
-    QString abs_label = settings_->value("absLabel");
-    QString abs_units = settings_->value("absUnit");
-    QString ord_label = settings_->value("ordLabel");
-    QString ord_units = settings_->value("ordUnits");
+    QString r_home = settings_->value("R_HOME").toString();
+    QString abs_label = settings_->value("absLabel").toString();
+    QString abs_units = settings_->value("absUnit").toString();
+    QString ord_label = settings_->value("ordLabel").toString();
+    QString ord_units = settings_->value("ordUnits").toString();
 
     r_home_line_edit_->setText(r_home);
     abs_label_line_edit_->setText(abs_label);

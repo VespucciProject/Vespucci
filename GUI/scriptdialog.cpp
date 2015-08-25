@@ -3,6 +3,7 @@
 #include "External/Octave/VespucciOctave.h"
 #include "External/R/VespucciR.h"
 #include <cstdlib>
+#include <cstdio>
 
 ScriptDialog::ScriptDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
@@ -67,10 +68,12 @@ void ScriptDialog::on_buttonBox_accepted()
         std::cout << "R stuff" << endl;
         if (interpreter_selector_->currentText() == "R"){
             workspace->settings()->beginGroup("environment");
-            QString r_home = workspace->settings()->value("R_HOME");
+            QString r_home = workspace->settings()->value("R_HOME").toString();
             workspace->settings()->endGroup();
             r_home = "R_HOME=" + r_home;
-            putenv(r_home.toStdString().c_str()); //set R_HOME environment variable
+            char* R_HOME;
+            snprintf(R_HOME, r_home.size(), r_home.toStdString().c_str());
+            putenv(R_HOME); //set R_HOME environment variable
             int argc = 1;
             char first_arg[] = "vespucci"; //done to avoid string conversion
             char* argv[1];

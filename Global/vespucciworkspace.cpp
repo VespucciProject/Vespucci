@@ -343,7 +343,7 @@ void VespucciWorkspace::CheckSettings()
     else{
         settings_.beginGroup("environment");
         if (settings_.allKeys().contains("R_HOME")){
-            r_home = settings_.value("R_HOME");
+            r_home = settings_.value("R_HOME").toString();
         }
         else{
             r_home = r_path;
