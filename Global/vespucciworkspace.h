@@ -93,6 +93,8 @@ public:
     void CleanLogFiles();
 
     void ResetSettings();
+    void CheckSettings();
+    QSettings *settings();
 
     //bool SavePlot(QCustomPlot *plot, const QString filename) const;
 

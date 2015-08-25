@@ -151,6 +151,8 @@ private slots:
 
     void on_actionClassical_Least_Squares_triggered();
 
+    void on_actionSettings_triggered();
+
 private:
     Ui::MainWindow *ui;
 

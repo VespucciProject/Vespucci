@@ -28,8 +28,7 @@ VespucciWorkspace::VespucciWorkspace() :
 {
     dataset_loading_count_ = 0;
     directory_ = QDir::homePath();
-    //only datarange and colors need to be set.
-    //need to call a function here or in mainwindow to evaluate values.
+    CheckSettings();
 }
 
 ///
@@ -305,7 +304,79 @@ void VespucciWorkspace::CleanLogFiles()
 
 void VespucciWorkspace::ResetSettings()
 {
+    QString r_path;
+#if defined Q_OS_WIN32
+    r_path = "C:/Program Files/R/R-3.1.3";
+#elif defined Q_OS_MAC
+    r_path = "/Library/Frameworks/R.framework/Resources";
+#else
+    r_path = "/usr/lib/R";
+#endif
+    settings_.beginGroup("environment");
+    settings_.setValue("R_HOME", r_path);
+    settings_.endGroup();
 
+    settings_.beginGroup("specdata");
+    settings_.setValue("absLabel", "Raman Shift");
+    settings_.setValue("absUnits", "cm⁻¹");
+    settings_.setValue("ordLabel", "Intensity");
+    settings_.setValue("ordUnits", "a.u.");
+    settings_.endGroup();
+}
+
+void VespucciWorkspace::CheckSettings()
+{
+    QString r_path, r_home;
+#if defined Q_OS_WIN32
+    r_path = "C:/Program Files/R/R-3.1.3";
+#elif defined Q_OS_MAC
+    r_path = "/Library/Frameworks/R.framework/Resources";
+#else
+    r_path = "/usr/lib/R";
+#endif
+
+    if (!settings_.childGroups().contains("environment")){
+        settings_.beginGroup("environment");
+        settings_.setValue("R_HOME", r_path);
+        settings_.endGroup();
+    }
+    else{
+        settings_.beginGroup("environment");
+        if (settings_.allKeys().contains("R_HOME")){
+            r_home = settings_.value("R_HOME");
+        }
+        else{
+            r_home = r_path;
+            settings_.setValue("R_HOME", r_path);
+        }
+        settings_.endGroup();
+    }
+
+    if (!settings_.childGroups().contains("specdata")){
+        settings_.beginGroup("specdata");
+        settings_.setValue("absLabel", "Raman Shift");
+        settings_.setValue("absUnits", "cm⁻¹");
+        settings_.setValue("ordLabel", "Intensity");
+        settings_.setValue("ordUnits", "a.u.");
+        settings_.endGroup();
+    }
+    else{
+        settings_.beginGroup("specdata");
+        if (!settings_.allKeys().contains("absLabel"))
+            settings_.setValue("absLabel", "Raman Shift");
+        if (!settings_.allKeys().contains("absUnits"))
+            settings_.setValue("absUnits", "cm⁻¹");
+        if (!settings_.allKeys().contains("ordLabel"))
+            settings_.setValue("ordLabel", "Intensity");
+        if (!settings_.allKeys().contains("ordUnits"))
+            settings_.setValue("ordUnits", "a.u.");
+        settings_.endGroup();
+    }
+}
+
+QSettings *VespucciWorkspace::settings()
+{
+    return &settings_;
 }
 
 

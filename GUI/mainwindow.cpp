@@ -47,7 +47,7 @@
 #include "GUI/Processing/multiimportdialog.h"
 #include "GUI/Processing/bulkconversiondialog.h"
 #include "GUI/Analysis/classicalleastsquaresdialog.h"
-
+#include "GUI/settingsdialog.h"
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent usually 0
@@ -1124,4 +1124,10 @@ void MainWindow::on_actionClassical_Least_Squares_triggered()
     int row = dataset_list_view_->currentIndex().row();
     ClassicalLeastSquaresDialog *cls_dialog = new ClassicalLeastSquaresDialog(this, workspace, row);
     cls_dialog->show();
+}
+
+void MainWindow::on_actionSettings_triggered()
+{
+    SettingsDialog *settings_dialog = new SettingsDialog(this, workspace);
+    settings_dialog->show();
 }

@@ -25,7 +25,8 @@ private:
     QPlainTextEdit *receive_box_;
     QPlainTextEdit *send_box_;
     QComboBox *interpreter_selector_;
-    QSharedPointer<VespucciDataset> dataset_;
+    QSharedPointer<VespucciDataset> dataset_;\
+    VespucciWorkspace *workspace;
 
 };
 

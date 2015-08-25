@@ -19,5 +19,4 @@
 *******************************************************************************/
 #ifndef VESPUCCIOCTAVE_H
 #define VESPUCCIOCTAVE_H
-
 #endif // VESPUCCIOCTAVE_H
