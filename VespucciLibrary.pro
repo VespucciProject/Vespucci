@@ -97,7 +97,8 @@ SOURCES +=\
     Math/PeakFinding/cwtridge.cpp \
     Math/Fitting/linleastsq.cpp \
     Math/Fitting/nonlinleastsq.cpp \
-    Global/vespucci.cpp
+    Global/vespucci.cpp \
+    Math/Transform/fft.cpp
 
 
 HEADERS  += \
@@ -117,7 +118,9 @@ HEADERS  += \
     Math/Fitting/linleastsq.h \
     Math/Fitting/nonlinleastsq.h \
     Global/vespucci.h \
-    Global/libvespucci.h
+    Global/libvespucci.h \
+    Math/Transform/fft.h
+
 
 #linux libraries, specific to my own install. This will be handled by CMake later
 #I hope...

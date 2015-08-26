@@ -1,6 +1,5 @@
 #include "abscissainterpolationdialog.h"
 #include "ui_abscissainterpolationdialog.h"
-#include "GUI/waitdialog.h"
 AbscissaInterpolationDialog::AbscissaInterpolationDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
     ui(new Ui::AbscissaInterpolationDialog)

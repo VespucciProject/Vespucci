@@ -19,7 +19,7 @@
    <string>View Spectrum</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources.qrc">
+   <iconset resource="../../resources.qrc">
     <normaloff>:/icons/vespuccilogo.svg</normaloff>:/icons/vespuccilogo.svg</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -69,7 +69,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../../resources.qrc"/>
  </resources>
  <connections/>
 </ui>

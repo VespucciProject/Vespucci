@@ -17,35 +17,25 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-
-#ifndef VESPUCCI_Math_H
-#define VESPUCCI_Math_H
-
-#include <Math/Accessory/accessory.h>
-#include <Math/DimensionReduction/dimensionreduction.h>
-#include <Math/Normalization/normalization.h>
-#include <Math/PeakFinding/peakfinding.h>
-#include <Math/Quantification/quantification.h>
-#include <Math/Smoothing/smoothing.h>
-#include <Math/Transform/cwt.h>
-#include "Math/Transform/fft.h"
-#include <Math/Fitting/linleastsq.h>
-#include <Math/Fitting/nonlinleastsq.h>
-#include "Math/Fitting/linleastsq.h"
-#include "Math/Fitting/nonlinleastsq.h"
-#include "Math/Accessory/accessory_impl.h"
+#ifndef FFT_H
+#define FFT_H
+#include "Math/VespucciMath.h"
 #include "Global/libvespucci.h"
-
-
 namespace Vespucci{
-
-/// \namespace Vespucci::Math
-/// \brief A namespace for math functions
-///
-///
-namespace Math{
-
+    namespace Math{
+        namespace Transform{
+            VESPUCCI_EXPORT void fft_mat(const arma::mat &t_signal,
+                                        const arma::vec &t_abscissa,
+                                        arma::cx_mat &f_signal,
+                                        arma::vec &f_abscissa,
+                                        arma::uword n);
+            VESPUCCI_EXPORT void ifft_mat(const arma::cx_mat &f_signal,
+                                        const arma::vec f_abscissa,
+                                        arma::cx_mat &t_signal,
+                                        arma::vec &t_abscissa,
+                                        arma::uword n);
+        }
     }
 }
 
-#endif // VESPUCCI_Math_H
+#endif // FFT_H

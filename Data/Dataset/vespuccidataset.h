@@ -171,6 +171,7 @@ public:
                                   unsigned int window_size);
     void InterpolateToNewAbscissa(const vec &new_abscissa);
     void FourierTransform(int n);
+    void InverseFourierTransform(int n);
     void ApplyFTWeight(QString type, double cut_after = -1);
 
 
@@ -421,8 +422,8 @@ private:
 
     ///
     /// \brief spectra_imag_
-    /// The imaginary part of the spectra after fft (makes ifft more consistent)
-    cx_mat spectra_imag_;
+    /// The imaginary part of the spectra after fft (makes ifft)
+    mat spectra_imag_;
 
 
     ///

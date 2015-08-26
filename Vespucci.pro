@@ -141,7 +141,6 @@ SOURCES += main.cpp\
     GUI/settingsdialog.cpp \
     GUI/Processing/abscissainterpolationdialog.cpp
 
-
 HEADERS  += \
     Global/enums.h \
     GUI/mainwindow.h \

@@ -1164,7 +1164,7 @@ void MainWindow::on_actionSave_Log_File_triggered()
     QString filename = QFileDialog::getSaveFileName(this,
                                                     "Save Log File",
                                                     workspace->directory(),
-                                                    "Text Files (.txt)");
+                                                    "Text Files (*.txt)");
     bool ok = dataset->SaveLogFile(filename);
     QString message = (ok? "File Saved Successfully" : "Saving Log File Failed");
     QString title = (ok? "Saved Log File" : "Saving Log File Failed");

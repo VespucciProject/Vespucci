@@ -1385,6 +1385,55 @@ void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa)
     last_operation_ = "Abscissa Interpolation";
 }
 
+///
+/// \brief VespucciDataset::FourierTransform
+/// \param n
+///
+void VespucciDataset::FourierTransform(int n)
+{
+    log_stream_ << "FourierTransform" << endl;
+    log_stream_ << "n = " << n << endl;
+    //cx_mat complex_spectra = cx_mat(spectra_, spectra_imag_);
+    cx_mat f_spectra(spectra_.n_rows, spectra_.n_cols);
+    vec f_abscissa(abscissa.n_rows);
+    try{
+        Vespucci::Math::Transform::fft_mat(spectra_, abscissa_,
+                                           f_spectra, f_abscissa,
+                                           n);
+    }catch(exception e){
+        string str = "FourierTransform: " + string(e.what());
+        throw std::runtime_error(str);
+    }
+    SetOldCopies();
+    spectra_ = real(f_spectra);
+    spectra_imag_ = imag(f_spectra);
+    abscissa_ = f_abscissa;
+    x_axis_description_ = "Frequency (Hz)";
+}
+
+void VespucciDataset::InverseFourierTransform(int n)
+{
+    log_stream_ << "InverseFouerierTransform" << endl;
+    log_stream_ << "n = " << n << endl;
+    cx_mat t_spectra(spectra.n_rows, spectra.n_cols);
+    vec t_abscissa(abscissa_.n_rows);
+    try{
+        Vespucci::Math::Transform::ifft_mat(cx_mat(spectra_, spectra_imag_),
+                                            abscissa_,
+                                            t_spectra,
+                                            t_abscissa,
+                                            n);
+    }catch(exception e){
+        string str = "InverseFourierTransform: " + string(e.what());
+        throw std::runtime_error(str);
+    }
+    SetOldCopies();
+    spectra_ = real(t_spectra);
+    spectra_imag_ = imag(f_spectra);
+    abscissa_ = t_abscissa;
+    x_axis_description_ = "Time (s)";
+}
+
 // MAPPING FUNCTIONS //
 
 ///
