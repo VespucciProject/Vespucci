@@ -120,6 +120,7 @@
     <addaction name="separator"/>
     <addaction name="actionCreate_Plot"/>
     <addaction name="separator"/>
+    <addaction name="actionSave_Log_File"/>
     <addaction name="actionClose_Dataset"/>
    </widget>
    <widget class="QMenu" name="menuMap">
@@ -394,7 +395,7 @@
   </action>
   <action name="actionRun_script">
    <property name="text">
-    <string>&amp;Run Script...</string>
+    <string>Run Script...</string>
    </property>
   </action>
   <action name="actionDetect_Peaks">
@@ -450,6 +451,11 @@
   <action name="actionSettings">
    <property name="text">
     <string>&amp;Settings</string>
+   </property>
+  </action>
+  <action name="actionSave_Log_File">
+   <property name="text">
+    <string>Save Log File</string>
    </property>
   </action>
  </widget>

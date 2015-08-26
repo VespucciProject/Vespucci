@@ -765,3 +765,56 @@ arma::sp_mat Vespucci::Math::LocalMaximaWindow(const arma::mat &X, const int win
 
     return local_maxes;
 }
+
+///
+/// \brief AreEqual
+/// \param a
+/// \param b
+/// \return Whether or not all elements in the two vectors are equal
+///
+bool Vespucci::Math::AreEqual(const arma::vec &a, const arma::vec &b)
+{
+    if (a.n_rows != b.n_rows){
+        return false;
+    }
+    bool equal;
+    arma::uword i = 0;
+    do{
+        equal = a(i) == b(i);
+        i++;
+    }while(equal && (i < a.n_rows));
+    return equal;
+}
+
+///
+/// \brief IsMonotonic
+/// \param x
+/// \return
+///
+bool Vespucci::Math::IsMonotonic(const arma::vec &x)
+{
+    arma::vec deriv = Vespucci::Math::diff(x, 1);
+    double val = deriv(0);
+    bool equal;
+    arma::uword i = 1;
+    do{
+        equal = (deriv(i++) == val);
+    }while(equal && (i < deriv.n_rows));
+    return equal;
+}
+
+///
+/// \brief IsIncreasing
+/// \param x
+/// \return
+///
+bool Vespucci::Math::IsIncreasing(const arma::vec &x)
+{
+    arma::vec deriv = Vespucci::Math::diff(x, 1);
+    arma::uword i = 0;
+    bool positive;
+    do{
+        positive = (deriv(i++) > 0);
+    }while(positive && (i < deriv.n_rows));
+    return positive;
+}

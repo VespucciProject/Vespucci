@@ -144,10 +144,6 @@ unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
 unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
 unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
 
-unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RInside/lib/ -lRInside
-unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/Rcpp/libs/ -lRcpp
-unix:!macx: LIBS += -L$$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/libs/ -lRCppArmadillo
-unix:!macx: LIBS += -L/usr/share/lib/R/lib/ -lR
 unix:!macx:CONFIG(release, debug|release): LIBS += -L$$PWD/../Vespucci-QCP-sharedlib/lib/ -lqcustomplot
 else:unix:!macx:CONFIG(debug, debug|release): LIBS += -L$$PWD/../Vespucci-QCP-sharedlib/lib/ -lqcustomplotd
 

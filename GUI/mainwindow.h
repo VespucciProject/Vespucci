@@ -153,6 +153,14 @@ private slots:
 
     void on_actionSettings_triggered();
 
+    void on_actionTransform_Abscissa_triggered();
+
+    void on_actionFourierTransform_triggered();
+
+    void on_actionInterpolate_to_New_Abscissa_triggered();
+
+    void on_actionSave_Log_File_triggered();
+
 private:
     Ui::MainWindow *ui;
 

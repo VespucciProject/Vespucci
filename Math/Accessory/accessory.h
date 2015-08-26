@@ -56,8 +56,8 @@ namespace Vespucci
         VESPUCCI_EXPORT arma::uword max(arma::uword a, arma::uword b);
 
         VESPUCCI_EXPORT void position(arma::uword index,
-                      arma::uword n_rows, arma::uword n_cols,
-                      arma::uword &i, arma::uword &j);
+                                      arma::uword n_rows, arma::uword n_cols,
+                                      arma::uword &i, arma::uword &j);
         VESPUCCI_EXPORT arma::umat to_row_column(arma::uvec indices, arma::uword n_rows, arma::uword n_cols);
 
         VESPUCCI_EXPORT double RecalculateAverage(double new_value, double old_average, double old_count);
@@ -79,6 +79,10 @@ namespace Vespucci
         VESPUCCI_EXPORT arma::vec EnergyToWavelength(const arma::vec &x, double wl_factor, double energy_factor);
         VESPUCCI_EXPORT arma::vec EnergyToWavenumber(const arma::vec &x, double wn_factor, double energy_factor);
         VESPUCCI_EXPORT arma::vec WavenumberToEnergy(const arma::vec &x, double energy_factor, double wn_factor);
+
+        VESPUCCI_EXPORT bool AreEqual(const arma::vec &a, const arma::vec &b);
+        VESPUCCI_EXPORT bool IsMonotonic(const arma::vec &x);
+        VESPUCCI_EXPORT bool IsIncreasing(const arma::vec &x);
 
     }
 }

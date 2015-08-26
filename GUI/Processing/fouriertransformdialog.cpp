@@ -1,7 +1,7 @@
 #include "fouriertransformdialog.h"
 #include "ui_fouriertransformdialog.h"
 
-FourierTransformDialog::FourierTransformDialog(QWidget *parent) :
+FourierTransformDialog::FourierTransformDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
     ui(new Ui::FourierTransformDialog)
 {

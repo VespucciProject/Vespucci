@@ -45,6 +45,9 @@ namespace Vespucci
                                                const arma::vec &new_abscissa,
                                                const int window_size=2,
                                                const int order=1);
+            VESPUCCI_EXPORT arma::mat InterpolateToNewAbscissa(const arma::mat &spectra,
+                                                               const arma::mat &old_abscissa,
+                                                               const arma::vec &new_abscissa);
         }
     }
 }

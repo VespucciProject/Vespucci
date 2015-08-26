@@ -138,7 +138,8 @@ SOURCES += main.cpp\
     Data/Import/textimportqpd.cpp \
     Global/global.cpp \
     GUI/Analysis/classicalleastsquaresdialog.cpp \
-    GUI/settingsdialog.cpp
+    GUI/settingsdialog.cpp \
+    GUI/Processing/abscissainterpolationdialog.cpp
 
 
 HEADERS  += \
@@ -198,7 +199,8 @@ HEADERS  += \
     Data/Import/textimportqpd.h \
     Global/global.h \
     GUI/Analysis/classicalleastsquaresdialog.h \
-    GUI/settingsdialog.h
+    GUI/settingsdialog.h \
+    GUI/Processing/abscissainterpolationdialog.h
 
 
 FORMS    += \
@@ -239,7 +241,8 @@ FORMS    += \
     GUI/Processing/fouriertransformdialog.ui \
     GUI/Display/plotviewer.ui \
     GUI/Analysis/classicalleastsquaresdialog.ui \
-    GUI/settingsdialog.ui
+    GUI/settingsdialog.ui \
+    GUI/Processing/abscissainterpolationdialog.ui
 
 RESOURCES += \
     resources.qrc

@@ -88,6 +88,11 @@ bool VespucciDataset::SaveSpectrum(QString filename, uword column, file_type typ
 
 }
 
+bool VespucciDataset::SaveLogFile(QString filename)
+{
+    return log_file_->copy(filename);
+}
+
 ///
 /// \brief VespucciDataset::DestroyLogFile
 /// Deletes log file unless user decides to save it elsewhere
@@ -1215,26 +1220,38 @@ int VespucciDataset::HySime()
 ///
 void VespucciDataset::TransformAbscissa(QString input_units, double input_factor, QString output_units, double output_factor, QString description)
 {
+    log_stream_ << "TransformAbscissa" << endl;
+    log_stream_ << "Input Units: " << input_units << endl;
+    log_stream_ << "Input Factor: " << input_factor << endl;
+    log_stream_ << "Output Units: " << output_units << endl;
+    log_stream_ << "Output Factor: " << output_factor << endl;
+    log_stream_ << "Old Label: " << x_axis_description_ << endl;
+    log_stream_ << "New Label: " << description << endl;
+
     if (input_units == "Wavelength"){
         if (output_units == "Energy"){
             SetOldCopies();
             abscissa_ = Vespucci::Math::WavelengthToEnergy(abscissa_, output_factor, input_factor);
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else if (output_units == "Wavenumber"){
             SetOldCopies();
             abscissa_ = Vespucci::Math::WavelengthToWavenumber(abscissa_, output_factor, input_factor);
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else if (output_units == "Frequency"){
             SetOldCopies();
             abscissa_ = Vespucci::Math::WavelengthToFrequency(abscissa_, output_factor, input_factor);
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else if (output_units == "Wavelength"){
             SetOldCopies();
             abscissa_ = (input_factor * output_factor) * abscissa_;
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else{return;}
     }
@@ -1243,21 +1260,25 @@ void VespucciDataset::TransformAbscissa(QString input_units, double input_factor
             SetOldCopies();
             abscissa_ = (input_factor * output_factor) * abscissa_;
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else if (output_units == "Wavenumber"){
             SetOldCopies();
             abscissa_ = Vespucci::Math::EnergyToWavenumber(abscissa_, output_factor, input_factor);
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else if (output_units == "Frequency"){
             SetOldCopies();
             abscissa_ = Vespucci::Math::EnergyToFrequency(abscissa_, output_factor, input_factor);
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else if (output_units == "Wavelength"){
             SetOldCopies();
             abscissa_ = Vespucci::Math::EnergyToWavelength(abscissa_, output_factor, input_factor);
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else{return;}
     }
@@ -1266,21 +1287,25 @@ void VespucciDataset::TransformAbscissa(QString input_units, double input_factor
             SetOldCopies();
             abscissa_ = Vespucci::Math::WavenumberToEnergy(abscissa_, output_factor, input_factor);
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else if (output_units == "Wavenumber"){
             SetOldCopies();
             abscissa_ = (input_factor * output_factor) * abscissa_;
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else if (output_units == "Frequency"){
             SetOldCopies();
             abscissa_ = Vespucci::Math::WavenumberToFrequency(abscissa_, output_factor, input_factor);
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else if (output_units == "Wavelength"){
             SetOldCopies();
             abscissa_ = Vespucci::Math::WavenumberToWavelength(abscissa_, output_factor, input_factor);
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else{return;}
     }
@@ -1289,30 +1314,75 @@ void VespucciDataset::TransformAbscissa(QString input_units, double input_factor
             SetOldCopies();
             abscissa_ = Vespucci::Math::FrequencyToEnergy(abscissa_, output_factor, input_factor);
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else if (output_units == "Wavenumber"){
             SetOldCopies();
             abscissa_ = Vespucci::Math::FrequencyToWavenumber(abscissa_, output_factor, input_factor);
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else if (output_units == "Frequency"){
             SetOldCopies();
             abscissa_ = (input_factor * output_factor) * abscissa_;
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else if (output_units == "Wavelength"){
             SetOldCopies();
             abscissa_ = Vespucci::Math::FrequencyToWavelength(abscissa_, output_factor, input_factor);
             x_axis_description_ = description;
+            last_operation_ = "Abscissa Transform";
         }
         else{return;}//do nothing for invalid input
     }
     else{return;}
 }
 
-void VespucciDataset::InterpolateToNewAbscissa(vec &new_abscissa, unsigned int polynomial_order, unsigned int window_size)
+///
+/// \brief VespucciDataset::InterpolateToNewAbscissa
+/// \param new_abscissa
+/// \param polynomial_order
+/// \param window_size
+/// Spline interpolation to new abscissa
+void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa, unsigned int poly_order, unsigned int window_size)
 {
-    
+    log_stream_ << "InterpolateToNewAbscissa (spline)" << endl;
+    log_stream_ << "Old Abscissa Size: " << abscissa_.n_rows << endl;
+    log_stream_ << "New Abscissa Size: " << new_abscissa.n_rows << endl;
+    mat new_spectra;
+    try{
+        new_spectra = Vespucci::Math::Smoothing::InterpolateToNewAbscissa(spectra_, abscissa_, new_abscissa, window_size, poly_order);
+    }catch(exception e){
+        string str = "InterpolateToNewAbscissa(vec, uint, uint): " + string(e.what());
+        throw std::runtime_error(str);
+    }
+    SetOldCopies();
+    abscissa_ = new_abscissa;
+    spectra_ = new_spectra;
+    last_operation_ = "Abscissa Interpolation";
+}
+
+///
+/// \brief VespucciDataset::InterpolateToNewAbscissa
+/// \param new_abscissa
+/// Linear interpolation to new abscissa
+void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa)
+{
+    log_stream_ << "InterpolateToNewAbscissa (linear)" << endl;
+    log_stream_ << "Old Abscissa Size: " << abscissa_.n_rows << endl;
+    log_stream_ << "New Abscissa Size: " << new_abscissa.n_rows << endl;
+    mat new_spectra;
+    try{
+        new_spectra = Vespucci::Math::Smoothing::InterpolateToNewAbscissa(spectra_, abscissa_, new_abscissa);
+    }catch(exception e){
+        string str = "InterpolateToNewAbscissa(vec): " + string(e.what());
+        throw std::runtime_error(str);
+    }
+    SetOldCopies();
+    abscissa_ = new_abscissa;
+    spectra_ = new_spectra;
+    last_operation_ = "Abscissa Interpolation";
 }
 
 // MAPPING FUNCTIONS //
@@ -1573,50 +1643,26 @@ void VespucciDataset::PrincipalComponents(int component,
     log_stream_ << "recalculate == " << (recalculate ? "true" : "false") << endl << endl;
 
     if (recalculate || !principal_components_calculated_){
-
         component--;
-
-        QMessageBox alert;
-        alert.setText("Calculating principal components may take a while.");
-        alert.setInformativeText("When complete, the image will appear in a new window. "
-                                 "The program may appear not to respond.  Principal "
-                                 "components only need to be calculated once per dataset. "
-                                 "OK to continue");
-
-        alert.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-        alert.setWindowTitle("Principal Components Analysis");
-        alert.setIcon(QMessageBox::Question);
-
-        int ret = alert.exec();
-
-
-        if (ret == QMessageBox::Cancel){
-            return;
+        cout << "call to arma::princomp" << endl;
+        wall_clock timer;
+        timer.tic();
+        principal_components_data_ =
+                QSharedPointer<PrincipalComponentsData>
+                (new PrincipalComponentsData(
+                     QSharedPointer<VespucciDataset>(this),
+                     directory_));
+        try{
+            principal_components_data_->Apply(spectra_);
+        }
+        catch(exception e){
+            string str = "PrincipalComponents: " + string(e.what());
+            throw std::runtime_error(str);
         }
 
-        if (ret == QMessageBox::Ok){
-
-
-            cout << "call to arma::princomp" << endl;
-            wall_clock timer;
-            timer.tic();
-            principal_components_data_ =
-                    QSharedPointer<PrincipalComponentsData>
-                    (new PrincipalComponentsData(
-                         QSharedPointer<VespucciDataset>(this),
-                         directory_));
-            try{
-                principal_components_data_->Apply(spectra_);
-            }
-            catch(exception e){
-                string str = "PrincipalComponents: " + string(e.what());
-                throw std::runtime_error(str);
-            }
-
-            int seconds = timer.toc();
-            cout << "call to arma::princomp successful. Took " << seconds << " s" << endl;
-            principal_components_calculated_ = true;
-        }
+        int seconds = timer.toc();
+        cout << "call to arma::princomp successful. Took " << seconds << " s" << endl;
+        principal_components_calculated_ = true;
     }
 
     QString map_type;
@@ -1669,15 +1715,6 @@ void VespucciDataset::PrincipalComponents(bool scaleData)
 void VespucciDataset::PrincipalComponents()
 {
     log_stream_ << "PrincipalComponents (no image)" << endl;
-    int ok = QMessageBox::question(main_window_, "Principal Components Analysis",
-                                   "Principal Components Analysis may take over "
-                                   "a minute. During this time, Vespucci will "
-                                   "appear to freeze. Would you like to continue?",
-                                   QMessageBox::Yes, QMessageBox::No);
-    if (ok != QMessageBox::Yes)
-        return;
-
-
     principal_components_data_ =
             QSharedPointer<PrincipalComponentsData>(
                 new PrincipalComponentsData(QSharedPointer<VespucciDataset>(this),

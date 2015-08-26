@@ -166,9 +166,10 @@ public:
     int HySime();
     void TransformAbscissa(QString input_units, double input_factor,
                            QString output_units, double output_factor, QString description);
-    void InterpolateToNewAbscissa(vec &new_abscissa,
-                                  unsigned int polynomial_order,
+    void InterpolateToNewAbscissa(const vec &new_abscissa,
+                                  unsigned int poly_order,
                                   unsigned int window_size);
+    void InterpolateToNewAbscissa(const vec &new_abscissa);
     void FourierTransform(int n);
     void ApplyFTWeight(QString type, double cut_after = -1);
 
@@ -199,7 +200,7 @@ public:
 
     bool Save(QString filename);
     bool SaveSpectrum(QString filename, uword column, file_type type);
-
+    bool SaveLogFile(QString filename);
     // IMAGING FUNCTIONS //
 
     void Univariate(double min,

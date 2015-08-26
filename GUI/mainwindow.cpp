@@ -48,6 +48,9 @@
 #include "GUI/Processing/bulkconversiondialog.h"
 #include "GUI/Analysis/classicalleastsquaresdialog.h"
 #include "GUI/settingsdialog.h"
+#include "GUI/Processing/abscissatransformdialog.h"
+#include "GUI/Processing/fouriertransformdialog.h"
+#include "GUI/Processing/abscissainterpolationdialog.h"
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent usually 0
@@ -1130,4 +1133,40 @@ void MainWindow::on_actionSettings_triggered()
 {
     SettingsDialog *settings_dialog = new SettingsDialog(this, workspace);
     settings_dialog->show();
+}
+
+void MainWindow::on_actionTransform_Abscissa_triggered()
+{
+    int row = dataset_list_view_->currentIndex().row();
+    AbscissaTransformDialog *abscissa_transform_dialog = new AbscissaTransformDialog(this, workspace, row);
+    abscissa_transform_dialog->show();
+}
+
+void MainWindow::on_actionFourierTransform_triggered()
+{
+    int row = dataset_list_view_->currentIndex().row();
+    FourierTransformDialog *fourier_transform_dialog = new FourierTransformDialog(this, workspace, row);
+    fourier_transform_dialog->show();
+}
+
+void MainWindow::on_actionInterpolate_to_New_Abscissa_triggered()
+{
+    int row = dataset_list_view_->currentIndex().row();
+    AbscissaInterpolationDialog *abs_interp_dialog =
+            new AbscissaInterpolationDialog(this, workspace, row);
+    abs_interp_dialog->show();
+}
+
+void MainWindow::on_actionSave_Log_File_triggered()
+{
+    int row = dataset_list_view_->currentIndex().row();
+    QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
+    QString filename = QFileDialog::getSaveFileName(this,
+                                                    "Save Log File",
+                                                    workspace->directory(),
+                                                    "Text Files (.txt)");
+    bool ok = dataset->SaveLogFile(filename);
+    QString message = (ok? "File Saved Successfully" : "Saving Log File Failed");
+    QString title = (ok? "Saved Log File" : "Saving Log File Failed");
+    QMessageBox::information(this, title, message);
 }

@@ -206,3 +206,39 @@ arma::mat Vespucci::Math::Smoothing::InterpolateToNewAbscissa(const arma::mat &s
 
     return new_spectra;
 }
+
+///
+/// \brief InterpolateToNewAbscissa
+/// \param spectra
+/// \param new_abscissa
+/// \return
+/// Performs linear interpolation using the two closest points. Is faster than the spline method
+arma::mat InterpolateToNewAbscissa(const arma::mat &spectra,
+                                   const arma::vec &old_abscissa,
+                                   const arma::vec &new_abscissa)
+
+{
+    bool mono_inc = Vespucci::Math::IsMonotonic(old_abscissa) && Vespucci::Math::IsIncreasing(old_abscissa);
+
+    arma::vec new_spectrum(new_abscissa.n_rows);
+    arma::mat new_spectra(new_abscissa.n_rows, spectra.n_cols);
+
+    //check for values in new_abscissa that are out-of-bounds in old_abscissa
+    arma::uvec lower = arma::find(new_abscissa < old_abscissa.min());
+    arma::uvec higher = arma::find(new_abscissa > old_abscissa.max());\
+    arma::uvec min_ind = arma::find(old_abscissa == old_abscissa.min());
+    arma::uvec max_ind = arma::find(old_abscissa == old_abscissa.max());
+
+    for (arma::uword i = 0; i < spectra.n_cols; ++i){
+        arma::vec spectrum = spectra.col(i);
+        if (mono_inc)
+            interp1(old_abscissa, spectrum, new_abscissa, new_spectrum, "*linear");
+        else
+            interp1(old_abscissa, spectrum, new_abscissa, new_spectrum, "linear");
+
+        new_spectrum(lower).fill(spectrum(min_ind(0)));
+        new_spectrum(higher).fill(spectrum(max_ind(0)));
+        new_spectra.col(i) = new_spectrum;
+    }
+    return new_spectra;
+}

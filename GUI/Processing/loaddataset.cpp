@@ -79,7 +79,13 @@ void LoadDataset::FilenameChanged(QString new_filename)
 {
     QFileInfo info(new_filename);
     QString basename = info.baseName();
-    name_box_->setText(basename);
+    QString dataset_name = basename;
+    int i = 1;
+    while (workspace->dataset_names().contains(dataset_name)){
+        dataset_name = basename + " (" + QString::number(i) + ")";
+        ++i;
+    }
+    name_box_->setText(dataset_name);
 }
 
 ///
@@ -112,6 +118,11 @@ void LoadDataset::on_buttonBox_accepted()
     QString filename = filename_line_edit_->text();
     QFileInfo file_info(filename);
     QString extension = file_info.suffix();
+
+    if (workspace->dataset_names().contains(name)){
+        QMessageBox::warning(this, "Name Exists", "A dataset with this name already exists.");
+        return;
+    }
 
     std::string format;
     const QString data_format_string = data_format_box_->currentText();
