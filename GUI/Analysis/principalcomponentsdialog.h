@@ -22,6 +22,7 @@
 
 #include <QDialog>
 #include "Global/vespucciworkspace.h"
+#include "Global/global.h"
 
 
 namespace Ui {

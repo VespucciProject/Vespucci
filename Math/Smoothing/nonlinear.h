@@ -1,3 +1,4 @@
+
 /*******************************************************************************
     Copyright (C) 2015 Wright State University - All Rights Reserved
     Daniel P. Foose - Author
@@ -17,32 +18,19 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include <Math/Smoothing/whittaker.h>
+#include <Math/Accessory/accessory.h>
+#include <Global/libvespucci.h>
 
-///
-/// \brief Vespucci::Math::WhittakerSmooth
-/// \param x
-/// \param lambda
-/// \param penalty_order
-/// \return
-/// This may be re-written to use a sparse Cholesky decomposition if such a function
-/// comes to exist in armadillo or MLPACK
-arma::vec Vespucci::Math::Smoothing::WhittakerSmooth(const arma::vec &x, double lambda, arma::uword penalty_order)
-{
+#ifndef NONLINEAR_H
+#define NONLINEAR_H
 
-    arma::uword m = x.n_elem;
-    arma::mat E = arma::eye(m, m);
-    arma::mat D = Vespucci::Math::diff(E, penalty_order);
-    arma::vec filtered = solve(E + lambda*D.t()*D, x);
-
-    //This is a version that would work if chol() could take a sparse input.
-    /*
-    arma::uword m = x.n_elem;
-    arma::sp_mat E = speye(m, m);
-    arma::sp_mat D = Vespucci::Math::diff(E, penalty_order);
-    arma::sp_mat F = E + lambda*D.t()*D;
-    arma::mat C = chol(F);
-    arma::vec z = solve(C, solve(C, x));
-    */
-    return filtered;
+namespace Vespucci{
+    namespace Math{
+        namespace Smoothing{
+            VESPUCCI_EXPORT arma::vec MedianFilter(const arma::vec &X, arma::uword window_size);
+            VESPUCCI_EXPORT arma::mat MedianFilterMat(const arma::mat &X, arma::uword window_size);
+        }
+    }
 }
+
+#endif // NONLINEAR_H

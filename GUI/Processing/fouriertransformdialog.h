@@ -22,19 +22,31 @@ private slots:
 
     void on_previewPushButton_clicked();
 
+    void on_powerSpinBox_valueChanged(int arg1);
+
+    void on_weightsPushButton_clicked();
+
+    void on_buttonBox_accepted();
+
 private:
     Ui::FourierTransformDialog *ui;
 
-    QDoubleSpinBox *cut_double_spin_box_;
-    QLabel *cut_label_;
+    QDoubleSpinBox *end_double_spin_box_;
+    QLabel *end_label_;
     QSpinBox *spectrum_spin_box_;
     QComboBox *type_combo_box_;
     QComboBox *weights_combo_box_;
     QLabel *weights_label_;
     QDoubleSpinBox *parameter_double_spin_box_;
     QLabel *parameter_label_;
-    QCheckBox *prediction_check_box_;
     QCustomPlot *spectrum_custom_plot_;
+    QLabel *sine_power_label_;
+    QDoubleSpinBox *sine_power_double_spin_box_;
+    QSpinBox *power_spin_box_;
+    QLabel *value_label_;
+
+    QSharedPointer<VespucciDataset> dataset_;
+    VespucciWorkspace *workspace;
 
 };
 

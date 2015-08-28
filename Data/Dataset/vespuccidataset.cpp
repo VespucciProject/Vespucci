@@ -81,7 +81,7 @@ bool VespucciDataset::SaveSpectrum(QString filename, uword column, file_type typ
         success = spectrum.save(filename_stdstring, type);
     }
     catch(exception e){
-        main_window_->DisplayExceptionWarning(e);
+        main_window_->DisplayExceptionWarning("VespucciDataset::SaveSpectrum", e);
         success = false;
     }
     return success;
@@ -741,7 +741,7 @@ void VespucciDataset::ShedZeroSpectra()
         y_ = y_.rows(indices);
     }
     catch(exception e){
-        main_window_->DisplayExceptionWarning(e);
+        main_window_->DisplayExceptionWarning("VespucciDataset::ShedZeroSpectra", e);
     }
 }
 
@@ -762,7 +762,7 @@ void VespucciDataset::ShedZeroWavelengths()
         abscissa_ = abscissa_.rows(indices);
     }
     catch(exception e){
-        main_window_->DisplayExceptionWarning(e);
+        main_window_->DisplayExceptionWarning("VespucciDataset::ShedZeroWavelengths", e);
     }
 }
 
@@ -949,7 +949,7 @@ void VespucciDataset::IModPolyBaseline(const uword poly_order, const uword max_i
             }
         }
     }catch(exception e){
-          main_window_->DisplayExceptionWarning(e);
+          main_window_->DisplayExceptionWarning("VespucciDataset::IModPolyBaseline", e);
     }
     progress->close();
     if (!progress->wasCanceled()){
@@ -1395,7 +1395,7 @@ void VespucciDataset::FourierTransform(int n)
     log_stream_ << "n = " << n << endl;
     //cx_mat complex_spectra = cx_mat(spectra_, spectra_imag_);
     cx_mat f_spectra(spectra_.n_rows, spectra_.n_cols);
-    vec f_abscissa(abscissa.n_rows);
+    vec f_abscissa(abscissa_.n_rows);
     try{
         Vespucci::Math::Transform::fft_mat(spectra_, abscissa_,
                                            f_spectra, f_abscissa,
@@ -1415,10 +1415,10 @@ void VespucciDataset::InverseFourierTransform(int n)
 {
     log_stream_ << "InverseFouerierTransform" << endl;
     log_stream_ << "n = " << n << endl;
-    cx_mat t_spectra(spectra.n_rows, spectra.n_cols);
+    cx_mat t_spectra(spectra_.n_rows, spectra_.n_cols);
     vec t_abscissa(abscissa_.n_rows);
     try{
-        Vespucci::Math::Transform::ifft_mat(cx_mat(spectra_, spectra_imag_),
+        Vespucci::Math::Transform::ifft_mat(cx_spectra(),
                                             abscissa_,
                                             t_spectra,
                                             t_abscissa,
@@ -1429,9 +1429,59 @@ void VespucciDataset::InverseFourierTransform(int n)
     }
     SetOldCopies();
     spectra_ = real(t_spectra);
-    spectra_imag_ = imag(f_spectra);
+    spectra_imag_ = imag(t_spectra);
     abscissa_ = t_abscissa;
     x_axis_description_ = "Time (s)";
+}
+
+///
+/// \brief VespucciDataset::ApplyFTWeight
+/// \param type
+/// \param param
+///
+void VespucciDataset::ApplyFTWeight(QString type,
+                                    double param)
+{
+    log_stream_ << "ApplyFTWeight" << endl;
+    log_stream_ << "type = " << type << endl;
+    log_stream_ << "parameter = " << param << endl;
+    SetOldCopies();
+    string shape;
+    if (type == "Exponential"){shape = "exp";}
+    else{shape = "gaus";}
+    try{
+        spectra_ = Vespucci::Math::Transform::ApplyWeights(spectra_, abscissa_, shape, param);
+    }catch(exception e){
+        main_window_->DisplayExceptionWarning("VespucciDataset::ApplyFTWeight", e);
+    }
+}
+
+///
+/// \brief VespucciDataset::ApplyFTWeight
+/// \param type
+/// \param start_offset
+/// \param end_offset
+/// \param power
+///
+void VespucciDataset::ApplyFTWeight(double start_offset,
+                                    double end_offset,
+                                    double power)
+{
+    log_stream_ << "ApplyFTWeight (sine bell)" << endl;
+    log_stream_ << "start_offset = " << start_offset << endl;
+    log_stream_ << "end_offset = " << end_offset << endl;
+    log_stream_ << "power = " << power << endl;
+    SetOldCopies();
+    try{
+        spectra_ = Vespucci::Math::Transform::ApplySBWeights(spectra_,
+                                                             abscissa_,
+                                                             start_offset,
+                                                             end_offset,
+                                                             power);
+    }catch(exception e){
+        main_window_->DisplayExceptionWarning("VespucciDataset::ApplyFTWeight", e);
+    }
+
 }
 
 // MAPPING FUNCTIONS //
@@ -1849,7 +1899,7 @@ void VespucciDataset::FindPeaksCWT(string wavelet,
                               gradient);
     }
     catch(exception e){
-        main_window_->DisplayExceptionWarning(e);
+        main_window_->DisplayExceptionWarning("VespucciDataset::FindPeaksCWT", e);
     }
 
     //mat centers = cwt_peak_data_->centers();
@@ -2382,7 +2432,7 @@ void VespucciDataset::KMeans(size_t clusters)
 /// \param end the second wavelength in the spectral region of interest
 /// \return
 ///
-uvec VespucciDataset::FindRange(double start, double end)
+uvec VespucciDataset::FindRange(double start, double end) const
 {
     uvec indices(2);
     indices(0) = FindIndex(start);
@@ -2395,7 +2445,7 @@ uvec VespucciDataset::FindRange(double start, double end)
 /// \return
 /// Find the point closest to (0,0) in the map. If the function fails, find the
 /// index in the middle of the spatial data.
-uword VespucciDataset::FindOrigin()
+uword VespucciDataset::FindOrigin() const
 {
     double delta = std::max(std::abs((x_(1) - x(0))), std::abs((y_(1) - y_(0))));
     uvec zero_x = find(((0-delta) <= x_) && (0 + delta) >= x_);
@@ -2411,7 +2461,7 @@ uword VespucciDataset::FindOrigin()
 /// \param index
 /// \return
 ///
-QVector<double> VespucciDataset::PointSpectrum(const uword index)
+QVector<double> VespucciDataset::PointSpectrum(const uword index) const
 {
     //perform bounds check.
     std::vector<double> spectrum_stdvector;
@@ -2431,7 +2481,7 @@ QVector<double> VespucciDataset::PointSpectrum(const uword index)
     }
     catch(exception e){
         cerr << "exception thrown!" << endl;
-        main_window_->DisplayExceptionWarning(e);
+        main_window_->DisplayExceptionWarning("VespucciDataset::PointSpectrum", e);
     }
 
     cout << "end of PointSpectrum" << endl;
@@ -2439,7 +2489,7 @@ QVector<double> VespucciDataset::PointSpectrum(const uword index)
     return spectrum_qvector;
 }
 
-QVector<double> VespucciDataset::WavelengthQVector()
+QVector<double> VespucciDataset::WavelengthQVector() const
 {
     std::vector<double> abscissa_stdvector =
             conv_to< std::vector<double> >::from(abscissa_);
@@ -2450,7 +2500,7 @@ QVector<double> VespucciDataset::WavelengthQVector()
     return abscissa_qvector;
 }
 
-uword VespucciDataset::FindIndex(double abscissa_value)
+uword VespucciDataset::FindIndex(double abscissa_value) const
 {
     double delta = std::fabs(abscissa_(1) - abscissa_(0));
     uvec indices = find((abscissa_value - delta) < abscissa_ <= (abscissa_value + delta));
@@ -2463,7 +2513,7 @@ uword VespucciDataset::FindIndex(double abscissa_value)
 ///  of QCustomPlot objects
 /// \return
 ///
-QCPRange VespucciDataset::ValueRange()
+QCPRange VespucciDataset::ValueRange() const
 {
     double lower = y_.min();
     double upper = y_.max();
@@ -2476,7 +2526,7 @@ QCPRange VespucciDataset::ValueRange()
 ///  of QCustomPlot objects
 /// \return
 ///
-QCPRange VespucciDataset::KeyRange()
+QCPRange VespucciDataset::KeyRange() const
 {
     double lower = x_.min();
     double upper = x_.max();
@@ -2490,7 +2540,7 @@ QCPRange VespucciDataset::KeyRange()
 ///  of QCustomPlot objects
 /// \return number of unique x values
 ///
-int VespucciDataset::KeySize()
+int VespucciDataset::KeySize() const
 {
     uword i;
     uword x_count=1;
@@ -2525,7 +2575,7 @@ int VespucciDataset::KeySize()
 /// Finds number of unique y values for properly setting QCPAxis
 /// \return number of unique y values
 ///
-int VespucciDataset::ValueSize()
+int VespucciDataset::ValueSize() const
 {
 
     uword i = 0;
@@ -2566,17 +2616,17 @@ int VespucciDataset::ValueSize()
 /// \brief VespucciDataset::wavelength
 /// \return member abscissa_ (spectrum key values)
 ///
-vec VespucciDataset::wavelength()
+vec VespucciDataset::wavelength() const
 {
     return abscissa_;
 }
 
-vec VespucciDataset::abscissa()
+vec VespucciDataset::abscissa() const
 {
     return abscissa_;
 }
 
-vec VespucciDataset::wavelength(uvec indices)
+vec VespucciDataset::wavelength(uvec indices) const
 {
     return abscissa_.rows(indices);
 }
@@ -2585,7 +2635,7 @@ vec VespucciDataset::wavelength(uvec indices)
 /// \brief VespucciDataset::x
 /// \return member x_
 ///
-colvec VespucciDataset::x()
+colvec VespucciDataset::x() const
 {
     return x_;
 }
@@ -2594,7 +2644,7 @@ colvec VespucciDataset::x()
 /// \brief VespucciDataset::indices
 /// \return The indices_ vector
 ///
-vec VespucciDataset::indices()
+vec VespucciDataset::indices() const
 {
     return indices_;
 }
@@ -2622,12 +2672,12 @@ void VespucciDataset::SetIndices(vec indices)
 /// \param indices Vector of indices
 /// \return Subvec of x corresponding to valeus in indices
 ///
-colvec VespucciDataset::x(uvec indices)
+colvec VespucciDataset::x(uvec indices) const
 {
     return x_(indices);
 }
 
-double VespucciDataset::x(uword index)
+double VespucciDataset::x(uword index) const
 {
     if (index >= x_.n_rows)
         return x_(x_.n_rows - 1);
@@ -2641,7 +2691,7 @@ double VespucciDataset::x(uword index)
 /// \brief VespucciDataset::y
 /// \return member y_
 ///
-colvec VespucciDataset::y()
+colvec VespucciDataset::y() const
 {
     return y_;
 }
@@ -2651,12 +2701,12 @@ colvec VespucciDataset::y()
 /// \param indices Vector of indices
 /// \return Subvec of y at indices
 ///
-colvec VespucciDataset::y(uvec indices)
+colvec VespucciDataset::y(uvec indices) const
 {
     return y_(indices);
 }
 
-double VespucciDataset::y(uword index)
+double VespucciDataset::y(uword index) const
 {
     if (index >= y_.n_rows)
         return y_(y_.n_rows - 1);
@@ -2668,9 +2718,25 @@ double VespucciDataset::y(uword index)
 /// \brief VespucciDataset::spectra
 /// \return member spectra_
 ///
-mat VespucciDataset::spectra()
+mat VespucciDataset::spectra() const
 {
     return spectra_;
+}
+
+cx_mat VespucciDataset::cx_spectra() const
+{
+    if (spectra_imag_.n_rows == spectra_.n_rows && spectra_imag_.n_cols == spectra_.n_cols)
+        return cx_mat(spectra_, spectra_imag_);
+    else
+        return cx_mat(spectra_, zeros(spectra_.n_rows, spectra_.n_cols));
+}
+
+cx_mat VespucciDataset::cx_spectra(uvec indices) const
+{
+    if (spectra_imag_.n_rows == spectra_.n_rows && spectra_imag_.n_cols == spectra_.n_cols)
+        return cx_mat(spectra_.cols(indices), spectra_imag_.cols(indices));
+    else
+        return cx_mat(spectra_.cols(indices), zeros(spectra_.n_rows, indices.n_rows));
 }
 
 ///
@@ -2678,7 +2744,7 @@ mat VespucciDataset::spectra()
 /// \param indices Vector of indices
 /// \return Submat of spectra at indices
 ///
-mat VespucciDataset::spectra(uvec indices)
+mat VespucciDataset::spectra(uvec indices) const
 {
     return spectra_.cols(indices);
 }
@@ -2687,7 +2753,7 @@ mat VespucciDataset::spectra(uvec indices)
 /// \brief VespucciDataset::name
 /// \return member name_, the name of the dataset as seen by the user
 ///
-const QString VespucciDataset::name()
+const QString VespucciDataset::name() const
 {
     return name_;
 }
@@ -2730,7 +2796,7 @@ void VespucciDataset::SetData(mat spectra, vec wavelength, colvec x, colvec y)
 /// \brief VespucciDataset::map_loading_count
 /// \return number of maps created for this dataset
 ///
-int VespucciDataset::map_loading_count()
+int VespucciDataset::map_loading_count() const
 {
     return map_loading_count_;
 }
@@ -2760,7 +2826,7 @@ void VespucciDataset::AddMap(QSharedPointer<MapData> map)
 /// \brief VespucciDataset::WavelengthRange
 /// \return the range of the wavlength vector (for plotting point spectra)
 ///
-QCPRange VespucciDataset::WavelengthRange()
+QCPRange VespucciDataset::WavelengthRange() const
 {
     double min = abscissa_.min();
     double max = abscissa_.max();
@@ -2773,7 +2839,7 @@ QCPRange VespucciDataset::WavelengthRange()
 /// \param i col of spectra_ containing desired spectrum
 /// \return the range of y values for the point spectra at i
 ///
-QCPRange VespucciDataset::PointSpectrumRange(int i)
+QCPRange VespucciDataset::PointSpectrumRange(int i) const
 {
     vec row = spectra_.col(i);
     double min = row.min();
@@ -2789,7 +2855,7 @@ QCPRange VespucciDataset::PointSpectrumRange(int i)
 /// \param gradient_number
 /// \return
 ///
-QCPColorGradient VespucciDataset::GetGradient(int gradient_number)
+QCPColorGradient VespucciDataset::GetGradient(int gradient_number) const
 {
     switch (gradient_number)
     {
@@ -2843,7 +2909,7 @@ QCPColorGradient VespucciDataset::GetGradient(int gradient_number)
 /// \param clusters Number of clusters
 /// \return Proper color gradient for number of clusters
 ///
-QCPColorGradient VespucciDataset::GetClusterGradient(int clusters)
+QCPColorGradient VespucciDataset::GetClusterGradient(int clusters) const
 {
     switch (clusters)
     {
@@ -2865,7 +2931,7 @@ QCPColorGradient VespucciDataset::GetClusterGradient(int clusters)
 /// asks this and cleans everything up in case it is canceled.
 /// \return
 ///
-bool VespucciDataset::ConstructorCancelled()
+bool VespucciDataset::ConstructorCancelled() const
 {
     return constructor_canceled_;
 }
@@ -2878,7 +2944,7 @@ bool VespucciDataset::ConstructorCancelled()
 /// \param stats Whether or not to include standard deviations on the second row.
 /// \return The average spectrum
 ///
-mat VespucciDataset::AverageSpectrum(bool stats)
+mat VespucciDataset::AverageSpectrum(bool stats) const
 {
     mat spec_mean = mean(spectra_, 1);
     vec spec_stddev;
@@ -2897,7 +2963,7 @@ mat VespucciDataset::AverageSpectrum(bool stats)
 /// The x_axis_description is printed on the spectrum viewer.
 /// \return Spectral abscissa description.
 ///
-const QString VespucciDataset::x_axis_description()
+const QString VespucciDataset::x_axis_description() const
 {
     return x_axis_description_;
 }
@@ -2925,7 +2991,7 @@ void VespucciDataset::SetYDescription(QString description)
 /// \brief VespucciDataset::y_axis_description
 /// \return The spectral ordinate axis description.
 ///
-const QString VespucciDataset::y_axis_description()
+const QString VespucciDataset::y_axis_description() const
 {
     return y_axis_description_;
 }
@@ -2936,15 +3002,16 @@ const QString VespucciDataset::y_axis_description()
 /// to make sure that the same PCA is not calculated twice.
 /// \return Whether or not PCA has been calculated.
 ///
-bool VespucciDataset::principal_components_calculated()
+bool VespucciDataset::principal_components_calculated() const
 {
     return principal_components_calculated_;
 }
 
-bool VespucciDataset::mlpack_pca_calculated()
+bool VespucciDataset::mlpack_pca_calculated() const
 {
     return mlpack_pca_calculated_;
 }
+
 
 ///
 /// \brief VespucciDataset::vertex_components_calculated
@@ -2952,7 +3019,7 @@ bool VespucciDataset::mlpack_pca_calculated()
 /// make sure that the same VCA is not calculated twice.
 /// \return Whether or not VCA has been computed.
 ///
-bool VespucciDataset::vertex_components_calculated()
+bool VespucciDataset::vertex_components_calculated() const
 {
     return vertex_components_calculated_;
 }
@@ -2963,7 +3030,7 @@ bool VespucciDataset::vertex_components_calculated()
 /// to make sure that the same PLS is not calculated twice.
 /// \return Whether or not PLS has been computed.
 ///
-bool VespucciDataset::partial_least_squares_calculated()
+bool VespucciDataset::partial_least_squares_calculated() const
 {
     return partial_least_squares_calculated_;
 }
@@ -2973,7 +3040,7 @@ bool VespucciDataset::partial_least_squares_calculated()
 /// Accessor for k_means_calculated_. Used for filling dataviewer.
 /// \return Whether or not k means have been calculated.
 ///
-bool VespucciDataset::k_means_calculated()
+bool VespucciDataset::k_means_calculated() const
 {
     return k_means_calculated_;
 }
@@ -3046,7 +3113,7 @@ mat* VespucciDataset::spectra_ptr()
 /// \brief VespucciDataset::Undoable
 /// \return Whether or not the last operation can be undone
 ///
-bool VespucciDataset::Undoable()
+bool VespucciDataset::Undoable() const
 {
     return (spectra_old_.n_elem > 0 ? true : false);
 }
@@ -3055,7 +3122,7 @@ bool VespucciDataset::Undoable()
 /// \brief VespucciDataset::UnivariateCount
 /// \return
 /// Number of univariate/band ratio data objects have been created
-int VespucciDataset::UnivariateCount()
+int VespucciDataset::UnivariateCount() const
 {
     return univariate_datas_.size();
 }
@@ -3096,7 +3163,7 @@ mat* VespucciDataset::y_ptr()
 /// \brief VespucciDataset::non_spatial
 /// \return True if map has empty x_ and y_
 ///
-bool VespucciDataset::non_spatial()
+bool VespucciDataset::non_spatial() const
 {
     return non_spatial_;
 }
@@ -3105,7 +3172,7 @@ bool VespucciDataset::non_spatial()
 /// \brief VespucciDataset::meta
 /// \return
 /// Whether or not this is an instance of MetaDataset
-bool VespucciDataset::meta()
+bool VespucciDataset::meta() const
 {
     return meta_;
 }
@@ -3128,7 +3195,7 @@ mat *VespucciDataset::parent_dataset_indices()
 /// \brief VespucciDataset::last_operation
 /// \return Description of last pre-processing operation performed
 ///
-QString VespucciDataset::last_operation()
+const QString VespucciDataset::last_operation() const
 {
     return last_operation_;
 }

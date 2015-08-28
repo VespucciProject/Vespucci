@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include <Math/Smoothing/smoothing.h>
+#include <Math/Smoothing/nonlinear.h>
 
 ///
 /// \brief Vespucci::Math::Smoothing::MedianFilter

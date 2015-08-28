@@ -49,6 +49,7 @@ public:
     void SetGlobalDataRange(QCPRange* new_data_range);
     VespucciWorkspace *workspace_ptr(); //return the workspace
     void DisplayExceptionWarning(std::exception e);
+    void DisplayExceptionWarning(std::string where, std::exception e);
     QListView *map_list_view();
     void SetActiveDatasetListRow(int row);
     bool DatasetMappable(int row);

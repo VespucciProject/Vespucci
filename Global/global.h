@@ -23,6 +23,7 @@
 namespace Vespucci{
     bool SavePlot(QCustomPlot *plot, QString filename);
     void SetQCPFonts(QCustomPlot *plot, const QFont &font);
+    QProgressDialog *DisplayProgressDialog(QWidget *parent, QString title, QString text);
 }
 #endif // GLOBAL
 

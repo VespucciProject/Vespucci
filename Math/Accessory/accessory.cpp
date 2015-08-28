@@ -818,3 +818,24 @@ bool Vespucci::Math::IsIncreasing(const arma::vec &x)
     }while(positive && (i < deriv.n_rows));
     return positive;
 }
+
+///
+/// \brief Vespucci::Math::cx_zeros
+/// \param m
+/// \param n
+/// \return
+///]
+arma::cx_mat Vespucci::Math::cx_zeros(arma::uword m, arma::uword n)
+{
+    return arma::cx_mat(arma::zeros(m, n), arma::zeros(m, n));
+}
+
+///
+/// \brief Vespucci::Math::cx_zeros
+/// \param n
+/// \return
+///
+arma::cx_vec Vespucci::Math::cx_zeros(arma::uword n)
+{
+    return arma::cx_vec(arma::zeros(n), arma::zeros(n));
+}

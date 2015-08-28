@@ -84,6 +84,9 @@ namespace Vespucci
         VESPUCCI_EXPORT bool IsMonotonic(const arma::vec &x);
         VESPUCCI_EXPORT bool IsIncreasing(const arma::vec &x);
 
+        VESPUCCI_EXPORT arma::cx_vec cx_zeros(arma::uword n);
+        VESPUCCI_EXPORT arma::cx_mat cx_zeros(arma::uword m, arma::uword n);
+
     }
 }
 

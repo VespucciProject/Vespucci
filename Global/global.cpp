@@ -161,3 +161,16 @@ void Vespucci::SetQCPFonts(QCustomPlot *plot, const QFont &font)
 
     plot->legend->setFont(font);
 }
+
+
+QProgressDialog *Vespucci::DisplayProgressDialog(QWidget *parent, QString title, QString text)
+{
+    QProgressDialog *progress = new QProgressDialog(parent);
+    progress->setWindowModality(Qt::WindowModal);
+    progress->setLabelText(text);
+    progress->setWindowTitle(title);
+    progress->setCancelButton(0);
+    progress->setRange(0,0);
+    progress->exec();
+    return progress;
+}

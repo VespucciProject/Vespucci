@@ -813,11 +813,18 @@ void MainWindow::on_actionUndo_triggered()
 /// action that caused the exception being canceled.
 void MainWindow::DisplayExceptionWarning(std::exception e)
 {
-    char str[50];
-    strcat(str, "The following exception was thrown: ");
-    strcat(str, e.what());
-    QString display_text = QString::fromLocal8Bit(str);
-    QMessageBox::warning(this, "Exception Occurred", display_text);
+    string str = "The following exception was thrown: " + string(e.what());
+    QMessageBox::warning(this, "Exception Occurred", QString::fromStdString(str));
+}
+
+void MainWindow::DisplayExceptionWarning(string where, exception e)
+{
+    string str = "The following exception was thrown: "
+            + string(e.what())
+            + ". In the internal function: "
+            + where
+            + ".";
+    QMessageBox::warning(this, "Exception Occurred", QString::fromStdString(str));
 }
 
 void MainWindow::on_datasetsListView_clicked(const QModelIndex &index)
@@ -1147,6 +1154,7 @@ void MainWindow::on_actionFourierTransform_triggered()
     int row = dataset_list_view_->currentIndex().row();
     FourierTransformDialog *fourier_transform_dialog = new FourierTransformDialog(this, workspace, row);
     fourier_transform_dialog->show();
+
 }
 
 void MainWindow::on_actionInterpolate_to_New_Abscissa_triggered()

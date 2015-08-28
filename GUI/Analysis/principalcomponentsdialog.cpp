@@ -20,6 +20,7 @@
 #include "GUI/Analysis/principalcomponentsdialog.h"
 #include "ui_principalcomponentsdialog.h"
 
+
 ///
 /// \brief PrincipalComponentsDialog::PrincipalComponentsDialog
 /// \param parent see QWidget
@@ -56,12 +57,10 @@ PrincipalComponentsDialog::~PrincipalComponentsDialog()
 void PrincipalComponentsDialog::on_buttonBox_accepted()
 {
 
-    QProgressDialog progress(this);
-    progress.setWindowModality(Qt::WindowModal);
-    progress.setLabelText("Interpolating Spectra...");
-    progress.setCancelButton(0);
-    progress.setRange(0,0);
-    progress.exec();
+    QProgressDialog *progress =
+            Vespucci::DisplayProgressDialog(this,
+                                            "Principal Components",
+                                            "Calculating principal components data...");
     if (map_check_box_->isChecked()){
         int component = component_selector_->value();
         QString name = name_box_->text();
@@ -71,7 +70,7 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
             data_->PrincipalComponents(component, name, gradient_index, recalculate);
         }
         catch(exception e){
-            progress.close();
+            progress->close();
             workspace->main_window()->DisplayExceptionWarning(e);
         }
     }
@@ -79,11 +78,11 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
         try{
             data_->PrincipalComponents();
         }catch(exception e){
-            progress.close();
+            progress->close();
             workspace->main_window()->DisplayExceptionWarning(e);
         }
     }
-    progress.close();
+    progress->close();
     close();
     data_.clear();
 }

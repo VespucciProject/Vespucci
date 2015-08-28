@@ -17,10 +17,9 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include <Math/Smoothing/smoothing.h>
+#include <Math/Smoothing/FIR.h>
 
 #include <Math/Fitting/linleastsq.h>
-
 
 ///
 /// \brief Vespucci::Math::Smoothing::sgolay Find a arma::matrix of Savitzky-Golay convolution coefficients
@@ -187,7 +186,7 @@ arma::mat Vespucci::Math::Smoothing::InterpolateToNewAbscissa(const arma::mat &s
 {
     arma::mat new_spectra(new_abscissa.n_rows, spectra.n_cols);
 
-    arma::umat closest_indices = Vespucci::Math::GetClosestValues(new_abscissa,
+    arma::umat closest_indices = Math::GetClosestValues(new_abscissa,
                                                                   old_abscissa,
                                                                   window_size);
 
@@ -213,19 +212,19 @@ arma::mat Vespucci::Math::Smoothing::InterpolateToNewAbscissa(const arma::mat &s
 /// \param new_abscissa
 /// \return
 /// Performs linear interpolation using the two closest points. Is faster than the spline method
-arma::mat InterpolateToNewAbscissa(const arma::mat &spectra,
+arma::mat Vespucci::Math::Smoothing::InterpolateToNewAbscissa(const arma::mat &spectra,
                                    const arma::vec &old_abscissa,
                                    const arma::vec &new_abscissa)
 
 {
-    bool mono_inc = Vespucci::Math::IsMonotonic(old_abscissa) && Vespucci::Math::IsIncreasing(old_abscissa);
+    bool mono_inc = Vespucci::Math::IsMonotonic(old_abscissa) && Math::IsIncreasing(old_abscissa);
 
     arma::vec new_spectrum(new_abscissa.n_rows);
     arma::mat new_spectra(new_abscissa.n_rows, spectra.n_cols);
 
     //check for values in new_abscissa that are out-of-bounds in old_abscissa
     arma::uvec lower = arma::find(new_abscissa < old_abscissa.min());
-    arma::uvec higher = arma::find(new_abscissa > old_abscissa.max());\
+    arma::uvec higher = arma::find(new_abscissa > old_abscissa.max());
     arma::uvec min_ind = arma::find(old_abscissa == old_abscissa.min());
     arma::uvec max_ind = arma::find(old_abscissa == old_abscissa.max());
 
@@ -242,3 +241,4 @@ arma::mat InterpolateToNewAbscissa(const arma::mat &spectra,
     }
     return new_spectra;
 }
+

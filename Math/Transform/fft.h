@@ -34,8 +34,16 @@ namespace Vespucci{
                                         arma::cx_mat &t_signal,
                                         arma::vec &t_abscissa,
                                         arma::uword n);
-        }
+            VESPUCCI_EXPORT arma::mat ApplyWeights(const arma::mat &signal,
+                                                   const arma::vec &abscissa,
+                                                   const std::string &weight,
+                                                   const double &param);
+            VESPUCCI_EXPORT arma::mat ApplySBWeights(const arma::mat &signal,
+                                                     const arma::vec &abscissa,
+                                                     const double &starting_offset,
+                                                     const double &ending_offset,
+                                                     const double &power);
     }
 }
-
+}
 #endif // FFT_H

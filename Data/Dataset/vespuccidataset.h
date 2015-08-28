@@ -172,32 +172,34 @@ public:
     void InterpolateToNewAbscissa(const vec &new_abscissa);
     void FourierTransform(int n);
     void InverseFourierTransform(int n);
-    void ApplyFTWeight(QString type, double cut_after = -1);
+    void ApplyFTWeight(QString type, double param);
+    void ApplyFTWeight(double start_offset, double end_offset,
+                       double power);
 
 
 
     // HELPER FUNCTIONS //
 
     // Grabs one line of spectra_, at indices specified, recasts as QVector for QCustomPlot //
-    QVector<double> PointSpectrum(const uword index);
+    QVector<double> PointSpectrum(const uword index) const;
 
     // Converts wavelength_ to QVector //
-    QVector<double> WavelengthQVector();
+    QVector<double> WavelengthQVector() const;
 
     // Finds the index of spectra_ with x and y values closest to the input //
-    int FindIndex(int x_value, int y_value);
-    uword FindIndex(double abscissa_value);
+    int FindIndex(int x_value, int y_value) const;
+    uword FindIndex(double abscissa_value) const;
 
     // Returns vector containing start and end index within a range
-    uvec FindRange(double start, double end);
+    uvec FindRange(double start, double end) const;
 
-    uword FindOrigin();
+    uword FindOrigin() const;
 
     // These QCustomPlot sizes apply to all maps created from dataset //
-    int KeySize();
-    int ValueSize();
-    QCPRange KeyRange();
-    QCPRange ValueRange();
+    int KeySize() const;
+    int ValueSize() const;
+    QCPRange KeyRange() const;
+    QCPRange ValueRange() const;
 
     bool Save(QString filename);
     bool SaveSpectrum(QString filename, uword column, file_type type);
@@ -297,27 +299,28 @@ public:
 
 
     //MEMBER ACCESS FUNCTIONS:
-    vec wavelength();
-    vec abscissa();
-    colvec x();
-    colvec y();
-    colvec x(uvec indices);
-    colvec y(uvec indices);
-    double x(uword index);
-    double y(uword index);
-    vec wavelength(uvec indices);
-    mat spectra(uvec indices);
-    mat spectra();
-    const QString name();
-    vec indices();
+    vec wavelength() const;
+    vec abscissa() const;
+    colvec x() const;
+    colvec y() const;
+    colvec x(uvec indices) const;
+    colvec y(uvec indices) const;
+    double x(uword index) const;
+    double y(uword index) const;
+    vec wavelength(uvec indices) const;
+    mat spectra(uvec indices) const;
+    mat spectra() const;
+    cx_mat cx_spectra() const;
+    cx_mat cx_spectra(uvec indices) const;
+    const QString name() const;
+    vec indices() const;
     mat *indices_ptr();
 
-    bool principal_components_calculated();
-    bool mlpack_pca_calculated();
-    bool vertex_components_calculated();
-    bool partial_least_squares_calculated();
-    bool k_means_calculated();
-    bool radical_calculated();
+    bool principal_components_calculated() const;
+    bool mlpack_pca_calculated() const;
+    bool vertex_components_calculated() const;
+    bool partial_least_squares_calculated() const;
+    bool k_means_calculated() const;
 
     QSharedPointer<PrincipalComponentsData> principal_components_data();
     QSharedPointer<MLPACKPCAData> mlpack_pca_data();
@@ -325,16 +328,14 @@ public:
     QSharedPointer<PLSData> partial_least_squares_data();
     mat* k_means_data();
     QList<QSharedPointer<UnivariateData> > univariate_datas();
-    const QString x_axis_description();
-    const QString y_axis_description();
+    const QString x_axis_description() const;
+    const QString y_axis_description() const;
 
     void SetName(QString new_name);
     void SetData(mat spectra, vec wavelength, colvec x, colvec y);
 
     void SetIndices(vec indices);
 
-    //MAP HANDLING FUNCTIONS
-    QStringList map_names();
 
     //adds or removes dataset or map to relevant lists
     void AddDataset(VespucciDataset dataset);
@@ -342,19 +343,19 @@ public:
 
     void AddMap(QSharedPointer<MapData> map);
     void RemoveMapAt(unsigned int i);
-    int map_loading_count();
+    int map_loading_count() const;
 
     void SetXDescription(QString description);
     void SetYDescription(QString description);
 
-    QCPRange WavelengthRange();
-    QCPRange PointSpectrumRange(int i);
+    QCPRange WavelengthRange() const;
+    QCPRange PointSpectrumRange(int i) const;
 
-    QCPColorGradient GetGradient(int gradient_number);
-    QCPColorGradient GetClusterGradient(int clusters);
+    QCPColorGradient GetGradient(int gradient_number) const;
+    QCPColorGradient GetClusterGradient(int clusters) const;
 
-    bool ConstructorCancelled();
-    mat AverageSpectrum(bool stats);
+    bool ConstructorCancelled() const;
+    mat AverageSpectrum(bool stats) const;
 
     mat *x_ptr();
     mat *y_ptr();
@@ -362,15 +363,15 @@ public:
     mat *abscissa_ptr();
     mat *spectra_ptr();
     mat *spectra_old_ptr(bool *ok);
-    bool non_spatial();
-    bool meta();
+    bool non_spatial() const;
+    bool meta() const;
     void SetParentDatasetIndices(mat parent_dataset_indices);
     mat *parent_dataset_indices();
-    bool Undoable();
+    bool Undoable() const;
 
-    int UnivariateCount();
+    int UnivariateCount() const;
 
-    QString last_operation();
+    const QString last_operation() const;
 
     ///
     /// \brief log_stream_ A log of all UI-induced functions called on this dataset

@@ -119,7 +119,10 @@ HEADERS  += \
     Math/Fitting/nonlinleastsq.h \
     Global/vespucci.h \
     Global/libvespucci.h \
-    Math/Transform/fft.h
+    Math/Transform/fft.h \
+    Math/Smoothing/FIR.h \
+    Math/Smoothing/whittaker.h \
+    Math/Smoothing/nonlinear.h
 
 
 #linux libraries, specific to my own install. This will be handled by CMake later
