@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
-#include <Math/Quantification/quantification.h>
+#include <Math/Quantification/bandwidth.h>
 
 ///
 /// \brief Vespucci::Math::Quantification::FindBandwidth

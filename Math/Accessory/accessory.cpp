@@ -18,6 +18,108 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include <Math/Accessory/accessory.h>
+
+///
+/// \brief Vespucci::Math::LocalMaximum
+/// \param X
+/// \param value
+/// \return
+///
+arma::uword Vespucci::Math::LocalMaximum(const arma::vec &X, double &value)
+{
+    arma::sp_mat local_maxima = Vespucci::Math::LocalMaxima(X);
+    if (!local_maxima.n_nonzero){
+        value = X.max();
+        arma::uvec ind = arma::find(X == value);
+        return ind(0);
+    }
+    else{
+        value = local_maxima.max();
+        arma::uvec ind = arma::find(arma::vec(local_maxima) == value);
+        return ind(0);
+    }
+}
+
+
+///
+/// \brief Vespucci::Math::LocalMaximum
+/// \param X
+/// \param dX
+/// \param d2X
+/// \param value
+/// \return
+///
+arma::uword Vespucci::Math::LocalMaximum(const arma::vec &X, const arma::vec &dX, const arma::vec &d2X, double &value)
+{
+    arma::sp_mat local_maxima = Vespucci::Math::LocalMaxima(X, dX, d2X);
+    value = local_maxima.max();
+    if (!local_maxima.n_nonzero){
+        value = X.max();
+        arma::uvec ind = arma::find(X == value);
+        return ind(0);
+    }
+    else{
+        value = local_maxima.max();
+        arma::uvec ind = arma::find(arma::vec(local_maxima) == value);
+        return ind(0);
+    }
+
+}
+
+///
+/// \brief Vespucci::Math::LocalMinimum
+/// \param X
+/// \param value
+/// \return
+///
+arma::uword Vespucci::Math::LocalMinimum(const arma::mat &X, double &value)
+{
+    arma::sp_mat local_minima = Vespucci::Math::LocalMinima(X);
+    value = local_minima.min();
+    if (!local_minima.n_nonzero){
+        value = X.max();
+        arma::uvec ind = arma::find(X == value);
+        return ind(0);
+    }
+    else{
+        value = local_minima.max();
+        arma::uvec ind = arma::find(arma::vec(local_minima) == value);
+        return ind(0);
+    }
+
+}
+
+
+///
+/// \brief Vespucci::Math::LocalMinimum
+/// \param X
+/// \param dX
+/// \param d2X
+/// \param value
+/// \return
+///
+arma::uword Vespucci::Math::LocalMinimum(const arma::vec &X, const arma::vec &dX, const arma::mat &d2X, double &value)
+{
+    arma::sp_mat local_minima = Vespucci::Math::LocalMinima(X, dX, d2X);
+    value = local_minima.min();
+    if (!local_minima.n_nonzero){
+        value = X.max();
+        arma::uvec ind = arma::find(X == value);
+        return ind(0);
+    }
+    else{
+        value = local_minima.max();
+        arma::uvec ind = arma::find(arma::vec(local_minima) == value);
+        return ind(0);
+    }
+}
+
+
+
+
+
+
+
 ///
 /// \brief spdiags analgous to the Octave/arma::matLAB function A = spdiags(B, d, m, n).
 /// \param B a arma::matrix containing the new diagonal vectors as columns
@@ -267,7 +369,11 @@ arma::sp_mat Vespucci::Math::LocalMaxima(const arma::mat &X, const arma::mat &dX
     return arma::sp_mat(locations, values, X.n_rows, X.n_cols, false, false);
 }
 
-
+///
+/// \brief Vespucci::Math::LocalMinima
+/// \param X
+/// \return
+///
 arma::sp_mat Vespucci::Math::LocalMinima(const arma::mat &X)
 {
     arma::mat dX = Vespucci::Math::diff(X, 1);
@@ -284,6 +390,13 @@ arma::sp_mat Vespucci::Math::LocalMinima(const arma::mat &X)
     return Vespucci::Math::LocalMinima(X, dX, d2X);
 }
 
+///
+/// \brief Vespucci::Math::LocalMinima
+/// \param X
+/// \param dX
+/// \param d2X
+/// \return
+///
 arma::sp_mat Vespucci::Math::LocalMinima(const arma::mat &X, const arma::mat &dX, const arma::mat &d2X)
 {
     arma::uvec minima_indices, extrema_indices;

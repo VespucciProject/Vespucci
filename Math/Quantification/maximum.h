@@ -17,12 +17,30 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef QUANTIFICATION_H
-#define QUANTIFICATION_H
+#ifndef MAXIMUM_H
+#define MAXIMUM_H
 #include <Math/Accessory/accessory.h>
 #include "Global/libvespucci.h"
-#include "Math/Quantification/bandwidth.h"
-#include "Math/Quantification/correlation.h"
-#include "Math/Quantification/integration.h"
-#include "Math/Quantification/maximum.h"
-#endif //QUANTIFICATION_H
+
+namespace Vespucci
+{
+    namespace Math
+    {
+    /// \namespace Vespucci::Math::Quantification
+    /// \brief A namespace for math functions relating to peak quantification
+    ///
+    ///
+        namespace Quantification
+        {
+            //Peak determination
+            VESPUCCI_EXPORT double FindPeakMax(const arma::vec &X, arma::uword min_index, arma::uword max_index, arma::uword &position);
+            VESPUCCI_EXPORT arma::vec FindPeakMaxMat(const arma::mat &X, arma::vec abscissa, double &min, double &max, arma::vec &positions);
+            VESPUCCI_EXPORT arma::mat FindPeakMaxesMat(const arma::mat &X, arma::vec abscissa,
+                                 double &first_min, double &first_max,
+                                 double &second_min, double &second_max,
+                                 arma::mat positions);
+        }
+
+    }
+}
+#endif // MAXIMUM_H

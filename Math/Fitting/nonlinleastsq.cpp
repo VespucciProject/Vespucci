@@ -126,19 +126,6 @@ arma::vec Vespucci::Math::Fitting::FitGaussianPeak(arma::vec signal,
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-/*
     int n = signal.n_rows;
     int m = 4;
     double p[m], opts[LM_OPTS_SZ], info[LM_INFO_SZ];

@@ -219,6 +219,20 @@ public:
                     UnivariateMethod::Method method,
                     QString integration_method);
 
+    void Univariate(double min,
+                    double max,
+                    uword window,
+                    QString name,
+                    UnivariateMethod::Method method,
+                    QString integration_method,
+                    uword gradient_index);
+
+    void Univariate(double min,
+                    double max,
+                    uword window,
+                    QString name,
+                    UnivariateMethod::Method method,
+                    QString integration_method);
 
     void CorrelationMap(vec control,
                         QString name,
@@ -238,6 +252,23 @@ public:
                    double second_max,
                    QString name,
                    UnivariateMethod::Method method);
+
+    void BandRatio(double first_min,
+                   double first_max,
+                   double second_min,
+                   double second_max,
+                   unsigned int window,
+                   QString name,
+                   UnivariateMethod::Method method,
+                   unsigned int gradient_index);
+    void BandRatio(double first_min,
+                   double first_max,
+                   double second_min,
+                   double second_max,
+                   unsigned int window,
+                   QString name,
+                   UnivariateMethod::Method method);
+
 
     void PartialLeastSquares(uword components, uword image_component,
                              QString name,

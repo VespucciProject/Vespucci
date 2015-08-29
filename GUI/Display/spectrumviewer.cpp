@@ -305,6 +305,16 @@ void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *ev
                       map_data_->first_baseline(current_index_),
                       map_data_->second_baseline(current_index_));
     }
+    if (map_data_->band_ratio_derivative()){
+        SetSecondPlot(map_data_->first_abscissa(current_index_),
+                      map_data_->second_abscissa(current_index_),
+                      map_data_->first_baseline(current_index_),
+                      map_data_->second_baseline(current_index_));
+    }
+    if (map_data_->univariate_derivative()){
+        SetSecondPlot(map_data_->first_abscissa(current_index_),
+                      map_data_->first_baseline(current_index_));
+    }
 
 
 }

@@ -45,6 +45,19 @@ bool PLSData::Apply(mat spectra, vec wavelength, int components)
 
 }
 
+bool PLSData::Calibrate(mat spectra, mat controls)
+{
+    //spectra is y
+    //controls are X
+
+    bool success = Vespucci::Math::DimensionReduction::plsregress(controls, spectra, controls.n_cols,
+                                                                  X_loadings_, Y_loadings_,
+                                                                  X_scores_, Y_scores_,
+                                                                  coefficients_, percent_variance_,
+                                                                  fitted_);
+    return success;
+}
+
 ///
 /// \brief DiscriminantAnalysis
 /// \param spectra
@@ -54,8 +67,7 @@ bool PLSData::Apply(mat spectra, vec wavelength, int components)
 /// Perform PLS-DA
 bool DiscriminantAnalysis(mat spectra, vec labels, int components)
 {
-    //mat Y = repmat(labels, components);
-    //bool success = ;
+    //mat Y = repmat();
 }
 
 mat *PLSData::X_loadings()

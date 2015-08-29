@@ -32,6 +32,18 @@ public:
           double right_bound,
           UnivariateMethod::Method method);
 
+    void Apply(double left_bound,
+               double right_bound,
+               uword window,
+               UnivariateMethod::Method method);
+
+    void Apply(double first_left_bound,
+               double first_right_bound,
+               double second_left_bound,
+               double second_right_bound,
+               uword window,
+               UnivariateMethod::Method method);
+
     void Apply(double first_left_bound,
           double first_right_bound,
           double second_left_bound,
@@ -106,13 +118,16 @@ private:
 
     ///
     /// \brief midlines_
-    /// The midlines (band ratio)
+    /// The midlines (peak width)
     mat midlines_;
 
     ///
     /// \brief ratio_baselines_
     /// Contains the two sets of baselines for an intensity band ratio.
     arma::field<mat> baselines_;
+    arma::field<vec> d_baselines_;
+    arma::field<vec> d_first_baselines_;
+    arma::field<vec> d_second_baselines_;
 
     mat first_baselines_;
     mat second_baselines_;

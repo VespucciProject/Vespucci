@@ -55,6 +55,8 @@ MapData::MapData(QString x_axis_description,
     band_ratio_area_ = false;
     univariate_bandwidth_ = false;
     crisp_clusters_ = false;
+    univariate_derivative_ = false;
+    band_ratio_derivative_ = false;
     using_global_color_scale_ = false;
     map_display_ = new MapViewer(name_, directory_, this);
     map_qcp_ = map_display_->findChild<QCustomPlot *>("mapView");
@@ -627,6 +629,22 @@ void MapData::set_baselines(vec first_abscissa, vec second_abscissa,
     band_ratio_area_ = true;
 }
 
+void MapData::set_deriv_baselines(field<vec> abscissae, field<vec> baselines)
+{
+    first_abscissae_ = abscissae;
+    first_baselines_ = baselines;
+    univariate_derivative_ = true;
+}
+
+void MapData::set_deriv_baselines(field<vec> first_abscissae, field<vec> second_abscissae, field<vec> first_baselines, field<vec> second_baselines)
+{
+    first_abscissae_ = first_abscissae;
+    first_baselines_ = first_baselines;
+    second_abscissae_ = second_abscissae;
+    second_baselines_ = second_baselines;
+    band_ratio_derivative_ = true;
+}
+
 ///
 /// \brief MapData::set_fwhm
 /// \param mid_lines the FWHM representations
@@ -664,6 +682,16 @@ bool MapData::univariate_bandwidth()
     return univariate_bandwidth_;
 }
 
+bool MapData::univariate_derivative()
+{
+    return univariate_derivative_;
+}
+
+bool MapData::band_ratio_derivative()
+{
+    return band_ratio_derivative_;
+}
+
 ///
 /// \brief MapData::results_at_position
 /// \param x The horizontal position of the mouse click relative to the axes of the map.
@@ -692,7 +720,12 @@ QVector<double> MapData::first_abscissa()
 ///
 QVector<double> MapData::first_baseline(int i)
 {
-    vec baseline_r = first_baseline_.col(i);
+    vec baseline_r;
+    if (band_ratio_derivative_ || univariate_derivative_){
+        baseline_r = first_baselines_(i);
+    }
+    else{baseline_r = first_baseline_.col(i);}
+
     std::vector<double> baseline = conv_to<std::vector<double> >::from(baseline_r);
     return QVector<double>::fromStdVector(baseline);
 }
@@ -707,6 +740,20 @@ QVector<double> MapData::second_abscissa()
     return QVector<double>::fromStdVector(abscissa);
 }
 
+QVector<double> MapData::first_abscissa(int i)
+{
+    vec abscissa_r = first_abscissae_(i);
+    std::vector<double> abscissa = conv_to<std::vector<double> >::from(abscissa_r);
+    return QVector<double>::fromStdVector(abscissa);
+}
+
+QVector<double> MapData::second_abscissa(int i)
+{
+    vec abscissa_r = second_abscissae_(i);
+    std::vector<double> abscissa = conv_to<std::vector<double> >::from(abscissa_r);
+    return QVector<double>::fromStdVector(abscissa);
+}
+
 ///
 /// \brief MapData::second_baseline
 /// \param i index of VespucciDataset obejct (and also second_baseline_) of the spectrum in question.
@@ -714,7 +761,12 @@ QVector<double> MapData::second_abscissa()
 ///
 QVector<double> MapData::second_baseline(int i)
 {
-    vec baseline_r = second_baseline_.col(i);
+    vec baseline_r;
+    if (band_ratio_derivative_ || univariate_derivative_){
+        baseline_r = second_baselines_(i);
+    }
+    else{baseline_r = second_baseline_.col(i);}
+
     std::vector<double> baseline = conv_to<std::vector<double> >::from(baseline_r);
     return QVector<double>::fromStdVector(baseline);
 }

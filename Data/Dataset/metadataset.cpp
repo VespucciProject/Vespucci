@@ -146,7 +146,6 @@ mat MetaDataset::Concatenate(vec &x, vec &y)
         y.insert_rows(y.n_rows, indices_buf.col(2));
     }
     return spectra;
-
 }
 
 ///

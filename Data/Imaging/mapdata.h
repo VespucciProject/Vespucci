@@ -69,18 +69,25 @@ public:
     void set_type(QString type);
     void set_name(QString name, QString type);
     void set_baseline(vec abscissa, mat baseline);
+    void set_fwhm(mat mid_lines);
     void set_baselines(vec first_abscissa, vec second_abscissa,
                        mat first_baseline, mat second_baseline);
-    void set_fwhm(mat mid_lines);
-
+    void set_deriv_baselines(field<vec> abscissae, field<vec> baselines);
+    void set_deriv_baselines(field<vec> first_abscissae, field<vec> second_abscissae,
+                             field<vec> first_baselines, field<vec> second_baselines);
+    bool univariate_bandwidth();
+    bool univariate_derivative();
+    bool band_ratio_derivative();
     bool univariate_area();
     bool band_ratio_area();
-    bool univariate_bandwidth();
+
 
     QVector<double> first_baseline(int i);
     QVector<double> second_baseline(int i);
     QVector<double> first_abscissa();
     QVector<double> second_abscissa();
+    QVector<double> first_abscissa(int i);
+    QVector<double> second_abscissa(int i);
     QVector<double> half_max(int i);
     QVector<double> mid_line(int i);
     QVector<double> mid_lines(int i);
@@ -274,9 +281,16 @@ private:
     vec second_abscissa_;
     mat mid_lines_;
 
+    field<vec> first_baselines_;
+    field<vec> first_abscissae_;
+    field<vec> second_baselines_;
+    field<vec> second_abscissae_;
+
     bool univariate_area_;
     bool band_ratio_area_;
     bool univariate_bandwidth_;
+    bool univariate_derivative_;
+    bool band_ratio_derivative_;
     bool using_global_color_scale_;
     bool k_means_;
     bool principal_components_;

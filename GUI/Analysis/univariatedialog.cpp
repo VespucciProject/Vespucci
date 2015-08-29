@@ -56,10 +56,15 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
     browse_button_ = findChild<QPushButton *>("browseButton");
     map_check_box_ = findChild<QCheckBox *>("mapCheckBox");
 
+    correlation_label_ = findChild<QLabel*>("correlationLabel");
+
     integration_method_selector_->setDisabled(true);
     integration_method_label_->setDisabled(true);
-    browse_button_->setDisabled(true);
-    file_name_box_->setDisabled(true);
+
+
+    browse_button_->setVisible(false);
+    file_name_box_->setVisible(false);
+    correlation_label_->setVisible(false);
 
     min_line_ = new QCPItemStraightLine(spectrum_plot_);
     min_line_->point1->setCoords(0, 0);
@@ -135,6 +140,8 @@ void UnivariateDialog::on_buttonBox_accepted()
         method = UnivariateMethod::FWHM;
     else if (value_method == "Correlation")
         method = UnivariateMethod::Correlation;
+    else if (value_method == "Area (Estimate Peak Edges)")
+        method = UnivariateMethod::Derivative;
     else
         method = UnivariateMethod::Intensity;
 
@@ -197,8 +204,9 @@ void UnivariateDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
 {
     integration_method_selector_->setEnabled(arg1 == "Area");
     integration_method_label_->setEnabled(arg1 == "Area");
-    browse_button_->setEnabled(arg1 == "Correlation");
-    file_name_box_->setEnabled(arg1 == "Correlation");
+    browse_button_->setVisible(arg1 == "Correlation");
+    file_name_box_->setVisible(arg1 == "Correlation");
+    correlation_label_->setVisible(arg1 == "Correlation");
     min_box_->setDisabled(arg1 == "Correlation");
     max_box_->setDisabled(arg1 == "Correlation");
 }

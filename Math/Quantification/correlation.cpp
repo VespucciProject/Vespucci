@@ -18,18 +18,15 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
-#ifndef ENUMS_H
-#define ENUMS_H
-
-namespace UnivariateMethod{
-///
-/// \brief The Method enum
-/// Univariate methods
-    enum Method{Intensity, Area, FWHM, AreaRatio, IntensityRatio, SignalNoise, Correlation, Derivative, DerivativeRatio};
+#include <Math/Quantification/correlation.h>
+arma::vec Vespucci::Math::Quantification::CorrelationMat(const arma::mat &X, arma::vec control)
+{
+    arma::vec results;
+    results.set_size(X.n_cols);
+    for(arma::uword i = 0; i < X.n_cols; ++i){
+        results(i) = arma::as_scalar(cor(control, X.col(i)));
+    }
+    return results;
 }
 
-namespace MetaMethod{
-    enum Method{AverageSpectra, ConcatenateDatasets, StitchDatasets};
-}
 
-#endif // ENUMS_H

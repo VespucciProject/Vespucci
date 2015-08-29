@@ -37,9 +37,6 @@ public:
                 QString method_description,
                 MetaMethod::Method method,
                 QList<QSharedPointer<VespucciDataset> > parent_datasets);
-
-
-
     vec *parents();
 
 private:
@@ -74,6 +71,8 @@ private:
 
     mat ProcessAverage(vec &x, vec &y);
     mat Concatenate(vec &x, vec &y);
+
+    mat Stitch(vec &x, vec &y, int v_pos, int h_pos);
 
     bool ParentsValid();
 };

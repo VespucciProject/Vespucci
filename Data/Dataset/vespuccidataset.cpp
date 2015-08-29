@@ -1585,6 +1585,106 @@ void VespucciDataset::Univariate(double min,
     univariate_datas_.append(univariate_data);}
 
 ///
+/// \brief VespucciDataset::Univariate
+/// \param min
+/// \param max
+/// \param window
+/// \param name
+/// \param method
+/// \param integration_method
+/// \param gradient_index
+///
+void VespucciDataset::Univariate(double min, double max, uword window, QString name, UnivariateMethod::Method method, QString integration_method, uword gradient_index)
+{
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
+    try{
+        univariate_data->Apply(min, max, window, method);
+    }catch(exception e){
+        throw std::runtime_error("VespucciDataset::Univariate: " + string(e.what()));
+    }
+
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, univariate_data->results(),
+                                            QSharedPointer<VespucciDataset>(this),
+                                            directory_,
+                                            GetGradient(gradient_index),
+                                            map_list_model_->rowCount(QModelIndex()),
+                                            6,
+                                            main_window_));
+    new_map->set_name(name, univariate_data->MethodDescription());
+
+    /*
+    uvec boundaries;
+    if(method == UnivariateMethod::Area || method == UnivariateMethod::FWHM){
+        boundaries = univariate_data->Boundaries();
+        new_map->set_baseline(abscissa_.subvec(boundaries(0), boundaries(1)),
+                              univariate_data->first_baselines());
+    }
+    */
+
+    /*if(method == UnivariateMethod::FWHM){
+        boundaries = univariate_data->Boundaries();
+        new_map->set_fwhm(univariate_data->Midlines());
+    }*/
+
+
+    log_stream_ << "Univariate" << endl;
+    log_stream_ << "min == " << min << endl;
+    log_stream_ << "max == " << max << endl;
+    log_stream_ << "name == " << name << endl;
+    log_stream_ << "method == " << (method == UnivariateMethod::Area ? "Area" : (method == UnivariateMethod::FWHM ? "Bandwidth" : "Intensity")) << endl;
+    log_stream_ << "integration_method == " << integration_method << endl;
+    log_stream_ << "gradient_index == " << gradient_index << endl;
+    univariate_datas_.append(univariate_data);
+    map_list_model_->AddMap(new_map);
+    new_map->ShowMapWindow();
+}
+
+///
+/// \brief VespucciDataset::Univariate
+/// \param min
+/// \param max
+/// \param window
+/// \param name
+/// \param method
+/// \param integration_method
+///
+void VespucciDataset::Univariate(double min, double max, uword window, QString name, UnivariateMethod::Method method, QString integration_method)
+{
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
+    try{
+        univariate_data->Apply(min, max, method);
+    }catch(exception e){
+        throw runtime_error("VespucciDataset::Univariate: " + string(e.what()));
+    }
+
+    /*if(method == UnivariateMethod::FWHM){
+        boundaries = univariate_data->Boundaries();
+        new_map->set_fwhm(univariate_data->Midlines());
+    }*/
+
+
+    log_stream_ << "Univariate (no image)" << endl;
+    log_stream_ << "min == " << min << endl;
+    log_stream_ << "max == " << max << endl;
+    log_stream_ << "name == " << name << endl;
+    log_stream_ << "method == " << (method == UnivariateMethod::Area ? "Area" : (method == UnivariateMethod::FWHM ? "Bandwidth" : "Intensity")) << endl;
+    log_stream_ << "integration_method == " << integration_method << endl;
+    univariate_datas_.append(univariate_data);
+}
+
+///
 /// \brief VespucciDataset::CorrelationMap
 /// \param control The "control" vector to which all spectra are compared
 /// \param name The name of the image
@@ -1714,6 +1814,75 @@ void VespucciDataset::BandRatio(double first_min,
 
     QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
     univariate_data->Apply(first_min, first_max, second_min, second_max, method);
+    univariate_data->SetName(name);
+    univariate_datas_.append(univariate_data);
+}
+
+void VespucciDataset::BandRatio(double first_min, double first_max,
+                                double second_min, double second_max,
+                                unsigned int window,
+                                QString name, UnivariateMethod::Method method,
+                                unsigned int gradient_index)
+{
+    log_stream_ << "BandRatio (Estimate Edges)" << endl;
+    log_stream_ << "first_min == " << first_min << endl;
+    log_stream_ << "first_max == " << first_max << endl;
+    log_stream_ << "second_min == " << second_min << endl;
+    log_stream_ << "second_max == " << second_max << endl;
+    log_stream_ << "name == " << name << endl;
+    log_stream_ << "value_method == " << "Area Ratio (Estimated Edges)" << endl;
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
+    try{
+        univariate_data->Apply(first_min, first_max, second_min, second_max, window, method);
+    }catch(exception e){
+        throw std::runtime_error("VespucciDataset::BandRatio: " + string(e.what()));
+    }
+    univariate_data->SetName(name);
+    univariate_datas_.append(univariate_data);
+
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, univariate_data->results(),
+                                            QSharedPointer<VespucciDataset>(this), directory_,
+                                            GetGradient(gradient_index),
+                                            map_list_model_->rowCount(QModelIndex()),
+                                            6,
+                                            main_window_));
+
+
+    //uvec boundaries = univariate_data->Boundaries();
+
+    /*
+    if (method == UnivariateMethod::AreaRatio){
+        new_map->set_baselines(abscissa_.subvec(boundaries(0), boundaries(1)),
+                               abscissa_.subvec(boundaries(2), boundaries(3)),
+                               univariate_data->first_baselines(),
+                               univariate_data->second_baselines());
+    }
+    */
+    map_list_model_->AddMap(new_map);
+    new_map->ShowMapWindow();
+
+}
+
+void VespucciDataset::BandRatio(double first_min, double first_max,
+                                double second_min, double second_max,
+                                unsigned int window,
+                                QString name, UnivariateMethod::Method method)
+{
+    log_stream_ << "BandRatio (Estimate Edges, no image)" << endl;
+    log_stream_ << "first_min == " << first_min << endl;
+    log_stream_ << "first_max == " << first_max << endl;
+    log_stream_ << "second_min == " << second_min << endl;
+    log_stream_ << "second_max == " << second_max << endl;
+    log_stream_ << "name == " << name << endl;
+    log_stream_ << "value_method == " << "Area Ratio (Estimated Edges)" << endl;
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
+    try{
+        univariate_data->Apply(first_min, first_max, second_min, second_max, window, method);
+    }catch(exception e){
+        throw std::runtime_error("VespucciDataset::BandRatio: " + string(e.what()));
+    }
     univariate_data->SetName(name);
     univariate_datas_.append(univariate_data);
 }

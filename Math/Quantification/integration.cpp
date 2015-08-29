@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
-#include <Math/Quantification/quantification.h>
+#include <Math/Quantification/integration.h>
 ///
 /// \brief Vespucci::Math::Quantification::IntegratePeak
 /// \param X
@@ -53,7 +53,7 @@ double Vespucci::Math::Quantification::IntegratePeak(const arma::vec &X, arma::u
 /// \return
 /// Finds the index of specified start and end values, then calls IntegratePeak
 /// on each column of the arma::matrix
-arma::vec Vespucci::Math::Quantification::IntegratePeakMat(const arma::mat &X, arma::vec abscissa, double &min, double &max, arma::mat &baselines, arma::uvec &boundaries)
+arma::vec Vespucci::Math::Quantification::IntegratePeakMat(const arma::mat &X, const arma::vec abscissa, double &min, double &max, arma::mat &baselines, arma::uvec &boundaries)
 {
     double delta = std::abs(abscissa(1) - abscissa(0));
     arma::uvec left_bound = find(((min-delta) <= abscissa) && (abscissa <= (min+delta)));
@@ -87,7 +87,7 @@ arma::vec Vespucci::Math::Quantification::IntegratePeakMat(const arma::mat &X, a
 /// \param second_baselines
 /// \return
 /// Performs two peak integrations
-arma::mat Vespucci::Math::Quantification::IntegratePeaksMat(const arma::mat &X, arma::vec abscissa, double &first_min, double &first_max, double &second_min, double &second_max, arma::mat &first_baselines, arma::mat &second_baselines, arma::uvec &boundaries)
+arma::mat Vespucci::Math::Quantification::IntegratePeaksMat(const arma::mat &X, const arma::vec &abscissa, double &first_min, double &first_max, double &second_min, double &second_max, arma::mat &first_baselines, arma::mat &second_baselines, arma::uvec &boundaries)
 {
     double delta = std::abs(abscissa(1) - abscissa(0));
     arma::uvec first_left_bound = find(((first_min-delta) <= abscissa) && (abscissa <= (first_min+delta)));
@@ -129,6 +129,137 @@ arma::mat Vespucci::Math::Quantification::IntegratePeaksMat(const arma::mat &X, 
         results(i, 1) = IntegratePeak(X.col(i), second_min_index, second_max_index, delta, second_baseline);
         second_baselines.col(i) = second_baseline;
     }
+    return results;
+}
+
+///
+/// \brief Vespucci::Math::Quantification::IntegratePeakMat
+/// \param X
+/// \param abscissa
+/// \param min
+/// \param max
+/// \param baselines
+/// \param boundaries
+/// \param bound_window
+/// \return
+///  Performs single peak Riemann sum integration. If find_boundaries is true, then will estimate the actual boundaries
+arma::vec Vespucci::Math::Quantification::IntegratePeakMat(const arma::mat &X, const arma::vec &abscissa,
+                                                           double &min, double &max,
+                                                           arma::field<arma::vec> &baselines,
+                                                           arma::uvec &boundaries, arma::uword bound_window)
+{
+    arma::vec results(X.n_cols);
+    double delta = std::abs(abscissa(1) - abscissa(0)); //assumes monotonic to some degree of precision
+    arma::uvec left_bound = find(((min-delta) <= abscissa) && (abscissa <= (min+delta)));
+    arma::uvec right_bound = find(((max-delta) <= abscissa) && (abscissa <= (max+delta)));
+
+    //initial centers
+    arma::uword min_index = left_bound(0);
+    arma::uword max_index = right_bound(0);
+    min = abscissa(min_index);
+    max = abscissa(max_index);
+
+    arma::uword min_start = min_index - bound_window;
+    arma::uword min_end = min_index + bound_window;
+    min_end = (min_end >= abscissa.n_rows ? abscissa.n_rows - 1 : min_end);
+
+    arma::uword max_start = max_index - bound_window;
+    arma::uword max_end = max_index + bound_window;
+    max_end = (max_end >= abscissa.n_rows ? abscissa.n_rows - 1 : max_end);
+
+    baselines.set_size(X.n_cols);
+    for (arma::uword i = 0; i < X.n_cols; ++i){
+        arma::vec spectrum = X.col(i);
+        arma::vec min_window = spectrum.rows(min_start, min_end);
+        arma::vec max_window = spectrum.rows(max_start, max_end);
+        min_index = Vespucci::Math::LocalMinimum(min_window, min);
+        max_index = Vespucci::Math::LocalMinimum(max_window, max);
+        arma::vec baseline(spectrum.rows(min_index, max_index).n_rows);
+        results(i) = IntegratePeak(spectrum, min_index, max_index, delta, baseline);
+        baselines(i) = baseline;
+    }
+    return results;
+}
+
+///
+/// \brief Vespucci::Math::Quantification::IntegratePeaksMat
+/// \param X
+/// \param abscissa
+/// \param first_min
+/// \param first_max
+/// \param second_min
+/// \param second_max
+/// \param first_baselines
+/// \param second_baselines
+/// \param boundaries
+/// \param bound_window
+/// \return
+///
+arma::mat Vespucci::Math::Quantification::IntegratePeaksMat(const arma::mat &X, const arma::vec &abscissa,
+                                                            double &first_min, double &first_max,
+                                                            double &second_min, double &second_max,
+                                                            arma::field<arma::vec> &first_baselines, arma::field<arma::vec> &second_baselines,
+                                                            arma::uvec &boundaries, arma::uword bound_window)
+{
+    arma::mat results(X.n_cols, 2);
+    double delta = std::abs(abscissa(1) - abscissa(0));
+    arma::uvec first_left_bound = find(((first_min-delta) <= abscissa) && (abscissa <= (first_min+delta)));
+    arma::uvec first_right_bound = find(((first_max-delta) <= abscissa) && (abscissa <= (first_max+delta)));
+    arma::uvec second_left_bound = find(((second_min-delta) <= abscissa) && (abscissa <= (second_min+delta)));
+    arma::uvec second_right_bound = find(((second_max-delta) <= abscissa) && (abscissa <= (second_max+delta)));
+
+    arma::uword first_min_index = first_left_bound(0);
+    arma::uword first_max_index = first_right_bound(0);
+    arma::uword second_min_index = second_left_bound(0);
+    arma::uword second_max_index = second_right_bound(0);
+
+    first_min = abscissa(first_min_index);
+    first_max = abscissa(first_max_index);
+    second_min = abscissa(second_min_index);
+    second_max = abscissa(second_max_index);
+
+    arma::uword first_min_start = first_min_index - bound_window;
+    arma::uword first_min_end = first_min_index + bound_window;
+    first_min_end = (first_min_end >= abscissa.n_rows ? abscissa.n_rows - 1 : first_min_end);
+    arma::uword second_min_start = second_min_index - bound_window;
+    arma::uword second_min_end = second_min_index + bound_window;
+    second_min_end = (second_min_end >= abscissa.n_rows ? abscissa.n_rows - 1 : second_min_end);
+
+    arma::uword first_max_start = first_max_index - bound_window;
+    arma::uword first_max_end = first_max_index + bound_window;
+    first_max_end = (first_max_end >= abscissa.n_rows ? abscissa.n_rows - 1 : first_max_end);
+    arma::uword second_max_start = second_max_index - bound_window;
+    arma::uword second_max_end = second_max_index + bound_window;
+    second_max_end = (second_max_end >= abscissa.n_rows ? abscissa.n_rows - 1 : second_max_end);
+
+    first_baselines.set_size(X.n_cols);
+    second_baselines.set_size(X.n_cols);
+
+    for (arma::uword i = 0; i < X.n_cols; ++i){
+        arma::vec spectrum = X.col(i);
+
+        arma::vec first_min_window = spectrum.rows(first_min_start, first_min_end);
+        arma::vec first_max_window = spectrum.rows(first_max_start, first_max_end);
+        first_min_index = Vespucci::Math::LocalMinimum(first_min_window, first_min);
+        first_max_index = Vespucci::Math::LocalMinimum(first_max_window, first_max);
+        arma::vec first_baseline(spectrum.rows(first_min_index, first_max_index).n_rows);
+        results(i, 0) = IntegratePeak(spectrum, first_min_index, first_max_index, delta, first_baseline);
+        first_baselines(i) = first_baseline;
+
+        arma::vec second_min_window = spectrum.rows(second_min_start, second_min_end);
+        arma::vec second_max_window = spectrum.rows(second_max_start, second_max_end);
+        second_min_index = Vespucci::Math::LocalMinimum(second_min_window, second_min);
+        second_max_index = Vespucci::Math::LocalMinimum(second_max_window, second_max);
+        arma::vec second_baseline(spectrum.rows(second_min_index, second_max_index).n_rows);
+        results(i, 1) = IntegratePeak(spectrum, second_min_index, second_max_index, delta, second_baseline);
+        second_baselines(i) = second_baseline;
+    }
+
+    boundaries.set_size(4);
+    boundaries(0) = first_min_index;
+    boundaries(1) = first_max_index;
+    boundaries(2) = second_min_index;
+    boundaries(3) = second_max_index;
 
     return results;
 }

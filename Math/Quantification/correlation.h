@@ -17,16 +17,18 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
+#ifndef CORRELATION_H
+#define CORRELATION_H
 
-#include <Math/Quantification/quantification.h>
-arma::vec Vespucci::Math::Quantification::CorrelationMat(const arma::mat &X, arma::vec control)
-{
-    arma::vec results;
-    results.set_size(X.n_cols);
-    for(arma::uword i = 0; i < X.n_cols; ++i){
-        results(i) = as_scalar(cor(control, X.col(i)));
+#include <Math/Accessory/accessory.h>
+#include "Global/libvespucci.h"
+
+namespace Vespucci{
+    namespace Math{
+        namespace Quantification{
+            VESPUCCI_EXPORT arma::vec CorrelationMat(const arma::mat &X, arma::vec control);
+        }
     }
-    return results;
 }
 
-
+#endif // CORRELATION_H

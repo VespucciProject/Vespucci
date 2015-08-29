@@ -140,6 +140,8 @@ private:
     /// \brief data_
     /// The current dataset
     QSharedPointer<VespucciDataset> data_;
+
+    QLabel *correlation_label_;
 };
 
 #endif // UNIVARIATEDIALOG_H

@@ -93,12 +93,12 @@ SOURCES +=\
     Math/Smoothing/whittaker.cpp \
     Math/Transform/cwt.cpp \
     Math/PeakFinding/peakfinding.cpp \
-    Math/Quantification/misc.cpp \
     Math/PeakFinding/cwtridge.cpp \
     Math/Fitting/linleastsq.cpp \
     Math/Fitting/nonlinleastsq.cpp \
     Global/vespucci.cpp \
-    Math/Transform/fft.cpp
+    Math/Transform/fft.cpp \
+    Math/Quantification/correlation.cpp
 
 
 HEADERS  += \
@@ -122,7 +122,11 @@ HEADERS  += \
     Math/Transform/fft.h \
     Math/Smoothing/FIR.h \
     Math/Smoothing/whittaker.h \
-    Math/Smoothing/nonlinear.h
+    Math/Smoothing/nonlinear.h \
+    Math/Quantification/integration.h \
+    Math/Quantification/maximum.h \
+    Math/Quantification/bandwidth.h \
+    Math/Quantification/correlation.h
 
 
 #linux libraries, specific to my own install. This will be handled by CMake later

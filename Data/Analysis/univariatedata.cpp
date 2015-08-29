@@ -53,6 +53,7 @@ void UnivariateData::Apply(double left_bound,
         results_ = Vespucci::Math::Quantification::CorrelationMat(parent_->spectra(), control_);
         break;
     case UnivariateMethod::SignalNoise :
+        break;
     case UnivariateMethod::Intensity : default :
         results_ = Vespucci::Math::Quantification::FindPeakMaxMat(parent_->spectra(),
                                             parent_->wavelength(),
@@ -64,6 +65,44 @@ void UnivariateData::Apply(double left_bound,
         break;
     }
 
+}
+
+void UnivariateData::Apply(double left_bound, double right_bound, uword window, UnivariateMethod::Method method)
+{
+    if (method != UnivariateMethod::Derivative){
+        throw std::runtime_error("UnivariateData::Apply: Invalid method parameter.");
+    }
+    left_bound_ = left_bound;
+    right_bound_ = right_bound;
+    method_ = method;
+    results_ = Vespucci::Math::Quantification::IntegratePeakMat(parent_->spectra(),
+                                                                parent_->abscissa(),
+                                                                left_bound_, right_bound_,
+                                                                d_baselines_, boundaries_, window);
+    method_description_ = "Univariate Area (Estimated Edges)";
+}
+
+void UnivariateData::Apply(double first_left_bound, double first_right_bound, double second_left_bound, double second_right_bound, uword window, UnivariateMethod::Method method)
+{
+    if (method != UnivariateMethod::DerivativeRatio){
+        throw std::runtime_error("UnivariateData::Apply: Invalid method parameter.");
+    }
+    first_left_bound_ = first_left_bound;
+    first_right_bound_ = first_right_bound;
+    second_left_bound_ = second_left_bound;
+    second_right_bound_ = second_right_bound;
+    method_ = method;
+    mat results = Vespucci::Math::Quantification::IntegratePeaksMat(parent_->spectra(),
+                                                                 parent_->abscissa(),
+                                                                 first_left_bound_,
+                                                                 first_right_bound_,
+                                                                 second_left_bound_,
+                                                                 second_right_bound_,
+                                                                 d_first_baselines_,
+                                                                 d_second_baselines_,
+                                                                 boundaries_, window);
+    method_description_ = "Univariate Area (Estimated Edges)";
+    results_ = results.col(0) / results.col(1);
 }
 
 void UnivariateData::Apply(double first_left_bound,

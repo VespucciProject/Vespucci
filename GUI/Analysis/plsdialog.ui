@@ -47,11 +47,6 @@
         </item>
         <item>
          <property name="text">
-          <string>Discrimination (PLS-DA)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
           <string>Calibration</string>
          </property>
         </item>

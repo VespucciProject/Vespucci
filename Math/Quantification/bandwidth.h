@@ -18,18 +18,19 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
-#ifndef ENUMS_H
-#define ENUMS_H
 
-namespace UnivariateMethod{
-///
-/// \brief The Method enum
-/// Univariate methods
-    enum Method{Intensity, Area, FWHM, AreaRatio, IntensityRatio, SignalNoise, Correlation, Derivative, DerivativeRatio};
+#ifndef BANDWIDTH_H
+#define BANDWIDTH_H
+
+#include <Math/Accessory/accessory.h>
+#include "Global/libvespucci.h"
+
+namespace Vespucci{
+    namespace Math{
+        namespace Quantification {
+            VESPUCCI_EXPORT double FindBandwidth(const arma::vec &X, arma::uword min_index, arma::uword max_index, arma::vec &midline, arma::vec &baseline, double abscissa_step);
+            VESPUCCI_EXPORT arma::vec FindBandwidthMat(const arma::mat &X, arma::vec abscissa, double &min, double &max, arma::mat &midlines, arma::mat &baselines, arma::uvec &boundaries);
+        }
+    }
 }
-
-namespace MetaMethod{
-    enum Method{AverageSpectra, ConcatenateDatasets, StitchDatasets};
-}
-
-#endif // ENUMS_H
+#endif // BANDWIDTH_H

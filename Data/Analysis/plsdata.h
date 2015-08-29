@@ -33,6 +33,7 @@ public:
             QString *directory);
 
     bool Apply(mat spectra, vec wavelength, int components);
+    bool Calibrate(mat spectra, mat controls);
     bool DiscriminantAnalysis(mat spectra, vec labels, int components);
 
     mat *X_loadings();

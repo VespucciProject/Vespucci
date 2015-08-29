@@ -27,24 +27,31 @@ namespace Vespucci
     namespace Math
     {
         //general Math functions
-        VESPUCCI_EXPORT arma::sp_mat LocalMaxima(const arma::mat &X);
 
+        VESPUCCI_EXPORT arma::uword LocalMaximum(const arma::vec &X, double &value);
+        VESPUCCI_EXPORT arma::uword LocalMaximum(const arma::vec &dX, const arma::vec &d2X, double &value);
+        VESPUCCI_EXPORT arma::uword LocalMaximum(const arma::vec &X, const arma::vec &dX, const arma::vec &d2X, double &value);
+
+        VESPUCCI_EXPORT arma::uword LocalMinimum(const arma::mat &X, double &value);
+        VESPUCCI_EXPORT arma::uword LocalMinimum(const arma::vec &dX, const arma::vec &d2X, double &value);
+        VESPUCCI_EXPORT arma::uword LocalMinimum(const arma::vec &X, const arma::vec &dX, const arma::mat &d2X, double &value);
+
+
+        VESPUCCI_EXPORT arma::sp_mat LocalMaxima(const arma::mat &X);
         VESPUCCI_EXPORT arma::sp_mat LocalMaxima(const arma::mat &X, const arma::mat &dX, const arma::mat &d2X);
-        VESPUCCI_EXPORT arma::sp_mat LocalMaxima(const arma::mat &dX, const arma::mat &d2X);
 
         VESPUCCI_EXPORT arma::sp_mat LocalMinima(const arma::mat &X);
         VESPUCCI_EXPORT arma::sp_mat LocalMinima(const arma::mat &X, const arma::mat &dX, const arma::mat &d2X);
-        VESPUCCI_EXPORT arma::sp_mat LocalMinima(const arma::mat &dX, const arma::mat &d2X);
 
         VESPUCCI_EXPORT arma::sp_mat LocalMinimaWindow(const arma::mat &X, const int window_size);
         VESPUCCI_EXPORT arma::sp_mat LocalMaximaWindow(const arma::mat &X, const int window_size);
 
-
         VESPUCCI_EXPORT arma::sp_mat LocalMinimaCWT(arma::mat coefs, arma::uvec scales, arma::uword min_window_size, double amplitude_threshold);
         VESPUCCI_EXPORT arma::sp_mat LocalMaximaCWT(arma::mat coefs, arma::uvec scales, arma::uword min_window_size);
 
-        VESPUCCI_EXPORT double quantile (arma::vec &data, double probs);
-        VESPUCCI_EXPORT double mad (arma::vec &data);
+        VESPUCCI_EXPORT double quantile(arma::vec &data, double probs);
+        VESPUCCI_EXPORT double mad(arma::vec &data);
+
         VESPUCCI_EXPORT arma::vec ExtendToNextPow(arma::vec X, arma::uword n);
         VESPUCCI_EXPORT arma::uword NextPow(arma::uword number, arma::uword power);
 
@@ -66,7 +73,8 @@ namespace Vespucci
         VESPUCCI_EXPORT arma::umat GetClosestValues(arma::vec query, arma::vec target, const arma::uword k=5);
 
         VESPUCCI_EXPORT double CalcPoly(const double x, const arma::vec &coefs);
-
+\
+        //Abscissa transforms
         VESPUCCI_EXPORT arma::vec WavelengthToFrequency(const arma::vec &x, double freq_factor, double wl_factor);
         VESPUCCI_EXPORT arma::vec FrequencyToWavelength(const arma::vec &x, double wl_factor, double freq_factor);
         VESPUCCI_EXPORT arma::vec FrequencyToEnergy(const arma::vec &x, double energy_factor, double freq_factor);
@@ -80,7 +88,9 @@ namespace Vespucci
         VESPUCCI_EXPORT arma::vec EnergyToWavenumber(const arma::vec &x, double wn_factor, double energy_factor);
         VESPUCCI_EXPORT arma::vec WavenumberToEnergy(const arma::vec &x, double energy_factor, double wn_factor);
 
+
         VESPUCCI_EXPORT bool AreEqual(const arma::vec &a, const arma::vec &b);
+
         VESPUCCI_EXPORT bool IsMonotonic(const arma::vec &x);
         VESPUCCI_EXPORT bool IsIncreasing(const arma::vec &x);
 
