@@ -139,7 +139,8 @@ SOURCES += main.cpp\
     Global/global.cpp \
     GUI/Analysis/classicalleastsquaresdialog.cpp \
     GUI/settingsdialog.cpp \
-    GUI/Processing/abscissainterpolationdialog.cpp
+    GUI/Processing/abscissainterpolationdialog.cpp \
+    GUI/Processing/stitchimportdialog.cpp
 
 HEADERS  += \
     Global/enums.h \
@@ -199,7 +200,8 @@ HEADERS  += \
     Global/global.h \
     GUI/Analysis/classicalleastsquaresdialog.h \
     GUI/settingsdialog.h \
-    GUI/Processing/abscissainterpolationdialog.h
+    GUI/Processing/abscissainterpolationdialog.h \
+    GUI/Processing/stitchimportdialog.h
 
 
 FORMS    += \
@@ -241,7 +243,8 @@ FORMS    += \
     GUI/Display/plotviewer.ui \
     GUI/Analysis/classicalleastsquaresdialog.ui \
     GUI/settingsdialog.ui \
-    GUI/Processing/abscissainterpolationdialog.ui
+    GUI/Processing/abscissainterpolationdialog.ui \
+    GUI/Processing/stitchimportdialog.ui
 
 RESOURCES += \
     resources.qrc

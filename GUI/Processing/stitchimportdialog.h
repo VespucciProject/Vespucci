@@ -17,42 +17,50 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef MULTIIMPORTDIALOG_H
-#define MULTIIMPORTDIALOG_H
+#ifndef STITCHIMPORTDIALOG_H
+#define STITCHIMPORTDIALOG_H
 
 #include <QDialog>
+
 #include "Global/vespucciworkspace.h"
+#include <mlpack/core.hpp>
+using namespace arma;
+using namespace std;
 
 namespace Ui {
-class MultiImportDialog;
+class StitchImportDialog;
 }
 
-class MultiImportDialog : public QDialog
+class StitchImportDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit MultiImportDialog(QWidget *parent, VespucciWorkspace * ws);
-    ~MultiImportDialog();
+    explicit StitchImportDialog(QWidget *parent, VespucciWorkspace *ws);
+    ~StitchImportDialog();
 
 private slots:
-    void on_rowSpinBox_valueChanged(int arg1);
-
-    void on_colSpinBox_valueChanged(int arg1);
-
-    void on_addFilesPushButton_clicked();
+    void on_browsePushButton_clicked();
 
     void on_buttonBox_accepted();
 
 private:
-    Ui::MultiImportDialog *ui;
+    Ui::StitchImportDialog *ui;
     VespucciWorkspace *workspace;
-    QTableWidget *filename_table_;
-    QLabel *count_label_;
-    QLineEdit *name_box_;
-    QLineEdit *abscissa_label_box_;
-    QLineEdit *ordinate_label_box_;
+    QLineEdit *x_line_edit_;
+    QLineEdit *x_units_line_edit_;
+    QLineEdit *y_line_edit_;
+    QLineEdit *y_units_line_edit_;
+    QLineEdit *filename_line_edit_;
+    QComboBox *data_format_combo_box_;
+    QLineEdit *name_line_edit_;
+    QCheckBox *swap_spatial_check_box_;
+
+    bool LoadDatasets(field<string> filenames,
+                      mat &spectra,
+                      vec &x, vec &y, vec &abscissa,
+                      bool swap_spatial, QString type);
 
 };
 
-#endif // MULTIIMPORTDIALOG_H
+#endif // STITCHIMPORTDIALOG_H

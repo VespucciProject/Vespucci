@@ -162,6 +162,8 @@ private slots:
 
     void on_actionSave_Log_File_triggered();
 
+    void on_actionImport_Dataset_from_Multiple_Files_triggered();
+
 private:
     Ui::MainWindow *ui;
 

@@ -51,6 +51,7 @@
 #include "GUI/Processing/abscissatransformdialog.h"
 #include "GUI/Processing/fouriertransformdialog.h"
 #include "GUI/Processing/abscissainterpolationdialog.h"
+#include "GUI/Processing/stitchimportdialog.h"
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent usually 0
@@ -1177,4 +1178,10 @@ void MainWindow::on_actionSave_Log_File_triggered()
     QString message = (ok? "File Saved Successfully" : "Saving Log File Failed");
     QString title = (ok? "Saved Log File" : "Saving Log File Failed");
     QMessageBox::information(this, title, message);
+}
+
+void MainWindow::on_actionImport_Dataset_from_Multiple_Files_triggered()
+{
+    StitchImportDialog *stitch_dialog = new StitchImportDialog(this, workspace);
+    stitch_dialog->show();
 }

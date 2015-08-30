@@ -75,11 +75,11 @@
      <string>Fi&amp;le</string>
     </property>
     <addaction name="actionImport_Dataset_from_File"/>
+    <addaction name="actionImport_Dataset_from_Multiple_Files"/>
     <addaction name="actionImport_From_Multiple_Point_Spectra"/>
     <addaction name="separator"/>
     <addaction name="actionBatch_File_Conversion"/>
     <addaction name="separator"/>
-    <addaction name="actionSet_Global_Color_Scale"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -115,6 +115,7 @@
     <addaction name="menuExport_Dataset_Elements"/>
     <addaction name="actionView_Edit_Spectra"/>
     <addaction name="actionView_Dataset_Elements"/>
+    <addaction name="actionDelete_Map"/>
     <addaction name="separator"/>
     <addaction name="actionNew_Composite_Dataset"/>
     <addaction name="separator"/>
@@ -159,13 +160,13 @@
     <addaction name="menuNew_Multivariate_Map"/>
     <addaction name="menuPeak_Detection"/>
     <addaction name="separator"/>
-    <addaction name="actionDelete_Map"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
      <string>Tools</string>
     </property>
     <addaction name="actionSettings"/>
+    <addaction name="actionSet_Global_Color_Scale"/>
    </widget>
    <widget class="QMenu" name="menuProcessing">
     <property name="title">
@@ -180,8 +181,8 @@
     <addaction name="actionBooleanize_Clamp"/>
     <addaction name="actionRemove_Vectors_of_Zeros"/>
     <addaction name="actionTransform_Abscissa"/>
-    <addaction name="actionFourierTransform"/>
     <addaction name="actionInterpolate_to_New_Abscissa"/>
+    <addaction name="actionFourierTransform"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuData"/>
@@ -345,7 +346,7 @@
   </action>
   <action name="actionCreate_Plot">
    <property name="text">
-    <string>&amp;Create Plot...</string>
+    <string>&amp;Create Plot</string>
    </property>
   </action>
   <action name="actionDelete_Map">
@@ -395,7 +396,7 @@
   </action>
   <action name="actionRun_script">
    <property name="text">
-    <string>Run Script...</string>
+    <string>&amp;Run Script</string>
    </property>
   </action>
   <action name="actionDetect_Peaks">
@@ -411,6 +412,9 @@
   <action name="actionImport_From_Multiple_Point_Spectra">
    <property name="text">
     <string>Import &amp;From Multiple Point Spectra</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new dataset by importing multiple files representing single points</string>
    </property>
   </action>
   <action name="actionTransform_Abscissa">
@@ -455,7 +459,15 @@
   </action>
   <action name="actionSave_Log_File">
    <property name="text">
-    <string>Save Log File</string>
+    <string>&amp;Save Log File</string>
+   </property>
+  </action>
+  <action name="actionImport_Dataset_from_Multiple_Files">
+   <property name="text">
+    <string>Import Dataset from Multiple Files</string>
+   </property>
+   <property name="toolTip">
+    <string>Import a dataset from a CSV file containing paths to files, concatenating spatially based on relative positions of file names in the CSV file.</string>
    </property>
   </action>
  </widget>
