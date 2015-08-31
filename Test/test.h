@@ -17,15 +17,13 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-
-#include <iostream>
-
-
+#ifndef TEST_H
+#define TEST_H
+#include <Math/VespucciMath.h>
 using namespace std;
+using namespace arma;
 
-int main()
-{
-    cout << "Hello World!" << endl;
-    return 0;
+namespace VespucciTest{
+    vec CreateMockSpectrum(const vec &abscissa, vec peak_heights, vec peak_centers, vec peak_widths);
 }
-
+#endif // TEST_H

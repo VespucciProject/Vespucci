@@ -395,6 +395,9 @@
    </property>
   </action>
   <action name="actionRun_script">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Run Script</string>
    </property>

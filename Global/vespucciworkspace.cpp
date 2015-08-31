@@ -26,6 +26,7 @@
 VespucciWorkspace::VespucciWorkspace() :
     settings_("settings.ini", QSettings::IniFormat)
 {
+    settings_.setIniCodec("UTF-8");
     dataset_loading_count_ = 0;
     directory_ = QDir::homePath();
     CheckSettings();

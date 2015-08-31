@@ -41,6 +41,20 @@ PLSDialog::PLSDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     color_selector_->setEnabled(false);
     image_component_selector_->setEnabled(false);
 
+
+
+    browse_push_button_ = findChild<QPushButton*>("browsePushButton");
+    dataset_label_ = findChild<QLabel*>("datasetLabel");
+    file_label_ = findChild<QLabel*>("fileLabel");
+    file_line_edit_ = findChild<QLineEdit *>("fileLineEdit");
+    dataset_combo_box_ = findChild<QComboBox*>("datasetComboBox");
+
+    browse_push_button_->setVisible(false);
+    dataset_label_->setVisible(false);
+    file_label_->setVisible(false);
+    file_line_edit_->setVisible(false);
+    dataset_combo_box_->setVisible(false);
+
 }
 
 PLSDialog::~PLSDialog()

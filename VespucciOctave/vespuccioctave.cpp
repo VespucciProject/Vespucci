@@ -10,7 +10,7 @@
 #include <octave/parse.h>
 #include <octave/toplev.h>
 #include <octave/symtab.h>
-#include "arrayinterface.h"
+//#include "arrayinterface.h"
 #include <armadillo>
 
 Matrix BuildMatrix(arma::mat *arma_mat);
@@ -20,7 +20,7 @@ bool GetSharedMemory(std::vector<std::string> &invar_names,
 void WriteWrapperFunction(const std::vector<std::string> &invar_names,
                           const std::vector<std::string> &outvar_names);
 bool RunScript();
-\
+
 
 
 ///
@@ -82,8 +82,8 @@ int main(int argc, char *argv[])
     invars_pair = obj_map_mem.find<std::vector<std::string>("in");
     outvars_pair = obj_map_mem.find<std::vector<std::string> >("out");
 
-    std::vector<std::string> outvar_names = *outvars_pair.first;
-    std::vector<std::string> invar_names = *invars_pair.first;
+    std::vector<std::string> outvar_names = outvars_pair.first;
+    std::vector<std::string> invar_names = invars_pair.first;
 
     //create our wrapper function:
     typedef std::vector<std::string>::iterator strvec_it;
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
     octave_value_list oct_outvars;
 
     //add input variables to input variable list
-    for (octave_uint32 i = 0; i < invar_names; ++i){
+    for (int i = 0; i < invar_names.size(); ++i){
         std::string name = invar_names[i];
         arma::mat *arma_mat = obj_mem.find<arma::mat>(name).first;
         Matrix oct_mat = BuildMatrix(arma_mat);
@@ -146,21 +146,14 @@ int main(int argc, char *argv[])
 Matrix BuildMatrix(arma::mat *arma_mat)
 
 {
-    double *mem_ptr = arma_mat->memptr();
-    arma::uword size = arma_mat->n_elem;
     arma::uword m = arma_mat->n_rows;
     arma::uword n = arma_mat->n_cols;
 
-
-    //create tempoary ArrayRep and Array
-    Array<double>::ArrayRep rep(mem_ptr, size);
-    ArrayInterface oct_array(&rep);
-
-    //copy data into matrix
-    Matrix matrix = oct_array.as_matrix();
-
-    //reshape into approprate size
-    matrix.reshape(dim_vector(n_rows, n_cols));
+    Matrix matrix(m, n);
+    //load all elements into
+    for (int j = 0; j < n; ++j)
+        for (int i = 0; i < m; ++i)
+            matrix(i, j) = arma_mat->at(i, j);
     return matrix;
 }
 

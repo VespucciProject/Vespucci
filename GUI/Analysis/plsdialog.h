@@ -92,6 +92,12 @@ private:
     /// Index of the dataset in the various lists
     int data_index_;
 
+
+    QPushButton *browse_push_button_;
+    QLabel *dataset_label_;
+    QLabel *file_label_;
+    QLineEdit *file_line_edit_;
+    QComboBox *dataset_combo_box_;
     ///
     /// \brief data_
     /// Current dataset

@@ -14,12 +14,15 @@ SettingsDialog::SettingsDialog(QWidget *parent, VespucciWorkspace *ws) :
     ord_units_line_edit_ = findChild<QLineEdit*>("ordUnitsLineEdit");
 
     settings_ = workspace->settings();
-
+    settings_->beginGroup("environment");
     QString r_home = settings_->value("R_HOME").toString();
+    settings_->endGroup();
+    settings_->beginGroup("specdata");
     QString abs_label = settings_->value("absLabel").toString();
-    QString abs_units = settings_->value("absUnit").toString();
+    QString abs_units = settings_->value("absUnits").toString();
     QString ord_label = settings_->value("ordLabel").toString();
     QString ord_units = settings_->value("ordUnits").toString();
+    settings_->endGroup();
 
     r_home_line_edit_->setText(r_home);
     abs_label_line_edit_->setText(abs_label);
