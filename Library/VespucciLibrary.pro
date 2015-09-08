@@ -144,6 +144,8 @@ unix:!macx: DEPENDPATH += /usr/local/include/cminpack-1
 INCLUDEPATH += $$PWD/../Vespucci-QCP-sharedlib/include
 DEPENDPATH += $$PWD/../Vespucci-QCP-sharedlib/include
 
+INCLUDEPATH += $$PWD/include
+DEPENDPATH += $$PWD/include
 
 #mlpack and dependencies
 unix:!macx: LIBS += -L/usr/local/lib/ -lmlpack
