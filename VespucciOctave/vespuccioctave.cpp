@@ -65,10 +65,7 @@ int main(int argc, char *argv[])
     typedef ipc::managed_shared_memory::size_type size_type;
 
     ipc::managed_shared_memory script_mem(ipc::open_only, argv[1]);
-    ipc::managed_shared_memory obj_name_mem(ipc::open_only, argv[2]);
-    ipc::managed_shared_memory obj_mem(ipc::open_only, argv[3]);
-
-
+    ipc::managed_shared_memory obj_map_mem(ipc::open_only, argv[2]);
     ipc::managed_shared_memory obj_mem;
 
     std::pair<std::string*, size_type> script_pair;

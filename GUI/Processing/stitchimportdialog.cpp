@@ -39,23 +39,30 @@ void StitchImportDialog::on_browsePushButton_clicked()
 bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec &x, vec &y, vec &abscissa, bool swap_spatial, QString type)
 {
     //follows the vespuccci binary field format:
-
     field<field<mat> > datasets(filenames.n_rows, filenames.n_cols);
     mat current_spectra;
     vec current_x, current_y, current_abscissa;
-    QProgressDialog progress(this);
     bool ok;
+    bool two_dim = datasets.n_rows > 1 && datasets.n_cols > 1;
+    QProgressDialog progress(this);
     for (uword j = 0; j < filenames.n_cols; ++j){
         for (uword i = 0; i < filenames.n_rows; ++i){
+            cout << "i = " << i << endl << "j = " << j << endl;
+            QString filename;
+            if (two_dim)
+                filename = path + "/" + QString::fromStdString(filenames(i, j));
+            else
+                filename = path + "/" + QString::fromStdString(filenames(i));
             if (type == "Vespucci Dataset"){
-                ok = BinaryImport::ImportVespucciBinary(filenames(i,j),
-                                                   current_spectra,
-                                                   current_abscissa,
-                                                   current_x,
-                                                   current_y);
+
+                ok = BinaryImport::ImportVespucciBinary(filename.toStdString(),
+                                                        current_spectra,
+                                                        current_abscissa,
+                                                        current_x,
+                                                        current_y);
             }
             else if (type == "Wide Text"){
-                ok = TextImport::ImportWideText(QString::fromStdString(filenames(i, j)),
+                ok = TextImport::ImportWideText(filename,
                                                 current_spectra,
                                                 current_abscissa,
                                                 current_x,
@@ -63,9 +70,10 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
                                                 swap_spatial,
                                                 &progress,
                                                 "\t");
+
             }
             else if (type == "Wide CSV"){
-                ok = TextImport::ImportWideText(QString::fromStdString(filenames(i, j)),
+                ok = TextImport::ImportWideText(filename,
                                                 current_spectra,
                                                 current_abscissa,
                                                 current_x,
@@ -75,7 +83,7 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
                                                 ",");
             }
             else if (type == "Long Text" || "Long CSV"){
-                ok = TextImport::ImportLongText(QString::fromStdString(filenames(i, j)),
+                ok = TextImport::ImportLongText(filename,
                                                 current_spectra,
                                                 current_abscissa,
                                                 current_x,
@@ -84,29 +92,37 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
                                                 &progress);
             }
             else{
+                cout << "Improper!" << endl;
                 return false;
             }
+
+
 
             if (ok){
-                datasets(i, j)(0) = current_spectra;
-                datasets(i, j)(1) = current_abscissa;
-                datasets(i, j)(2) = current_x;
-                datasets(i, j)(3) = current_y;
+                field<mat> dataset(4);
+                dataset(0) = current_spectra;
+                dataset(1) = current_abscissa;
+                dataset(2) = current_x;
+                dataset(3) = current_y;
+                datasets(i, j) = dataset;
             }
-            else{
-                return false;
-            }
-
-
         }
     }
 
-    return Vespucci::StitchDatasets(datasets, spectra, x, y, abscissa);
+    try{
+        ok = Vespucci::StitchDatasets(datasets, spectra, x, y, abscissa);
+    }catch(exception e){
+        workspace->main_window()->DisplayExceptionWarning("Vespucci::StitchDatasets", e);
+        ok = false;
+    }
+
+    return ok;
 }
 
 void StitchImportDialog::on_buttonBox_accepted()
 {
     QString filename = filename_line_edit_->text();
+    path_ = QFileInfo(filename).absolutePath();
     QString data_format = data_format_combo_box_->currentText();
     bool swap_spatial = swap_spatial_check_box_->isChecked();
     bool ok;
@@ -125,6 +141,7 @@ void StitchImportDialog::on_buttonBox_accepted()
                           swap_spatial, data_format);
     }catch (exception e){
         workspace->main_window()->DisplayExceptionWarning(e);
+        ok = false;
     }
     if (!ok){
         QMessageBox::warning(this,

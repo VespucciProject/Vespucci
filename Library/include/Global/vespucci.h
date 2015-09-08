@@ -1,8 +1,11 @@
 #ifndef VESPUCCI_H
 #define VESPUCCI_H
-#include <qcustomplot.h>
+#include <iostream>
 #include <armadillo>
 #include "Global/libvespucci.h"
+#include <stdlib.h>
+#include <string>
+#include <map>
 
 /// \namespace Vespucci
 /// \brief A namespace for "global" functions, including math functions
@@ -15,7 +18,7 @@ namespace Vespucci{
     VESPUCCI_EXPORT bool SaveText(std::string basename, const arma::mat &spectra, const arma::vec &x, const arma::vec &y, const arma::vec &abscissa, arma::file_type type);
     VESPUCCI_EXPORT bool StitchDatasets(const arma::field<arma::field<arma::mat> > &datasets, arma::mat &spectra, arma::vec &x, arma::vec &y, arma::vec &abscissa);
     VESPUCCI_EXPORT void ResetDataset(arma::mat &spectra, arma::vec &x, arma::vec &y, arma::vec &abscissa);
-
+    VESPUCCI_EXPORT std::string CleanString(const std::string &in);
 }
 
 

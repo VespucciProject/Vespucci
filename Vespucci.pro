@@ -438,7 +438,7 @@ win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libcminpack.a
 
 #libvespucci
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-library/release -lvespucci
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../build/release/libvespucci.a
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../build-library/release/libvespucci.a
 
 win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-library/debug -lvespucci
-win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../build/debug/libvespucci.a
+win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../build-library/debug/libvespucci.a

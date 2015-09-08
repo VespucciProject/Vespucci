@@ -56,6 +56,8 @@ private:
     QLineEdit *name_line_edit_;
     QCheckBox *swap_spatial_check_box_;
 
+    QString path_;
+
     bool LoadDatasets(field<string> filenames,
                       mat &spectra,
                       vec &x, vec &y, vec &abscissa,

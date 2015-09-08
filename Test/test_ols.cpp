@@ -17,3 +17,5 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
+//Assert that our output matches the outputs of Octave and R using the external
+//code interface

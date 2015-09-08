@@ -57,6 +57,7 @@ unix: !macx: QMAKE_CXXFLAGS += -std=c++11 \
                         -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.1/Rcpp/include" \
                         -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.1/RInside/include" \
                         -isystem "/usr/share/R/include"
+
 macx: QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -std=gnu0x -stdlib=libc+
 
 macx: CONFIG +=c++11
@@ -78,55 +79,55 @@ win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
 
 
 SOURCES +=\
-    Data/Import/binaryimport.cpp \
-    Data/Import/textimport.cpp \
-    Math/Accessory/accessory.cpp \
-    Math/DimensionReduction/pls.cpp \
-    Math/DimensionReduction/svds.cpp \
-    Math/DimensionReduction/VCA.cpp \
-    Math/Normalization/normalization.cpp \
-    Math/Quantification/bandwidth.cpp \
-    Math/Quantification/integration.cpp \
-    Math/Quantification/maximum.cpp \
-    Math/Smoothing/FIR.cpp \
-    Math/Smoothing/nonlinear.cpp \
-    Math/Smoothing/whittaker.cpp \
-    Math/Transform/cwt.cpp \
-    Math/PeakFinding/peakfinding.cpp \
-    Math/PeakFinding/cwtridge.cpp \
-    Math/Fitting/linleastsq.cpp \
-    Math/Fitting/nonlinleastsq.cpp \
-    Global/vespucci.cpp \
-    Math/Transform/fft.cpp \
-    Math/Quantification/correlation.cpp
+    src/Data/Import/binaryimport.cpp \
+    src/Data/Import/textimport.cpp \
+    src/Math/Accessory/accessory.cpp \
+    src/Math/DimensionReduction/pls.cpp \
+    src/Math/DimensionReduction/svds.cpp \
+    src/Math/DimensionReduction/VCA.cpp \
+    src/Math/Normalization/normalization.cpp \
+    src/Math/Quantification/bandwidth.cpp \
+    src/Math/Quantification/integration.cpp \
+    src/Math/Quantification/maximum.cpp \
+    src/Math/Smoothing/FIR.cpp \
+    src/Math/Smoothing/nonlinear.cpp \
+    src/Math/Smoothing/whittaker.cpp \
+    src/Math/Transform/cwt.cpp \
+    src/Math/PeakFinding/peakfinding.cpp \
+    src/Math/PeakFinding/cwtridge.cpp \
+    src/Math/Fitting/linleastsq.cpp \
+    src/Math/Fitting/nonlinleastsq.cpp \
+    src/Global/vespucci.cpp \
+    src/Math/Transform/fft.cpp \
+    src/Math/Quantification/correlation.cpp
 
 
 HEADERS  += \
-    Global/enums.h \
-    Data/Import/binaryimport.h \
-    Data/Import/textimport.h \
-    Math/VespucciMath.h \
-    Math/Accessory/accessory.h \
-    Math/DimensionReduction/dimensionreduction.h \
-    Math/Normalization/normalization.h \
-    Math/Quantification/quantification.h \
-    Math/Smoothing/smoothing.h \
-    Math/Transform/cwt.h \
-    Math/PeakFinding/peakfinding.h \
-    Math/Accessory/accessory_impl.h \
-    Math/PeakFinding/cwtridge.h \
-    Math/Fitting/linleastsq.h \
-    Math/Fitting/nonlinleastsq.h \
-    Global/vespucci.h \
-    Global/libvespucci.h \
-    Math/Transform/fft.h \
-    Math/Smoothing/FIR.h \
-    Math/Smoothing/whittaker.h \
-    Math/Smoothing/nonlinear.h \
-    Math/Quantification/integration.h \
-    Math/Quantification/maximum.h \
-    Math/Quantification/bandwidth.h \
-    Math/Quantification/correlation.h
+    include/Global/enums.h \
+    include/Data/Import/binaryimport.h \
+    include/Data/Import/textimport.h \
+    include/Math/VespucciMath.h \
+    include/Math/Accessory/accessory.h \
+    include/Math/DimensionReduction/dimensionreduction.h \
+    include/Math/Normalization/normalization.h \
+    include/Math/Quantification/quantification.h \
+    include/Math/Smoothing/smoothing.h \
+    include/Math/Transform/cwt.h \
+    include/Math/PeakFinding/peakfinding.h \
+    include/Math/Accessory/accessory_impl.h \
+    include/Math/PeakFinding/cwtridge.h \
+    include/Math/Fitting/linleastsq.h \
+    include/Math/Fitting/nonlinleastsq.h \
+    include/Global/vespucci.h \
+    include/Global/libvespucci.h \
+    include/Math/Transform/fft.h \
+    include/Math/Smoothing/FIR.h \
+    include/Math/Smoothing/whittaker.h \
+    include/Math/Smoothing/nonlinear.h \
+    include/Math/Quantification/integration.h \
+    include/Math/Quantification/maximum.h \
+    include/Math/Quantification/bandwidth.h \
+    include/Math/Quantification/correlation.h
 
 
 #linux libraries, specific to my own install. This will be handled by CMake later
@@ -212,7 +213,7 @@ win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libarmadillo.a
 
 #HDF5
 win32: LIBS += -L$$PWD/../MinGW_libs/lib -lhdf5
-wind32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libhdf5.a
+win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libhdf5.a
 
 #ARPACK-NG
 win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -larpack

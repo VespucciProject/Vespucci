@@ -1,5 +1,5 @@
 /*******************************************************************************
-    Copyright (C) 2014 Wright State University - All Rights Reserved
+    Copyright (C) 2015 Wright State University - All Rights Reserved
     Daniel P. Foose - Author
 
     This file is part of Vespucci.
@@ -17,31 +17,19 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef TEXTIMPORT_H
-#define TEXTIMPORT_H
-
+#ifndef BINARYIMPORT_H
+#define BINARYIMPORT_H
 #include <armadillo>
 #include <QtCore>
 #include "Global/libvespucci.h"
 
 
-namespace TextImport
+namespace BinaryImport
 {
-
-    VESPUCCI_EXPORT bool ImportWideText(std::string filename,
-                        arma::mat &spectra,
-                        arma::vec &wavelength,
-                        arma::vec &x, arma::vec &y,
-                        bool swap_spatial);
-
-    VESPUCCI_EXPORT bool ImportMultiplePoints(QMap<QPair<int,int>, QString> filenames,
-                              int rows,
-                              int cols,
-                              arma::mat& spectra,
-                              arma::vec& wavelength,
-                              arma::vec& x, arma::vec& y);
-
-    VESPUCCI_EXPORT bool CheckFileValidity(QString filename, bool &comma_decimals);
+    VESPUCCI_EXPORT bool ImportVespucciBinary(std::string filename,
+                              arma::mat &spectra,
+                              arma::vec &abscissa,
+                              arma::vec &x, arma::vec &y);
 }
 
-#endif // TEXTIMPORT_H
+#endif // BINARYIMPORT_H

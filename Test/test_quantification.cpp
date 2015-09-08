@@ -17,3 +17,5 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
+//create mock peaks using various gaussian, lorentzian and pseudo-voigt functions.
+//assert that the calculated areas and bandwidths are equivalent

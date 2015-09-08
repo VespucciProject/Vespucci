@@ -10,7 +10,8 @@ SOURCES += main.cpp \
     test_pls.cpp \
     test_quantification.cpp \
     test_smoothing.cpp \
-    test.cpp
+    test.cpp \
+    test_peak_finding.cpp
 
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
 unix: !macx: QMAKE_CXXFLAGS += -std=c++11 \

@@ -143,6 +143,12 @@ void MainWindow::on_actionCiting_Vespucci_triggered()
 ///Triggers univariate dialog.
 void MainWindow::on_actionNew_Univariate_Map_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     if (DatasetMappable(row)){
         UnivariateDialog *univariate_dialog =
@@ -156,6 +162,12 @@ void MainWindow::on_actionNew_Univariate_Map_triggered()
 ///Triggers band ratio dialog.
 void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     if(DatasetMappable(row)){
         BandRatioDialog *band_ratio_dialog =
@@ -170,6 +182,12 @@ void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
 ///Triggers principal components dialog
 void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     if (DatasetMappable(row)){
         PrincipalComponentsDialog *principal_components_dialog =
@@ -185,6 +203,12 @@ void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
 ///Triggers vertex components dialog
 void MainWindow::on_actionVertex_Components_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     if (DatasetMappable(row)){
         VCADialog *vca_dialog = new VCADialog(this, workspace, row);
@@ -200,6 +224,12 @@ void MainWindow::on_actionVertex_Components_triggered()
 ///
 void MainWindow::on_actionPartial_Least_Squares_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     if (DatasetMappable(row)){
         PLSDialog *pls_dialog =
@@ -215,6 +245,12 @@ void MainWindow::on_actionPartial_Least_Squares_triggered()
 ///
 void MainWindow::on_actionK_Means_Clustering_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     if (DatasetMappable(row)){
         KMeansDialog *k_means_dialog =
@@ -231,8 +267,12 @@ void MainWindow::on_actionK_Means_Clustering_triggered()
 ///
 void MainWindow::on_actionNormalize_Standardize_triggered()
 {
-    if (dataset_list_view_->model()->rowCount() < 1)
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
         return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QStringList methods;
@@ -286,8 +326,12 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
 ///Subtracts a background matrix (a saved armadillo binary matrix) from spectra
 void MainWindow::on_actionSubtract_Background_triggered()
 {
-    if (dataset_list_view_->model()->rowCount() < 1)
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
         return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     QString filename =
@@ -337,8 +381,12 @@ void MainWindow::on_actionSubtract_Background_triggered()
 ///Saves the spectra matrix of selected dataset as binary, csv, or raw ascii.
 void MainWindow::on_actionSpectra_triggered()
 {
-    if (dataset_list_view_->model()->rowCount() < 1)
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
         return;
+    }
 
     bool success;
     int row = dataset_list_view_->currentIndex().row();
@@ -371,8 +419,12 @@ void MainWindow::on_actionSpectra_triggered()
 /// Saves a transpose of spectra_
 void MainWindow::on_actionSpectra_as_Columns_triggered()
 {
-    if (dataset_list_view_->model()->rowCount() < 1)
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
         return;
+    }
     bool success;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
@@ -406,8 +458,12 @@ void MainWindow::on_actionSpectra_as_Columns_triggered()
 /// Saves an average spectrum of the selected dataset
 void MainWindow::on_actionAverage_Spectra_triggered()
 {
-    if (dataset_list_view_->model()->rowCount() < 1)
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
         return;
+    }
     bool success;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
@@ -440,8 +496,12 @@ void MainWindow::on_actionAverage_Spectra_triggered()
 /// Saves average spectrum (with abscissa above).
 void MainWindow::on_actionAverage_Spectra_with_Abscissa_triggered()
 {
-    if (dataset_list_view_->model()->rowCount() < 1)
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
         return;
+    }
     bool success;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
@@ -484,8 +544,12 @@ void MainWindow::on_actionAverage_Spectra_with_Abscissa_triggered()
 /// Saves the spectral abscissa
 void MainWindow::on_actionSpectral_Abscissa_triggered()
 {
-    if (dataset_list_view_->model()->rowCount() < 1)
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
         return;
+    }
     bool success;
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
@@ -519,6 +583,12 @@ void MainWindow::on_actionSpectral_Abscissa_triggered()
 /// Saves a matrix containing all spatial and spectral data
 void MainWindow::on_actionAll_Data_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     if (dataset_list_view_->model()->rowCount() < 1)
         return;
     bool success;
@@ -554,6 +624,12 @@ void MainWindow::on_actionAll_Data_triggered()
 /// Triggers dialog to filter data
 void MainWindow::on_actionFilter_Derivatize_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     FilterDialog *filter_dialog = new FilterDialog(this, workspace, row);
     filter_dialog->show();
@@ -564,6 +640,12 @@ void MainWindow::on_actionFilter_Derivatize_triggered()
 /// Closes the dataset. Should force it to go out of scope
 void MainWindow::on_actionClose_Dataset_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     QModelIndex index = dataset_list_view_->currentIndex();
     QString name = dataset_list_view_->currentIndex().data().value<QString>();
     QString text = "Are you sure you want to close the dataset " + name + "?" +
@@ -589,7 +671,12 @@ void MainWindow::on_actionDocumentation_triggered()
 /// \brief MainWindow::on_actionCrop_triggered
 /// Triggers the CropDialog
 void MainWindow::on_actionCrop_triggered()
-{
+{    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     CropDialog *crop_dialog = new CropDialog(this, workspace, row);
     crop_dialog->show();
@@ -600,6 +687,12 @@ void MainWindow::on_actionCrop_triggered()
 /// Triggers Baseline correction dialog
 void MainWindow::on_actionCorrect_Baseline_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     BaselineDialog *baseline_dialog = new BaselineDialog(this, workspace, row);
     baseline_dialog->show();
@@ -610,6 +703,12 @@ void MainWindow::on_actionCorrect_Baseline_triggered()
 /// Triggers DataViewer
 void MainWindow::on_actionView_Dataset_Elements_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     DataViewer *data_viewer = new DataViewer(0, workspace, row);
     data_viewer->show();
@@ -776,8 +875,12 @@ VespucciWorkspace* MainWindow::workspace_ptr()
 
 void MainWindow::on_actionUndo_triggered()
 {
-    if (dataset_list_view_->model()->rowCount() < 1)
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
         return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
 
@@ -830,8 +933,12 @@ void MainWindow::DisplayExceptionWarning(string where, exception e)
 
 void MainWindow::on_datasetsListView_clicked(const QModelIndex &index)
 {
-    if (dataset_list_view_->model()->rowCount() < 1)
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
         return;
+    }
 
     QSharedPointer<VespucciDataset> dataset =
             dataset_list_model_->DatasetAt(index.row());
@@ -844,8 +951,12 @@ void MainWindow::on_datasetsListView_clicked(const QModelIndex &index)
 /// Change the row that is active in the dataset list view
 void MainWindow::SetActiveDatasetListRow(int row)
 {
-    if (dataset_list_view_->model()->rowCount() < 1)
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
         return;
+    }
     QSharedPointer<VespucciDataset> dataset =
             dataset_list_model_->DatasetAt(row);
     map_list_view_->setModel(dataset->map_list_model());
@@ -853,8 +964,12 @@ void MainWindow::SetActiveDatasetListRow(int row)
 
 bool MainWindow::DatasetMappable(int row)
 {
-    if (dataset_list_view_->model()->rowCount() < 1)
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
         return false;
+    }
     QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
     if(data->non_spatial()){
         QMessageBox::warning(this,
@@ -888,6 +1003,12 @@ void MainWindow::DatasetAdded(const QModelIndex &index)
 /// Opens or closes a map when it is double clicked.
 void MainWindow::on_mapsListView_doubleClicked(const QModelIndex &index)
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     MapListModel *map_list_model = qobject_cast<MapListModel*>(map_list_view_->model());
     QSharedPointer<MapData> map_data = map_list_model->MapAt(index.row());
     if (map_data->MapWindowVisible())
@@ -898,6 +1019,12 @@ void MainWindow::on_mapsListView_doubleClicked(const QModelIndex &index)
 
 void MainWindow::on_actionDelete_Map_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     MapListModel *map_list_model = qobject_cast<MapListModel*>(map_list_view_->model());
     QModelIndex index = map_list_view_->currentIndex();
     map_list_model->removeRow(index.row(), index);
@@ -905,12 +1032,24 @@ void MainWindow::on_actionDelete_Map_triggered()
 
 void MainWindow::on_actionMultivariate_Analysis_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     AnalysisDialog *analysis_dialog = new AnalysisDialog(this, workspace, dataset_list_view_->currentIndex().row());
     analysis_dialog->show();
 }
 
 void MainWindow::on_actionNew_Composite_Dataset_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     MetaDatasetDialog *meta_dialog = new MetaDatasetDialog(this, workspace);
     meta_dialog->show();
 }
@@ -919,8 +1058,12 @@ void MainWindow::on_actionNew_Composite_Dataset_triggered()
 
 void MainWindow::on_actionReject_Clipped_Spectra_triggered()
 {
-    if (dataset_list_view_->model()->rowCount() < 1)
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
         return;
+    }
     ThresholdDialog *dialog = new ThresholdDialog(this, workspace, dataset_list_view_->currentIndex().row());
     dialog->show();
 }
@@ -944,6 +1087,12 @@ void MainWindow::RangeDialogAccepted(double min, double max)
 
 void MainWindow::on_actionUnivariate_Analysis_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     UnivariateAnalysisDialog *analysis_dialog = new UnivariateAnalysisDialog(this, workspace, row);
     analysis_dialog->show();
@@ -951,6 +1100,12 @@ void MainWindow::on_actionUnivariate_Analysis_triggered()
 
 void MainWindow::on_actionLarge_Matrices_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     QSharedPointer<VespucciDataset> data =
             workspace->DatasetAt(dataset_list_view_->currentIndex().row());
     QMap<QString, mat*> data_objects;
@@ -1049,6 +1204,12 @@ void MainWindow::on_actionLarge_Matrices_triggered()
 
 void MainWindow::on_actionView_Edit_Spectra_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     QSharedPointer<VespucciDataset> data =
             workspace->DatasetAt(dataset_list_view_->currentIndex().row());
     SpectrumSelectionDialog *spectrum_selector =
@@ -1058,12 +1219,24 @@ void MainWindow::on_actionView_Edit_Spectra_triggered()
 
 void MainWindow::on_actionBooleanize_Clamp_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     BooleanizeDialog *booleanize_dialog = new BooleanizeDialog(this, workspace, dataset_list_view_->currentIndex().row());
     booleanize_dialog->show();
 }
 
 void MainWindow::on_actionRemove_Vectors_of_Zeros_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     QStringList items;
     bool ok;
     items << "Remove columns of zeros (removes spectra)" << "Remove rows of zeros (removes wavelengths)";
@@ -1098,6 +1271,12 @@ void MainWindow::on_actionRemove_Vectors_of_Zeros_triggered()
 
 void MainWindow::on_actionRun_script_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     ScriptDialog *script_dialog = new ScriptDialog(this, workspace, row);
     script_dialog->show();
@@ -1105,6 +1284,12 @@ void MainWindow::on_actionRun_script_triggered()
 
 void MainWindow::on_actionDetect_Peaks_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     PeakFindingDialog *peak_dialog = new PeakFindingDialog(this, workspace, row);
     peak_dialog->show();
@@ -1112,6 +1297,12 @@ void MainWindow::on_actionDetect_Peaks_triggered()
 
 void MainWindow::on_actionCalculate_Peak_Populations_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     HasPeaksDialog *peaks_dialog = new HasPeaksDialog(this, workspace, row);
     peaks_dialog->show();
@@ -1132,6 +1323,12 @@ void MainWindow::on_actionBatch_File_Conversion_triggered()
 
 void MainWindow::on_actionClassical_Least_Squares_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     ClassicalLeastSquaresDialog *cls_dialog = new ClassicalLeastSquaresDialog(this, workspace, row);
     cls_dialog->show();
@@ -1145,6 +1342,12 @@ void MainWindow::on_actionSettings_triggered()
 
 void MainWindow::on_actionTransform_Abscissa_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     AbscissaTransformDialog *abscissa_transform_dialog = new AbscissaTransformDialog(this, workspace, row);
     abscissa_transform_dialog->show();
@@ -1152,6 +1355,12 @@ void MainWindow::on_actionTransform_Abscissa_triggered()
 
 void MainWindow::on_actionFourierTransform_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     FourierTransformDialog *fourier_transform_dialog = new FourierTransformDialog(this, workspace, row);
     fourier_transform_dialog->show();
@@ -1160,6 +1369,11 @@ void MainWindow::on_actionFourierTransform_triggered()
 
 void MainWindow::on_actionInterpolate_to_New_Abscissa_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+    }
     int row = dataset_list_view_->currentIndex().row();
     AbscissaInterpolationDialog *abs_interp_dialog =
             new AbscissaInterpolationDialog(this, workspace, row);
@@ -1168,6 +1382,12 @@ void MainWindow::on_actionInterpolate_to_New_Abscissa_triggered()
 
 void MainWindow::on_actionSave_Log_File_triggered()
 {
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
     int row = dataset_list_view_->currentIndex().row();
     QSharedPointer<VespucciDataset> dataset = workspace->DatasetAt(row);
     QString filename = QFileDialog::getSaveFileName(this,

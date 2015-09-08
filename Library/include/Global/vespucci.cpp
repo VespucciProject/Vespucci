@@ -122,8 +122,12 @@ bool Vespucci::StitchDatasets(const arma::field<arma::field<arma::mat> > &datase
     //due to rounding errors, this may not be the same for all points in a dataset
     //to armadillo's degree of precision, but will be close. If drastically different
     //color maps will be rendered meaningless but spectral data will still be valid
-    arma::vec unique_x = arma::unique(datasets(0,0)(2));
-    arma::vec unique_y = arma::unique(datasets(0,0)(3));
+    arma::mat first_x = datasets(0, 0)(2);
+    arma::mat first_y = datasets(0, 0)(3);
+
+
+    arma::vec unique_x = arma::unique(first_x);
+    arma::vec unique_y = arma::unique(first_y);
     double spatial_resolution;
     if (unique_x.n_rows < 2){
         if (unique_y.n_rows > 1){
@@ -142,6 +146,7 @@ bool Vespucci::StitchDatasets(const arma::field<arma::field<arma::mat> > &datase
     arma::uword row_block_n_unique_y = 0;
     //building bottom to top, left to right
     for (int i = datasets.n_rows - 1; i >= 0; --i){
+        row_block_n_unique_y = 0;
         unique_x = arma::unique(datasets(i, 0)(2));
         arma::uword n_unique_x = unique_x.n_rows;
         arma::mat row_block_spc;
@@ -151,7 +156,7 @@ bool Vespucci::StitchDatasets(const arma::field<arma::field<arma::mat> > &datase
         for (arma::uword j = 0; j < datasets.n_cols; ++j){
             arma::uword abs_ct = datasets(i,j)(1).n_rows;
             //ensure validity of spectra for this abscissa
-            if (datasets(i, j)(0).n_cols != abs_ct){
+            if (datasets(i,j)(0).n_rows != abs_ct){
                 Vespucci::ResetDataset(spectra, x, y, abscissa);
                 return false;
             }
@@ -164,33 +169,30 @@ bool Vespucci::StitchDatasets(const arma::field<arma::field<arma::mat> > &datase
             }
             row_block_n_unique_y += unique_y.n_rows;
 
-            arma::mat current_spc = datasets(i, j)(0);
-            arma::vec current_x = (datasets(i, j)(2));
-            arma::vec current_y = datasets(i, j)(3);
 
             //we're shifting values so that 0,0 is local origin
             //lowest value of x and y globally will be zero
-            current_x = current_x - current_x.min()*arma::ones(current_x.n_rows);
-            current_y = current_y - current_y.min()*arma::ones(current_y.n_rows);
+            arma::vec new_x = datasets(i,j)(2) - datasets(i,j)(2).min()*arma::ones(datasets(i,j)(2).n_rows);
+            arma::vec new_y = datasets(i,j)(3) - datasets(i,j)(3).min()*arma::ones(datasets(i,j)(3).n_rows);
 
             //x offset is equal to the current_maximum
-            double x_offset = (row_block_x.n_rows ?
+            double x_offset = (row_block_x.n_elem ?
                                    row_block_x.max() + spatial_resolution :
                                    0);
-            current_x = current_x + x_offset*arma::ones(current_x.n_rows);
+            new_x = datasets(i,j)(2) + x_offset*arma::ones(datasets(i,j)(2).n_rows);
 
             //add to row block
-            if (!row_block_x.n_rows){row_block_x = current_x;}
-            else{row_block_x = arma::join_vert(row_block_x, current_x);}
-            if (!row_block_y.n_rows){row_block_y = current_x;}
-            else{row_block_y = arma::join_vert(row_block_y, current_y);}
-            if (!row_block_spc.n_rows){row_block_spc = current_spc;}
-            else{row_block_spc = arma::join_horiz(row_block_spc, current_spc);}
+            if (!row_block_x.n_elem){row_block_x = new_x;}
+            else{row_block_x = arma::join_vert(row_block_x, new_x);}
+            if (!row_block_y.n_elem){row_block_y = new_y;}
+            else{row_block_y = arma::join_vert(row_block_y, new_y);}
+            if (!row_block_spc.n_elem){row_block_spc = datasets(i,j)(0);}
+            else{row_block_spc = arma::join_horiz(row_block_spc, datasets(i,j)(0));}
         }//datasets in row block
-
         //offset y values in this row block;
-        double y_offset = (y.n_rows ?
-                               y.max() + spatial_resolution :
+
+        double y_offset = (y.n_elem ?
+                               y.max() - row_block_y.min() + spatial_resolution :
                                0);
         row_block_y = row_block_y + y_offset*arma::ones(row_block_y.n_rows);
 
@@ -214,8 +216,8 @@ bool Vespucci::StitchDatasets(const arma::field<arma::field<arma::mat> > &datase
     }//row blocks in new dataset
 
     //recenter spatial data to put origin at center of spatial data
-    x = x - arma::median(x)*arma::ones(x.n_rows);
-    y = y - arma::median(y)*arma::ones(y.n_rows);
+    //x = x - arma::median(x)*arma::ones(x.n_rows);
+    //y = y - arma::median(y)*arma::ones(y.n_rows);
 
     return true;
 }
@@ -226,4 +228,20 @@ void Vespucci::ResetDataset(arma::mat &spectra, arma::vec &x, arma::vec &y, arma
     x.reset();
     y.reset();
     abscissa.reset();
+}
+
+///
+/// \brief Vespucci::CleanString
+/// \param in
+/// \return
+///
+std::string Vespucci::CleanString(const std::string &in)
+{
+    std::string out;
+    std::string::const_iterator it = in.begin();
+    for (const char c : in){
+        if (c == '\t' || c == ','){out.append(" ");}
+        else{out.append(&c);}
+    }
+    return out;
 }

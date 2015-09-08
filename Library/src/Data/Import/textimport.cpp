@@ -18,8 +18,11 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include <Data/Import/textimport.h>
+#include <Global/vespucci.h>
 #include <regex>
 #include <QtCore>
+#include <boost/tokenizer.hpp>
+#include <boost/lexical_cast.hpp>
 
 
 using namespace arma;
@@ -148,39 +151,94 @@ bool TextImport::ImportMultiplePoints(QMap<QPair<int, int>, QString> filenames,
 
 }
 
-
-bool TextImport::ImportWideText(std::string filename, arma::mat &spectra, arma::vec &wavelength, arma::vec &x, arma::vec &y, bool swap_spatial)
+///
+/// \brief TextImport::ImportWideText
+/// \param filename
+/// \param spectra
+/// \param abscissa
+/// \param x
+/// \param y
+/// \param swap_spatial
+/// \return
+/// May throw exceptions or give improper results. Not intended for use in GUI
+/// programs. See textimportqpd.h in Vespucci
+bool TextImport::ImportWideText(std::string filename,
+                                arma::mat &spectra,
+                                arma::vec &abscissa,
+                                arma::vec &x, arma::vec &y,
+                                bool swap_spatial)
 {
+    Vespucci::ResetDataset(spectra, x, y, abscissa);
+    std::vector<double> x_s;
+    std::vector<double> y_s;
+    std::vector<double> abs_s;
+    std::vector<double> spec_s;
     std::ifstream file_stream(filename);
     std::string current_line;
-    arma::rowvec current_row;
     std::getline(file_stream, current_line);
-
-    current_line = std::regex_replace(current_line, std::regex("\t|,"), std::string(" "));
-    current_row = arma::rowvec(current_line);
-    wavelength = current_row.t();
+    typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
+    tokenizer::iterator it;
+    boost::char_separator<char> sep(",\t");
+    tokenizer tok(current_line, sep);
+    for (it = tok.begin(); it != tok.end(); ++it){
+        try{
+            abs_s.push_back(boost::lexical_cast<double>(*it));
+        }catch(boost::bad_lexical_cast & b){
+            std::cout << b.what() << std::endl;
+        }
+    }
     while (file_stream){
         std::getline(file_stream, current_line);
-        //replace every separatory character with space
-        current_line = std::regex_replace(current_line, std::regex("\t|,"), std::string(" "));
-        current_row = arma::rowvec(current_line);
+        if (current_line.empty()){break;}
+        tok = tokenizer(current_line, sep);
+        it = tok.begin();
         if (swap_spatial){
-            x.insert_rows(x.n_rows, 1);
-            x(x.n_rows-1) = current_row(1);
-            y.insert_rows(y.n_rows, 1);
-            y(y.n_rows-1) = current_row(0);
+            try{
+                y_s.push_back(boost::lexical_cast<double>(*it));
+            }catch (boost::bad_lexical_cast & b){
+                std::cout << b.what();
+            }
+
+            ++it;
+            try{
+                x_s.push_back(boost::lexical_cast<double>(*it));
+            }catch (boost::bad_lexical_cast & b){
+                std::cout << b.what();
+            }
+
+            ++it;
         }
         else{
-            y.insert_rows(y.n_rows, 1);
-            y(y.n_rows-1) = current_row(1);
-            x.insert_rows(x.n_rows, 1);
-            x(x.n_rows-1) = current_row(0);
-        }
+            try{
+                x_s.push_back(boost::lexical_cast<double>(*it));
+            }catch (boost::bad_lexical_cast & b){
+                std::cout << b.what();
+            }
 
-        current_row.shed_cols(0,1);
-        spectra.insert_cols(spectra.n_cols, 1);
-        spectra.col(spectra.n_cols-1) = current_row.t();
+            ++it;
+            try{
+                y_s.push_back(boost::lexical_cast<double>(*it));
+            }catch (boost::bad_lexical_cast & b){
+                std::cout << b.what();
+            }
+
+            ++it;
+        }
+        while (it != tok.end()){
+            try{
+               spec_s.push_back(boost::lexical_cast<double>(*it));
+            }catch (boost::bad_lexical_cast & b){
+                std::cout << b.what();
+            }
+
+            ++it;
+        }
     }
+    abscissa = arma::vec(abs_s);
+    x = arma::vec(x_s);
+    y = arma::vec(y_s);
+    spectra = arma::mat(spec_s);
+    spectra.reshape(abscissa.n_rows, x.n_rows);
     return true;
 
 }
