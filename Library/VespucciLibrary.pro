@@ -16,7 +16,7 @@
 #    along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 
 ################################################################################
-##############                Vespucci Qt Profile                 ##############
+##############               LibVespucci Qt Profile               ##############
 ################################################################################
 # The configuration for windows assumes that you have downloaded the compiled
 # windows libraries from the MinGW_libs branch of the Vespucci repository.
@@ -29,7 +29,6 @@
 
 
 # Configuration settings for unix systems are based on my own personal environment
-# I use Clang on linux for the diagnostics.
 
 QT       += core gui
 QT       += widgets printsupport
@@ -200,94 +199,79 @@ macx: LIBS += -L$$PWD/../mac_libs/lib/ -lqcustomplot
 
 #Windows Libraries
 #Binaries for windows libraries are included in the MinGW_libs branch of the repository
-win32: INCLUDEPATH += $$PWD/../MinGW_libs/include
-win32: DEPENDPATH += $$PWD/../MinGW_libs/include
-win32: INCLUDEPATH += $$PWD/../MinGW_libs/boost/
-win32: DEPENDPATH += $$PWD/../MinGW_libs/boost/
+win32: INCLUDEPATH += $$PWD/../../MinGW_libs/include
+win32: DEPENDPATH += $$PWD/../../MinGW_libs/include
+win32: INCLUDEPATH += $$PWD/../../MinGW_libs/boost/
+win32: DEPENDPATH += $$PWD/../../MinGW_libs/boost/
 
 #MLPACK
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lmlpack
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libmlpack.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lmlpack
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libmlpack.a
 
 #Armadillo
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -larmadillo
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libarmadillo.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -larmadillo
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libarmadillo.a
 
 #HDF5
-win32: LIBS += -L$$PWD/../MinGW_libs/lib -lhdf5
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libhdf5.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/lib -lhdf5
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libhdf5.a
 
 #ARPACK-NG
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -larpack
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libarpack.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -larpack
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libarpack.a
 
 #OpenBLAS (linked dynamically because arpack links it dynamically)
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -llibopenblas
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libopenblas.dll.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -llibopenblas
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libopenblas.dll.a
 
 #Libgfortran
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lgfortran
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libgfortran.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lgfortran
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libgfortran.a
 
 #Boost random (C99)
-win32: LIBS += -L$$PWD/../MinGW_libs/boost/stage/lib/ -lboost_math_c99-mgw49-mt-1_57
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/boost/stage/lib/libboost_math_c99-mgw49-mt-1_57.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/boost/stage/lib/ -lboost_math_c99-mgw49-mt-1_57
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/boost/stage/lib/libboost_math_c99-mgw49-mt-1_57.a
 
 #Boost math
-win32: LIBS += -L$$PWD/../MinGW_libs/boost/stage/lib/ -lboost_math_c99-mgw49-mt-1_57
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/boost/stage/lib/libboost_math_c99-mgw49-mt-1_57.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/boost/stage/lib/ -lboost_math_c99-mgw49-mt-1_57
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/boost/stage/lib/libboost_math_c99-mgw49-mt-1_57.a
 
 #Boost test
-win32: LIBS += -L$$PWD/../MinGW_libs/boost/stage/lib/ -lboost_unit_test_framework-mgw49-mt-1_57
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/boost/stage/lib/libboost_unit_test_framework-mgw49-mt-1_57.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/boost/stage/lib/ -lboost_unit_test_framework-mgw49-mt-1_57
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/boost/stage/lib/libboost_unit_test_framework-mgw49-mt-1_57.a
 
 #Boost program_options
-win32: LIBS += -L$$PWD/../MinGW_libs/boost/stage/lib/ -lboost_program_options-mgw49-mt-1_57
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/boost/stage/lib/libboost_program_options-mgw49-mt-1_57.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/boost/stage/lib/ -lboost_program_options-mgw49-mt-1_57
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/boost/stage/lib/libboost_program_options-mgw49-mt-1_57.a
 
 #LibXML2
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lxml2
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libxml2.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lxml2
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libxml2.a
 
 #LibICONV
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -liconv
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libiconv.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -liconv
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libiconv.a
 
 #Zlib
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lz
-else:win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libz.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lz
+else:win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libz.a
 
 #The standard C++ library (linked dynmically by openblas)
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lstdc++
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libstdc++.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lstdc++
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libstdc++.a
 
 #QCustomPlot
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqcustomplot
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqcustomplotd
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplot.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplotd.a
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../MinGW_libs/lib/ -lqcustomplot
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../MinGW_libs/lib/ -lqcustomplotd
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libqcustomplot.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libqcustomplotd.a
 
-#R Integration (these libraries will depend on your R installation)
-win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\Library\RInside\include
-win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\Library\RCpp\include
-win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\Library\RCppArmadillo\include
-win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\include
-
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\library\RInside\libs\x64 -lRInside
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\library\RCppArmadillo\libs\x64 -lRCppArmadillo
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\library\RCpp\libs\x64 -lRCpp
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lR
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRlapack
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRblas
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRiconv
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRzlib
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRgraphapp
 
 #CMinpack
-win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -lcminpack
-INCLUDEPATH += $$PWD/../MinGW_libs/include/cminpack-1
-DEPENDPATH += $$PWD/../MinGW_libs/include/cminpack-1
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libcminpack.a
+win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lcminpack
+INCLUDEPATH += $$PWD/../../MinGW_libs/include/cminpack-1
+DEPENDPATH += $$PWD/../../MinGW_libs/include/cminpack-1
+win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libcminpack.a
 
 
 

@@ -25,5 +25,6 @@ using namespace arma;
 
 namespace VespucciTest{
     vec CreateMockSpectrum(const vec &abscissa, vec peak_heights, vec peak_centers, vec peak_widths);
+    vec CreateGaussianPeak(const vec &x, double sigma, double &fwhm, double &area);
 }
 #endif // TEST_H

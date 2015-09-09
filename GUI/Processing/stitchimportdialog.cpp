@@ -50,9 +50,9 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
             cout << "i = " << i << endl << "j = " << j << endl;
             QString filename;
             if (two_dim)
-                filename = path + "/" + QString::fromStdString(filenames(i, j));
+                filename = path_ + "/" + QString::fromStdString(filenames(i, j));
             else
-                filename = path + "/" + QString::fromStdString(filenames(i));
+                filename = path_ + "/" + QString::fromStdString(filenames(i));
             if (type == "Vespucci Dataset"){
 
                 ok = BinaryImport::ImportVespucciBinary(filename.toStdString(),

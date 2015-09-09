@@ -123,8 +123,6 @@ SOURCES += main.cpp\
     GUI/Analysis/univariatedialog.cpp \
     GUI/Analysis/vcadialog.cpp \
     GUI/QAbstractItemModel/vespuccitablemodel.cpp \
-    External/R/VespucciR.cpp \
-    External/Octave/VespucciOctave.cpp \
     GUI/scriptdialog.cpp \
     Data/Analysis/cwtdata.cpp \
     GUI/Analysis/peakfindingdialog.cpp \
@@ -136,14 +134,15 @@ SOURCES += main.cpp\
     GUI/Processing/fouriertransformdialog.cpp \
     GUI/Display/plotviewer.cpp \
     Data/Import/textimportqpd.cpp \
-    Global/global.cpp \
     GUI/Analysis/classicalleastsquaresdialog.cpp \
     GUI/settingsdialog.cpp \
     GUI/Processing/abscissainterpolationdialog.cpp \
-    GUI/Processing/stitchimportdialog.cpp
+    GUI/Processing/stitchimportdialog.cpp \
+    Global/global.cpp \
+    External/interprocesssender.cpp \
+    External/fileinterprocess.cpp
 
 HEADERS  += \
-    Global/enums.h \
     GUI/mainwindow.h \
     Global/vespucciworkspace.h \
     Data/Analysis/analysisresults.h \
@@ -185,7 +184,6 @@ HEADERS  += \
     GUI/Analysis/vcadialog.h \
     GUI/QAbstractItemModel/vespuccitablemodel.h \
     GUI/Analysis/plotmakerdialog.h \
-    External/Octave/VespucciOctave.h \
     GUI/scriptdialog.h \
     Data/Analysis/cwtdata.h \
     GUI/Analysis/peakfindingdialog.h \
@@ -197,11 +195,13 @@ HEADERS  += \
     GUI/Processing/fouriertransformdialog.h \
     GUI/Display/plotviewer.h \
     Data/Import/textimportqpd.h \
-    Global/global.h \
     GUI/Analysis/classicalleastsquaresdialog.h \
     GUI/settingsdialog.h \
     GUI/Processing/abscissainterpolationdialog.h \
-    GUI/Processing/stitchimportdialog.h
+    GUI/Processing/stitchimportdialog.h \
+    Global/global.h \
+    External/interprocesssender.h \
+    External/fileinterprocess.h
 
 
 FORMS    += \
@@ -252,8 +252,8 @@ RESOURCES += \
 RC_ICONS = "vespuccilogo.ico"
 
 #for inclusion of LibVespucci headers
-INCLUDEPATH += $$PWD/
-DEPENDPATH += $$PWD/
+INCLUDEPATH += $$PWD/Library/include
+DEPENDPATH += $$PWD/Library/include
 
 #linux libraries, specific to my own install. This will be handled by CMake later
 #I hope...
@@ -409,21 +409,6 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqc
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplot.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplotd.a
 
-#R Integration (these libraries will depend on your R installation)
-win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\Library\RInside\include
-win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\Library\RCpp\include
-win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\Library\RCppArmadillo\include
-win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\include
-
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\library\RInside\libs\x64 -lRInside
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\library\RCppArmadillo\libs\x64 -lRCppArmadillo
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\library\RCpp\libs\x64 -lRCpp
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lR
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRlapack
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRblas
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRiconv
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRzlib
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRgraphapp
 
 #levmar
 win32: LIBS += -L$$PWD/../MinGW_libs/lib/ -llevmar

@@ -45,8 +45,8 @@ win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
                          -isystem "C:/Tools/R/R-3.1.3/library/RcppArmadillo/include/armadillo_bits"
 
 #for inclusion of LibVespucci headers
-INCLUDEPATH += $$PWD/../
-DEPENDPATH += $$PWD/../
+INCLUDEPATH += $$PWD/../Library/include
+DEPENDPATH += $$PWD/../Library/include
 
 #linux libraries, specific to my own install. This will be handled by CMake later
 #I hope...

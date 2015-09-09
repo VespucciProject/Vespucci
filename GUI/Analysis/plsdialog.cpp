@@ -27,12 +27,12 @@ PLSDialog::PLSDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     ui->setupUi(this);
     workspace = ws;
     data_ = workspace->DatasetAt(row);
-    image_component_selector_ = findChild<QSpinBox *>("componentSpinBox");
-    components_selector_ = findChild<QSpinBox *>("componentsToCalculatespinBox");
+    image_component_selector_ = findChild<QSpinBox *>("imageComponentSpinBox");
+    components_selector_ = findChild<QSpinBox *>("componentsSpinBox");
     color_selector_ = findChild<QComboBox *>("gradientComboBox");
     recalculate_box_ = findChild<QCheckBox *>("recalculateCheckBox");
     prediction_box_ = findChild<QCheckBox *>("predictionCheckBox");
-    name_box_ = findChild<QLineEdit*>("nameLineEdit");
+    name_box_ = findChild<QLineEdit*>("mapNameLineEdit");
     map_check_box_ = findChild<QCheckBox *>("mapCheckBox");
     data_index_ = row;
 
