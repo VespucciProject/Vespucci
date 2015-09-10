@@ -1,4 +1,6 @@
 #include <Math/DimensionReduction/dimensionreduction.h>
+#include <Math/Accessory/accessory.h>
+
 ///
 /// \brief Vespucci::Math::DimensionReduction::svds Finds a few largest singular values of the arma::matrix X.
 /// This is based on the Matlab/Octave function svds(), a truncated singular

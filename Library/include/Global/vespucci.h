@@ -1,8 +1,11 @@
 #ifndef VESPUCCI_H
 #define VESPUCCI_H
+#if !defined( SWIG )
+    // SWIG should not see #inlcude<armadillo> as it can not handle it
+    #include <armadillo>
+    #include "Global/libvespucci.h"
+#endif
 #include <iostream>
-#include <armadillo>
-#include "Global/libvespucci.h"
 #include <stdlib.h>
 #include <string>
 #include <map>

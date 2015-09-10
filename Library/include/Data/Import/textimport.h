@@ -20,9 +20,11 @@
 #ifndef TEXTIMPORT_H
 #define TEXTIMPORT_H
 
-#include <armadillo>
-#include <QtCore>
-#include "Global/libvespucci.h"
+#if !defined( SWIG )
+    // SWIG should not see #inlcude<armadillo> as it can not handle it
+    #include <armadillo>
+    #include "Global/libvespucci.h"
+#endif
 
 
 namespace TextImport

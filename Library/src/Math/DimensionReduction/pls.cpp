@@ -18,6 +18,8 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include <Math/DimensionReduction/dimensionreduction.h>
+#include <Math/Accessory/accessory.h>
+
 
 ///
 /// \brief Vespucci::MathDimensionReduction::plsregress PLS Regression Using SIMPLS algorithm.

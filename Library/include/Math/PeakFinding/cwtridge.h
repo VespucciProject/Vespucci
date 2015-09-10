@@ -19,8 +19,12 @@
 *******************************************************************************/
 #ifndef CWTRIDGE_H
 #define CWTRIDGE_H
-#include <mlpack/core.hpp>
-#include "Global/libvespucci.h"
+#if !defined( SWIG )
+    // SWIG should not see #inlcude<armadillo> as it can not handle it
+    #include "Math/VespucciMath.h"
+    #include "Global/libvespucci.h"
+#endif
+
 namespace Vespucci{
 namespace Math{
 class VESPUCCI_EXPORT CWTRidge

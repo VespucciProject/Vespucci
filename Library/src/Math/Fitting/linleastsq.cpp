@@ -17,7 +17,9 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "linleastsq.h"
+#include "Math/Fitting/linleastsq.h"
+#include "Math/Accessory/accessory.h"
+#include "Math/Accessory/accessory_impl.h"
 ///
 /// \brief Vespucci::Math::LinLeastSq::IModPoly Perform the Vancouver Raman Algorithm to correct baseline
 /// \param spectrum A vector containing the signal to be corrected

@@ -19,9 +19,8 @@
 *******************************************************************************/
 #include <iostream>
 #include <armadillo>
-#include <Rcpp.h>
-#include <RInside.h>
 #include <RcppArmadillo.h>
+#include <RInside.h>
 
 using namespace std;
 
@@ -53,7 +52,7 @@ int main(int argc, char *argv[])
     for (arma::uword i = 0; i < invar_names.n_elem; ++i)
         R_instance[invar_names(i)] = invars(i).t(); //to account for R's row-major nature
 
-    std::istream commands(cmd_path);
+    std::ifstream commands(cmd_path);
     std::string command;
     try{
         while (!commands.eof()){
@@ -101,7 +100,7 @@ int main(int argc, char *argv[])
             else if (exists && isvec)
                 matrix = (arma::mat) Rcpp::as<arma::vec>(R_instance.parseEval(query));
             else
-                std::cerr << R_key << " is of unsupported type or does not exist!" << std::endl;
+                std::cerr << key << " is of unsupported type or does not exist!" << std::endl;
 
         }catch(std::exception e){
             std::cerr << "Conversion to matrix failed" << std::endl;
@@ -109,101 +108,10 @@ int main(int argc, char *argv[])
         try{
             outvars(i) = matrix;
         }catch(std::exception e){
-            std::cerr << "Adding " << R_key << " failed" << std::endl;
+            std::cerr << "Adding " << key << " failed" << std::endl;
             //ignore and move on. element remains uninitialized in outvars
         }
     }
     outvars.save(outvar_path);
     return 0;
 }
-
-
-///
-/// \brief VespucciR::GetEnvironment Returns potentially modified variables from
-/// the R environment.
-/// \param x
-/// \param y
-/// \param abscissa
-/// \param spectra
-///
-void VespucciR::GetEnvironment(arma::mat &x, arma::mat &y, arma::mat &abscissa, arma::mat &spectra)
-{
-    x = Rcpp::as<arma::mat>(R_.parseEval("x"));
-    y = Rcpp::as<arma::mat>(R_.parseEval("y"));
-    //R prefers row major layout, so we have to convert back.
-    abscissa = Rcpp::as<arma::mat>(R_.parseEval("t(abscissa)"));
-    spectra = Rcpp::as<arma::mat>(R_.parseEval("t(spectra)"));
-}
-
-std::map<std::string, arma::mat> VespucciR::GetEnvironment(std::map<std::string, std::string> keys)
-{
-    std::map<std::string, arma::mat> objects;
-    arma::mat matrix;
-    std::string vespucci_key;
-    std::string R_key;
-    for (std::map<std::string, std::string>::iterator i = keys.begin(); i != keys.end(); ++i){
-        vespucci_key = i->first;
-        R_key = i->second;
-        std::cout << "Get " << R_key << " as " << vespucci_key << std::endl;
-        try{
-            //breaking into parts because everything is really templated
-            R_key = "as.numeric(" + R_key + ")";
-            std::string query = "as.numeric(" + R_key + ")";
-            std::string existtest = "exists(\"" + R_key + "\")";
-            std::string mattest = "is.matrix(" + query + ")";
-            std::string vectest = "is.vector(" + query + ")";
-            bool exists = Rcpp::as<bool>(R_.parseEval(existtest));
-            bool ismat = Rcpp::as<bool>(R_.parseEval(mattest));
-            bool isvec = Rcpp::as<bool>(R_.parseEval(vectest));
-
-            //vectors must be cast as arma::vec, matrices as arma::mat
-            //check if R object is matrix or vector
-            if (exists && ismat)
-                matrix = Rcpp::as<arma::mat>(R_.parseEval(query));
-            else if (exists && isvec)
-                matrix = (arma::mat) Rcpp::as<arma::vec>(R_.parseEval(query));
-            else
-                std::cerr << R_key << " is of unsupported type or does not exist!" << std::endl;
-
-        }catch(std::exception e){
-            std::cerr << "Conversion to matrix failed" << std::endl;
-        }
-        try{
-            objects[vespucci_key] = matrix;
-        }catch(std::exception e){
-            std::cerr << "Adding " << R_key << " failed" << std::endl;
-            //ignore and move on.
-        }
-    }
-    return objects;
-}
-
-void VespucciR::RunScript(std::string cmd)
-{
-    //read commands line by line for better error output
-    std::istringstream commands(cmd);
-    std::string command;
-    try{
-        while (!commands.eof()){
-            std::getline(commands, command);
-            std::cout << "R: " << command << std::endl;
-            try{
-                R_.parseEval(command);
-            }catch(std::exception e){
-                std::cerr << e.what();
-                std::string what(e.what());
-                what = "RInside Exception: " + what;
-                throw std::runtime_error(what.c_str());
-            }
-        }
-    }
-    catch (std::exception e)
-    {
-        std::cerr << e.what();
-        std::string what(e.what());
-        what = command;
-        throw std::runtime_error(what.c_str());
-    }
-}
-
-

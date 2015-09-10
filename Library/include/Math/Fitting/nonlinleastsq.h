@@ -20,8 +20,12 @@
 #ifndef NONLINLEASTSQ_H
 #define NONLINLEASTSQ_H
 
-#include "Math/Accessory/accessory.h"
-#include "Math/Accessory/accessory_impl.h"
+#if !defined( SWIG )
+    // SWIG should not see #inlcude<armadillo> as it can not handle it
+    #include "Math/VespucciMath.h"
+    #include "Global/libvespucci.h"
+#endif
+
 
     //#include <levmar.h>
     //#include <compiler.h>
