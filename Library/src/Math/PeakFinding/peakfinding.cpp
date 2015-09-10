@@ -22,6 +22,7 @@
 #include <Math/Smoothing/smoothing.h>
 #include <Math/PeakFinding/cwtridge.h>
 #include <Math/Transform/cwt.h>
+#include <Math/Accessory/accessory.h>
 
 
 

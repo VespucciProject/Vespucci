@@ -90,12 +90,14 @@ void MultiImportDialog::on_buttonBox_accepted()
     QString y_axis_description = ordinate_label_box_->text();
 
     QMap<QPair<int, int>, QString> filename_map;
+    map<pair<int,int>, string> filename_map;
 
     for (int row = 0; row < rows; ++row){
         for (int col = 0; col < cols; ++col){
             QTableWidgetItem *item = filename_table_->takeItem(row, col);
-            QString filename = item->text();
-            filename_map.insert(QPair<int, int>(row, col), filename);
+            string value = item->text().toStdString();
+            pair<int, int> key(row, col);
+            filename_map.insert(key, value);
         }
     }
 

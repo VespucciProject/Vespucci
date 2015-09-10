@@ -1,4 +1,4 @@
-#include "cwtridge.h"
+#include "Math/PeakFinding/cwtridge.h"
 #include "Math/VespucciMath.h"
 Vespucci::Math::CWTRidge::CWTRidge(int id)
 {

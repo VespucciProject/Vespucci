@@ -74,82 +74,6 @@ bool TextImport::CheckFileValidity(QString filename, bool &comma_decimals)
 
 }
 
-///
-/// \brief TextImport::ImportMultiplePoints
-/// \param filenames
-/// \param rows
-/// \param cols
-/// \param spectra
-/// \param wavelength
-/// \param x
-/// \param y
-/// \return
-/// Function for importing a collection of text files with manually verified/set
-/// spatial information.
-bool TextImport::ImportMultiplePoints(QMap<QPair<int, int>, QString> filenames,
-                                      int rows, int cols,
-                                      mat &spectra,
-                                      vec &wavelength,
-                                      vec &x, vec &y)
-{
-    //fill x and y based on rows and colums
-    x.set_size(rows*cols);
-    y.set_size(rows*cols);
-
-    filenames.first().toStdString();
-    bool have_abscissa = false;
-    mat current_spectrum;
-    bool ok = current_spectrum.load(filenames.first().toStdString());
-    int spec_rows = current_spectrum.n_rows;
-    spectra.set_size(spec_rows, x.n_rows);
-    if (!ok){
-        return false;
-    }
-    typedef QMap<QPair<int, int>, QString>::iterator map_it;
-    uword i = 0;
-    QString filename;
-    for (map_it it = filenames.begin(); it!=filenames.end(); ++it){
-        QPair<int, int> keys = it.key();
-        x(i) = (double) keys.first;
-        y(i) = (double) keys.second;
-        filename = it.value();
-        ok = current_spectrum.load(filename.toStdString());
-        if (!have_abscissa && current_spectrum.n_cols == 2){
-            if (current_spectrum.n_rows > current_spectrum.n_cols){
-                wavelength = current_spectrum.col(0);
-                current_spectrum.shed_col(0);
-            }
-            else{
-                wavelength = current_spectrum.row(0).t();
-                current_spectrum.shed_row(0);
-            }
-            have_abscissa = true;
-        }
-        try{
-            if (current_spectrum.n_rows > current_spectrum.n_cols){
-                spectra.col(i) = current_spectrum.col(0);
-            }
-            else{
-                spectra.col(i) = current_spectrum.row(0).t();
-            }
-        }catch(std::exception e){
-            spectra.clear();
-            wavelength.clear();
-            x.clear();
-            y.clear();
-            std::cerr << "Exception thrown. Spectra " << i << "." << "Type: " << e.what() << "." << std::endl;
-            return false;
-        }
-
-         if (!ok){
-            std::cerr << "Could not load file " << filename.toStdString() << "." << std::endl;
-        }
-        ++i;
-    }
-
-    return have_abscissa;
-
-}
 
 ///
 /// \brief TextImport::ImportWideText
@@ -241,4 +165,69 @@ bool TextImport::ImportWideText(std::string filename,
     spectra.reshape(abscissa.n_rows, x.n_rows);
     return true;
 
+}
+
+
+bool TextImport::ImportMultiplePoints(std::map<std::pair<int, int>, std::string> filenames,
+                                      int rows, int cols,
+                                      arma::mat &spectra,
+                                      arma::vec &abscissa,
+                                      arma::vec &x, arma::vec &y)
+{
+    //fill x and y based on rows and colums
+    x.set_size(rows*cols);
+    y.set_size(rows*cols);
+
+    bool have_abscissa = false;
+    mat current_spectrum;
+    std::pair<int,int> origin(0,0);
+    bool ok = current_spectrum.load(filenames[origin]);
+    int spec_rows = current_spectrum.n_rows;
+    spectra.set_size(spec_rows, x.n_rows);
+    if (!ok){
+        return false;
+    }
+    typedef std::map<std::pair<int,int>, std::string>::iterator map_it;
+    uword i = 0;
+    std::string filename;
+    for (map_it it = filenames.begin(); it!=filenames.end(); ++it){
+        std::pair<int,int> keys = it->first;
+        x(i) = (double) keys.first;
+        y(i) = (double) keys.second;
+        filename = it->second;
+        ok = current_spectrum.load(filename);
+        if (!have_abscissa && current_spectrum.n_cols == 2){
+            if (current_spectrum.n_rows > current_spectrum.n_cols){
+                abscissa = current_spectrum.col(0);
+                current_spectrum.shed_col(0);
+            }
+            else{
+                abscissa = current_spectrum.row(0).t();
+                current_spectrum.shed_row(0);
+            }
+            have_abscissa = true;
+        }
+        try{
+            if (current_spectrum.n_rows > current_spectrum.n_cols){
+                spectra.col(i) = current_spectrum.col(0);
+            }
+            else{
+                spectra.col(i) = current_spectrum.row(0).t();
+            }
+        }catch(std::exception e){
+            spectra.clear();
+            abscissa.clear();
+            x.clear();
+            y.clear();
+            std::cerr << "Exception thrown. Spectra " << i << "." << "Type: " << e.what() << "." << std::endl;
+            return false;
+        }
+
+         if (!ok){
+            std::cerr << "Could not load file " << filename << "." << std::endl;
+        }
+        ++i;
+    }
+
+    return have_abscissa;
 }

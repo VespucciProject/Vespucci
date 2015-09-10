@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "nonlinleastsq.h"
+#include "Math/Fitting/nonlinleastsq.h"
 
 
 arma::vec Vespucci::Math::Fitting::FitBaseline(arma::vec signal, std::string function, std::vector<double> initial_params, std::vector<double> lims)

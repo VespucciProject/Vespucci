@@ -21,7 +21,7 @@
 #define CWTRIDGE_H
 #if !defined( SWIG )
     // SWIG should not see #inlcude<armadillo> as it can not handle it
-    #include "Math/VespucciMath.h"
+    #include <armadillo>
     #include "Global/libvespucci.h"
 #endif
 

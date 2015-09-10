@@ -19,8 +19,11 @@
 *******************************************************************************/
 #ifndef MAXIMUM_H
 #define MAXIMUM_H
-#include <Math/Accessory/accessory.h>
-#include "Global/libvespucci.h"
+#if !defined( SWIG )
+    // SWIG should not see #inlcude<armadillo> as it can not handle it
+    #include "Math/VespucciMath.h"
+    #include "Global/libvespucci.h"
+#endif
 
 namespace Vespucci
 {

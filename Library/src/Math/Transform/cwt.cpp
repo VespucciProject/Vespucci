@@ -19,6 +19,7 @@
 *******************************************************************************/
 #include <Math/PeakFinding/peakfinding.h>
 #include <Math/Transform/cwt.h>
+#include <Math/Accessory/accessory.h>
 
 
 ///

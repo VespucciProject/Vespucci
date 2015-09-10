@@ -20,7 +20,7 @@
 #include <Math/Smoothing/FIR.h>
 
 #include <Math/Fitting/linleastsq.h>
-
+#include <Math/Accessory/accessory.h>
 ///
 /// \brief Vespucci::Math::Smoothing::sgolay Find a arma::matrix of Savitzky-Golay convolution coefficients
 /// \param poly_order

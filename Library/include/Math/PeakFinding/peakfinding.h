@@ -19,9 +19,12 @@
 *******************************************************************************/
 #ifndef PEAKFINDING_H
 #define PEAKFINDING_H
-#include <Math/Accessory/accessory.h>
-#include <Math/PeakFinding/cwtridge.h>
-#include <Global/libvespucci.h>
+#if !defined( SWIG )
+    // SWIG should not see #inlcude<armadillo> as it can not handle it
+    #include "Math/VespucciMath.h"
+    #include "Global/libvespucci.h"
+#endif
+#include "Math/PeakFinding/cwtridge.h"
 namespace Vespucci
 {
     namespace Math

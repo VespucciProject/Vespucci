@@ -18,6 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include <Math/Smoothing/nonlinear.h>
+#include <Math/Accessory/accessory.h>
 
 ///
 /// \brief Vespucci::Math::Smoothing::MedianFilter

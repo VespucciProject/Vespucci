@@ -25,7 +25,7 @@
     #include <armadillo>
     #include "Global/libvespucci.h"
 #endif
-
+#include <map>
 
 namespace TextImport
 {
@@ -36,12 +36,12 @@ namespace TextImport
                         arma::vec &x, arma::vec &y,
                         bool swap_spatial);
 
-    VESPUCCI_EXPORT bool ImportMultiplePoints(QMap<QPair<int,int>, QString> filenames,
+    VESPUCCI_EXPORT bool ImportMultiplePoints(std::map<std::pair<int,int>, std::string> filenames,
                               int rows,
                               int cols,
-                              arma::mat& spectra,
-                              arma::vec& wavelength,
-                              arma::vec& x, arma::vec& y);
+                              arma::mat &spectra,
+                              arma::vec &abscissa,
+                              arma::vec &x, arma::vec &y);
 
     VESPUCCI_EXPORT bool CheckFileValidity(QString filename, bool &comma_decimals);
 }
