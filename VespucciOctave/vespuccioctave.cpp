@@ -55,6 +55,7 @@ arma::mat OctaveToArma(const Matrix &in_mat);
 /// 2,147,483,647 is tried to be sent to this process.
 int main(int argc, char *argv[])
 {
+    void *__gxx_personality_v0;
     if (argc != 6){
         return 1;
     }

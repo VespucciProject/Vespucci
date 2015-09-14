@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     RInside R_instance(R_argc, R_argv);
     for (arma::uword i = 0; i < invar_names.n_elem; ++i)
         R_instance[invar_names(i)] = invars(i).t(); //to account for R's row-major nature
-
+    R_instance.parseEval("library(RcppArmadillo)");
     std::ifstream commands(cmd_path);
     std::string command;
     try{
@@ -84,7 +84,6 @@ int main(int argc, char *argv[])
         std::cout << "Get " << key << std::endl;
         try{
             //breaking into parts because everything is really templated
-            key = "as.numeric(" + key + ")";
             std::string query = "as.numeric(" + key + ")";
             std::string existtest = "exists(\"" + key + "\")";
             std::string mattest = "is.matrix(" + query + ")";
@@ -101,6 +100,7 @@ int main(int argc, char *argv[])
                 matrix = (arma::mat) Rcpp::as<arma::vec>(R_instance.parseEval(query));
             else
                 std::cerr << key << " is of unsupported type or does not exist!" << std::endl;
+            cout << "current matrix has " << matrix.n_rows << " rows, " << matrix.n_cols << " columns" << endl;
 
         }catch(std::exception e){
             std::cerr << "Conversion to matrix failed" << std::endl;
@@ -111,6 +111,11 @@ int main(int argc, char *argv[])
             std::cerr << "Adding " << key << " failed" << std::endl;
             //ignore and move on. element remains uninitialized in outvars
         }
+    }
+    cout << "outvars have following properties" << endl;
+    cout << "name \t n_rows \t n_cols \t" << endl;
+    for (arma::uword i = 0; i < outvars.n_elem; ++i){
+        cout << outvar_names(i) << " \t " << outvars(i).n_rows << " \t " << outvars(i).n_cols << endl;
     }
     outvars.save(outvar_path);
     return 0;
