@@ -21,6 +21,7 @@ This is the binary most often used by my research group.
 
 Compiling Vespucci:
 ===================
+You will have to build VespucciLibrary before building Vespucci and make sure that Vespucci.pro has the proper path to this library.
 Compiling Vespucci from source is easy on Unix-like systems. Assuming you
 have the proper pre-requisites (and Vespucci.pro is properly edited to reflect
 their paths):
