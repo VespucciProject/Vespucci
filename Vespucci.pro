@@ -46,8 +46,8 @@ isEmpty(PREFIX) {
     PREFIX = $$PWD/../../Vespucci-install
 }
 # it is assumed that casual windows users will not use the build system to install
-macx: TARGET = Vespucci #Vespucci.app (which can be installed in Applications) for mac.
-!macx: TARGET = vespucci #vespucci or vespucci.exe on linux, windows.
+mac: TARGET = Vespucci #Vespucci.app (which can be installed in Applications) for mac.
+!mac: TARGET = vespucci #vespucci or vespucci.exe on linux, windows.
 TEMPLATE = app
 
 
