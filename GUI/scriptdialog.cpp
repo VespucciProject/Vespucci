@@ -1,9 +1,8 @@
 #include "GUI/scriptdialog.h"
 #include "ui_scriptdialog.h"
-#include "External/Octave/VespucciOctave.h"
-#include "External/R/VespucciR.h"
 #include <cstdlib>
 #include <cstdio>
+#include "External/fileinterprocess.h"
 
 ScriptDialog::ScriptDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),
@@ -26,6 +25,7 @@ ScriptDialog::~ScriptDialog()
 void ScriptDialog::on_buttonBox_accepted()
 {
     //Parse input
+    /*
     try{
         std::string cmd = code_box_->document()->toPlainText().toStdString();
         QStringList invars = send_box_->document()->toPlainText().split("\n");
@@ -104,7 +104,7 @@ void ScriptDialog::on_buttonBox_accepted()
     }
 
 
-
+*/
 
 }
 

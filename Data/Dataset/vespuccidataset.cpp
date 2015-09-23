@@ -325,7 +325,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
     main_window_ = main_window;
 }
 
-VespucciDataset::VespucciDataset(QMap<QPair<int, int>, QString> text_filenames,
+VespucciDataset::VespucciDataset(map<pair<int, int>, string> text_filenames,
                                  MainWindow *main_window,
                                  QString *directory,
                                  QFile *log_file,

@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Wright State University");
     QCoreApplication::setOrganizationDomain("chm.wright.edu");
     QCoreApplication::setApplicationName("Vespucci");
+    QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
     QApplication a(argc, argv);
     //A pointer to this goes by "workspace" in every window that needs it
     VespucciWorkspace ws;
