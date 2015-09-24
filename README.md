@@ -54,9 +54,8 @@ OS is similarly easy, just use [homebrew](http://brew.sh/) to install all the pr
 
 Because it is difficult to find Windows binaries for Armadillo, MLPACK and ARPACK,
 and to make development on Windows easier, I have included Windows binaries of all
-requisite libraries in the MinGW_libs repository at [](github.com/dpfoose/MinGW_libs) These are compiled with MinGW-w64 
-version 3 (GCC 4.8.2) with SEH for exception handling. A 7z archive containing the
-Qt distribution and MinGW-w64 toolkit I use is available by request (foose DOT 3 AT wright.edu)
+requisite libraries in the MinGW_libs repository at [](github.com/dpfoose/MinGW_libs) These are compiled with MinGW-w64 version 3 (GCC 4.8.2) with SEH for exception handling. A 7z archive containing the
+Qt distribution and MinGW-w64 toolkit I use is available [here](https://drive.google.com/file/d/0B9FzBeLChZ8bVmlLZDVDZFVRSDg/view?usp=sharing)
 
 The included Qt profile uses the library paths used by Ubuntu's package manager.
 Frameworks are used for Mac OS when possible.
