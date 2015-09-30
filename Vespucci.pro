@@ -49,10 +49,15 @@ isEmpty(PREFIX) {
 mac: TARGET = Vespucci #Vespucci.app (which can be installed in Applications) for mac.
 !mac: TARGET = vespucci #vespucci or vespucci.exe on linux, windows.
 TEMPLATE = app
-
+LIBS_USED_FOR_QT = QtCore QtSvg QtPrintSupport QtWidgets QtGui
+for(somelib, $$list($$LIBS_USED_FOR_QT)) {
+    mac: QMAKE_CXXFLAGS += -isystem $$(QTDIR)/lib/$${somelib}.framework/Versions/5/Headers/
+    mac: QMAKE_CXXFLAGS += -isystem $$(QTDIR)/lib/$${somelib}.framework/Headers/
+}
+mac: QMAKE_CXXFLAGS += -Wno-inconsistent-missing-override
 
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
-unix: QMAKE_CXXFLAGS += -std=c++11 \
+unix:!macx: QMAKE_CXXFLAGS += -std=c++11 \
                         -isystem "/usr/local/include" \
                         -isystem "/usr/local/include/armadillo_bits" \
                         -isystem "/usr/local/include/boost" \
@@ -68,9 +73,23 @@ unix: QMAKE_CXXFLAGS += -std=c++11 \
                         -isystem $$PWD/../../Vespucci-QCP-sharedlib/include \
                         -isystem $$PWD/include \
                         -DARMA_DONT_USE_WRAPPER
-macx: QMAKE_CXXFLAGS = -mmacosx-version-min=10.10 -stdlib=libc++ -std=c++11
-macx: QMAKE_CXXFLAGS_WARN_ON = -Wall -Wno-unused-parameter
-macx: LIBS += -L/usr/lib -lc++
+mac: QMAKE_CXXFLAGS =  -mmacosx-version-min=10.7 \
+                       -stdlib=libc++ -std=c++11 \
+                       --system-header-prefix=/usr/ \
+                       --system-header-prefix=$$PWD/../Vespucci-QCP-sharedlib/include \
+                        -isystem "/usr/local/include" \
+                        -isystem "/usr/local/include/armadillo_bits" \
+                        -isystem "/usr/local/include/boost" \
+                        -isystem "/usr/include/mlpack" \
+                        -isystem "/usr/share/R/include" \
+                        -isystem /usr/include \
+                        -isystem /usr/local/include \
+                        -isystem /usr/local/include/cminpack-1 \
+                        -isystem /usr/local/opt/libxml2/include/libxml2 \
+                        -isystem $$PWD/../../Vespucci-QCP-sharedlib/include \
+                        -isystem /usr/local/Cellar/qt5/5.5.0/lib/QtPrintSupport.framework/Headers/QtPrintSupport \
+                        -DARMA_DONT_USE_WRAPPER
+mac: LIBS += -L/usr/lib -lc++
 
 win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
                          -pthread \
