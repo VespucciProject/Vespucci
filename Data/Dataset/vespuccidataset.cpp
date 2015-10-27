@@ -1058,6 +1058,7 @@ void VespucciDataset::LinearMovingAverage(unsigned int window_size)
     catch(exception e){
         string str = "LinearMovingAverage: " + string(e.what());
         throw std::runtime_error(str);
+        Undo();
     }
 
     last_operation_ = "moving average filter";
@@ -1080,7 +1081,7 @@ void VespucciDataset::SingularValue(unsigned int singular_values)
     vec s;
     mat V;
     try{
-        svds(U, s, V, sp_mat(spectra_), singular_values);
+        Vespucci::Math::DimensionReduction::svds(spectra_, singular_values, U, s, V);
         spectra_ = -1 * U * diagmat(s) * V.t();
     }
     catch(exception e){
