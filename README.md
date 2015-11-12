@@ -21,6 +21,7 @@ This is the binary most often used by my research group.
 
 Compiling Vespucci:
 ===================
+You will have to build VespucciLibrary before building Vespucci and make sure that Vespucci.pro has the proper path to this library.
 Compiling Vespucci from source is easy on Unix-like systems. Assuming you
 have the proper pre-requisites (and Vespucci.pro is properly edited to reflect
 their paths):
@@ -49,16 +50,12 @@ libraries on your system:
 
 All of the above packages, with the exception of MLPACK and QCustomPlot, are 
 readily available from most major GNU/Linux repositories. Installation on Mac
-OS is similarly easy, though some packages may need to be compiled and installed
-manually, or installed through MacPorts (https://www.macports.org/) or Fink 
-(http://www.finkproject.org/). I haven't included a configure script, but setting
-directories should be easy enough.
+OS is similarly easy, just use [homebrew](http://brew.sh/) to install all the prerequisites ("brew install mlpack" should take care of mlpack and all its dependencies, and "brew install qt5" should handle the gui dependencies. 
 
 Because it is difficult to find Windows binaries for Armadillo, MLPACK and ARPACK,
 and to make development on Windows easier, I have included Windows binaries of all
-requisite libraries in the MinGW_libs branch. These are compiled with MinGW-w64 
-version 3 (GCC 4.8.2) with SEH for exception handling. A 7z archive containing the
-Qt distribution and MinGW-w64 toolkit I use is also included in the toolkit branch.
+requisite libraries in the MinGW_libs repository at [](github.com/dpfoose/MinGW_libs) These are compiled with MinGW-w64 version 3 (GCC 4.8.2) with SEH for exception handling. A 7z archive containing the
+Qt distribution and MinGW-w64 toolkit I use is available [here](https://drive.google.com/file/d/0B9FzBeLChZ8bVmlLZDVDZFVRSDg/view?usp=sharing)
 
 The included Qt profile uses the library paths used by Ubuntu's package manager.
 Frameworks are used for Mac OS when possible.
