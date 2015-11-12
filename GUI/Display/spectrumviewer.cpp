@@ -337,9 +337,6 @@ void SpectrumViewer::on_pushButton_clicked()
                                                 "Windows Bitmap (*.bmp);; "
                                                 "Portable Network Graphics (*.png);; "
                                                 "JPEG (*.jpg)"));
-        Vespucci::SavePlot(spectrum_plot_, filename);
-
-
         bool success = Vespucci::SavePlot(spectrum_plot_, filename);
         if(success)
             QMessageBox::information(this, "Success!", "File " + filename + " written successfully");

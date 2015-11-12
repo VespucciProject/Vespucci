@@ -93,16 +93,23 @@ void PlotMakerDialog::on_buttonBox_accepted()
             z.load(filename.toStdString());
             if (z.n_rows == x.n_rows){
                 PlotViewer *plot_view = new PlotViewer(this, x, y, z.col(0), x_label, y_label);
+                plot_view->SetDirectory(workspace->directory());
+                plot_view->SetLineStyle(QCPGraph::lsNone);
                 plot_view->show();
+
             }
         }
         else if (map_var_description == "Parent Dataset Indices"){
             vec z = dataset_->parent_dataset_indices()->col(0);
             PlotViewer *plot_view = new PlotViewer(this, x, y, z.col(0), x_label, y_label);
+            plot_view->SetDirectory(workspace->directory());
+            plot_view->SetLineStyle(QCPGraph::lsNone);
             plot_view->show();
         }
         else{
             PlotViewer *plot_view = new PlotViewer(this, x, y, x_label, y_label);
+            plot_view->SetDirectory(workspace->directory());
+            plot_view->SetLineStyle(QCPGraph::lsNone);
             plot_view->show();
         }
     }catch(exception e){

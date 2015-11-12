@@ -89,7 +89,6 @@ void MultiImportDialog::on_buttonBox_accepted()
     QString x_axis_description = abscissa_label_box_->text();
     QString y_axis_description = ordinate_label_box_->text();
 
-    QMap<QPair<int, int>, QString> filename_map;
     map<pair<int,int>, string> filename_map;
 
     for (int row = 0; row < rows; ++row){
@@ -97,7 +96,7 @@ void MultiImportDialog::on_buttonBox_accepted()
             QTableWidgetItem *item = filename_table_->takeItem(row, col);
             string value = item->text().toStdString();
             pair<int, int> key(row, col);
-            filename_map.insert(key, value);
+            filename_map[key] = value;
         }
     }
 
