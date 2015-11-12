@@ -29,37 +29,60 @@
     <normaloff>vespuccilogo.svg</normaloff>vespuccilogo.svg</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1">
-     <widget class="QLabel" name="label">
-      <property name="font">
-       <font>
-        <family>Ubuntu</family>
-       </font>
-      </property>
-      <property name="text">
-       <string>Datasets</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="3">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Maps</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QListView" name="datasetsListView"/>
-    </item>
-    <item row="1" column="3">
-     <widget class="QListView" name="mapsListView">
-      <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustIgnored</enum>
-      </property>
-     </widget>
-    </item>
-   </layout>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>12</y>
+      <width>55</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Datasets</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>205</x>
+      <y>12</y>
+      <width>35</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Maps</string>
+    </property>
+   </widget>
+   <widget class="QListView" name="datasetsListView">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>38</y>
+      <width>183</width>
+      <height>235</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListView" name="mapsListView">
+    <property name="geometry">
+     <rect>
+      <x>205</x>
+      <y>38</y>
+      <width>183</width>
+      <height>235</height>
+     </rect>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QAbstractScrollArea::AdjustIgnored</enum>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -67,7 +90,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -467,7 +490,7 @@
   </action>
   <action name="actionImport_Dataset_from_Multiple_Files">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Import Dataset from Multiple Files</string>

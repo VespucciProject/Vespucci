@@ -52,6 +52,7 @@
 #include "GUI/Processing/fouriertransformdialog.h"
 #include "GUI/Processing/abscissainterpolationdialog.h"
 #include "GUI/Processing/stitchimportdialog.h"
+#include "GUI/Analysis/plotmakerdialog.h"
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent usually 0
@@ -1404,4 +1405,11 @@ void MainWindow::on_actionImport_Dataset_from_Multiple_Files_triggered()
 {
     StitchImportDialog *stitch_dialog = new StitchImportDialog(this, workspace);
     stitch_dialog->show();
+}
+
+void MainWindow::on_actionCreate_Plot_triggered()
+{
+    int row = dataset_list_view_->currentIndex().row();
+    PlotMakerDialog *plot_maker = new PlotMakerDialog(this, workspace, row);
+    plot_maker->show();
 }

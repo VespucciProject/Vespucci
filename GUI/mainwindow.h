@@ -164,6 +164,8 @@ private slots:
 
     void on_actionImport_Dataset_from_Multiple_Files_triggered();
 
+    void on_actionCreate_Plot_triggered();
+
 private:
     Ui::MainWindow *ui;
 
