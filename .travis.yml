@@ -28,6 +28,11 @@ before_install:
     - cd cminpack-1.3.4
     - mkdir build && cd build && cmake ../ && make && sudo make install
     - cd ../../
+    - git clone https://github.com/VespucciProject/Vespucci-QCP.git
+    - cd Vespucci-QCP && mkdir lib && mkdir include && cd lib
+    - qmake ../ && make
+    - cd ../ && cp qcustomplot.h include
+    - cd ../
 
 script:
     - mkdir build-library && cd build-library
