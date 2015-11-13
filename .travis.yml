@@ -41,7 +41,9 @@ before_install:
     - cd ~/
 
 script:
+    - qmake -project
     - qmake -qt=qt5 Library/VespucciLibrary.pro
     - make
+    - qmake -project
     - qmake -qt=qt5 Vespucci.pro
     - make
