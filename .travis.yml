@@ -36,7 +36,7 @@ before_install:
     - cd ../../
     - git clone https://github.com/VespucciProject/Vespucci-QCP.git
     - cd Vespucci-QCP && mkdir lib && mkdir include && cd lib
-    - qmake ../ && make
+    - qmake -qt=qt5 ../ && make
     - cd ../ && cp qcustomplot.h include
     - cd ../
 
