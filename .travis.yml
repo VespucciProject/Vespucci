@@ -16,9 +16,9 @@ before_install:
     - wget http://superb-dca2.dl.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.gz
     - tar -xf boost_1_59_0.tar.gz
     - cd ./boost_1_59_0
-    - ./bootstrap.sh --with-library=math,program_options,random,test
-    - ./bjam
-    - sudo ./bjam install
+    - ./bootstrap.sh --with-library=math_c99,program_options,random,test
+    - b2
+    - sudo b2 install
     - wget http://iweb.dl.sourceforge.net/project/arma/armadillo-6.200.3.tar.gz
     - tar -xf armadillo-6.200.3.tar.gz
     - cd armadillo-6.200.3 && ./configure && make && sudo make install
