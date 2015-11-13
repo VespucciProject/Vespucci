@@ -39,11 +39,12 @@ before_install:
     - qmake -qt=qt5 ../ && make
     - cd ../ && cp qcustomplot.h include
     - cd ~/
+    - mkdir build-library && cd build-library
+    - qmake -qt=qt5 ../Library/VespucciLibrary.pro
+    - make
+    - cd ~/
+    - mkdir build && cd build
+    - qmake -qt=qt5 ../Vespucci.pro
 
 script:
-    - qmake -project
-    - qmake -qt=qt5 Library/VespucciLibrary.pro
-    - make
-    - qmake -project
-    - qmake -qt=qt5 Vespucci.pro
     - make
