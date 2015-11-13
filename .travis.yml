@@ -14,23 +14,23 @@ before_install:
     - sudo apt-get install -y libsuperlu3-dev
     - sudo apt-get install -y libxml2-dev
     - wget http://superb-dca2.dl.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.gz
-    - tar -xvf boost_1_59_0.tar.gz
-    - cd ./boost_1_59_0.tar.gz
+    - tar -xf boost_1_59_0.tar.gz
+    - cd ./boost_1_59_0
     - ./bootstrap.sh --with-library=math,program_options,random,test
     - ./bjam
     - sudo ./bjam install
     - wget http://iweb.dl.sourceforge.net/project/arma/armadillo-6.200.3.tar.gz
-    - tar -xvf armadillo-6.200.3.tar.gz
+    - tar -xf armadillo-6.200.3.tar.gz
     - cd armadillo-6.200.3 && ./configure && make && sudo make install
     - cd ../
     - wget http://mlpack.org/files/mlpack-1.0.12.tar.gz
-    - tar -xvf mlpack-1.0.12.tar.gz
+    - tar -xf mlpack-1.0.12.tar.gz
     - cd mlpack-1.0.12 && mkdir build && cd build
     - cmake -D DEBUG=OFF -D PROFILE=OFF ../
     - make mlpack && sudo make install
     - cd ../../
     - wget http://devernay.free.fr/hacks/cminpack/cminpack-1.3.4.tar.gz
-    - tar -xvf cminpack-1.3.4.tar.gz
+    - tar -xf cminpack-1.3.4.tar.gz
     - cd cminpack-1.3.4
     - mkdir build && cd build && cmake ../ && make && sudo make install
     - cd ../../
