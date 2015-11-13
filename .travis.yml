@@ -16,29 +16,29 @@ before_install:
     - wget http://superb-dca2.dl.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.gz
     - tar -xf boost_1_59_0.tar.gz
     - cd ./boost_1_59_0
-    - ./bootstrap.sh --with-libraries=math,program_options,random,test
-    - ./b2
-    - sudo ./b2 install
+    - ./bootstrap.sh --with-libraries=math,program_options,random,test >/dev/null
+    - ./b2 >/dev/null
+    - sudo ./b2 install >/dev/null
     - wget http://iweb.dl.sourceforge.net/project/arma/armadillo-6.200.3.tar.gz
     - tar -xf armadillo-6.200.3.tar.gz
     - cd armadillo-6.200.3 && ./configure && make && sudo make install
-    - cd ../
+    - cd ~/
     - wget http://mlpack.org/files/mlpack-1.0.12.tar.gz
     - tar -xf mlpack-1.0.12.tar.gz
     - cd mlpack-1.0.12 && mkdir build && cd build
     - cmake -D DEBUG=OFF -D PROFILE=OFF ../
-    - make mlpack && sudo make install
-    - cd ../../
+    - make mlpack >/dev/null && sudo make install >/dev/null
+    - cd ~/
     - wget http://devernay.free.fr/hacks/cminpack/cminpack-1.3.4.tar.gz
     - tar -xf cminpack-1.3.4.tar.gz
     - cd cminpack-1.3.4
     - mkdir build && cd build && cmake ../ && make && sudo make install
-    - cd ../../
+    - cd ~/
     - git clone https://github.com/VespucciProject/Vespucci-QCP.git
     - cd Vespucci-QCP && mkdir lib && mkdir include && cd lib
     - qmake -qt=qt5 ../ && make
     - cd ../ && cp qcustomplot.h include
-    - cd ../
+    - cd ~/
 
 script:
     - mkdir build-library && cd build-library
