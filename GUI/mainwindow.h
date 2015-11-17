@@ -130,8 +130,6 @@ private slots:
 
     void on_actionSpectra_as_Columns_triggered();
 
-    void on_actionUnivariate_Analysis_triggered();
-
     void on_actionLarge_Matrices_triggered();
 
     void on_actionView_Edit_Spectra_triggered();
