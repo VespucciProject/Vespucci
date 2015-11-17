@@ -141,7 +141,6 @@ SOURCES += main.cpp\
     GUI/Display/spectrumviewer.cpp \
     GUI/Display/statsdialog.cpp \
     GUI/Processing/thresholddialog.cpp \
-    GUI/Analysis/univariateanalysisdialog.cpp \
     GUI/Analysis/univariatedialog.cpp \
     GUI/Analysis/vcadialog.cpp \
     GUI/QAbstractItemModel/vespuccitablemodel.cpp \
@@ -201,7 +200,6 @@ HEADERS  += \
     GUI/Display/spectrumviewer.h \
     GUI/Display/statsdialog.h \
     GUI/Processing/thresholddialog.h \
-    GUI/Analysis/univariateanalysisdialog.h \
     GUI/Analysis/univariatedialog.h \
     GUI/Analysis/vcadialog.h \
     GUI/QAbstractItemModel/vespuccitablemodel.h \
@@ -251,7 +249,6 @@ FORMS    += \
     GUI/Display/spectrumviewer.ui \
     GUI/Display/statsdialog.ui \
     GUI/Processing/thresholddialog.ui \
-    GUI/Analysis/univariateanalysisdialog.ui \
     GUI/Analysis/univariatedialog.ui \
     GUI/Analysis/vcadialog.ui \
     GUI/scriptdialog.ui \

@@ -227,3 +227,8 @@ arma::mat Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(const arma::mat &X, c
 
 }
 */
+
+arma::vec Vespucci::Math::LinLeastSq::FitGaussian(const arma::vec &x, arma::vec &params, double &fwhm, double &height)
+{
+    //
+}
