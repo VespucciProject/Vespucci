@@ -2,10 +2,8 @@ language: cpp
 
 compiler:
     - gcc
-    - clang
-
+    
 before_install:
-    - ls
     - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
     - sudo apt-get update -qq
     - sudo apt-get install -qq qt5-qmake qtbase5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev
@@ -43,9 +41,8 @@ before_install:
 
 
 script:
-    - mkdir build-library && cd build-library
-    - qmake -qt=qt5 $PWD/Library/VespucciLibrary.pro
+    - mkdir ~/build-library && cd ~/build-library
+    - qmake -qt=qt5 ~/VespucciProject/Vespucci/Library/VespucciLibrary.pro
     - make
-    - cd ~/
-    - mkdir build && cd build
-    - qmake -qt=qt5 $PWD/Vespucci.pro
+    - cd ~/build
+    - qmake -qt=qt5 ~/VespucciProject/Vespucci/Vespucci.pro
