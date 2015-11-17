@@ -6,8 +6,10 @@ compiler:
 before_install:
     - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
     - sudo apt-get update -qq
-    - sudo apt-get install -qq -y qt5-qmake qtbase5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev
-    - qmake -qt=qt5 Library/VespucciLibrary.pro
+    - sudo apt-get install -qq -y qt5-qmake qtbase5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev libqt5svg5
+    - mkdir build-library && cd build-library
+    - qmake -qt=qt5 ../Library/VespucciLibrary.pro
+    
     - sudo apt-get install -qq -y libhdf5-serial-dev
     - sudo apt-get install -qq -y libarpack2-dev
     - sudo apt-get install -qq -y libopenblas-dev
