@@ -40,6 +40,7 @@ macx: CONFIG += lib_bundle
 isEmpty(PREFIX) {
     PREFIX = $$PWD/../../Vespucci-install
 }
+travis_ci = $$(TRAVIS_CI)
 # it is assumed that casual windows users will not use the build system to install
 !macx: TARGET = vespucci
 macx: TARGET = Vespucci #mac convention is to Make Frameworks and Applications Capitalized.
@@ -140,6 +141,10 @@ HEADERS  += \
 #should be installed using the package manager for your distribution
 # (these work for ubuntu and for the homebrew mac os package manager).
 # include paths a
+count(travis_ci, 1){
+    unix: INCLUDEPATH += ~/depts/include
+    unix: DEPENDPATH += ~/depts/include
+}
 unix: INCLUDEPATH += /usr/include
 unix: DEPENDPATH += /usr/include
 unix: INCLUDEPATH += /usr/local/include
@@ -158,10 +163,19 @@ DEPENDPATH += $$PWD/include
 
 #mlpack and dependencies
 #we use the Accelerate Framework on OS X but OpenBLAS on linux.
-unix: LIBS += -L/usr/local/lib -lmlpack
-unix!macx: LIBS += -L/usr/lib -larmadillo
-unix: LIBS += -L/usr/local/lib -larpack
-unix: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
+count(travis_ci, 1){
+    unix: LIBS += -L$$HOME/depts/lib -lmlpack
+    unix: LIBS += -L$$HOME/depts/lib -larmadillo
+    unix: LIBS += -L/usr/lib -larpack
+    unix: PRE_TARGETDEPS += /usr/lib/libarpack.a
+}
+count(travis_ci, 0){
+    unix: LIBS += -L/usr/local/lib -lmlpack
+    unix!macx: LIBS += -L/usr/lib -larmadillo
+    unix: LIBS += -L/usr/local/lib -larpack
+    unix: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
+}
+
 unix: LIBS += -L/usr/local/lib -lhdf5
 unix: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
 unix:!macx: LIBS += -L/usr/lib -lopenblas
