@@ -26,6 +26,11 @@ addons:
           - libcminpack-dev
 
 before_install:
+    - mkdir ~/depts
+    - mkdir ~/depts/include
+    - mkdir ~/depts/bin
+    - mkdir ~/depts/lib
+    - mkdir ~/depts/share
     - wget http://iweb.dl.sourceforge.net/project/arma/armadillo-6.200.3.tar.gz
     - tar -xf armadillo-6.200.3.tar.gz
     - cd armadillo-6.200.3
