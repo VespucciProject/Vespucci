@@ -45,6 +45,8 @@ mac: ICON = vespuccilogo.icns
 isEmpty(PREFIX) {
     PREFIX = $$PWD/../../Vespucci-install
 }
+travis_ci = $$(TRAVIS_CI)
+
 # it is assumed that casual windows users will not use the build system to install
 mac: TARGET = Vespucci #Vespucci.app (which can be installed in Applications) for mac.
 !mac: TARGET = vespucci #vespucci or vespucci.exe on linux, windows.
@@ -292,6 +294,10 @@ unix: DEPENDPATH += /usr/local/include/cminpack-1
 unix:macx: INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
 unix:macx: DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
 
+count(travis_ci, 1){
+    unix: INCLUDEPATH += ~/depts/include
+}
+
 INCLUDEPATH += $$PWD/../Vespucci-QCP-sharedlib/include
 DEPENDPATH += $$PWD/../Vespucci-QCP-sharedlib/include
 
@@ -302,8 +308,16 @@ DEPENDPATH += $$PWD/include
 
 #mlpack and dependencies
 #we use the Accelerate Framework on OS X but OpenBLAS on linux.
-unix: LIBS += -L/usr/local/lib -lmlpack
-unix!macx: LIBS += -L/usr/lib -larmadillo
+count(travis_ci, 1){ #Docker doesn't allow root
+    unix: LIBS += ~/depts/lib -lmlpack
+    unix: LIBS += ~/depts/lib -larmadillo
+}
+count (travis_ci, 0){
+    unix: LIBS += -L/usr/local/lib -lmlpack
+    unix!macx: LIBS += -L/usr/lib -larmadillo
+}
+
+
 unix: LIBS += -L/usr/local/lib -larpack
 unix: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
 unix: LIBS += -L/usr/local/lib -lhdf5
