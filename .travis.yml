@@ -51,6 +51,7 @@ script:
     - mkdir build-VespucciLibrary && cd build-VespucciLibrary
     - qmake -qt=qt5 ../Library/VespucciLibrary.pro
     - make
+    - cd ../
     - mkdir build-Vespucci
     - cd build-Vespucci
     - qmake -qt=qt5 ../Vespucci.pro
