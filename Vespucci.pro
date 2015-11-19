@@ -317,9 +317,15 @@ count (travis_ci, 0){
     unix!macx: LIBS += -L/usr/lib -larmadillo
 }
 
+count(travis_ci, 1){
+    unix: LIBS += -L/usr/lib -larpack
+    unix: PRE_TARGETDEPS += /usr/lib/libarpack.a
+}
+count(travis_ci, 0){
+    unix: LIBS += -L/usr/local/lib -larpack
+    unix: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
+}
 
-unix: LIBS += -L/usr/local/lib -larpack
-unix: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
 unix: LIBS += -L/usr/local/lib -lhdf5
 unix: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
 unix:!macx: LIBS += -L/usr/lib -lopenblas
