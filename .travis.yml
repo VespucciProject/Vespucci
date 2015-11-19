@@ -28,23 +28,22 @@ addons:
 before_install:
     - wget http://iweb.dl.sourceforge.net/project/arma/armadillo-6.200.3.tar.gz
     - tar -xf armadillo-6.200.3.tar.gz
-    - cd armadillo-6.200.3 && ./configure --prefix=$HOME/deps && make && make install
+    - cd armadillo-6.200.3 && ./configure --prefix=$HOME/depts && make && make install
     - cd ../
     - wget http://mlpack.org/files/mlpack-1.0.12.tar.gz
     - tar -xf mlpack-1.0.12.tar.gz
     - cd mlpack-1.0.12 && mkdir build && cd build
-    - cmake -DDEBUG=OFF -DPROFILE=OFF -DCMAKE_INSTALL_PREFIX=$HOME/deps ../
+    - cmake -DDEBUG=OFF -DPROFILE=OFF -DCMAKE_INSTALL_PREFIX=$HOME/depts ../
     - make mlpack >/dev/null && make install >/dev/null
     - cd ../../
     - git clone https://github.com/VespucciProject/Vespucci-QCP.git
     - cd Vespucci-QCP
     - qmake -qt=qt5 && make && make install
-    - cd ../ && cp qcustomplot.h ../include
     - cd ../
 
 script:
-    - mkdir ~/build-library && cd ~/build-library
+    - mkdir ~/build-VespucciLibrary && cd ~/build-library
     - qmake -qt=qt5 ../Library/VespucciLibrary.pro
     - make
-    - cd ~/build
+    - cd ~/build-Vespucci
     - qmake -qt=qt5 ../Vespucci.pro
