@@ -28,12 +28,13 @@ addons:
 before_install:
     - wget http://iweb.dl.sourceforge.net/project/arma/armadillo-6.200.3.tar.gz
     - tar -xf armadillo-6.200.3.tar.gz
-    - cd armadillo-6.200.3 && ./configure --prefix=$HOME/depts && make && make install
+    - cd armadillo-6.200.3
+    - ./configure -DINSTALL_LIB_DIR=~/depts/lib -DINSTALL_INCLUDE_DIR=~/depts/include -DINSTALL_DATA_DIR=~/depts/share -DINSTALL_BIN_DIR=~/depts/bin && make && make install
     - cd ../
     - wget http://mlpack.org/files/mlpack-1.0.12.tar.gz
     - tar -xf mlpack-1.0.12.tar.gz
     - cd mlpack-1.0.12 && mkdir build && cd build
-    - cmake -DDEBUG=OFF -DPROFILE=OFF -DCMAKE_INSTALL_PREFIX=$HOME/depts ../
+    - cmake -DDEBUG=OFF -DPROFILE=OFF -DCMAKE_INSTALL_PREFIX=~/depts ../
     - make mlpack >/dev/null && make install >/dev/null
     - cd ../../
     - git clone https://github.com/VespucciProject/Vespucci-QCP.git
