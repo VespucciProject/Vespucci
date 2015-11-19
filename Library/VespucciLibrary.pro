@@ -171,7 +171,6 @@ count(travis_ci, 1){
     unix: LIBS += -L/usr/lib -lhdf5
     unix: PRE_TARGETDEPS += /usr/lib/libhdf5.a
     unix:!macx: LIBS += -L/usr/lib/ -lcminpack
-    unix:!macx: PRE_TARGETDEPS += /usr/lib/libcminpack.a
 }
 count(travis_ci, 0){
     unix: LIBS += -L/usr/local/lib -lmlpack
