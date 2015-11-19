@@ -48,7 +48,7 @@ TEMPLATE = lib
 DEFINES += VESPUCCI_LIBRARY
 
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
-unix: QMAKE_CXXFLAGS += -std=c++11 \
+unix: QMAKE_CXXFLAGS += -std=c++0x \
                         -isystem "/usr/local/include" \
                         -isystem "/usr/local/include/armadillo_bits" \
                         -isystem "/usr/local/include/boost" \
