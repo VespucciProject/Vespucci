@@ -8,6 +8,7 @@ addons:
           - boost-latest
           - ubuntu-sdk-team
       packages:
+          - g++-4.8
           - qt5-qmake 
           - qtbase5-dev
           - qtdeclarative5-dev
