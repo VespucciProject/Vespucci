@@ -317,7 +317,7 @@ count(travis_ci, 1){
     unix: LIBS += -L/usr/lib -lhdf5
     unix: PRE_TARGETDEPS += /usr/lib/libhdf5.a
     unix:!macx: LIBS += -L/usr/lib/ -lcminpack
-    unix:!macx: LIBS += -L/usr/lib/openblas-base -lopenblas
+    unix:!macx: LIBS += -L/usr/lib/openblas-base-lopenblas
     unix:!macx: PRE_TARGETDEPS += /usr/lib/openblas-base/libopenblas.a
 }
 count(travis_ci, 0){
@@ -333,8 +333,6 @@ count(travis_ci, 0){
     unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
 }
 
-unix:!macx: LIBS += -L/usr/lib -lopenblas
-unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
 unix:macx: LIBS += -framework Accelerate
 
 unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
