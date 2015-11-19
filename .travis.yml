@@ -8,6 +8,7 @@ addons:
           - boost-latest
           - ubuntu-sdk-team
       packages:
+          - gcc-4.8
           - g++-4.8
           - qt5-qmake 
           - qtbase5-dev
@@ -26,6 +27,7 @@ addons:
           - libcminpack-dev
 
 before_install:
+    - g++ --version
     - mkdir $HOME/depts
     - mkdir $HOME/depts/include
     - mkdir $HOME/depts/bin
@@ -34,7 +36,7 @@ before_install:
     - wget http://iweb.dl.sourceforge.net/project/arma/armadillo-6.200.3.tar.gz
     - tar -xf armadillo-6.200.3.tar.gz
     - cd armadillo-6.200.3
-    - ./configure -DARMA_USE_CXX_11 -DARMA_64_BIT_WORD -DARMA_USE_HDF5 -DINSTALL_LIB_DIR=$HOME/depts/lib -DINSTALL_INCLUDE_DIR=$HOME/depts/include -DINSTALL_DATA_DIR=$HOME/depts/share -DINSTALL_BIN_DIR=$HOME/depts/bin && make && make install
+    - ./configure -DINSTALL_LIB_DIR=$HOME/depts/lib -DINSTALL_INCLUDE_DIR=$HOME/depts/include -DINSTALL_DATA_DIR=$HOME/depts/share -DINSTALL_BIN_DIR=$HOME/depts/bin && make && make install
     - cd ../
     - wget http://mlpack.org/files/mlpack-1.0.12.tar.gz
     - tar -xf mlpack-1.0.12.tar.gz
