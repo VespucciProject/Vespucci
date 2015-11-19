@@ -48,9 +48,9 @@ before_install:
     - cd ../
 
 script:
-    - mkdir $HOME/build-VespucciLibrary && cd $HOME/build-VespucciLibrary
+    - mkdir build-VespucciLibrary && cd build-VespucciLibrary
     - qmake -qt=qt5 ../Library/VespucciLibrary.pro
     - make
-    - mkdir $HOME/build-Vespucci
-    - cd $HOME/build-Vespucci
+    - mkdir build-Vespucci
+    - cd build-Vespucci
     - qmake -qt=qt5 ../Vespucci.pro
