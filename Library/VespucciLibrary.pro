@@ -141,10 +141,7 @@ HEADERS  += \
 #should be installed using the package manager for your distribution
 # (these work for ubuntu and for the homebrew mac os package manager).
 # include paths a
-count(travis_ci, 1){
-    unix: INCLUDEPATH += ~/depts/include
-    unix: DEPENDPATH += ~/depts/include
-}
+
 unix: INCLUDEPATH += /usr/include
 unix: DEPENDPATH += /usr/include
 unix: INCLUDEPATH += /usr/local/include
@@ -173,6 +170,8 @@ count(travis_ci, 1){
     unix:!macx: LIBS += -L/usr/lib/ -lcminpack
     unix:!macx: LIBS += -L/usr/lib -lblas
     unix:!macx: LIBS += -L/usr/lib -llapack
+    unix: INCLUDEPATH += $$HOME/depts/include
+    unix: DEPENDPATH += $$HOME/depts/include
 }
 count(travis_ci, 0){
     unix: LIBS += -L/usr/local/lib -lmlpack
