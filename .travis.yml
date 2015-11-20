@@ -41,7 +41,7 @@ before_install:
     - wget http://mlpack.org/files/mlpack-1.0.12.tar.gz
     - tar -xf mlpack-1.0.12.tar.gz
     - cd mlpack-1.0.12 && mkdir build && cd build
-    - cmake -DDEBUG=OFF -DPROFILE=OFF -DBoost_INCLUIDE_DIR=/usr/include -DCMAKE_INSTALL_PREFIX=$HOME/depts ../
+    - cmake -DDEBUG=OFF -DPROFILE=OFF -DBOOST_INCLUDEDIR=/usr/include -DCMAKE_INSTALL_PREFIX=$HOME/depts ../
     - make mlpack >/dev/null && make install >/dev/null
     - cd ../../
     - git clone https://github.com/VespucciProject/Vespucci-QCP.git
