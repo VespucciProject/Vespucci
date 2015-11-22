@@ -296,6 +296,7 @@ unix:macx: DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
 
 count(travis_ci, 1){
     unix: INCLUDEPATH += $$HOME/depts/include
+    unix: DEPENDPATH += $$HOME/depts/include
 }
 
 INCLUDEPATH += $$PWD/../Vespucci-QCP-sharedlib/include
