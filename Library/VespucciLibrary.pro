@@ -146,8 +146,6 @@ unix: INCLUDEPATH += /usr/include
 unix: DEPENDPATH += /usr/include
 unix: INCLUDEPATH += /usr/local/include
 unix: DEPENDPATH += /usr/local/include
-unix: INCLUDEPATH += /usr/local/include/cminpack-1
-unix: DEPENDPATH += /usr/local/include/cminpack-1
 unix:macx: INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
 unix:macx: DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
 
@@ -190,6 +188,8 @@ count(travis_ci, 0){
     unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
     unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
     unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
+    unix: INCLUDEPATH += /usr/local/include/cminpack-1
+    unix: DEPENDPATH += /usr/local/include/cminpack-1
 }
 
 
