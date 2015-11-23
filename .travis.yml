@@ -1,7 +1,7 @@
 language: cpp
 sudo: false
 compiler:
-    - gcc
+    - clang
 addons:
     apt:
       sources:
@@ -9,8 +9,6 @@ addons:
           - ubuntu-sdk-team
           - ubuntu-toolchain-r-test
       packages:
-          - gcc-4.8
-          - g++-4.8
           - qt5-qmake 
           - qtbase5-dev
           - qtdeclarative5-dev
@@ -49,6 +47,8 @@ before_install:
     - cd Vespucci-QCP
     - qmake -qt=qt5 && make && make install
     - cd ../
+    - /usr/include/cminpack-1
+    - /usr/include/cminpack-1/cminpack.h
 
 script:
     - mkdir build-VespucciLibrary && cd build-VespucciLibrary
