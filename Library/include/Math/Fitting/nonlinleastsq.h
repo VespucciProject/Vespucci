@@ -19,7 +19,7 @@
 *******************************************************************************/
 #ifndef NONLINLEASTSQ_H
 #define NONLINLEASTSQ_H
-
+/*
 #if !defined( SWIG )
     // SWIG should not see #inlcude<armadillo> as it can not handle it
     #include "Math/VespucciMath.h"
@@ -47,11 +47,12 @@ namespace Vespucci{
             void LorentzianJacobian(double *p, double *jac, int m, int n, void *data);
             void PseudoVoigt(double *p, double *x, int m, int n, void *data);
             void PseudoVoigtJacobian(double *p, double *jac, int m, int n, void *data);
-            
-            
+
+
 
         }
     }
 }
 
 #endif // NONLINLEASTSQ_H
+*/

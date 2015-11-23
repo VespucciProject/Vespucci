@@ -102,7 +102,7 @@ void Vespucci::Math::Fitting::GaussianJacobian(double *p, double *jac, int m, in
 /// "Residual sum of squares"
 /// "Iterations"
 ///
-arma::vec Vespucci::Math::Fitting::FitGaussianPeak(arma::vec signal, 
+arma::vec Vespucci::Math::Fitting::FitGaussianPeak(arma::vec signal,
                                                    int iterations,
                                                    std::string &reason,
                                                    std::map<std::string, std::pair<double, double> > &params,
@@ -130,10 +130,10 @@ arma::vec Vespucci::Math::Fitting::FitGaussianPeak(arma::vec signal,
     int m = 4;
     double p[m], opts[LM_OPTS_SZ], info[LM_INFO_SZ];
     int ret;
-    
+
     double *x = signal.memptr(); //this is the array the levmar library will work with
-    
-    
+
+
     //guess some initial parameters
     //Gaussian function:
     //y = y0 + A/(w*sqrt(PI/(4*ln(2)))) * exp(-4*ln(2)*(x-xc)^2/w^2)
@@ -147,7 +147,7 @@ arma::vec Vespucci::Math::Fitting::FitGaussianPeak(arma::vec signal,
     p[1] = arma::mean(signal - signal.min()); //guess xc to be mean of input area
     p[2] = signal.max() - signal.min(); //guess A to be "height" of input area
     p[3] = arma::stddev(signal - signal.min()); //guess w to be standard deviation of input area
-    
+
 
 
 
@@ -180,7 +180,7 @@ arma::vec Vespucci::Math::Fitting::FitGaussianPeak(arma::vec signal,
 
     //invoke levmar optimization function
     std::cout << "invoke levmar" << std::endl;
-    ret = dlevmar_der(Vespucci::Math::Fitting::Gaussian, 
+    ret = dlevmar_der(Vespucci::Math::Fitting::Gaussian,
                       Vespucci::Math::Fitting::GaussianJacobian,
                       p, x, m, n, iterations, opts, info,
                       NULL, &covar[0][0], NULL);
