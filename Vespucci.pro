@@ -314,8 +314,11 @@ count(travis_ci, 1){
     unix:!macx: LIBS += -L/usr/lib/ -lcminpack
     unix:!macx: LIBS += -L/usr/lib -lblas
     unix:!macx: LIBS += -L/usr/lib -llapack
+    unix:!macx: LIBS += -L/home/travis/build/dpfoose/Vespucci/Vespucci-QCP/lib -lqcustomplot
     unix: INCLUDEPATH += /home/travis/depts/include
     unix: DEPENDPATH += /home/travis/depts/include
+    unix: INCLUDEPATH += /home/travis/build/dpfoose/Vespucci/Vespucci-QCP/include
+    unix: DEPENDPATH += /home/travis/build/dpfoose/Vespucci/Vespucci-QCP/include
     unix: INCLDEPATH += /usr/include/cminpack-1
     unix: DEPENDPATH += /usr/include/cminpack-1
 }
@@ -334,13 +337,14 @@ count(travis_ci, 0){
     unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
     unix: INCLUDEPATH += /usr/local/include/cminpack-1
     unix: DEPENDPATH += /usr/local/include/cminpack-1
+    unix:!macx: CONFIG(release, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplot
+    else:unix:!macx: CONFIG(debug, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplotd
 }
 unix:macx: LIBS += -framework Accelerate
 
 
 
-unix:!macx: CONFIG(release, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplot
-else:unix:!macx: CONFIG(debug, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplotd
+
 
 unix:!macx:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary/release -lvespucci
 else:unix:!macx:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary/debug -lvespucci
