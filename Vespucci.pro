@@ -311,8 +311,8 @@ DEPENDPATH += $$PWD/include
 #we use the Accelerate Framework on OS X but OpenBLAS on linux.
 
 count(travis_ci, 1){
-    unix: LIBS += -L$$HOME/depts/lib -lmlpack
-    unix: LIBS += -L$$HOME/depts/lib -larmadillo
+    unix: LIBS += -L/home/travis/depts/lib -lmlpack
+    unix: LIBS += -L/home/travis/depts/lib -larmadillo
     unix: LIBS += -L/usr/lib -larpack
     unix: PRE_TARGETDEPS += /usr/lib/libarpack.a
     unix: LIBS += -L/usr/lib -lhdf5
@@ -320,6 +320,10 @@ count(travis_ci, 1){
     unix:!macx: LIBS += -L/usr/lib/ -lcminpack
     unix:!macx: LIBS += -L/usr/lib -lblas
     unix:!macx: LIBS += -L/usr/lib -llapack
+    unix: INCLUDEPATH += /home/travis/depts/include
+    unix: DEPENDPATH += /home/travis/depts/include
+    unix: INCLDEPATH += /usr/include/cminpack-1
+    unix: DEPENDPATH += /usr/include/cminpack-1
 }
 count(travis_ci, 0){
     unix: LIBS += -L/usr/local/lib -lmlpack
