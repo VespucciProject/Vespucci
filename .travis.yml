@@ -6,7 +6,7 @@ compiler:
 before_install:
     - sudo apt-add-repository -y ppa:boost-latest
     - sudo apt-add-repository -y ppa:ubuntu-sdk-team
-    - sudo apt-add-repository -y ppa:ubuntu-toolchain-r-test
+    - sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
     - sudo apt-add-repository -y ppa:beineri/opt-qt551
     - sudo apt-get install g++-4.9 gcc-4.9
     - sudo apt-get install qt55-qmake qt55base-dev qt55declarative-dev libsqlite3-dev qt55svg-dev
