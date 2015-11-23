@@ -8,10 +8,11 @@ addons:
           - boost-latest
           - ubuntu-sdk-team
           - ubuntu-toolchain-r-test
+          - beineri/opt-qt541
       packages:
           - g++-4.9
           - gcc-4.9
-          - qt5-qmake 
+          - qt5-qmake
           - qtbase5-dev
           - qtdeclarative5-dev
           - libqt5webkit5-dev
@@ -32,6 +33,7 @@ before_install:
     - export CC=/usr/bin/gcc-4.9
     - export CMAKE_CXX_COMPILER=/usr/bin/g++-4.9
     - export QMAKE_CXX=/usr/bin/g++-4.9
+    - qmake --version
     - g++-4.9 --version
     - mkdir $HOME/depts
     - mkdir $HOME/depts/include
