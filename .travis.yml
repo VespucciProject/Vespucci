@@ -49,8 +49,6 @@ before_install:
     - cd Vespucci-QCP
     - qmake -qt=qt5 && make && make install
     - cd ../
-    - /usr/include/cminpack-1
-    - /usr/include/cminpack-1/cminpack.h
 
 script:
     - mkdir build-VespucciLibrary && cd build-VespucciLibrary
