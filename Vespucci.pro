@@ -289,15 +289,9 @@ unix: INCLUDEPATH += /usr/include
 unix: DEPENDPATH += /usr/include
 unix: INCLUDEPATH += /usr/local/include
 unix: DEPENDPATH += /usr/local/include
-unix: INCLUDEPATH += /usr/local/include/cminpack-1
-unix: DEPENDPATH += /usr/local/include/cminpack-1
+
 unix:macx: INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
 unix:macx: DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
-
-count(travis_ci, 1){
-    unix: INCLUDEPATH += $$HOME/depts/include
-    unix: DEPENDPATH += $$HOME/depts/include
-}
 
 INCLUDEPATH += $$PWD/../Vespucci-QCP-sharedlib/include
 DEPENDPATH += $$PWD/../Vespucci-QCP-sharedlib/include
@@ -338,12 +332,15 @@ count(travis_ci, 0){
     unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
     unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
     unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
+    unix: INCLUDEPATH += /usr/local/include/cminpack-1
+    unix: DEPENDPATH += /usr/local/include/cminpack-1
+    unix:macx: LIBS += -L/usr/local/lib/ -lcminpack
+    unix:macx: PRE_TARGETDEPS += /usr/local/lib/libcminpack.a
 }
 
 unix:macx: LIBS += -framework Accelerate
 
-unix:macx: LIBS += -L/usr/local/lib/ -lcminpack
-unix:macx: PRE_TARGETDEPS += /usr/local/lib/libcminpack.a
+
 
 unix:!macx: CONFIG(release, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplot
 else:unix:!macx: CONFIG(debug, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplotd
