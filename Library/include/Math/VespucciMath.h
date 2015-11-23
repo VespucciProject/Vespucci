@@ -30,9 +30,7 @@
 #include <Math/Transform/cwt.h>
 #include "Math/Transform/fft.h"
 #include <Math/Fitting/linleastsq.h>
-#include <Math/Fitting/nonlinleastsq.h>
 #include "Math/Fitting/linleastsq.h"
-//#include "Math/Fitting/nonlinleastsq.h"
 #include "Math/Accessory/accessory_impl.h"
 #include "Global/libvespucci.h"
 
