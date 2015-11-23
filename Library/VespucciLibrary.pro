@@ -157,7 +157,8 @@ DEPENDPATH += $$PWD/../../Vespucci-QCP-sharedlib/include
 
 INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include
-
+unix: INCLDEPATH += /usr/include/cminpack-1
+unix: DEPENDPATH += /usr/include/cminpack-1
 #mlpack and dependencies
 #we use the Accelerate Framework on OS X but OpenBLAS on linux.
 count(travis_ci, 1){
