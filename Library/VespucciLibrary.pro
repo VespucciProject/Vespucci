@@ -161,6 +161,7 @@ DEPENDPATH += $$PWD/include
 #mlpack and dependencies
 #we use the Accelerate Framework on OS X but OpenBLAS on linux.
 count(travis_ci, 1){
+    QMAKE_CXX=/usr/bin/g++-4.9
     unix: LIBS += -L/home/travis/depts/lib -lmlpack
     unix: LIBS += -L/home/travis/depts/lib -larmadillo
     unix: LIBS += -L/usr/lib -larpack
