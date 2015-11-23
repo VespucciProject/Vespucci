@@ -289,8 +289,6 @@ unix: INCLUDEPATH += /usr/include
 unix: DEPENDPATH += /usr/include
 unix: INCLUDEPATH += /usr/local/include
 unix: DEPENDPATH += /usr/local/include
-unix: INCLDEPATH += /usr/include/cminpack-1
-unix: DEPENDPATH += /usr/include/cminpack-1
 unix:macx: INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
 unix:macx: DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
 
@@ -306,7 +304,7 @@ DEPENDPATH += $$PWD/include
 #we use the Accelerate Framework on OS X but OpenBLAS on linux.
 
 count(travis_ci, 1){
-    unix: QMAKE_CXX=/usr/bin/g++-4.9
+    QMAKE_CXX=/usr/bin/g++-4.9
     unix: LIBS += -L/home/travis/depts/lib -lmlpack
     unix: LIBS += -L/home/travis/depts/lib -larmadillo
     unix: LIBS += -L/usr/lib -larpack
@@ -336,10 +334,7 @@ count(travis_ci, 0){
     unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
     unix: INCLUDEPATH += /usr/local/include/cminpack-1
     unix: DEPENDPATH += /usr/local/include/cminpack-1
-    unix:macx: LIBS += -L/usr/local/lib/ -lcminpack
-    unix:macx: PRE_TARGETDEPS += /usr/local/lib/libcminpack.a
 }
-
 unix:macx: LIBS += -framework Accelerate
 
 
