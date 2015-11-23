@@ -1,34 +1,17 @@
 language: cpp
-sudo: false
+sudo: required
 compiler:
     - gcc
-addons:
-    apt:
-      sources:
-          - boost-latest
-          - ubuntu-sdk-team
-          - ubuntu-toolchain-r-test
-          - beineri/opt-qt541
-      packages:
-          - g++-4.9
-          - gcc-4.9
-          - qt5-qmake
-          - qtbase5-dev
-          - qtdeclarative5-dev
-          - libqt5webkit5-dev
-          - libsqlite3-dev
-          - libqt5svg5-dev
-          - libhdf5-serial-dev
-          - libarpack2-dev
-          - libxml2-dev
-          - libboost1.55-dev
-          - libboost-math1.55-dev
-          - libboost-program-options1.55-dev
-          - libboost-test1.55-dev
-          - libboost-random1.55-dev
-          - libcminpack-dev
 
 before_install:
+    - sudo apt-add-repository -y ppa:boost-latest
+    - sudo apt-add-repository -y ppa:ubuntu-sdk-team
+    - sudo apt-add-repository -y ppa:ubuntu-toolchain-r-test
+    - sudo apt-add-repository -y ppa:beineri/opt-qt551
+    - sudo apt-get install g++-4.9 gcc-4.9
+    - sudo apt-get install qt55-qmake qt55base-dev qt55declarative-dev libsqlite3-dev qt55svg-dev
+    - sudo apt-get install libhdf5-serial-dev libarpack2-dev
+    - sudo apt-get install libxml2-dev libboost1.55-dev libboost-math1.55-dev libboost-program-options1.55-dev libboost-test1.55-dev libboost-random1.55-dev libcminpack-dev
     - export CXX=/usr/bin/g++-4.9
     - export CC=/usr/bin/gcc-4.9
     - export CMAKE_CXX_COMPILER=/usr/bin/g++-4.9
