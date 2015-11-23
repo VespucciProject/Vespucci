@@ -1,7 +1,7 @@
 language: cpp
 sudo: false
 compiler:
-    - clang
+    - gcc
 addons:
     apt:
       sources:
@@ -9,6 +9,7 @@ addons:
           - ubuntu-sdk-team
           - ubuntu-toolchain-r-test
       packages:
+          - g++-4.8
           - qt5-qmake 
           - qtbase5-dev
           - qtdeclarative5-dev
@@ -26,6 +27,7 @@ addons:
           - libcminpack-dev
 
 before_install:
+    - export CXX="g++-4.8"
     - g++ --version
     - mkdir $HOME/depts
     - mkdir $HOME/depts/include
