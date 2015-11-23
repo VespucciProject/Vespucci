@@ -22,7 +22,7 @@
 # windows libraries from the MinGW_libs branch of the Vespucci repository.
 # To use these libraries, you must be using 64-bit MinGW-w64 toolkit, with SEH
 # for exception handling. All libraries must be compiled in such a manner.
-# A link to download the exact compiler build I used is availible on the GitHub
+# A link to download the exact compiler build I used is available on the GitHub
 # page.
 # R- and Octave-related libraries will be based on your installation of those
 # tools.
@@ -101,7 +101,7 @@ SOURCES +=\
     src/Math/PeakFinding/peakfinding.cpp \
     src/Math/PeakFinding/cwtridge.cpp \
     src/Math/Fitting/linleastsq.cpp \
-    src/Math/Fitting/nonlinleastsq.cpp \
+    #src/Math/Fitting/nonlinleastsq.cpp \
     src/Global/vespucci.cpp \
     src/Math/Transform/fft.cpp \
     src/Math/Quantification/correlation.cpp
@@ -122,7 +122,7 @@ HEADERS  += \
     include/Math/Accessory/accessory_impl.h \
     include/Math/PeakFinding/cwtridge.h \
     include/Math/Fitting/linleastsq.h \
-    include/Math/Fitting/nonlinleastsq.h \
+    #include/Math/Fitting/nonlinleastsq.h \
     include/Global/vespucci.h \
     include/Global/libvespucci.h \
     include/Math/Transform/fft.h \
@@ -282,4 +282,3 @@ win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lcminpack
 INCLUDEPATH += $$PWD/../../MinGW_libs/include/cminpack-1
 DEPENDPATH += $$PWD/../../MinGW_libs/include/cminpack-1
 win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libcminpack.a
-

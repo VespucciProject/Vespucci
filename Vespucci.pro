@@ -22,7 +22,7 @@
 # windows libraries from the MinGW_libs branch of the Vespucci repository.
 # To use these libraries, you must be using 64-bit MinGW-w64 toolkit, with SEH
 # for exception handling. All libraries must be compiled in such a manner.
-# A link to download the exact compiler build I used is availible on the GitHub
+# A link to download the exact compiler build I used is available on the GitHub
 # page.
 # R- and Octave-related libraries will be based on your installation of those
 # tools.
