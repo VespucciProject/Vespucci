@@ -93,6 +93,21 @@
         </item>
         <item>
          <property name="text">
+          <string>Area (Gaussian Fit)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Bandwidth (Empirical FWHM)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Bandwidth (Gaussian Fit FWHM)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>Correlation</string>
          </property>
         </item>
@@ -441,7 +456,11 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="nameLineEdit"/>
+       <widget class="QLineEdit" name="nameLineEdit">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

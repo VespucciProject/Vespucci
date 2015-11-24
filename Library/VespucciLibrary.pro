@@ -1,4 +1,4 @@
-#    Copyright (C) 2014 Daniel P. Foose - All Rights Reserved
+#    Copyright (C) 2015 Daniel P. Foose - All Rights Reserved
 
 #    This file is part of Vespucci.
 
@@ -22,32 +22,33 @@
 # windows libraries from the MinGW_libs branch of the Vespucci repository.
 # To use these libraries, you must be using 64-bit MinGW-w64 toolkit, with SEH
 # for exception handling. All libraries must be compiled in such a manner.
-# A link to download the exact compiler build I used is availible on the GitHub
+# A link to download the exact compiler build I used is available on the GitHub
 # page.
 # R- and Octave-related libraries will be based on your installation of those
 # tools.
 
 
 # Configuration settings for unix systems are based on my own personal environment
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 
 QT       += core gui
 QT       += widgets printsupport
 QT       += svg
 CONFIG   += shared
+macx: CONFIG += lib_bundle
 # Set the installation directory
 isEmpty(PREFIX) {
     PREFIX = $$PWD/../../Vespucci-install
 }
+travis_ci = $$(TRAVIS_CI)
 # it is assumed that casual windows users will not use the build system to install
-TARGET = vespucci
+!macx: TARGET = vespucci
+macx: TARGET = Vespucci #mac convention is to Make Frameworks and Applications Capitalized.
 TEMPLATE = lib
 DEFINES += VESPUCCI_LIBRARY
 
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
-unix: !macx: QMAKE_CXXFLAGS += -std=c++11 \
-                        -isystem "/home/dan/libraries/include" \
-                        -isystem "/home/dan/libraries/include/armadillo_bits" \
-                        -isystem "/home/dan/libraries/include/mlpack" \
+unix: QMAKE_CXXFLAGS += -std=c++0x \
                         -isystem "/usr/local/include" \
                         -isystem "/usr/local/include/armadillo_bits" \
                         -isystem "/usr/local/include/boost" \
@@ -55,16 +56,21 @@ unix: !macx: QMAKE_CXXFLAGS += -std=c++11 \
                         -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/include" \
                         -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.1/Rcpp/include" \
                         -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.1/RInside/include" \
-                        -isystem "/usr/share/R/include"
+                        -isystem "/usr/share/R/include" \
+                        -isystem /usr/include \
+                        -isystem /usr/local/include \
+                        -isystem /usr/local/include/cminpack-1 \
+                        -isystem /usr/local/opt/libxml2/include/libxml2 \
+                        -isystem $$PWD/../../Vespucci-QCP-sharedlib/include \
+                        -isystem $$PWD/include
+#Warnings in boost library not suppressed with -isystem in Clang++. These are always
+macx: QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -std=c++11 -stdlib=libc+
+macx: QMAKE_CXXFLAGS_WARN_ON = -Wall -Wno-unused-parameter
 
-macx: QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -std=gnu0x -stdlib=libc+
 
 macx: CONFIG +=c++11
 
-macx: QMAKE_CXXFLAGS += -isystem "/Users/danielfoose/Vespucci/mac_libs/include" \
-                        -isystem "/Users/danielfoose/Vespucci/mac_libs/include/armadillo_bits" \
-                        -isystem "/Users/danielfoose/Vespucci/mac_libs/include/mlpack" \
-                        -isystem "/Users/danielfoose/Vespucci/mac_libs/include/boost"
+
 win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
                          -pthread \
                          -isystem "C:/Projects/Vespucci/MinGW_libs/include" \
@@ -95,7 +101,7 @@ SOURCES +=\
     src/Math/PeakFinding/peakfinding.cpp \
     src/Math/PeakFinding/cwtridge.cpp \
     src/Math/Fitting/linleastsq.cpp \
-    src/Math/Fitting/nonlinleastsq.cpp \
+    #src/Math/Fitting/nonlinleastsq.cpp \
     src/Global/vespucci.cpp \
     src/Math/Transform/fft.cpp \
     src/Math/Quantification/correlation.cpp
@@ -116,7 +122,7 @@ HEADERS  += \
     include/Math/Accessory/accessory_impl.h \
     include/Math/PeakFinding/cwtridge.h \
     include/Math/Fitting/linleastsq.h \
-    include/Math/Fitting/nonlinleastsq.h \
+    #include/Math/Fitting/nonlinleastsq.h \
     include/Global/vespucci.h \
     include/Global/libvespucci.h \
     include/Math/Transform/fft.h \
@@ -129,72 +135,76 @@ HEADERS  += \
     include/Math/Quantification/correlation.h
 
 
-#linux libraries, specific to my own install. This will be handled by CMake later
+#linux and mac osx libraries, specific to my own install. This will be handled by CMake later
 #I hope...
+#For these paths to work, everything except for armadillo, mlpack and cminpack
+#should be installed using the package manager for your distribution
+# (these work for ubuntu and for the homebrew mac os package manager).
+# include paths a
 
-unix:!macx: INCLUDEPATH += /usr/include
-unix:!macx: DEPENDPATH += /usr/include
-unix:!macx: INCLUDEPATH += /usr/local/include
-unix:!macx: DEPENDPATH += /usr/local/include
-unix:!macx: INCLUDEPATH += /usr/local/include/cminpack-1
-unix:!macx: DEPENDPATH += /usr/local/include/cminpack-1
+unix: INCLUDEPATH += /usr/include
+unix: DEPENDPATH += /usr/include
+unix: INCLUDEPATH += /usr/local/include
+unix: DEPENDPATH += /usr/local/include
+unix:macx: INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
+unix:macx: DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
 
 
-INCLUDEPATH += $$PWD/../Vespucci-QCP-sharedlib/include
-DEPENDPATH += $$PWD/../Vespucci-QCP-sharedlib/include
+INCLUDEPATH += $$PWD/../../Vespucci-QCP-sharedlib/include
+DEPENDPATH += $$PWD/../../Vespucci-QCP-sharedlib/include
 
 INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include
-
+unix: INCLDEPATH += /usr/include/cminpack-1
+unix: DEPENDPATH += /usr/include/cminpack-1
 #mlpack and dependencies
-unix:!macx: LIBS += -L/usr/local/lib/ -lmlpack
-unix:!macx: LIBS += -L/usr/lib/ -larmadillo
-unix:!macx: LIBS += -L/usr/local/lib/ -larpack
-unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
-unix:!macx: LIBS += -L/usr/lib/ -lopenblas
-unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
-unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
-unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
+#we use the Accelerate Framework on OS X but OpenBLAS on linux.
+count(travis_ci, 1){
+    QMAKE_CXX=/usr/bin/g++-4.8
+    unix: LIBS += -L/home/travis/depts/lib -lmlpack
+    unix: LIBS += -L/home/travis/depts/lib -larmadillo
+    unix: LIBS += -L/usr/lib -larpack
+    unix: PRE_TARGETDEPS += /usr/lib/libarpack.a
+    unix: LIBS += -L/usr/lib -lhdf5
+    unix: PRE_TARGETDEPS += /usr/lib/libhdf5.a
+    unix:!macx: LIBS += -L/usr/lib/ -lcminpack
+    unix:!macx: LIBS += -L/usr/lib -lblas
+    unix:!macx: LIBS += -L/usr/lib -llapack
+    unix: INCLUDEPATH += /home/travis/depts/include
+    unix: DEPENDPATH += /home/travis/depts/include
+    unix: INCLDEPATH += /usr/include/cminpack-1
+    unix: DEPENDPATH += /usr/include/cminpack-1
+}
+count(travis_ci, 0){
+    unix: LIBS += -L/usr/local/lib -lmlpack
+    unix!macx: LIBS += -L/usr/lib -larmadillo
+    unix: LIBS += -L/usr/local/lib -larpack
+    unix: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
+    unix: LIBS += -L/usr/local/lib -lhdf5
+    unix: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
+    unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
+    unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
+    unix:!macx: LIBS += -L/usr/lib -lopenblas
+    unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
+    unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
+    unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
+    unix: INCLUDEPATH += /usr/local/include/cminpack-1
+    unix: DEPENDPATH += /usr/local/include/cminpack-1
+}
 
-unix:!macx:CONFIG(release, debug|release): LIBS += -L$$PWD/../Vespucci-QCP-sharedlib/lib/ -lqcustomplot
-else:unix:!macx:CONFIG(debug, debug|release): LIBS += -L$$PWD/../Vespucci-QCP-sharedlib/lib/ -lqcustomplotd
+
+unix:macx: LIBS += -framework Accelerate
+
+#unix:CONFIG(release, debug|release): LIBS += -L$$PWD/../../Vespucci-QCP-sharedlib/lib/ -lqcustomplot
+#else:unix:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../Vespucci-QCP-sharedlib/lib/ -lqcustomplotd
 
 unix:!macx: INCLUDEPATH += /usr/include
 unix:!macx: DEPENDPATH += /usr/include
 
 unix:!macx: INCLUDEPATH += /usr/include/libxml2
 unix:!macx: DEPENDPATH += /usr/include/libxml2
-#Mac Libraries
-#include paths
-mac: INCLUDEPATH += $$PWD/../mac_libs/include
-mac: DEPENDPATH += $$PWD/../mac_libs/include
-mac: INCLUDEPATH += $$PWD/../mac_libs/include/libxml2
-mac: DEPENDPATH += $$PWD/../mac_libs/include/libxml2
 
-mac: LIBS += -L$$PWD/../mac_libs/lib -lmlpack
-mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libmlpack.dylib
 
-mac: LIBS += -L$$PWD/../mac_libs/lib -larmadillo
-mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libarmadillo.dylib
-
-mac: LIBS += -L$$PWD/../mac_libs/lib -larpack
-mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libarpack.dylib
-
-mac: LIBS += -framework Accelerate
-
-mac: LIBS += -L$$PWD/../mac_libs/lib -lboost_math_c99-mt
-mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_math_c99-mt.dylib
-
-mac: LIBS += -L$$PWD/../mac_libs/lib -lboost_program_options-mt
-mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_program_options-mt.dylib
-
-mac: LIBS += -L$$PWD/../mac_libs/lib -lboost_random-mt
-mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_random-mt.dylib
-
-mac: LIBS += -L$$PWD/../mac_libs/lib -lboost_unit_test_framework-mt
-mac: PRE_TARGETDEPS += $$PWD/../mac_libs/lib/libboost_unit_test_framework-mt.dylib
-
-macx: LIBS += -L$$PWD/../mac_libs/lib/ -lqcustomplot
 
 
 #Windows Libraries
@@ -272,12 +282,3 @@ win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lcminpack
 INCLUDEPATH += $$PWD/../../MinGW_libs/include/cminpack-1
 DEPENDPATH += $$PWD/../../MinGW_libs/include/cminpack-1
 win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libcminpack.a
-
-
-
-
-
-
-
-
-

@@ -25,7 +25,6 @@
     #include "Global/libvespucci.h"
 #endif
 
-
 namespace BinaryImport
 {
     VESPUCCI_EXPORT bool ImportVespucciBinary(std::string filename,

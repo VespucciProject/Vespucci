@@ -23,7 +23,6 @@
 #include "GUI/Display/aboutdialog.h"
 #include "GUI/Display/citationdialog.h"
 #include "GUI/Analysis/univariatedialog.h"
-#include "GUI/Analysis/univariateanalysisdialog.h"
 #include "GUI/Analysis/bandratiodialog.h"
 #include "GUI/Analysis/principalcomponentsdialog.h"
 #include "GUI/Processing/filterdialog.h"
@@ -52,6 +51,7 @@
 #include "GUI/Processing/fouriertransformdialog.h"
 #include "GUI/Processing/abscissainterpolationdialog.h"
 #include "GUI/Processing/stitchimportdialog.h"
+#include "GUI/Analysis/plotmakerdialog.h"
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent usually 0
@@ -1083,21 +1083,6 @@ void MainWindow::RangeDialogAccepted(double min, double max)
     }
 }
 
-
-
-void MainWindow::on_actionUnivariate_Analysis_triggered()
-{
-    if (!workspace->datasets()->size()){
-        QMessageBox::information(this,
-                                 "No datasets loaded",
-                                 "No dataset exists on which to perform this operation");
-        return;
-    }
-    int row = dataset_list_view_->currentIndex().row();
-    UnivariateAnalysisDialog *analysis_dialog = new UnivariateAnalysisDialog(this, workspace, row);
-    analysis_dialog->show();
-}
-
 void MainWindow::on_actionLarge_Matrices_triggered()
 {
     if (!workspace->datasets()->size()){
@@ -1404,4 +1389,11 @@ void MainWindow::on_actionImport_Dataset_from_Multiple_Files_triggered()
 {
     StitchImportDialog *stitch_dialog = new StitchImportDialog(this, workspace);
     stitch_dialog->show();
+}
+
+void MainWindow::on_actionCreate_Plot_triggered()
+{
+    int row = dataset_list_view_->currentIndex().row();
+    PlotMakerDialog *plot_maker = new PlotMakerDialog(this, workspace, row);
+    plot_maker->show();
 }

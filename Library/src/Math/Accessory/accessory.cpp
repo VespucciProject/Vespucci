@@ -121,7 +121,7 @@ arma::uword Vespucci::Math::LocalMinimum(const arma::vec &X, const arma::vec &dX
 
 
 ///
-/// \brief spdiags analgous to the Octave/arma::matLAB function A = spdiags(B, d, m, n).
+/// \brief spdiags analgous to the Octave/MATLAB function A = spdiags(B, d, m, n).
 /// \param B a arma::matrix containing the new diagonal vectors as columns
 /// \param d a vector containing the row numbers to set.  The first column
 /// vector of B corresponds to the first entry in d.

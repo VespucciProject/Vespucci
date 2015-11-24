@@ -41,7 +41,6 @@ private:
     /// second column is width in spectral abscissa units, third column is CWT
     ///  ridge length and fourth column is signal-to-noise ratio from CWT coefs.
     field<mat> peak_data_;
-    MainWindow *main_window_;
     mat counts_;
 };
 
