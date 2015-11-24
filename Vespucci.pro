@@ -22,7 +22,7 @@
 # windows libraries from the MinGW_libs branch of the Vespucci repository.
 # To use these libraries, you must be using 64-bit MinGW-w64 toolkit, with SEH
 # for exception handling. All libraries must be compiled in such a manner.
-# A link to download the exact compiler build I used is availible on the GitHub
+# A link to download the exact compiler build I used is available on the GitHub
 # page.
 # R- and Octave-related libraries will be based on your installation of those
 # tools.
@@ -45,6 +45,8 @@ mac: ICON = vespuccilogo.icns
 isEmpty(PREFIX) {
     PREFIX = $$PWD/../../Vespucci-install
 }
+travis_ci = $$(TRAVIS_CI)
+
 # it is assumed that casual windows users will not use the build system to install
 mac: TARGET = Vespucci #Vespucci.app (which can be installed in Applications) for mac.
 !mac: TARGET = vespucci #vespucci or vespucci.exe on linux, windows.
@@ -57,7 +59,7 @@ for(somelib, $$list($$LIBS_USED_FOR_QT)) {
 mac: QMAKE_CXXFLAGS += -Wno-inconsistent-missing-override
 
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
-unix:!macx: QMAKE_CXXFLAGS += -std=c++11 \
+unix:!macx: QMAKE_CXXFLAGS += -std=c++0x \
                         -isystem "/usr/local/include" \
                         -isystem "/usr/local/include/armadillo_bits" \
                         -isystem "/usr/local/include/boost" \
@@ -287,8 +289,6 @@ unix: INCLUDEPATH += /usr/include
 unix: DEPENDPATH += /usr/include
 unix: INCLUDEPATH += /usr/local/include
 unix: DEPENDPATH += /usr/local/include
-unix: INCLUDEPATH += /usr/local/include/cminpack-1
-unix: DEPENDPATH += /usr/local/include/cminpack-1
 unix:macx: INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
 unix:macx: DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
 
@@ -302,27 +302,54 @@ DEPENDPATH += $$PWD/include
 
 #mlpack and dependencies
 #we use the Accelerate Framework on OS X but OpenBLAS on linux.
-unix: LIBS += -L/usr/local/lib -lmlpack
-unix!macx: LIBS += -L/usr/lib -larmadillo
-unix: LIBS += -L/usr/local/lib -larpack
-unix: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
-unix: LIBS += -L/usr/local/lib -lhdf5
-unix: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
-unix:!macx: LIBS += -L/usr/lib -lopenblas
-unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
+
+count(travis_ci, 1){
+    QMAKE_CXX=/usr/bin/g++-4.8
+    unix: LIBS += -L/home/travis/depts/lib -lmlpack
+    unix: LIBS += -L/home/travis/depts/lib -larmadillo
+    unix: LIBS += -L/usr/lib -larpack
+    unix: PRE_TARGETDEPS += /usr/lib/libarpack.a
+    unix: LIBS += -L/usr/lib -lhdf5
+    unix: PRE_TARGETDEPS += /usr/lib/libhdf5.a
+    unix:!macx: LIBS += -L/usr/lib/ -lcminpack
+    unix:!macx: LIBS += -L/usr/lib -lblas
+    unix:!macx: LIBS += -L/usr/lib -llapack
+    unix:!macx: LIBS += -L/home/travis/build/dpfoose/Vespucci/Vespucci-QCP/lib -lqcustomplot
+    unix:!macx: LIBS += -L/home/travis/build/dpfoose/Vespucci/build-VespucciLibrary -lvespucci
+    unix: INCLUDEPATH += /home/travis/depts/include
+    unix: DEPENDPATH += /home/travis/depts/include
+    unix: INCLUDEPATH += /home/travis/build/dpfoose/Vespucci/Vespucci-QCP/include
+    unix: DEPENDPATH += /home/travis/build/dpfoose/Vespucci/Vespucci-QCP/include
+    unix: INCLDEPATH += /usr/include/cminpack-1
+    unix: DEPENDPATH += /usr/include/cminpack-1
+}
+count(travis_ci, 0){
+    unix: LIBS += -L/usr/local/lib -lmlpack
+    unix!macx: LIBS += -L/usr/lib -larmadillo
+    unix: LIBS += -L/usr/local/lib -larpack
+    unix: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
+    unix: LIBS += -L/usr/local/lib -lhdf5
+    unix: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
+    unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
+    unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
+    unix:!macx: LIBS += -L/usr/lib -lopenblas
+    unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
+    unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
+    unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
+    unix: INCLUDEPATH += /usr/local/include/cminpack-1
+    unix: DEPENDPATH += /usr/local/include/cminpack-1
+    unix:!macx: CONFIG(release, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplot
+    else:unix:!macx: CONFIG(debug, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplotd
+    unix:!macx:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary/release -lvespucci
+    else:unix:!macx:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary/debug -lvespucci
+}
 unix:macx: LIBS += -framework Accelerate
 
-unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
-unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
 
-unix:macx: LIBS += -L/usr/local/lib/ -lcminpack
-unix:macx: PRE_TARGETDEPS += /usr/local/lib/libcminpack.a
 
-unix:!macx: CONFIG(release, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplot
-else:unix:!macx: CONFIG(debug, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplotd
 
-unix:!macx:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary/release -lvespucci
-else:unix:!macx:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary/debug -lvespucci
+
+
 macx:CONFIG(release, debug|release): LIBS += -F$$PWD/../build-VespucciLibrary/release/ -framework Vespucci
 macx:CONFIG(debug, debug|release): LIBS += -F$$PWD/../build-VespucciLibrary/debug/ -framework Vespucci
 

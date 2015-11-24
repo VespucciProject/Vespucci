@@ -1083,10 +1083,6 @@ void MainWindow::RangeDialogAccepted(double min, double max)
     }
 }
 
-
-
-
-
 void MainWindow::on_actionLarge_Matrices_triggered()
 {
     if (!workspace->datasets()->size()){
