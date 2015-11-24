@@ -1,4 +1,4 @@
-Vespucci Development Branch [![Travis CI Status](https://travis-ci.org/VespucciProject/Vespucci.svg?branch=master)](https://travis-ci.org/VespucciProject/Vespucci)
+Vespucci Development Branch [![Travis CI Status](https://travis-ci.org/dpfoose/Vespucci.svg?branch=master)](https://travis-ci.org/dpfoose/Vespucci)
 ========
 This branch is the active branch and is **probably not stable**.
 
