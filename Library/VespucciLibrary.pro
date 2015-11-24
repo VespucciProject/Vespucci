@@ -161,8 +161,8 @@ unix: DEPENDPATH += /usr/include/cminpack-1
 #we use the Accelerate Framework on OS X but OpenBLAS on linux.
 count(travis_ci, 1){
     QMAKE_CXX=/usr/bin/g++-4.8
-    unix: LIBS += -L/home/travis/build/depts/lib -lmlpack
-    unix: LIBS += -L/home/travis/build/depts/lib -larmadillo
+    unix: LIBS += -L$$HOME/depts/lib -lmlpack
+    unix: LIBS += -L$$HOME/depts/lib -larmadillo
     unix: LIBS += -L/usr/lib -larpack
     unix: PRE_TARGETDEPS += /usr/lib/libarpack.a
     unix: LIBS += -L/usr/lib -lhdf5
