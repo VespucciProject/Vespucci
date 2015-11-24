@@ -314,12 +314,10 @@ count(travis_ci, 1){
     unix:!macx: LIBS += -L/usr/lib/ -lcminpack
     unix:!macx: LIBS += -L/usr/lib -lblas
     unix:!macx: LIBS += -L/usr/lib -llapack
-    unix:!macx: LIBS += -L/home/travis/build/dpfoose/Vespucci/Vespucci-QCP/lib -lqcustomplot
-    unix:!macx: LIBS += -L/home/travis/build/dpfoose/Vespucci/build-VespucciLibrary -lvespucci
+    unix:!macx: LIBS += -L/home/travis/depts/lib -lqcustomplot
+    unix:!macx: LIBS += -L/home/travis/build/VespucciProject/Vespucci/build-VespucciLibrary -lvespucci
     unix: INCLUDEPATH += /home/travis/depts/include
     unix: DEPENDPATH += /home/travis/depts/include
-    unix: INCLUDEPATH += /home/travis/build/dpfoose/Vespucci/Vespucci-QCP/include
-    unix: DEPENDPATH += /home/travis/build/dpfoose/Vespucci/Vespucci-QCP/include
     unix: INCLDEPATH += /usr/include/cminpack-1
     unix: DEPENDPATH += /usr/include/cminpack-1
 }
