@@ -10,11 +10,12 @@ before_install:
     - sudo apt-add-repository -y ppa:beineri/opt-qt551
     - sudo apt-get update
     - sudo apt-get install gcc-4.8 g++-4.8
-    - sudo apt-get install qt55-qmake qt55base-dev qt55declarative-dev libsqlite3-dev qt55svg-dev
+    - sudo apt-get install qt55base qt55tools qt55imageformats qt55location qt55declarative libsqlite3-dev qt55svg
     - sudo apt-get install libhdf5-serial-dev libarpack2-dev
     - sudo apt-get install libxml2-dev libboost1.55-dev libboost-math1.55-dev libboost-program-options1.55-dev libboost-test1.55-dev libboost-random1.55-dev libcminpack-dev
-    - export CXX=/usr/bin/g++-4.9
-    - export CC=/usr/bin/gcc-4.9
+    - export CXX=/usr/bin/g++-4.8
+    - export CC=/usr/bin/gcc-4.8
+    - source /opt/qt55/bin/qt55-env.sh
     - export CMAKE_CXX_COMPILER=/usr/bin/g++-4.9
     - export QMAKE_CXX=/usr/bin/g++-4.9
     - qmake --version
