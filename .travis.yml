@@ -37,11 +37,11 @@ before_install:
     - cd ../../
     - git clone https://github.com/VespucciProject/Vespucci-QCP.git
     - cd Vespucci-QCP
-    - qmake -qt=qt5 && make && make install
+    - qmake && make && make install
     - cd ../
 
 script:
     - mkdir build-VespucciLibrary && cd build-VespucciLibrary
-    - qmake -qt=qt5 ../Library/VespucciLibrary.pro && make
+    - qmake ../Library/VespucciLibrary.pro && make
     - cd ../ && mkdir build-Vespucci && cd build-Vespucci
-    - qmake -qt=qt5 ../Vespucci.pro && make
+    - qmake ../Vespucci.pro && make
