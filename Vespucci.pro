@@ -315,8 +315,6 @@ QMAKE_CXX=/usr/bin/g++-4.8
   unix:!macx: LIBS += -L/home/travis/build/VespucciProject/Vespucci/build-VespucciLibrary -lvespucci
   unix: INCLUDEPATH += /home/travis/depts/include
   unix: DEPENDPATH += /home/travis/depts/include
-  unix: INCLDEPATH += /usr/include/cminpack-1
-  unix: DEPENDPATH += /usr/include/cminpack-1
 }
 count(travis_ci, 0){
     unix: LIBS += -L/usr/local/lib -lmlpack
@@ -368,9 +366,6 @@ unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RcppArm
 unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/include
 unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/Rcpp/include
 unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RCpp/include
-
-unix: INCLUDEPATH += $$PWD/../Vespucci-QCP/include
-unix: DEPENDPATH += $$PWD/../Vespucci-QCP/include
 
 
 #Windows Libraries
