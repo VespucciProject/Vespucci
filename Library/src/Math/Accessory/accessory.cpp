@@ -807,14 +807,18 @@ arma::vec Vespucci::Math::WavenumberToEnergy(const arma::vec &x, double energy_f
 }
 
 
-arma::sp_mat Vespucci::Math::LocalMaximaCWT(arma::mat coefs, arma::uvec scales, arma::uword min_window_size)
+arma::sp_mat Vespucci::Math::LocalMaximaCWT(const arma::mat &coefs, const arma::uvec &scales, arma::uword min_window_size)
 {
+    if (coefs.n_cols != scales.n_rows){
+        std::cerr << "Coefficents and scales must be of same size! Improper value may be passed!" << std::endl;
+        throw std::invalid_argument("coefs and scales do not agree in dimension");
+    }
+    std::cout << "scales: " << std::endl << scales << std::endl;
     arma::uword window_size;
     arma::vec current_coefs;
-    arma::sp_mat local_maxima_col;
     arma::sp_mat local_maxima(coefs.n_rows, coefs.n_cols);
-    for (arma::uword i = 0; i < scales.n_rows; ++i){
-        current_coefs = coefs.col(scales(i));
+    for (arma::uword i = 0; i < coefs.n_cols; ++i){
+        current_coefs = coefs.col(scales(i) - 1);
         window_size = scales(i)*2 + 1;
         window_size = (min_window_size < window_size ? window_size: min_window_size);
         local_maxima.col(i) = Vespucci::Math::LocalMaximaWindow(current_coefs, window_size);

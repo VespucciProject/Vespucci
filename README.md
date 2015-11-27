@@ -9,8 +9,8 @@ A copy of this license is provided in LICENSE
 
 Binary Releases:
 -----------------
-Because the members of my group primarily use Windows machines, most releases 
-will only include Windows binaries.  Major releases may include binaries for 
+Because the members of my group primarily use Windows machines, most releases
+will only include Windows binaries.  Major releases may include binaries for
 Windows, Mac OSX, and GNU/Linux (most likely as .deb and .rpm).
 
 A relatively stable Windows development build is availible from Dropbox:
@@ -48,9 +48,9 @@ libraries on your system:
 * LibXML2
 * Vespucci-QCP (compiled shared or static library, a fork of QCustomPlot https://github.com/dpfoose/Vespucci-QCP)
 
-All of the above packages, with the exception of MLPACK and QCustomPlot, are 
+All of the above packages, with the exception of MLPACK and QCustomPlot, are
 readily available from most major GNU/Linux repositories. Installation on Mac
-OS is similarly easy, just use [homebrew](http://brew.sh/) to install all the prerequisites ("brew install mlpack" should take care of mlpack and all its dependencies, and "brew install qt5" should handle the gui dependencies. 
+OS is similarly easy, just use [homebrew](http://brew.sh/) to install all the prerequisites ("brew install mlpack" should take care of mlpack and all its dependencies, and "brew install qt5" should handle the gui dependencies.
 
 Because it is difficult to find Windows binaries for Armadillo, MLPACK and ARPACK,
 and to make development on Windows easier, I have included Windows binaries of all
@@ -64,4 +64,3 @@ For Unix-like systems, shared libraries are the default. You will need to
 compile and install static versions of these libraries if you want a stand-
 alone executable. Linux packages, if made availible will require Qt, OpenBLAS, and
 ARPACK (armadillo and MLPACK will be included).
-

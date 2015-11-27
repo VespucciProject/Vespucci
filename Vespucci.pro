@@ -292,9 +292,6 @@ unix: DEPENDPATH += /usr/local/include
 unix:macx: INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
 unix:macx: DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
 
-INCLUDEPATH += $$PWD/../Vespucci-QCP-sharedlib/include
-DEPENDPATH += $$PWD/../Vespucci-QCP-sharedlib/include
-
 mac: LIBS += -F$$PWD/../Frameworks/ -framework QCustomPlot
 
 INCLUDEPATH += $$PWD/include
@@ -304,22 +301,20 @@ DEPENDPATH += $$PWD/include
 #we use the Accelerate Framework on OS X but OpenBLAS on linux.
 
 count(travis_ci, 1){
-    QMAKE_CXX=/usr/bin/g++-4.8
-    unix: LIBS += -L/home/travis/depts/lib -lmlpack
-    unix: LIBS += -L/home/travis/depts/lib -larmadillo
-    unix: LIBS += -L/usr/lib -larpack
-    unix: PRE_TARGETDEPS += /usr/lib/libarpack.a
-    unix: LIBS += -L/usr/lib -lhdf5
-    unix: PRE_TARGETDEPS += /usr/lib/libhdf5.a
-    unix:!macx: LIBS += -L/usr/lib/ -lcminpack
-    unix:!macx: LIBS += -L/usr/lib -lblas
-    unix:!macx: LIBS += -L/usr/lib -llapack
-    unix:!macx: LIBS += -L/home/travis/depts/lib -lqcustomplot
-    unix:!macx: LIBS += -L/home/travis/build/VespucciProject/Vespucci/build-VespucciLibrary -lvespucci
-    unix: INCLUDEPATH += /home/travis/depts/include
-    unix: DEPENDPATH += /home/travis/depts/include
-    unix: INCLDEPATH += /usr/include/cminpack-1
-    unix: DEPENDPATH += /usr/include/cminpack-1
+QMAKE_CXX=/usr/bin/g++-4.8
+  unix: LIBS += -L/home/travis/depts/lib -lmlpack
+  unix: LIBS += -L/home/travis/depts/lib -larmadillo
+  unix: LIBS += -L/usr/lib -larpack
+  unix: PRE_TARGETDEPS += /usr/lib/libarpack.a
+  unix: LIBS += -L/usr/lib -lhdf5
+  unix: PRE_TARGETDEPS += /usr/lib/libhdf5.a
+  unix:!macx: LIBS += -L/usr/lib/ -lcminpack
+  unix:!macx: LIBS += -L/usr/lib -lblas
+  unix:!macx: LIBS += -L/usr/lib -llapack
+  unix:!macx: LIBS += -L/home/travis/depts/lib -lqcustomplot
+  unix:!macx: LIBS += -L/home/travis/build/VespucciProject/Vespucci/build-VespucciLibrary -lvespucci
+  unix: INCLUDEPATH += /home/travis/depts/include
+  unix: DEPENDPATH += /home/travis/depts/include
 }
 count(travis_ci, 0){
     unix: LIBS += -L/usr/local/lib -lmlpack
@@ -336,6 +331,8 @@ count(travis_ci, 0){
     unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
     unix: INCLUDEPATH += /usr/local/include/cminpack-1
     unix: DEPENDPATH += /usr/local/include/cminpack-1
+    INCLUDEPATH += $$PWD/../Vespucci-QCP-sharedlib/include
+    DEPENDPATH += $$PWD/../Vespucci-QCP-sharedlib/include
     unix:!macx: CONFIG(release, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplot
     else:unix:!macx: CONFIG(debug, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplotd
     unix:!macx:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary/release -lvespucci
@@ -369,9 +366,6 @@ unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RcppArm
 unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/include
 unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/Rcpp/include
 unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RCpp/include
-
-unix: INCLUDEPATH += $$PWD/../Vespucci-QCP/include
-unix: DEPENDPATH += $$PWD/../Vespucci-QCP/include
 
 
 #Windows Libraries
