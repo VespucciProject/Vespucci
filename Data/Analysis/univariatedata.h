@@ -28,15 +28,13 @@ class UnivariateData
 public:
     UnivariateData(QSharedPointer<VespucciDataset> parent, QString name);
     UnivariateData(QSharedPointer<VespucciDataset> parent, QString name, vec control);
-    void Apply(double left_bound,
-          double right_bound,
-          UnivariateMethod::Method method);
 
+    //univariate (if window==0, don't predict)
     void Apply(double left_bound,
                double right_bound,
                uword window,
                UnivariateMethod::Method method);
-
+    //band ratio
     void Apply(double first_left_bound,
                double first_right_bound,
                double second_left_bound,
@@ -44,11 +42,6 @@ public:
                uword window,
                UnivariateMethod::Method method);
 
-    void Apply(double first_left_bound,
-          double first_right_bound,
-          double second_left_bound,
-          double second_right_bound,
-          UnivariateMethod::Method method);
     void Calibrate(const vec &values, const vec &concentrations);
 
     vec results() const;
@@ -60,23 +53,23 @@ public:
     double first_right_bound() const;
     double second_left_bound() const;
     double second_right_bound() const;
-    QString MethodDescription() const;
+    QString method_description() const;
 
     mat calibration_curve() const;
     const mat *calibration_curve_ptr() const;
     const std::map<std::string, double> calibration_stats() const;
 
 
-    mat Midlines() const;
-    uvec Boundaries() const;
-    uvec MidlineBoundaries() const;
-    mat first_baselines() const;
-    mat second_baselines() const;
-
     QString name() const;
     void SetName(QString name);
 
     bool calibrated() const;
+
+    arma::field<mat> baselines() const;
+    arma::field<mat> first_baselines() const;
+    arma::field<mat> second_baselines() const;
+    arma::field<mat> midlines() const;
+
 
 private:
     QString method_description_;
@@ -117,20 +110,11 @@ private:
 
 
     ///
-    /// \brief midlines_
-    /// The midlines (peak width)
-    mat midlines_;
-
-    ///
     /// \brief ratio_baselines_
-    /// Contains the two sets of baselines for an intensity band ratio.
     arma::field<mat> baselines_;
-    arma::field<vec> d_baselines_;
-    arma::field<vec> d_first_baselines_;
-    arma::field<vec> d_second_baselines_;
-
-    mat first_baselines_;
-    mat second_baselines_;
+    arma::field<mat> first_baselines_;
+    arma::field<mat> second_baselines_;
+    arma::field<mat> midlines_;
 
     ///
     /// \brief positions_
