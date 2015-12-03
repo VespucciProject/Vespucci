@@ -46,8 +46,8 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
     name_box_ = findChild<QLineEdit *>("nameLineEdit");
     file_name_box_ = findChild<QLineEdit *>("filenameLineEdit");
     spectrum_plot_ = findChild<QCustomPlot *>("spectrumPlot");
-    value_method_selector_ = findChild<QComboBox *>("peakComboBox");
-    color_selector_ = findChild<QComboBox *>("gradientComboBox");
+    peak_combo_box_ = findChild<QComboBox *>("peakComboBox");
+    gradient_combo_box_ = findChild<QComboBox *>("gradientComboBox");
     negative_box_ = findChild<QCheckBox *>("negativeScoresCheckBox");
 
     integration_method_selector_ = findChild<QComboBox *>("integrationComboBox");
@@ -126,13 +126,12 @@ void UnivariateDialog::on_buttonBox_accepted()
     }
     double entered_min = min_box_->text().toDouble();
     double entered_max = max_box_->text().toDouble();
-    bool make_map = map_check_box_->isChecked();
-
+    bool plot = map_check_box_->isChecked();
     QString name = name_box_->text();
     if(!name.size()){
         name = "Univariate " + QString::number(data_->UnivariateCount());
     }
-    QString value_method = value_method_selector_->currentText();
+    QString value_method = peak_combo_box_->currentText();
     UnivariateMethod::Method method;
     if (value_method == "Area")
         method = UnivariateMethod::Area;
@@ -147,52 +146,26 @@ void UnivariateDialog::on_buttonBox_accepted()
 
     QString integration_method = integration_method_selector_->currentText();
 
-    int gradient_index = color_selector_->currentIndex();
-
-    if (make_map){
-        if (method != UnivariateMethod::Correlation){
-            try{
-                data_->Univariate(entered_min, entered_max, name, method, integration_method, gradient_index);
-            }
-            catch(exception e){
-                workspace->main_window()->DisplayExceptionWarning(e);
-            }
-        }
-        else{
+    int gradient_index = gradient_combo_box_->currentIndex();
+    if (method == UnivariateMethod::Correlation){
+        try{
             vec control;
-            QFileInfo file_info(file_name_box_->text());
-            workspace->set_directory(file_info.dir().path());
-            try{
-                control.load(file_name_box_->text().toStdString());
-                data_->CorrelationMap(control, name, gradient_index);
-            }
-            catch(exception e){
-                workspace->main_window()->DisplayExceptionWarning(e);
-            }
+            control.load(file_name_box_->text().toStdString());
+            data_->Correlation(control, name, gradient_index, plot);
+        }catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
         }
     }
     else{
-        if (method != UnivariateMethod::Correlation){
-            try{
-                data_->Univariate(entered_min, entered_max, name, method, integration_method);
-            }
-            catch(exception e){
-                workspace->main_window()->DisplayExceptionWarning(e);
-            }
-        }
-        else{
-            vec control;
-            QFileInfo file_info(file_name_box_->text());
-            workspace->set_directory(file_info.dir().path());
-            try{
-                control.load(file_name_box_->text().toStdString());
-                data_->CorrelationAnalysis(control, name);
-            }
-            catch(exception e){
-                workspace->main_window()->DisplayExceptionWarning(e);
-            }
+        try{
+            data_->Univariate(entered_min, entered_max,
+                              name, method,
+                              15, plot, gradient_index);
+        }catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
         }
     }
+
     data_.clear();
 }
 

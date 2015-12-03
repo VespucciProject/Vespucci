@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>725</width>
+    <width>731</width>
     <height>629</height>
    </rect>
   </property>
@@ -167,6 +167,11 @@
         <item>
          <property name="text">
           <string>Area</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Area (Estimate Peak Edges)</string>
          </property>
         </item>
        </widget>

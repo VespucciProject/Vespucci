@@ -130,31 +130,21 @@ void BandRatioDialog::on_buttonBox_accepted()
     UnivariateMethod::Method method;
     if (value_method == "Area")
         method = UnivariateMethod::AreaRatio;
+    else if (value_method == "Area (Estimate Peak Edges)")
+        method = UnivariateMethod::DerivativeRatio;
     else
         method = UnivariateMethod::IntensityRatio;
 
     int gradient_index = color_selector_->currentIndex();
-    if (map_check_box_->isChecked()){
-        try{
-            data_->BandRatio(first_entered_min,
-                             first_entered_max,
-                             second_entered_min,
-                             second_entered_max,
-                             name,
-                             method,
-                             gradient_index);
-        }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
-        }
-    }
-    else{
-        try{
-            data_->BandRatio(first_entered_min, first_entered_max,
-                             second_entered_min, second_entered_max,
-                             name, method);
-        }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
-        }
+    arma::uword window = 15;
+    bool plot = map_check_box_->isChecked();
+
+    try{
+        data_->BandRatio(first_entered_min, first_entered_max,
+                         second_entered_min, second_entered_max,
+                         name, method, window, plot, gradient_index);
+    }catch(exception e){
+        workspace->main_window()->DisplayExceptionWarning(e);
     }
 
     close();

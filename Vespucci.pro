@@ -293,6 +293,8 @@ unix:macx: INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
 unix:macx: DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
 
 mac: LIBS += -F$$PWD/../Frameworks/ -framework QCustomPlot
+mac: INCLUDEPATH += $$PWD/../Vespucci-QCP/include
+mac: DEPENDPATH += $$PWD/../Vespucci-QCP/include
 
 INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include

@@ -98,12 +98,12 @@ private:
     ///
     /// \brief color_selector_
     /// User selects desired color scheme here
-    QComboBox *color_selector_;
+    QComboBox *gradient_combo_box_;
 
     ///
-    /// \brief value_method_selector_
+    /// \brief peak_combo_box_
     /// User selects value determination method here
-    QComboBox *value_method_selector_;
+    QComboBox *peak_combo_box_;
 
     ///
     /// \brief negative_box_

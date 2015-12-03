@@ -93,6 +93,8 @@ bool VespucciDataset::SaveLogFile(QString filename)
     return log_file_->copy(filename);
 }
 
+
+
 ///
 /// \brief VespucciDataset::DestroyLogFile
 /// Deletes log file unless user decides to save it elsewhere
@@ -1485,407 +1487,134 @@ void VespucciDataset::ApplyFTWeight(double start_offset,
 
 }
 
-// MAPPING FUNCTIONS //
-
-///
-/// \brief VespucciDataset::Univariate
-/// Creates a univariate image. Several peak-determination methods are availible.
-/// All methods except for "Intensity" estimate a local baseline. This is done
-/// by drawing a straight line from the left to right endpoint. This can cause
-/// problems when the endpoints are near other local maxima.
-///
-/// The "Bandwidth" method calculates the full-width at half maximum of the peak
-/// near the range specified.
-///
-/// The "Intensity" method calculates the local maximum of the spectrum within
-/// the range specified.
-///
-/// The "Area" method takes a right Riemann sum of the spectrum
-///
-/// The "Derivative" method is misleadingly named (this is based on in-house
-/// MATLAB code previously used by my group). The derivative method is actually
-/// and area method which finds the edges of the peak by taking a second derivative.
-/// It then determines the peak in an identical fashion to the "Area" method///
-///
-/// \param min left bound of spectral region of interest
-/// \param max right bound of spectral region of interest
-/// \param name name of MapData object to be created
-/// \param value_method method of determining peak (intensity, derivative, or area)
-/// \param gradient_index index of color scheme in master list (GetGradient());
-///
-void VespucciDataset::Univariate(double min,
-                                 double max,
-                                 QString name,
-                                 UnivariateMethod::Method method,
-                                 QString integration_method,
-                                 uword gradient_index)
-{
-    //if dataset is non spatial, just quit
-    if(non_spatial_){
-        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
-        return;
-    }
-    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
-    univariate_data->Apply(min, max, method);
-    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
-                                            y_axis_description_,
-                                            x_, y_, univariate_data->results(),
-                                            QSharedPointer<VespucciDataset>(this),
-                                            directory_,
-                                            GetGradient(gradient_index),
-                                            map_list_model_->rowCount(QModelIndex()),
-                                            6,
-                                            main_window_));
-    cout << "set name" << endl;
-    new_map->set_name(name, univariate_data->MethodDescription());
-
-    uvec boundaries;
-    if(method == UnivariateMethod::Area || method == UnivariateMethod::FWHM){
-        boundaries = univariate_data->Boundaries();
-        new_map->set_baseline(abscissa_.subvec(boundaries(0), boundaries(1)),
-                              univariate_data->first_baselines());
-    }
-
-
-    /*if(method == UnivariateMethod::FWHM){
-        boundaries = univariate_data->Boundaries();
-        new_map->set_fwhm(univariate_data->Midlines());
-    }*/
-
-
-    log_stream_ << "Univariate" << endl;
-    log_stream_ << "min == " << min << endl;
-    log_stream_ << "max == " << max << endl;
-    log_stream_ << "name == " << name << endl;
-    log_stream_ << "method == " << (method == UnivariateMethod::Area ? "Area" : (method == UnivariateMethod::FWHM ? "Bandwidth" : "Intensity")) << endl;
-    log_stream_ << "integration_method == " << integration_method << endl;
-    log_stream_ << "gradient_index == " << gradient_index << endl;
-    univariate_datas_.append(univariate_data);
-    map_list_model_->AddMap(new_map);
-    new_map->ShowMapWindow();
-}
-
-
-void VespucciDataset::Univariate(double min,
-                                 double max,
-                                 QString name,
-                                 UnivariateMethod::Method method,
-                                 QString integration_method)
-{
-
-    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
-    univariate_data->Apply(min, max, method);
-
-
-    log_stream_ << "Univariate (no image)" << endl;
-    log_stream_ << "min == " << min << endl;
-    log_stream_ << "max == " << max << endl;
-    log_stream_ << "name == " << name << endl;
-    log_stream_ << "method == " << (method == UnivariateMethod::Area ? "Area" : (method == UnivariateMethod::FWHM ? "Bandwidth" : "Intensity")) << endl;
-    log_stream_ << "integration_method == " << integration_method << endl;
-    univariate_datas_.append(univariate_data);}
+// ANALYIS/MAPPING FUNCTIONS //
 
 ///
 /// \brief VespucciDataset::Univariate
 /// \param min
 /// \param max
-/// \param window
 /// \param name
 /// \param method
-/// \param integration_method
+/// \param window
+/// \param plot
 /// \param gradient_index
 ///
-void VespucciDataset::Univariate(double min, double max, uword window, QString name, UnivariateMethod::Method method, QString integration_method, uword gradient_index)
+void VespucciDataset::Univariate(double min, double max, QString name, 
+                                 UnivariateMethod::Method method, 
+                                 uword window, bool plot, uword gradient_index)
 {
-    //if dataset is non spatial, just quit
-    if(non_spatial_){
-        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
-        return;
-    }
     QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
-    try{
-        univariate_data->Apply(min, max, window, method);
-    }catch(exception e){
-        throw std::runtime_error("VespucciDataset::Univariate: " + string(e.what()));
-    }
-
-    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
-                                            y_axis_description_,
-                                            x_, y_, univariate_data->results(),
-                                            QSharedPointer<VespucciDataset>(this),
-                                            directory_,
-                                            GetGradient(gradient_index),
-                                            map_list_model_->rowCount(QModelIndex()),
-                                            6,
-                                            main_window_));
-    new_map->set_name(name, univariate_data->MethodDescription());
-
-    /*
-    uvec boundaries;
-    if(method == UnivariateMethod::Area || method == UnivariateMethod::FWHM){
-        boundaries = univariate_data->Boundaries();
-        new_map->set_baseline(abscissa_.subvec(boundaries(0), boundaries(1)),
-                              univariate_data->first_baselines());
-    }
-    */
-
-    /*if(method == UnivariateMethod::FWHM){
-        boundaries = univariate_data->Boundaries();
-        new_map->set_fwhm(univariate_data->Midlines());
-    }*/
-
+    univariate_data->Apply(min, max, window, method);
+    univariate_datas_.append(univariate_data);
 
     log_stream_ << "Univariate" << endl;
     log_stream_ << "min == " << min << endl;
     log_stream_ << "max == " << max << endl;
     log_stream_ << "name == " << name << endl;
-    log_stream_ << "method == " << (method == UnivariateMethod::Area ? "Area" : (method == UnivariateMethod::FWHM ? "Bandwidth" : "Intensity")) << endl;
-    log_stream_ << "integration_method == " << integration_method << endl;
-    log_stream_ << "gradient_index == " << gradient_index << endl;
-    univariate_datas_.append(univariate_data);
-    map_list_model_->AddMap(new_map);
-    new_map->ShowMapWindow();
-}
+    log_stream_ << "method == " << univariate_data->method_description() << endl;
 
-///
-/// \brief VespucciDataset::Univariate
-/// \param min
-/// \param max
-/// \param window
-/// \param name
-/// \param method
-/// \param integration_method
-///
-void VespucciDataset::Univariate(double min, double max, uword window, QString name, UnivariateMethod::Method method, QString integration_method)
-{
-    //if dataset is non spatial, just quit
-    if(non_spatial_){
-        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
-        return;
-    }
-    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
-    try{
-        univariate_data->Apply(min, max, method);
-    }catch(exception e){
-        throw runtime_error("VespucciDataset::Univariate: " + string(e.what()));
+    if (plot){
+        QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                                    y_axis_description_,
+                                                    x_, y_,
+                                                    univariate_data->results(),
+                                                    QSharedPointer<VespucciDataset>(this),
+                                                    directory_, GetGradient(gradient_index),
+                                                    map_list_model_->rowCount(QModelIndex()),
+                                                    6,
+                                                    main_window_));
+        switch (method){
+          case UnivariateMethod::Area :
+          case UnivariateMethod::Derivative :
+            new_map->set_baselines(univariate_data->baselines());
+            break;
+          case UnivariateMethod::FWHM :
+            new_map->set_fwhm(univariate_data->baselines(), univariate_data->midlines());
+            break;
+          default:
+            ;//do nothing
+        }
+
+        map_list_model_->AddMap(new_map);
+        new_map->ShowMapWindow();
     }
 
-    /*if(method == UnivariateMethod::FWHM){
-        boundaries = univariate_data->Boundaries();
-        new_map->set_fwhm(univariate_data->Midlines());
-    }*/
 
-
-    log_stream_ << "Univariate (no image)" << endl;
-    log_stream_ << "min == " << min << endl;
-    log_stream_ << "max == " << max << endl;
-    log_stream_ << "name == " << name << endl;
-    log_stream_ << "method == " << (method == UnivariateMethod::Area ? "Area" : (method == UnivariateMethod::FWHM ? "Bandwidth" : "Intensity")) << endl;
-    log_stream_ << "integration_method == " << integration_method << endl;
-    univariate_datas_.append(univariate_data);
-}
-
-///
-/// \brief VespucciDataset::CorrelationMap
-/// \param control The "control" vector to which all spectra are compared
-/// \param name The name of the image
-/// \param gradient_index The index of the color gradient in the global list
-///
-void VespucciDataset::CorrelationMap(vec control, QString name, uword gradient_index)
-{
-    //if dataset is non spatial, just quit
-    if(non_spatial_){
-        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
-        return;
-    }
-    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name, control));
-    univariate_data->Apply(0, 0, UnivariateMethod::Correlation);
-    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
-                                            y_axis_description_,
-                                            x_, y_, univariate_data->results(),
-                                            QSharedPointer<VespucciDataset>(this),
-                                            directory_,
-                                            GetGradient(gradient_index),
-                                            map_list_model_->rowCount(QModelIndex()),
-                                            6,
-                                            main_window_));
-
-    new_map->set_name(name, univariate_data->MethodDescription());
-
-
-    log_stream_ << "Univariate" << endl;
-    log_stream_ << "name == " << name << endl;
-    log_stream_ << "method == Correlation" << endl;
-    log_stream_ << "gradient_index == " << gradient_index << endl;
-    univariate_datas_.append(univariate_data);
-    map_list_model_->AddMap(new_map);
-    new_map->ShowMapWindow();
 }
 
 ///
 /// \brief VespucciDataset::BandRatio
-/// Creates a band ratio univariate map. Band ratio maps represent the ratio of
-/// two peaks. The determination methods here are identical to those in
-/// VespucciDataset::Univariate.
-/// \param first_min index of left bound of first region of interest
-/// \param first_max index of right bound of first region of interest
-/// \param second_min index of left bound of second region of interest
-/// \param second_max index of right bound of second region of interest
-/// \param name name of the MapData object to be created.  This becomes name of the map to the user
-/// \param value_method how the maxima are to be determined (area, derivative, or intensity)
-/// \param gradient_index index of gradient in the master list (GetGradient())
+/// \param first_min
+/// \param first_max
+/// \param second_min
+/// \param second_max
+/// \param name
+/// \param method
+/// \param window
+/// \param plot
+/// \param gradient_index
 ///
-void VespucciDataset::BandRatio(double first_min, double first_max,
-                                double second_min, double second_max,
-                                QString name,
-                                UnivariateMethod::Method method,
-                                unsigned int gradient_index)
+void VespucciDataset::BandRatio(double first_min, double first_max, double second_min, double second_max, QString name, UnivariateMethod::Method method, uword window, bool plot, unsigned int gradient_index)
 {
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
+    univariate_data->Apply(first_min, first_max, second_min, second_max, window, method);
+    univariate_datas_.append(univariate_data);
 
-    //if dataset is non spatial, just quit
-    if(non_spatial_){
-        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
-        return;
-    }
-
-    log_stream_ << "BandRatio" << endl;
+    log_stream_ << "Band Ratio" << endl;
     log_stream_ << "first_min == " << first_min << endl;
     log_stream_ << "first_max == " << first_max << endl;
     log_stream_ << "second_min == " << second_min << endl;
     log_stream_ << "second_max == " << second_max << endl;
     log_stream_ << "name == " << name << endl;
-    log_stream_ << "value_method == " << (method == UnivariateMethod::Area ? "Area Ratio" : "Intensity Ratio") << endl;
-    //log_stream_ << "integration_method == " << integration_method << endl;
-    log_stream_ << "gradient_index == " << gradient_index << endl << endl;
+    log_stream_ << "method == " << univariate_data->method_description() << endl;
 
+    if (plot){
+        QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                                    y_axis_description_,
+                                                    x_, y_,
+                                                    univariate_data->results(),
+                                                    QSharedPointer<VespucciDataset>(this),
+                                                    directory_, GetGradient(gradient_index),
+                                                    map_list_model_->rowCount(QModelIndex()),
+                                                    6,
+                                                    main_window_));
 
-    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
-    univariate_datas_.append(univariate_data);
+        if (method == UnivariateMethod::AreaRatio || method == UnivariateMethod::DerivativeRatio)
+            new_map->set_baselines(univariate_data->first_baselines(), univariate_data->second_baselines());
 
-    univariate_data->Apply(first_min, first_max, second_min, second_max, method);
-
-    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
-                                            y_axis_description_,
-                                            x_, y_, univariate_data->results(),
-                                            QSharedPointer<VespucciDataset>(this), directory_,
-                                            GetGradient(gradient_index),
-                                            map_list_model_->rowCount(QModelIndex()),
-                                            6,
-                                            main_window_));
-
-
-    uvec boundaries = univariate_data->Boundaries();
-
-    if (method == UnivariateMethod::AreaRatio){
-        new_map->set_baselines(abscissa_.subvec(boundaries(0), boundaries(1)),
-                               abscissa_.subvec(boundaries(2), boundaries(3)),
-                               univariate_data->first_baselines(),
-                               univariate_data->second_baselines());
+        map_list_model_->AddMap(new_map);
+        new_map->ShowMapWindow();
     }
-
-    map_list_model_->AddMap(new_map);
-    new_map->ShowMapWindow();
 }
-
 
 ///
-/// \brief BandRatio Band ratio analysis without imaging
-/// \param first_min First spectral region of interest left bound.
-/// \param first_max First spectral region of interest right bound.
-/// \param second_min Second spectral region of interest left bound.
-/// \param second_max Second spectral region of interest right bound.
-/// \param name Descriptive name exposed to the user.
-/// \param method The method.
-/// Perform a band ratio analysis without creating an image.
-void VespucciDataset::BandRatio(double first_min,
-                                double first_max,
-                                double second_min,
-                                double second_max,
-                                QString name,
-                                UnivariateMethod::Method method)
+/// \brief VespucciDataset::Correlation
+/// \param control
+/// \param name
+/// \param gradient_index
+///
+void VespucciDataset::Correlation(vec control, QString name, uword gradient_index, bool plot)
 {
-    log_stream_ << "BandRatio (no image)" << endl;
-    log_stream_ << "first_min == " << first_min << endl;
-    log_stream_ << "first_max == " << first_max << endl;
-    log_stream_ << "second_min == " << second_min << endl;
-    log_stream_ << "second_max == " << second_max << endl;
-    log_stream_ << "name == " << name << endl;
-    log_stream_ << "value_method == " << (method == UnivariateMethod::Area ? "Area Ratio" : "Intensity Ratio") << endl;
-    //log_stream_ << "integration_method == " << integration_method << endl;
-
-    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
-    univariate_data->Apply(first_min, first_max, second_min, second_max, method);
-    univariate_data->SetName(name);
-    univariate_datas_.append(univariate_data);
-}
-
-void VespucciDataset::BandRatio(double first_min, double first_max,
-                                double second_min, double second_max,
-                                unsigned int window,
-                                QString name, UnivariateMethod::Method method,
-                                unsigned int gradient_index)
-{
-    log_stream_ << "BandRatio (Estimate Edges)" << endl;
-    log_stream_ << "first_min == " << first_min << endl;
-    log_stream_ << "first_max == " << first_max << endl;
-    log_stream_ << "second_min == " << second_min << endl;
-    log_stream_ << "second_max == " << second_max << endl;
-    log_stream_ << "name == " << name << endl;
-    log_stream_ << "value_method == " << "Area Ratio (Estimated Edges)" << endl;
-    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
-    try{
-        univariate_data->Apply(first_min, first_max, second_min, second_max, window, method);
-    }catch(exception e){
-        throw std::runtime_error("VespucciDataset::BandRatio: " + string(e.what()));
-    }
-    univariate_data->SetName(name);
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name, control));
+    univariate_data->Apply(0, 0, 0, UnivariateMethod::Correlation);
     univariate_datas_.append(univariate_data);
 
-    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
-                                            y_axis_description_,
-                                            x_, y_, univariate_data->results(),
-                                            QSharedPointer<VespucciDataset>(this), directory_,
-                                            GetGradient(gradient_index),
-                                            map_list_model_->rowCount(QModelIndex()),
-                                            6,
-                                            main_window_));
-
-
-    //uvec boundaries = univariate_data->Boundaries();
-
-    /*
-    if (method == UnivariateMethod::AreaRatio){
-        new_map->set_baselines(abscissa_.subvec(boundaries(0), boundaries(1)),
-                               abscissa_.subvec(boundaries(2), boundaries(3)),
-                               univariate_data->first_baselines(),
-                               univariate_data->second_baselines());
-    }
-    */
-    map_list_model_->AddMap(new_map);
-    new_map->ShowMapWindow();
-
-}
-
-void VespucciDataset::BandRatio(double first_min, double first_max,
-                                double second_min, double second_max,
-                                unsigned int window,
-                                QString name, UnivariateMethod::Method method)
-{
-    log_stream_ << "BandRatio (Estimate Edges, no image)" << endl;
-    log_stream_ << "first_min == " << first_min << endl;
-    log_stream_ << "first_max == " << first_max << endl;
-    log_stream_ << "second_min == " << second_min << endl;
-    log_stream_ << "second_max == " << second_max << endl;
+    log_stream_ << "Correlation" << endl;
     log_stream_ << "name == " << name << endl;
-    log_stream_ << "value_method == " << "Area Ratio (Estimated Edges)" << endl;
-    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
-    try{
-        univariate_data->Apply(first_min, first_max, second_min, second_max, window, method);
-    }catch(exception e){
-        throw std::runtime_error("VespucciDataset::BandRatio: " + string(e.what()));
+
+    if (plot){
+        QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                                    y_axis_description_,
+                                                    x_, y_,
+                                                    univariate_data->results(),
+                                                    QSharedPointer<VespucciDataset>(this),
+                                                    directory_, GetGradient(gradient_index),
+                                                    map_list_model_->rowCount(QModelIndex()),
+                                                    6,
+                                                    main_window_));
+        map_list_model_->AddMap(new_map);
+        new_map->ShowMapWindow();
     }
-    univariate_data->SetName(name);
-    univariate_datas_.append(univariate_data);
 }
 
 ///
@@ -2351,18 +2080,6 @@ void VespucciDataset::PartialLeastSquares(uword components)
         throw std::runtime_error(str);
     }
 }
-
-void VespucciDataset::CorrelationAnalysis(vec control, QString name)
-{
-    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name, control));
-    univariate_data->Apply(0, 0, UnivariateMethod::Correlation);
-
-    log_stream_ << "Univariate" << endl;
-    log_stream_ << "name == " << name << endl;
-    log_stream_ << "method == Correlation" << endl;
-    univariate_datas_.append(univariate_data);
-}
-
 
 ///
 /// \brief VespucciDataset::KMeans
