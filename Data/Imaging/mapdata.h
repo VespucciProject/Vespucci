@@ -68,29 +68,24 @@ public:
 
     void set_type(QString type);
     void set_name(QString name, QString type);
-    void set_baseline(vec abscissa, mat baseline);
-    void set_fwhm(mat mid_lines);
-    void set_baselines(vec first_abscissa, vec second_abscissa,
-                       mat first_baseline, mat second_baseline);
-    void set_deriv_baselines(field<vec> abscissae, field<vec> baselines);
-    void set_deriv_baselines(field<vec> first_abscissae, field<vec> second_abscissae,
-                             field<vec> first_baselines, field<vec> second_baselines);
+    void set_baselines(field<mat> baselines);
+    void set_baselines(field<mat> first_baselines, field<mat> second_baselines);
+    void set_fwhm(field<mat> baselines, field<mat> midlines);
+
     bool univariate_bandwidth();
     bool univariate_derivative();
     bool band_ratio_derivative();
     bool univariate_area();
     bool band_ratio_area();
 
-
+    QVector<double> abscissa(int i);
+    QVector<double> baseline(int i);
     QVector<double> first_baseline(int i);
     QVector<double> second_baseline(int i);
-    QVector<double> first_abscissa();
-    QVector<double> second_abscissa();
     QVector<double> first_abscissa(int i);
     QVector<double> second_abscissa(int i);
-    QVector<double> half_max(int i);
-    QVector<double> mid_line(int i);
-    QVector<double> mid_lines(int i);
+    QVector<double> midline(int i);
+    QVector<double> midline_abscissa(int i);
 
     mat stats_; //a statistics matrix like made by MATLAB
 
@@ -274,17 +269,11 @@ private:
     /// The color scale displayed on the map viewer
     QCPLayoutElement *color_scale_; //this color scale is not changed!
 
-    //stuff related to baselines and such
-    mat first_baseline_;
-    mat second_baseline_;
-    vec first_abscissa_;
-    vec second_abscissa_;
-    mat mid_lines_;
-
-    field<vec> first_baselines_;
-    field<vec> first_abscissae_;
-    field<vec> second_baselines_;
-    field<vec> second_abscissae_;
+    //stuff related to baselines and such    
+    field<mat> baselines_;
+    field<mat> first_baselines_;
+    field<mat> second_baselines_;
+    field<mat> midlines_;
 
     bool univariate_area_;
     bool band_ratio_area_;
