@@ -24,7 +24,7 @@
 namespace TextImport{
     bool ImportLongText(QString filename,
                         arma::mat &spectra,
-                        arma::vec &wavelength,
+                        arma::vec &abscissa,
                         arma::vec &x, arma::vec &y,
                         bool swap_spatial,
                         QProgressDialog *progress);
@@ -33,14 +33,14 @@ namespace TextImport{
                          QString y_filename,
                          QString spectra_filename,
                          arma::mat &spectra,
-                         arma::vec &wavelength,
+                         arma::vec &abscissa,
                          arma::vec &x, arma::vec &y,
                          bool swap_spatial,
                          QProgressDialog *progress);
 
     bool ImportWideText(QString filename,
                         arma::mat &spectra,
-                        arma::vec &wavelength,
+                        arma::vec &abscissa,
                         arma::vec &x, arma::vec &y,
                         bool swap_spatial,
                         QProgressDialog *progress,

@@ -252,6 +252,11 @@ arma::mat Vespucci::Math::Quantification::IntegratePeaksMat(const arma::mat &X, 
         arma::vec first_max_window = spectrum.rows(first_max_start, first_max_end);
         first_min_index = Vespucci::Math::LocalMinimum(first_min_window, first_min);
         first_max_index = Vespucci::Math::LocalMinimum(first_max_window, first_max);
+        if (first_min_index > first_max_index){
+            arma::uword first_min_tmp = first_min_index;
+            first_min_index = first_max_index;
+            first_max_index = first_min_tmp;
+        }
         arma::vec first_baseline(spectrum.rows(first_min_index, first_max_index).n_rows);
         results(i, 0) = IntegratePeak(spectrum, first_min_index, first_max_index, delta, first_baseline);
         current_first_baseline = arma::join_horiz(abscissa.rows(first_min_index, first_max_index),
@@ -262,7 +267,15 @@ arma::mat Vespucci::Math::Quantification::IntegratePeaksMat(const arma::mat &X, 
         arma::vec second_max_window = spectrum.rows(second_max_start, second_max_end);
         second_min_index = Vespucci::Math::LocalMinimum(second_min_window, second_min);
         second_max_index = Vespucci::Math::LocalMinimum(second_max_window, second_max);
+
+        if (second_min_index > second_max_index){
+            arma::uword second_min_tmp = second_min_index;
+            second_min_index = second_max_index;
+            second_max_index = second_min_tmp;
+        }
         arma::vec second_baseline(spectrum.rows(second_min_index, second_max_index).n_rows);
+
+
         results(i, 1) = IntegratePeak(spectrum, second_min_index, second_max_index, delta, second_baseline);
         current_second_baseline = arma::join_horiz(abscissa.rows(second_min_index, second_max_index),
                                                    second_baseline);

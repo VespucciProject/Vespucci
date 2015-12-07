@@ -30,7 +30,11 @@
 /// Finds the maximum of a peak bound by min_index and max_index
 double Vespucci::Math::Quantification::FindPeakMax(const arma::vec &X, arma::uword min_index, arma::uword max_index, arma::uword &position)
 {
-    arma::vec region = X.subvec(min_index, max_index);
+    if (min_index >= max_index){
+        std::cerr << "FindPeakMax: min_index larger than max_index" << std::endl;
+        throw std::invalid_argument("min_index larger than max_index");
+    }
+    arma::vec region = X.rows(min_index, max_index);
     double max = region.max();
     arma::uvec positions = find(region == max);
     position = min_index + positions(0);
@@ -49,6 +53,10 @@ double Vespucci::Math::Quantification::FindPeakMax(const arma::vec &X, arma::uwo
 /// min and max inputs
 arma::vec Vespucci::Math::Quantification::FindPeakMaxMat(const arma::mat &X, arma::vec abscissa, double &min, double &max, arma::mat &positions)
 {
+    if (min >= max){
+        std::cerr << "FindPeakMaxMat: min larger than max" << std::endl;
+        throw std::invalid_argument("min larger than max");
+    }
     double delta = std::abs(abscissa(1) - abscissa(0));
     arma::uvec left_bound = find(((min-delta) <= abscissa) && (abscissa <= (min+delta)));
     arma::uvec right_bound = find(((max-delta) <= abscissa) && (abscissa <= (max+delta)));
