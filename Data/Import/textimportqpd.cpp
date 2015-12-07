@@ -23,7 +23,7 @@
 
 bool TextImport::ImportWideText(QString filename,
                                 mat &spectra,
-                                vec &wavelength,
+                                vec &abscissa,
                                 vec &x, vec &y,
                                 bool swap_spatial,
                                 QProgressDialog *progress,
@@ -49,15 +49,15 @@ bool TextImport::ImportWideText(QString filename,
     int i, j;
 
     inputstream.seek(0);
-    QString wavelength_string = inputstream.readLine();
+    QString abscissa_string = inputstream.readLine();
 
-    QStringList wavelength_string_list =
-            wavelength_string.split(sep,  QString::SkipEmptyParts);
+    QStringList abscissa_string_list =
+            abscissa_string.split(sep,  QString::SkipEmptyParts);
 
-    int rows = wavelength_string_list.size();
-    wavelength.set_size(rows);
+    int rows = abscissa_string_list.size();
+    abscissa.set_size(rows);
     for(i=0; i<rows; ++i){
-        wavelength(i) = wavelength_string_list.at(i).toDouble();
+        abscissa(i) = abscissa_string_list.at(i).toDouble();
     }
     i=0;
     j=0;
@@ -117,7 +117,10 @@ bool TextImport::ImportWideText(QString filename,
 
         }
     }
-
+    if (abscissa(1) < abscissa(0)){
+        abscissa = arma::flipud(abscissa);
+        spectra = arma::flipud(spectra);
+    }
     return true;
 }
 
@@ -126,7 +129,7 @@ bool TextImport::ImportWideText(QString filename,
 /// \brief TextImport::ImportLongText
 /// \param filename
 /// \param spectra
-/// \param wavelength
+/// \param abscissa
 /// \param x
 /// \param y
 /// \param swap_spatial
@@ -139,7 +142,7 @@ bool TextImport::ImportWideText(QString filename,
 ///
 bool TextImport::ImportLongText(QString filename,
                                 mat &spectra,
-                                vec &wavelength,
+                                vec &abscissa,
                                 vec &x, vec &y,
                                 bool swap_spatial,
                                 QProgressDialog *progress)
@@ -165,7 +168,7 @@ bool TextImport::ImportLongText(QString filename,
 
     vec all_x;
     vec all_y;
-    vec all_wavelength = all_data.col(2);
+    vec all_abscissa = all_data.col(2);
     vec all_spectra = all_data.col(3);
 
     if (swap_spatial){
@@ -179,25 +182,25 @@ bool TextImport::ImportLongText(QString filename,
     progress->setValue(progress->maximum());
     progress->setWindowTitle("Parsing File");
     progress->setValue(0);
-    double wavelength_max = all_wavelength.max();
+    double abscissa_max = all_abscissa.max();
 
 
-    bool max_to_min = (all_wavelength(1) < all_wavelength(0) ? true : false);
+    bool max_to_min = (all_abscissa(1) < all_abscissa(0) ? true : false);
 
-    //This is the location of the maximum of each copy of the wavelength vector
+    //This is the location of the maximum of each copy of the abscissa vector
     //The size of this vector is the number of spectra.
 
-    uvec max_indices = find(all_wavelength == wavelength_max);
+    uvec max_indices = find(all_abscissa == abscissa_max);
 
     x.set_size(max_indices.n_elem);
     y.set_size(max_indices.n_elem);
     x = all_x.elem(max_indices);
     y = all_y.elem(max_indices);
     uword abscissa_size = all_data.n_rows / max_indices.n_elem;
-    wavelength.set_size(abscissa_size);
-    wavelength = all_wavelength.subvec(0, abscissa_size - 1);
+    abscissa.set_size(abscissa_size);
+    abscissa = all_abscissa.subvec(0, abscissa_size - 1);
 
-    spectra.set_size(wavelength.n_elem, x.n_elem);
+    spectra.set_size(abscissa.n_elem, x.n_elem);
 
     uword range_start = 0;
     uword range_end = x.n_elem - 1;
@@ -213,9 +216,10 @@ bool TextImport::ImportLongText(QString filename,
     if (progress->wasCanceled())
         return false;
     //must reverse spectra and abscissa if they were read in backward
-    if (max_to_min){
-        spectra = flipud(spectra);
-        wavelength = flipud(wavelength);
+
+    if (abscissa(1) < abscissa(0)){
+        abscissa = arma::flipud(abscissa);
+        spectra = arma::flipud(spectra);
     }
 
     return true;

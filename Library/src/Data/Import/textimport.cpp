@@ -159,10 +159,16 @@ bool TextImport::ImportWideText(std::string filename,
         }
     }
     abscissa = arma::vec(abs_s);
+
     x = arma::vec(x_s);
     y = arma::vec(y_s);
     spectra = arma::mat(spec_s);
     spectra.reshape(abscissa.n_rows, x.n_rows);
+
+    if (abscissa(1) < abscissa(0)){
+        abscissa = arma::flipud(abscissa);
+        spectra = arma::flipud(spectra);
+    }
     return true;
 
 }
@@ -227,6 +233,10 @@ bool TextImport::ImportMultiplePoints(std::map<std::pair<int, int>, std::string>
             std::cerr << "Could not load file " << filename << "." << std::endl;
         }
         ++i;
+    }
+    if (abscissa(1) < abscissa(0)){
+        abscissa = arma::flipud(abscissa);
+        spectra = arma::flipud(spectra);
     }
 
     return have_abscissa;
