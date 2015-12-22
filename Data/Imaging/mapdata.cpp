@@ -170,6 +170,40 @@ void MapData::set_name(QString name, QString type)
 }
 
 ///
+/// \brief MapData::set_baselines
+/// \param baselines
+///
+void MapData::set_baselines(field<mat> baselines)
+{
+    baselines_ = baselines;
+    univariate_area_ = true;
+}
+
+///
+/// \brief MapData::set_baselines
+/// \param first_baselines
+/// \param second_baselines
+///
+void MapData::set_baselines(field<mat> first_baselines, field<mat> second_baselines)
+{
+    first_baselines_ = first_baselines;
+    second_baselines_ = second_baselines;
+    band_ratio_area_ = true;
+}
+
+///
+/// \brief MapData::set_fwhm
+/// \param baselines
+/// \param midlines
+///
+void MapData::set_fwhm(field<mat> baselines, field<mat> midlines)
+{
+    midlines_ = midlines;
+    baselines_ = baselines;
+    univariate_bandwidth_ = true;
+}
+
+///
 /// \brief MapData::ShowMapWindow
 /// Shows or hides the map window.
 void MapData::ShowMapWindow()
@@ -600,60 +634,8 @@ void MapData::ShowSpectrumViewer(bool enabled)
     spectrum_display_->setVisible(enabled);
 }
 
-///
-/// \brief MapData::set_baseline
-/// \param abscissa
-/// \param baseline
-/// Sets a single baseline of this object.
-void MapData::set_baseline(vec abscissa, mat baseline)
-{
-    first_abscissa_ = abscissa;
-    first_baseline_ = baseline;
-    univariate_area_ = true;
-}
 
-///
-/// \brief MapData::set_baselines
-/// \param first_abscissa
-/// \param second_abscissa
-/// \param first_baseline
-/// \param second_baseline
-/// Sets the baselines of this object
-void MapData::set_baselines(vec first_abscissa, vec second_abscissa,
-                            mat first_baseline, mat second_baseline)
-{
-    first_abscissa_ = first_abscissa;
-    second_abscissa_ = second_abscissa;
-    first_baseline_ = first_baseline;
-    second_baseline_ = second_baseline;
-    band_ratio_area_ = true;
-}
 
-void MapData::set_deriv_baselines(field<vec> abscissae, field<vec> baselines)
-{
-    first_abscissae_ = abscissae;
-    first_baselines_ = baselines;
-    univariate_derivative_ = true;
-}
-
-void MapData::set_deriv_baselines(field<vec> first_abscissae, field<vec> second_abscissae, field<vec> first_baselines, field<vec> second_baselines)
-{
-    first_abscissae_ = first_abscissae;
-    first_baselines_ = first_baselines;
-    second_abscissae_ = second_abscissae;
-    second_baselines_ = second_baselines;
-    band_ratio_derivative_ = true;
-}
-
-///
-/// \brief MapData::set_fwhm
-/// \param mid_lines the FWHM representations
-///
-void MapData::set_fwhm(mat mid_lines)
-{
-    mid_lines_ = mid_lines;
-    univariate_bandwidth_ = true;
-}
 
 ///
 /// \brief MapData::univariate_area
@@ -671,6 +653,70 @@ bool MapData::univariate_area()
 bool MapData::band_ratio_area()
 {
     return band_ratio_area_;
+}
+
+QVector<double> MapData::abscissa(int i)
+{
+    vec val = baselines_(i).col(0);
+    typedef std::vector<double> stdvec;
+    stdvec valstd = conv_to<stdvec>::from(val);
+    return QVector<double>::fromStdVector(valstd);
+}
+
+QVector<double> MapData::baseline(int i)
+{
+    vec val = baselines_(i).col(1);
+    typedef std::vector<double> stdvec;
+    stdvec valstd = conv_to<stdvec>::from(val);
+    return QVector<double>::fromStdVector(valstd);
+}
+
+QVector<double> MapData::first_baseline(int i)
+{
+    vec val = first_baselines_(i).col(1);
+    typedef std::vector<double> stdvec;
+    stdvec valstd = conv_to<stdvec>::from(val);
+    return QVector<double>::fromStdVector(valstd);
+}
+
+QVector<double> MapData::second_baseline(int i)
+{
+    vec val = second_baselines_(i).col(1);
+    typedef std::vector<double> stdvec;
+    stdvec valstd = conv_to<stdvec>::from(val);
+    return QVector<double>::fromStdVector(valstd);
+}
+
+QVector<double> MapData::first_abscissa(int i)
+{
+    vec val = first_baselines_(i).col(0);
+    typedef std::vector<double> stdvec;
+    stdvec valstd = conv_to<stdvec>::from(val);
+    return QVector<double>::fromStdVector(valstd);
+}
+
+QVector<double> MapData::second_abscissa(int i)
+{
+    vec val = second_baselines_(i).col(0);
+    typedef std::vector<double> stdvec;
+    stdvec valstd = conv_to<stdvec>::from(val);
+    return QVector<double>::fromStdVector(valstd);
+}
+
+QVector<double> MapData::midline(int i)
+{
+    vec val = midlines_(i).col(1);
+    typedef std::vector<double> stdvec;
+    stdvec valstd = conv_to<stdvec>::from(val);
+    return QVector<double>::fromStdVector(valstd);
+}
+
+QVector<double> MapData::midline_abscissa(int i)
+{
+    vec val = midlines_(i).col(0);
+    typedef std::vector<double> stdvec;
+    stdvec valstd = conv_to<stdvec>::from(val);
+    return QVector<double>::fromStdVector(valstd);
 }
 
 ///
@@ -703,101 +749,6 @@ double MapData::results_at_position(double x, double y)
     return map_->data()->data(x, y);
 }
 
-///
-/// \brief MapData::first_abscissa
-/// \return The abscissa for the first baseline
-///
-QVector<double> MapData::first_abscissa()
-{
-    std::vector<double> abscissa = conv_to<std::vector<double> >::from(first_abscissa_);
-    return QVector<double>::fromStdVector(abscissa);
-}
-
-///
-/// \brief MapData::first_baseline
-/// \param i The index of first_baseline_ of the spectrum in question.
-/// \return The values of the first baseline.
-///
-QVector<double> MapData::first_baseline(int i)
-{
-    vec baseline_r;
-    if (band_ratio_derivative_ || univariate_derivative_){
-        baseline_r = first_baselines_(i);
-    }
-    else{baseline_r = first_baseline_.col(i);}
-
-    std::vector<double> baseline = conv_to<std::vector<double> >::from(baseline_r);
-    return QVector<double>::fromStdVector(baseline);
-}
-
-///
-/// \brief MapData::second_abscissa
-/// \return The abscissa for the second baseline
-///
-QVector<double> MapData::second_abscissa()
-{
-    std::vector<double> abscissa = conv_to<std::vector<double> >::from(second_abscissa_);
-    return QVector<double>::fromStdVector(abscissa);
-}
-
-QVector<double> MapData::first_abscissa(int i)
-{
-    vec abscissa_r = first_abscissae_(i);
-    std::vector<double> abscissa = conv_to<std::vector<double> >::from(abscissa_r);
-    return QVector<double>::fromStdVector(abscissa);
-}
-
-QVector<double> MapData::second_abscissa(int i)
-{
-    vec abscissa_r = second_abscissae_(i);
-    std::vector<double> abscissa = conv_to<std::vector<double> >::from(abscissa_r);
-    return QVector<double>::fromStdVector(abscissa);
-}
-
-///
-/// \brief MapData::second_baseline
-/// \param i index of VespucciDataset obejct (and also second_baseline_) of the spectrum in question.
-/// \return A QVector representing the second baseline for a two-peak map.
-///
-QVector<double> MapData::second_baseline(int i)
-{
-    vec baseline_r;
-    if (band_ratio_derivative_ || univariate_derivative_){
-        baseline_r = second_baselines_(i);
-    }
-    else{baseline_r = second_baseline_.col(i);}
-
-    std::vector<double> baseline = conv_to<std::vector<double> >::from(baseline_r);
-    return QVector<double>::fromStdVector(baseline);
-}
-
-///
-/// \brief MapData::mid_line
-/// \param i The row in the VespucciDataset object (and therefore also in mid_lines_)
-/// corresponding the the spectrum in question.
-/// \return A QVector for a line drawn from one edge of the peak in question to
-/// the other at the half-maximum of the peak.
-/// Used to visualize the FWHM.
-QVector<double> MapData::mid_line(int i)
-{
-    QVector<double> output;
-    output.append(mid_lines_(i, 0));
-    output.append(mid_lines_(i, 1));
-    return output;
-}
-
-///
-/// \brief MapData::mid_lines
-/// \param i The row in the VespucciDataset object (and therefore also in mid_lines_)
-/// that contains the spectrum in question.
-/// \return Returns a QVector for two lines that extend from one edge of two peaks to
-/// the other with a vertical position equal to the half maximum of the peak.
-///  Used to visualize the FWHM.
-QVector<double> MapData::mid_lines(int i)
-{
-    std::vector<double> lines = conv_to<std::vector<double> >::from(mid_lines_.col(i));
-    return QVector<double>::fromStdVector(lines);
-}
 
 ///
 /// \brief MapData::UseGlobalColorScale

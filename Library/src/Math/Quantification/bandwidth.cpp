@@ -29,7 +29,7 @@
 /// \param abscissa_step
 /// \return
 /// Finds the full-width at half maximum of a peak bound by min_index and max_index
-double Vespucci::Math::Quantification::FindBandwidth(const arma::vec &X, arma::uword min_index, arma::uword max_index, arma::vec &midline, arma::vec &baseline, double abscissa_step)
+double Vespucci::Math::Quantification::FindBandwidth(const arma::vec &X, arma::uword min_index, arma::uword max_index, arma::uword &mid_start, arma::uword &mid_end, arma::vec &midline, arma::vec &baseline, double abscissa_step)
 {
    arma::vec region = X.subvec(min_index, max_index);
    arma::uword size = region.n_elem;
@@ -37,8 +37,8 @@ double Vespucci::Math::Quantification::FindBandwidth(const arma::vec &X, arma::u
    double start_value, end_value;
    midline.set_size(size);
    max_index = 0;
-   arma::uword left_index = 0;
-   arma::uword right_index = 0;
+   mid_start = 0;
+   mid_end = 0;
    start_value = X(min_index);
    end_value = X(max_index);
    baseline = arma::linspace(start_value, end_value, size);
@@ -51,7 +51,7 @@ double Vespucci::Math::Quantification::FindBandwidth(const arma::vec &X, arma::u
    //search for left inflection point
    for (arma::uword i = max_index; i > 0; --i){
        if (X(i) - half_maximum < 0){
-           left_index = i;
+           mid_start = i;
            break;
        }
    }
@@ -59,24 +59,24 @@ double Vespucci::Math::Quantification::FindBandwidth(const arma::vec &X, arma::u
    //search for right inflection point
    for (arma::uword i = max_index; i < size; ++i){
        if (X(i) - half_maximum < 0){
-           right_index = i;
+           mid_end = i;
            break;
        }
    }
 
    //check to make sure the values on the other side of the inflection point aren't better
-   if (left_index > 0 && right_index < size - 1){
-       if(std::fabs(X(left_index) - half_maximum) > std::fabs(X(left_index - 1) - half_maximum)){
-           --left_index;
+   if (mid_start > 0 && mid_end < size - 1){
+       if(std::fabs(X(mid_start) - half_maximum) > std::fabs(X(mid_start - 1) - half_maximum)){
+           --mid_start;
        }
 
-       if (std::fabs(X(right_index) - half_maximum) > std::fabs(X(right_index + 1) - half_maximum)){
-           ++right_index;
+       if (std::fabs(X(mid_end) - half_maximum) > std::fabs(X(mid_end + 1) - half_maximum)){
+           ++mid_end;
        }
    }
-
-   double region_size = region.subvec(left_index, right_index).n_elem;
-   return abscissa_step * region_size;
+   arma::uword region_size = region.subvec(mid_start, mid_end).n_elem;
+   midline = half_maximum * arma::ones(region_size);
+   return abscissa_step * (double) region_size;
 }
 
 ///
@@ -89,8 +89,9 @@ double Vespucci::Math::Quantification::FindBandwidth(const arma::vec &X, arma::u
 /// \param baselines
 /// \return
 /// Finds the bandwidth of every column of a arma::matrix.
-arma::vec Vespucci::Math::Quantification::FindBandwidthMat(const arma::mat &X, arma::vec abscissa, double &min, double &max, arma::mat &midlines, arma::mat &baselines, arma::uvec &boundaries)
+arma::vec Vespucci::Math::Quantification::FindBandwidthMat(const arma::mat &X, arma::vec abscissa, double &min, double &max, arma::field<arma::mat> &midlines, arma::field<arma::mat> &baselines, arma::uvec &boundaries)
 {
+    arma::uword mid_start, mid_end;
     double delta = std::abs(abscissa(1) - abscissa(0));
     arma::uvec left_bound = find(((min-delta) <= abscissa) && (abscissa <= (min+delta)));
     arma::uvec right_bound = find(((max-delta) <= abscissa) && (abscissa <= (max+delta)));
@@ -102,16 +103,15 @@ arma::vec Vespucci::Math::Quantification::FindBandwidthMat(const arma::mat &X, a
     min = abscissa(min_index);
     max = abscissa(max_index);
 
-    arma::uword size = abscissa.subvec(min_index, max_index).n_elem;
     arma::vec results(X.n_cols);
-    midlines.set_size(X.n_cols, size);
-    baselines.set_size(X.n_cols, size);
+    midlines.set_size(X.n_cols);
+    baselines.set_size(X.n_cols);
     arma::vec midline;
     arma::vec baseline;
     for (arma::uword i = 0; i < X.n_cols; ++i){
-        results(i) = FindBandwidth(X.col(i), min_index, max_index, midline, baseline, delta);
-        midlines.row(i) = midline;
-        baselines.row(i) = baseline;
+        results(i) = FindBandwidth(X.col(i), min_index, max_index, mid_start, mid_end, midline, baseline, delta);
+        midlines(i) = arma::join_horiz(abscissa.rows(mid_start, mid_end), midline);
+        baselines(i) = arma::join_horiz(abscissa.rows(min_index, max_index), baseline);
     }
 
     return results;
