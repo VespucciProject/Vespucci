@@ -46,7 +46,6 @@ SpectrumViewer::SpectrumViewer(MapViewer *parent,
     ui->setupUi(this);
     linked_to_map_ = true;
     map_data_ = map_data;
-    hold_check_box_ = findChild<QCheckBox *>("holdCheckBox");
     spectrum_plot_ = findChild<QCustomPlot *>("spectrum");
     spectrum_plot_->addGraph();
     spectrum_plot_->xAxis->setLabel(x_axis_description);
@@ -91,7 +90,6 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
 {
     ui->setupUi(this);
     dataset_ = dataset;
-    hold_check_box_ = findChild<QCheckBox *>("holdCheckBox");
     coordinate_label_ = findChild<QLabel *>("coordinateLabel");
     value_label_ = findChild<QLabel *>("valueLabel");
     coordinate_label_->setVisible(false);
@@ -125,7 +123,6 @@ SpectrumViewer::SpectrumViewer(SpectrumSelectionDialog *parent,
     ui->setupUi(this);
     cout << "alternative SpectrumViewer constructor" << endl;
     dataset_ = dataset;
-    hold_check_box_ = findChild<QCheckBox *>("holdCheckBox");
 
     cout << "find labels " << endl;
     coordinate_label_ = findChild<QLabel *>("coordinateLabel");
@@ -163,7 +160,6 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
     ui->setupUi(this);
     cout << "alternative SpectrumViewer constructor" << endl;
     dataset_ = dataset;
-    hold_check_box_ = findChild<QCheckBox *>("holdCheckBox");
 
     cout << "find labels " << endl;
     coordinate_label_ = findChild<QLabel *>("coordinateLabel");
@@ -201,11 +197,6 @@ SpectrumViewer::~SpectrumViewer()
     delete ui;
 }
 
-void SpectrumViewer::ResetPlot()
-{
-    spectrum_plot_->clearGraphs();
-}
-
 ///
 /// \brief SpectrumViewer::SetPlot
 /// \param wavelength
@@ -214,18 +205,54 @@ void SpectrumViewer::ResetPlot()
 void SpectrumViewer::SetPlot(QVector<double> wavelength,
                              QVector<double> intensity)
 {
-    spectrum_plot_->clearGraphs();
-    spectrum_plot_->addGraph();
+    cout << "SetPlot" << endl;
     spectrum_plot_->graph(0)->setData(wavelength, intensity);
     spectrum_plot_->rescaleAxes();
     spectrum_plot_->replot();
 }
 
-void SpectrumViewer::AddPlot(QVector<double> abscissa, QVector<double> intensity)
+///
+/// \brief SpectrumViewer::SetSecondPlot
+/// \param first_abscissa
+/// \param second_abscissa
+/// \param first_intensities
+/// \param second_intensities
+/// Set other plots (baselines)
+void SpectrumViewer::SetSecondPlot(QVector<double> first_abscissa, QVector<double> second_abscissa,
+                                   QVector<double> first_intensities, QVector<double> second_intensities)
 {
-    spectrum_plot_->addGraph(spectrum_plot_->graph(0)->keyAxis(), spectrum_plot_->graph(0)->valueAxis());
-    spectrum_plot_->graph(spectrum_plot_->graphCount() - 1)->addData(abscissa, intensity);
-    spectrum_plot_->rescaleAxes();
+    if (spectrum_plot_->graphCount() <= 2){
+        spectrum_plot_->addGraph(spectrum_plot_->graph(0)->keyAxis(), spectrum_plot_->graph(0)->valueAxis());
+        spectrum_plot_->graph(1)->addData(first_abscissa, first_intensities);
+        spectrum_plot_->addGraph(spectrum_plot_->graph(0)->keyAxis(), spectrum_plot_->graph(0)->valueAxis());
+        spectrum_plot_->graph(2)->addData(second_abscissa, second_intensities);
+    }
+
+    spectrum_plot_->graph(1)->setData(first_abscissa, first_intensities);
+    spectrum_plot_->graph(1)->setPen(QPen(QColor("red")));
+    spectrum_plot_->graph(1)->setVisible(true);
+
+    spectrum_plot_->graph(2)->setData(second_abscissa, second_intensities);
+    spectrum_plot_->graph(2)->setPen(QPen(QColor("red")));
+    spectrum_plot_->graph(2)->setVisible(true);
+    spectrum_plot_->replot();
+}
+
+///
+/// \brief SpectrumViewer::SetSecondPlot
+/// \param abscissa
+/// \param intensities
+/// Set the second plot.
+void SpectrumViewer::SetSecondPlot(QVector<double> abscissa, QVector<double> intensities)
+{
+    if (spectrum_plot_->graphCount() <= 1){
+        spectrum_plot_->addGraph(spectrum_plot_->graph(0)->keyAxis(), spectrum_plot_->graph(0)->valueAxis());
+        spectrum_plot_->graph(1)->addData(abscissa, intensities);
+    }
+
+    spectrum_plot_->graph(1)->setData(abscissa, intensities);
+    spectrum_plot_->graph(1)->setPen(QPen(QColor("red")));
+    spectrum_plot_->graph(1)->setVisible(true);
     spectrum_plot_->replot();
 }
 
@@ -257,25 +284,39 @@ void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *ev
                                QString::number(y_value) +
                                ")");
     value_label_->setText(QString::number(current_z_));
-
-    if (hold_check_box_->isChecked()){
-        AddPlot(wavelength, intensities);
-    }
-    else{
-        SetPlot(wavelength, intensities);
-    }
-
-    if (map_data_->univariate_area()){
-        AddPlot(map_data_->abscissa(current_index_), map_data_->baseline(current_index_));
-    }
+    SetPlot(wavelength, intensities);
+    if (map_data_->univariate_area())
+        SetSecondPlot(map_data_->first_abscissa(), map_data_->first_baseline(current_index_));
     if (map_data_->univariate_bandwidth()){
-        AddPlot(map_data_->abscissa(current_index_), map_data_->baseline(current_index_));
-        AddPlot(map_data_->midline_abscissa(current_index_), map_data_->midline(current_index_));
+        SetSecondPlot(map_data_->first_abscissa(), map_data_->first_baseline(current_index_));
+        if (spectrum_plot_->itemCount() == 0){
+            QCPItemLine *mid_line = new QCPItemLine(spectrum_plot_);
+            QVector<double> mid_line_vec = map_data_->mid_line(current_index_);
+            mid_line->start->setCoords(mid_line_vec[0], mid_line_vec[1]);
+            mid_line->end->setCoords(mid_line_vec[2], mid_line_vec[3]);
+            mid_line->setPen(QPen(QColor("red")));
+            spectrum_plot_->addItem(mid_line);
+        }
+
     }
     if (map_data_->band_ratio_area()){
-        AddPlot(map_data_->first_abscissa(current_index_), map_data_->first_baseline(current_index_));
-        AddPlot(map_data_->second_abscissa(current_index_), map_data_->second_baseline(current_index_));
+        SetSecondPlot(map_data_->first_abscissa(),
+                      map_data_->second_abscissa(),
+                      map_data_->first_baseline(current_index_),
+                      map_data_->second_baseline(current_index_));
     }
+    if (map_data_->band_ratio_derivative()){
+        SetSecondPlot(map_data_->first_abscissa(current_index_),
+                      map_data_->second_abscissa(current_index_),
+                      map_data_->first_baseline(current_index_),
+                      map_data_->second_baseline(current_index_));
+    }
+    if (map_data_->univariate_derivative()){
+        SetSecondPlot(map_data_->first_abscissa(current_index_),
+                      map_data_->first_baseline(current_index_));
+    }
+
+
 }
 
 ///

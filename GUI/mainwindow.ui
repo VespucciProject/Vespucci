@@ -90,7 +90,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -466,6 +466,11 @@
   <action name="actionClassical_Least_Squares">
    <property name="text">
     <string>&amp;Classical Least Squares</string>
+   </property>
+  </action>
+  <action name="actionUnivariate">
+   <property name="text">
+    <string>Univariate</string>
    </property>
   </action>
   <action name="actionBand_Ratio">

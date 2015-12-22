@@ -65,50 +65,50 @@ private:
     VespucciWorkspace *workspace;
 
     ///
-    /// \brief spectrum_plot_
+    /// \brief spectrum_custom_plot_
     /// Pointer to the plot inside this window that displays a preview of the data
-    QCustomPlot *spectrum_plot_;
+    QCustomPlot *spectrum_custom_plot_;
 
     ///
-    /// \brief first_min_box_
+    /// \brief first_min_line_edit_
     /// User enteres first minimum here
-    QLineEdit *first_min_box_;
+    QLineEdit *first_min_line_edit_;
 
     ///
-    /// \brief first_max_box_
+    /// \brief first_max_line_edit_
     /// User enters first maximum here
-    QLineEdit *first_max_box_;
+    QLineEdit *first_max_line_edit_;
 
     ///
-    /// \brief second_min_box_
+    /// \brief second_min_line_edit_
     /// User enters second minimum here
-    QLineEdit *second_min_box_;
+    QLineEdit *second_min_line_edit_;
 
     ///
-    /// \brief second_max_box_
+    /// \brief second_max_line_edit_
     /// User enteres second maximum here
-    QLineEdit *second_max_box_;
+    QLineEdit *second_max_line_edit_;
 
 
     ///
-    /// \brief integration_method_selector_
+    /// \brief integration_method_selector_combo_box_
     /// User selects the integration method here
-    QComboBox *integration_method_selector_;
+    QComboBox *integration_method_selector_combo_box_;
 
     ///
-    /// \brief name_box_
+    /// \brief name_line_edit_
     /// User enters map name here
-    QLineEdit *name_box_;
+    QLineEdit *name_line_edit_;
 
     ///
-    /// \brief color_selector_
+    /// \brief color_selector_combo_box_
     /// User selects the color scheme here
-    QComboBox *color_selector_;
+    QComboBox *color_selector_combo_box_;
 
     ///
-    /// \brief value_method_selector_
+    /// \brief value_method_selector_combo_box_
     /// User selects the value determination method here
-    QComboBox *value_method_selector_;
+    QComboBox *value_method_selector_combo_box_;
 
 
     ///

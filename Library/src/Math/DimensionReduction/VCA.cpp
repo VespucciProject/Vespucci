@@ -112,11 +112,11 @@ bool Vespucci::Math::DimensionReduction::VCA(const arma::mat &R, arma::uword p,
     for (arma::uword i = 0; i < p; ++i){
         w.randu();
         f = w - A*arma::pinv(A)*w;
-        sum_squares = std::sqrt(arma::sum(arma::square(f)));
+        sum_squares = sqrt(sum(square(f)));
         f /= sum_squares;
         v = f.t() * y;
-        v_max = arma::max(arma::abs(v));
-        q1 = arma::find(arma::abs(v) == v_max, 1);
+        v_max = arma::max(abs(v));
+        q1 = arma::find(abs(v) == v_max, 1);
         indices(i) = q1(0);
         A.col(i) = y.col(indices(i)); //same as x.col(indices(i));
     }

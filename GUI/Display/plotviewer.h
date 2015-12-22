@@ -27,7 +27,7 @@ private slots:
 private:
     void AddContextMenuItems();
     Ui::PlotViewer *ui;
-    QCustomPlot *plot_;
+    QCustomPlot *custom_plot_;
     bool mappeed_;
     QMenu context_menu_;
     QString directory_;

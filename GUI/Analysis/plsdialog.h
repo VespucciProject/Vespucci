@@ -55,35 +55,35 @@ private:
     VespucciWorkspace *workspace;
 
     ///
-    /// \brief image_component_selector_
+    /// \brief image_component_selector_spin_box_
     /// Which component number to create the image from
-    QSpinBox *image_component_selector_;
+    QSpinBox *image_component_selector_spin_box_;
 
     ///
-    /// \brief components_selector_
+    /// \brief components_selector_spin_box_
     /// User selects how many components to calculate
-    QSpinBox *components_selector_;
+    QSpinBox *components_selector_spin_box_;
 
     ///
-    /// \brief color_selector_
+    /// \brief color_selector_combo_box_
     /// User selects color scheme here
-    QComboBox *color_selector_;
+    QComboBox *color_selector_combo_box_;
 
     ///
-    /// \brief name_box_
+    /// \brief name_line_edit_
     /// User sets map name here
-    QLineEdit *name_box_;
+    QLineEdit *name_line_edit_;
 
     ///
-    /// \brief recalculate_box_
+    /// \brief recalculate_check_box_
     /// Whether or not to repeat PLS analysis
-    QCheckBox *recalculate_box_;
+    QCheckBox *recalculate_check_box_;
 
 
     ///
-    /// \brief prediction_box_
+    /// \brief prediction_check_box_
     /// User selects whether or not to allow prediction of dimensionality
-    QCheckBox *prediction_box_;
+    QCheckBox *prediction_check_box_;
 
     QCheckBox *map_check_box_;
 

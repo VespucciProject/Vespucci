@@ -31,24 +31,24 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     workspace = ws;
     data_ = workspace->DatasetAt(row);
 
-    spectrum_plot_ = findChild<QCustomPlot *>("spectrumPlot");
-    first_min_box_ = findChild<QLineEdit *>("firstMinLineEdit");
-    first_max_box_ = findChild<QLineEdit *>("firstMaxLineEdit");
-    second_min_box_ = findChild<QLineEdit *>("secondMinLineEdit");
-    second_max_box_ = findChild<QLineEdit *>("secondMaxLineEdit");
-    name_box_ = findChild<QLineEdit *>("nameLineEdit");
-    color_selector_ = findChild<QComboBox *>("gradientComboBox");
-    value_method_selector_ = findChild<QComboBox *>("peakComboBox");
-    integration_method_selector_ = findChild<QComboBox *>("integrationComboBox");
+    spectrum_custom_plot_ = findChild<QCustomPlot *>("spectrumPlot");
+    first_min_line_edit_ = findChild<QLineEdit *>("firstMinLineEdit");
+    first_max_line_edit_ = findChild<QLineEdit *>("firstMaxLineEdit");
+    second_min_line_edit_ = findChild<QLineEdit *>("secondMinLineEdit");
+    second_max_line_edit_ = findChild<QLineEdit *>("secondMaxLineEdit");
+    name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
+    color_selector_combo_box_ = findChild<QComboBox *>("gradientComboBox");
+    value_method_selector_combo_box_ = findChild<QComboBox *>("peakComboBox");
+    integration_method_selector_combo_box_ = findChild<QComboBox *>("integrationComboBox");
     integration_method_label_ = findChild<QLabel *>("integrationLabel");
     range_label_ = findChild<QLabel *>("rangeLabel");
     map_check_box_ = findChild<QCheckBox*>("mapCheckBox");
     data_index_ = row;
 
-    first_min_line_ = new QCPItemStraightLine(spectrum_plot_);
-    first_max_line_ = new QCPItemStraightLine(spectrum_plot_);
-    second_min_line_ = new QCPItemStraightLine(spectrum_plot_);
-    second_max_line_ = new QCPItemStraightLine(spectrum_plot_);
+    first_min_line_ = new QCPItemStraightLine(spectrum_custom_plot_);
+    first_max_line_ = new QCPItemStraightLine(spectrum_custom_plot_);
+    second_min_line_ = new QCPItemStraightLine(spectrum_custom_plot_);
+    second_max_line_ = new QCPItemStraightLine(spectrum_custom_plot_);
 
     first_min_line_->point1->setCoords(0, 0);
     first_min_line_->point2->setCoords(0, 1);
@@ -76,17 +76,17 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     QVector<double> plot_data = data_->PointSpectrum(origin);
     QVector<double> wavelength = data_->WavelengthQVector();
 
-    first_min_box_->setValidator(validator);
-    first_max_box_->setValidator(validator);
-    second_min_box_->setValidator(validator);
-    second_max_box_->setValidator(validator);
-    spectrum_plot_->addGraph();
-    spectrum_plot_->graph(0)->addData(wavelength, plot_data);
-    spectrum_plot_->rescaleAxes();
-    spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
-    spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
+    first_min_line_edit_->setValidator(validator);
+    first_max_line_edit_->setValidator(validator);
+    second_min_line_edit_->setValidator(validator);
+    second_max_line_edit_->setValidator(validator);
+    spectrum_custom_plot_->addGraph();
+    spectrum_custom_plot_->graph(0)->addData(wavelength, plot_data);
+    spectrum_custom_plot_->rescaleAxes();
+    spectrum_custom_plot_->setInteraction(QCP::iRangeDrag, true);
+    spectrum_custom_plot_->setInteraction(QCP::iRangeZoom, true);
 
-    color_selector_->setEnabled(false);
+    color_selector_combo_box_->setEnabled(false);
 }
 
 BandRatioDialog::~BandRatioDialog()
@@ -100,16 +100,16 @@ BandRatioDialog::~BandRatioDialog()
 /// instantiates the map data
 void BandRatioDialog::on_buttonBox_accepted()
 {
-    if (first_min_box_->text().isEmpty() || first_max_box_->text().isEmpty() || second_min_box_->text().isEmpty() || second_max_box_->text().isEmpty()){
+    if (first_min_line_edit_->text().isEmpty() || first_max_line_edit_->text().isEmpty() || second_min_line_edit_->text().isEmpty() || second_max_line_edit_->text().isEmpty()){
         QMessageBox::warning(this, "Invalid Input!", "You must enter numbers for left and right bounds.");
         return;
     }
 
 
-    double first_entered_min = first_min_box_->text().toDouble();
-    double second_entered_min = second_min_box_->text().toDouble();
-    double first_entered_max = first_max_box_->text().toDouble();
-    double second_entered_max = second_max_box_->text().toDouble();
+    double first_entered_min = first_min_line_edit_->text().toDouble();
+    double second_entered_min = second_min_line_edit_->text().toDouble();
+    double first_entered_max = first_max_line_edit_->text().toDouble();
+    double second_entered_max = second_max_line_edit_->text().toDouble();
 
     if (first_entered_min < workspace->GetWavelengthMin(data_index_) || second_entered_min < workspace->GetWavelengthMin(data_index_)){
         QMessageBox::warning(this, "Invalid Input!", "You have entered a left bound that is smaller than the smallest number on the spectral abscissa");
@@ -123,28 +123,38 @@ void BandRatioDialog::on_buttonBox_accepted()
 
 
 
-    QString name = name_box_->text();
-    QString value_method = value_method_selector_->currentText();
-    //QString integration_method = integration_method_selector_->currentText();
+    QString name = name_line_edit_->text();
+    QString value_method = value_method_selector_combo_box_->currentText();
+    //QString integration_method = integration_method_selector_combo_box_->currentText();
 
     UnivariateMethod::Method method;
     if (value_method == "Area")
         method = UnivariateMethod::AreaRatio;
-    else if (value_method == "Area (Estimate Peak Edges)")
-        method = UnivariateMethod::DerivativeRatio;
     else
         method = UnivariateMethod::IntensityRatio;
 
-    int gradient_index = color_selector_->currentIndex();
-    arma::uword window = 15;
-    bool plot = map_check_box_->isChecked();
-
-    try{
-        data_->BandRatio(first_entered_min, first_entered_max,
-                         second_entered_min, second_entered_max,
-                         name, method, window, plot, gradient_index);
-    }catch(exception e){
-        workspace->main_window()->DisplayExceptionWarning(e);
+    int gradient_index = color_selector_combo_box_->currentIndex();
+    if (map_check_box_->isChecked()){
+        try{
+            data_->BandRatio(first_entered_min,
+                             first_entered_max,
+                             second_entered_min,
+                             second_entered_max,
+                             name,
+                             method,
+                             gradient_index);
+        }catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
+    }
+    else{
+        try{
+            data_->BandRatio(first_entered_min, first_entered_max,
+                             second_entered_min, second_entered_max,
+                             name, method);
+        }catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
     }
 
     close();
@@ -159,11 +169,11 @@ void BandRatioDialog::on_buttonBox_accepted()
 void BandRatioDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
 {
     if (arg1 == "Area"){
-        integration_method_selector_->setEnabled(true);
+        integration_method_selector_combo_box_->setEnabled(true);
         integration_method_label_->setEnabled(true);
     }
     else{
-        integration_method_selector_->setEnabled(false);
+        integration_method_selector_combo_box_->setEnabled(false);
         integration_method_label_->setEnabled(false);
     }
 }
@@ -185,9 +195,9 @@ void BandRatioDialog::on_firstMinLineEdit_textChanged(const QString &arg1)
         return;
     first_min_line_->point1->setCoords(value, 0);
     first_min_line_->point2->setCoords(value, 1);
-    if (!spectrum_plot_->hasItem(first_min_line_))
-        spectrum_plot_->addItem(first_min_line_);
-    spectrum_plot_->repaint();
+    if (!spectrum_custom_plot_->hasItem(first_min_line_))
+        spectrum_custom_plot_->addItem(first_min_line_);
+    spectrum_custom_plot_->repaint();
 }
 
 void BandRatioDialog::on_firstMaxLineEdit_textChanged(const QString &arg1)
@@ -198,9 +208,9 @@ void BandRatioDialog::on_firstMaxLineEdit_textChanged(const QString &arg1)
         return;
     first_max_line_->point1->setCoords(value, 0);
     first_max_line_->point2->setCoords(value, 1);
-    if (!spectrum_plot_->hasItem(first_max_line_))
-        spectrum_plot_->addItem(first_max_line_);
-    spectrum_plot_->repaint();
+    if (!spectrum_custom_plot_->hasItem(first_max_line_))
+        spectrum_custom_plot_->addItem(first_max_line_);
+    spectrum_custom_plot_->repaint();
 }
 
 void BandRatioDialog::on_secondMinLineEdit_textChanged(const QString &arg1)
@@ -211,8 +221,8 @@ void BandRatioDialog::on_secondMinLineEdit_textChanged(const QString &arg1)
         return;
     second_min_line_->point1->setCoords(value, 0);
     second_min_line_->point2->setCoords(value, 1);
-    if (!spectrum_plot_->hasItem(second_min_line_))
-        spectrum_plot_->addItem(second_min_line_);
+    if (!spectrum_custom_plot_->hasItem(second_min_line_))
+        spectrum_custom_plot_->addItem(second_min_line_);
 }
 
 void BandRatioDialog::on_secondMaxLineEdit_textChanged(const QString &arg1)
@@ -223,11 +233,11 @@ void BandRatioDialog::on_secondMaxLineEdit_textChanged(const QString &arg1)
         return;
     second_max_line_->point1->setCoords(value, 0);
     second_max_line_->point2->setCoords(value, 1);
-    if (!spectrum_plot_->hasItem(second_max_line_))
-        spectrum_plot_->addItem(second_max_line_);
+    if (!spectrum_custom_plot_->hasItem(second_max_line_))
+        spectrum_custom_plot_->addItem(second_max_line_);
 }
 
 void BandRatioDialog::on_mapCheckBox_stateChanged(int arg1)
 {
-    color_selector_->setEnabled(arg1);
+    color_selector_combo_box_->setEnabled(arg1);
 }

@@ -41,15 +41,15 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
 
     directory_ = workspace->directory();
 
-    export_button_ = findChild<QToolButton *>("exportToolButton");
-    plot_button_ = findChild<QToolButton *>("plotToolButton");
-    data_selector_ = findChild<QComboBox *>("comboBox");
-    extract_button_ = findChild<QToolButton *>("extractToolButton");
-    stats_button_ = findChild<QToolButton *>("statsToolButton");
-    plot_button_->setDisabled(true);
-    export_button_->setDisabled(true);
-    extract_button_->setDisabled(true);
-    table_ = findChild<QTableView *>("tableView");
+    export_tool_button_ = findChild<QToolButton *>("exportToolButton");
+    plot_tool_button_ = findChild<QToolButton *>("plotToolButton");
+    data_selector_combo_box_ = findChild<QComboBox *>("comboBox");
+    extract_tool_button_ = findChild<QToolButton *>("extractToolButton");
+    stats_tool_button_ = findChild<QToolButton *>("statsToolButton");
+    plot_tool_button_->setDisabled(true);
+    export_tool_button_->setDisabled(true);
+    extract_tool_button_->setDisabled(true);
+    table_view_ = findChild<QTableView *>("tableView");
 
     const mat *matrix;
     matrix = dataset_->wavelength_ptr();
@@ -130,8 +130,8 @@ DataViewer::DataViewer(QWidget *parent, VespucciWorkspace *ws, int row) :
             }
         }
     }
-    data_selector_->addItems(data_objects_.keys());
-    data_selector_->setCurrentIndex(0);
+    data_selector_combo_box_->addItems(data_objects_.keys());
+    data_selector_combo_box_->setCurrentIndex(0);
 }
 
 DataViewer::~DataViewer()
@@ -149,51 +149,51 @@ void DataViewer::on_comboBox_currentTextChanged(const QString &arg1)
     current_text_ = arg1;
     if (arg1 == "Spatial Data"){
         VespucciTableModel *table_model = new VespucciTableModel(this, dataset_, "spatial");
-        table_->setModel(table_model);
+        table_view_->setModel(table_model);
         current_data_ = table_model->GetData();
-        export_button_->setDisabled(true);
-        plot_button_->setDisabled(true);
-        extract_button_->setDisabled(true);
-        stats_button_->setDisabled(true);
+        export_tool_button_->setDisabled(true);
+        plot_tool_button_->setDisabled(true);
+        extract_tool_button_->setDisabled(true);
+        stats_tool_button_->setDisabled(true);
     }
     else if (data_objects_.contains(arg1)){
         current_data_ = data_objects_[arg1];
         VespucciTableModel *table_model = new VespucciTableModel(this, current_data_);
-        table_->setModel(table_model);
-        export_button_->setDisabled(false);
+        table_view_->setModel(table_model);
+        export_tool_button_->setDisabled(false);
 
         if (current_data_->n_cols == dataset_->spectra_ptr()->n_cols 
                 || current_data_->n_rows == dataset_->spectra_ptr()->n_cols){
-            extract_button_->setDisabled(false);
-            stats_button_->setDisabled(false);
+            extract_tool_button_->setDisabled(false);
+            stats_tool_button_->setDisabled(false);
         }
         else{
-            extract_button_->setDisabled(true);
-            stats_button_->setDisabled(true);
+            extract_tool_button_->setDisabled(true);
+            stats_tool_button_->setDisabled(true);
         }
 
 
         if (current_data_->n_rows == dataset_->spectra_ptr()->n_rows)
-            plot_button_->setDisabled(false);
+            plot_tool_button_->setDisabled(false);
         else
-            plot_button_->setDisabled(true);
+            plot_tool_button_->setDisabled(true);
 
     }
     else if (metadata_objects_.contains(arg1)){
-        extract_button_->setDisabled(true);
-        stats_button_->setDisabled(true);
+        extract_tool_button_->setDisabled(true);
+        stats_tool_button_->setDisabled(true);
     }
     else{
         current_data_ = data_objects_["Spectral Abscissa"];
         VespucciTableModel *table_model = new VespucciTableModel(this, current_data_);
-        table_->setModel(table_model);
-        export_button_->setDisabled(false);
-        plot_button_->setDisabled(true);
-        stats_button_->setDisabled(true);
+        table_view_->setModel(table_model);
+        export_tool_button_->setDisabled(false);
+        plot_tool_button_->setDisabled(true);
+        stats_tool_button_->setDisabled(true);
     }
 
-    table_->resizeColumnsToContents();
-    table_->resizeRowsToContents();
+    table_view_->resizeColumnsToContents();
+    table_view_->resizeRowsToContents();
 }
 
 ///
@@ -275,7 +275,7 @@ void DataViewer::RefreshComboBox()
             matrix = (mat *) univariate_data_list[i]->results_ptr();
             if (!data_objects_.values().contains(matrix)){
                 data_objects_.insertMulti(univariate_data_list[i]->name(), matrix);
-                data_selector_->addItem(univariate_data_list[i]->name());
+                data_selector_combo_box_->addItem(univariate_data_list[i]->name());
             }
         }
     }
@@ -285,15 +285,15 @@ void DataViewer::RefreshComboBox()
 
         matrix = dataset_->principal_components_data()->coeff();
         data_objects_.insert("PCA Coefficients", matrix);
-        data_selector_->addItem("PCA Cofficients");
+        data_selector_combo_box_->addItem("PCA Cofficients");
 
         matrix = (mat *) dataset_->principal_components_data()->tsquared();
         data_objects_.insert("PCA t² Values", matrix);
-        data_selector_->addItem("PCA t² Values");
+        data_selector_combo_box_->addItem("PCA t² Values");
 
         matrix = (mat *) dataset_->principal_components_data()->latent();
         data_objects_.insert("PCA Eigenvalues of Covariance Matrix", matrix);
-        data_selector_->addItem("PCA Eigenvalues of Covariance Matrix");
+        data_selector_combo_box_->addItem("PCA Eigenvalues of Covariance Matrix");
     }
 
     if (dataset_->vertex_components_calculated() && !vertex_components_calculated_){
@@ -301,15 +301,15 @@ void DataViewer::RefreshComboBox()
 
         matrix = dataset_->vertex_components_data()->endmember_spectra();
         data_objects_.insert("VCA Endmembers", matrix);
-        data_selector_->addItem("VCA Endmembers");
+        data_selector_combo_box_->addItem("VCA Endmembers");
 
         matrix = dataset_->vertex_components_data()->fractional_abundances();
         data_objects_.insert("VCA Fractional Abundances", matrix);
-        data_selector_->addItem("VCA Fractional Abundances");
+        data_selector_combo_box_->addItem("VCA Fractional Abundances");
 
         matrix = dataset_->vertex_components_data()->indices();
         data_objects_.insert("VCA Pure Pixel Indices", matrix);
-        data_selector_->addItem("VCA Pure Pixel Indices");
+        data_selector_combo_box_->addItem("VCA Pure Pixel Indices");
 
         vca_endmembers_ = dataset_->vertex_components_data()->NumberComponents();
     }
@@ -319,36 +319,36 @@ void DataViewer::RefreshComboBox()
 
         matrix = dataset_->partial_least_squares_data()->percent_variance();
         data_objects_.insert("PLS Variance", matrix);
-        data_selector_->addItem("PLS Variance");
+        data_selector_combo_box_->addItem("PLS Variance");
 
         matrix = dataset_->partial_least_squares_data()->X_loadings();
         data_objects_.insert("PLS Predictor Loadings", matrix);
-        data_selector_->addItem("PLS Predictor Loadings");
+        data_selector_combo_box_->addItem("PLS Predictor Loadings");
 
         matrix = dataset_->partial_least_squares_data()->Y_loadings();
-        data_selector_->addItem("PLS Response Loadings");
+        data_selector_combo_box_->addItem("PLS Response Loadings");
         data_objects_.insert("PLS Response Loadings", matrix);
 
 
         matrix = dataset_->partial_least_squares_data()->X_scores();
         data_objects_.insert("PLS Predictor Scores", matrix);
-        data_selector_->addItem("PLS Predictor Scores");
+        data_selector_combo_box_->addItem("PLS Predictor Scores");
 
         matrix = dataset_->partial_least_squares_data()->Y_scores();
         data_objects_.insert("PLS Response Scores", matrix);
-        data_selector_->addItem("PLS Response Scores");
+        data_selector_combo_box_->addItem("PLS Response Scores");
 
 
         matrix = dataset_->partial_least_squares_data()->coefficients();
         data_objects_.insert("PLS Coefficients", matrix);
-        data_selector_->addItem("PLS Coefficients");
+        data_selector_combo_box_->addItem("PLS Coefficients");
 
     }
 
     if (dataset_->k_means_calculated() && !k_means_calculated_){
         matrix = dataset_->k_means_data();
         data_objects_.insert("k-Means Assignments", matrix);
-        data_selector_->addItem("k-Means Assignments");
+        data_selector_combo_box_->addItem("k-Means Assignments");
     }
 }
 
@@ -373,7 +373,7 @@ void DataViewer::on_extractToolButton_clicked()
                                     column,
                                     dataset_,
                                     workspace->main_window(),
-                                    data_selector_->currentText());
+                                    data_selector_combo_box_->currentText());
     extractor_dialog->show();
 }
 

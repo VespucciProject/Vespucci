@@ -121,7 +121,7 @@ arma::uword Vespucci::Math::LocalMinimum(const arma::vec &X, const arma::vec &dX
 
 
 ///
-/// \brief spdiags analgous to the Octave/MATLAB function A = spdiags(B, d, m, n).
+/// \brief spdiags analgous to the Octave/arma::matLAB function A = spdiags(B, d, m, n).
 /// \param B a arma::matrix containing the new diagonal vectors as columns
 /// \param d a vector containing the row numbers to set.  The first column
 /// vector of B corresponds to the first entry in d.
@@ -807,18 +807,14 @@ arma::vec Vespucci::Math::WavenumberToEnergy(const arma::vec &x, double energy_f
 }
 
 
-arma::sp_mat Vespucci::Math::LocalMaximaCWT(const arma::mat &coefs, const arma::uvec &scales, arma::uword min_window_size)
+arma::sp_mat Vespucci::Math::LocalMaximaCWT(arma::mat coefs, arma::uvec scales, arma::uword min_window_size)
 {
-    if (coefs.n_cols != scales.n_rows){
-        std::cerr << "Coefficents and scales must be of same size! Improper value may be passed!" << std::endl;
-        throw std::invalid_argument("coefs and scales do not agree in dimension");
-    }
-    std::cout << "scales: " << std::endl << scales << std::endl;
     arma::uword window_size;
     arma::vec current_coefs;
+    arma::sp_mat local_maxima_col;
     arma::sp_mat local_maxima(coefs.n_rows, coefs.n_cols);
-    for (arma::uword i = 0; i < coefs.n_cols; ++i){
-        current_coefs = coefs.col(scales(i) - 1);
+    for (arma::uword i = 0; i < scales.n_rows; ++i){
+        current_coefs = coefs.col(scales(i));
         window_size = scales(i)*2 + 1;
         window_size = (min_window_size < window_size ? window_size: min_window_size);
         local_maxima.col(i) = Vespucci::Math::LocalMaximaWindow(current_coefs, window_size);

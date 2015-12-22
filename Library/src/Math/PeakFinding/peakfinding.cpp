@@ -445,7 +445,7 @@ std::vector<Vespucci::Math::CWTRidge>
         maxima = Vespucci::Math::LocalMaximaCWT(coefs, scales, 7);
         //maxima = Vespucci::Math::LocalMaxima(coefs);
     }catch(std::exception e){
-        std::cerr << "LocalMaximaCWT" << std::endl;
+        std::cerr << "LocalMaxima" << std::endl;
         std::cerr << e.what() << std::endl;
         throw e;
     }

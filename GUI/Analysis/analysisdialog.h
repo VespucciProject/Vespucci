@@ -46,15 +46,15 @@ private slots:
 
 private:
     Ui::AnalysisDialog *ui;
-    QComboBox *method_selection_box_;
-    QSpinBox *components_box_;
+    QComboBox *method_selection_combo_box_;
+    QSpinBox *components_spin_box_;
     QSharedPointer<VespucciDataset> dataset_;
     VespucciWorkspace *workspace;
 
     ///
-    /// \brief prediction_box_
+    /// \brief prediction_check_box_
     /// User selects whether or not to allow prediction of dimensionality
-    QCheckBox *prediction_box_;
+    QCheckBox *prediction_check_box_;
 };
 
 #endif // ANALYSISDIALOG_H

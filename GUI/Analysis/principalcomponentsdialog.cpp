@@ -34,16 +34,16 @@ PrincipalComponentsDialog::PrincipalComponentsDialog(QWidget *parent, VespucciWo
     ui->setupUi(this);
     workspace = ws;
     data_ = workspace->DatasetAt(row);
-    component_selector_ = findChild<QSpinBox *>("componentSpinBox");
-    color_selector_ = findChild<QComboBox *>("gradientComboBox");
-    recalculate_box_ = findChild<QCheckBox *>("recalculateCheckBox");
-    name_box_ = findChild<QLineEdit*>("nameLineEdit");
+    component_selector_spin_box_ = findChild<QSpinBox *>("componentSpinBox");
+    color_selector_combo_box_ = findChild<QComboBox *>("gradientComboBox");
+    recalculate_check_box_ = findChild<QCheckBox *>("recalculateCheckBox");
+    name_line_edit_ = findChild<QLineEdit*>("nameLineEdit");
     map_check_box_ = findChild<QCheckBox*>("mapCheckBox");
     data_index_ = row;
 
-    component_selector_->setEnabled(false);
-    color_selector_->setEnabled(false);
-    recalculate_box_->setEnabled(false);
+    component_selector_spin_box_->setEnabled(false);
+    color_selector_combo_box_->setEnabled(false);
+    recalculate_check_box_->setEnabled(false);
 }
 
 PrincipalComponentsDialog::~PrincipalComponentsDialog()
@@ -62,10 +62,10 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
                                             "Principal Components",
                                             "Calculating principal components data...");
     if (map_check_box_->isChecked()){
-        int component = component_selector_->value();
-        QString name = name_box_->text();
-        bool recalculate = recalculate_box_->isChecked();
-        int gradient_index = color_selector_->currentIndex();
+        int component = component_selector_spin_box_->value();
+        QString name = name_line_edit_->text();
+        bool recalculate = recalculate_check_box_->isChecked();
+        int gradient_index = color_selector_combo_box_->currentIndex();
         try{
             data_->PrincipalComponents(component, name, gradient_index, recalculate);
         }
@@ -98,7 +98,7 @@ void PrincipalComponentsDialog::on_buttonBox_rejected()
 
 void PrincipalComponentsDialog::on_mapCheckBox_stateChanged(int arg1)
 {
-    component_selector_->setEnabled(arg1);
-    color_selector_->setEnabled(arg1);
-    recalculate_box_->setEnabled(arg1);
+    component_selector_spin_box_->setEnabled(arg1);
+    color_selector_combo_box_->setEnabled(arg1);
+    recalculate_check_box_->setEnabled(arg1);
 }

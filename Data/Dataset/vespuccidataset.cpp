@@ -93,8 +93,6 @@ bool VespucciDataset::SaveLogFile(QString filename)
     return log_file_->copy(filename);
 }
 
-
-
 ///
 /// \brief VespucciDataset::DestroyLogFile
 /// Deletes log file unless user decides to save it elsewhere
@@ -160,16 +158,16 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
                                  QString name,
                                  QString x_axis_description,
                                  QString y_axis_description)
-    : log_stream_(log_file)
+    : log_text_stream_(log_file)
 {
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_file_ = log_file;
-    log_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
-    log_stream_ << "Version 1.0" << endl << endl;
-    log_stream_ << "Dataset " << name << "created "
+    log_text_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
+    log_text_stream_ << "Version 1.0" << endl << endl;
+    log_text_stream_ << "Dataset " << name << "created "
                 << datetime.date().toString("yyyy-MM-dd") << "T"
                 << datetime.time().toString("hh:mm:ss") << "Z" << endl;
-    log_stream_ << "Imported from binary file " << vespucci_binary_filename << endl << endl;
+    log_text_stream_ << "Imported from binary file " << vespucci_binary_filename << endl << endl;
 
     non_spatial_ = false;
     meta_ = false;
@@ -231,16 +229,16 @@ VespucciDataset::VespucciDataset(QString text_filename,
                                  QString y_axis_description,
                                  bool swap_spatial,
                                  std::string format)
-    : log_stream_(log_file)
+    : log_text_stream_(log_file)
 {
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_file_ = log_file;
 
 
-    log_stream_ << "Dataset " << name << " created "
+    log_text_stream_ << "Dataset " << name << " created "
                 << datetime.date().toString("yyyy-MM-dd") << "T"
                 << datetime.time().toString("hh:mm:ss") << "Z" << endl;
-    log_stream_ << "Imported from text file " << text_filename << endl << endl;
+    log_text_stream_ << "Imported from text file " << text_filename << endl << endl;
 
 
     non_spatial_ = false;
@@ -335,15 +333,15 @@ VespucciDataset::VespucciDataset(map<pair<int, int>, string> text_filenames,
                                  QString x_axis_description,
                                  QString y_axis_description,
                                  int rows, int cols)
-     : log_stream_(log_file)
+     : log_text_stream_(log_file)
 {
     QDateTime datetime = QDateTime::currentDateTimeUtc();
-    log_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
-    log_stream_ << "Version 1.0" << endl << endl;
-    log_stream_ << "Dataset " << name << "created "
+    log_text_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
+    log_text_stream_ << "Version 1.0" << endl << endl;
+    log_text_stream_ << "Dataset " << name << "created "
                 << datetime.date().toString("yyyy-MM-dd") << "T"
                 << datetime.time().toString("hh:mm:ss") << "Z" << endl;
-    log_stream_ << "Created from multiple text files"<< endl;
+    log_text_stream_ << "Created from multiple text files"<< endl;
     non_spatial_ = false;
     meta_ = false;
     //Set up variables unrelated to hyperspectral data:
@@ -392,18 +390,18 @@ VespucciDataset::VespucciDataset(QString name,
                                  QFile *log_file,
                                  QSharedPointer<VespucciDataset> original,
                                  uvec indices)
-    : log_stream_(log_file)
+    : log_text_stream_(log_file)
 
 {
     log_file_ = log_file;
     map_list_model_ = new MapListModel(main_window, this);
     QDateTime datetime = QDateTime::currentDateTimeUtc();
-    log_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
-    log_stream_ << "Version 1.0" << endl << endl;
-    log_stream_ << "Dataset " << name << "created "
+    log_text_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
+    log_text_stream_ << "Version 1.0" << endl << endl;
+    log_text_stream_ << "Dataset " << name << "created "
                 << datetime.date().toString("yyyy-MM-dd") << "T"
                 << datetime.time().toString("hh:mm:ss") << "Z" << endl;
-    log_stream_ << "Created from previous dataset " << original->name() << endl;
+    log_text_stream_ << "Created from previous dataset " << original->name() << endl;
 
     non_spatial_ = true;
     meta_ = original->meta();
@@ -447,7 +445,7 @@ VespucciDataset::VespucciDataset(QString name,
                                  MainWindow *main_window,
                                  QString *directory,
                                  QFile *log_file)
-    : log_stream_(log_file)
+    : log_text_stream_(log_file)
 {
     map_list_model_ = new MapListModel(main_window, this);
     log_file_ = log_file;
@@ -503,7 +501,7 @@ void VespucciDataset::Undo()
         throw std::runtime_error(str);
     }
 
-    log_stream_ << "Undo: " << last_operation_ << endl << endl;
+    log_text_stream_ << "Undo: " << last_operation_ << endl << endl;
     last_operation_ = "Undo";
 }
 
@@ -551,13 +549,13 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
     }
 
     last_operation_ = "crop";
-    log_stream_ << "CropSpectra" << endl;
-    log_stream_ << "x_min == " << x_min << endl;
-    log_stream_ << "x_max == " << x_max << endl;
-    log_stream_ << "y_min == " << y_min << endl;
-    log_stream_ << "y_max == " << y_max << endl;
-    log_stream_ << "wl_min == " << wl_min << endl;
-    log_stream_ << "wl_max == " << wl_max << endl << endl;
+    log_text_stream_ << "CropSpectra" << endl;
+    log_text_stream_ << "x_min == " << x_min << endl;
+    log_text_stream_ << "x_max == " << x_max << endl;
+    log_text_stream_ << "y_min == " << y_min << endl;
+    log_text_stream_ << "y_max == " << y_max << endl;
+    log_text_stream_ << "wl_min == " << wl_min << endl;
+    log_text_stream_ << "wl_max == " << wl_max << endl << endl;
 }
 
 
@@ -585,13 +583,13 @@ void VespucciDataset::MinMaxNormalize()
         throw std::runtime_error(str);
     }
     last_operation_ = "min/max normalize";
-    log_stream_ << "MinMaxNormalize" << endl << endl;
+    log_text_stream_ << "MinMaxNormalize" << endl << endl;
 
 }
 
 void VespucciDataset::VectorNormalize()
 {
-    log_stream_ << "Vector Normalization" << endl << endl;
+    log_text_stream_ << "Vector Normalization" << endl << endl;
     SetOldCopies();
     try{
         spectra_ = normalise(spectra_old_);
@@ -610,7 +608,7 @@ void VespucciDataset::VectorNormalize()
 /// wavelength (i.e. in preparation for PCA)
 void VespucciDataset::MeanCenter()
 {
-    log_stream_ << "Mean Centering" << endl << endl;
+    log_text_stream_ << "Mean Centering" << endl << endl;
     SetOldCopies();
     try{
         vec mean_intensity = mean(spectra_, 1);
@@ -627,7 +625,7 @@ void VespucciDataset::MeanCenter()
 ///normalizes the spectral data so that the area under each point spectrum is 1
 void VespucciDataset::UnitAreaNormalize()
 {
-    log_stream_ << "UnitAreaNormalize" << endl << endl;
+    log_text_stream_ << "UnitAreaNormalize" << endl << endl;
     SetOldCopies();
     uword num_rows = spectra_.n_rows;
     uword num_cols = spectra_.n_cols;
@@ -676,7 +674,7 @@ void VespucciDataset::Booleanize(double min, double max, bool keep_inside, bool 
 {
     SetOldCopies();
     last_operation_ = "Booleanize";
-    log_stream_
+    log_text_stream_
             << "Booleanize" << endl << "min = " << min << endl <<"max = "
             << max << endl
             << (keep_inside ? "keep values in range" : "zero values in range")
@@ -713,7 +711,7 @@ void VespucciDataset::Clamp(double min, double max)
 {
     SetOldCopies();
     last_operation_ = "Clamp";
-    log_stream_ << "Clamp" << endl << "min = "<< min << endl << "max = " << max << endl;
+    log_text_stream_ << "Clamp" << endl << "min = "<< min << endl << "max = " << max << endl;
 
     try{
         spectra_ = clamp(spectra_, min, max);
@@ -749,7 +747,7 @@ void VespucciDataset::ShedZeroSpectra()
 
 void VespucciDataset::ShedZeroWavelengths()
 {
-    log_stream_ << "ShedZeroWavelengths" << endl;
+    log_text_stream_ << "ShedZeroWavelengths" << endl;
     SetOldCopies();
     vec current_row;
     uvec indices, indices_buffer;
@@ -795,7 +793,7 @@ mat VespucciDataset::ZScoreNormCopy()
 ///
 void VespucciDataset::ZScoreNormalize()
 {
-    log_stream_ << "ZScoreNormalize" << endl;
+    log_text_stream_ << "ZScoreNormalize" << endl;
     SetOldCopies();
 
     try{
@@ -814,9 +812,9 @@ void VespucciDataset::ZScoreNormalize()
 
 void VespucciDataset::SNVNormalize(double offset, bool center)
 {
-    log_stream_ << "SNVNormalize" << endl;
-    log_stream_ << "offset = " << offset << endl;
-    log_stream_ << "center (Z-score) = " << (center ? "true" : "false") << endl;
+    log_text_stream_ << "SNVNormalize" << endl;
+    log_text_stream_ << "offset = " << offset << endl;
+    log_text_stream_ << "center (Z-score) = " << (center ? "true" : "false") << endl;
     SetOldCopies();
     try{
         spectra_ = Vespucci::Math::Normalization::SNVNorm(spectra_, offset, center);
@@ -831,7 +829,7 @@ void VespucciDataset::SNVNormalize(double offset, bool center)
 
 void VespucciDataset::AbsoluteValue()
 {
-    log_stream_ << "AbsoluteValue" << endl;
+    log_text_stream_ << "AbsoluteValue" << endl;
     SetOldCopies();
 
     try{
@@ -858,8 +856,8 @@ void VespucciDataset::AbsoluteValue()
 ///
 void VespucciDataset::SubtractBackground(mat background, QString filename)
 {
-    log_stream_ << "SubtractBackground" << endl;
-    log_stream_ << "filename == " << filename << endl << endl;
+    log_text_stream_ << "SubtractBackground" << endl;
+    log_text_stream_ << "filename == " << filename << endl << endl;
     SetOldCopies();
     if (background.n_rows != spectra_.n_rows){
         QMessageBox::warning(0,
@@ -893,8 +891,8 @@ void VespucciDataset::SubtractBackground(mat background, QString filename)
 ///
 void VespucciDataset::MFBaseline(int window_size, int iterations)
 {
-    log_stream_ << "MFBaseline" << endl;
-    log_stream_ << "window_size == " << window_size << endl;
+    log_text_stream_ << "MFBaseline" << endl;
+    log_text_stream_ << "window_size == " << window_size << endl;
     SetOldCopies();
     try{
         baselines_ = spectra_;
@@ -918,10 +916,10 @@ void VespucciDataset::CWTBaseline(int lambda, int penalty_order, double SNR_thre
 
 void VespucciDataset::IModPolyBaseline(const uword poly_order, const uword max_it, double threshold)
 {
-    log_stream_ << "IModPolyBaseline" << endl;
-    log_stream_ << "poly_order == " << poly_order << endl;
-    log_stream_ << "max_it == " << max_it << endl;
-    log_stream_ << "threshold == " << threshold << endl;
+    log_text_stream_ << "IModPolyBaseline" << endl;
+    log_text_stream_ << "poly_order == " << poly_order << endl;
+    log_text_stream_ << "max_it == " << max_it << endl;
+    log_text_stream_ << "threshold == " << threshold << endl;
     SetOldCopies();
     mat baselines(spectra_.n_rows, spectra_.n_cols);
     vec baseline, corrected;
@@ -1023,8 +1021,8 @@ void VespucciDataset::RemoveFlatSpectra(double threshold)
 
 void VespucciDataset::MedianFilter(unsigned int window_size)
 {
-    log_stream_ << "MedianFilter" << endl;
-    log_stream_ << "window_size == " << window_size << endl << endl;
+    log_text_stream_ << "MedianFilter" << endl;
+    log_text_stream_ << "window_size == " << window_size << endl << endl;
     mat processed;
     SetOldCopies();
     try{
@@ -1047,8 +1045,8 @@ void VespucciDataset::MedianFilter(unsigned int window_size)
 
 void VespucciDataset::LinearMovingAverage(unsigned int window_size)
 {
-    log_stream_ << "LinearMovingAverage" << endl;
-    log_stream_ << "window_size == " << window_size << endl << endl;
+    log_text_stream_ << "LinearMovingAverage" << endl;
+    log_text_stream_ << "window_size == " << window_size << endl << endl;
 
     SetOldCopies();
     try{
@@ -1060,7 +1058,6 @@ void VespucciDataset::LinearMovingAverage(unsigned int window_size)
     catch(exception e){
         string str = "LinearMovingAverage: " + string(e.what());
         throw std::runtime_error(str);
-        Undo();
     }
 
     last_operation_ = "moving average filter";
@@ -1076,14 +1073,14 @@ void VespucciDataset::LinearMovingAverage(unsigned int window_size)
 ///
 void VespucciDataset::SingularValue(unsigned int singular_values)
 {
-    log_stream_ << "SingularValue" << endl;
-    log_stream_ << "singular_values == " << singular_values << endl << endl;
+    log_text_stream_ << "SingularValue" << endl;
+    log_text_stream_ << "singular_values == " << singular_values << endl << endl;
     SetOldCopies();
     mat U;
     vec s;
     mat V;
     try{
-        Vespucci::Math::DimensionReduction::svds(spectra_, singular_values, U, s, V);
+        svds(U, s, V, sp_mat(spectra_), singular_values);
         spectra_ = -1 * U * diagmat(s) * V.t();
     }
     catch(exception e){
@@ -1104,14 +1101,14 @@ int VespucciDataset::QUIC_SVD(double epsilon)
 {
     SetOldCopies();
     int SVD_rank;
-    log_stream_ << "QUIC_SVD" << endl;
-    log_stream_ << "epsilon == " << epsilon << endl << endl;
+    log_text_stream_ << "QUIC_SVD" << endl;
+    log_text_stream_ << "epsilon == " << epsilon << endl << endl;
     mat u, sigma, v, copy;
     cout << "Call QUIC_SVD" << endl;
     mlpack::svd::QUIC_SVD svd_obj(spectra_, u, v, sigma, epsilon, 0.1);
     cout << "create copy" << endl;
     SVD_rank = u.n_cols;
-    log_stream_ << "rank of approximation = " << SVD_rank << endl;
+    log_text_stream_ << "rank of approximation = " << SVD_rank << endl;
     spectra_ = u * sigma * v.t();
     last_operation_ = "truncated SVD de-noise";
     cout << "Copy operations" << endl;
@@ -1131,10 +1128,10 @@ void VespucciDataset::SavitzkyGolay(unsigned int derivative_order,
                                  unsigned int polynomial_order,
                                  unsigned int window_size)
 {
-    log_stream_ << "SavitzkyGolay" << endl;
-    log_stream_ << "derivative_order == " << derivative_order << endl;
-    log_stream_ << "polynomial_order == " << polynomial_order << endl;
-    log_stream_ << "window_size == " << window_size << endl << endl;
+    log_text_stream_ << "SavitzkyGolay" << endl;
+    log_text_stream_ << "derivative_order == " << derivative_order << endl;
+    log_text_stream_ << "polynomial_order == " << polynomial_order << endl;
+    log_text_stream_ << "window_size == " << window_size << endl << endl;
     SetOldCopies();
 
     try{
@@ -1154,8 +1151,8 @@ void VespucciDataset::SavitzkyGolay(unsigned int derivative_order,
 
 void VespucciDataset::Scale(double scaling_factor)
 {
-    log_stream_ << "Scale" << endl;
-    log_stream_ << "scaling_factor = " << scaling_factor << endl;
+    log_text_stream_ << "Scale" << endl;
+    log_text_stream_ << "scaling_factor = " << scaling_factor << endl;
     SetOldCopies();
 
     try{
@@ -1176,8 +1173,8 @@ void VespucciDataset::ShedSpectrum(const uword index)
 {
     cout << "VespucciDataset::ShedSpectrum" << endl;
     cout << "index = " << index << "x = " << x_(index) << " y = " << y_(index) << endl;
-    log_stream_ << "Shed Spectrum" << endl;
-    log_stream_ << "index = " << index << "x = " << x_(index) << " y = " << y_(index) << endl;
+    log_text_stream_ << "Shed Spectrum" << endl;
+    log_text_stream_ << "index = " << index << "x = " << x_(index) << " y = " << y_(index) << endl;
     SetOldCopies();
     cout << "spectra columns = " << spectra_.n_cols;
     try{
@@ -1223,13 +1220,13 @@ int VespucciDataset::HySime()
 ///
 void VespucciDataset::TransformAbscissa(QString input_units, double input_factor, QString output_units, double output_factor, QString description)
 {
-    log_stream_ << "TransformAbscissa" << endl;
-    log_stream_ << "Input Units: " << input_units << endl;
-    log_stream_ << "Input Factor: " << input_factor << endl;
-    log_stream_ << "Output Units: " << output_units << endl;
-    log_stream_ << "Output Factor: " << output_factor << endl;
-    log_stream_ << "Old Label: " << x_axis_description_ << endl;
-    log_stream_ << "New Label: " << description << endl;
+    log_text_stream_ << "TransformAbscissa" << endl;
+    log_text_stream_ << "Input Units: " << input_units << endl;
+    log_text_stream_ << "Input Factor: " << input_factor << endl;
+    log_text_stream_ << "Output Units: " << output_units << endl;
+    log_text_stream_ << "Output Factor: " << output_factor << endl;
+    log_text_stream_ << "Old Label: " << x_axis_description_ << endl;
+    log_text_stream_ << "New Label: " << description << endl;
 
     if (input_units == "Wavelength"){
         if (output_units == "Energy"){
@@ -1350,9 +1347,9 @@ void VespucciDataset::TransformAbscissa(QString input_units, double input_factor
 /// Spline interpolation to new abscissa
 void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa, unsigned int poly_order, unsigned int window_size)
 {
-    log_stream_ << "InterpolateToNewAbscissa (spline)" << endl;
-    log_stream_ << "Old Abscissa Size: " << abscissa_.n_rows << endl;
-    log_stream_ << "New Abscissa Size: " << new_abscissa.n_rows << endl;
+    log_text_stream_ << "InterpolateToNewAbscissa (spline)" << endl;
+    log_text_stream_ << "Old Abscissa Size: " << abscissa_.n_rows << endl;
+    log_text_stream_ << "New Abscissa Size: " << new_abscissa.n_rows << endl;
     mat new_spectra;
     try{
         new_spectra = Vespucci::Math::Smoothing::InterpolateToNewAbscissa(spectra_, abscissa_, new_abscissa, window_size, poly_order);
@@ -1372,9 +1369,9 @@ void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa, unsigned
 /// Linear interpolation to new abscissa
 void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa)
 {
-    log_stream_ << "InterpolateToNewAbscissa (linear)" << endl;
-    log_stream_ << "Old Abscissa Size: " << abscissa_.n_rows << endl;
-    log_stream_ << "New Abscissa Size: " << new_abscissa.n_rows << endl;
+    log_text_stream_ << "InterpolateToNewAbscissa (linear)" << endl;
+    log_text_stream_ << "Old Abscissa Size: " << abscissa_.n_rows << endl;
+    log_text_stream_ << "New Abscissa Size: " << new_abscissa.n_rows << endl;
     mat new_spectra;
     try{
         new_spectra = Vespucci::Math::Smoothing::InterpolateToNewAbscissa(spectra_, abscissa_, new_abscissa);
@@ -1394,8 +1391,8 @@ void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa)
 ///
 void VespucciDataset::FourierTransform(int n)
 {
-    log_stream_ << "FourierTransform" << endl;
-    log_stream_ << "n = " << n << endl;
+    log_text_stream_ << "FourierTransform" << endl;
+    log_text_stream_ << "n = " << n << endl;
     //cx_mat complex_spectra = cx_mat(spectra_, spectra_imag_);
     cx_mat f_spectra(spectra_.n_rows, spectra_.n_cols);
     vec f_abscissa(abscissa_.n_rows);
@@ -1416,8 +1413,8 @@ void VespucciDataset::FourierTransform(int n)
 
 void VespucciDataset::InverseFourierTransform(int n)
 {
-    log_stream_ << "InverseFouerierTransform" << endl;
-    log_stream_ << "n = " << n << endl;
+    log_text_stream_ << "InverseFouerierTransform" << endl;
+    log_text_stream_ << "n = " << n << endl;
     cx_mat t_spectra(spectra_.n_rows, spectra_.n_cols);
     vec t_abscissa(abscissa_.n_rows);
     try{
@@ -1445,9 +1442,9 @@ void VespucciDataset::InverseFourierTransform(int n)
 void VespucciDataset::ApplyFTWeight(QString type,
                                     double param)
 {
-    log_stream_ << "ApplyFTWeight" << endl;
-    log_stream_ << "type = " << type << endl;
-    log_stream_ << "parameter = " << param << endl;
+    log_text_stream_ << "ApplyFTWeight" << endl;
+    log_text_stream_ << "type = " << type << endl;
+    log_text_stream_ << "parameter = " << param << endl;
     SetOldCopies();
     string shape;
     if (type == "Exponential"){shape = "exp";}
@@ -1470,10 +1467,10 @@ void VespucciDataset::ApplyFTWeight(double start_offset,
                                     double end_offset,
                                     double power)
 {
-    log_stream_ << "ApplyFTWeight (sine bell)" << endl;
-    log_stream_ << "start_offset = " << start_offset << endl;
-    log_stream_ << "end_offset = " << end_offset << endl;
-    log_stream_ << "power = " << power << endl;
+    log_text_stream_ << "ApplyFTWeight (sine bell)" << endl;
+    log_text_stream_ << "start_offset = " << start_offset << endl;
+    log_text_stream_ << "end_offset = " << end_offset << endl;
+    log_text_stream_ << "power = " << power << endl;
     SetOldCopies();
     try{
         spectra_ = Vespucci::Math::Transform::ApplySBWeights(spectra_,
@@ -1487,134 +1484,407 @@ void VespucciDataset::ApplyFTWeight(double start_offset,
 
 }
 
-// ANALYIS/MAPPING FUNCTIONS //
+// MAPPING FUNCTIONS //
+
+///
+/// \brief VespucciDataset::Univariate
+/// Creates a univariate image. Several peak-determination methods are availible.
+/// All methods except for "Intensity" estimate a local baseline. This is done
+/// by drawing a straight line from the left to right endpoint. This can cause
+/// problems when the endpoints are near other local maxima.
+///
+/// The "Bandwidth" method calculates the full-width at half maximum of the peak
+/// near the range specified.
+///
+/// The "Intensity" method calculates the local maximum of the spectrum within
+/// the range specified.
+///
+/// The "Area" method takes a right Riemann sum of the spectrum
+///
+/// The "Derivative" method is misleadingly named (this is based on in-house
+/// MATLAB code previously used by my group). The derivative method is actually
+/// and area method which finds the edges of the peak by taking a second derivative.
+/// It then determines the peak in an identical fashion to the "Area" method///
+///
+/// \param min left bound of spectral region of interest
+/// \param max right bound of spectral region of interest
+/// \param name name of MapData object to be created
+/// \param value_method method of determining peak (intensity, derivative, or area)
+/// \param gradient_index index of color scheme in master list (GetGradient());
+///
+void VespucciDataset::Univariate(double min,
+                                 double max,
+                                 QString name,
+                                 UnivariateMethod::Method method,
+                                 QString integration_method,
+                                 uword gradient_index)
+{
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
+    univariate_data->Apply(min, max, method);
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, univariate_data->results(),
+                                            QSharedPointer<VespucciDataset>(this),
+                                            directory_,
+                                            GetGradient(gradient_index),
+                                            map_list_model_->rowCount(QModelIndex()),
+                                            6,
+                                            main_window_));
+    cout << "set name" << endl;
+    new_map->set_name(name, univariate_data->MethodDescription());
+
+    uvec boundaries;
+    if(method == UnivariateMethod::Area || method == UnivariateMethod::FWHM){
+        boundaries = univariate_data->Boundaries();
+        new_map->set_baseline(abscissa_.subvec(boundaries(0), boundaries(1)),
+                              univariate_data->first_baselines());
+    }
+
+
+    /*if(method == UnivariateMethod::FWHM){
+        boundaries = univariate_data->Boundaries();
+        new_map->set_fwhm(univariate_data->Midlines());
+    }*/
+
+
+    log_text_stream_ << "Univariate" << endl;
+    log_text_stream_ << "min == " << min << endl;
+    log_text_stream_ << "max == " << max << endl;
+    log_text_stream_ << "name == " << name << endl;
+    log_text_stream_ << "method == " << (method == UnivariateMethod::Area ? "Area" : (method == UnivariateMethod::FWHM ? "Bandwidth" : "Intensity")) << endl;
+    log_text_stream_ << "integration_method == " << integration_method << endl;
+    log_text_stream_ << "gradient_index == " << gradient_index << endl;
+    univariate_datas_.append(univariate_data);
+    map_list_model_->AddMap(new_map);
+    new_map->ShowMapWindow();
+}
+
+
+void VespucciDataset::Univariate(double min,
+                                 double max,
+                                 QString name,
+                                 UnivariateMethod::Method method,
+                                 QString integration_method)
+{
+
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
+    univariate_data->Apply(min, max, method);
+
+
+    log_text_stream_ << "Univariate (no image)" << endl;
+    log_text_stream_ << "min == " << min << endl;
+    log_text_stream_ << "max == " << max << endl;
+    log_text_stream_ << "name == " << name << endl;
+    log_text_stream_ << "method == " << (method == UnivariateMethod::Area ? "Area" : (method == UnivariateMethod::FWHM ? "Bandwidth" : "Intensity")) << endl;
+    log_text_stream_ << "integration_method == " << integration_method << endl;
+    univariate_datas_.append(univariate_data);}
 
 ///
 /// \brief VespucciDataset::Univariate
 /// \param min
 /// \param max
+/// \param window
 /// \param name
 /// \param method
-/// \param window
-/// \param plot
+/// \param integration_method
 /// \param gradient_index
 ///
-void VespucciDataset::Univariate(double min, double max, QString name, 
-                                 UnivariateMethod::Method method, 
-                                 uword window, bool plot, uword gradient_index)
+void VespucciDataset::Univariate(double min, double max, uword window, QString name, UnivariateMethod::Method method, QString integration_method, uword gradient_index)
 {
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
     QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
-    univariate_data->Apply(min, max, window, method);
-    univariate_datas_.append(univariate_data);
-
-    log_stream_ << "Univariate" << endl;
-    log_stream_ << "min == " << min << endl;
-    log_stream_ << "max == " << max << endl;
-    log_stream_ << "name == " << name << endl;
-    log_stream_ << "method == " << univariate_data->method_description() << endl;
-
-    if (plot){
-        QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
-                                                    y_axis_description_,
-                                                    x_, y_,
-                                                    univariate_data->results(),
-                                                    QSharedPointer<VespucciDataset>(this),
-                                                    directory_, GetGradient(gradient_index),
-                                                    map_list_model_->rowCount(QModelIndex()),
-                                                    6,
-                                                    main_window_));
-        switch (method){
-          case UnivariateMethod::Area :
-          case UnivariateMethod::Derivative :
-            new_map->set_baselines(univariate_data->baselines());
-            break;
-          case UnivariateMethod::FWHM :
-            new_map->set_fwhm(univariate_data->baselines(), univariate_data->midlines());
-            break;
-          default:
-            ;//do nothing
-        }
-
-        map_list_model_->AddMap(new_map);
-        new_map->ShowMapWindow();
+    try{
+        univariate_data->Apply(min, max, window, method);
+    }catch(exception e){
+        throw std::runtime_error("VespucciDataset::Univariate: " + string(e.what()));
     }
 
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, univariate_data->results(),
+                                            QSharedPointer<VespucciDataset>(this),
+                                            directory_,
+                                            GetGradient(gradient_index),
+                                            map_list_model_->rowCount(QModelIndex()),
+                                            6,
+                                            main_window_));
+    new_map->set_name(name, univariate_data->MethodDescription());
 
+    /*
+    uvec boundaries;
+    if(method == UnivariateMethod::Area || method == UnivariateMethod::FWHM){
+        boundaries = univariate_data->Boundaries();
+        new_map->set_baseline(abscissa_.subvec(boundaries(0), boundaries(1)),
+                              univariate_data->first_baselines());
+    }
+    */
+
+    /*if(method == UnivariateMethod::FWHM){
+        boundaries = univariate_data->Boundaries();
+        new_map->set_fwhm(univariate_data->Midlines());
+    }*/
+
+
+    log_text_stream_ << "Univariate" << endl;
+    log_text_stream_ << "min == " << min << endl;
+    log_text_stream_ << "max == " << max << endl;
+    log_text_stream_ << "name == " << name << endl;
+    log_text_stream_ << "method == " << (method == UnivariateMethod::Area ? "Area" : (method == UnivariateMethod::FWHM ? "Bandwidth" : "Intensity")) << endl;
+    log_text_stream_ << "integration_method == " << integration_method << endl;
+    log_text_stream_ << "gradient_index == " << gradient_index << endl;
+    univariate_datas_.append(univariate_data);
+    map_list_model_->AddMap(new_map);
+    new_map->ShowMapWindow();
+}
+
+///
+/// \brief VespucciDataset::Univariate
+/// \param min
+/// \param max
+/// \param window
+/// \param name
+/// \param method
+/// \param integration_method
+///
+void VespucciDataset::Univariate(double min, double max, uword window, QString name, UnivariateMethod::Method method, QString integration_method)
+{
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
+    try{
+        univariate_data->Apply(min, max, method);
+    }catch(exception e){
+        throw runtime_error("VespucciDataset::Univariate: " + string(e.what()));
+    }
+
+    /*if(method == UnivariateMethod::FWHM){
+        boundaries = univariate_data->Boundaries();
+        new_map->set_fwhm(univariate_data->Midlines());
+    }*/
+
+
+    log_text_stream_ << "Univariate (no image)" << endl;
+    log_text_stream_ << "min == " << min << endl;
+    log_text_stream_ << "max == " << max << endl;
+    log_text_stream_ << "name == " << name << endl;
+    log_text_stream_ << "method == " << (method == UnivariateMethod::Area ? "Area" : (method == UnivariateMethod::FWHM ? "Bandwidth" : "Intensity")) << endl;
+    log_text_stream_ << "integration_method == " << integration_method << endl;
+    univariate_datas_.append(univariate_data);
+}
+
+///
+/// \brief VespucciDataset::CorrelationMap
+/// \param control The "control" vector to which all spectra are compared
+/// \param name The name of the image
+/// \param gradient_index The index of the color gradient in the global list
+///
+void VespucciDataset::CorrelationMap(vec control, QString name, uword gradient_index)
+{
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name, control));
+    univariate_data->Apply(0, 0, UnivariateMethod::Correlation);
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, univariate_data->results(),
+                                            QSharedPointer<VespucciDataset>(this),
+                                            directory_,
+                                            GetGradient(gradient_index),
+                                            map_list_model_->rowCount(QModelIndex()),
+                                            6,
+                                            main_window_));
+
+    new_map->set_name(name, univariate_data->MethodDescription());
+
+
+    log_text_stream_ << "Univariate" << endl;
+    log_text_stream_ << "name == " << name << endl;
+    log_text_stream_ << "method == Correlation" << endl;
+    log_text_stream_ << "gradient_index == " << gradient_index << endl;
+    univariate_datas_.append(univariate_data);
+    map_list_model_->AddMap(new_map);
+    new_map->ShowMapWindow();
 }
 
 ///
 /// \brief VespucciDataset::BandRatio
-/// \param first_min
-/// \param first_max
-/// \param second_min
-/// \param second_max
-/// \param name
-/// \param method
-/// \param window
-/// \param plot
-/// \param gradient_index
+/// Creates a band ratio univariate map. Band ratio maps represent the ratio of
+/// two peaks. The determination methods here are identical to those in
+/// VespucciDataset::Univariate.
+/// \param first_min index of left bound of first region of interest
+/// \param first_max index of right bound of first region of interest
+/// \param second_min index of left bound of second region of interest
+/// \param second_max index of right bound of second region of interest
+/// \param name name of the MapData object to be created.  This becomes name of the map to the user
+/// \param value_method how the maxima are to be determined (area, derivative, or intensity)
+/// \param gradient_index index of gradient in the master list (GetGradient())
 ///
-void VespucciDataset::BandRatio(double first_min, double first_max, double second_min, double second_max, QString name, UnivariateMethod::Method method, uword window, bool plot, unsigned int gradient_index)
+void VespucciDataset::BandRatio(double first_min, double first_max,
+                                double second_min, double second_max,
+                                QString name,
+                                UnivariateMethod::Method method,
+                                unsigned int gradient_index)
 {
+
+    //if dataset is non spatial, just quit
+    if(non_spatial_){
+        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
+        return;
+    }
+
+    log_text_stream_ << "BandRatio" << endl;
+    log_text_stream_ << "first_min == " << first_min << endl;
+    log_text_stream_ << "first_max == " << first_max << endl;
+    log_text_stream_ << "second_min == " << second_min << endl;
+    log_text_stream_ << "second_max == " << second_max << endl;
+    log_text_stream_ << "name == " << name << endl;
+    log_text_stream_ << "value_method == " << (method == UnivariateMethod::Area ? "Area Ratio" : "Intensity Ratio") << endl;
+    //log_text_stream_ << "integration_method == " << integration_method << endl;
+    log_text_stream_ << "gradient_index == " << gradient_index << endl << endl;
+
+
     QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
-    univariate_data->Apply(first_min, first_max, second_min, second_max, window, method);
     univariate_datas_.append(univariate_data);
 
-    log_stream_ << "Band Ratio" << endl;
-    log_stream_ << "first_min == " << first_min << endl;
-    log_stream_ << "first_max == " << first_max << endl;
-    log_stream_ << "second_min == " << second_min << endl;
-    log_stream_ << "second_max == " << second_max << endl;
-    log_stream_ << "name == " << name << endl;
-    log_stream_ << "method == " << univariate_data->method_description() << endl;
+    univariate_data->Apply(first_min, first_max, second_min, second_max, method);
 
-    if (plot){
-        QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
-                                                    y_axis_description_,
-                                                    x_, y_,
-                                                    univariate_data->results(),
-                                                    QSharedPointer<VespucciDataset>(this),
-                                                    directory_, GetGradient(gradient_index),
-                                                    map_list_model_->rowCount(QModelIndex()),
-                                                    6,
-                                                    main_window_));
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, univariate_data->results(),
+                                            QSharedPointer<VespucciDataset>(this), directory_,
+                                            GetGradient(gradient_index),
+                                            map_list_model_->rowCount(QModelIndex()),
+                                            6,
+                                            main_window_));
 
-        if (method == UnivariateMethod::AreaRatio || method == UnivariateMethod::DerivativeRatio)
-            new_map->set_baselines(univariate_data->first_baselines(), univariate_data->second_baselines());
 
-        map_list_model_->AddMap(new_map);
-        new_map->ShowMapWindow();
+    uvec boundaries = univariate_data->Boundaries();
+
+    if (method == UnivariateMethod::AreaRatio){
+        new_map->set_baselines(abscissa_.subvec(boundaries(0), boundaries(1)),
+                               abscissa_.subvec(boundaries(2), boundaries(3)),
+                               univariate_data->first_baselines(),
+                               univariate_data->second_baselines());
     }
+
+    map_list_model_->AddMap(new_map);
+    new_map->ShowMapWindow();
 }
 
+
 ///
-/// \brief VespucciDataset::Correlation
-/// \param control
-/// \param name
-/// \param gradient_index
-///
-void VespucciDataset::Correlation(vec control, QString name, uword gradient_index, bool plot)
+/// \brief BandRatio Band ratio analysis without imaging
+/// \param first_min First spectral region of interest left bound.
+/// \param first_max First spectral region of interest right bound.
+/// \param second_min Second spectral region of interest left bound.
+/// \param second_max Second spectral region of interest right bound.
+/// \param name Descriptive name exposed to the user.
+/// \param method The method.
+/// Perform a band ratio analysis without creating an image.
+void VespucciDataset::BandRatio(double first_min,
+                                double first_max,
+                                double second_min,
+                                double second_max,
+                                QString name,
+                                UnivariateMethod::Method method)
 {
-    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name, control));
-    univariate_data->Apply(0, 0, 0, UnivariateMethod::Correlation);
+    log_text_stream_ << "BandRatio (no image)" << endl;
+    log_text_stream_ << "first_min == " << first_min << endl;
+    log_text_stream_ << "first_max == " << first_max << endl;
+    log_text_stream_ << "second_min == " << second_min << endl;
+    log_text_stream_ << "second_max == " << second_max << endl;
+    log_text_stream_ << "name == " << name << endl;
+    log_text_stream_ << "value_method == " << (method == UnivariateMethod::Area ? "Area Ratio" : "Intensity Ratio") << endl;
+    //log_text_stream_ << "integration_method == " << integration_method << endl;
+
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
+    univariate_data->Apply(first_min, first_max, second_min, second_max, method);
+    univariate_data->SetName(name);
+    univariate_datas_.append(univariate_data);
+}
+
+void VespucciDataset::BandRatio(double first_min, double first_max,
+                                double second_min, double second_max,
+                                unsigned int window,
+                                QString name, UnivariateMethod::Method method,
+                                unsigned int gradient_index)
+{
+    log_text_stream_ << "BandRatio (Estimate Edges)" << endl;
+    log_text_stream_ << "first_min == " << first_min << endl;
+    log_text_stream_ << "first_max == " << first_max << endl;
+    log_text_stream_ << "second_min == " << second_min << endl;
+    log_text_stream_ << "second_max == " << second_max << endl;
+    log_text_stream_ << "name == " << name << endl;
+    log_text_stream_ << "value_method == " << "Area Ratio (Estimated Edges)" << endl;
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
+    try{
+        univariate_data->Apply(first_min, first_max, second_min, second_max, window, method);
+    }catch(exception e){
+        throw std::runtime_error("VespucciDataset::BandRatio: " + string(e.what()));
+    }
+    univariate_data->SetName(name);
     univariate_datas_.append(univariate_data);
 
-    log_stream_ << "Correlation" << endl;
-    log_stream_ << "name == " << name << endl;
+    QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
+                                            y_axis_description_,
+                                            x_, y_, univariate_data->results(),
+                                            QSharedPointer<VespucciDataset>(this), directory_,
+                                            GetGradient(gradient_index),
+                                            map_list_model_->rowCount(QModelIndex()),
+                                            6,
+                                            main_window_));
 
-    if (plot){
-        QSharedPointer<MapData> new_map(new MapData(x_axis_description_,
-                                                    y_axis_description_,
-                                                    x_, y_,
-                                                    univariate_data->results(),
-                                                    QSharedPointer<VespucciDataset>(this),
-                                                    directory_, GetGradient(gradient_index),
-                                                    map_list_model_->rowCount(QModelIndex()),
-                                                    6,
-                                                    main_window_));
-        map_list_model_->AddMap(new_map);
-        new_map->ShowMapWindow();
+
+    //uvec boundaries = univariate_data->Boundaries();
+
+    /*
+    if (method == UnivariateMethod::AreaRatio){
+        new_map->set_baselines(abscissa_.subvec(boundaries(0), boundaries(1)),
+                               abscissa_.subvec(boundaries(2), boundaries(3)),
+                               univariate_data->first_baselines(),
+                               univariate_data->second_baselines());
     }
+    */
+    map_list_model_->AddMap(new_map);
+    new_map->ShowMapWindow();
+
+}
+
+void VespucciDataset::BandRatio(double first_min, double first_max,
+                                double second_min, double second_max,
+                                unsigned int window,
+                                QString name, UnivariateMethod::Method method)
+{
+    log_text_stream_ << "BandRatio (Estimate Edges, no image)" << endl;
+    log_text_stream_ << "first_min == " << first_min << endl;
+    log_text_stream_ << "first_max == " << first_max << endl;
+    log_text_stream_ << "second_min == " << second_min << endl;
+    log_text_stream_ << "second_max == " << second_max << endl;
+    log_text_stream_ << "name == " << name << endl;
+    log_text_stream_ << "value_method == " << "Area Ratio (Estimated Edges)" << endl;
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name));
+    try{
+        univariate_data->Apply(first_min, first_max, second_min, second_max, window, method);
+    }catch(exception e){
+        throw std::runtime_error("VespucciDataset::BandRatio: " + string(e.what()));
+    }
+    univariate_data->SetName(name);
+    univariate_datas_.append(univariate_data);
 }
 
 ///
@@ -1634,11 +1904,11 @@ void VespucciDataset::PrincipalComponents(int component,
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available. Please use the analysis dialog.");
         return;
     }
-    log_stream_ << "PrincipalComponents" << endl;
-    log_stream_ << "component == " << component << endl;
-    log_stream_ << "name == " << name << endl;
-    log_stream_ << "gradient_index == " << gradient_index << endl;
-    log_stream_ << "recalculate == " << (recalculate ? "true" : "false") << endl << endl;
+    log_text_stream_ << "PrincipalComponents" << endl;
+    log_text_stream_ << "component == " << component << endl;
+    log_text_stream_ << "name == " << name << endl;
+    log_text_stream_ << "gradient_index == " << gradient_index << endl;
+    log_text_stream_ << "recalculate == " << (recalculate ? "true" : "false") << endl << endl;
 
     if (recalculate || !principal_components_calculated_){
         component--;
@@ -1712,7 +1982,7 @@ void VespucciDataset::PrincipalComponents(bool scaleData)
 /// Perform PCA without creating an image
 void VespucciDataset::PrincipalComponents()
 {
-    log_stream_ << "PrincipalComponents (no image)" << endl;
+    log_text_stream_ << "PrincipalComponents (no image)" << endl;
     principal_components_data_ =
             QSharedPointer<PrincipalComponentsData>(
                 new PrincipalComponentsData(QSharedPointer<VespucciDataset>(this),
@@ -1735,11 +2005,11 @@ void VespucciDataset::PrincipalComponents()
 ///
 void VespucciDataset::FindPeaks(double sel, double threshold, uword poly_order, uword window_size)
 {
-    log_stream_ << "FindPeaks" << endl;
-    log_stream_ << "sel = " << sel << endl;
-    log_stream_ << "threshold = " << threshold << endl;
-    log_stream_ << "poly_order = " << poly_order << endl;
-    log_stream_ << "window_size = " << window_size << endl;
+    log_text_stream_ << "FindPeaks" << endl;
+    log_text_stream_ << "sel = " << sel << endl;
+    log_text_stream_ << "threshold = " << threshold << endl;
+    log_text_stream_ << "poly_order = " << poly_order << endl;
+    log_text_stream_ << "window_size = " << window_size << endl;
 
     mat peak_magnitudes;
     mat peak_positions;
@@ -1849,14 +2119,14 @@ void VespucciDataset::VertexComponents(uword endmembers,
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
         return;
     }
-    log_stream_ << "VertexComponents" << endl;
-    log_stream_ << "endmembers == " << endmembers << endl;
-    log_stream_ << "image_component == " << image_component << endl;
-    log_stream_ << "gradient_index == " << gradient_index;
-    log_stream_ << "recalculate == " << (recalculate ? "true" : "false") << endl << endl;
+    log_text_stream_ << "VertexComponents" << endl;
+    log_text_stream_ << "endmembers == " << endmembers << endl;
+    log_text_stream_ << "image_component == " << image_component << endl;
+    log_text_stream_ << "gradient_index == " << gradient_index;
+    log_text_stream_ << "recalculate == " << (recalculate ? "true" : "false") << endl << endl;
 
     if(endmembers == 0){
-        log_stream_ << "Endmember count predicted using HySime algorithm: ";
+        log_text_stream_ << "Endmember count predicted using HySime algorithm: ";
         QMessageBox alert;
         alert.setText("The HySime algorithm will take a long time.");
         alert.setInformativeText("OK to continue");
@@ -1873,7 +2143,7 @@ void VespucciDataset::VertexComponents(uword endmembers,
         }
 
         endmembers = HySime();
-        log_stream_ << endmembers << endl;
+        log_text_stream_ << endmembers << endl;
     }
 
     QString map_type;
@@ -1922,11 +2192,11 @@ void VespucciDataset::VertexComponents(uword endmembers,
 /// Perform VCA without creating an image
 void VespucciDataset::VertexComponents(uword endmembers)
 {
-    log_stream_ << "VertexComponents (no image)" << endl;
-    log_stream_ << "endmembers == " << endmembers << endl;
+    log_text_stream_ << "VertexComponents (no image)" << endl;
+    log_text_stream_ << "endmembers == " << endmembers << endl;
 
     if(endmembers == 0){
-        log_stream_ << "Endmember count predicted using HySime algorithm: ";
+        log_text_stream_ << "Endmember count predicted using HySime algorithm: ";
         QMessageBox alert;
         alert.setText("The HySime algorithm will take a long time.");
         alert.setInformativeText("OK to continue");
@@ -1942,7 +2212,7 @@ void VespucciDataset::VertexComponents(uword endmembers)
             return;
         }
         endmembers = HySime();
-        log_stream_ << endmembers << endl;
+        log_text_stream_ << endmembers << endl;
     }
 
     try{
@@ -1981,17 +2251,17 @@ void VespucciDataset::PartialLeastSquares(uword components,
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
         return;
     }
-    log_stream_ << "PartialLeastSqares" << endl;
-    log_stream_ << "components == " << components << endl;
-    log_stream_ << "image_component == " << image_component << endl;
-    log_stream_ << "name == " << name << endl;
-    log_stream_ << "gradient_index == " << gradient_index << endl;
-    log_stream_ << "recalculate == " << (recalculate ? "true" : "false") << endl << endl;
+    log_text_stream_ << "PartialLeastSqares" << endl;
+    log_text_stream_ << "components == " << components << endl;
+    log_text_stream_ << "image_component == " << image_component << endl;
+    log_text_stream_ << "name == " << name << endl;
+    log_text_stream_ << "gradient_index == " << gradient_index << endl;
+    log_text_stream_ << "recalculate == " << (recalculate ? "true" : "false") << endl << endl;
 
     if(components == 0){
-        log_stream_ << "Component count predicted using HySime algorithm: ";
+        log_text_stream_ << "Component count predicted using HySime algorithm: ";
         components = HySime();
-        log_stream_ << components << endl;
+        log_text_stream_ << components << endl;
         if (image_component > components){
             image_component = components;
         }
@@ -2057,13 +2327,13 @@ void VespucciDataset::PartialLeastSquares(uword components,
 /// Perform partial least squares without creating an image
 void VespucciDataset::PartialLeastSquares(uword components)
 {
-    log_stream_ << "PartialLeastSqares (no image)" << endl;
-    log_stream_ << "components == " << components << endl;
+    log_text_stream_ << "PartialLeastSqares (no image)" << endl;
+    log_text_stream_ << "components == " << components << endl;
 
     if(components == 0){
-        log_stream_ << "Component count predicted using HySime algorithm: ";
+        log_text_stream_ << "Component count predicted using HySime algorithm: ";
         components = HySime();
-        log_stream_ << components << endl;
+        log_text_stream_ << components << endl;
     }
 
 
@@ -2081,6 +2351,18 @@ void VespucciDataset::PartialLeastSquares(uword components)
     }
 }
 
+void VespucciDataset::CorrelationAnalysis(vec control, QString name)
+{
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(QSharedPointer<VespucciDataset>(this), name, control));
+    univariate_data->Apply(0, 0, UnivariateMethod::Correlation);
+
+    log_text_stream_ << "Univariate" << endl;
+    log_text_stream_ << "name == " << name << endl;
+    log_text_stream_ << "method == Correlation" << endl;
+    univariate_datas_.append(univariate_data);
+}
+
+
 ///
 /// \brief VespucciDataset::KMeans
 /// Implements K-means clustering using MLPACK
@@ -2091,9 +2373,9 @@ void VespucciDataset::PartialLeastSquares(uword components)
 void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
 {
     if(clusters == 0){
-        log_stream_ << "Cluster count predicted using HySime algorithm: ";
+        log_text_stream_ << "Cluster count predicted using HySime algorithm: ";
         clusters = HySime();
-        log_stream_ << clusters << endl;
+        log_text_stream_ << clusters << endl;
     }
 
     if (metric_text == "Euclidean"){
@@ -2189,14 +2471,14 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
         return;
     }
-    log_stream_ << "KMeans" << endl;
-    log_stream_ << "clusters == " << clusters << endl;
-    log_stream_ << "name == " << name << endl << endl;
+    log_text_stream_ << "KMeans" << endl;
+    log_text_stream_ << "clusters == " << clusters << endl;
+    log_text_stream_ << "name == " << name << endl << endl;
 
     if(clusters == 0){
-        log_stream_ << "Cluster count predicted using HySime algorithm: ";
+        log_text_stream_ << "Cluster count predicted using HySime algorithm: ";
         clusters = HySime();
-        log_stream_ << clusters << endl;
+        log_text_stream_ << clusters << endl;
     }
 
 
@@ -2228,8 +2510,8 @@ void VespucciDataset::PLS_DA(vec labels, uword components, QString name)
 
 void VespucciDataset::ClassicalLeastSquares(const mat &standards, QString name)
 {
-    log_stream_ << "Classical Least Squares" << endl;
-    log_stream_ << "name == " << name << endl << endl;
+    log_text_stream_ << "Classical Least Squares" << endl;
+    log_text_stream_ << "name == " << name << endl << endl;
     mat coefs;
     try{
         coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(standards, spectra_);
@@ -2248,8 +2530,8 @@ void VespucciDataset::ClassicalLeastSquares(const mat &standards, uword image_co
         QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
         return;
     }
-    log_stream_ << "Classical Least Squares" << endl;
-    log_stream_ << "name == " << name << endl << endl;
+    log_text_stream_ << "Classical Least Squares" << endl;
+    log_text_stream_ << "name == " << name << endl << endl;
     mat coefs;
     try{
         coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(standards, spectra_);
@@ -2283,13 +2565,13 @@ void VespucciDataset::ClassicalLeastSquares(const mat &standards, uword image_co
 /// Perform k-Means clustering without creating an image
 void VespucciDataset::KMeans(size_t clusters)
 {
-    log_stream_ << "KMeans (no image)" << endl;
-    log_stream_ << "clusters == " << clusters << endl;
+    log_text_stream_ << "KMeans (no image)" << endl;
+    log_text_stream_ << "clusters == " << clusters << endl;
 
     if(clusters == 0){
-        log_stream_ << "Cluster count predicted using HySime algorithm: ";
+        log_text_stream_ << "Cluster count predicted using HySime algorithm: ";
         clusters = HySime();
-        log_stream_ << clusters << endl;
+        log_text_stream_ << clusters << endl;
     }
 
     try{

@@ -16,7 +16,8 @@
 
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
-*******************************************************************************/#ifndef VESPUCCITABLEMODEL_H
+*******************************************************************************/
+#ifndef VESPUCCITABLEMODEL_H
 #define VESPUCCITABLEMODEL_H
 
 #include <QAbstractTableModel>
