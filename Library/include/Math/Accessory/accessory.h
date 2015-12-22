@@ -46,8 +46,8 @@ namespace Vespucci
         VESPUCCI_EXPORT arma::sp_mat LocalMinimaWindow(const arma::mat &X, const int window_size);
         VESPUCCI_EXPORT arma::sp_mat LocalMaximaWindow(const arma::mat &X, const int window_size);
 
-        VESPUCCI_EXPORT arma::sp_mat LocalMinimaCWT(const arma::mat &coefs, const arma::uvec &scales, arma::uword min_window_size, double amplitude_threshold);
-        VESPUCCI_EXPORT arma::sp_mat LocalMaximaCWT(const arma::mat &coefs, const arma::uvec &scales, arma::uword min_window_size);
+        VESPUCCI_EXPORT arma::sp_mat LocalMinimaCWT(arma::mat coefs, arma::uvec scales, arma::uword min_window_size, double amplitude_threshold);
+        VESPUCCI_EXPORT arma::sp_mat LocalMaximaCWT(arma::mat coefs, arma::uvec scales, arma::uword min_window_size);
 
         VESPUCCI_EXPORT double quantile(arma::vec &data, double probs);
         VESPUCCI_EXPORT double mad(arma::vec &data);

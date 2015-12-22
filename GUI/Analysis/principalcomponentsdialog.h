@@ -56,24 +56,24 @@ private:
     VespucciWorkspace *workspace;
 
     ///
-    /// \brief component_selector_
+    /// \brief component_selector_spin_box_
     /// Which component to use for the image
-    QSpinBox *component_selector_;
+    QSpinBox *component_selector_spin_box_;
 
     ///
-    /// \brief color_selector_
+    /// \brief color_selector_combo_box_
     /// User selects color gradient here
-    QComboBox *color_selector_;
+    QComboBox *color_selector_combo_box_;
 
     ///
-    /// \brief name_box_
+    /// \brief name_line_edit_
     /// User sets map name here
-    QLineEdit *name_box_;
+    QLineEdit *name_line_edit_;
 
     ///
-    /// \brief recalculate_box_
+    /// \brief recalculate_check_box_
     /// User selects whether or not to recalculate the analysis
-    QCheckBox *recalculate_box_;
+    QCheckBox *recalculate_check_box_;
 
     ///
     /// \brief data_index_

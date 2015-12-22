@@ -105,9 +105,9 @@ private:
     QCustomPlot *qcp_;
 
     ///
-    /// \brief parent_
+    /// \brief parent_map_data_
     /// The MapData object that creates this display
-    MapData *parent_;
+    MapData *parent_map_data_;
 
     ///
     /// \brief color_list_

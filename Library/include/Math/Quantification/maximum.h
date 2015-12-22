@@ -37,7 +37,7 @@ namespace Vespucci
         {
             //Peak determination
             VESPUCCI_EXPORT double FindPeakMax(const arma::vec &X, arma::uword min_index, arma::uword max_index, arma::uword &position);
-            VESPUCCI_EXPORT arma::vec FindPeakMaxMat(const arma::mat &X, arma::vec abscissa, double &min, double &max, arma::mat &positions);
+            VESPUCCI_EXPORT arma::vec FindPeakMaxMat(const arma::mat &X, arma::vec abscissa, double &min, double &max, arma::vec &positions);
             VESPUCCI_EXPORT arma::mat FindPeakMaxesMat(const arma::mat &X, arma::vec abscissa,
                                  double &first_min, double &first_max,
                                  double &second_min, double &second_max,

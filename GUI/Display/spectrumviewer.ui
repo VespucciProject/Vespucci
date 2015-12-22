@@ -23,8 +23,15 @@
     <normaloff>:/icons/vespuccilogo.svg</normaloff>:/icons/vespuccilogo.svg</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="4">
+   <item row="0" column="0" colspan="3">
     <widget class="QCustomPlot" name="spectrum" native="true"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="coordinateLabel">
+     <property name="text">
+      <string>(NA, NA)</string>
+     </property>
+    </widget>
    </item>
    <item row="1" column="1">
     <widget class="QLabel" name="valueLabel">
@@ -33,7 +40,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="3">
+   <item row="1" column="2">
     <widget class="QPushButton" name="pushButton">
      <property name="maximumSize">
       <size>
@@ -48,23 +55,6 @@
      </property>
      <property name="text">
       <string>Export...</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="coordinateLabel">
-     <property name="text">
-      <string>(NA, NA)</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QCheckBox" name="holdCheckBox">
-     <property name="toolTip">
-      <string>When checked, spectra are superimposed on each other. When unchecked, viewing a new spectrum resets the view.</string>
-     </property>
-     <property name="text">
-      <string>Hold Plots</string>
      </property>
     </widget>
    </item>

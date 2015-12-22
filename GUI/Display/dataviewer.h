@@ -81,14 +81,14 @@ private:
     VespucciWorkspace *workspace;
 
     ///
-    /// \brief table_
+    /// \brief table_view_
     /// The table view of the data
-    QTableView *table_;
+    QTableView *table_view_;
 
     ///
-    /// \brief data_selector_
+    /// \brief data_selector_combo_box_
     /// The combobox where the user chooses which dataset element to display
-    QComboBox *data_selector_;
+    QComboBox *data_selector_combo_box_;
 
     ///
     /// \brief current_data_
@@ -96,24 +96,24 @@ private:
     const mat *current_data_;
 
     ///
-    /// \brief export_button_
+    /// \brief export_tool_button_
     /// The user clicks this to open a file dialog to save the current data
-    QToolButton *export_button_;
+    QToolButton *export_tool_button_;
 
     ///
-    /// \brief plot_button_
+    /// \brief plot_tool_button_
     /// Opens a plot of the selected spectrum
-    QToolButton *plot_button_;
+    QToolButton *plot_tool_button_;
 
     ///
-    /// \brief extract_button_
+    /// \brief extract_tool_button_
     /// The user clicks this to create a new dataset from current data
-    QToolButton *extract_button_;
+    QToolButton *extract_tool_button_;
 
     ///
-    /// \brief stats_button_
+    /// \brief stats_tool_button_
     /// The user clicks this to view the statistics of the sample
-    QToolButton *stats_button_;
+    QToolButton *stats_tool_button_;
 
     ///
     /// \brief spectrum_viewer_

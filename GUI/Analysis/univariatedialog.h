@@ -71,50 +71,50 @@ private:
     QCustomPlot *spectrum_plot_;
 
     ///
-    /// \brief min_box_
+    /// \brief min_line_edit_
     /// The user enters her desired minimum value here.
-    QLineEdit *min_box_;
+    QLineEdit *min_line_edit_;
 
     ///
-    /// \brief max_box_
+    /// \brief max_line_edit_
     /// The user enters her desired maximum value here.
-    QLineEdit *max_box_;
+    QLineEdit *max_line_edit_;
 
     ///
-    /// \brief name_box_
+    /// \brief name_line_edit_
     /// The user enters the name of the dataset her
-    QLineEdit *name_box_;
+    QLineEdit *name_line_edit_;
 
     ///
-    /// \brief file_name_box_
+    /// \brief file_name_line_edit_
     /// The user enteres the filename of the "control" spectrum for correlation map here.
-    QLineEdit *file_name_box_;
+    QLineEdit *file_name_line_edit_;
 
     ///
-    /// \brief browse_button_
+    /// \brief browse_push_button_
     ///
-    QPushButton *browse_button_;
+    QPushButton *browse_push_button_;
 
     ///
-    /// \brief color_selector_
+    /// \brief color_selector_combo_box_
     /// User selects desired color scheme here
-    QComboBox *gradient_combo_box_;
+    QComboBox *color_selector_combo_box_;
 
     ///
-    /// \brief peak_combo_box_
+    /// \brief value_method_selector_combo_box_
     /// User selects value determination method here
-    QComboBox *peak_combo_box_;
+    QComboBox *value_method_selector_combo_box_;
 
     ///
-    /// \brief negative_box_
+    /// \brief negative_check_box_
     /// User selects whether or not the dataset has "negative peaks". This may
     /// be deprecated soon
-    QCheckBox *negative_box_;
+    QCheckBox *negative_check_box_;
 
     ///
-    /// \brief integration_method_selector_
+    /// \brief integration_method_selector_combo_box_
     /// User selects integration method here
-    QComboBox *integration_method_selector_;
+    QComboBox *integration_method_selector_combo_box_;
 
     ///
     /// \brief integration_method_label_
