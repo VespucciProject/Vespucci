@@ -35,22 +35,25 @@ LoadDataset::LoadDataset(QWidget *parent, VespucciWorkspace *ws) :
     ui->setupUi(this);
     workspace = ws;
     directory_ = ws->directory_ptr();
-    QLineEdit *name_box = findChild<QLineEdit *>("nameBox");
+    name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
     QString name = "Dataset" + QString::number(workspace->dataset_loading_count());
-    name_box->setText(name); //puts in default name
+    name_line_edit_->setText(name); //puts in default name
 
     QDialogButtonBox *button_box = findChild<QDialogButtonBox *>("buttonBox");
     QPushButton *ok_button = button_box->button(QDialogButtonBox::Ok);
     ok_button->setDisabled(true);
 
+    file_size_label_ = findChild<QLabel *>("fileSizeLabel");
     swap_check_box_ = findChild<QCheckBox *>("swapCheckBox");
-    filename_line_edit_ = findChild<QLineEdit *>("filenameBox");
-    name_box_ = findChild<QLineEdit *>("nameBox");
-    y_description_box_ = findChild<QLineEdit *>("yDescription");
-    x_description_box_ = findChild<QLineEdit *>("xDescription");
-    y_units_box_ = findChild<QLineEdit *>("yUnits");
-    x_units_box_ = findChild<QLineEdit *>("xUnits");
-    data_format_box_ = findChild<QComboBox *>("dataFormatBox");
+    filename_line_edit_ = findChild<QLineEdit *>("filenameLineEdit");
+    name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
+    y_description_line_edit_ = findChild<QLineEdit *>("yDescriptionLineEdit");
+    x_description_line_edit_ = findChild<QLineEdit *>("xDescriptionLineEdit");
+    y_units_line_edit_ = findChild<QLineEdit *>("yUnitsLineEdit");
+    x_units_line_edit_ = findChild<QLineEdit *>("xUnitsLineEdit");
+    data_format_combo_box_ = findChild<QComboBox *>("dataFormatComboBox");
+    button_box_ = findChild<QDialogButtonBox *>("buttonBox");
+
 
     ws->settings()->beginGroup("specdata");
     QString abs_label = ws->settings()->value("absLabel").toString();
@@ -59,10 +62,10 @@ LoadDataset::LoadDataset(QWidget *parent, VespucciWorkspace *ws) :
     QString ord_units = ws->settings()->value("ordUnits").toString();
     ws->settings()->endGroup();
 
-    y_description_box_->setText(ord_label);
-    y_units_box_->setText(ord_units);
-    x_description_box_->setText(abs_label);
-    x_units_box_->setText(abs_units);
+    y_description_line_edit_->setText(ord_label);
+    y_units_line_edit_->setText(ord_units);
+    x_description_line_edit_->setText(abs_label);
+    x_units_line_edit_->setText(abs_units);
 
     QObject::connect(filename_line_edit_,
                      SIGNAL(textChanged(QString)),
@@ -85,7 +88,7 @@ void LoadDataset::FilenameChanged(QString new_filename)
         dataset_name = basename + " (" + QString::number(i) + ")";
         ++i;
     }
-    name_box_->setText(dataset_name);
+    name_line_edit_->setText(dataset_name);
 }
 
 ///
@@ -94,14 +97,13 @@ void LoadDataset::FilenameChanged(QString new_filename)
 void LoadDataset::on_browseButton_clicked()
 {
     QString filename;
-    QLineEdit *filename_line_edit = findChild<QLineEdit *>("filenameBox");
 
     filename = QFileDialog::getOpenFileName(this, tr("Open Data File"),
                                             workspace->directory(),
                                             tr("Text Files (*.txt);;"
                                                //"SPC Files (*.spc);;"
                                                "Vespucci Dataset Files (*.vds);;"));
-    filename_line_edit->setText(filename);
+    filename_line_edit_->setText(filename);
 
 }
 
@@ -111,10 +113,10 @@ void LoadDataset::on_browseButton_clicked()
 /// constructor.
 void LoadDataset::on_buttonBox_accepted()
 {
-    QString y_description = y_description_box_->text() + " (" + y_units_box_->text() + ")";
-    QString x_description = x_description_box_->text() + " (" + x_units_box_->text() + ")";
+    QString y_description = y_description_line_edit_->text() + " (" + y_units_line_edit_->text() + ")";
+    QString x_description = x_description_line_edit_->text() + " (" + x_units_line_edit_->text() + ")";
 
-    QString name = name_box_->text();
+    QString name = name_line_edit_->text();
     QString filename = filename_line_edit_->text();
     QFileInfo file_info(filename);
     QString extension = file_info.suffix();
@@ -125,7 +127,7 @@ void LoadDataset::on_buttonBox_accepted()
     }
 
     std::string format;
-    const QString data_format_string = data_format_box_->currentText();
+    const QString data_format_string = data_format_combo_box_->currentText();
     if (extension == "vds" || (data_format_string == "Vespucci Dataset" && extension != "txt"))
         format = "VespucciBinary";
     else if (data_format_string == "Wide Text")
@@ -221,30 +223,6 @@ void LoadDataset::on_buttonBox_accepted()
 }
 
 
-///
-/// \brief LoadDataset::on_filenameBox_textChanged
-/// \param arg1
-/// Changes file info displays when file name is changed
-void LoadDataset::on_filenameBox_textChanged(const QString &arg1)
-{
-    QLabel *file_size_label = findChild<QLabel *>("fileSize");
-    QFileInfo file_info(arg1);
-    QDialogButtonBox *button_box = findChild<QDialogButtonBox *>("buttonBox");
-    QPushButton *ok_button = button_box->button(QDialogButtonBox::Ok);
-
-    if(file_info.exists()){
-        double file_size = file_info.size()/1048576;
-        QString file_size_string = QString::number(file_size, 'f', 3);
-        file_size_label->setText(file_size_string);
-        ok_button->setEnabled(true);
-    }
-
-    else{
-        file_size_label->setText("File does not exist!");
-        ok_button->setDisabled(true);
-    }
-
-}
 
 ///
 /// \brief LoadDataset::on_buttonBox_rejected
@@ -252,4 +230,22 @@ void LoadDataset::on_filenameBox_textChanged(const QString &arg1)
 void LoadDataset::on_buttonBox_rejected()
 {
     close();
+}
+
+void LoadDataset::on_filenameLineEdit_textChanged(const QString &arg1)
+{
+    QFileInfo file_info(arg1);
+    QPushButton *ok_button = button_box_->button(QDialogButtonBox::Ok);
+
+    if(file_info.exists()){
+        double file_size = file_info.size()/1048576;
+        QString file_size_string = QString::number(file_size, 'f', 3);
+        file_size_label_->setText(file_size_string);
+        ok_button->setEnabled(true);
+    }
+
+    else{
+        file_size_label_->setText("File does not exist!");
+        ok_button->setDisabled(true);
+    }
 }

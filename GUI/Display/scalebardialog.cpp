@@ -30,13 +30,13 @@ ScaleBarDialog::ScaleBarDialog(QWidget *parent, MapData *map_data) :
     ui(new Ui::ScaleBarDialog)
 {
     ui->setupUi(this);
-    width_box_ = findChild<QDoubleSpinBox *>("widthDoubleSpinBox");
-    height_box_ = findChild<QDoubleSpinBox *>("heightDoubleSpinBox");
-    units_box_ = findChild<QLineEdit *>("unitsLineEdit");
-    color_button_ = findChild<QPushButton *>("colorPushButton");
-    position_box_ = findChild<QComboBox *>("positionComboBox");
-    font_box_ = findChild<QFontComboBox *>("fontComboBox");
-    font_size_box_ = findChild<QSpinBox *>("fontSizeSpinBox");
+    width_spin_box_ = findChild<QDoubleSpinBox *>("widthDoubleSpinBox");
+    height_spin_box_ = findChild<QDoubleSpinBox *>("heightDoubleSpinBox");
+    units_line_edit_ = findChild<QLineEdit *>("unitsLineEdit");
+    color_push_button_ = findChild<QPushButton *>("colorPushButton");
+    position_combo_box_ = findChild<QComboBox *>("positionComboBox");
+    font_combo_box_ = findChild<QFontComboBox *>("fontComboBox");
+    font_size_spin_box_ = findChild<QSpinBox *>("fontSizeSpinBox");
     color_ = Qt::black;
     map_data_ = map_data;
 }
@@ -60,12 +60,12 @@ void ScaleBarDialog::on_colorPushButton_clicked()
 void ScaleBarDialog::on_buttonBox_accepted()
 {
     QMessageBox::information(this, "Scale Bar", "Click on the map to show the scale bar.");
-    double width = width_box_->value();
-    double height = height_box_->value();
-    QString units = units_box_->text();
-    QString position = position_box_->currentText();
-    QFont font = font_box_->currentFont();
-    int font_size = font_size_box_->value();
+    double width = width_spin_box_->value();
+    double height = height_spin_box_->value();
+    QString units = units_line_edit_->text();
+    QString position = position_combo_box_->currentText();
+    QFont font = font_combo_box_->currentFont();
+    int font_size = font_size_spin_box_->value();
     font.setPointSize(font_size);
     font.setBold(true);
 

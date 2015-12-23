@@ -31,8 +31,8 @@
 namespace Vespucci{
     namespace Math{
         namespace Quantification {
-            VESPUCCI_EXPORT double FindBandwidth(const arma::vec &X, arma::uword min_index, arma::uword max_index, arma::uword &mid_start, arma::uword &mid_end, arma::vec &midline, arma::vec &baseline, double abscissa_step);
-            VESPUCCI_EXPORT arma::vec FindBandwidthMat(const arma::mat &X, arma::vec abscissa, double &min, double &max, arma::field<arma::mat> &midlines, arma::field<arma::mat> &baselines, arma::uvec &boundaries);
+            VESPUCCI_EXPORT double FindBandwidth(const arma::vec &X, arma::uword min_index, arma::uword max_index, arma::vec &midline, arma::vec &baseline, double abscissa_step);
+            VESPUCCI_EXPORT arma::vec FindBandwidthMat(const arma::mat &X, arma::vec abscissa, double &min, double &max, arma::mat &midlines, arma::mat &baselines, arma::uvec &boundaries);
         }
     }
 }

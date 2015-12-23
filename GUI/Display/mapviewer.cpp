@@ -39,7 +39,7 @@ MapViewer::MapViewer(QString name, QString *directory, MapData *parent):
     qcp_= findChild<QCustomPlot *>("mapView");
     qcp_->setBackground(palette().window());
 
-    parent_ = parent;
+    parent_map_data_ = parent;
     //color_map_ = qobject_cast<QCPColorMap *>(color_map_abs);
 
 
@@ -156,7 +156,7 @@ void MapViewer::on_actionInterpolate_triggered()
 /// Turns interpolation of the QCustomPlot object on and off
 void MapViewer::on_actionInterpolate_toggled(bool arg1)
 {
-    parent_->setInterpolate(arg1);
+    parent_map_data_->setInterpolate(arg1);
 }
 
 ///
@@ -192,16 +192,16 @@ void MapViewer::on_actionSave_Image_As_triggered()
 
     if (extension == "bmp")
         Vespucci::SavePlot(qcp_, filename);
-        parent_->saveBmp(filename, 0, 0, 1.0);
+        parent_map_data_->saveBmp(filename, 0, 0, 1.0);
     else if (extension == "pdf")
-        parent_->savePdf(filename, 0, 0);
+        parent_map_data_->savePdf(filename, 0, 0);
     else if (extension == "png"){
         bool ok;
         int quality = QInputDialog::getInt(this, "Enter Quality",
                                            "Quality (%)",
                                            80, 0, 100, 1, &ok);
         if (ok)
-            parent_->savePng(filename, 0, 0, 1.0, quality);
+            parent_map_data_->savePng(filename, 0, 0, 1.0, quality);
     }
 
     else if (extension == "jpg"){
@@ -210,7 +210,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
                                            "Quality (%)",
                                            80, 0, 100, 1, &ok);
         if (ok)
-            parent_->saveJpg(filename, 0, 0, 1.0, quality);
+            parent_map_data_->saveJpg(filename, 0, 0, 1.0, quality);
     }
 
     else{
@@ -224,7 +224,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
                                            "1 for LZW lossless compression",
                                            0, 0, 1, 1, &ok);
         if (ok)
-            parent_->saveTiff(filename, 0, 0, 1.0, quality);
+            parent_map_data_->saveTiff(filename, 0, 0, 1.0, quality);
     }
     */
 
@@ -236,7 +236,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
 /// Toggles whether or not the axes of the map are visible
 void MapViewer::on_actionShow_Axes_toggled(bool arg1)
 {
-    parent_->ShowAxes(arg1);
+    parent_map_data_->ShowAxes(arg1);
 }
 
 ///
@@ -245,7 +245,7 @@ void MapViewer::on_actionShow_Axes_toggled(bool arg1)
 /// toggles whether or not the color scale is visible
 void MapViewer::on_actionShow_Color_Scale_toggled(bool arg1)
 {
-    parent_->ShowColorScale(arg1);
+    parent_map_data_->ShowColorScale(arg1);
 }
 
 ///
@@ -256,7 +256,7 @@ void MapViewer::on_actionSet_Color_Scheme_triggered()
     QString color_name = QInputDialog::getItem(this, "Select Color Scheme", "Choose Scheme", color_list_);
     int color_index = color_list_.indexOf(color_name);
     QCPColorGradient new_gradient = GetGradient(color_index);
-    parent_->setGradient(new_gradient);
+    parent_map_data_->setGradient(new_gradient);
 }
 
 ///
@@ -265,7 +265,7 @@ void MapViewer::on_actionSet_Color_Scheme_triggered()
 void MapViewer::on_actionAdd_Scale_Bar_triggered()
 {
     //widget will delete itself
-    ScaleBarDialog *scale_bar_dialog = new ScaleBarDialog(this, parent_);
+    ScaleBarDialog *scale_bar_dialog = new ScaleBarDialog(this, parent_map_data_);
     scale_bar_dialog->show();
 }
 
@@ -274,7 +274,7 @@ void MapViewer::on_actionAdd_Scale_Bar_triggered()
 /// Makes the spectrum viewer visible
 void MapViewer::on_actionShow_Spectrum_Viewer_triggered()
 {
-    parent_->ShowSpectrumViewer(true);
+    parent_map_data_->ShowSpectrumViewer(true);
 }
 
 ///
@@ -283,7 +283,7 @@ void MapViewer::on_actionShow_Spectrum_Viewer_triggered()
 /// Sets the color scale to the global color scale.
 void MapViewer::on_actionCommon_Color_Gradient_toggled(bool arg1)
 {
-    parent_->UseGlobalColorScale(arg1);
+    parent_map_data_->UseGlobalColorScale(arg1);
 }
 
 ///
@@ -292,7 +292,7 @@ void MapViewer::on_actionCommon_Color_Gradient_toggled(bool arg1)
 /// Sets the range to the global color range. Associated with a signal in MainWindow
 void MapViewer::GlobalDataRangeChanged(QCPRange new_range)
 {
-    parent_->SetDataRange(new_range);
+    parent_map_data_->SetDataRange(new_range);
 }
 
 ///
@@ -301,7 +301,7 @@ void MapViewer::GlobalDataRangeChanged(QCPRange new_range)
 /// Sets the new global color gradient when the global gradient is changed
 void MapViewer::GlobalGradientChanged(QCPColorGradient new_gradient)
 {
-    parent_->setGradient(new_gradient);
+    parent_map_data_->setGradient(new_gradient);
 }
 
 ///
@@ -310,7 +310,7 @@ void MapViewer::GlobalGradientChanged(QCPColorGradient new_gradient)
 /// Locks the size of the MapDisplay window
 void MapViewer::on_actionLock_Size_toggled(bool arg1)
 {
-    parent_->LockMapDisplaySize(arg1);
+    parent_map_data_->LockMapDisplaySize(arg1);
 }
 
 ///
@@ -318,7 +318,7 @@ void MapViewer::on_actionLock_Size_toggled(bool arg1)
 /// Resets the size to its original.
 void MapViewer::on_actionReset_Size_triggered()
 {
-    parent_->ResetMapWidgetSize();
+    parent_map_data_->ResetMapWidgetSize();
 }
 
 ///
@@ -327,7 +327,7 @@ void MapViewer::on_actionReset_Size_triggered()
 /// it had on instantiation.
 void MapViewer::on_actionReproportion_triggered()
 {
-    parent_->RescaleMapWidget();
+    parent_map_data_->RescaleMapWidget();
 }
 
 ///
@@ -335,24 +335,24 @@ void MapViewer::on_actionReproportion_triggered()
 /// Launches the data extractor from the MapData object.
 void MapViewer::on_actionNew_Dataset_from_Map_triggered()
 {
-    parent_->LaunchDataExtractor();
+    parent_map_data_->LaunchDataExtractor();
 }
 
 void MapViewer::closeEvent(QCloseEvent *event)
 {
-    if (parent_->SpectrumViewerVisible())
-        parent_->HideSpectrumViewer();
+    if (parent_map_data_->SpectrumViewerVisible())
+        parent_map_data_->HideSpectrumViewer();
     event->accept();
 }
 
 void MapViewer::on_actionStats_triggered()
 {
-    parent_->ShowStatsDialog();
+    parent_map_data_->ShowStatsDialog();
 }
 
 void MapViewer::on_actionExport_Values_triggered()
 {
-    parent_->ExportText();
+    parent_map_data_->ExportText();
 }
 
 
@@ -363,7 +363,7 @@ void MapViewer::on_actionSet_Font_triggered()
                                       QFont("Arial", 12, QFont::Normal),
                                       this, "Select Font");
     if (ok){
-        parent_->SetFonts(font);
+        parent_map_data_->SetFonts(font);
 
     }
 

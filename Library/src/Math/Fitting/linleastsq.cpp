@@ -223,6 +223,7 @@ arma::vec Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(const arma::mat &X,
 
 arma::vec Vespucci::Math::LinLeastSq::FitGaussian(const arma::vec &x, const arma::vec &y, arma::vec &fit, std::map<std::string, double> &stats)
 {
+<<<<<<< HEAD
     arma::vec log_x = arma::log(x);
     arma::vec log_y = arma::log(y);
     arma::mat vdm = Vespucci::Math::LinLeastSq::Vandermonde(log_x, 2);
@@ -238,3 +239,8 @@ arma::vec Vespucci::Math::LinLeastSq::FitGaussian(const arma::vec &x, const arma
                              )
     return fit_coefs;
 }
+=======
+
+}
+*/
+>>>>>>> f6de0297d1bfb0fc04548f6046dbec457395b0fc

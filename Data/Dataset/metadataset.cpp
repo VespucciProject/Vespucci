@@ -49,15 +49,15 @@ MetaDataset::MetaDataset(QString name,
 
 
     QDateTime datetime = QDateTime::currentDateTimeUtc();
-    log_stream_ << "Dataset " << name << "created "
+    log_text_stream_ << "Dataset " << name << "created "
                 << datetime.date().toString("yyyy-MM-dd") << "T"
                 << datetime.time().toString("hh:mm:ss") << "Z" << endl;
-    log_stream_ << "Created from previous datasets:" << endl;
+    log_text_stream_ << "Created from previous datasets:" << endl;
     for(int i = 0; i < parent_datasets_.size(); ++i){
-        log_stream_ << "  " << parent_datasets_[i]->name() << endl;
+        log_text_stream_ << "  " << parent_datasets_[i]->name() << endl;
     }
 
-    log_stream_ << endl;
+    log_text_stream_ << endl;
 
     method_ = method;
     method_description_ = method_description;

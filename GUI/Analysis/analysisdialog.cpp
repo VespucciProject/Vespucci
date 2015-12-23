@@ -25,9 +25,9 @@ AnalysisDialog::AnalysisDialog(QWidget *parent, VespucciWorkspace *ws, int row) 
     ui(new Ui::AnalysisDialog)
 {
     ui->setupUi(this);
-    method_selection_box_ = findChild<QComboBox*>("methodComboBox");
-    components_box_ = findChild<QSpinBox*>("componentsSpinBox");
-    prediction_box_ = findChild<QCheckBox *>("predictionCheckBox");
+    method_selection_combo_box_ = findChild<QComboBox*>("methodComboBox");
+    components_spin_box_ = findChild<QSpinBox*>("componentsSpinBox");
+    prediction_check_box_ = findChild<QCheckBox *>("predictionCheckBox");
     dataset_ = ws->DatasetAt(row);
     workspace = ws;
 }
@@ -39,10 +39,10 @@ AnalysisDialog::~AnalysisDialog()
 
 void AnalysisDialog::on_comboBox_currentIndexChanged(int index)
 {
-    if(index==0 && components_box_->isEnabled())
-        components_box_->setEnabled(false);
-    else if(index!=0 && !components_box_->isEnabled())
-        components_box_->setEnabled(true);
+    if(index==0 && components_spin_box_->isEnabled())
+        components_spin_box_->setEnabled(false);
+    else if(index!=0 && !components_spin_box_->isEnabled())
+        components_spin_box_->setEnabled(true);
 }
 
 void AnalysisDialog::on_buttonBox_rejected()
@@ -54,12 +54,12 @@ void AnalysisDialog::on_buttonBox_rejected()
 void AnalysisDialog::on_buttonBox_accepted()
 {
     int components;
-    if (prediction_box_->isChecked())
+    if (prediction_check_box_->isChecked())
         components = 0;
     else
-        components = components_box_->value();
+        components = components_spin_box_->value();
 
-    switch(method_selection_box_->currentIndex()){
+    switch(method_selection_combo_box_->currentIndex()){
     case 0:
         try{
             dataset_->PrincipalComponents();
@@ -115,5 +115,5 @@ void AnalysisDialog::on_buttonBox_accepted()
 
 void AnalysisDialog::on_predictionCheckBox_clicked(bool checked)
 {
-    components_box_->setEnabled(!checked);
+    components_spin_box_->setEnabled(!checked);
 }

@@ -93,21 +93,6 @@
         </item>
         <item>
          <property name="text">
-          <string>Area (Gaussian Fit)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Bandwidth (Empirical FWHM)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Bandwidth (Gaussian Fit FWHM)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
           <string>Correlation</string>
          </property>
         </item>

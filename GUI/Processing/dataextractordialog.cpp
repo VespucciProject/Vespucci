@@ -47,8 +47,6 @@ DataExtractorDialog::DataExtractorDialog(QWidget *parent, MapData *map, QSharedP
     upper_box_->setRange(data_range_.lower, data_range_.upper);
     lower_box_->setRange(data_range_.lower, data_range_.upper);
     name_line_edit_->setText(dataset_->name() + "-" + map_->name());
-    method_combo_box_ = findChild<QComboBox *>("methodComboBox");
-
 }
 
 DataExtractorDialog::DataExtractorDialog(QWidget *parent,

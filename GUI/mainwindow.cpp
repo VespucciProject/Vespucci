@@ -23,6 +23,7 @@
 #include "GUI/Display/aboutdialog.h"
 #include "GUI/Display/citationdialog.h"
 #include "GUI/Analysis/univariatedialog.h"
+#include "GUI/Analysis/univariateanalysisdialog.h"
 #include "GUI/Analysis/bandratiodialog.h"
 #include "GUI/Analysis/principalcomponentsdialog.h"
 #include "GUI/Processing/filterdialog.h"
@@ -1081,6 +1082,21 @@ void MainWindow::RangeDialogAccepted(double min, double max)
     catch(exception e){
         DisplayExceptionWarning(e);
     }
+}
+
+
+
+void MainWindow::on_actionUnivariate_Analysis_triggered()
+{
+    if (!workspace->datasets()->size()){
+        QMessageBox::information(this,
+                                 "No datasets loaded",
+                                 "No dataset exists on which to perform this operation");
+        return;
+    }
+    int row = dataset_list_view_->currentIndex().row();
+    UnivariateAnalysisDialog *analysis_dialog = new UnivariateAnalysisDialog(this, workspace, row);
+    analysis_dialog->show();
 }
 
 void MainWindow::on_actionLarge_Matrices_triggered()

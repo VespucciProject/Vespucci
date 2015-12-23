@@ -195,7 +195,7 @@ bool VespucciWorkspace::RecalculateGlobalDataRange(QCPRange *new_data_range)
 /// Changes the global gradient
 void VespucciWorkspace::RefreshGlobalColorGradient(QCPColorGradient new_gradient)
 {
-    global_gradient_ = new_gradient;
+    global_color_gradient_ = new_gradient;
 }
 
 ///
@@ -222,7 +222,7 @@ QCPRange* VespucciWorkspace::global_data_range()
 ///
 QCPColorGradient* VespucciWorkspace::global_gradient()
 {
-    return &global_gradient_;
+    return &global_color_gradient_;
 }
 
 ///

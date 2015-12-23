@@ -4,6 +4,6 @@
         <file>vespuccilogo.ico</file>
     </qresource>
     <qresource prefix="/">
-        <file>vespuccilogo150.png</file>
+        <file>Docs/API_docs/html/vespuccilogo150.png</file>
     </qresource>
 </RCC>

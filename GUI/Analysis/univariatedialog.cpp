@@ -41,29 +41,29 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
                                    "non-contiguous datasets.");
     }
 
-    min_box_ = findChild<QLineEdit *>("minLineEdit");
-    max_box_ = findChild<QLineEdit *>("maxLineEdit");
-    name_box_ = findChild<QLineEdit *>("nameLineEdit");
-    file_name_box_ = findChild<QLineEdit *>("filenameLineEdit");
+    min_line_edit_ = findChild<QLineEdit *>("minLineEdit");
+    max_line_edit_ = findChild<QLineEdit *>("maxLineEdit");
+    name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
+    file_name_line_edit_ = findChild<QLineEdit *>("filenameLineEdit");
     spectrum_plot_ = findChild<QCustomPlot *>("spectrumPlot");
-    peak_combo_box_ = findChild<QComboBox *>("peakComboBox");
-    gradient_combo_box_ = findChild<QComboBox *>("gradientComboBox");
-    negative_box_ = findChild<QCheckBox *>("negativeScoresCheckBox");
+    value_method_selector_combo_box_ = findChild<QComboBox *>("peakComboBox");
+    color_selector_combo_box_ = findChild<QComboBox *>("gradientComboBox");
+    negative_check_box_ = findChild<QCheckBox *>("negativeScoresCheckBox");
 
-    integration_method_selector_ = findChild<QComboBox *>("integrationComboBox");
+    integration_method_selector_combo_box_ = findChild<QComboBox *>("integrationComboBox");
     integration_method_label_ = findChild<QLabel *>("integrationLabel");
     range_label_ = findChild<QLabel *>("rangeLabel");
-    browse_button_ = findChild<QPushButton *>("browseButton");
+    browse_push_button_ = findChild<QPushButton *>("browseButton");
     map_check_box_ = findChild<QCheckBox *>("mapCheckBox");
 
     correlation_label_ = findChild<QLabel*>("correlationLabel");
 
-    integration_method_selector_->setDisabled(true);
+    integration_method_selector_combo_box_->setDisabled(true);
     integration_method_label_->setDisabled(true);
 
 
-    browse_button_->setVisible(false);
-    file_name_box_->setVisible(false);
+    browse_push_button_->setVisible(false);
+    file_name_line_edit_->setVisible(false);
     correlation_label_->setVisible(false);
 
     min_line_ = new QCPItemStraightLine(spectrum_plot_);
@@ -87,8 +87,8 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, int r
     QString label_text = QString::number(min) + "–" + QString::number(max);
     range_label_->setText(label_text);
 
-    min_box_->setValidator(new QDoubleValidator(min, max, 2, this));
-    max_box_->setValidator(new QDoubleValidator(min, max, 2, this));
+    min_line_edit_->setValidator(new QDoubleValidator(min, max, 2, this));
+    max_line_edit_->setValidator(new QDoubleValidator(min, max, 2, this));
 
     uword origin = data_->FindOrigin();
     QVector<double> plot_data, wavelength;
@@ -120,18 +120,19 @@ UnivariateDialog::~UnivariateDialog()
 void UnivariateDialog::on_buttonBox_accepted()
 {
     close();
-    if (min_box_->text().isEmpty() || max_box_->text().isEmpty()){
+    if (min_line_edit_->text().isEmpty() || max_line_edit_->text().isEmpty()){
         QMessageBox::warning(this, "Invalid Input!", "You must enter numbers for left and right bounds.");
         return;
     }
-    double entered_min = min_box_->text().toDouble();
-    double entered_max = max_box_->text().toDouble();
-    bool plot = map_check_box_->isChecked();
-    QString name = name_box_->text();
+    double entered_min = min_line_edit_->text().toDouble();
+    double entered_max = max_line_edit_->text().toDouble();
+    bool make_map = map_check_box_->isChecked();
+
+    QString name = name_line_edit_->text();
     if(!name.size()){
         name = "Univariate " + QString::number(data_->UnivariateCount());
     }
-    QString value_method = peak_combo_box_->currentText();
+    QString value_method = value_method_selector_combo_box_->currentText();
     UnivariateMethod::Method method;
     if (value_method == "Area")
         method = UnivariateMethod::Area;
@@ -144,28 +145,54 @@ void UnivariateDialog::on_buttonBox_accepted()
     else
         method = UnivariateMethod::Intensity;
 
-    QString integration_method = integration_method_selector_->currentText();
+    QString integration_method = integration_method_selector_combo_box_->currentText();
 
-    int gradient_index = gradient_combo_box_->currentIndex();
-    if (method == UnivariateMethod::Correlation){
-        try{
+    int gradient_index = color_selector_combo_box_->currentIndex();
+
+    if (make_map){
+        if (method != UnivariateMethod::Correlation){
+            try{
+                data_->Univariate(entered_min, entered_max, name, method, integration_method, gradient_index);
+            }
+            catch(exception e){
+                workspace->main_window()->DisplayExceptionWarning(e);
+            }
+        }
+        else{
             vec control;
-            control.load(file_name_box_->text().toStdString());
-            data_->Correlation(control, name, gradient_index, plot);
-        }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            QFileInfo file_info(file_name_line_edit_->text());
+            workspace->set_directory(file_info.dir().path());
+            try{
+                control.load(file_name_line_edit_->text().toStdString());
+                data_->CorrelationMap(control, name, gradient_index);
+            }
+            catch(exception e){
+                workspace->main_window()->DisplayExceptionWarning(e);
+            }
         }
     }
     else{
-        try{
-            data_->Univariate(entered_min, entered_max,
-                              name, method,
-                              15, plot, gradient_index);
-        }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+        if (method != UnivariateMethod::Correlation){
+            try{
+                data_->Univariate(entered_min, entered_max, name, method, integration_method);
+            }
+            catch(exception e){
+                workspace->main_window()->DisplayExceptionWarning(e);
+            }
+        }
+        else{
+            vec control;
+            QFileInfo file_info(file_name_line_edit_->text());
+            workspace->set_directory(file_info.dir().path());
+            try{
+                control.load(file_name_line_edit_->text().toStdString());
+                data_->CorrelationAnalysis(control, name);
+            }
+            catch(exception e){
+                workspace->main_window()->DisplayExceptionWarning(e);
+            }
         }
     }
-
     data_.clear();
 }
 
@@ -175,13 +202,13 @@ void UnivariateDialog::on_buttonBox_accepted()
 /// Turn options on and off when peak determination method is changed
 void UnivariateDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
 {
-    integration_method_selector_->setEnabled(arg1 == "Area");
+    integration_method_selector_combo_box_->setEnabled(arg1 == "Area");
     integration_method_label_->setEnabled(arg1 == "Area");
-    browse_button_->setVisible(arg1 == "Correlation");
-    file_name_box_->setVisible(arg1 == "Correlation");
+    browse_push_button_->setVisible(arg1 == "Correlation");
+    file_name_line_edit_->setVisible(arg1 == "Correlation");
     correlation_label_->setVisible(arg1 == "Correlation");
-    min_box_->setDisabled(arg1 == "Correlation");
-    max_box_->setDisabled(arg1 == "Correlation");
+    min_line_edit_->setDisabled(arg1 == "Correlation");
+    max_line_edit_->setDisabled(arg1 == "Correlation");
 }
 
 ///
@@ -228,5 +255,5 @@ void UnivariateDialog::on_browseButton_clicked()
                                          "Vespucci Spectrum Files (*.arma);;"
                                          "Comma-separated Variables (*.csv);;"
                                          "Tab-delimited Text (*.txt)");
-    file_name_box_->setText(filename);
+    file_name_line_edit_->setText(filename);
 }

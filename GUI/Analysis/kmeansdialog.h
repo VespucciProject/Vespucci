@@ -60,9 +60,9 @@ private:
     QSpinBox *cluster_spin_box_;
 
     ///
-    /// \brief prediction_box_
+    /// \brief prediction_check_box_
     /// User selects whether or not to allow prediction of dimensionality
-    QCheckBox *prediction_box_;
+    QCheckBox *prediction_check_box_;
 
     QCheckBox *map_check_box_;
 

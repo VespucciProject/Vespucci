@@ -62,12 +62,12 @@ public:
                    vec y, QString ordinate_label);
 
     ~SpectrumViewer();
-    void ResetPlot();
     void SetPlot(QVector<double> wavelength,
                  QVector<double> intensity);
-    void AddPlot(QVector<double> abscissa,
-                 QVector<double> intensity);
 
+    void SetSecondPlot(QVector<double> abscissa, QVector<double> intensities);
+    void SetSecondPlot(QVector<double> first_abscissa, QVector<double> second_abscissa,
+                       QVector<double> first_intensities, QVector<double> second_intensities);
 private slots:
     void MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *event);
     void on_pushButton_clicked();
@@ -133,11 +133,6 @@ private:
     /// \brief value_label_
     /// A label that displays current data value
     QLabel *value_label_;
-
-    ///
-    /// \brief hold_check_box_
-    /// Checkbox to determine whether to superimpose spectra or reset view
-    QCheckBox *hold_check_box_;
 
     ///
     /// \brief linked_to_map_

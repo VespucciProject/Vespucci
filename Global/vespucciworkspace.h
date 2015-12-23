@@ -142,9 +142,9 @@ private:
     QCPRange global_data_range_;
 
     ///
-    /// \brief global_gradient_
+    /// \brief global_color_gradient_
     /// The global color gradient
-    QCPColorGradient global_gradient_;
+    QCPColorGradient global_color_gradient_;
 
     ///
     /// \brief settings_

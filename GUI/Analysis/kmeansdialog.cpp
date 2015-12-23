@@ -33,7 +33,7 @@ KMeansDialog::KMeansDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     ui->setupUi(this);
     name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
     cluster_spin_box_ = findChild<QSpinBox *>("clustersSpinBox");
-    prediction_box_ = findChild<QCheckBox *>("predictionCheckBox");
+    prediction_check_box_ = findChild<QCheckBox *>("predictionCheckBox");
     metric_combo_box_ = findChild<QComboBox *>("metricComboBox");
     map_check_box_ = findChild<QCheckBox *>("mapCheckBox");
     workspace = ws;
@@ -55,7 +55,7 @@ void KMeansDialog::on_buttonBox_accepted()
 
     QString metric_text = metric_combo_box_->currentText();
     int clusters;
-    if (prediction_box_->isChecked())
+    if (prediction_check_box_->isChecked())
         clusters = 0;
     else
         clusters = cluster_spin_box_->value();

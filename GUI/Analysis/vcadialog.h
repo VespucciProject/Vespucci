@@ -54,34 +54,34 @@ private:
     VespucciWorkspace *workspace;
 
     ///
-    /// \brief image_component_selector_
+    /// \brief image_component_selector_spin_box_
     /// The VCA component assocciated with the map to be created is selected here
-    QSpinBox *image_component_selector_;
+    QSpinBox *image_component_selector_spin_box_;
 
     ///
-    /// \brief components_selector_
+    /// \brief components_selector_spin_box_
     /// The user selects the number of components to compute here
-    QSpinBox *components_selector_;
+    QSpinBox *components_selector_spin_box_;
 
     ///
-    /// \brief color_selector_
+    /// \brief color_selector_combo_box_
     /// The user selects the color gradient of the image here
-    QComboBox *color_selector_;
+    QComboBox *color_selector_combo_box_;
 
     ///
-    /// \brief name_box_
+    /// \brief name_line_edit_
     /// User sets the name of the image to be created here
-    QLineEdit *name_box_;
+    QLineEdit *name_line_edit_;
 
     ///
-    /// \brief recalculate_box_
+    /// \brief recalculate_check_box_
     /// User selects whether or not to recalculate VCA here
-    QCheckBox *recalculate_box_;
+    QCheckBox *recalculate_check_box_;
 
     ///
-    /// \brief prediction_box_
+    /// \brief prediction_check_box_
     /// User selects whether or not to allow prediction of dimensionality
-    QCheckBox *prediction_box_;
+    QCheckBox *prediction_check_box_;
 
     ///
     /// \brief data_index_

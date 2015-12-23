@@ -10,10 +10,10 @@ ScriptDialog::ScriptDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
 {
     ui->setupUi(this);
     dataset_ = ws->DatasetAt(row);
-    code_box_ = findChild<QPlainTextEdit *>("codePlainTextEdit");
-    receive_box_ = findChild<QPlainTextEdit *>("receivePlainTextEdit");
-    send_box_ = findChild<QPlainTextEdit *>("sendPlainTextEdit");
-    interpreter_selector_ = findChild<QComboBox *>("interpreterComboBox");
+    code_plain_test_edit_ = findChild<QPlainTextEdit *>("codePlainTextEdit");
+    receive_plain_test_edit_ = findChild<QPlainTextEdit *>("receivePlainTextEdit");
+    send_plain_test_edit_ = findChild<QPlainTextEdit *>("sendPlainTextEdit");
+    interpreter_selector_combo_box_ = findChild<QComboBox *>("interpreterComboBox");
     workspace = ws;
 }
 
@@ -27,9 +27,9 @@ void ScriptDialog::on_buttonBox_accepted()
     //Parse input
     /*
     try{
-        std::string cmd = code_box_->document()->toPlainText().toStdString();
-        QStringList invars = send_box_->document()->toPlainText().split("\n");
-        QStringList outvars = receive_box_->document()->toPlainText().split("\n");
+        std::string cmd = code_plain_test_edit_->document()->toPlainText().toStdString();
+        QStringList invars = send_plain_test_edit_->document()->toPlainText().split("\n");
+        QStringList outvars = receive_plain_test_edit_->document()->toPlainText().split("\n");
 
         //parse syntax for input box
         std::map<std::string, arma::mat> in_data;
@@ -66,7 +66,7 @@ void ScriptDialog::on_buttonBox_accepted()
         }
         std::map<std::string, arma::mat> data;
         std::cout << "R stuff" << endl;
-        if (interpreter_selector_->currentText() == "R"){
+        if (interpreter_selector_combo_box_->currentText() == "R"){
             workspace->settings()->beginGroup("environment");
             QString r_home = workspace->settings()->value("R_HOME").toString();
             workspace->settings()->endGroup();
@@ -90,7 +90,7 @@ void ScriptDialog::on_buttonBox_accepted()
             std::cout << "Add Results" << std::endl;
             dataset_->AddAnalysisResults(data);
         }
-        else if (interpreter_selector_->currentText() == "Octave"){
+        else if (interpreter_selector_combo_box_->currentText() == "Octave"){
             //Do Octave stuff
         }
         else{
