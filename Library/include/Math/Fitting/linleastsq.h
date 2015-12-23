@@ -44,10 +44,10 @@ namespace Vespucci{
             arma::vec CalcPoly(const arma::vec &coefs, const arma::vec &x);
             VESPUCCI_EXPORT arma::mat OrdinaryLeastSquares(const arma::mat &X, const arma::mat &y);
             VESPUCCI_EXPORT arma::mat OrdinaryLeastSquares(const arma::mat &X, const arma::mat &y, arma::mat &coef_errors, arma::mat &predicted);
-            VESPUCCI_EXPORT arma::vec OrdinaryLeastSquares(const arma::mat &X, const arma::vec &y, arma::vec &fit, std::map<std::string, double> stats);
+            VESPUCCI_EXPORT arma::vec OrdinaryLeastSquares(const arma::mat &X, const arma::vec &y, arma::vec &fit, std::map<std::string, double> &stats);
             VESPUCCI_EXPORT arma::mat Vandermonde(const arma::vec &x, const int poly_order);
             double CalcErr(const double &dev, const double &prev_dev);
-            VESPUCCI_EXPORT arma::vec FitGaussian(const arma::vec &x, arma::vec &params, double &fwhm, double &height);
+            VESPUCCI_EXPORT arma::vec FitGaussian(const arma::vec &x, arma::vec &fit, std::map<std::string, double> &stats);
 
 
 

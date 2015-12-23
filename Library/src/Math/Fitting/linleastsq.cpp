@@ -184,7 +184,7 @@ double Vespucci::Math::LinLeastSq::CalcErr(const double &dev, const double &prev
 arma::vec Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(const arma::mat &X,
                                                            const arma::vec &y,
                                                            arma::vec &fit,
-                                                           std::map<std::string, double> stats)
+                                                           std::map<std::string, double> &stats)
 {
     double n = X.n_rows;
     double dof = n - 2; //for linear fit
@@ -221,14 +221,20 @@ arma::vec Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(const arma::mat &X,
     return coefs;
 }
 
-/*
-arma::mat Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(const arma::mat &X, const arma::mat &y, arma::mat &coef_errors, arma::mat &predicted)
+arma::vec Vespucci::Math::LinLeastSq::FitGaussian(const arma::vec &x, const arma::vec &y, arma::vec &fit, std::map<std::string, double> &stats)
 {
-
-}
-*/
-
-arma::vec Vespucci::Math::LinLeastSq::FitGaussian(const arma::vec &x, arma::vec &params, double &fwhm, double &height)
-{
-    //
+    arma::vec log_x = arma::log(x);
+    arma::vec log_y = arma::log(y);
+    arma::mat vdm = Vespucci::Math::LinLeastSq::Vandermonde(log_x, 2);
+    arma::vec fit_coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(vdm, log_y, fit, stats);
+    fit = arma::exp(fit);
+    stats["A"] = std::exp(stats["a_0"] - (0.5*stats["a_1"]/stats["a_2"]));
+    stats["b"] = -0.5 * stats["a_1"] / stats["a_2"];
+    if (stats["a_2"] >= 0){
+        return arma::zeros(3);
+    }
+    stats["c"] = std::sqrt(-1.0/(2.0*stats["a_2"]));
+    stats["s_A"] = stats["A"] * std::sqrt(
+                             )
+    return fit_coefs;
 }

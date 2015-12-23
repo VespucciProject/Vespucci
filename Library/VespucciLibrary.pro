@@ -29,6 +29,7 @@
 
 
 # Configuration settings for unix systems are based on my own personal environment
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 
 QT       += core gui
 QT       += widgets printsupport
@@ -63,7 +64,6 @@ unix: QMAKE_CXXFLAGS += -std=c++0x \
                         -isystem $$PWD/../../Vespucci-QCP-sharedlib/include \
                         -isystem $$PWD/include
 #Warnings in boost library not suppressed with -isystem in Clang++. These are always
-macx: QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 macx: QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -std=c++11 -stdlib=libc+
 macx: QMAKE_CXXFLAGS_WARN_ON = -Wall -Wno-unused-parameter
 
@@ -160,51 +160,52 @@ unix: DEPENDPATH += /usr/include/cminpack-1
 #mlpack and dependencies
 #we use the Accelerate Framework on OS X but OpenBLAS on linux.
 count(travis_ci, 1){
-    unix:!macx: QMAKE_CXX=/usr/bin/g++-4.8
-    unix:!macx: LIBS += -L/home/travis/depts/lib -lmlpack
-    unix:!macx: LIBS += -L/home/travis/depts/lib -larmadillo
-    unix:!macx: LIBS += -L/usr/lib -larpack
-    unix:!macx: PRE_TARGETDEPS += /usr/lib/libarpack.a
-    unix:!macx: LIBS += -L/usr/lib -lhdf5
-    unix:!macx: PRE_TARGETDEPS += /usr/lib/libhdf5.a
+    QMAKE_CXX=/usr/bin/g++-4.8
+    unix: LIBS += -L/home/travis/depts/lib -lmlpack
+    unix: LIBS += -L/home/travis/depts/lib -larmadillo
+    unix: LIBS += -L/usr/lib -larpack
+    unix: PRE_TARGETDEPS += /usr/lib/libarpack.a
+    unix: LIBS += -L/usr/lib -lhdf5
+    unix: PRE_TARGETDEPS += /usr/lib/libhdf5.a
     unix:!macx: LIBS += -L/usr/lib/ -lcminpack
     unix:!macx: LIBS += -L/usr/lib -lblas
     unix:!macx: LIBS += -L/usr/lib -llapack
-    unix:!macx: INCLUDEPATH += /home/travis/depts/include
-    unix:!macx: DEPENDPATH += /home/travis/depts/include
-    unix:!macx: INCLDEPATH += /usr/include/cminpack-1
-    unix:!macx: DEPENDPATH += /usr/include/cminpack-1
+    unix: INCLUDEPATH += /home/travis/depts/include
+    unix: DEPENDPATH += /home/travis/depts/include
+    unix: INCLDEPATH += /usr/include/cminpack-1
+    unix: DEPENDPATH += /usr/include/cminpack-1
 }
 count(travis_ci, 0){
-    unix:!macx: LIBS += -L/usr/local/lib -lmlpack
-    unix:!macx: LIBS += -L/usr/lib -larmadillo
-    unix:!macx: LIBS += -L/usr/local/lib -larpack
-    unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
-    unix:!macx: LIBS += -L/usr/local/lib -lhdf5
-    unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
+    unix: LIBS += -L/usr/local/lib -lmlpack
+    unix!macx: LIBS += -L/usr/lib -larmadillo
+    unix: LIBS += -L/usr/local/lib -larpack
+    unix: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
+    unix: LIBS += -L/usr/local/lib -lhdf5
+    unix: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
     unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
     unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
     unix:!macx: LIBS += -L/usr/lib -lopenblas
     unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
     unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
     unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
-    unix:!macx: INCLUDEPATH += /usr/local/include/cminpack-1
-    unix:!macx: DEPENDPATH += /usr/local/include/cminpack-1
+    unix: INCLUDEPATH += /usr/local/include/cminpack-1
+    unix: DEPENDPATH += /usr/local/include/cminpack-1
 }
+
+
+unix:macx: LIBS += -framework Accelerate
+
+#unix:CONFIG(release, debug|release): LIBS += -L$$PWD/../../Vespucci-QCP-sharedlib/lib/ -lqcustomplot
+#else:unix:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../Vespucci-QCP-sharedlib/lib/ -lqcustomplotd
+
 unix:!macx: INCLUDEPATH += /usr/include
 unix:!macx: DEPENDPATH += /usr/include
+
 unix:!macx: INCLUDEPATH += /usr/include/libxml2
 unix:!macx: DEPENDPATH += /usr/include/libxml2
 
-#using homebrew to install as many dependencies as possible (works on as many macs as possible)
-macx:LIBS += -L/usr/local/lib -lmlpack
-macx:LIBS += -L/usr/local/lib -larmadillo
-macx:LIBS += -L/usr/local/lib -larpack
-macx:LIBS += -L/usr/local/lib -lcminpack
-macx:LIBS += -framework Accelerate
-macx:LIBS += -L/usr/local/lib -lhdf5
-macx:INCLUDEPATH += /usr/local/include
-macx:DEPENDPATH += /usr/local/include
+
+
 
 #Windows Libraries
 #Binaries for windows libraries are included in the MinGW_libs branch of the repository
