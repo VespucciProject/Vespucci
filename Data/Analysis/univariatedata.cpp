@@ -147,6 +147,7 @@ void UnivariateData::Apply(double first_left_bound,
 ///
 void UnivariateData::Calibrate(const vec &values, const vec &concentrations)
 {
+    /*
     mat X = Vespucci::Math::LinLeastSq::Vandermonde(concentrations, 1);
     vec calibration_y;
     vec coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(X,
@@ -161,6 +162,7 @@ void UnivariateData::Calibrate(const vec &values, const vec &concentrations)
     double b = coefs(0);
     double m = coefs(1);
     results_.transform([m, b](double val){return (val - b)/m;});
+*/
 }
 
 
