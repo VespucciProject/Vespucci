@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>vespuccilogo.svg</file>
+        <file>vespuccilogo.ico</file>
+        <file>vespuccilogo.icns</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>vespuccilogo150.png</file>
+    </qresource>
+</RCC>
