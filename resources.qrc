@@ -2,8 +2,9 @@
     <qresource prefix="/icons">
         <file>vespuccilogo.svg</file>
         <file>vespuccilogo.ico</file>
+        <file>vespuccilogo.icns</file>
     </qresource>
     <qresource prefix="/">
-        <file>Docs/API_docs/html/vespuccilogo150.png</file>
+        <file>vespuccilogo150.png</file>
     </qresource>
 </RCC>

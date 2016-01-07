@@ -251,7 +251,6 @@ FORMS    += \
     GUI/Display/spectrumviewer.ui \
     GUI/Display/statsdialog.ui \
     GUI/Processing/thresholddialog.ui \
-    GUI/Analysis/univariatedialog.ui \
     GUI/Analysis/vcadialog.ui \
     GUI/scriptdialog.ui \
     GUI/Analysis/peakfindingdialog.ui \

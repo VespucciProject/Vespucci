@@ -468,11 +468,6 @@
     <string>&amp;Classical Least Squares</string>
    </property>
   </action>
-  <action name="actionUnivariate">
-   <property name="text">
-    <string>Univariate</string>
-   </property>
-  </action>
   <action name="actionBand_Ratio">
    <property name="text">
     <string>Band Ratio</string>
