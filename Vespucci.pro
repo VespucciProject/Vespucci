@@ -264,7 +264,8 @@ FORMS    += \
     GUI/Analysis/classicalleastsquaresdialog.ui \
     GUI/settingsdialog.ui \
     GUI/Processing/abscissainterpolationdialog.ui \
-    GUI/Processing/stitchimportdialog.ui
+    GUI/Processing/stitchimportdialog.ui \
+    GUI/Analysis/univariatedialog.ui
 
 RESOURCES += \
     resources.qrc
