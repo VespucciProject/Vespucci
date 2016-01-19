@@ -47,21 +47,16 @@ libraries on your system:
 
 All of the above packages, with the exception of MLPACK and QCustomPlot, are 
 readily available from most major GNU/Linux repositories. Installation on Mac
-OS is similarly easy, though some packages may need to be compiled and installed
-manually, or installed through MacPorts (https://www.macports.org/) or Fink 
-(http://www.finkproject.org/). I haven't included a configure script, but setting
-directories should be easy enough.
+OS is similarly easy, so long as all dependencies are installed with homebrew. You may need to edit armadillo’s configure configuration to disable the wrapper.
 
 Because it is difficult to find Windows binaries for Armadillo, MLPACK and ARPACK,
 and to make development on Windows easier, I have included Windows binaries of all
-requisite libraries in the MinGW_libs branch. These are compiled with MinGW-w64 
-version 3 (GCC 4.8.2) with SEH for exception handling. A 7z archive containing the
-Qt distribution and MinGW-w64 toolkit I use is also included in the toolkit branch.
+requisite libraries in the MinGW_libs repo. These are compiled with MinGW-w64 
+version 3 (GCC 4.8.2) with SEH for exception handling. The MSVC repo includes the prerequisites compiled using Visual Studio 14.0 (2015).
 
 The included Qt profile uses the library paths used by Ubuntu's package manager.
 Mac OS dependences are installed with homebrew.
 
 For Unix-like systems, shared libraries are the default. You will need to
-compile and install static versions of these libraries if you want a stand-
-alone executable.
+compile and install static versions of these libraries if you want a stand-alone executable.
 
