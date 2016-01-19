@@ -1,6 +1,6 @@
-Vespucci Development Branch
+Vespucci [!["travis_ci_status"](https://travis-ci.org/VespucciProject/Vespucci.svg?branch=master)](https://travis-ci.org/VespucciProject/Vespucci)
 ========
-This branch is the active branch and is **probably not stable**.
+This branch is the active branch of the project and, while more stable than the branches of individual contributors, is **probably not stable**.
 
 Vespucci is a free/libre/open-source, cross-platform tool for spectroscopic
 imaging
@@ -10,14 +10,10 @@ A copy of this license is provided in LICENSE
 Binary Releases:
 -----------------
 Because the members of my group primarily use Windows machines, most releases 
-will only include Windows binaries.  Major releases may include binaries for 
-Windows, Mac OSX, and GNU/Linux (most likely as .deb and .rpm).
+will only include Windows binaries.  Major releases include binaries for 
+Windows, Mac OS X, and GNU/Linux.
 
-A relatively stable Windows development build is availible from Dropbox:
-https://www.dropbox.com/sh/at9zo6udw1oeaao/AADWCdwKD87Z7Fq9Tm6_Wk1fa
-
-This is the binary most often used by my research group.
-
+Nightly builds will be availible for Windows soon.
 
 Compiling Vespucci:
 ===================
@@ -31,6 +27,8 @@ Should do the trick. This does not require elevation as the default install path
 is two directories above the source. You can modify PREFIX to install to a different
 directory if you'd like. If you are not compiling with static Qt, and the Qt linked
 libraries are not in your path, you will have to deploy Qt (using windeployqt or macdeployqt)
+
+The file deploymac.sh can be run to make the .app file run on Mac OS X, assuming that you used homebrew to install all dependencies.
 
 Pre-requisites:
 --------------------
@@ -49,22 +47,16 @@ libraries on your system:
 
 All of the above packages, with the exception of MLPACK and QCustomPlot, are 
 readily available from most major GNU/Linux repositories. Installation on Mac
-OS is similarly easy, though some packages may need to be compiled and installed
-manually, or installed through MacPorts (https://www.macports.org/) or Fink 
-(http://www.finkproject.org/). I haven't included a configure script, but setting
-directories should be easy enough.
+OS is similarly easy, so long as all dependencies are installed with homebrew. You may need to edit armadillo’s configure configuration to disable the wrapper.
 
 Because it is difficult to find Windows binaries for Armadillo, MLPACK and ARPACK,
 and to make development on Windows easier, I have included Windows binaries of all
-requisite libraries in the MinGW_libs branch. These are compiled with MinGW-w64 
-version 3 (GCC 4.8.2) with SEH for exception handling. A 7z archive containing the
-Qt distribution and MinGW-w64 toolkit I use is also included in the toolkit branch.
+requisite libraries in the MinGW_libs repo. These are compiled with MinGW-w64 
+version 3 (GCC 4.8.2) with SEH for exception handling. The MSVC repo includes the prerequisites compiled using Visual Studio 14.0 (2015).
 
 The included Qt profile uses the library paths used by Ubuntu's package manager.
-Frameworks are used for Mac OS when possible.
+Mac OS dependences are installed with homebrew.
 
 For Unix-like systems, shared libraries are the default. You will need to
-compile and install static versions of these libraries if you want a stand-
-alone executable. Linux packages, if made availible will require Qt, OpenBLAS, and
-ARPACK (armadillo and MLPACK will be included).
+compile and install static versions of these libraries if you want a stand-alone executable.
 
