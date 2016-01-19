@@ -163,8 +163,13 @@ bool TextImport::ImportWideText(std::string filename,
     y = arma::vec(y_s);
     spectra = arma::mat(spec_s);
     spectra.reshape(abscissa.n_rows, x.n_rows);
-    return true;
 
+    //check to make sure everything is sorted the way Vespucci expects
+    arma::uvec sorted_indices = arma::stable_sort_index(abscissa);
+    abscissa = abscissa.rows(sorted_indices);
+    spectra = spectra.rows(sorted_indices);
+
+    return true;
 }
 
 
@@ -228,6 +233,11 @@ bool TextImport::ImportMultiplePoints(std::map<std::pair<int, int>, std::string>
         }
         ++i;
     }
+
+    //check to make sure everything is sorted the way Vespucci expects
+    arma::uvec sorted_indices = arma::stable_sort_index(abscissa);
+    abscissa = abscissa.rows(sorted_indices);
+    spectra = spectra.rows(sorted_indices);
 
     return have_abscissa;
 }
