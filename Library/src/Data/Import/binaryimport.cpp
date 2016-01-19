@@ -33,6 +33,11 @@ bool BinaryImport::ImportVespucciBinary(std::string filename,
         abscissa = input_data(1);
         x = input_data(2);
         y = input_data(3);
+
+        //check to make sure everything is sorted the way Vespucci expects
+        arma::uvec sorted_indices = arma::stable_sort_index(abscissa);
+        abscissa = abscissa.rows(sorted_indices);
+        spectra = spectra.rows(sorted_indices);
     }
     return success;
 }
