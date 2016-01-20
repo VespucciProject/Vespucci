@@ -452,8 +452,8 @@ DEPENDPATH += $$PWD/../MinGW_libs/include/cminpack-1
 win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libcminpack.a
 
 #libvespucci
-win32-g++:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-library/release -lvespucci
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../build-library/release/libvespucci.a
+win32-g++:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary/release -lvespucci
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../build-VespucciLibrary/release/libvespucci.a
 
-win32-g++:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-library/debug -lvespucci
-win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../build-library/debug/libvespucci.a
+win32-g++:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary/debug -lvespucci
+win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../build-VespucciLibrary/debug/libvespucci.a
