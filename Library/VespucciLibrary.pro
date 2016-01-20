@@ -168,8 +168,8 @@ count(travis_ci, 1){
     unix: LIBS += -L/home/travis/depts/lib -larmadillo
     unix: LIBS += -L/usr/lib -larpack
     unix: PRE_TARGETDEPS += /usr/lib/libarpack.a
-    unix!macx: LIBS += -L/usr/lib -lhdf5
-    unix: PRE_TARGETDEPS += /usr/lib/libhdf5.a
+    unix!macx: LIBS += -L/usr/lib/x86_64-linux-gnu -lhdf5
+    unix!macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5.a
     unix:!macx: LIBS += -L/usr/lib/ -lcminpack
     unix:!macx: LIBS += -L/usr/lib -lblas
     unix:!macx: LIBS += -L/usr/lib -llapack
