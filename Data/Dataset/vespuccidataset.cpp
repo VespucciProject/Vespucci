@@ -2381,7 +2381,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
     if (metric_text == "Euclidean"){
         mlpack::kmeans::KMeans<mlpack::metric::EuclideanDistance> k;
         try{
-            Col<size_t> assignments;
+            Row<size_t> assignments;
             mat data = spectra_;
             k.Cluster(data, clusters, assignments);
             k_means_data_.set_size(assignments.n_elem, 1);
@@ -2403,7 +2403,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
     else if (metric_text == "Manhattan"){
         mlpack::kmeans::KMeans<mlpack::metric::ManhattanDistance> k;
         try{
-            Col<size_t> assignments;
+            Row<size_t> assignments;
             mat data = spectra_;
             k.Cluster(data, clusters, assignments);
             k_means_data_.set_size(assignments.n_elem, 1);
@@ -2425,7 +2425,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
     else if (metric_text == "Chebyshev"){
         mlpack::kmeans::KMeans<mlpack::metric::ChebyshevDistance> k;
         try{
-            Col<size_t> assignments;
+            Row<size_t> assignments;
             mat data = spectra_;
             k.Cluster(data, clusters, assignments);
             k_means_data_.set_size(assignments.n_elem, 1);
@@ -2447,7 +2447,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
     else{
         mlpack::kmeans::KMeans<mlpack::metric::SquaredEuclideanDistance> k;
         try{
-            Col<size_t> assignments;
+            Row<size_t> assignments;
             mat data = spectra_;
             k.Cluster(data, clusters, assignments);
             k_means_data_.set_size(assignments.n_elem, 1);
@@ -2575,7 +2575,7 @@ void VespucciDataset::KMeans(size_t clusters)
     }
 
     try{
-        Col<size_t> assignments;
+        Row<size_t> assignments;
         mlpack::kmeans::KMeans<> k;
         mat data = spectra_;
         k.Cluster(data, clusters, assignments);
