@@ -36,7 +36,7 @@
 QT       += core gui
 QT       += widgets printsupport
 QT       += svg
-CONFIG   += static
+CONFIG   += static debug_and_release
 mac: CONFIG += app_bundle
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 

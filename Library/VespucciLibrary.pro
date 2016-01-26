@@ -34,7 +34,7 @@ QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 QT       += core gui
 QT       += widgets printsupport
 QT       += svg
-CONFIG   += shared
+CONFIG   += shared debug_and_release
 macx: CONFIG += lib_bundle
 # Set the installation directory
 isEmpty(PREFIX) {
