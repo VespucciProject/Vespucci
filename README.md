@@ -1,4 +1,5 @@
-Vespucci [!["travis_ci_status"](https://travis-ci.org/VespucciProject/Vespucci.svg?branch=master)](https://travis-ci.org/VespucciProject/Vespucci) [![Build status](https://ci.appveyor.com/api/projects/status/3v1voa5sim7whv55?svg=true)](https://ci.appveyor.com/project/VespucciProject/vespucci)
+Vespucci 
+[!["travis_ci_status"](https://travis-ci.org/VespucciProject/Vespucci.svg?branch=master)](https://travis-ci.org/VespucciProject/Vespucci) [![Build status](https://ci.appveyor.com/api/projects/status/3v1voa5sim7whv55?svg=true)](https://ci.appveyor.com/project/VespucciProject/vespucci)
 
 ========
 This branch is the active branch of the project and, while more stable than the branches of individual contributors, is **probably not stable**.
