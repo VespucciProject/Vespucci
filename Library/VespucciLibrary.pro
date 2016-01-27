@@ -176,7 +176,7 @@ count(travis_ci, 1){
     unix:!macx: LIBS += -L/usr/lib -llapack
     unix: INCLUDEPATH += /home/travis/depts/include
     unix: DEPENDPATH += /home/travis/depts/include
-    unix: INCLDEPATH += /usr/include/cminpack-1
+    unix: INCLUDEPATH += /usr/include/cminpack-1
     unix: DEPENDPATH += /usr/include/cminpack-1
 }
 count(travis_ci, 0){
