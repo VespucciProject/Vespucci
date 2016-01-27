@@ -62,3 +62,4 @@ Mac OS dependences are installed with homebrew.
 For Unix-like systems, shared libraries are the default. You will need to
 compile and install static versions of these libraries if you want a stand-alone executable.
 
+ 
