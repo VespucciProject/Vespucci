@@ -317,6 +317,8 @@ count(travis_ci, 1){
   unix:!macx: LIBS += -L/home/travis/build/VespucciProject/Vespucci/build-VespucciLibrary -lvespucci
   unix:!macx: INCLUDEPATH += /home/travis/depts/include
   unix:!macx: DEPENDPATH += /home/travis/depts/include
+  unix: INCLUDEPATH += /home/travis/depts/include/armadillo_bits
+  unix: DEPENDPATH += /home/travis/depts/include/armadillo_bits
 }
 count(travis_ci, 0){
     unix:!macx: LIBS += -L/usr/local/lib -lmlpack
