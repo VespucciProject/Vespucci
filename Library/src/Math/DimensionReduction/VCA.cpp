@@ -207,10 +207,10 @@ int Vespucci::Math::DimensionReduction::HySime(arma::mat y,
 /// faster ones.
 void Vespucci::Math::DimensionReduction::EstimateAdditiveNoise(arma::mat &noise, arma::mat &noise_correlation, const arma::mat &sample)
 {
-    double small = 1e-6;
+    double little = 1e-6;
     noise = arma::zeros(sample.n_rows, sample.n_cols);
     arma::mat RR = sample * sample.t();
-    arma::mat RRi = arma::inv(RR + small*arma::eye(sample.n_rows, sample.n_rows));
+    arma::mat RRi = arma::inv(RR + little*arma::eye(sample.n_rows, sample.n_rows));
     arma::mat XX, RRa, beta;
     for (arma::uword i = 0; i < sample.n_rows; ++i){
         XX = RRi - (RRi.col(i) * RRi.row(i))/RRi(i, i);

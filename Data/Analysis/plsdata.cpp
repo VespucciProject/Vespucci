@@ -68,6 +68,7 @@ bool PLSData::Calibrate(mat spectra, mat controls)
 bool DiscriminantAnalysis(mat spectra, vec labels, int components)
 {
     //mat Y = repmat();
+    return false;
 }
 
 mat *PLSData::X_loadings()
