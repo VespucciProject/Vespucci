@@ -44,19 +44,12 @@ private slots:
 
     void on_predictionCheckBox_clicked(bool checked);
 
-    void on_mapCheckBox_stateChanged(int arg1);
-
 private:
     Ui::VCADialog *ui;
     ///
     /// \brief workspace
     /// The current workspace
     VespucciWorkspace *workspace;
-
-    ///
-    /// \brief image_component_selector_spin_box_
-    /// The VCA component assocciated with the map to be created is selected here
-    QSpinBox *image_component_selector_spin_box_;
 
     ///
     /// \brief components_selector_spin_box_
@@ -73,10 +66,6 @@ private:
     /// User sets the name of the image to be created here
     QLineEdit *name_line_edit_;
 
-    ///
-    /// \brief recalculate_check_box_
-    /// User selects whether or not to recalculate VCA here
-    QCheckBox *recalculate_check_box_;
 
     ///
     /// \brief prediction_check_box_
@@ -87,8 +76,6 @@ private:
     /// \brief data_index_
     /// Index of the current dataset in the relevant lists
     int data_index_;
-
-    QCheckBox *map_check_box_;
 
     ///
     /// \brief data_

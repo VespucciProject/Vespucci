@@ -17,20 +17,14 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef BINARYIMPORT_H
-#define BINARYIMPORT_H
-#if !defined( SWIG )
-    // SWIG should not see #inlcude<armadillo> as it can not handle it
-    #include <mlpack/core.hpp>
-    #include "Global/libvespucci.h"
-#endif
+#ifndef DATASETTREEMODEL_H
+#define DATASETTREEMODEL_H
 
-namespace BinaryImport
+#include <QAbstractItemModel>
+class DatasetTreeModel : public QAbstractItemModel
 {
-    VESPUCCI_EXPORT bool ImportVespucciBinary(std::string filename,
-                              arma::mat &spectra,
-                              arma::vec &abscissa,
-                              arma::vec &x, arma::vec &y);
-}
+public:
+    DatasetTreeModel();
+};
 
-#endif // BINARYIMPORT_H
+#endif // DATASETTREEMODEL_H

@@ -101,7 +101,6 @@ void LoadDataset::on_browseButton_clicked()
     filename = QFileDialog::getOpenFileName(this, tr("Open Data File"),
                                             workspace->directory(),
                                             tr("Text Files (*.txt);;"
-                                               //"SPC Files (*.spc);;"
                                                "Vespucci Dataset Files (*.vds);;"));
     filename_line_edit_->setText(filename);
 

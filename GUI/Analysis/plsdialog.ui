@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>447</width>
-    <height>520</height>
+    <height>271</height>
    </rect>
   </property>
   <property name="font">
@@ -25,14 +25,14 @@
       <string>Analysis Options</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
-      <item row="0" column="0">
+      <item row="1" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
          <string>Analysis Type</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="1" column="1">
        <widget class="QComboBox" name="analysisTypeComboBox">
         <property name="sizePolicy">
          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -47,14 +47,14 @@
         </item>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="controlTypeLabel">
         <property name="text">
          <string>Control Spectra</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QComboBox" name="controlTypeComboBox">
         <item>
          <property name="text">
@@ -68,24 +68,24 @@
         </item>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="datasetLabel">
         <property name="text">
          <string>Dataset</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <widget class="QComboBox" name="datasetComboBox"/>
       </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="QLabel" name="fileLabel">
         <property name="text">
          <string>File</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QLineEdit" name="fileLineEdit"/>
@@ -99,305 +99,38 @@
         </item>
        </layout>
       </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
          <string>Components to Calculate</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="5" column="1">
        <widget class="QSpinBox" name="componentsSpinBox">
         <property name="minimum">
          <number>5</number>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
+      <item row="6" column="1">
        <widget class="QCheckBox" name="predictionCheckBox">
         <property name="text">
          <string>Predict Number of Components?</string>
         </property>
        </widget>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Map Options</string>
-     </property>
-     <layout class="QFormLayout" name="formLayout_2">
       <item row="0" column="0">
-       <widget class="QCheckBox" name="mapCheckBox">
+       <widget class="QLabel" name="label">
         <property name="text">
-         <string>Create Map</string>
+         <string>Name</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="mapNameLabel">
-        <property name="text">
-         <string>Map Name</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="imageComponentLabel">
-        <property name="text">
-         <string>Component Number</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="gradientLabel">
-        <property name="text">
-         <string>Color Sheme</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="mapNameLineEdit">
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="nameLineEdit">
         <property name="text">
          <string>PLS</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QSpinBox" name="imageComponentSpinBox">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>50</number>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QComboBox" name="gradientComboBox">
-        <property name="toolTip">
-         <string>An asterix by the color scheme name indicates a divergent color scheme particularly suited for this kind of map.</string>
-        </property>
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
-        <item>
-         <property name="text">
-          <string>ColorBrewer BlueGreen</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer BluePurple</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer GreenBlue</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer OrangeRed</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer PurpleBlue</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer PurpleBlueGreen</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer PurpleRed</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer RedPurple</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer YellowGreen</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer YellowGreenBlue</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer YellowOrangeBrown</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer YellowOrangeRed</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer Blues</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer Greens</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer Oranges</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer Purples</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer Reds</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ColorBrewer Grayscale</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>QCustomPlot Grayscale</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>QCustomPlot Night</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>QCustomPlot Candy</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>QCustomPlot Ion</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>QCustomPlot Thermal</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>↔ QCustomPlot Polar</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>↔ QCustomPlot Spectrum</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>QCustomPlot Jet</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>QCustomPlot Hues</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>QCustomPlot Hot</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>QCustomPlot Cold</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>↔ ColorBrewer BrownBlueGreen </string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>↔ ColorBrewer PinkYellowGreen</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>↔ ColorBrewer PurpleGreen</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>↔ ColorBrewer PurpleOrange</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>↔ ColorBrewer RedBlue</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>↔ ColorBrewer RedGray</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>↔ ColorBrewer RedYellowBlue</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>↔ ColorBrewer RedYellowGreen</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>↔ ColorBrewer Spectral</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>↔ Vespucci Spectral</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QDialogButtonBox" name="buttonBox">
-        <property name="font">
-         <font>
-          <pointsize>8</pointsize>
-         </font>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="standardButtons">
-         <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QCheckBox" name="recalculateCheckBox">
-        <property name="text">
-         <string>Recalculate PLS Data?</string>
         </property>
        </widget>
       </item>
@@ -407,38 +140,5 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>PLSDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>PLSDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

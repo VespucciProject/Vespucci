@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>284</height>
+    <height>202</height>
    </rect>
   </property>
   <property name="font">
@@ -25,21 +25,14 @@
       <string>Analysis Options</string>
      </property>
      <layout class="QFormLayout" name="formLayout_2">
-      <item row="2" column="0">
-       <widget class="QCheckBox" name="predictionCheckBox">
-        <property name="text">
-         <string>Predict Number of Clusters?</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
+      <item row="1" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
          <string>Number of Clusters</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="1" column="1">
        <widget class="QSpinBox" name="clustersSpinBox">
         <property name="minimum">
          <number>2</number>
@@ -52,14 +45,14 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
          <string>Distance Metric</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QComboBox" name="metricComboBox">
         <item>
          <property name="text">
@@ -83,33 +76,24 @@
         </item>
        </widget>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Map Options</string>
-     </property>
-     <layout class="QFormLayout" name="formLayout">
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="mapCheckBox">
-        <property name="text">
-         <string>Create Map</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Map Name</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
+      <item row="0" column="1">
        <widget class="QLineEdit" name="nameLineEdit">
         <property name="text">
          <string>k-Means</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Name</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="predictionCheckBox">
+        <property name="text">
+         <string>Predict Number of Clusters?</string>
         </property>
        </widget>
       </item>
@@ -142,8 +126,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>373</x>
-     <y>147</y>
+     <x>379</x>
+     <y>197</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -158,8 +142,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>390</x>
-     <y>147</y>
+     <x>393</x>
+     <y>197</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

@@ -1,7 +1,6 @@
 #include "Data/Analysis/univariatedata.h"
-#include "Math/Fitting/linleastsq.h"
 
-UnivariateData::UnivariateData(QSharedPointer<VespucciDataset> parent, QString name) : baselines_(2)
+UnivariateData::UnivariateData(QSharedPointer<VespucciDataset> parent, QString name)
 {
     parent_ = parent;
     name_ = name;
@@ -18,162 +17,52 @@ UnivariateData::UnivariateData(QSharedPointer<VespucciDataset> parent, QString n
     calibrated_ = false;
 }
 
-///
-/// \brief UnivariateData::Apply
-/// \param left_bound Approximate start of peak
-/// \param right_bound Approximate end of peak
-/// \param method Method used
-/// Performs the non band ratio univariate analysis. The left and right bounds
-/// are adjusted by the determination functions.
-void UnivariateData::Apply(double left_bound,
-                      double right_bound,
-                      UnivariateMethod::Method method)
+void UnivariateData::Apply(double left_bound, double right_bound, uword bound_window)
 {
-    left_bound_ = left_bound;
-    right_bound_ = right_bound;
-    method_ = method;
-    vec positions;
-    switch (method_){
-    case UnivariateMethod::Area :
-        results_ = Vespucci::Math::Quantification::IntegratePeakMat(parent_->spectra(),
-                                              parent_->wavelength(),
-                                              left_bound_, right_bound_,
-                                              first_baselines_, boundaries_);
+    bound_window_ = bound_window;
+    first_left_bound_ = left_bound;
+    first_right_bound_ = right_bound;
 
-        method_description_ = "Univariate Area";
-        break;
-    case UnivariateMethod::FWHM :
-        results_ = Vespucci::Math::Quantification::FindBandwidthMat(parent_->spectra(),
-                                              parent_->wavelength(),
-                                              left_bound_, right_bound_,
-                                              midlines_, first_baselines_, boundaries_);
-        method_description_ = "Univariate Bandwidth";
-        break;
-    case UnivariateMethod::Correlation :
-        results_ = Vespucci::Math::Quantification::CorrelationMat(parent_->spectra(), control_);
-        break;
-    case UnivariateMethod::SignalNoise :
-        break;
-    case UnivariateMethod::Intensity : default :
-        results_ = Vespucci::Math::Quantification::FindPeakMaxMat(parent_->spectra(),
-                                            parent_->wavelength(),
-                                            left_bound, right_bound,
-                                            positions);
-        positions_.set_size(positions.n_elem, 1);
-        positions_.col(0) = positions;
-        method_description_ = "Univariate Intensity";
-        break;
-    }
+    first_results_ = Vespucci::Math::Quantification::QuantifyPeakMat(parent_->spectra(),
+                                                               parent_->abscissa(),
+                                                               left_bound, right_bound,
+                                                               bound_window, first_baselines_,
+                                                               inflection_first_baselines_);
+
+    band_ratio_ = false;
 
 }
 
-void UnivariateData::Apply(double left_bound, double right_bound, uword window, UnivariateMethod::Method method)
+void UnivariateData::Apply(double first_left_bound, double first_right_bound, double second_left_bound, double second_right_bound, uword bound_window)
 {
-    if (method != UnivariateMethod::Derivative){
-        throw std::runtime_error("UnivariateData::Apply: Invalid method parameter.");
-    }
-    left_bound_ = left_bound;
-    right_bound_ = right_bound;
-    method_ = method;
-    results_ = Vespucci::Math::Quantification::IntegratePeakMat(parent_->spectra(),
-                                                                parent_->abscissa(),
-                                                                left_bound_, right_bound_,
-                                                                d_baselines_, boundaries_, window);
-    method_description_ = "Univariate Area (Estimated Edges)";
-}
-
-void UnivariateData::Apply(double first_left_bound, double first_right_bound, double second_left_bound, double second_right_bound, uword window, UnivariateMethod::Method method)
-{
-    if (method != UnivariateMethod::DerivativeRatio){
-        throw std::runtime_error("UnivariateData::Apply: Invalid method parameter.");
-    }
+    bound_window_ = bound_window;
     first_left_bound_ = first_left_bound;
     first_right_bound_ = first_right_bound;
-    second_left_bound_ = second_left_bound;
     second_right_bound_ = second_right_bound;
-    method_ = method;
-    mat results = Vespucci::Math::Quantification::IntegratePeaksMat(parent_->spectra(),
-                                                                 parent_->abscissa(),
-                                                                 first_left_bound_,
-                                                                 first_right_bound_,
-                                                                 second_left_bound_,
-                                                                 second_right_bound_,
-                                                                 d_first_baselines_,
-                                                                 d_second_baselines_,
-                                                                 boundaries_, window);
-    method_description_ = "Univariate Area (Estimated Edges)";
-    results_ = results.col(0) / results.col(1);
-}
-
-void UnivariateData::Apply(double first_left_bound,
-                           double first_right_bound,
-                           double second_left_bound,
-                           double second_right_bound,
-                           UnivariateMethod::Method method)
-{
-    first_left_bound_ = first_left_bound;
     second_left_bound_ = second_left_bound;
-    first_right_bound_ = first_right_bound;
-    second_right_bound_ = second_right_bound;
-    method_ = method;
-    mat results;
-    switch (method_){
-    case UnivariateMethod::AreaRatio:
-        results = Vespucci::Math::Quantification::IntegratePeaksMat(parent_->spectra(),
-                                              parent_->wavelength(),
-                                              first_left_bound_, first_right_bound_,
-                                              second_left_bound_, second_right_bound_,
-                                              first_baselines_, second_baselines_,
-                                              boundaries_);
 
-        method_description_ = "Band Ratio Area";
-        break;
-    case UnivariateMethod::IntensityRatio: default:
-        results = Vespucci::Math::Quantification::FindPeakMaxesMat(parent_->spectra(),
-                                             parent_->wavelength(),
-                                             first_left_bound_, first_right_bound_,
-                                             second_left_bound_, second_right_bound_,
-                                             positions_);
-        method_description_ = "Band Ratio Intensity";
-        break;
-    }
-    results_ = results.col(0) / results.col(1);
-}
-
-///
-/// \brief UnivariateData::Calibrate
-/// \param values Intensity (or band ratio, or areas) of calibration curve)
-/// \param conentrations
-///
-void UnivariateData::Calibrate(const vec &values, const vec &concentrations)
-{
-    /*
-    mat X = Vespucci::Math::LinLeastSq::Vandermonde(concentrations, 1);
-    vec calibration_y;
-    vec coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(X,
-                                                                 values,
-                                                                 calibration_y,
-                                                                 calibration_stats_);
-
-    calibration_stats_["Calibrated"] = 1;
-    vec residuals = values - calibration_y;
-    calibration_curve_ = join_horiz(concentrations, join_horiz(calibration_y, residuals));
-
-    double b = coefs(0);
-    double m = coefs(1);
-    results_.transform([m, b](double val){return (val - b)/m;});
-*/
+    first_results_ = Vespucci::Math::Quantification::QuantifyPeakMat(parent_->spectra(),
+                                                               parent_->abscissa(),
+                                                               first_left_bound_, first_right_bound_,
+                                                               bound_window_, first_baselines_,
+                                                               inflection_first_baselines_);
+    second_results_ = Vespucci::Math::Quantification::QuantifyPeakMat(parent_->spectra(),
+                                                                      parent_->abscissa(),
+                                                                      second_left_bound_, second_right_bound_,
+                                                                      bound_window_, second_baselines_,
+                                                                      inflection_second_baselines_);
+    band_ratio_ = true;
 }
 
 
-vec UnivariateData::results() const
+mat UnivariateData::results() const
 {
-    return results_;
+    return first_results_;
 }
 
-const vec *UnivariateData::results_ptr() const
+const mat *UnivariateData::results_ptr() const
 {
-    return &results_;
+    return &first_results_;
 }
 
 bool UnivariateData::band_ratio() const
@@ -183,12 +72,12 @@ bool UnivariateData::band_ratio() const
 
 double UnivariateData::left_bound() const
 {
-    return left_bound_;
+    return first_left_bound_;
 }
 
 double UnivariateData::right_bound() const
 {
-    return right_bound_;
+    return first_right_bound_;
 }
 
 double UnivariateData::first_left_bound() const
@@ -211,10 +100,6 @@ double UnivariateData::second_right_bound() const
     return second_right_bound_;
 }
 
-QString UnivariateData::MethodDescription() const
-{
-    return method_description_;
-}
 
 mat UnivariateData::calibration_curve() const
 {
@@ -241,11 +126,6 @@ mat UnivariateData::second_baselines() const
     return second_baselines_;
 }
 
-mat UnivariateData::Midlines() const
-{
-    return midlines_;
-}
-
 uvec UnivariateData::Boundaries() const
 {
     return boundaries_;
@@ -265,3 +145,103 @@ bool UnivariateData::calibrated() const
 {
     return calibrated_;
 }
+
+mat UnivariateData::Intensities(bool adjust_baselines)
+{
+    if (band_ratio_){
+        if (adjust_baselines){
+            return join_horiz(first_results_.col(2), second_results_.col(2));
+        }else{
+            return join_horiz(first_results_.col(1), second_results_.col(1));
+        }
+    }
+    else{
+        if (adjust_baselines){
+            return first_results_.col(2);
+        }
+        else{
+            return first_results_.col(1);
+        }
+    }
+}
+
+vec UnivariateData::IntensityRatios(bool adjust_baselines)
+{
+    if (!band_ratio_){return ones(parent_->spectra_ptr()->n_rows);}
+    if (adjust_baselines){
+        return first_results_.col(2) / second_results_.col(2);
+    }else{
+        return first_results_.col(1) / second_results_.col(1);
+    }
+}
+
+mat UnivariateData::Areas(bool adjust_baselines, bool detect_edges)
+{
+    if (band_ratio_){
+        if (adjust_baselines){
+            if (detect_edges){
+                return join_horiz(first_results_.col(6), second_results_.col(6));
+            }else{
+                return join_horiz(first_results_.col(4), second_results_.col(4));
+            }
+        }else{
+            if (detect_edges){
+                return join_horiz(first_results_.col(5), second_results_.col(5));
+            }
+            else{
+                return join_horiz(first_results_.col(3), second_results_.col(3));
+            }
+        }
+    }else{
+        if (adjust_baselines){
+            if (detect_edges){
+                return first_results_.col(6);
+            }else{
+                return first_results_.col(4);
+            }
+        }else{
+            if (detect_edges){
+                return first_results_.col(5);
+            }
+            else{
+                return first_results_.col(3);
+            }
+        }
+    }
+}
+
+vec UnivariateData::AreaRatios(bool adjust_baselines, bool detect_edges)
+{
+    if (!band_ratio_){return ones(parent_->spectra_ptr()->n_rows);}
+
+
+    if (adjust_baselines){
+        if (detect_edges){
+            return first_results_.col(6) / second_results_.col(6);
+        }else{
+            return first_results_.col(4) / second_results_.col(4);
+        }
+    }else{
+        if (detect_edges){
+            return first_results_.col(5) / second_results_.col(5);
+        }else{
+            return first_results_.col(3) / second_results_.col(3);
+        }
+    }
+}
+
+mat UnivariateData::Bandwidths()
+{
+    if (band_ratio_){return join_horiz(first_results_.col(7), second_results_.col(7));}
+    else{return first_baselines_.col(7);}
+}
+
+mat UnivariateData::PeakCenters()
+{
+    if (band_ratio_){return join_horiz(first_results_.col(0), second_results_.col(0));}
+    else{return first_results_.col(0);}
+}
+
+
+
+

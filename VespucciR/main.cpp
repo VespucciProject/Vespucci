@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include <iostream>
-#include <armadillo>
+#include <mlpack/core.hpp>
 #include <RcppArmadillo.h>
 #include <RInside.h>
 

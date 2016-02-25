@@ -45,8 +45,6 @@ private slots:
 
     void on_predictionCheckBox_clicked(bool checked);
 
-    void on_mapCheckBox_stateChanged(int arg1);
-
 private:
     Ui::PLSDialog *ui;
     ///
@@ -60,9 +58,9 @@ private:
     QSpinBox *image_component_selector_spin_box_;
 
     ///
-    /// \brief components_selector_spin_box_
+    /// \brief components_spin_box_
     /// User selects how many components to calculate
-    QSpinBox *components_selector_spin_box_;
+    QSpinBox *components_spin_box_;
 
     ///
     /// \brief color_selector_combo_box_

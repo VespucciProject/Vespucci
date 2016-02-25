@@ -4,7 +4,7 @@
 #include <QDialog>
 #include "Global/vespucciworkspace.h"
 #include "GUI/mainwindow.h"
-#include <armadillo>
+#include <mlpack/core.hpp>
 
 
 namespace Ui {

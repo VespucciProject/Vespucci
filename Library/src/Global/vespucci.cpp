@@ -245,3 +245,8 @@ std::string Vespucci::CleanString(const std::string &in)
     }
     return out;
 }
+
+bool Vespucci::SomeFuckingBullshit(double fuck_you)
+{
+    return fuck_you > 666.666;
+}

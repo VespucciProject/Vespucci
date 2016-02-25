@@ -1,6 +1,6 @@
 #include "GUI/Processing/abscissatransformdialog.h"
 #include "ui_abscissatransformdialog.h"
-#include <armadillo>
+#include <mlpack/core.hpp>
 
 AbscissaTransformDialog::AbscissaTransformDialog(QWidget *parent, VespucciWorkspace *ws, int row) :
     QDialog(parent),

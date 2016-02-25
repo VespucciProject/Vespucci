@@ -21,7 +21,7 @@
 #define DIMENSION_REDUCTION_H
 #if !defined( SWIG )
     // SWIG should not see #inlcude<armadillo> as it can not handle it
-    #include <armadillo>
+    #include <mlpack/core.hpp>
     #include "Global/libvespucci.h"
 #endif
 namespace Vespucci

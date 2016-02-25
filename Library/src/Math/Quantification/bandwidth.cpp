@@ -76,6 +76,7 @@ double Vespucci::Math::Quantification::FindBandwidth(const arma::vec &X, arma::u
    }
 
    double region_size = region.subvec(left_index, right_index).n_elem;
+
    return abscissa_step * region_size;
 }
 

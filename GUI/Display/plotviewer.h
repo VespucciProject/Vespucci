@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include "qcustomplot.h"
-#include <armadillo>
+#include <mlpack/core.hpp>
 
 namespace Ui {
 class PlotViewer;

@@ -26,7 +26,7 @@
 #include <octave/toplev.h>
 #include <octave/symtab.h>
 //#include "arrayinterface.h"
-#include <armadillo>
+#include <mlpack/core.hpp>
 
 bool RunScript();
 

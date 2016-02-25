@@ -104,7 +104,8 @@ SOURCES +=\
     #src/Math/Fitting/nonlinleastsq.cpp \
     src/Global/vespucci.cpp \
     src/Math/Transform/fft.cpp \
-    src/Math/Quantification/correlation.cpp
+    src/Math/Quantification/correlation.cpp \
+    src/Math/Quantification/quantification.cpp
 
 
 HEADERS  += \

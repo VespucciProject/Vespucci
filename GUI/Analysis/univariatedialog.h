@@ -41,15 +41,11 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
-    void on_peakComboBox_currentTextChanged(const QString &arg1);
-
     void on_buttonBox_rejected();
 
     void on_minLineEdit_textChanged(const QString &arg1);
 
     void on_maxLineEdit_textChanged(const QString &arg1);
-
-    void on_browseButton_clicked();
 
 private:
     Ui::UnivariateDialog *ui;
@@ -85,41 +81,16 @@ private:
     /// The user enters the name of the dataset her
     QLineEdit *name_line_edit_;
 
-    ///
-    /// \brief file_name_line_edit_
-    /// The user enteres the filename of the "control" spectrum for correlation map here.
-    QLineEdit *file_name_line_edit_;
 
     ///
-    /// \brief browse_push_button_
-    ///
-    QPushButton *browse_push_button_;
-
-    ///
-    /// \brief color_selector_combo_box_
-    /// User selects desired color scheme here
-    QComboBox *color_selector_combo_box_;
-
-    ///
-    /// \brief value_method_selector_combo_box_
+    /// \brief value_method_combo_box_
     /// User selects value determination method here
-    QComboBox *value_method_selector_combo_box_;
+    QComboBox *value_method_combo_box_;
 
     ///
-    /// \brief negative_check_box_
-    /// User selects whether or not the dataset has "negative peaks". This may
-    /// be deprecated soon
-    QCheckBox *negative_check_box_;
-
+    /// \brief search_window_spin_box_
     ///
-    /// \brief integration_method_selector_combo_box_
-    /// User selects integration method here
-    QComboBox *integration_method_selector_combo_box_;
-
-    ///
-    /// \brief integration_method_label_
-    /// Displays the integration method
-    QLabel *integration_method_label_;
+    QSpinBox *search_window_spin_box_;
 
     ///
     /// \brief data_index_
@@ -141,7 +112,6 @@ private:
     /// The current dataset
     QSharedPointer<VespucciDataset> data_;
 
-    QLabel *correlation_label_;
 };
 
 #endif // UNIVARIATEDIALOG_H

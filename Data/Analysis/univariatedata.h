@@ -21,38 +21,22 @@
 #define UNIVARIATEDATA_H
 #include "Global/enums.h"
 #include "Data/Dataset/vespuccidataset.h"
-
+#include "Math/Quantification/quantification.h"
 
 class UnivariateData
 {
 public:
     UnivariateData(QSharedPointer<VespucciDataset> parent, QString name);
     UnivariateData(QSharedPointer<VespucciDataset> parent, QString name, vec control);
-    void Apply(double left_bound,
-          double right_bound,
-          UnivariateMethod::Method method);
 
-    void Apply(double left_bound,
-               double right_bound,
-               uword window,
-               UnivariateMethod::Method method);
+    void Apply(double left_bound, double right_bound, uword bound_window);
+    void Apply(double first_left_bound, double first_right_bound,
+               double second_left_bound, double second_right_bound, uword bound_window);
 
-    void Apply(double first_left_bound,
-               double first_right_bound,
-               double second_left_bound,
-               double second_right_bound,
-               uword window,
-               UnivariateMethod::Method method);
-
-    void Apply(double first_left_bound,
-          double first_right_bound,
-          double second_left_bound,
-          double second_right_bound,
-          UnivariateMethod::Method method);
     void Calibrate(const vec &values, const vec &concentrations);
 
-    vec results() const;
-    const vec *results_ptr() const;
+    mat results() const;
+    const mat *results_ptr() const;
     bool band_ratio() const;
     double left_bound() const;
     double right_bound() const;
@@ -67,7 +51,6 @@ public:
     const std::map<std::string, double> calibration_stats() const;
 
 
-    mat Midlines() const;
     uvec Boundaries() const;
     uvec MidlineBoundaries() const;
     mat first_baselines() const;
@@ -78,67 +61,43 @@ public:
 
     bool calibrated() const;
 
+    mat Intensities(bool adjust_baselines);
+    vec IntensityRatios(bool adjust_baselines);
+    mat Areas(bool adjust_baselines, bool detect_edges);
+    vec AreaRatios(bool adjust_baselines, bool detect_edges);
+    mat Bandwidths();
+    mat PeakCenters();
+
+
 private:
     QString method_description_;
 
-    ///
-    /// \brief results_
-    /// The results which are turned into an image
-    vec results_;
-
+    mat first_results_; //matrix with 8 or 16 columns and spectra count rows, depending on type
+    mat second_results_;
     ///
     /// \brief control_
     /// Control correlation is calculated for.
     vec control_;
 
     ///
-    /// \brief method_
-    /// The method
-    int method_;
-    ///
     /// \brief band_ratio_
     /// Whether or not this is a band ratio map
     bool band_ratio_;
 
-    ///
-    /// \brief left_bound_
-    /// The spectral left bound
-    double left_bound_;
-
-    ///
-    /// \brief right_bound_
-    /// The right bound in spectral units
-    double right_bound_;
-
+    //only first_ ones used when not band ratio
     double first_left_bound_;
     double first_right_bound_;
     double second_left_bound_;
     double second_right_bound_;
 
-
-    ///
-    /// \brief midlines_
-    /// The midlines (peak width)
-    mat midlines_;
-
-    ///
-    /// \brief ratio_baselines_
-    /// Contains the two sets of baselines for an intensity band ratio.
-    arma::field<mat> baselines_;
-    arma::field<vec> d_baselines_;
-    arma::field<vec> d_first_baselines_;
-    arma::field<vec> d_second_baselines_;
+    uword bound_window_;
 
     mat first_baselines_;
     mat second_baselines_;
-
-    ///
-    /// \brief positions_
-    /// The position in abscissa units of the maximum of the peaks
-    mat positions_;
+    field<vec> inflection_first_baselines_;
+    field<vec> inflection_second_baselines_;
 
     QSharedPointer<VespucciDataset> parent_;
-
 
     QString name_;
 

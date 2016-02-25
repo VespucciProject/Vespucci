@@ -27,8 +27,8 @@
 namespace Vespucci{
     namespace Math{
         namespace Quantification{
-        VESPUCCI_EXPORT double IntegratePeak(const arma::vec &X, arma::uword min_index, arma::uword max_index, double abscissa_step, arma::vec &baseline);
-        VESPUCCI_EXPORT arma::vec IntegratePeakMat(const arma::mat &X, const arma::vec abscissa, double &min, double &max, arma::mat &baselines, arma::uvec &boundaries);
+        VESPUCCI_EXPORT double IntegratePeak(const arma::vec &X, arma::uword min_index, arma::uword max_index, double abscissa_step, arma::vec &baseline, bool correct_baseline);
+        VESPUCCI_EXPORT arma::vec IntegratePeakMat(const arma::mat &X, const arma::vec &abscissa, double &min, double &max, arma::mat &baselines, arma::uvec &boundaries, bool correct_baseline);
 
         VESPUCCI_EXPORT arma::mat IntegratePeaksMat(const arma::mat &X, const arma::vec &abscissa,
                               double &first_min, double &first_max,
@@ -38,13 +38,15 @@ namespace Vespucci{
         VESPUCCI_EXPORT arma::vec IntegratePeakMat(const arma::mat &X, const arma::vec &abscissa,
                                                    double &min, double &max,
                                                    arma::field<arma::vec> &baselines,
-                                                   arma::uvec &boundaries, arma::uword bound_window);
+                                                   arma::uvec &boundaries, arma::uword bound_window, bool correct_baseline);
+
 
         VESPUCCI_EXPORT arma::mat IntegratePeaksMat(const arma::mat &X, const arma::vec &abscissa,
                                                     double &first_min, double &first_max,
                                                     double &second_min, double &second_max,
                                                     arma::field<arma::vec> &first_baselines, arma::field<arma::vec> &second_baselines,
                                                     arma::uvec &boundaries, arma::uword bound_window);
+
         }
     }
 }

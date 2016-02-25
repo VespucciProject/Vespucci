@@ -21,8 +21,6 @@ private slots:
 
     void on_fileRadioButton_clicked();
 
-    void on_imageCheckBox_stateChanged(int arg1);
-
     void on_buttonBox_accepted();
 
     void on_browsePushButton_clicked();
@@ -33,9 +31,6 @@ private:
     QRadioButton *dataset_radio_button_;
     QRadioButton *file_radio_button_;
     QLineEdit *filename_line_edit_;
-    QSpinBox *component_spin_box_;
-    QComboBox *gradient_combo_box_;
-    QCheckBox *image_check_box_;
     QLineEdit *name_line_edit_;
     QPushButton *browse_push_button_;
     VespucciWorkspace *workspace;

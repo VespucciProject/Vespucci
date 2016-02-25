@@ -234,6 +234,12 @@ arma::vec Vespucci::Math::LinLeastSq::FitGaussian(const arma::vec &x, const arma
         return arma::zeros(3);
     }
     stats["c"] = std::sqrt(-1.0/(2.0*stats["a_2"]));
-    //stats["s_A"] = stats["A"] * std::sqrt()
+    stats["s_A"] = stats["A"] * std::sqrt(std::pow((0.5*std::sqrt( std::pow(stats["s_a_1"]/stats["a_1"], 2.0)) +
+                                          std::pow(stats["s_a_2"]/stats["a_2"], 2.0)), 2.0)
+                                        + std::pow(stats["s_a_0"], 2.0));
+    stats["s_b"] = 0.5 * std::sqrt(std::pow(stats["s_a_1"]/stats["s_a"], 2.0)
+                                  + std::pow(stats["s_a_2"]/stats["a_2"], 2.0));
+
+    stats["s_c"] = std::sqrt(0.5)*0.5*stats["s_a_2"]/stats["a_2"];
     return fit_coefs;
 }

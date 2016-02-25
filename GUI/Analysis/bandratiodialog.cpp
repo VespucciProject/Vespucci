@@ -37,12 +37,9 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     second_min_line_edit_ = findChild<QLineEdit *>("secondMinLineEdit");
     second_max_line_edit_ = findChild<QLineEdit *>("secondMaxLineEdit");
     name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
-    color_selector_combo_box_ = findChild<QComboBox *>("gradientComboBox");
-    value_method_selector_combo_box_ = findChild<QComboBox *>("peakComboBox");
-    integration_method_selector_combo_box_ = findChild<QComboBox *>("integrationComboBox");
-    integration_method_label_ = findChild<QLabel *>("integrationLabel");
+    method_combo_box_ = findChild<QComboBox *>("peakComboBox");
     range_label_ = findChild<QLabel *>("rangeLabel");
-    map_check_box_ = findChild<QCheckBox*>("mapCheckBox");
+    search_window_spin_box_ = findChild<QSpinBox*>("searchWindowSpinBox");
     data_index_ = row;
 
     first_min_line_ = new QCPItemStraightLine(spectrum_custom_plot_);
@@ -75,6 +72,7 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
 
     QVector<double> plot_data = data_->PointSpectrum(origin);
     QVector<double> wavelength = data_->WavelengthQVector();
+    if (plot_data.isEmpty()){plot_data = data_->PointSpectrum(0);}
 
     first_min_line_edit_->setValidator(validator);
     first_max_line_edit_->setValidator(validator);
@@ -85,8 +83,6 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     spectrum_custom_plot_->rescaleAxes();
     spectrum_custom_plot_->setInteraction(QCP::iRangeDrag, true);
     spectrum_custom_plot_->setInteraction(QCP::iRangeZoom, true);
-
-    color_selector_combo_box_->setEnabled(false);
 }
 
 BandRatioDialog::~BandRatioDialog()
@@ -120,63 +116,36 @@ void BandRatioDialog::on_buttonBox_accepted()
         QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abscissa");
         return;
     }
-
+    uint bound_window = search_window_spin_box_->value();
 
 
     QString name = name_line_edit_->text();
-    QString value_method = value_method_selector_combo_box_->currentText();
-    //QString integration_method = integration_method_selector_combo_box_->currentText();
+    QString value_method = method_combo_box_->currentText();
 
-    UnivariateMethod::Method method;
-    if (value_method == "Area")
-        method = UnivariateMethod::AreaRatio;
-    else
-        method = UnivariateMethod::IntensityRatio;
-
-    int gradient_index = color_selector_combo_box_->currentIndex();
-    if (map_check_box_->isChecked()){
+    if (value_method == "Riemann Sum"){
         try{
-            data_->BandRatio(first_entered_min,
-                             first_entered_max,
-                             second_entered_min,
-                             second_entered_max,
-                             name,
-                             method,
-                             gradient_index);
+            data_->BandRatio(name, first_entered_min, first_entered_max,
+                             second_entered_min, second_entered_max,
+                             bound_window);
+        }catch(exception e){
+            workspace->main_window()->DisplayExceptionWarning(e);
+        }
+    }
+    else if (value_method == "Gaussian Fit"){
+        try{
+
         }catch(exception e){
             workspace->main_window()->DisplayExceptionWarning(e);
         }
     }
     else{
-        try{
-            data_->BandRatio(first_entered_min, first_entered_max,
-                             second_entered_min, second_entered_max,
-                             name, method);
-        }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
-        }
+        QMessageBox::warning(this, "Error Occurred", "A non-fatal error occurred: invalid input from method_combo_box_");
     }
 
     close();
     data_.clear();
 }
 
-///
-/// \brief BandRatioDialog::on_peakComboBox_currentTextChanged
-/// \param arg1
-/// When the user changes the peak determination method, various options are
-/// enabled or disabled
-void BandRatioDialog::on_peakComboBox_currentTextChanged(const QString &arg1)
-{
-    if (arg1 == "Area"){
-        integration_method_selector_combo_box_->setEnabled(true);
-        integration_method_label_->setEnabled(true);
-    }
-    else{
-        integration_method_selector_combo_box_->setEnabled(false);
-        integration_method_label_->setEnabled(false);
-    }
-}
 
 ///
 /// \brief BandRatioDialog::on_buttonBox_rejected
@@ -237,7 +206,3 @@ void BandRatioDialog::on_secondMaxLineEdit_textChanged(const QString &arg1)
         spectrum_custom_plot_->addItem(second_max_line_);
 }
 
-void BandRatioDialog::on_mapCheckBox_stateChanged(int arg1)
-{
-    color_selector_combo_box_->setEnabled(arg1);
-}

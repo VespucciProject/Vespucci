@@ -42,8 +42,6 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
-    void on_peakComboBox_currentTextChanged(const QString &arg1);
-
     void on_buttonBox_rejected();
 
     void on_firstMinLineEdit_textChanged(const QString &arg1);
@@ -53,8 +51,6 @@ private slots:
     void on_secondMinLineEdit_textChanged(const QString &arg1);
 
     void on_secondMaxLineEdit_textChanged(const QString &arg1);
-
-    void on_mapCheckBox_stateChanged(int arg1);
 
 private:
     Ui::BandRatioDialog *ui;
@@ -93,29 +89,14 @@ private:
     ///
     /// \brief integration_method_selector_combo_box_
     /// User selects the integration method here
-    QComboBox *integration_method_selector_combo_box_;
+    QComboBox *method_combo_box_;
 
     ///
     /// \brief name_line_edit_
     /// User enters map name here
     QLineEdit *name_line_edit_;
 
-    ///
-    /// \brief color_selector_combo_box_
-    /// User selects the color scheme here
-    QComboBox *color_selector_combo_box_;
-
-    ///
-    /// \brief value_method_selector_combo_box_
-    /// User selects the value determination method here
-    QComboBox *value_method_selector_combo_box_;
-
-
-    ///
-    /// \brief integration_method_label_
-    /// A label displaying the integration method
-    QLabel *integration_method_label_;
-
+    QSpinBox *search_window_spin_box_;
     ///
     /// \brief data_index_
     /// Index of the VespucciDataset object in the various lists

@@ -964,22 +964,7 @@ void MainWindow::SetActiveDatasetListRow(int row)
 
 bool MainWindow::DatasetMappable(int row)
 {
-    if (!workspace->datasets()->size()){
-        QMessageBox::information(this,
-                                 "No datasets loaded",
-                                 "No dataset exists on which to perform this operation");
-        return false;
-    }
-    QSharedPointer<VespucciDataset> data = workspace->DatasetAt(row);
-    if(data->non_spatial()){
-        QMessageBox::warning(this,
-                             "Non-spatial or Non-contiguous Dataset",
-                             "Images cannot be created from non-spatial or "
-                             "non-contiguous datasets.");
-        data.clear();
-        return false;
-    }
-    return true;
+    return true; //we changed how we handle this
 }
 
 ///

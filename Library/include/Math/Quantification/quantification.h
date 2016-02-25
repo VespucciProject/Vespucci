@@ -25,4 +25,15 @@
 #include "Math/Quantification/correlation.h"
 #include "Math/Quantification/integration.h"
 #include "Math/Quantification/maximum.h"
+
+namespace Vespucci{
+    namespace Math{
+        namespace Quantification{
+            VESPUCCI_EXPORT arma::rowvec QuantifyPeak(const arma::vec &spectrum, const arma::vec &abscissa, double &min, double &max, arma::uword bound_window, arma::vec &total_baseline, arma::vec &inflection_baseline);
+            VESPUCCI_EXPORT arma::mat QuantifyPeakMat(const arma::mat &spectra, const arma::vec &abscissa, double &min, double &max, arma::uword bound_window, arma::mat &total_baselines, arma::field<arma::vec> &inflection_baselines);
+        }
+    }
+}
+
+
 #endif //QUANTIFICATION_H

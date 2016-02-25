@@ -206,68 +206,12 @@ public:
     bool SaveLogFile(QString filename);
     // IMAGING FUNCTIONS //
 
-    void Univariate(double min,
-                    double max,
-                    QString name,
-                    UnivariateMethod::Method method,
-                    QString integration_method,
-                    uword gradient_index);
-
-    void Univariate(double min,
-                    double max,
-                    QString name,
-                    UnivariateMethod::Method method,
-                    QString integration_method);
-
-    void Univariate(double min,
-                    double max,
-                    uword window,
-                    QString name,
-                    UnivariateMethod::Method method,
-                    QString integration_method,
-                    uword gradient_index);
-
-    void Univariate(double min,
-                    double max,
-                    uword window,
-                    QString name,
-                    UnivariateMethod::Method method,
-                    QString integration_method);
-
-    void CorrelationMap(vec control,
-                        QString name,
-                        uword gradient_index);
-
-    void BandRatio(double first_min,
-                   double first_max,
-                   double second_min,
-                   double second_max,
-                   QString name,
-                   UnivariateMethod::Method method,
-                   unsigned int gradient_index);
-
-    void BandRatio(double first_min,
-                   double first_max,
-                   double second_min,
-                   double second_max,
-                   QString name,
-                   UnivariateMethod::Method method);
-
-    void BandRatio(double first_min,
-                   double first_max,
-                   double second_min,
-                   double second_max,
-                   unsigned int window,
-                   QString name,
-                   UnivariateMethod::Method method,
-                   unsigned int gradient_index);
-    void BandRatio(double first_min,
-                   double first_max,
-                   double second_min,
-                   double second_max,
-                   unsigned int window,
-                   QString name,
-                   UnivariateMethod::Method method);
+    void Univariate(QString name, double &left_bound, double &right_bound,
+                    uword bound_window);
+    void BandRatio(QString name,
+                   double &first_left_bound, double &first_right_bound,
+                   double &second_left_bound, double &second_right_bound,
+                   uword bound_window);
 
 
     void PartialLeastSquares(uword components, uword image_component,
