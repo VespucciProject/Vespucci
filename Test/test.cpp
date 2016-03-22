@@ -19,6 +19,7 @@
 *******************************************************************************/
 
 #include "test.h"
+/*
 vec VespucciTest::CreateGaussianPeak(const vec &x, double sigma, double &fwhm, double &area)
 {
     fwhm = 2.0*std::sqrt(2 * std::log(2));
@@ -26,3 +27,4 @@ vec VespucciTest::CreateGaussianPeak(const vec &x, double sigma, double &fwhm, d
     return (1.0 / (sigma * std::sqrt(2*datum::pi)))
             * (arma::exp((-1.0/(2*std::pow(sigma, 2.0)))*arma::pow(x, 2.0)));
 }
+*/

@@ -80,6 +80,32 @@ void PlotWidget::AddPlot(const mat &paired_data)
     }
 }
 
+void PlotWidget::AddPlot(const vec &abscissa, const vec &data)
+{
+    QVector<double> abscissa_qvec =
+            QVector<double>::fromStdVector(conv_to<stdvec>::from(abscissa));
+    QVector<double> data_qvec =
+            QVector<double>::fromStdVector(conv_to<stdvec>::from(data));
+    int graph_count = plot_->graphCount();
+    if (graph_count < 1){
+        plot_->addGraph();
+        plot_->graph(graph_count)->addData(abscissa_qvec, data_qvec);
+    }
+    else{
+        plot_->addGraph(plot_->graph(0)->keyAxis(), plot_->graph(0)->valueAxis());
+        if (offset_plots_){
+            RemoveOffset();
+            DetermineOffset(data_qvec);
+            plot_->graph(graph_count)->addData(abscissa_qvec, data_qvec);
+            ApplyOffset();
+        }
+        else{
+            plot_->graph(graph_count)->addData(abscissa_qvec, data_qvec);
+        }
+
+    }
+}
+
 void PlotWidget::StackPlots(bool stack)
 {
     if (plot_->graphCount() < 1){

@@ -97,12 +97,6 @@ int DatasetTreeModel::columnCount(const QModelIndex &parent) const
     return root_item_->columnCount();
 }
 
-bool DatasetTreeModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-
-}
-
-
 bool DatasetTreeModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     TreeItem *parent_item = getItem(parent);
@@ -163,5 +157,10 @@ TreeItem *DatasetTreeModel::getItem(const QModelIndex &index) const
         TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
         if (item){return item;}
     }
+    return root_item_;
+}
+
+TreeItem *DatasetTreeModel::root_item()
+{
     return root_item_;
 }

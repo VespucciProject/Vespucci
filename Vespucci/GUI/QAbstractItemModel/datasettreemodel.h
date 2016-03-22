@@ -41,10 +41,6 @@ public:
     QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
-
-    bool setData(const QModelIndex &index, const QVariant &value, int role) Q_DECL_OVERRIDE;
-    bool insertRows(int row, int count,
-                    const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
     bool removeRows(int row, int count,
                     const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
     void AddDataset(QSharedPointer<VespucciDataset> dataset_);
@@ -55,6 +51,7 @@ public:
     void ClearDatasets();
     void removeRow(const QModelIndex &index);
     TreeItem *getItem(const QModelIndex &index) const;
+    TreeItem *root_item();
 
 
 private:

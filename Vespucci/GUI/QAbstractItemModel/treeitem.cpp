@@ -228,11 +228,8 @@ AnalysisResultTreeItem::AnalysisResultTreeItem(const QString &name, DatasetTreeI
     //create children from this analysis result
     QSharedPointer<AnalysisResults> result = parent->dataset()->GetAnalysisResult(name);
     QStringList matrix_list = result->KeyList();
-    foreach (const QString &matrix_name, matrix_list){
-        int rows = result->value(matrix_name).n_rows;
-        int cols = result->value(matrix_name).n_cols;
+    foreach (const QString &matrix_name, matrix_list)
         appendChild(new MatrixTreeItem(matrix_name, parent->dataset(), this));
-    }
 }
 
 

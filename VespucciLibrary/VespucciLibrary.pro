@@ -34,8 +34,9 @@ QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 QT       += core gui
 QT       += widgets printsupport
 QT       += svg
-CONFIG   += shared debug_and_release
-macx: CONFIG += lib_bundle
+CONFIG   += shared debug_and_release c++11
+#previously we handled this as a framework, but we're building dylib files now
+#mac: CONFIG += lib_bundle
 # Set the installation directory
 isEmpty(PREFIX) {
     PREFIX = $$PWD/../../Vespucci-install
@@ -43,8 +44,7 @@ isEmpty(PREFIX) {
 travis_ci = $$(TRAVIS_CI)
 deploy_win64 = $$(DEPLOY_WIN64)
 # it is assumed that casual windows users will not use the build system to install
-!macx: TARGET = vespucci
-macx: TARGET = Vespucci #mac convention is to Make Frameworks and Applications Capitalized.
+TARGET = vespucci
 TEMPLATE = lib
 DEFINES += VESPUCCI_LIBRARY
 

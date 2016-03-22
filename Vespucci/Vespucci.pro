@@ -41,6 +41,7 @@ mac: CONFIG += app_bundle
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 
 mac: ICON = vespuccilogo.icns
+
 # Set the installation directory
 isEmpty(PREFIX) {
     PREFIX = $$PWD/../../Vespucci-install
@@ -309,18 +310,11 @@ unix:!macx: INCLUDEPATH += /usr/local/include
 unix:!macx: DEPENDPATH += /usr/local/include
 unix:macx: INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
 unix:macx: DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
+
 #for inclusion of LibVespucci headers
-unix:!macx: INCLUDEPATH += $$PWD/Library/include
-unix:!macx: DEPENDPATH += $$PWD/Library/include
+INCLUDEPATH += $$PWD/../VespucciLibrary/include
+DEPENDPATH += $$PWD/../VespucciLibrary/include
 
-INCLUDEPATH += $$PWD/Library/include
-DEPENDPATH += $$PWD/Library/include
-
-
-mac: LIBS += -F$$PWD/../build-VespucciLibrary/debug/ -framework Vespucci
-
-INCLUDEPATH += $$PWD/../build-VespucciLibrary/debug
-DEPENDPATH += $$PWD/../build-VespucciLibrary/debug
 count(travis_ci, 1){
   unix:!macx: QMAKE_CXX=/usr/bin/g++-4.9
   unix:!macx: LIBS += -L/home/travis/depts/lib -lmlpack
@@ -375,94 +369,10 @@ unix:!macx: INCLUDEPATH += /usr/local/include
 unix:!macx: DEPENDPATH += /usr/local/include
 unix:!macx: INCLUDEPATH += /usr/local/include/cminpack-1
 unix:!macx: DEPENDPATH += /usr/local/include/cminpack-1
-unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RInside/include
-unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RInside/include
-unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/include
-unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/include
-unix:!macx: INCLUDEPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/Rcpp/include
-unix:!macx: DEPENDPATH += $$PWD/../../R/x86_64-pc-linux-gnu-library/3.1/RCpp/include
 
 
-#Windows Libraries for MinGW-w64
-#Binaries for windows libraries are included in the MinGW_libs branch of the repository
-win32-g++: INCLUDEPATH += $$PWD/../MinGW_libs/include
-win32-g++: DEPENDPATH += $$PWD/../MinGW_libs/include
-win32-g++: INCLUDEPATH += $$PWD/../MinGW_libs/boost/
-win32-g++: DEPENDPATH += $$PWD/../MinGW_libs/boost/
-
-#MLPACK
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/lib/ -lmlpack
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libmlpack.a
-
-#Armadillo
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/lib/ -larmadillo
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libarmadillo.a
-
-#HDF5
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/lib -lhdf5
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libhdf5.a
-
-#ARPACK-NG
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/lib/ -larpack
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libarpack.a
-
-#OpenBLAS (linked dynamically because arpack links it dynamically)
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/lib/ -llibopenblas
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libopenblas.dll.a
-
-#Libgfortran
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/lib/ -lgfortran
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libgfortran.a
-
-#Boost random (C99)
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/boost/stage/lib/ -lboost_math_c99-mgw49-mt-1_57
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/boost/stage/lib/libboost_math_c99-mgw49-mt-1_57.a
-
-#Boost math
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/boost/stage/lib/ -lboost_math_c99-mgw49-mt-1_57
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/boost/stage/lib/libboost_math_c99-mgw49-mt-1_57.a
-
-#Boost test
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/boost/stage/lib/ -lboost_unit_test_framework-mgw49-mt-1_57
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/boost/stage/lib/libboost_unit_test_framework-mgw49-mt-1_57.a
-
-#Boost program_options
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/boost/stage/lib/ -lboost_program_options-mgw49-mt-1_57
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/boost/stage/lib/libboost_program_options-mgw49-mt-1_57.a
-
-#LibXML2
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/lib/ -lxml2
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libxml2.a
-
-#LibICONV
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/lib/ -liconv
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libiconv.a
-
-#Zlib
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/lib/ -lz
-else:win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libz.a
-
-#The standard C++ library (linked dynmically by openblas)
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/lib/ -lstdc++
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libstdc++.a
-
-#QCustomPlot
-win32-g++:CONFIG(release, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqcustomplot
-else:win32-g++:CONFIG(debug, debug|release): LIBS += -L$$PWD/../MinGW_libs/lib/ -lqcustomplotd
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplot.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libqcustomplotd.a
-
-win32-g++: LIBS += -L$$PWD/../MinGW_libs/lib/ -lcminpack
-INCLUDEPATH += $$PWD/../MinGW_libs/include/cminpack-1
-DEPENDPATH += $$PWD/../MinGW_libs/include/cminpack-1
-win32-g++: PRE_TARGETDEPS += $$PWD/../MinGW_libs/lib/libcminpack.a
-
-#libvespucci
-win32-g++:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary/release -lvespucci
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../build-VespucciLibrary/release/libvespucci.a
-
-win32-g++:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary/debug -lvespucci
-win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../build-VespucciLibrary/debug/libvespucci.a
+#we will no longer support MinGW-w64 for Windows. Users who want to use it will have to
+#reckon the config themselves
 
 #MSVC for deployment (used for build using static qt and all libraries compiled in msvc linked statically)
 count(deploy_win64, 1){
@@ -517,46 +427,42 @@ count(deploy_win64, 1){
     win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/QCustomPlot/Release/qcustomplot.lib
 }
 
-
-win32-g++:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-library/debug -lvespucci
-win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../build-library/debug/libvespucci.a
-
 #mac libraries. These are the same in Travis-CI as in most local environments
 #with all dependencies of armadillo and mlpack installed using homebrew
-mac:CONFIG(debug, debug|release): LIBS += -F$$PWD/../build-VespucciLibrary/debug/ -framework Vespucci
-mac:CONFIG(release, debug|release): LIBS += -F$$PWD/../build-VespucciLibrary/release/ -framework Vespucci
+macx: LIBS += -L$$OUT_PWD/../VespucciLibrary/ -lvespucci
 
-mac: LIBS += -L$$PWD/../mlpack/lib/ -lmlpack
-mac: INCLUDEPATH += $$PWD/../mlpack/include
-mac: DEPENDPATH += $$PWD/../mlpack/include
+mac: LIBS += -L$$PWD/../../mlpack/lib/ -lmlpack
+mac: INCLUDEPATH += $$PWD/../../mlpack/include
+mac: DEPENDPATH += $$PWD/../../mlpack/include
 
-mac: LIBS += -L$$PWD/../armadillo/lib/ -larmadillo
-mac: INCLUDEPATH += $$PWD/../armadillo/include
-mac: DEPENDPATH += $$PWD/../armadillo/include
+mac: LIBS += -L$$PWD/../../armadillo/lib/ -larmadillo
+mac: INCLUDEPATH += $$PWD/../../armadillo/include
+mac: DEPENDPATH += $$PWD/../../armadillo/include
 
-mac: LIBS += -L$$PWD/../../../../usr/local/lib/ -larpack
-mac: INCLUDEPATH += $$PWD/../../../../usr/local/include
-mac: DEPENDPATH += $$PWD/../../../../usr/local/include
+mac: LIBS += -L/usr/local/lib/ -larpack
+mac: INCLUDEPATH += /usr/local/include
+mac: DEPENDPATH += /usr/local/include
 
 mac: LIBS += -framework Accelerate
 
 macx: LIBS += -L/usr/local/lib/ -lhdf5
 macx: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
 
-mac: LIBS += -F$$PWD/../Vespucci-QCP/lib/ -framework QCustomPlot
-mac: INCLUDEPATH += $$PWD/../Vespucci-QCP/include
-mac: DEPENDPATH += $$PWD/../Vespucci-QCP/include
+mac: LIBS += -F$$PWD/../../Vespucci-QCP/lib/ -framework QCustomPlot
+mac: INCLUDEPATH += $$PWD/../../Vespucci-QCP/include
+mac: DEPENDPATH += $$PWD/../../Vespucci-QCP/include
+
+macx: LIBS += -L$$PWD/../../quazip/lib/ -lquazip
+INCLUDEPATH += $$PWD/../../quazip/include
+DEPENDPATH += $$PWD/../../quazip/include
+macx: PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
 
 
-macx: LIBS += -L$$PWD/../quazip/lib/ -lquazip
-INCLUDEPATH += $$PWD/../quazip/include
-DEPENDPATH += $$PWD/../quazip/include
-macx: PRE_TARGETDEPS += $$PWD/../quazip/lib/libquazip.a
-
-
-macx: LIBS += -L$$PWD/../yaml-cpp/lib/ -lyaml-cpp
-INCLUDEPATH += $$PWD/../yaml-cpp/include
-DEPENDPATH += $$PWD/../yaml-cpp/include
-macx: PRE_TARGETDEPS += $$PWD/../yaml-cpp/lib/libyaml-cpp.a
+macx: LIBS += -L$$PWD/../../yaml-cpp/lib/ -lyaml-cpp
+INCLUDEPATH += $$PWD/../../yaml-cpp/include
+DEPENDPATH += $$PWD/../../yaml-cpp/include
+macx: PRE_TARGETDEPS += $$PWD/../../yaml-cpp/lib/libyaml-cpp.a
 
 macx: LIBS += -lz.1
+
+

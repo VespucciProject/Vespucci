@@ -40,6 +40,16 @@ VespucciWorkspace::~VespucciWorkspace()
     cout << "Workspace destructor" << endl;
 }
 
+QStringList VespucciWorkspace::dataset_names() const
+{
+    QStringList names;
+    QList<TreeItem*> items = dataset_tree_model_->root_item()->child_items();
+    foreach(TreeItem* item, items)
+        if (item->is_dataset())
+            names << item->data(0).toString();
+    return names;
+}
+
 ///
 /// \brief VespucciWorkspace::SetPointers
 /// \param main_window
