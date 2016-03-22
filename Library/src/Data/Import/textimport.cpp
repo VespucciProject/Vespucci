@@ -1,6 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2015 Wright State University - All Rights Reserved
-    Daniel P. Foose - Author
+    Copyright (C) 2014-2016 Wright State University - All Rights Reserved
+    Daniel P. Foose - Maintainer/Lead Developer
 
     This file is part of Vespucci.
 
@@ -240,4 +240,79 @@ bool TextImport::ImportMultiplePoints(std::map<std::pair<int, int>, std::string>
     spectra = spectra.rows(sorted_indices);
 
     return have_abscissa;
+}
+
+///
+/// \brief TextImport::ImportWitec
+/// \param spec_filename
+/// \param x_filename
+/// \param y_filename
+/// \param spectra
+/// \param abscissa
+/// \param x
+/// \param y
+/// \return
+/// Parses a Witec dataset. These consist of the abscissa and spectra in a column-major format
+/// With the x and y values in a separate file.
+/// For each value of x, a repeating list of y values is given.
+/// This function can also automatically transpose datasets if given y for x.
+bool TextImport::ImportWitec(std::string spec_filename, std::string x_filename, std::string y_filename, arma::mat &spectra, arma::vec &abscissa, arma::vec &x, arma::vec &y)
+{
+    bool spec_ok = spectra.load(spec_filename);
+    if (!spec_ok){
+        spectra.clear();
+        abscissa.clear();
+        x.clear();
+        y.clear();
+        return false;
+    }
+
+    abscissa = spectra.col(0);
+    spectra.shed_col(0);
+    bool x_ok = x.load(x_filename);
+    bool y_ok = y.load(y_filename);
+    if (!(x_ok && y_ok)){
+        spectra.clear();
+        abscissa.clear();
+        x.clear();
+        y.clear();
+        return false;
+    }
+
+    //the repeating, unique values in y are what we keep with constant x
+    //if y has the unique values, then we keep constant x
+    arma::vec unique_x = arma::unique(x);
+    arma::vec unique_y = arma::unique(y);
+    bool x_unique = unique_x.n_rows == x.n_rows;
+
+    //if data doesn't look like we expect it to, give up
+    if (!x_unique && (unique_y.n_rows == y.n_rows)){
+        spectra.clear();
+        abscissa.clear();
+        x.clear();
+        y.clear();
+        return false;
+    }
+
+
+    if (x_unique){
+        //we're going to fill x with new values (y already follows Vespucci conventions)
+        x.clear();
+        for (arma::uword i = 0; i < unique_x.n_rows; ++i){
+            arma::vec x_values(unique_y.n_rows);
+            x_values.fill(unique_x(i));
+            x = arma::join_vert(x, x_values);
+        }
+    }
+    else{
+        //we're going to fill y with new values (x already follows Vespucci conventions)
+        y.clear();
+        for (arma::uword i = 0; i < unique_y.n_rows; ++i){
+            arma::vec y_values(unique_x.n_rows);
+            y_values.fill(unique_y(i));
+            y = arma::join_vert(y, y_values);
+        }
+    }
+
+    return true;
 }

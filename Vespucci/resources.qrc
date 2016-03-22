@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>vespuccilogo.svg</file>
+        <file>vespuccilogo.ico</file>
+        <file>vespuccilogo.icns</file>
+        <file>toolbar_icons/close.svg</file>
+        <file>toolbar_icons/delete.svg</file>
+        <file>toolbar_icons/import_multiple.svg</file>
+        <file>toolbar_icons/import.svg</file>
+        <file>toolbar_icons/map.svg</file>
+        <file>toolbar_icons/open.svg</file>
+        <file>toolbar_icons/plot.svg</file>
+        <file>toolbar_icons/zero.svg</file>
+        <file>toolbar_icons/save.svg</file>
+        <file>toolbar_icons/stats.svg</file>
+        <file>toolbar_icons/table.svg</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>vespuccilogo150.png</file>
+    </qresource>
+</RCC>

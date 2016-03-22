@@ -49,7 +49,7 @@ TEMPLATE = lib
 DEFINES += VESPUCCI_LIBRARY
 
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
-unix: QMAKE_CXXFLAGS += -std=c++0x \
+unix:!macx: QMAKE_CXXFLAGS += -std=c++0x \
                         -isystem "/usr/local/include" \
                         -isystem "/usr/local/include/armadillo_bits" \
                         -isystem "/usr/local/include/boost" \
@@ -144,10 +144,10 @@ HEADERS  += \
 # (these work for ubuntu and for the homebrew mac os package manager).
 # include paths a
 
-unix: INCLUDEPATH += /usr/include
-unix: DEPENDPATH += /usr/include
-unix: INCLUDEPATH += /usr/local/include
-unix: DEPENDPATH += /usr/local/include
+unix:!macx: INCLUDEPATH += /usr/include
+unix:!macx: DEPENDPATH += /usr/include
+unix:!macx: INCLUDEPATH += /usr/local/include
+unix:!macx: DEPENDPATH += /usr/local/include
 unix:macx: INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
 unix:macx: DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
 
@@ -157,53 +157,49 @@ DEPENDPATH += $$PWD/../../Vespucci-QCP-sharedlib/include
 
 INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include
-unix: INCLDEPATH += /usr/include/cminpack-1
-unix: DEPENDPATH += /usr/include/cminpack-1
+unix:!macx: INCLDEPATH += /usr/include/cminpack-1
+unix:!macx: DEPENDPATH += /usr/include/cminpack-1
 #mlpack and dependencies
 #we use the Accelerate Framework on OS X but OpenBLAS on linux.
 
 
 #travis-ci builds
 count(travis_ci, 1){
-    QMAKE_CXX=/usr/bin/g++-4.8
-    unix: LIBS += -L/home/travis/depts/lib -lmlpack
-    unix: LIBS += -L/home/travis/depts/lib -larmadillo
-    unix: LIBS += -L/usr/lib -larpack
-    unix: PRE_TARGETDEPS += /usr/lib/libarpack.a
-    unix!macx: LIBS += -L/usr/lib/x86_64-linux-gnu -lhdf5
-    unix!macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5.a
+    QMAKE_CXX=/usr/bin/g++-4.9
+    unix:!macx: LIBS += -L/home/travis/depts/lib -lmlpack
+    unix:!macx: LIBS += -L/home/travis/depts/lib -larmadillo
+    unix:!macx: LIBS += -L/usr/lib -larpack
+    unix:!macx: PRE_TARGETDEPS += /usr/lib/libarpack.a
+    unix:!macx: LIBS += -L/usr/lib/x86_64-linux-gnu -lhdf5
+    unix:!macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5.a
     unix:!macx: LIBS += -L/usr/lib/ -lcminpack
     unix:!macx: LIBS += -L/usr/lib -lblas
     unix:!macx: LIBS += -L/usr/lib -llapack
-    unix: INCLUDEPATH += /home/travis/depts/include
-    unix: DEPENDPATH += /home/travis/depts/include
-    unix: INCLUDEPATH += /home/travis/depts/include/armadillo_bits
-    unix: DEPENDPATH += /home/travis/depts/include/armadillo_bits
-    unix: INCLUDEPATH += /usr/include/cminpack-1
-    unix: DEPENDPATH += /usr/include/cminpack-1
+    unix:!macx: INCLUDEPATH += /home/travis/depts/include
+    unix:!macx: DEPENDPATH += /home/travis/depts/include
+    unix:!macx: INCLUDEPATH += /home/travis/depts/include/armadillo_bits
+    unix:!macx: DEPENDPATH += /home/travis/depts/include/armadillo_bits
+    unix:!macx: INCLUDEPATH += /usr/include/cminpack-1
+    unix:!macx: DEPENDPATH += /usr/include/cminpack-1
 }
 count(travis_ci, 0){
-    unix: LIBS += -L/usr/local/lib -lmlpack
-    unix!macx: LIBS += -L/usr/lib -larmadillo
-    unix: LIBS += -L/usr/local/lib -larpack
-    unix: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
-    unix: LIBS += -L/usr/local/lib -lhdf5
-    unix: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
+    unix:!macx: LIBS += -L/usr/local/lib -lmlpack
+    unix:!macx: LIBS += -L/usr/lib -larmadillo
+    unix:!macx: LIBS += -L/usr/local/lib -larpack
+    unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
+    unix:!macx: LIBS += -L/usr/local/lib -lhdf5
+    unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
     unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
     unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
     unix:!macx: LIBS += -L/usr/lib -lopenblas
     unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
     unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
     unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
-    unix: INCLUDEPATH += /usr/local/include/cminpack-1
-    unix: DEPENDPATH += /usr/local/include/cminpack-1
+    unix:!macx: INCLUDEPATH += /usr/local/include/cminpack-1
+    unix:!macx: DEPENDPATH += /usr/local/include/cminpack-1
 }
 
 
-unix:macx: LIBS += -framework Accelerate
-
-#unix:CONFIG(release, debug|release): LIBS += -L$$PWD/../../Vespucci-QCP-sharedlib/lib/ -lqcustomplot
-#else:unix:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../Vespucci-QCP-sharedlib/lib/ -lqcustomplotd
 
 unix:!macx: INCLUDEPATH += /usr/include
 unix:!macx: DEPENDPATH += /usr/include
@@ -340,3 +336,21 @@ count(deploy_win64, 1){
 
 
 
+#mac libraries. These are the same in Travis-CI as in most local environments
+#assuming that all dependencies for armadillo and mlpack are installed using homebrew
+mac: LIBS += -L$$PWD/../../mlpack/lib/ -lmlpack
+mac: INCLUDEPATH += $$PWD/../../mlpack/include
+mac: DEPENDPATH += $$PWD/../../mlpack/include
+
+mac: LIBS += -L$$PWD/../../armadillo/lib/ -larmadillo
+mac: INCLUDEPATH += $$PWD/../../armadillo/include
+mac: DEPENDPATH += $$PWD/../../armadillo/include
+
+mac: LIBS += -L/usr/local/lib/ -larpack
+mac: INCLUDEPATH += /usr/local/include
+mac: DEPENDPATH += /usr/local/include
+
+mac: LIBS += -framework Accelerate
+
+mac: LIBS += -L/usr/local/lib/ -lhdf5
+mac: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a

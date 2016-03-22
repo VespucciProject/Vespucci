@@ -1,6 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2014 Wright State University - All Rights Reserved
-    Daniel P. Foose - Author
+    Copyright (C) 2014-2016 Wright State University - All Rights Reserved
+    Daniel P. Foose - Maintainer/Lead Developer
 
     This file is part of Vespucci.
 
@@ -42,6 +42,13 @@ namespace TextImport
                               arma::mat &spectra,
                               arma::vec &abscissa,
                               arma::vec &x, arma::vec &y);
+
+    VESPUCCI_EXPORT bool ImportWitec(std::string spec_filename,
+                                     std::string x_filename,
+                                     std::string y_filename,
+                                     arma::mat &spectra,
+                                     arma::vec &abscissa,
+                                     arma::vec &x, arma::vec &y);
 
     VESPUCCI_EXPORT bool CheckFileValidity(QString filename, bool &comma_decimals);
 }

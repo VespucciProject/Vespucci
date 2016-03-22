@@ -22,7 +22,6 @@ namespace Vespucci{
     VESPUCCI_EXPORT bool StitchDatasets(const arma::field<arma::field<arma::mat> > &datasets, arma::mat &spectra, arma::vec &x, arma::vec &y, arma::vec &abscissa);
     VESPUCCI_EXPORT void ResetDataset(arma::mat &spectra, arma::vec &x, arma::vec &y, arma::vec &abscissa);
     VESPUCCI_EXPORT std::string CleanString(const std::string &in);
-    VESPUCCI_EXPORT bool SomeFuckingBullshit(double fuck_you);
 }
 
 

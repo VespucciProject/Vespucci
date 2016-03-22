@@ -1,6 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2015 Wright State University - All Rights Reserved
-    Daniel P. Foose - Author
+    Copyright (C) 2014-2016 Wright State University - All Rights Reserved
+    Daniel P. Foose - Maintainer/Lead Developer
 
     This file is part of Vespucci.
 
@@ -244,9 +244,4 @@ std::string Vespucci::CleanString(const std::string &in)
         else{out.append(&c);}
     }
     return out;
-}
-
-bool Vespucci::SomeFuckingBullshit(double fuck_you)
-{
-    return fuck_you > 666.666;
 }

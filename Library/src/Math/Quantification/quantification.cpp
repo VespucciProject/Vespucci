@@ -1,6 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2015 Wright State University - All Rights Reserved
-    Daniel P. Foose - Author
+    Copyright (C) 2014-2016 Wright State University - All Rights Reserved
+    Daniel P. Foose - Maintainer/Lead Developer
 
     This file is part of Vespucci.
 
@@ -36,19 +36,20 @@
 /// Corrected Riemann Sum between inflextion points
 /// Empirical Full-width at half maximum.
 ///
-arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spectrum, const arma::vec &abscissa, double &min, double &max, arma::uword bound_window, arma::vec &total_baseline, arma::vec &inflection_baseline)
+arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spectrum, const arma::vec &abscissa, double &min, double &max, arma::uword bound_window, arma::mat &total_baseline, arma::mat &inflection_baseline)
 {
     //performs analysis of peak shape and magnitude
     arma::rowvec results(8);
     double delta = std::abs(abscissa(1) - abscissa(0)); //assumes monotonic to some degree of precision
     arma::uvec left_bound = find(((min-delta) <= abscissa) && (abscissa <= (min+delta)));
     arma::uvec right_bound = find(((max-delta) <= abscissa) && (abscissa <= (max+delta)));
-
     //initial centers
     arma::uword min_index = left_bound(0);
     arma::uword max_index = right_bound(0);
     min = abscissa(min_index);
     max = abscissa(max_index);
+    std::cout << "min_index: " << min_index <<  " max_index: " << max_index << std::endl;
+    std::cout << "calculated min: " << min << " calcuated max: " << max << std::endl;
 
     arma::uword min_start = min_index - bound_window;
     arma::uword min_end = min_index + bound_window;
@@ -58,52 +59,91 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     arma::uword max_end = max_index + bound_window;
     max_end = (max_end >= abscissa.n_rows ? abscissa.n_rows - 1 : max_end);
 
-
+    std::cout << min_index << " " << max_index << std::endl;
     double total_area = arma::sum(spectrum.rows(min_index, max_index));
     total_area = total_area / (abscissa(max_index) - abscissa(min_index));
 
+    std::cout << "compose inflection baseline" << std::endl;
     arma::uword window_size = max_index - min_index + 1;
     total_baseline = arma::linspace(spectrum(min_index), spectrum(max_index), window_size);
-    double baseline_area = arma::sum(total_baseline) / (abscissa(max_index) - abscissa(min_index));
+    arma::vec total_abscissa = abscissa.rows(min_index, max_index);
+    double baseline_area = arma::accu(total_baseline) / (abscissa(max_index) - abscissa(min_index));
+    total_baseline = arma::join_horiz(total_abscissa, total_baseline);
+
+    std::cout << min_start << " " << min_end << std::endl;
+    std::cout << max_start << " " << max_end << std::endl;
 
     arma::vec min_window = spectrum.rows(min_start, min_end);
     arma::vec max_window = spectrum.rows(max_start, max_end);
-    min_index = Vespucci::Math::LocalMinimum(min_window, min);
-    max_index = Vespucci::Math::LocalMinimum(max_window, max);
+    arma::uword inflection_min_index = Vespucci::Math::LocalMinimum(min_window, min) + min_start;
+    arma::uword inflection_max_index = Vespucci::Math::LocalMinimum(max_window, max) + max_start;
 
-    double area_between_inflection = arma::sum(spectrum.rows(min_index, max_index));
-    area_between_inflection = area_between_inflection / (abscissa(max_index) - abscissa(min_index));
-    window_size = max_index - min_index + 1;
-    inflection_baseline = arma::linspace(spectrum(min_index), spectrum(max_index), window_size);
-    double inf_baseline_area = arma::sum(inflection_baseline) / (abscissa(min_index) - abscissa(max_index));
+    std::cout << "inflection min: " << abscissa(inflection_min_index)
+              << " inflection max: " << abscissa(inflection_max_index) << std::endl;
+    double area_between_inflection;
+    try{
+        area_between_inflection = arma::sum(spectrum.rows(min_index, max_index));
+    }catch(std::exception e){
+        std::cout << "Exception: invalid inflection points found" << std::endl;
+        area_between_inflection = std::nan("");
+        inflection_min_index = min_index;
+        inflection_max_index = max_index;
+    }
+
+    std::cout << "find area between inflection points" << std::endl;
+    area_between_inflection = area_between_inflection / (abscissa(inflection_max_index) - abscissa(inflection_min_index));
+    window_size = inflection_max_index - inflection_min_index + 1;
+    inflection_baseline = arma::linspace(spectrum(inflection_min_index), spectrum(inflection_max_index), window_size);
+    double inf_baseline_area = arma::accu(inflection_baseline) / (abscissa(inflection_min_index) - abscissa(inflection_max_index));
 
 
-    double maximum = spectrum.rows(min_index, max_index).max();
 
-    arma::uvec max_loc = arma::find(spectrum.rows(min_index, max_index) == maximum);
+    std::cout << "find maximum and peak center" << std::endl;
+    //we need to make sure the peak center is within the originally specified range
+    arma::uword search_min_index = (inflection_min_index < min_index ? min_index : inflection_min_index);
+    arma::uword search_max_index = (inflection_max_index > max_index ? max_index : inflection_max_index);
+    arma::vec region = spectrum.rows(search_min_index, search_max_index);
+    arma::vec region_abscissa = abscissa.rows(search_min_index, search_max_index);
+    inflection_baseline = join_horiz(region_abscissa, region);
+    double maximum = region.max();
+    arma::uvec max_loc = arma::find(region == maximum);
+    arma::uword max_pos = max_loc(0);
+    arma::vec search_baseline = arma::linspace(region(0), region(region.n_rows - 1), region.n_rows);
+    double peak_center = region_abscissa(max_pos);
+    double adj_maximum = maximum - search_baseline(max_pos);
 
-    arma::uword max_pos = min_index + max_loc(0);
-    double peak_center = abscissa(max_pos);
-    double adj_maximum = maximum - inflection_baseline(max_pos);
-
-
+    std::cout << "fwhm calculations" << std::endl;
     double half_maximum = adj_maximum / 2.0;
     //find left inflection points
-    arma::vec region = spectrum.rows(min_index, max_index);
-    region = region - inflection_baseline;
-    region = region - half_maximum * arma::ones(region.n_rows);
+
+    arma::vec bandwidth_region = spectrum.rows(search_min_index, search_max_index);
+    std::cout << "define bandwidth_baseline" << std::endl;
+    arma::vec bandwidth_baseline = arma::linspace(bandwidth_region(0), bandwidth_region(bandwidth_region.n_rows - 1), bandwidth_region.n_rows);
+    bandwidth_region = bandwidth_region - bandwidth_baseline;
+    arma::vec bandwidth_abscissa = abscissa.rows(search_min_index, search_max_index);
+    bandwidth_region = bandwidth_region - half_maximum * arma::ones(bandwidth_region.n_rows);
     arma::uword i = 0;
     //search for first positive point, point before is inflection
-    while (region(i) < 0){++i;}
-    arma::uword left = i;
+    std::cout << "search for left bound" << std::endl;
+    while (i < bandwidth_region.n_rows && bandwidth_region(i) < 0){++i;}
+    arma::uword left = (i >= bandwidth_region.n_rows ? bandwidth_region.n_rows - 1 : i);
+
     //search for first negative point after first infleciton
-    while (region(i) >= 0){++i;}
-    arma::uword right = i;
+    std::cout << "search for right bound" << std::endl;
+    while (i < bandwidth_region.n_rows && bandwidth_region(i) >= 0){++i;}
+    arma::uword right = (i >= bandwidth_region.n_rows ? bandwidth_region.n_rows - 1 : i);
 
-    left = std::fabs(region(left)) < std::fabs(region(left + 1)) ? left : left + 1;
-    right = std::fabs(region(right)) < std::fabs(region(right - 1)) ? right : right - 1;
+    std::cout << "determine left and right" << std::endl;
+    std::cout << "left = " << left << " right = " << right << std::endl;
+    std::cout << "bandwidth_region.n_rows = " << bandwidth_region.n_rows << std::endl;
+    if (bandwidth_region.n_rows > left)
+        left = std::fabs(bandwidth_region(left)) < std::fabs(bandwidth_region(left + 1)) ? left : left + 1;
+    if (right > 0)
+        right = std::fabs(bandwidth_region(right)) < std::fabs(bandwidth_region(right - 1)) ? right : right - 1;
 
-    double fwhm = abscissa(right + min_index) - abscissa(left + min_index);
+
+    std::cout << "find fwhm" << std::endl;
+    double fwhm = bandwidth_abscissa(right) - bandwidth_abscissa(left);
 
     results(0) = peak_center;
     results(1) = maximum;
@@ -117,16 +157,20 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     return results;
 }
 
-arma::mat Vespucci::Math::Quantification::QuantifyPeakMat(const arma::mat &spectra, const arma::vec &abscissa, double &min, double &max, arma::uword bound_window, arma::mat &total_baselines, arma::field<arma::vec> &inflection_baselines)
+arma::mat Vespucci::Math::Quantification::QuantifyPeakMat(const arma::mat &spectra, const arma::vec &abscissa, double &min, double &max, arma::uword bound_window, arma::mat &total_baselines, arma::field<arma::mat> &inflection_baselines)
 {
-    arma::mat results(spectra.n_cols, 7);
+    arma::mat results(spectra.n_cols, 8);
     inflection_baselines.clear();
     total_baselines.clear();
     inflection_baselines.set_size(spectra.n_cols);
     for (arma::uword i = 0; i < spectra.n_cols; ++i){
-        arma::vec total_baseline;
-        arma::vec inflection_baseline;
-        results.row(i) = Vespucci::Math::Quantification::QuantifyPeak(spectra.col(i), abscissa, min, max, bound_window, total_baseline, inflection_baseline);
+        double temp_min = min;
+        double temp_max = max;
+        arma::mat total_baseline;
+        arma::mat inflection_baseline;
+        std::cout << "before call" << std::endl;
+        results.row(i) = Vespucci::Math::Quantification::QuantifyPeak(spectra.col(i), abscissa, temp_min, temp_max, bound_window, total_baseline, inflection_baseline);
+        std::cout << "after call" << std::endl;
         inflection_baselines(i) = inflection_baseline;
         if (total_baselines.n_rows){
             total_baselines = arma::join_vert(total_baselines, total_baseline.t());
