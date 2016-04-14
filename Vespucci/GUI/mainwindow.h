@@ -56,9 +56,10 @@ public:
     void DisplayExceptionWarning(std::string where, std::exception e);
     QListView *map_list_view();
     void SetActiveDatasetListRow(const QModelIndex &index);
+    void SetActiveDatasetTreeIndex(const QModelIndex &index);
     void DisplayWarning(const QString &title, const QString &text);
     void DisplayInformation(const QString &title, const QString &text);
-    QStringList DatasetNames() const;
+    void SetDatasetTreeModel(DatasetTreeModel *new_model);
 
 signals:
     void GlobalGradientChanged(QCPColorGradient gradient);
@@ -120,12 +121,6 @@ private slots:
     void on_actionVertex_Components_triggered();
 
     void on_actionUndo_triggered();
-
-    void on_datasetsListView_clicked(const QModelIndex &index);
-
-    void DatasetAdded(const QModelIndex &index);
-
-    void on_mapsListView_doubleClicked(const QModelIndex &index);
 
     void on_actionDelete_Map_triggered();
 

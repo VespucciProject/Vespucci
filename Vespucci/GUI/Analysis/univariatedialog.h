@@ -35,7 +35,7 @@ class UnivariateDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index);
+    explicit UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
     ~UnivariateDialog();
 
 private slots:
@@ -108,9 +108,9 @@ private:
     QCPItemStraightLine *max_line_;
 
     ///
-    /// \brief data_
+    /// \brief dataset_
     /// The current dataset
-    QSharedPointer<VespucciDataset> data_;
+    QSharedPointer<VespucciDataset> dataset_;
 
 };
 

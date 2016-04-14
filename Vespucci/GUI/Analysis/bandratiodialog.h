@@ -36,7 +36,7 @@ class BandRatioDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit BandRatioDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index);
+    explicit BandRatioDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
     ~BandRatioDialog();
 
 private slots:
@@ -125,9 +125,9 @@ private:
     QCPItemStraightLine *second_max_line_;
 
     ///
-    /// \brief data_
+    /// \brief dataset_
     /// Points to the dataset we're working with.
-    QSharedPointer<VespucciDataset> data_;
+    QSharedPointer<VespucciDataset> dataset_;
 
     QCheckBox *map_check_box_;
 };

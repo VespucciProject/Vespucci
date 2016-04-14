@@ -30,12 +30,13 @@ DataViewer::DataViewer(MainWindow *parent)
     :QDialog(parent),
      ui(new Ui::DataViewer)
 {
+    ui->setupUi(this);
     tab_widget_ = findChild<QTabWidget *>("tabWidget");
-    int tab_count = tab_widget_->count();
     //clear the tab widget of pages. The DataViewer isn't shown until a tab is added
-    while (tab_widget_->count() > 0)
-        tab_widget_->removeTab(0);
+    //while(tab_widget_->count()){tab_widget_->removeTab(0);}
+    tab_widget_->addTab(new DataWidget(this, new VespucciTableModel(this, empty_matrix_)), "Data");
     QObject::connect(tab_widget_, SIGNAL(tabCloseRequested(int)), this, SLOT(RemoveTab(int)));
+
 }
 
 DataViewer::~DataViewer()

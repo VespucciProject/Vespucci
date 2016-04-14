@@ -1,13 +1,13 @@
 #include "haspeaksdialog.h"
 #include "ui_haspeaksdialog.h"
 
-HasPeaksDialog::HasPeaksDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+HasPeaksDialog::HasPeaksDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::HasPeaksDialog)
 {
 
     ui->setupUi(this);
-    dataset_ = ws->DatasetAt(dataset_index);
+    dataset_ = ws->GetDataset(dataset_key);
     workspace = ws;
     table_widget_ = findChild<QTableWidget *>("tableWidget");
 

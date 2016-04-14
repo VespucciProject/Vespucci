@@ -13,7 +13,7 @@ class ScriptDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ScriptDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index);
+    explicit ScriptDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
     ~ScriptDialog();
 
 private slots:

@@ -1,7 +1,7 @@
 #include "classicalleastsquaresdialog.h"
 #include "ui_classicalleastsquaresdialog.h"
 
-ClassicalLeastSquaresDialog::ClassicalLeastSquaresDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+ClassicalLeastSquaresDialog::ClassicalLeastSquaresDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::ClassicalLeastSquaresDialog)
 {
@@ -10,7 +10,7 @@ ClassicalLeastSquaresDialog::ClassicalLeastSquaresDialog(QWidget *parent, Vespuc
     name_line_edit_= findChild<QLineEdit *>("nameLineEdit");
 
     workspace = ws;
-    dataset_ = workspace->DatasetAt(dataset_index);
+    dataset_ = workspace->GetDataset(dataset_key);
     QStringList matrix_keys = dataset_->AuxiliaryMatrixKeys();
     reference_combo_box_->addItems(matrix_keys);
 

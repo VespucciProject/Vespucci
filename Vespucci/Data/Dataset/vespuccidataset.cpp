@@ -157,11 +157,6 @@ bool VespucciDataset::Contains(const QString &key)
     return analysis_results_.contains(key) || auxiliary_matrices_.contains(key);
 }
 
-void VespucciDataset::SetTreeItem(DatasetTreeItem *item)
-{
-    tree_item_ = item;
-}
-
 
 ///
 /// \brief VespucciDataset::VespucciDataset
@@ -2625,10 +2620,6 @@ uword VespucciDataset::UniqueY() const
     return unique_y.n_rows;
 }
 
-QStringList VespucciDataset::DatasetNames() const
-{
-
-}
 
 ///
 /// \brief VespucciDataset::UnivariateCount
@@ -2785,6 +2776,15 @@ void VespucciDataset::AddAuxiliaryMatrix(const QString &name, mat &matrix)
 QStringList VespucciDataset::AuxiliaryMatrixKeys() const
 {
     return auxiliary_matrices_.keys();
+}
+
+///
+/// \brief VespucciDataset::CoreMatrixKeys
+/// \return
+///
+QStringList VespucciDataset::CoreMatrixKeys() const
+{
+    return {"Spectra", "Spectral Abscissa", "x", "y"};
 }
 
 const mat &VespucciDataset::GetAnalysisResultMatrix(const QString &results_key, const QString &matrix_key) const

@@ -35,7 +35,7 @@ class KMeansDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit KMeansDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index);
+    explicit KMeansDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
     ~KMeansDialog();
 
 private slots:
@@ -78,9 +78,9 @@ private:
     int data_index_;
 
     ///
-    /// \brief data_
+    /// \brief dataset_
     /// The current dataset
-    QSharedPointer<VespucciDataset> data_;
+    QSharedPointer<VespucciDataset> dataset_;
 };
 
 #endif // KMEANSDIALOG_H

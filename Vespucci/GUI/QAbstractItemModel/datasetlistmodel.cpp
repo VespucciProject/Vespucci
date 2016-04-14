@@ -17,37 +17,30 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef METADATASETDIALOG_H
-#define METADATASETDIALOG_H
+#include "datasetlistmodel.h"
 
-#include <QDialog>
-#include "Global/vespucciworkspace.h"
-#include "GUI/QAbstractItemModel/datasetlistmodel.h"
-
-namespace Ui {
-class MetaDatasetDialog;
+DatasetListModel::DatasetListModel(QObject *parent, QStringList dataset_names)
+{
+    dataset_names_ = dataset_names;
 }
 
-class MetaDatasetDialog : public QDialog
+int DatasetListModel::rowCount(const QModelIndex &parent) const
 {
-    Q_OBJECT
+    return dataset_names_.size();
+}
 
-public:
-    explicit MetaDatasetDialog(QWidget *parent, VespucciWorkspace * ws);
-    ~MetaDatasetDialog();
+QVariant DatasetListModel::data(const QModelIndex &index, int role) const
+{
+    if (role != Qt::DisplayRole){
+        return QVariant();
+    }
+    else{
+        int row = index.row();
+        return QVariant(dataset_names_[row]);
+    }
+}
 
-private slots:
-    void on_buttonBox_rejected();
-
-    void on_buttonBox_accepted();
-
-private:
-    Ui::MetaDatasetDialog *ui;
-    QListView *dataset_list_view_;
-    QComboBox *method_selection_box_;
-    QLineEdit *name_line_edit_;
-    DatasetListModel *dataset_list_model_;
-    VespucciWorkspace *workspace;
-};
-
-#endif // METADATASETDIALOG_H
+QString DatasetListModel::DatasetName(int row)
+{
+    return dataset_names_[row];
+}

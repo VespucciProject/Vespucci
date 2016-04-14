@@ -13,7 +13,7 @@ class HasPeaksDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit HasPeaksDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index);
+    explicit HasPeaksDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
     ~HasPeaksDialog();
 
 private slots:

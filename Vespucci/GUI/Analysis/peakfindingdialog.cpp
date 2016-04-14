@@ -1,13 +1,13 @@
 #include "peakfindingdialog.h"
 #include "ui_peakfindingdialog.h"
 #include "Data/Analysis/cwtdata.h"
-PeakFindingDialog::PeakFindingDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+PeakFindingDialog::PeakFindingDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::PeakFindingDialog)
 {
     workspace = ws;
     ui->setupUi(this);
-    dataset_ = ws->DatasetAt(dataset_index);
+    dataset_ = ws->GetDataset(dataset_key);
 
     save_coefs_check_box_ = findChild<QCheckBox *>("coefCheckBox");
     gradient_combo_box_ = findChild<QComboBox *>("gradientComboBox");

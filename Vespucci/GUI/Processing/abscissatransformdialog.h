@@ -13,7 +13,7 @@ class AbscissaTransformDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AbscissaTransformDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index);
+    explicit AbscissaTransformDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
     ~AbscissaTransformDialog();
 
 private slots:

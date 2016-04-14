@@ -13,7 +13,8 @@ PlotViewer::PlotViewer(MainWindow *parent) :
     hold_check_box_ = findChild<QCheckBox*>("holdCheckBox");
     //plotviewer is initialized with empty tab widget but not set visible until
     //a tab widget is added via a plot command
-    while (tab_widget_->count()){tab_widget_->removeTab(0);}
+    //while (tab_widget_->count()){tab_widget_->removeTab(0);}
+    tab_widget_->addTab(new PlotWidget(0,0), "Plot");
 }
 
 PlotViewer::~PlotViewer()
@@ -62,6 +63,7 @@ void PlotViewer::on_stackCheckBox_stateChanged(int arg1)
 
 void PlotViewer::on_tabWidget_currentChanged(int index)
 {
+    if (!tab_widget_->currentWidget()){return;}
     PlotWidget *plot_widget = qobject_cast<PlotWidget *>(tab_widget_->currentWidget());
     stack_check_box_->setChecked(plot_widget->offset_plots());
 }

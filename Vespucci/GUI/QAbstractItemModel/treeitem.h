@@ -19,6 +19,7 @@
 *******************************************************************************/
 #ifndef TREEITEM_H
 #define TREEITEM_H
+
 #include <QList>
 #include <QVariant>
 #include "Data/Dataset/vespuccidataset.h"
@@ -27,10 +28,14 @@ class VespucciDataset;
 class TreeItem
 {
 public:
-    TreeItem(const QList<QVariant> &data, TreeItem *parent = 0);
-    TreeItem(const QString &name, TreeItem *parent, bool is_dataset, bool is_analysis_result, bool is_matrix, bool is_plot);
-    virtual ~TreeItem();
+
+    enum ItemType{
+        Dataset, AnalysisResult, Matrix, Map, Base
+    };
+    TreeItem(TreeItem::ItemType type, QStringList &keys, QList<QVariant> &data, TreeItem *parent = 0);
+    ~TreeItem();
     void appendChild(TreeItem *child);
+    void removeChild(TreeItem *child);
     TreeItem *child(int row);
     int childCount() const;
     int columnCount() const;
@@ -38,102 +43,33 @@ public:
     int row() const;
     TreeItem *parentItem();
     QList<TreeItem*> child_items();
-    bool is_matrix();
-    bool is_plot();
-    bool is_dataset();
-    bool is_analysis_results();
-    void UpdateType(QString new_type);
     void ClearChildren();
+
+    TreeItem::ItemType type() const;
+    QStringList keys() const;
+    const QString DatasetKey() const;
+    QStringList ChildNames() const;
+
+    bool HasChild(const QString &name);
+
+    void UpdateType(QString new_type);
 
 private:
     QList<TreeItem*> child_items_;
     QList<QVariant> item_data_;
     TreeItem *parent_item_;
-    QString type_;
-    bool is_matrix_;
-    bool is_plot_;
-    bool is_dataset_;
-    bool is_analysis_results_;
-
-};
-
-///
-/// \brief The DatasetTreeItem class
-/// Parent is root item of model
-class MatrixTreeItem;
-class DatasetTreeItem : public TreeItem
-{
-public:
-    DatasetTreeItem(QSharedPointer<VespucciDataset> dataset, TreeItem *parent);
-    //appendChild should handle both cases
-    //void AddAnalysisResult(AnalysisResultTreeItem *result);
-    //void AddImage(ImageTreeItem *item);
-    QSharedPointer<VespucciDataset> dataset();
-    void UpdateDescriptions();
-    void AddChildren();
-private:
-    QSharedPointer<VespucciDataset> dataset_;
 
     ///
-    /// \brief spectra_item_
-    /// Spectra are editable, so we need to know to update the dimensions
-    MatrixTreeItem *spectra_item_;
+    /// \brief keys_ Stores relevant keys to get the object in the datamodel
+    /// keys_[0] = dataset name
+    /// keys_[1] = analysis results name, matrix name or map name
+    /// keys_[2] = analysis results matrix name
+    QStringList keys_;
 
     ///
-    /// \brief abscissa_item_
-    /// Abscissa is editable, so we need to be able to update dimensions
-    MatrixTreeItem *abscissa_item_;
-
-    ///
-    /// \brief spatial_item_
-    /// Spatial data is editable, so we need to be able to update dimensions
-    MatrixTreeItem *x_item_;
-
-    MatrixTreeItem *y_item_;
-
-
+    /// \brief type_
+    /// Type from the ItemType Enum
+    TreeItem::ItemType type_;
 
 };
-
-///
-/// \brief The AnalysisResultTreeItem class
-/// Parent should always be a DatasetTreeItem
-class AnalysisResultTreeItem : public TreeItem
-{
-public:
-    AnalysisResultTreeItem(const QString &name, DatasetTreeItem *parent);
-};
-
-///
-/// \brief The MatrixTreeItem class
-/// Is child of either AnalysisResultTreeItem or DatasetTreeItem
-class MatrixTreeItem : public TreeItem
-{
-public:
-    MatrixTreeItem(const QString &key, QSharedPointer<VespucciDataset> dataset, TreeItem *parent);
-    MatrixTreeItem(const QString &key, const QString &parent_key, QSharedPointer<VespucciDataset> dataset, TreeItem *parent);
-    QString key() const;
-    const arma::mat &value();
-    int MatrixRows();
-    int MatrixColumns();
-    QString parent_key();
-private:
-    QString parent_key_;
-    QString key_;
-    ///
-    /// \brief dataset_
-    /// The dataset that value_ was calculated from
-    QSharedPointer<VespucciDataset> dataset_;
-};
-
-class ImageTreeItem : public TreeItem
-{
-public:
-    ImageTreeItem(QSharedPointer<MapData> map_data, DatasetTreeItem *parent);
-    QSharedPointer<MapData> map_data();
-    void ToggleMapViewerVisible();
-private:
-    QSharedPointer<MapData> map_data_;
-};
-
-#endif // TREEITEM_H
+#endif //TREEITEM_H

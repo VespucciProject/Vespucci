@@ -173,7 +173,9 @@ SOURCES += main.cpp\
     GUI/Display/mapdialog.cpp \
     GUI/Display/datawidget.cpp \
     GUI/Display/plotwidget.cpp \
-    GUI/macrodialog.cpp
+    GUI/macrodialog.cpp \
+    Global/datamodel.cpp \
+    GUI/QAbstractItemModel/datasetlistmodel.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -241,7 +243,9 @@ HEADERS  += \
     GUI/Display/mapdialog.h \
     GUI/Display/datawidget.h \
     GUI/Display/plotwidget.h \
-    GUI/macrodialog.h
+    GUI/macrodialog.h \
+    Global/datamodel.h \
+    GUI/QAbstractItemModel/datasetlistmodel.h
 
 
 FORMS    += \

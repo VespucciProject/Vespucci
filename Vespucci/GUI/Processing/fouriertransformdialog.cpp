@@ -1,13 +1,13 @@
 #include "fouriertransformdialog.h"
 #include "ui_fouriertransformdialog.h"
 #include "Global/global.h"
-FourierTransformDialog::FourierTransformDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+FourierTransformDialog::FourierTransformDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::FourierTransformDialog)
 {
     ui->setupUi(this);
     workspace = ws;
-    dataset_ = workspace->DatasetAt(dataset_index);
+    dataset_ = workspace->GetDataset(dataset_key);
 
     end_double_spin_box_ = findChild<QDoubleSpinBox*>("endDoubleSpinBox");
     end_label_ = findChild<QLabel*>("endLabel");

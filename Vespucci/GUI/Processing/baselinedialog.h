@@ -36,7 +36,7 @@ class BaselineDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit BaselineDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index);
+    explicit BaselineDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
     ~BaselineDialog();
 
 private slots:

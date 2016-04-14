@@ -4,12 +4,12 @@
 #include <cstdio>
 #include "External/fileinterprocess.h"
 
-ScriptDialog::ScriptDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+ScriptDialog::ScriptDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::ScriptDialog)
 {
     ui->setupUi(this);
-    dataset_ = ws->DatasetAt(dataset_index);
+    dataset_ = ws->GetDataset(dataset_key);
     code_plain_test_edit_ = findChild<QPlainTextEdit *>("codePlainTextEdit");
     receive_plain_test_edit_ = findChild<QPlainTextEdit *>("receivePlainTextEdit");
     send_plain_test_edit_ = findChild<QPlainTextEdit *>("sendPlainTextEdit");

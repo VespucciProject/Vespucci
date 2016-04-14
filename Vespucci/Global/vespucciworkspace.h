@@ -30,7 +30,7 @@
 #include "GUI/mainwindow.h"
 #include "GUI/QAbstractItemModel/datasettreemodel.h"
 #include "Global/enums.h"
-
+#include "Global/datamodel.h"
 class VespucciDataset;
 class MainWindow;
 class DatasetTreeModel;
@@ -48,13 +48,11 @@ public:
     //adds or removes dataset or map to relevant lists
     void AddDataset(QSharedPointer<VespucciDataset> dataset);
     void RemoveDataset(QString name);
-
-    //void AddMap(MapData map);
-    //void RemoveMap(QString name);
+    void UpdateModel();
 
     void RemoveDatasetAt(const QModelIndex &parent);
     //void RemoveMapAt(int i);
-
+    QSharedPointer<VespucciDataset> DatasetAt(const QModelIndex &parent);
 
     int dataset_loading_count() const;
     //int map_loading_count();
@@ -66,11 +64,17 @@ public:
     void SetPointers(MainWindow *main_window);
 
     MainWindow* main_window();
-    double GetWavelengthMin(int row) const;
-    double GetWavelengthMax(int row) const;
+    double GetWavelengthMin(const QString &key) const;
+    double GetWavelengthMax(const QString &key) const;
 
-    //VespucciDataset* DatasetAt(int i);
-    QSharedPointer<VespucciDataset> DatasetAt(const QModelIndex &parent) const;
+    QSharedPointer<VespucciDataset> GetDataset(const QString &key) const;
+    QSharedPointer<AnalysisResults> GetAnalysisResults(const QString &dataset_key, const QString &results_key) const;
+    QSharedPointer<MapData> GetMap(const QString &dataset_key, const QString &map_key) const;
+    const mat& GetAuxiliaryMatrix(const QString &dataset_key, const QString &matrix_key) const;
+    const mat& GetResultsMatrix(const QString &dataset_key, const QString &results_key, const QString &matrix_key) const;
+    const mat& GetCoreMatrix(const QString &dataset_key, const QString &matrix_key) const;
+
+
 
     QCPRange *global_data_range();
     QCPColorGradient *global_gradient();
@@ -100,6 +104,9 @@ public:
 
 
 private:
+
+    void UpdateTreeModel();
+
     //pointers to main window and necessary widgets
 
     ///
@@ -107,29 +114,16 @@ private:
     /// The main window of the program
     MainWindow *main_window_;
 
-
     ///
-    /// \brief dataset_list_widget_
-    /// The list widget in MainWindow storing all the dataset names
-    QListWidget *dataset_list_widget_;
-
-
-    ///
-    /// \brief dataset_list_model_
+    /// \brief dataset_tree_model_
     /// The model for the dataset list widget.
     DatasetTreeModel *dataset_tree_model_;
-
-
 
     ///
     /// \brief directory_
     /// The directory used by all the file dialogs in the program
     QString directory_; //= QDir::homePath();
 
-    ///
-    /// \brief dataset_names_
-    /// A list of dataset names, which is displayed by the list widget in the main window
-    //QStringList dataset_names_;
 
     ///
     /// \brief dataset_loading_count_
@@ -152,9 +146,9 @@ private:
     QSettings settings_;
 
     ///
-    /// \brief datasets_
-    /// The container that stores all the heap-allocated dataset objects
-    QList<QSharedPointer<VespucciDataset> > *datasets_;
+    /// \brief data_model_
+    /// A model that keeps track of the datasets in the workspace and their members
+    DataModel *data_model_;
 
 };
 

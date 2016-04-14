@@ -26,13 +26,13 @@
 /// \param ws Current workspace
 /// \param row Selected row in the dataset list widget
 ///
-UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::UnivariateDialog)
 {
     ui->setupUi(this);
     workspace = ws;
-    data_ = workspace->DatasetAt(dataset_index);
+    dataset_ = workspace->GetDataset(dataset_key);
 
     min_line_edit_ = findChild<QLineEdit *>("minLineEdit");
     max_line_edit_ = findChild<QLineEdit *>("maxLineEdit");
@@ -51,8 +51,8 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, const
     max_line_->point2->setCoords(0, 1);
     double min, max;
     try{
-        min = data_->wavelength_ptr()->min();
-        max = data_->wavelength_ptr()->max();
+        min = dataset_->wavelength_ptr()->min();
+        max = dataset_->wavelength_ptr()->max();
     }
     catch(exception e){
         cerr << e.what();
@@ -67,15 +67,15 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, const
     min_line_edit_->setValidator(new QDoubleValidator(min, max, 2, this));
     max_line_edit_->setValidator(new QDoubleValidator(min, max, 2, this));
 
-    uword origin = data_->FindOrigin();
+    uword origin = dataset_->FindOrigin();
     QVector<double> plot_data, wavelength;
 
     try{
-        plot_data = data_->PointSpectrum(origin);
-        wavelength = data_->WavelengthQVector();
+        plot_data = dataset_->PointSpectrum(origin);
+        wavelength = dataset_->WavelengthQVector();
     }
     catch(exception e){}
-    if (plot_data.isEmpty()){plot_data = data_->PointSpectrum(0);}
+    if (plot_data.isEmpty()){plot_data = dataset_->PointSpectrum(0);}
     spectrum_plot_->addGraph();
     spectrum_plot_->graph(0)->addData(wavelength, plot_data);
     spectrum_plot_->rescaleAxes();
@@ -104,12 +104,12 @@ void UnivariateDialog::on_buttonBox_accepted()
     uint bound_window = search_window_spin_box_->value();
     QString name = name_line_edit_->text();
     if(!name.size()){
-        name = "Univariate " + QString::number(data_->UnivariateCount());
+        name = "Univariate " + QString::number(dataset_->UnivariateCount());
     }
     QString value_method = value_method_combo_box_->currentText();
     if (value_method == "Riemann Sum"){
         try{
-            data_->Univariate(name, entered_min, entered_max, bound_window);
+            dataset_->Univariate(name, entered_min, entered_max, bound_window);
         }catch(exception e){
             workspace->main_window()->DisplayExceptionWarning(e);
         }
@@ -122,7 +122,7 @@ void UnivariateDialog::on_buttonBox_accepted()
         }
     }
     else{}
-    data_.clear();
+    dataset_.clear();
 }
 
 
@@ -131,7 +131,7 @@ void UnivariateDialog::on_buttonBox_accepted()
 /// Close window when "Cancel" clicked.
 void UnivariateDialog::on_buttonBox_rejected()
 {
-        data_.clear();
+        dataset_.clear();
 }
 
 void UnivariateDialog::on_minLineEdit_textChanged(const QString &arg1)

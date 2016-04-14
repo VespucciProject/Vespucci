@@ -61,10 +61,6 @@ class UnivariateData;
 class AnalysisResults;
 class CWTData;
 class TreeItem;
-class MatrixTreeItem;
-class AnalysisResultTreeItem;
-class ImageTreeItem;
-class DatasetTreeItem;
 
 
 
@@ -325,7 +321,6 @@ public:
     bool Undoable() const;
     uword UniqueX() const;
     uword UniqueY() const;
-    QStringList DatasetNames() const;
     int UnivariateCount() const;
 
     const QString last_operation() const;
@@ -345,6 +340,7 @@ public:
     void ImportAuxiliaryMatrix(const QString &name, const QString &filename);
     void AddAuxiliaryMatrix(const QString &name, mat &matrix);
     QStringList AuxiliaryMatrixKeys() const;
+    QStringList CoreMatrixKeys() const;
 
     const mat& GetAnalysisResultMatrix(const QString &results_key, const QString &matrix_key) const;
     QSharedPointer<AnalysisResults> GetAnalysisResult(const QString &key);
@@ -366,21 +362,7 @@ public:
 
     bool Contains(const QString &key);
 
-    ///
-    /// \brief SetTreeItem
-    /// \param item
-    /// If called more than once, might make a dangling pointer, but since its
-    /// a QObject there might not be as much of a risk. This should only be called
-    /// once, after the dataset has been created successfully. This behavior may
-    /// be handled in the constructors later.
-    void SetTreeItem(DatasetTreeItem *item);
-
     private:
-
-    ///
-    /// \brief tree_item_
-    /// This dataset's tree item in the model
-    DatasetTreeItem *tree_item_;
 
     ///
     /// \brief empty_matrix_

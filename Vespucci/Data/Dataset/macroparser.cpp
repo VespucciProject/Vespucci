@@ -17,6 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
+//Skeleton functions to be filled by GABowers
+
 #include "macroparser.h"
 
 MacroParser::MacroParser(QSharedPointer<VespucciDataset> dataset)

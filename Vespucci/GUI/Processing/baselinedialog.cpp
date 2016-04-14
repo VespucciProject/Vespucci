@@ -26,13 +26,13 @@
 /// \param ws The current workspace
 /// \param row The currently selected row in the dataset list widget
 ///
-BaselineDialog::BaselineDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+BaselineDialog::BaselineDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::BaselineDialog)
 {
     ui->setupUi(this);
     workspace = ws;
-    dataset_ = workspace->DatasetAt(dataset_index);
+    dataset_ = workspace->GetDataset(dataset_key);
 
     param_0_spin_box_ = findChild<QSpinBox *>("param_0SpinBox");
     method_box_ = findChild<QComboBox *>("methodComboBox");

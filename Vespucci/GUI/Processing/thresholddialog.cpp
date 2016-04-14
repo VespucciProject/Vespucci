@@ -1,12 +1,12 @@
 #include "GUI/Processing/thresholddialog.h"
 #include "ui_thresholddialog.h"
 
-ThresholdDialog::ThresholdDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+ThresholdDialog::ThresholdDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::ThresholdDialog)
 {
     ui->setupUi(this);
-    dataset_ = ws->DatasetAt(dataset_index);
+    dataset_ = ws->GetDataset(dataset_key);
     workspace = ws;
     threshold_box_ = findChild<QDoubleSpinBox*>("doubleSpinBox");
     method_box_ = findChild<QComboBox*>("comboBox");

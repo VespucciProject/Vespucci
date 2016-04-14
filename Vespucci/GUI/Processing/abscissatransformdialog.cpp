@@ -2,13 +2,13 @@
 #include "ui_abscissatransformdialog.h"
 #include <mlpack/core.hpp>
 
-AbscissaTransformDialog::AbscissaTransformDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+AbscissaTransformDialog::AbscissaTransformDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::AbscissaTransformDialog)
 {
     ui->setupUi(this);
     workspace = ws;
-    dataset_ = workspace->DatasetAt(dataset_index);
+    dataset_ = workspace->GetDataset(dataset_key);
     out_factor_edit_ = findChild<QLineEdit *>("outFactorLineEdit");
     in_factor_edit_ = findChild<QLineEdit *>("inFactorLineEdit");
     out_units_combo_box_ = findChild<QComboBox *>("outUnitsComboBox");

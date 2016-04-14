@@ -31,7 +31,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <widget class="QTreeView" name="datasetsTreeView"/>
+     <widget class="QTreeView" name="datasetTreeView"/>
     </item>
     <item>
      <widget class="QTableView" name="spectraTableView"/>
@@ -223,7 +223,7 @@
   </action>
   <action name="actionImport_Dataset_from_File">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/import.svg</normaloff>:/icons/toolbar_icons/import.svg</iconset>
    </property>
    <property name="text">
@@ -439,7 +439,7 @@
   </action>
   <action name="actionImport_From_Multiple_Point_Spectra">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/import_multiple.svg</normaloff>:/icons/toolbar_icons/import_multiple.svg</iconset>
    </property>
    <property name="text">
@@ -505,7 +505,7 @@
   </action>
   <action name="actionPlotResult">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/plot.svg</normaloff>:/icons/toolbar_icons/plot.svg</iconset>
    </property>
    <property name="text">
@@ -517,7 +517,7 @@
   </action>
   <action name="actionMapResult">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/map.svg</normaloff>:/icons/toolbar_icons/map.svg</iconset>
    </property>
    <property name="text">
@@ -529,7 +529,7 @@
   </action>
   <action name="actionRemoveSpectrum">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/delete.svg</normaloff>:/icons/toolbar_icons/delete.svg</iconset>
    </property>
    <property name="text">
@@ -541,7 +541,7 @@
   </action>
   <action name="actionZeroSpectrum">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/zero.svg</normaloff>:/icons/toolbar_icons/zero.svg</iconset>
    </property>
    <property name="text">
@@ -553,7 +553,7 @@
   </action>
   <action name="actionOpenDataset">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/open.svg</normaloff>:/icons/toolbar_icons/open.svg</iconset>
    </property>
    <property name="text">
@@ -565,7 +565,7 @@
   </action>
   <action name="actionSaveDataset">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/save.svg</normaloff>:/icons/toolbar_icons/save.svg</iconset>
    </property>
    <property name="text">
@@ -585,7 +585,7 @@
   </action>
   <action name="actionView_Statistics">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/stats.svg</normaloff>:/icons/toolbar_icons/stats.svg</iconset>
    </property>
    <property name="text">
@@ -597,7 +597,7 @@
   </action>
   <action name="actionShow_in_Data_Viewer">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/table.svg</normaloff>:/icons/toolbar_icons/table.svg</iconset>
    </property>
    <property name="text">
@@ -655,6 +655,8 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

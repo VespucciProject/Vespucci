@@ -35,7 +35,7 @@ class PLSDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PLSDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index);
+    explicit PLSDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
     ~PLSDialog();
 
 private slots:
@@ -97,9 +97,9 @@ private:
     QLineEdit *file_line_edit_;
     QComboBox *dataset_combo_box_;
     ///
-    /// \brief data_
+    /// \brief dataset_
     /// Current dataset
-    QSharedPointer<VespucciDataset> data_;
+    QSharedPointer<VespucciDataset> dataset_;
 };
 
 #endif // PLSDIALOG_H

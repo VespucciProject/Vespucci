@@ -30,6 +30,7 @@ VespucciWorkspace::VespucciWorkspace() :
     dataset_loading_count_ = 0;
     directory_ = QDir::homePath();
     CheckSettings();
+    data_model_ = new DataModel();
 }
 
 ///
@@ -38,16 +39,12 @@ VespucciWorkspace::VespucciWorkspace() :
 VespucciWorkspace::~VespucciWorkspace()
 {
     cout << "Workspace destructor" << endl;
+    delete data_model_;
 }
 
 QStringList VespucciWorkspace::dataset_names() const
 {
-    QStringList names;
-    QList<TreeItem*> items = dataset_tree_model_->root_item()->child_items();
-    foreach(TreeItem* item, items)
-        if (item->is_dataset())
-            names << item->data(0).toString();
-    return names;
+    return data_model_->DatasetNames();
 }
 
 ///
@@ -58,7 +55,6 @@ QStringList VespucciWorkspace::dataset_names() const
 void VespucciWorkspace::SetPointers(MainWindow *main_window)
 {
     main_window_ = main_window;
-    QObject::connect(dataset_tree_model_, SIGNAL(DatasetAdded(QModelIndex)), main_window_, SLOT(DatasetAdded(QModelIndex)));
 }
 
 
@@ -70,13 +66,33 @@ void VespucciWorkspace::SetPointers(MainWindow *main_window)
 /// Add a dataset to the datasets_ QList
 void VespucciWorkspace::AddDataset(QSharedPointer<VespucciDataset> dataset)
 {
-    dataset_tree_model_->AddDataset(dataset);
+    data_model_->AddDataset(dataset);
+    dataset_tree_model_->SetupModelData(data_model_);
+}
+
+///
+/// \brief VespucciWorkspace::RemoveDataset
+/// \param name
+/// We forget about this dataset. This does not guarantee that the memory is
+/// deallocated, as the QSharedPointer may still belong to another active object
+/// (we make sure to call QSharedPointer::clear at the ends of dialogs that
+/// handle QSharedPointers for this reason).
+void VespucciWorkspace::RemoveDataset(QString name)
+{
+    data_model_->RemoveDataset(name);
+}
+
+///
+/// \brief VespucciWorkspace::UpdateModel
+/// Call when a VespucciDataset adds or removes a new object.
+void VespucciWorkspace::UpdateModel()
+{
+    dataset_tree_model_->SetupModelData(data_model_);
 }
 
 
 
 // Useful when the index is known (as when the list is being iterated)
-// These functions should be safe because the names list and the object list only update together
 
 ///
 /// \brief VespucciWorkspace::RemoveDatasetAt
@@ -86,7 +102,18 @@ void VespucciWorkspace::AddDataset(QSharedPointer<VespucciDataset> dataset)
 
 void VespucciWorkspace::RemoveDatasetAt(const QModelIndex &parent)
 {
-    dataset_tree_model_->removeRow(parent);
+    //we need to know how deep this thing goes
+    TreeItem *item = dataset_tree_model_->getItem(parent);
+    QStringList keys = item->keys();
+    if (keys.size() == 1) RemoveDataset(keys[0]);
+    else return;
+}
+
+QSharedPointer<VespucciDataset> VespucciWorkspace::DatasetAt(const QModelIndex &parent)
+{
+    TreeItem *item = dataset_tree_model_->getItem(parent);
+    QString dataset_key = item->keys()[0];
+    return data_model_->GetDataset(dataset_key);
 }
 
 
@@ -134,9 +161,58 @@ MainWindow *VespucciWorkspace::main_window()
 /// \param row Index of the dataset
 /// \return Maximum of the spectral abscissa
 ///
-double VespucciWorkspace::GetWavelengthMax(int row) const
+double VespucciWorkspace::GetWavelengthMax(const QString &key) const
 {
-    return datasets_->at(row)->wavelength().max();
+    double abscissa_max = 0;
+    try{
+        abscissa_max = data_model_->GetDataset(key)->abscissa_ptr()->max();
+    }catch(exception e){
+        main_window_->DisplayExceptionWarning("GetWavelengthMax", e);
+    }
+
+    return abscissa_max;
+
+}
+
+///
+/// \brief VespucciWorkspace::GetDataset
+/// \param key
+/// \return
+/// Will throw invalid argument (from DataModel) if key does not exist
+QSharedPointer<VespucciDataset> VespucciWorkspace::GetDataset(const QString &key) const
+{
+    return data_model_->GetDataset(key);
+}
+
+///
+/// \brief VespucciWorkspace::GetAnalysisResults
+/// \param dataset_key
+/// \param results_key
+/// \return
+/// Will throw invalid_argument (from DataModel) if key(s) do(es) not exist
+QSharedPointer<AnalysisResults> VespucciWorkspace::GetAnalysisResults(const QString &dataset_key, const QString &results_key) const
+{
+    return data_model_->GetResults(dataset_key, results_key);
+}
+
+QSharedPointer<MapData> VespucciWorkspace::GetMap(const QString &dataset_key, const QString &map_key) const
+{
+    return data_model_->GetMap(dataset_key, map_key);
+}
+
+const mat &VespucciWorkspace::GetAuxiliaryMatrix(const QString &dataset_key, const QString &matrix_key) const
+{
+    return data_model_->GetAuxiliaryMatrix(dataset_key, matrix_key);
+}
+
+const mat &VespucciWorkspace::GetResultsMatrix(const QString &dataset_key, const QString &results_key, const QString &matrix_key) const
+{
+    return data_model_->GetResultsMatrix(dataset_key, results_key, matrix_key);
+}
+
+const mat &VespucciWorkspace::GetCoreMatrix(const QString &dataset_key, const QString &matrix_key) const
+{
+    return data_model_->GetCoreMatrix(dataset_key, matrix_key);
 }
 
 ///
@@ -144,20 +220,15 @@ double VespucciWorkspace::GetWavelengthMax(int row) const
 /// \param row Index of the dataset
 /// \return  Minimum of the spectral abscissa
 ///
-double VespucciWorkspace::GetWavelengthMin(int row) const
+double VespucciWorkspace::GetWavelengthMin(const QString &key) const
 {
-    return datasets_->at(row)->wavelength().min();
-}
-
-
-///
-/// \brief VespucciWorkspace::DatasetAt
-/// \param i Index of desired dataset
-/// \return Desired dataset
-///
-QSharedPointer<VespucciDataset> VespucciWorkspace::DatasetAt(const QModelIndex &parent) const
-{
-    return dataset_tree_model_->DatasetAt(parent);
+    double abscissa_min = 0;
+    try{
+        abscissa_min = data_model_->GetDataset(key)->abscissa_ptr()->min();
+    }catch(exception e){
+        main_window_->DisplayExceptionWarning("GetWavelengthMin", e);
+    }
+    return abscissa_min;
 }
 
 ///
@@ -247,14 +318,6 @@ void VespucciWorkspace::ClearDatasets()
     dataset_tree_model_->ClearDatasets();
 }
 
-///
-/// \brief VespucciWorkspace::datasets
-/// \return a copy of the list of pointers to datasets
-///
-QList<QSharedPointer<VespucciDataset> > *VespucciWorkspace::datasets()
-{
-    return datasets_;
-}
 
 ///
 /// \brief VespucciWorkspace::SetListWidgetModel
@@ -265,16 +328,7 @@ void VespucciWorkspace::SetListWidgetModel(DatasetTreeModel *model)
     dataset_tree_model_ = model;
 }
 
-///
-/// \brief VespucciWorkspace::SetDatasets
-/// \param datasets
-/// Set the master list of datasets;
-void VespucciWorkspace::SetDatasets(QList<QSharedPointer<VespucciDataset> > *datasets)
-{
-    datasets_ = datasets;
-}
 
-///
 /// \brief VespucciWorkspace::UpdateCount
 /// \return The new count
 /// Increments dataset loading count
@@ -376,6 +430,11 @@ void VespucciWorkspace::CheckSettings()
 QSettings *VespucciWorkspace::settings()
 {
     return &settings_;
+}
+
+void VespucciWorkspace::UpdateTreeModel()
+{
+    dataset_tree_model_->UpdateData(data_model_);
 }
 
 

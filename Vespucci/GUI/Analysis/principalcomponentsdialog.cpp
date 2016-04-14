@@ -27,13 +27,13 @@
 /// \param ws Current workspace
 /// \param row Currently selected row
 ///
-PrincipalComponentsDialog::PrincipalComponentsDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+PrincipalComponentsDialog::PrincipalComponentsDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::PrincipalComponentsDialog)
 {
     ui->setupUi(this);
     workspace = ws;
-    data_ = workspace->DatasetAt(dataset_index);
+    dataset_ = workspace->GetDataset(dataset_key);
     name_line_edit_ = findChild<QLineEdit*>("nameLineEdit");
     map_check_box_ = findChild<QCheckBox*>("mapCheckBox");
 }
@@ -54,14 +54,14 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
                                             "Principal Components",
                                             "Calculating principal components data...");
     try{
-        data_->PrincipalComponents(name);
+        dataset_->PrincipalComponents(name);
     }catch(exception e){
         progress->close();
         workspace->main_window()->DisplayExceptionWarning(e);
     }
     progress->close();
     close();
-    data_.clear();
+    dataset_.clear();
 }
 
 ///
@@ -70,5 +70,5 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
 void PrincipalComponentsDialog::on_buttonBox_rejected()
 {
     close();
-    data_.clear();
+    dataset_.clear();
 }

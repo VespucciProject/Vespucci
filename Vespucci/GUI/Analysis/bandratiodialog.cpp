@@ -22,14 +22,14 @@
 
 BandRatioDialog::BandRatioDialog(QWidget *parent,
                                  VespucciWorkspace *ws,
-                                 const QModelIndex &dataset_index) :
+                                 const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::BandRatioDialog)
 {
     ui->setupUi(this);
 
     workspace = ws;
-    data_ = workspace->DatasetAt(dataset_index);
+    dataset_ = workspace->GetDataset(dataset_key);
 
     spectrum_custom_plot_ = findChild<QCustomPlot *>("spectrumPlot");
     first_min_line_edit_ = findChild<QLineEdit *>("firstMinLineEdit");
@@ -58,8 +58,8 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     second_min_line_->setPen(QPen(Qt::GlobalColor::red));
     second_max_line_->setPen(QPen(Qt::GlobalColor::red));
 
-    double min = data_->abscissa_ptr()->min();
-    double max = data_->abscissa_ptr()->max();
+    double min = dataset_->abscissa_ptr()->min();
+    double max = dataset_->abscissa_ptr()->max();
 
     QDoubleValidator *validator = new QDoubleValidator(min, max, 2, this);
 
@@ -67,11 +67,11 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     QString label_text = QString::number(min) + "–" + QString::number(max);
     range_label_->setText(label_text);
 
-    uword origin = data_->FindOrigin();
+    uword origin = dataset_->FindOrigin();
 
-    QVector<double> plot_data = data_->PointSpectrum(origin);
-    QVector<double> wavelength = data_->WavelengthQVector();
-    if (plot_data.isEmpty()){plot_data = data_->PointSpectrum(0);}
+    QVector<double> plot_data = dataset_->PointSpectrum(origin);
+    QVector<double> wavelength = dataset_->WavelengthQVector();
+    if (plot_data.isEmpty()){plot_data = dataset_->PointSpectrum(0);}
 
     first_min_line_edit_->setValidator(validator);
     first_max_line_edit_->setValidator(validator);
@@ -106,12 +106,12 @@ void BandRatioDialog::on_buttonBox_accepted()
     double first_entered_max = first_max_line_edit_->text().toDouble();
     double second_entered_max = second_max_line_edit_->text().toDouble();
 
-    if (first_entered_min < data_->abscissa_ptr()->min() || second_entered_min < data_->abscissa_ptr()->min()){
+    if (first_entered_min < dataset_->abscissa_ptr()->min() || second_entered_min < dataset_->abscissa_ptr()->min()){
         QMessageBox::warning(this, "Invalid Input!", "You have entered a left bound that is smaller than the smallest number on the spectral abscissa");
         return;
     }
 
-    if (first_entered_max > data_->abscissa_ptr()->min() || second_entered_max > data_->abscissa_ptr()->min()){
+    if (first_entered_max > dataset_->abscissa_ptr()->min() || second_entered_max > dataset_->abscissa_ptr()->min()){
         QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abscissa");
         return;
     }
@@ -123,7 +123,7 @@ void BandRatioDialog::on_buttonBox_accepted()
 
     if (value_method == "Riemann Sum"){
         try{
-            data_->BandRatio(name, first_entered_min, first_entered_max,
+            dataset_->BandRatio(name, first_entered_min, first_entered_max,
                              second_entered_min, second_entered_max,
                              bound_window);
         }catch(exception e){
@@ -142,7 +142,7 @@ void BandRatioDialog::on_buttonBox_accepted()
     }
 
     close();
-    data_.clear();
+    dataset_.clear();
 }
 
 
@@ -152,7 +152,7 @@ void BandRatioDialog::on_buttonBox_accepted()
 void BandRatioDialog::on_buttonBox_rejected()
 {
     close();
-    data_.clear();
+    dataset_.clear();
 }
 
 void BandRatioDialog::on_firstMinLineEdit_textChanged(const QString &arg1)

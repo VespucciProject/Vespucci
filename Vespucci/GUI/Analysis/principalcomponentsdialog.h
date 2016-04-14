@@ -37,7 +37,7 @@ class PrincipalComponentsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PrincipalComponentsDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index);
+    explicit PrincipalComponentsDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
     ~PrincipalComponentsDialog();
 
 private slots:
@@ -66,9 +66,9 @@ private:
     QCheckBox *map_check_box_;
 
     ///
-    /// \brief data_
+    /// \brief dataset_
     /// Current dataset
-    QSharedPointer<VespucciDataset> data_;
+    QSharedPointer<VespucciDataset> dataset_;
 };
 
 #endif // PRINCIPALCOMPONENTSDIALOG_H

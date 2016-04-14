@@ -19,28 +19,12 @@
 *******************************************************************************/
 #include "treeitem.h"
 
-TreeItem::TreeItem(const QList<QVariant> &data, TreeItem *parent)
+TreeItem::TreeItem(TreeItem::ItemType type, QStringList &keys, QList<QVariant> &data, TreeItem *parent)
 {
-    parent_item_ = parent;
+    type_ = type;
+    keys_ = keys;
     item_data_ = data;
-    is_matrix_ = false;
-    is_plot_ = false;
-}
-
-TreeItem::TreeItem(const QString &name, TreeItem *parent, bool dataset, bool analysis_result, bool matrix, bool plot)
-{
-    QString type;
-    if (dataset){type = "Dataset";}
-    else if (matrix){type="Matrix";}
-    else if (plot){type="Plot";}
-    else if (analysis_result){type="Analysis Result";}
-    else{type="";}
     parent_item_ = parent;
-    item_data_ << QVariant(name) << QVariant(type);
-    is_matrix_ = matrix;
-    is_plot_ = plot;
-    is_analysis_results_ = analysis_result;
-    is_dataset_ = dataset;
 }
 
 TreeItem::~TreeItem()
@@ -51,6 +35,11 @@ TreeItem::~TreeItem()
 void TreeItem::appendChild(TreeItem *child)
 {
     child_items_.append(child);
+}
+
+void TreeItem::removeChild(TreeItem *child)
+{
+    child_items_.removeOne(child);
 }
 
 TreeItem *TreeItem::child(int row)
@@ -90,26 +79,6 @@ QList<TreeItem *> TreeItem::child_items()
     return child_items_;
 }
 
-bool TreeItem::is_matrix()
-{
-    return is_matrix_;
-}
-
-bool TreeItem::is_plot()
-{
-    return is_plot_;
-}
-
-bool TreeItem::is_dataset()
-{
-    return is_dataset_;
-}
-
-bool TreeItem::is_analysis_results()
-{
-    return is_analysis_results_;
-}
-
 void TreeItem::UpdateType(QString new_type)
 {
     if (item_data_.size() > 1)
@@ -121,190 +90,35 @@ void TreeItem::ClearChildren()
     child_items_.clear();
 }
 
-DatasetTreeItem::DatasetTreeItem(QSharedPointer<VespucciDataset> dataset, TreeItem *parent)
-    : TreeItem(dataset->name(), parent, true, false, false, false)
+TreeItem::ItemType TreeItem::type() const
 {
-    dataset_ = dataset;
-    spectra_item_ = new MatrixTreeItem("Spectra", dataset, parent);
-    abscissa_item_ = new MatrixTreeItem("Spectral Abscissa", dataset, parent);
-    x_item_ = new MatrixTreeItem("x", dataset, parent);
-    y_item_ = new MatrixTreeItem("y", dataset, parent);
-
-    UpdateDescriptions();
-    appendChild(spectra_item_);
-    appendChild(abscissa_item_);
-    appendChild(x_item_);
-    appendChild(y_item_);
-
+    return type_;
 }
 
-QSharedPointer<VespucciDataset> DatasetTreeItem::dataset()
+QStringList TreeItem::keys() const
 {
-    return dataset_;
+    return keys_;
 }
 
-void DatasetTreeItem::UpdateDescriptions()
+const QString TreeItem::DatasetKey() const
 {
-    const arma::mat &spectra(dataset_->spectra_ref());
-    const arma::vec &abscissa(dataset_->abscissa_ref());
-    const arma::vec &x(dataset_->x_ref());
-    const arma::vec &y(dataset_->y_ref());
-    int spectrum_rows = spectra.n_rows;
-    int spectrum_cols = spectra.n_cols;
-    int abscissa_rows = abscissa.n_rows;
-    double abscissa_min = abscissa.min();
-    double abscissa_max = abscissa.max();
-    int x_rows = x.n_rows;
-    int y_rows = y.n_rows;
-    int unique_x = dataset_->UniqueX();
-    int unique_y = dataset_->UniqueY();
-    double x_min = x.min();
-    double y_min = y.min();
-    double x_max = x.max();
-    double y_max = y.max();
-
-    QString spectra_description = QString::number(spectrum_cols)
-            + " spectra with " + QString::number(spectrum_rows) + " elements";
-
-    QString abscissa_description = QString::number(abscissa_rows) + " elements, "
-            + QString::number(abscissa_min) + "–" + QString::number(abscissa_max)
-            + " " + dataset_->x_axis_description();
-
-    QString x_description = QString::number(unique_x) + " unique elements ("
-            + QString::number(x_rows) + " total), " + QString::number(x_min)
-            + "–" + QString::number(x_max);
-
-    QString y_description = QString::number(unique_y) + " unique elements ("
-            + QString::number(y_rows) + " total), " + QString::number(y_min)
-            + "–" + QString::number(y_max);
-
-    spectra_item_->UpdateType(spectra_description);
-    abscissa_item_->UpdateType(abscissa_description);
-    x_item_->UpdateType(x_description);
-    y_item_->UpdateType(y_description);
+    return keys_[0];
 }
 
-///
-/// \brief DatasetTreeItem::AddChildren
-/// Initializes and adds the children to this model.
-/// Is also used to update the model from VespucciDataset
-/// For matrices to appear in the model, this must be called
-void DatasetTreeItem::AddChildren()
+QStringList TreeItem::ChildNames() const
 {
-    QStringList aux_mat_list = dataset_->AuxiliaryMatrixKeys();
-    QStringList analysis_results_list = dataset_->AnalysisResultsKeys();
-    QStringList maps_list = dataset_->MapKeys();
-
-    QStringList mat_child_names;
-    QStringList result_child_names;
-    QStringList map_child_names;
-
-    foreach (TreeItem *item, child_items()){
-        if (item->is_analysis_results())
-            result_child_names << item->data(0).toString();
-        if (item->is_matrix())
-            mat_child_names << item->data(0).toString();
-        if (item->is_plot())
-            map_child_names << item->data(0).toString();
-    }
-    foreach (QString name, aux_mat_list){
-        if (!mat_child_names.contains(name))
-            appendChild(new MatrixTreeItem(name, dataset_, this));
-    }
-    foreach(QString name, analysis_results_list){
-        if (!result_child_names.contains(name))
-            appendChild(new AnalysisResultTreeItem(name, this));
-    }
-    foreach(QString name, maps_list){
-        if (!map_child_names.contains(name))
-            appendChild(new ImageTreeItem(dataset_->GetMapData(name), this));
-    }
-
+    QStringList child_names;
+    foreach(TreeItem *item, child_items_)
+        child_names << item->data(0).toString();
+    return child_names;
 }
 
-AnalysisResultTreeItem::AnalysisResultTreeItem(const QString &name, DatasetTreeItem *parent)
-    : TreeItem(name, parent, false, true, false, false)
+bool TreeItem::HasChild(const QString &name)
 {
-    //create children from this analysis result
-    QSharedPointer<AnalysisResults> result = parent->dataset()->GetAnalysisResult(name);
-    QStringList matrix_list = result->KeyList();
-    foreach (const QString &matrix_name, matrix_list)
-        appendChild(new MatrixTreeItem(matrix_name, parent->dataset(), this));
+    foreach(TreeItem *child_item, child_items_)
+        if (child_item->data(0) == name)
+            return true;
+
+    return false;
 }
 
-
-MatrixTreeItem::MatrixTreeItem(const QString &key, QSharedPointer<VespucciDataset> dataset, TreeItem *parent)
-    : TreeItem(key, parent, false, false, true, false)
-{
-    key_ = key;
-    parent_key_ = "";
-    dataset_ = dataset;
-    const mat &matrix(dataset_->GetAuxiliaryMatrix(key));
-    int rows = matrix.n_rows;
-    int cols = matrix.n_cols;
-    QString new_description = "[" + QString::number(rows)
-            + " x " + QString::number(cols) + " ] matrix";
-    UpdateType(new_description);
-
-}
-
-MatrixTreeItem::MatrixTreeItem(const QString &key, const QString &parent_key, QSharedPointer<VespucciDataset> dataset, TreeItem *parent)
-    : TreeItem(key, parent, false, false, true, false)
-{
-    key_ = key;
-    parent_key_ = parent_key;
-    dataset_ = dataset;
-    const mat &matrix(dataset_->GetAnalysisResultMatrix(parent_key, key));
-    int rows = matrix.n_rows;
-    int cols = matrix.n_cols;
-    QString new_description = "[" + QString::number(rows)
-            + " x " + QString::number(cols) + " ] matrix";
-    UpdateType(new_description);
-}
-
-QString MatrixTreeItem::key() const
-{
-    return key_;
-}
-
-const arma::mat &MatrixTreeItem::value()
-{
-    if (parentItem()->is_analysis_results()){
-        return dataset_->GetAnalysisResultMatrix(key_, parent_key_);
-    }
-    if (dataset_->IsCoreMatrix(key_)){
-        return dataset_->GetCoreMatrix(key_);
-    }
-    return dataset_->GetAuxiliaryMatrix(key_);
-}
-
-int MatrixTreeItem::MatrixRows()
-{
-    return value().n_rows;
-}
-
-int MatrixTreeItem::MatrixColumns()
-{
-    return value().n_cols;
-}
-
-QString MatrixTreeItem::parent_key()
-{
-    return parent_key_;
-}
-
-ImageTreeItem::ImageTreeItem(QSharedPointer<MapData> map_data, DatasetTreeItem *parent)
-    : TreeItem(map_data->name(), parent, false, false, false, true)
-{
-    map_data_ = map_data;
-}
-
-QSharedPointer<MapData> ImageTreeItem::map_data()
-{
-    return map_data_;
-}
-
-void ImageTreeItem::ToggleMapViewerVisible()
-{
-    map_data_->ShowMapWindow(map_data_->MapWindowVisible());
-}

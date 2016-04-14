@@ -1,12 +1,12 @@
 #include "abscissainterpolationdialog.h"
 #include "ui_abscissainterpolationdialog.h"
-AbscissaInterpolationDialog::AbscissaInterpolationDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+AbscissaInterpolationDialog::AbscissaInterpolationDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::AbscissaInterpolationDialog)
 {
     ui->setupUi(this);
     workspace = ws;
-    dataset_ = workspace->DatasetAt(dataset_index);
+    dataset_ = workspace->GetDataset(dataset_key);
 
     dataset_combo_box_ = findChild<QComboBox*>("datasetComboBox");
     dataset_radio_button_ = findChild<QRadioButton*>("datasetRadioButton");

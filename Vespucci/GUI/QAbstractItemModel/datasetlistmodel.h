@@ -17,51 +17,21 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef FILTERDIALOG_H
-#define FILTERDIALOG_H
+#ifndef DATASETLISTMODEL_H
+#define DATASETLISTMODEL_H
 
-#include <QDialog>
-#include "Global/vespucciworkspace.h"
-#include "Data/Dataset/vespuccidataset.h"
-
-class VespucciWorkspace;
-class VespucciDataset;
-namespace Ui {
-class FilterDialog;
-}
-
-///
-/// \brief The FilterDialog class
-/// This dialog allows the user to apply filtering, smoothing or derivatization
-/// to the dataset.
-class FilterDialog : public QDialog
+#include <QAbstractListModel>
+class DataModel;
+class DatasetListModel : public QAbstractListModel
 {
     Q_OBJECT
-
 public:
-    explicit FilterDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
-    ~FilterDialog();
-
-private slots:
-
-
-    void on_methodComboBox_currentIndexChanged(int index);
-
-    void on_buttonBox_accepted();
-
-    void on_buttonBox_rejected();
-
+    DatasetListModel(QObject *parent, QStringList dataset_names);
+    int rowCount(const QModelIndex &parent) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    QString DatasetName(int row);
 private:
-    Ui::FilterDialog *ui;
-    VespucciWorkspace *workspace;
-    QSharedPointer<VespucciDataset> dataset_;
-
-    QComboBox *method_box_;
-    QSpinBox *derivative_box_;
-    QSpinBox *polynomial_box_;
-    QSpinBox *window_box_;
-    QSpinBox *singular_values_box_;
-    QDoubleSpinBox *epsilon_box_;
+    QStringList dataset_names_;
 };
 
-#endif // FILTERDIALOG_H
+#endif // DATASETLISTMODEL_H

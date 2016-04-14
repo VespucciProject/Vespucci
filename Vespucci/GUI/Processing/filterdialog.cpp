@@ -26,13 +26,13 @@
 /// \param ws Current workspace
 /// \param row Row of current dataset
 ///
-FilterDialog::FilterDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+FilterDialog::FilterDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::FilterDialog)
 {
     ui->setupUi(this);
     workspace = ws;
-    dataset_ = workspace->DatasetAt(dataset_index);
+    dataset_ = workspace->GetDataset(dataset_key);
     method_box_ = findChild<QComboBox *>("methodComboBox");
     derivative_box_ = findChild<QSpinBox *>("derivativeSpinBox");
     polynomial_box_ = findChild<QSpinBox *>("polynomialSpinBox");

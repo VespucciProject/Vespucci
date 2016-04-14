@@ -13,7 +13,7 @@ class ClassicalLeastSquaresDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ClassicalLeastSquaresDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index);
+    explicit ClassicalLeastSquaresDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
     ~ClassicalLeastSquaresDialog();
 
 private slots:

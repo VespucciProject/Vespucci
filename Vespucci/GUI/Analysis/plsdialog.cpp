@@ -20,13 +20,13 @@
 #include "GUI/Analysis/plsdialog.h"
 #include "ui_plsdialog.h"
 
-PLSDialog::PLSDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+PLSDialog::PLSDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::PLSDialog)
 {
     ui->setupUi(this);
     workspace = ws;
-    data_ = workspace->DatasetAt(dataset_index);
+    dataset_ = workspace->GetDataset(dataset_key);
     components_spin_box_ = findChild<QSpinBox *>("componentsSpinBox");
     recalculate_check_box_ = findChild<QCheckBox *>("recalculateCheckBox");
     prediction_check_box_ = findChild<QCheckBox *>("predictionCheckBox");
@@ -68,12 +68,12 @@ void PLSDialog::on_buttonBox_accepted()
     int components = components_spin_box_->value();
     QString name = name_line_edit_->text();
     try{
-        data_->PartialLeastSquares(name, components);
+        dataset_->PartialLeastSquares(name, components);
     }catch(exception e){
         workspace->main_window()->DisplayExceptionWarning(e);
     }
     close();
-    data_.clear();
+    dataset_.clear();
 }
 
 ///
@@ -82,7 +82,7 @@ void PLSDialog::on_buttonBox_accepted()
 void PLSDialog::on_buttonBox_rejected()
 {
     close();
-    data_.clear();
+    dataset_.clear();
 }
 
 void PLSDialog::on_predictionCheckBox_clicked(bool checked)

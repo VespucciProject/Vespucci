@@ -29,9 +29,10 @@ class MainWindow;
 class VespucciDataset;
 class VespucciWorkspace;
 class UnivariateData;
+class VespucciTableModel;
+class DataWidget;
 namespace Ui {
 class DataViewer;
-class VespucciTableModel;
 }
 
 ///
@@ -51,6 +52,7 @@ public slots:
 private:
     Ui::DataViewer *ui;
     QTabWidget *tab_widget_;
+    mat empty_matrix_;
 };
 
 #endif // DATAVIEWER_H

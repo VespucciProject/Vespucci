@@ -45,6 +45,8 @@ PlotWidget::PlotWidget(QWidget *parent, VespucciWorkspace *ws) :
     colors_.append(QColor(166,86,40));
     colors_.append(QColor(247,129,191));
     colors_.append(QColor(153,153,153));
+
+    offset_plots_ = false;
 }
 
 PlotWidget::~PlotWidget()

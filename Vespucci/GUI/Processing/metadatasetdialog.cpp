@@ -27,7 +27,7 @@ MetaDatasetDialog::MetaDatasetDialog(QWidget *parent, VespucciWorkspace *ws) :
     ui->setupUi(this);
     dataset_list_view_ = findChild<QListView*>("datasetListView");
     workspace = ws;
-    dataset_list_model_ = ws->dataset_tree_model();
+    dataset_list_model_ = new DatasetListModel(this, workspace->dataset_names());
     dataset_list_view_->setModel(dataset_list_model_);
     dataset_list_view_->setSelectionMode(QAbstractItemView::MultiSelection);
     method_selection_box_ = findChild<QComboBox *>("methodComboBox");
@@ -52,7 +52,7 @@ void MetaDatasetDialog::on_buttonBox_accepted()
         return;
     }
     for (int i = 0; i < selected_indices.size(); ++i){
-        parent_datasets.append(dataset_list_model_->DatasetAt(selected_indices[i]));
+        parent_datasets.append(workspace->GetDataset(dataset_list_model_->DatasetName(selected_indices[i].row())));
     }
 
     QString method_description = method_selection_box_->currentText();

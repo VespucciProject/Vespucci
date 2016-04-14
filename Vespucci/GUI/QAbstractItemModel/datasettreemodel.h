@@ -22,15 +22,20 @@
 
 #include <QAbstractItemModel>
 #include <GUI/QAbstractItemModel/treeitem.h>
+#include <Global/datamodel.h>
 class TreeItem;
 class DatasetTreeItem;
 class MatrixTreeItem;
 class ImageTreeItem;
 class AnalysisResultTreeItem;
+class DataModel;
 class DatasetTreeModel : public QAbstractItemModel
 {
+    Q_OBJECT
 public:
-    DatasetTreeModel(QObject *parent, VespucciWorkspace *ws);
+    DatasetTreeModel(QObject *parent);
+    void SetupModelData(const DataModel *data_model);
+
     ~DatasetTreeModel();
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
@@ -43,8 +48,7 @@ public:
     int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
     bool removeRows(int row, int count,
                     const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
-    void AddDataset(QSharedPointer<VespucciDataset> dataset_);
-    QSharedPointer<VespucciDataset> DatasetAt(const QModelIndex &index);
+    void UpdateData(const DataModel *data_model);
     bool IsMatrix(const QModelIndex &index);
     bool IsDataset(const QModelIndex &index);
     bool IsMap(const QModelIndex &index);
@@ -55,6 +59,20 @@ public:
 
 
 private:
+    TreeItem *SetupDatasetTreeItem(QSharedPointer<VespucciDataset> dataset) const;
+    TreeItem *SetupAnalysisResultTreeItem(QSharedPointer<VespucciDataset> dataset, QSharedPointer<AnalysisResults> results, TreeItem *parent) const;
+    TreeItem *SetupMatrixTreeItem(const QString &dataset_key, const QString &results_key, const QString &matrix_key, const mat &matrix, TreeItem *parent) const;
+    TreeItem *SetupMatrixTreeItem(const QString &dataset_key, const QString &matrix_key, const mat &matrix, TreeItem *parent) const;
+    TreeItem *SetupMapTreeItem(const QString &dataset_key,
+                               const QString &map_key,
+                               QSharedPointer<MapData> data,
+                               TreeItem *parent) const;
+    QString DescribeMatrix(const mat &matrix) const;
+    QString DescribeSpectra(const mat &spectra_matrix) const;
+    QString DescribeAbscissa(const vec &abscissa) const;
+    bool DatasetAdded() const;
+    bool DatasetRemoved() const;
+
     TreeItem *root_item_;
 
 };

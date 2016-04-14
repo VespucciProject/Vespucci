@@ -1,7 +1,7 @@
 #include "GUI/Processing/booleanizedialog.h"
 #include "ui_booleanizedialog.h"
 
-BooleanizeDialog::BooleanizeDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index) :
+BooleanizeDialog::BooleanizeDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::BooleanizeDialog)
 {
@@ -12,7 +12,7 @@ BooleanizeDialog::BooleanizeDialog(QWidget *parent, VespucciWorkspace *ws, const
     oneify_box_ = findChild<QCheckBox*>("oneifyCheckBox");
     behavior_box_ = findChild<QComboBox*>("behaviorComboBox");
     workspace = ws;
-    dataset_ = workspace->DatasetAt(dataset_index);
+    dataset_ = workspace->GetDataset(dataset_key);
     //not encapsulated, but this is basically research code anyway...
     min_box_->setValue(dataset_->spectra_ptr()->min());
     max_box_->setValue(dataset_->spectra_ptr()->max());

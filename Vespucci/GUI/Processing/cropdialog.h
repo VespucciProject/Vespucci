@@ -37,7 +37,7 @@ class CropDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit CropDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index);
+    explicit CropDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
     ~CropDialog();
 
 private slots:

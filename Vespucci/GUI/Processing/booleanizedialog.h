@@ -14,7 +14,7 @@ class BooleanizeDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit BooleanizeDialog(QWidget *parent, VespucciWorkspace *ws, const QModelIndex &dataset_index);
+    explicit BooleanizeDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
     ~BooleanizeDialog();
 
 private slots:
