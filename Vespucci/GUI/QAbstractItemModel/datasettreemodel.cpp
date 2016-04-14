@@ -43,6 +43,7 @@ void DatasetTreeModel::SetupModelData(const DataModel *data_model)
     }
 }
 
+
 DatasetTreeModel::~DatasetTreeModel()
 {
     delete root_item_;
@@ -188,6 +189,12 @@ void DatasetTreeModel::UpdateData(const DataModel *data_model)
 
 }
 
+void DatasetTreeModel::AddDataset(QSharedPointer<VespucciDataset> dataset)
+{
+    TreeItem *dataset_tree_item = SetupDatasetTreeItem(dataset);
+    root_item_->appendChild(dataset_tree_item);
+}
+
 
 void DatasetTreeModel::ClearDatasets()
 {
@@ -223,15 +230,35 @@ TreeItem *DatasetTreeModel::root_item()
 /// \param key
 /// \return
 ///
-TreeItem *DatasetTreeModel::SetupDatasetTreeItem(QSharedPointer<VespucciDataset> dataset) const
+TreeItem *DatasetTreeModel::SetupDatasetTreeItem(QSharedPointer<VespucciDataset> dataset)
 {
-    QList<QVariant> dataset_data = {dataset->name(), "Dataset"};
+    QList<QVariant> dataset_data = {QVariant(dataset->name()), QVariant("Dataset")};
     QStringList dataset_key_list = {dataset->name()};
-
-    TreeItem* dataset_tree_item = new TreeItem(TreeItem::Dataset,
+    TreeItem *dataset_tree_item = new TreeItem(TreeItem::Dataset,
                                                dataset_key_list,
                                                dataset_data,
                                                root_item_);
+    QList<QStringList> corekeys = {
+        {dataset->name(), "Spectra"},
+        {dataset->name(), "Spectral Abscissa"},
+        {dataset->name(), "x"},
+        {dataset->name(), "y"}
+    };
+
+    QList<QList<QVariant> > coredata = {
+        {"Spectra", DescribeSpectra(dataset->spectra_ref())},
+        {"Spectral Abscissa", DescribeAbscissa(dataset->abscissa_ref())},
+        {"x", DescribeMatrix(dataset->x_ref())},
+        {"y", DescribeMatrix(dataset->y_ref())}
+    };
+
+    for (int i = 0; i < coredata.size(); ++i){
+        TreeItem *coreitem = new TreeItem(TreeItem::Matrix,
+                                         corekeys[i],
+                                         coredata[i],
+                                         dataset_tree_item);
+        dataset_tree_item->appendChild(coreitem);
+    }
 
     foreach(const QString results_key, dataset->AnalysisResultsKeys()){
         QSharedPointer<AnalysisResults> results = dataset->GetAnalysisResult(results_key);
@@ -271,7 +298,7 @@ TreeItem *DatasetTreeModel::SetupDatasetTreeItem(QSharedPointer<VespucciDataset>
 ///
 TreeItem *DatasetTreeModel::SetupAnalysisResultTreeItem(QSharedPointer<VespucciDataset> dataset,
                                                         QSharedPointer<AnalysisResults> results,
-                                                        TreeItem *parent) const
+                                                        TreeItem *parent)
 {
     QStringList analysis_results_key_list = {dataset->name(), results->name()};
 
@@ -309,7 +336,7 @@ TreeItem *DatasetTreeModel::SetupMatrixTreeItem(const QString &dataset_key,
                                                 const QString &results_key,
                                                 const QString &matrix_key,
                                                 const mat &matrix,
-                                                TreeItem *parent) const
+                                                TreeItem *parent)
 {
     QStringList matrix_key_list = {dataset_key, results_key, matrix_key};
     QList<QVariant> matrix_data = {matrix_key, DescribeMatrix(matrix)};
@@ -327,7 +354,7 @@ TreeItem *DatasetTreeModel::SetupMatrixTreeItem(const QString &dataset_key,
 TreeItem *DatasetTreeModel::SetupMatrixTreeItem(const QString &dataset_key,
                                                 const QString &matrix_key,
                                                 const mat &matrix,
-                                                TreeItem *parent) const
+                                                TreeItem *parent)
 {
     QStringList matrix_key_list = {dataset_key, matrix_key};
     QList<QVariant> matrix_data = {matrix_key, DescribeMatrix(matrix)};
@@ -345,7 +372,7 @@ TreeItem *DatasetTreeModel::SetupMatrixTreeItem(const QString &dataset_key,
 TreeItem *DatasetTreeModel::SetupMapTreeItem(const QString &dataset_key,
                                              const QString &map_key,
                                              QSharedPointer<MapData> data,
-                                             TreeItem *parent) const
+                                             TreeItem *parent)
 {
     QStringList map_key_list = {dataset_key, map_key};
     QList<QVariant> map_data = {map_key, data->type()};

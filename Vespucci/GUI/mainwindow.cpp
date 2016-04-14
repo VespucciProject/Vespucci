@@ -62,16 +62,23 @@ MainWindow::MainWindow(QWidget *parent, VespucciWorkspace *ws) :
     ui->setupUi(this);
     dataset_tree_view_ = findChild<QTreeView *>("datasetTreeView");
     dataset_tree_model_ = new DatasetTreeModel(dataset_tree_view_);
+
     dataset_tree_view_->setModel(dataset_tree_model_);
     data_viewer_ = new DataViewer(this);
     plot_viewer_ = new PlotViewer(this);
     global_map_count_ = 0;
     QObject::connect(dataset_tree_view_, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(TreeItemDoubleClicked(QModelIndex)));
+    workspace->SetPointers(this, dataset_tree_model_);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::RefreshTreeModel()
+{
+    dataset_tree_view_->setModel(dataset_tree_model_);
 }
 
 ///

@@ -61,7 +61,7 @@ public:
     QString directory() const;
     QString *directory_ptr();
 
-    void SetPointers(MainWindow *main_window);
+    void SetPointers(MainWindow *main_window, DatasetTreeModel *tree_model);
 
     MainWindow* main_window();
     double GetWavelengthMin(const QString &key) const;

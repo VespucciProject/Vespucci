@@ -46,6 +46,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent, VespucciWorkspace *ws);
     ~MainWindow();
+    void RefreshTreeModel();
     QCPRange *global_data_range();
     QCPColorGradient *global_gradient();
     void RecalculateGlobalDataRange(QCPRange* new_data_range);

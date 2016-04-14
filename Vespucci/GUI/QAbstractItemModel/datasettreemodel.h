@@ -49,6 +49,7 @@ public:
     bool removeRows(int row, int count,
                     const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
     void UpdateData(const DataModel *data_model);
+    void AddDataset(QSharedPointer<VespucciDataset> dataset);
     bool IsMatrix(const QModelIndex &index);
     bool IsDataset(const QModelIndex &index);
     bool IsMap(const QModelIndex &index);
@@ -59,14 +60,14 @@ public:
 
 
 private:
-    TreeItem *SetupDatasetTreeItem(QSharedPointer<VespucciDataset> dataset) const;
-    TreeItem *SetupAnalysisResultTreeItem(QSharedPointer<VespucciDataset> dataset, QSharedPointer<AnalysisResults> results, TreeItem *parent) const;
-    TreeItem *SetupMatrixTreeItem(const QString &dataset_key, const QString &results_key, const QString &matrix_key, const mat &matrix, TreeItem *parent) const;
-    TreeItem *SetupMatrixTreeItem(const QString &dataset_key, const QString &matrix_key, const mat &matrix, TreeItem *parent) const;
+    TreeItem *SetupDatasetTreeItem(QSharedPointer<VespucciDataset> dataset);
+    TreeItem *SetupAnalysisResultTreeItem(QSharedPointer<VespucciDataset> dataset, QSharedPointer<AnalysisResults> results, TreeItem *parent);
+    TreeItem *SetupMatrixTreeItem(const QString &dataset_key, const QString &results_key, const QString &matrix_key, const mat &matrix, TreeItem *parent);
+    TreeItem *SetupMatrixTreeItem(const QString &dataset_key, const QString &matrix_key, const mat &matrix, TreeItem *parent);
     TreeItem *SetupMapTreeItem(const QString &dataset_key,
                                const QString &map_key,
                                QSharedPointer<MapData> data,
-                               TreeItem *parent) const;
+                               TreeItem *parent);
     QString DescribeMatrix(const mat &matrix) const;
     QString DescribeSpectra(const mat &spectra_matrix) const;
     QString DescribeAbscissa(const vec &abscissa) const;

@@ -44,18 +44,10 @@ int main(int argc, char *argv[])
     //this is disabled for the debug config because I prefer to look at stderr and
     //stdout output directly when debugging.
 
-
-
-
-    //parse the config file
-    /*
-    namespace po = boost::program_options
-
-    po::options_description config("Configuration");
-    config.add_options()
-            ("R_HOME", po::value<std::string>(&opt)->default_value("C:/Tools/R/R-3.1.3"))
-            ("OCTAVE_DLL_PATH", po::value(&opt)<std::string>->default_value("C:/Octave/Octave-4.0.0/bin"));
-    */
+#ifdef QT_NO_DEBUG
+    std::freopen("stdout_log.txt", "w", stdout);
+    std::freopen("stderr_log.txt", "w", stderr);
+#endif
 
     //Launch QApplication instance
     QCoreApplication::setOrganizationName("Wright State University");
@@ -63,23 +55,15 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Vespucci");
     QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
     QApplication a(argc, argv);
+
     //A pointer to this goes by "workspace" in every window that needs it
     VespucciWorkspace ws;
 
     //Clean up dataset log files from when it crashed last
     ws.CleanLogFiles();
 
-
-#ifdef QT_NO_DEBUG
-    std::freopen("stdout_log.txt", "w", stdout);
-    std::freopen("stderr_log.txt", "w", stderr);
-#endif
-
     //Instantiate main window
     MainWindow w(0, &ws);
-
-    //This "finishes construction" on ws, for the parts that come from w
-    ws.SetPointers(&w);
 
     //show main window
     w.show();

@@ -31,6 +31,7 @@ VespucciWorkspace::VespucciWorkspace() :
     directory_ = QDir::homePath();
     CheckSettings();
     data_model_ = new DataModel();
+    dataset_tree_model_ = new DatasetTreeModel(0);
 }
 
 ///
@@ -52,9 +53,10 @@ QStringList VespucciWorkspace::dataset_names() const
 /// \param main_window
 /// Set pointers to the main window in the workspace (mainwindow requires
 /// workspace).
-void VespucciWorkspace::SetPointers(MainWindow *main_window)
+void VespucciWorkspace::SetPointers(MainWindow *main_window, DatasetTreeModel *tree_model)
 {
     main_window_ = main_window;
+    dataset_tree_model_ = tree_model;
 }
 
 
@@ -68,6 +70,8 @@ void VespucciWorkspace::AddDataset(QSharedPointer<VespucciDataset> dataset)
 {
     data_model_->AddDataset(dataset);
     dataset_tree_model_->SetupModelData(data_model_);
+    main_window_->RefreshTreeModel();
+    ++dataset_loading_count_;
 }
 
 ///

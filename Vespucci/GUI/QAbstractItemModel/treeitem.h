@@ -28,7 +28,6 @@ class VespucciDataset;
 class TreeItem
 {
 public:
-
     enum ItemType{
         Dataset, AnalysisResult, Matrix, Map, Base
     };
@@ -53,6 +52,8 @@ public:
     bool HasChild(const QString &name);
 
     void UpdateType(QString new_type);
+
+
 
 private:
     QList<TreeItem*> child_items_;
