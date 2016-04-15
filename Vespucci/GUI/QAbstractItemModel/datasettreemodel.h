@@ -34,6 +34,7 @@ class DatasetTreeModel : public QAbstractItemModel
     Q_OBJECT
 public:
     DatasetTreeModel(QObject *parent);
+    DatasetTreeModel(QObject *parent, const DataModel *data_model);
     void SetupModelData(const DataModel *data_model);
 
     ~DatasetTreeModel();

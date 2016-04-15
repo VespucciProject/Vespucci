@@ -25,6 +25,7 @@ PlotWidget::PlotWidget(QWidget *parent, VespucciWorkspace *ws) :
     ui(new Ui::PlotWidget)
 {
     workspace = ws;
+    transient_graph_ = 0;
     ui->setupUi(this);
     plot_ = findChild<QCustomPlot *>("customPlot");
     plot_->setInteraction(QCP::iRangeDrag);
@@ -108,9 +109,82 @@ void PlotWidget::AddPlot(const vec &abscissa, const vec &data)
     }
 }
 
+void PlotWidget::AddTransientPlot(const vec &abscissa, const vec &data)
+{
+    if (abscissa.n_rows != data.n_rows) return;
+
+    if (transient_graph_){
+        QVector<double> absiccsa_qvec =
+                QVector<double>::fromStdVector(conv_to<vector<double> >::from(abscissa));
+        QVector<double> data_qvec =
+                QVector<double>::fromStdVector(conv_to<vector<dobule> >::from(data));
+        transient_graph_->setData(abscissa_qvec, data_qvec);
+    }
+    else{
+        QCPAxis *key_axis;
+        QCPAxis *value_axis;
+        if (plot_->graphCount()){
+            key_axis = plot_->graph(0)->keyAxis();
+            value_axis = plot_->graph(0)->valueAxis();
+        }
+        else{
+            key_axis = 0;
+            value_axis = 0;
+        }
+        plot_->addGraph(key_axis, value_axis);
+        transient_graph_ = plot_->graph(plot_->graphCount() - 1);
+        QVector<double> absiccsa_qvec =
+                QVector<double>::fromStdVector(conv_to<vector<double> >::from(abscissa));
+        QVector<double> data_qvec =
+                QVector<double>::fromStdVector(conv_to<vector<dobule> >::from(data));
+        transient_graph_->addData(abscissa_qvec, data_qvec);
+    }
+
+}
+
+void PlotWidget::AddTransientPlot(const mat &paired_data)
+{
+    if (paired_data.n_cols != 2) return;
+
+    QCPAxis *key_axis;
+    QCPAxis *value_axis;
+    if (transient_graph_){
+        QVector<double> absiccsa_qvec =
+                QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(0)));
+        QVector<double> data_qvec =
+                QVector<double>::fromStdVector(conv_to<vector<dobule> >::from(paire_data.col(1)));
+        transient_graph_->setData(abscissa_qvec, data_qvec);
+    }
+    else{
+        if (plot_->graphCount()){
+            key_axis = plot_->graph(0)->keyAxis();
+            value_axis = plot_->graph(0)->valueAxis();
+        }
+        else{
+            key_axis = 0;
+            value_axis = 0;
+        }
+        plot_->addGraph(key_axis, value_axis);
+        transient_graph_ = plot_->graph(plot_->graphCount() - 1);
+        QVector<double> absiccsa_qvec =
+                QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(0)));
+        QVector<double> data_qvec =
+                QVector<double>::fromStdVector(conv_to<vector<dobule> >::from(paired_data.col(1)));
+        transient_graph_->addData(abscissa_qvec, data_qvec);
+    }
+}
+
+void PlotWidget::RemoveTransientPlot()
+{
+    if (transient_graph_){
+        plot_->removeGraph(transient_graph_);
+        transient_graph_ = 0;
+    }
+}
+
 void PlotWidget::StackPlots(bool stack)
 {
-    if (plot_->graphCount() < 1){
+    if (!plot_->graphCount()){
         offset_plots_ = true;
         return;
     }
@@ -127,9 +201,14 @@ void PlotWidget::StackPlots(bool stack)
 
 }
 
-bool PlotWidget::offset_plots()
+bool PlotWidget::offset_plots() const
 {
     return offset_plots_;
+}
+
+bool PlotWidget::TransientOnly() const
+{
+    return (transient_graph_ && plot_->graphCount() == 1);
 }
 
 

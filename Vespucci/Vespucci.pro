@@ -175,7 +175,8 @@ SOURCES += main.cpp\
     GUI/Display/plotwidget.cpp \
     GUI/macrodialog.cpp \
     Global/datamodel.cpp \
-    GUI/QAbstractItemModel/datasetlistmodel.cpp
+    GUI/QAbstractItemModel/datasetlistmodel.cpp \
+    GUI/pythonshelldialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -245,7 +246,8 @@ HEADERS  += \
     GUI/Display/plotwidget.h \
     GUI/macrodialog.h \
     Global/datamodel.h \
-    GUI/QAbstractItemModel/datasetlistmodel.h
+    GUI/QAbstractItemModel/datasetlistmodel.h \
+    GUI/pythonshelldialog.h
 
 
 FORMS    += \
@@ -291,7 +293,8 @@ FORMS    += \
     GUI/Display/mapdialog.ui \
     GUI/Display/datawidget.ui \
     GUI/Display/plotwidget.ui \
-    GUI/macrodialog.ui
+    GUI/macrodialog.ui \
+    GUI/pythonshelldialog.ui
 
 RESOURCES += \
     resources.qrc

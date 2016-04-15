@@ -50,6 +50,31 @@ void PlotViewer::AddPlot(const vec &abscissa, const vec &data, const QString &ta
     }
 }
 
+void PlotViewer::AddTransientPlot(const vec &abscissa, const vec &data, const QString &tab_title)
+{
+    if (hold_check_box_->isChecked() && tab_widget_->count()){
+        PlotWidget *plot_widget = qobject_cast<PlotWidget*>(tab_widget_->currentWidget());
+        plot_widget->AddTransientPlot(abscissa, data);
+        plot_widget->StackPlots(stack_check_box_->isChecked());
+    }
+    else{
+        PlotWidget *plot_widget = new PlotWidget(this);
+        plot_widget->AddTransientPlot(abscissa, data);
+        tab_widget_->addTab(plot_widget, tab_title);
+    }
+}
+
+void PlotViewer::AddTransientPlot(const mat &paired_data, const QString &tab_title)
+{
+
+}
+
+void PlotViewer::CloseTransientTab()
+{
+    PlotWidget *plot_widget = qobject_cast<PlotWidget*>(tab_widget_->currentWidget());
+    if (plot_widget->TransientOnly()) tab_widget_->removeTab(tab_widget_->currentIndex());
+}
+
 
 void PlotViewer::on_stackCheckBox_stateChanged(int arg1)
 {

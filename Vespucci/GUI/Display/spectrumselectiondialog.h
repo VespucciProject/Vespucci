@@ -17,8 +17,9 @@ class SpectrumSelectionDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit SpectrumSelectionDialog(QWidget *parent, MainWindow *main_window, QSharedPointer<VespucciDataset> dataset);
+    explicit SpectrumSelectionDialog(MainWindow *main_window);
     ~SpectrumSelectionDialog();
+    void SetActiveDataset(QSharedPointer<VespucciDataset> dataset);
 
 private slots:
     void on_tableView_clicked(const QModelIndex &index);
@@ -33,7 +34,8 @@ private:
     SpectraTableModel *table_model_;
     QTableView *table_view_;
     QSharedPointer<VespucciDataset> dataset_;
-    SpectrumViewer *spectrum_viewer_;
+    QCheckBox *hold_check_box_;
+    PlotViewer *plot_viewer_;
     MainWindow *main_window_;
     VespucciWorkspace *workspace;
 };

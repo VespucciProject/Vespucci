@@ -65,6 +65,13 @@ QSharedPointer<AnalysisResults> DataModel::GetResults(const QString &dataset_key
     }
 }
 
+QSharedPointer<AnalysisResults> DataModel::GetResults(const QStringList &keys) const
+{
+    if (keys.size() != 2)
+        throw invalid_argument("Wrong number of keys provided");
+    return GetResults(keys[0], keys[1]);
+}
+
 ///
 /// \brief DataModel::GetMap Get the MapData object named map_key from dataset named dataset_key
 /// \param dataset_key
@@ -88,6 +95,12 @@ QSharedPointer<MapData> DataModel::GetMap(const QString &dataset_key,
                                + dataset_key.toStdString()
                                + " does not exist!");
     }
+}
+
+QSharedPointer<MapData> DataModel::GetMap(const QStringList &keys) const
+{
+    if (keys.size() != 2) throw invalid_argument("Wrong number of keys provided");
+    return GetMap(keys[0], keys[1]);
 }
 
 const mat &DataModel::GetResultsMatrix(const QString &dataset_key,
@@ -119,6 +132,12 @@ const mat &DataModel::GetResultsMatrix(const QString &dataset_key,
     }
 }
 
+const mat &DataModel::GetResultsMatrix(const QStringList &keys) const
+{
+    if (keys.size() != 3) throw invalid_argument("Wrong number of keys provided");
+    return GetResultsMatrix(keys[0], keys[1], keys[2]);
+}
+
 ///
 /// \brief DataModel::GetCoreMatrix
 /// \param dataset_key
@@ -144,6 +163,12 @@ const mat &DataModel::GetCoreMatrix(const QString &dataset_key, const QString &m
     }
 }
 
+const mat &DataModel::GetCoreMatrix(const QStringList &keys) const
+{
+    if (keys.size() != 2) throw invalid_argument("Wrong number of keys provided");
+    return GetCoreMatrix(keys[0], keys[1]);
+}
+
 ///
 /// \brief DataModel::GetAuxiliaryMatrix
 /// \param dataset_key
@@ -166,6 +191,39 @@ const mat &DataModel::GetAuxiliaryMatrix(const QString &dataset_key,
         throw invalid_argument("Dataset " + dataset_key.toStdString()
                                + " does not exist!");
     }
+}
+
+const mat &DataModel::GetAuxiliaryMatrix(const QStringList &keys) const
+{
+    if (keys.size() != 2) throw invalid_argument("Wrong number of keys provided");
+    return GetAuxiliaryMatrix(keys[0], keys[1]);
+}
+
+const mat &DataModel::GetMatrix(const QString &dataset_key, const QString &matrix_key) const
+{
+    if (datasets_.contains(dataset_key)){
+        if (datasets_[dataset_key]->CoreMatrixKeys().contains(matrix_key))
+            return datasets_[dataset_key]->GetCoreMatrix(matrix_key);
+        else if (datasets_[dataset_key]->AuxiliaryMatrixKeys().contains(matrix_key))
+            return datasets_[dataset_key]->GetAuxiliaryMatrix(matrix_key);
+        else
+            throw invalid_argument("Dataset "
+                                   + dataset_key.toStdString()
+                                   + " does not have matrix "
+                                   + matrix_key.toStdString());
+    }
+    else{
+        throw invalid_argument("Dataset "
+                               + dataset_key.toStdString()
+                               + "does not exist!");
+    }
+}
+
+const mat &DataModel::GetMatrix(const QStringList &keys) const
+{
+    if (keys.size() == 2) return GetMatrix(keys[0], keys[1]);
+    if (keys.size() == 3) return GetResultsMatrix(keys);
+    throw invalid_argument("too few keys provided");
 }
 
 ///
@@ -237,5 +295,10 @@ void DataModel::RemoveDataset(const QString &name)
 {
     if (datasets_.contains(name))
         datasets_.remove(name);
+}
+
+const mat &DataModel::EmptyMatrix() const
+{
+    return empty_matrix_;
 }
 

@@ -62,10 +62,10 @@ MainWindow::MainWindow(QWidget *parent, VespucciWorkspace *ws) :
     ui->setupUi(this);
     dataset_tree_view_ = findChild<QTreeView *>("datasetTreeView");
     dataset_tree_model_ = new DatasetTreeModel(dataset_tree_view_);
-
     dataset_tree_view_->setModel(dataset_tree_model_);
     data_viewer_ = new DataViewer(this);
     plot_viewer_ = new PlotViewer(this);
+    spectrum_editor_ = new SpectrumSelectionDialog(this, this);
     global_map_count_ = 0;
     QObject::connect(dataset_tree_view_, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(TreeItemDoubleClicked(QModelIndex)));
     workspace->SetPointers(this, dataset_tree_model_);
@@ -76,10 +76,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::RefreshTreeModel()
+///
+/// \brief MainWindow::RefreshTreeModel
+/// \param data_model
+/// Creates a new DatasetTreeModel and changes the tree view to the new model
+void MainWindow::RefreshTreeModel(const DataModel *data_model)
 {
+    dataset_tree_model_ = new DatasetTreeModel(dataset_tree_view_, data_model);
     dataset_tree_view_->setModel(dataset_tree_model_);
 }
+
 
 ///
 /// \brief MainWindow::closeEvent
@@ -1017,6 +1023,21 @@ void MainWindow::SetDatasetTreeModel(DatasetTreeModel *new_model)
     dataset_tree_view_->setModel(new_model);
 }
 
+DatasetTreeModel *MainWindow::dataset_tree_model()
+{
+    return dataset_tree_model_;
+}
+
+PlotViewer *MainWindow::plot_viewer()
+{
+    return plot_viewer_;
+}
+
+DataViewer *MainWindow::data_viewer()
+{
+    return data_viewer_;
+}
+
 
 void MainWindow::on_actionDelete_Map_triggered()
 {
@@ -1366,4 +1387,14 @@ void MainWindow::on_actionImport_Dataset_from_Multiple_Files_triggered()
 void MainWindow::on_actionCreate_Plot_triggered()
 {
 
+}
+
+void MainWindow::on_datasetTreeView_activated(const QModelIndex &index)
+{
+    if (!index.isValid()) return;
+    TreeItem *active_item = dataset_tree_model_->getItem(index);
+    if (active_item->keys().size()){
+        spectrum_editor_->SetActiveDataset(workspace->GetDataset(active_item->keys()[0]));
+        macro_editor_->SetActiveDataset(workspace->GetDataset(active_item->keys()[0]));
+    }
 }

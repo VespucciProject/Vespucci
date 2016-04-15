@@ -17,30 +17,27 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef MACRODIALOG_H
-#define MACRODIALOG_H
+#ifndef PYTHONSHELLDIALOG_H
+#define PYTHONSHELLDIALOG_H
 
 #include <QDialog>
 #include "Global/vespucciworkspace.h"
-class VespucciWorkspace;
-class VespucciDataset;
+
 namespace Ui {
-class MacroDialog;
+class PythonShellDialog;
 }
 
-class MacroDialog : public QDialog
+class PythonShellDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit MacroDialog(QWidget *parent = 0, VespucciWorkspace *ws);
-    ~MacroDialog();
-    void SetActiveDataset(QSharedPointer<VespucciDataset> dataset);
+    explicit PythonShellDialog(QWidget *parent = 0, VespucciWorkspace *ws);
+    ~PythonShellDialog();
 
 private:
-    Ui::MacroDialog *ui;
+    Ui::PythonShellDialog *ui;
     VespucciWorkspace *workspace;
-    QSharedPointer<VespucciDataset> dataset_;
 };
 
-#endif // MACRODIALOG_H
+#endif // PYTHONSHELLDIALOG_H

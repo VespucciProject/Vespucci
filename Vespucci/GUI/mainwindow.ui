@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>453</width>
-    <height>380</height>
+    <width>487</width>
+    <height>435</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -29,12 +29,16 @@
     <normaloff>vespuccilogo.svg</normaloff>vespuccilogo.svg</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTreeView" name="datasetTreeView"/>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Loaded Data:</string>
+      </property>
+     </widget>
     </item>
     <item>
-     <widget class="QTableView" name="spectraTableView"/>
+     <widget class="QTreeView" name="datasetTreeView"/>
     </item>
    </layout>
   </widget>
@@ -43,7 +47,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>453</width>
+     <width>487</width>
      <height>22</height>
     </rect>
    </property>
@@ -74,22 +78,8 @@
     <property name="title">
      <string>Dataset</string>
     </property>
-    <widget class="QMenu" name="menuExport_Dataset_Elements">
-     <property name="title">
-      <string>&amp;Export Dataset Elements</string>
-     </property>
-     <addaction name="actionSpectra"/>
-     <addaction name="actionAverage_Spectra"/>
-     <addaction name="actionAverage_Spectra_with_Abscissa"/>
-     <addaction name="actionSpectral_Abscissa"/>
-     <addaction name="separator"/>
-     <addaction name="actionAll_Data"/>
-     <addaction name="separator"/>
-    </widget>
     <addaction name="actionUndo"/>
     <addaction name="separator"/>
-    <addaction name="menuExport_Dataset_Elements"/>
-    <addaction name="actionView_Edit_Spectra"/>
     <addaction name="actionDelete_Map"/>
     <addaction name="separator"/>
     <addaction name="actionNew_Composite_Dataset"/>
@@ -147,8 +137,6 @@
     </property>
     <addaction name="actionSettings"/>
     <addaction name="actionSet_Global_Color_Scale"/>
-    <addaction name="actionMacro_Editor"/>
-    <addaction name="actionPython_Shell_2"/>
    </widget>
    <widget class="QMenu" name="menuProcessing">
     <property name="title">
@@ -168,7 +156,7 @@
    </widget>
    <widget class="QMenu" name="menuObject">
     <property name="title">
-     <string>Object</string>
+     <string>Matrix</string>
     </property>
     <addaction name="actionShow_in_Data_Viewer"/>
     <addaction name="actionMapResult"/>
@@ -177,12 +165,24 @@
     <addaction name="actionCalibrate"/>
     <addaction name="actionTransform"/>
    </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="actionPlot_Viewer"/>
+    <addaction name="actionData_Viewer"/>
+    <addaction name="actionStatistics_Viewer"/>
+    <addaction name="actionSpectrum_Editor"/>
+    <addaction name="actionPython_Shell_2"/>
+    <addaction name="actionMacro_Editor"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuData"/>
    <addaction name="menuObject"/>
    <addaction name="menuProcessing"/>
    <addaction name="menuMap"/>
    <addaction name="menuTools"/>
+   <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -208,13 +208,10 @@
    <addaction name="actionSaveDataset"/>
    <addaction name="actionClose_Dataset"/>
    <addaction name="separator"/>
-   <addaction name="actionPlotResult"/>
    <addaction name="actionShow_in_Data_Viewer"/>
+   <addaction name="actionPlotResult"/>
    <addaction name="actionMapResult"/>
    <addaction name="actionView_Statistics"/>
-   <addaction name="separator"/>
-   <addaction name="actionRemoveSpectrum"/>
-   <addaction name="actionZeroSpectrum"/>
   </widget>
   <action name="actionExit">
    <property name="text">
@@ -391,7 +388,7 @@
   </action>
   <action name="actionNew_Composite_Dataset">
    <property name="text">
-    <string>&amp;New Composite Dataset...</string>
+    <string>&amp;New Composite Dataset</string>
    </property>
   </action>
   <action name="actionReject_Clipped_Spectra">
@@ -527,30 +524,6 @@
     <string>Create a color map of the currently selected analysis result</string>
    </property>
   </action>
-  <action name="actionRemoveSpectrum">
-   <property name="icon">
-    <iconset resource="../resources.qrc">
-     <normaloff>:/icons/toolbar_icons/delete.svg</normaloff>:/icons/toolbar_icons/delete.svg</iconset>
-   </property>
-   <property name="text">
-    <string>RemoveSpectrum</string>
-   </property>
-   <property name="toolTip">
-    <string>Remove the currently selected spectrum</string>
-   </property>
-  </action>
-  <action name="actionZeroSpectrum">
-   <property name="icon">
-    <iconset resource="../resources.qrc">
-     <normaloff>:/icons/toolbar_icons/zero.svg</normaloff>:/icons/toolbar_icons/zero.svg</iconset>
-   </property>
-   <property name="text">
-    <string>ZeroSpectrum</string>
-   </property>
-   <property name="toolTip">
-    <string>Replace the currently selected spectrum with a vector of zeros</string>
-   </property>
-  </action>
   <action name="actionOpenDataset">
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -613,11 +586,17 @@
    </property>
   </action>
   <action name="actionMacro_Editor">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Macro Editor</string>
    </property>
   </action>
   <action name="actionPython_Shell_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Python Shell</string>
    </property>
@@ -629,7 +608,7 @@
   </action>
   <action name="actionNew_Dataset_from_Object">
    <property name="text">
-    <string>New Dataset from Object...</string>
+    <string>New Dataset from Matrix</string>
    </property>
   </action>
   <action name="actionTransform">
@@ -651,6 +630,38 @@
    </property>
    <property name="text">
     <string>t-Test...</string>
+   </property>
+  </action>
+  <action name="actionPlot_Viewer">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Plot Viewer</string>
+   </property>
+  </action>
+  <action name="actionData_Viewer">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Data Viewer</string>
+   </property>
+  </action>
+  <action name="actionSpectrum_Editor">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Spectrum Editor</string>
+   </property>
+  </action>
+  <action name="actionStatistics_Viewer">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Statistics Viewer</string>
    </property>
   </action>
  </widget>

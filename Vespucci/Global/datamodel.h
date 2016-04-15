@@ -26,29 +26,43 @@ class DataModel
 public:
     DataModel();
     QSharedPointer<VespucciDataset> GetDataset(const QString &key) const;
+
     QSharedPointer<AnalysisResults> GetResults(const QString &dataset_key,
                                                const QString &results_key)
                                                const;
+    QSharedPointer<AnalysisResults> GetResults(const QStringList &keys) const;
+
     QSharedPointer<MapData> GetMap(const QString &dataset_key,
                                    const QString &map_key) const;
+    QSharedPointer<MapData> GetMap(const QStringList &keys) const;
 
     const mat& GetResultsMatrix(const QString &dataset_key,
                           const QString &results_key,
                           const QString &matrix_key) const;
+    const mat& GetResultsMatrix(const QStringList &keys) const;
+
     const mat& GetCoreMatrix(const QString &dataset_key,
                              const QString &matrix_key) const;
+    const mat& GetCoreMatrix(const QStringList &keys) const;
+
     const mat& GetAuxiliaryMatrix(const QString &dataset_key,
                                   const QString &matrix_key) const;
+    const mat& GetAuxiliaryMatrix(const QStringList &keys) const;
+
+    const mat& GetMatrix(const QString &dataset_key, const QString &matrix_key) const;
+    const mat& GetMatrix(const QStringList &keys) const;
+
     QStringList DatasetNames() const;
     QStringList AnalysisResultsNames(const QString &dataset_key) const;
     QStringList AuxiliaryMatrixNames(const QString &dataset_key) const;
     QStringList CoreMatrixNames(const QString &dataset_key);
     void AddDataset(QSharedPointer<VespucciDataset> dataset);
     void RemoveDataset(const QString &name);
-
+    const mat& EmptyMatrix() const;
 
 private:
     QMap<QString, QSharedPointer<VespucciDataset> > datasets_;
+    mat empty_matrix_;
 };
 
 #endif // DATAMODEL_H

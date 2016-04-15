@@ -24,6 +24,9 @@
 #include "Global/vespucciworkspace.h"
 #include "GUI/Processing/rangedialog.h"
 #include "GUI/Display/plotviewer.h"
+#include "GUI/Display/spectrumselectiondialog.h"
+#include "GUI/macrodialog.h"
+class SpectrumSelectionDialog;
 class VespucciWorkspace;
 class VespucciDataset;
 class DatasetTreeModel;
@@ -31,6 +34,7 @@ class RangeDialog;
 class SpectrumViewer;
 class DataViewer;
 class PlotViewer;
+class DataModel;
 namespace Ui {
 class MainWindow;
 }
@@ -46,7 +50,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent, VespucciWorkspace *ws);
     ~MainWindow();
-    void RefreshTreeModel();
+    void RefreshTreeModel(const DataModel *data_model);
     QCPRange *global_data_range();
     QCPColorGradient *global_gradient();
     void RecalculateGlobalDataRange(QCPRange* new_data_range);
@@ -61,6 +65,10 @@ public:
     void DisplayWarning(const QString &title, const QString &text);
     void DisplayInformation(const QString &title, const QString &text);
     void SetDatasetTreeModel(DatasetTreeModel *new_model);
+
+    DatasetTreeModel *dataset_tree_model();
+    PlotViewer *plot_viewer();
+    DataViewer *data_viewer();
 
 signals:
     void GlobalGradientChanged(QCPColorGradient gradient);
@@ -163,11 +171,17 @@ private slots:
 
     void on_actionCreate_Plot_triggered();
 
+    void on_datasetTreeView_activated(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
 
     PlotViewer *plot_viewer_;
     DataViewer *data_viewer_;
+    StatsViewer *stats_viewer_;
+    MacroDialog *macro_editor_;
+    SpectrumSelectionDialog *spectrum_editor_;
+
 
     ///
     /// \brief workspace
@@ -191,6 +205,8 @@ private:
     DatasetTreeModel *dataset_tree_model_;
 
     unsigned int global_map_count_;
+
+    QMap<QString, QDialog*> child_dialogs_;
 };
 
 #endif // MAINWINDOW_H

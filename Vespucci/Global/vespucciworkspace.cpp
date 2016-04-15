@@ -31,7 +31,6 @@ VespucciWorkspace::VespucciWorkspace() :
     directory_ = QDir::homePath();
     CheckSettings();
     data_model_ = new DataModel();
-    dataset_tree_model_ = new DatasetTreeModel(0);
 }
 
 ///
@@ -56,7 +55,6 @@ QStringList VespucciWorkspace::dataset_names() const
 void VespucciWorkspace::SetPointers(MainWindow *main_window, DatasetTreeModel *tree_model)
 {
     main_window_ = main_window;
-    dataset_tree_model_ = tree_model;
 }
 
 
@@ -69,8 +67,7 @@ void VespucciWorkspace::SetPointers(MainWindow *main_window, DatasetTreeModel *t
 void VespucciWorkspace::AddDataset(QSharedPointer<VespucciDataset> dataset)
 {
     data_model_->AddDataset(dataset);
-    dataset_tree_model_->SetupModelData(data_model_);
-    main_window_->RefreshTreeModel();
+    main_window_->RefreshTreeModel(data_model_);
     ++dataset_loading_count_;
 }
 
@@ -91,7 +88,7 @@ void VespucciWorkspace::RemoveDataset(QString name)
 /// Call when a VespucciDataset adds or removes a new object.
 void VespucciWorkspace::UpdateModel()
 {
-    dataset_tree_model_->SetupModelData(data_model_);
+    main_window_->RefreshTreeModel(data_model_);
 }
 
 
@@ -107,7 +104,7 @@ void VespucciWorkspace::UpdateModel()
 void VespucciWorkspace::RemoveDatasetAt(const QModelIndex &parent)
 {
     //we need to know how deep this thing goes
-    TreeItem *item = dataset_tree_model_->getItem(parent);
+    TreeItem *item = main_window_->dataset_tree_model()->getItem(parent);
     QStringList keys = item->keys();
     if (keys.size() == 1) RemoveDataset(keys[0]);
     else return;
@@ -115,7 +112,7 @@ void VespucciWorkspace::RemoveDatasetAt(const QModelIndex &parent)
 
 QSharedPointer<VespucciDataset> VespucciWorkspace::DatasetAt(const QModelIndex &parent)
 {
-    TreeItem *item = dataset_tree_model_->getItem(parent);
+    TreeItem *item = main_window_->dataset_tree_model()->getItem(parent);
     QString dataset_key = item->keys()[0];
     return data_model_->GetDataset(dataset_key);
 }
@@ -319,19 +316,8 @@ QFile* VespucciWorkspace::CreateLogFile(QString dataset_name)
 /// Clears the internal container for datasets in the list model
 void VespucciWorkspace::ClearDatasets()
 {
-    dataset_tree_model_->ClearDatasets();
+    main_window_->dataset_tree_model()->ClearDatasets();
 }
-
-
-///
-/// \brief VespucciWorkspace::SetListWidgetModel
-/// \param model
-/// Set the dataset list model
-void VespucciWorkspace::SetListWidgetModel(DatasetTreeModel *model)
-{
-    dataset_tree_model_ = model;
-}
-
 
 /// \brief VespucciWorkspace::UpdateCount
 /// \return The new count
@@ -347,7 +333,7 @@ unsigned int VespucciWorkspace::UpdateCount()
 ///
 DatasetTreeModel* VespucciWorkspace::dataset_tree_model() const
 {
-    return dataset_tree_model_;
+    return main_window_->dataset_tree_model();
 }
 
 void VespucciWorkspace::CleanLogFiles()
@@ -436,9 +422,30 @@ QSettings *VespucciWorkspace::settings()
     return &settings_;
 }
 
+DataModel *VespucciWorkspace::data_model()
+{
+    return data_model_;
+}
+
+///
+/// \brief VespucciWorkspace::GetMatrix
+/// \param keys
+/// \return
+/// Retruns empty matrix if invalid keys
+const mat &VespucciWorkspace::GetMatrix(const QStringList &keys) const
+{
+    if (keys.size() < 2) return data_model_->EmptyMatrix();
+    try{
+        return data_model_->GetMatrix(keys);
+    }catch(exception e){
+        main_window_->DisplayExceptionWarning("VespucciWorkspace::GetMatrix", e);
+        return data_model_->EmptyMatrix();
+    }
+}
+
 void VespucciWorkspace::UpdateTreeModel()
 {
-    dataset_tree_model_->UpdateData(data_model_);
+    main_window_->dataset_tree_model()->UpdateData(data_model_);
 }
 
 

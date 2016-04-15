@@ -1,44 +1,67 @@
 #include "GUI/Display/spectrumselectiondialog.h"
 #include "ui_spectrumselectiondialog.h"
 
-SpectrumSelectionDialog::SpectrumSelectionDialog(QWidget *parent, MainWindow *main_window, QSharedPointer<VespucciDataset> dataset) :
-    QDialog(parent),
+SpectrumSelectionDialog::SpectrumSelectionDialog(MainWindow *main_window) :
+    QDialog(main_window),
     ui(new Ui::SpectrumSelectionDialog)
 {
-    dataset_ = dataset;
     ui->setupUi(this);
-    table_model_ = new SpectraTableModel(this, dataset);
     main_window_ = main_window;
-    spectrum_viewer_ = new SpectrumViewer(this, dataset);
-    spectrum_viewer_->show();
-    table_view_ = findChild<QTableView *>("tableView");
-    table_view_->setModel(table_model_);
     workspace = main_window->workspace_ptr();
+    plot_viewer_ = main_window_->plot_viewer();
+    table_view_ = findChild<QTableView *>("tableView");
+    hold_check_box_ = findChild<QCheckBox*>("holdCheckBox");
+    dataset_ = QSharedPointer<VespucciDataset>(0);
 }
 
 SpectrumSelectionDialog::~SpectrumSelectionDialog()
 {
-    spectrum_viewer_->close();
     delete ui;
+}
+
+void SpectrumSelectionDialog::SetActiveDataset(QSharedPointer<VespucciDataset> dataset)
+{
+    dataset_ = dataset;
+    table_model_ = new SpectraTableModel(this, dataset);
+    table_view_->setModel(table_model_);
 }
 
 void SpectrumSelectionDialog::on_tableView_clicked(const QModelIndex &index)
 {
-    uword spectrum_index = index.row();
-    QVector<double> spectrum = dataset_->PointSpectrum(spectrum_index);
-    QVector<double> wavelength = dataset_->WavelengthQVector();
-    spectrum_viewer_->SetPlot(wavelength, spectrum);
+    if (!dataset_.data()) return; //should never happen, but let's be safe
+    if (index.isValid() && table_model_->rowCount(index)){
+        uvec spectrum_indices = {index.row()};
+        mat data = join_horiz(dataset_->abscissa(), dataset_->spectra(spectrum_indices));
+
+        if (hold_check_box_->isChecked())
+            plot_viewer_->AddPlot(data, dataset_->name());
+        else
+            plot_viewer_->AddTransientPlot(data, dataset_->name());
+    }
+
 }
 
 void SpectrumSelectionDialog::SpectrumRemoved(int row)
 {
+    if (!dataset_.data()) return; //should never happen, but let's be safe
+
     //after deletion, row may be out of bounds
     if (row >= dataset_->spectra_ptr()->n_cols)
         row = dataset_->spectra_ptr()->n_cols - 1; //make the last row appear.
 
     try{
-        spectrum_viewer_->SetPlot(dataset_->WavelengthQVector(),
-                                  dataset_->PointSpectrum(row));
+        uvec indices = {row};
+        if (hold_check_box_->isChecked())
+            plot_viewer_->AddPlot(dataset_->abscissa(),
+                                  dataset_->spectra(indices),
+                                  dataset_->name());
+
+        else
+            plot_viewer_->AddTransientPlot(dataset_->abscissa(),
+                                           dataset_->spectra(indices),
+                                           dataset_->name());
+
+
     }
     catch(std::exception e){
         main_window_->DisplayExceptionWarning(e);
@@ -47,6 +70,8 @@ void SpectrumSelectionDialog::SpectrumRemoved(int row)
 
 void SpectrumSelectionDialog::on_pushButton_clicked()
 {
+    if (!dataset_.data()) return; //should never happen, but let's be safe
+
     int row = table_view_->currentIndex().row();
 
     int response = QMessageBox::question(this, "Delete Spectrum?",
@@ -67,6 +92,8 @@ void SpectrumSelectionDialog::on_pushButton_clicked()
 
 void SpectrumSelectionDialog::on_pushButton_2_clicked()
 {
+    if (!dataset_.data()) return; //should never happen, but let's be safe
+
     int row = table_view_->currentIndex().row();
     QString filename =
             QFileDialog::getSaveFileName(this, "Save Spectrum",

@@ -90,7 +90,6 @@ public:
     void ClearDatasets();
 
     QList<QSharedPointer<VespucciDataset> > *datasets();
-    void SetListWidgetModel(DatasetTreeModel *model);
     void SetDatasets(QList<QSharedPointer<VespucciDataset> > *datasets);
     unsigned int UpdateCount();
     DatasetTreeModel *dataset_tree_model() const;
@@ -100,6 +99,10 @@ public:
     void CheckSettings();
     QSettings *settings();
 
+
+    DataModel *data_model();
+
+    const mat &GetMatrix(const QStringList &keys) const;
     //bool SavePlot(QCustomPlot *plot, const QString filename) const;
 
 

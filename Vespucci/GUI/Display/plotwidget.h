@@ -41,8 +41,12 @@ public:
     ~PlotWidget();
     void AddPlot(const mat &paired_data);
     void AddPlot(const vec &abscissa, const vec &data);
+    void AddTransientPlot(const vec &abscissa, const vec &data);
+    void AddTransientPlot(const mat &paired_data);
+    void RemoveTransientPlot();
     void StackPlots(bool stack);
-    bool offset_plots();
+    bool offset_plots() const;
+    bool TransientOnly() const;
 
 public slots:
 private:
@@ -59,6 +63,7 @@ private:
     QList<QColor> colors_;
     QColor GetNextColor();
     VespucciWorkspace *workspace;
+    QCPGraph *transient_graph_;
 };
 
 #endif // PLOTWIDGET_H
