@@ -20,25 +20,26 @@
 #ifndef MLPACKPCADATA_H
 #define MLPACKPCADATA_H
 
-#include "Data/Dataset/vespuccidataset.h"
 #include <mlpack/methods/pca/pca.hpp>
-#include <Data/Analysis/analysisresults.h>
+#include "Data/Analysis/analysisresults.h"
 
 using namespace arma;
 
 class VespucciDataset;
-class AnalysisResults;
-class MLPACKPCAData
+class MlpackPCAData: public AnalysisResults
 {
 public:
-    MLPACKPCAData(QString name, bool scaleData);
+    MlpackPCAData(QString name, bool scaleData);
     void Apply(mat data);
     mat *transformed_data();
     vec *eigval();
     mat *eigvec();
     vec *percent_variance();
     mat *value(QString key);
-    QSharedPointer<AnalysisResults> GetResults();
+    const mat &GetMatrix(const QString &key);
+    QStringList KeyList();
+    QMap<QString, QString> GetMetadata();
+    QString GetColumnHeading(const QString &key, int column);
 
 private:
     ///

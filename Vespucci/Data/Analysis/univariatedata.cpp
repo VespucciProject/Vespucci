@@ -1,16 +1,19 @@
 #include "Data/Analysis/univariatedata.h"
 
-UnivariateData::UnivariateData(QString name)
+UnivariateData::UnivariateData(QString name):
+    AnalysisResults(name, "Univariate Analysis Results"),
+    name_(name)
 {
-    name_ = name;
     calibration_stats_["Calibrated"] = 0;
     calibrated_ = false;
 }
 
-UnivariateData::UnivariateData(QString name, vec control)
+UnivariateData::UnivariateData(QString name, vec control):
+    AnalysisResults(name, "Univariate Analysis Results"),
+    control_(control),
+    name_(name)
 {
     control_ = control;
-    name_ = name;
     calibration_stats_["Calibrated"] = 0;
     calibrated_ = false;
     band_ratio_ = false;
@@ -19,6 +22,7 @@ UnivariateData::UnivariateData(QString name, vec control)
 
 void UnivariateData::Apply(double left_bound, double right_bound, uword bound_window, const mat &spectra, const vec &abscissa)
 {
+    cout << "UnivariateData::Apply" << endl;
     correlation_ = false;
     band_ratio_ = false;
     bound_window_ = bound_window;
@@ -32,6 +36,7 @@ void UnivariateData::Apply(double left_bound, double right_bound, uword bound_wi
                                                                inflection_first_baselines_);
 
     band_ratio_ = false;
+    cout << "results.n_cols :" << first_results_.n_cols;
     uword spectrum_count = spectra.n_cols;
     first_inflection_points_.set_size(spectrum_count, 2);
     for (arma::uword i = 0; i < spectrum_count; ++i){
@@ -62,6 +67,7 @@ void UnivariateData::Apply(double first_left_bound, double first_right_bound, do
                                                                       bound_window_, second_baselines_,
                                                                       inflection_second_baselines_);
     uword spectrum_count = spectra.n_cols;
+    cout << "results columns" << first_results_.n_cols;
     first_inflection_points_.set_size(spectrum_count, 2);
     second_inflection_points_.set_size(spectrum_count, 2);
     for (arma::uword i = 0; i < spectrum_count; ++i){
@@ -187,47 +193,55 @@ field<mat> UnivariateData::CalculateRatios()
     return objects;
 }
 
-QSharedPointer<AnalysisResults> UnivariateData::GetResults()
+QStringList UnivariateData::KeyList()
 {
-    QString type;
-    if (band_ratio_)
-        type = "Two-peak Univariate Analysis Data";
-    else if (correlation_)
-        type = "Correlation Analysis Data";
-    else
-        type = "Univariate Analysis Data";
+    if (band_ratio_) return QStringList({"First Region Results", "Second Region Results"});
+    else if (correlation_) return QStringList({"Correlation Coefficients"});
+    else return QStringList({"Results"});
+}
 
-    QSharedPointer<AnalysisResults> results(new AnalysisResults(name_, type));
-    QStringList column_headings;
-    if (band_ratio_){
-        mat matrix = {{first_left_bound_, first_right_bound_},
-                      {second_left_bound_, second_right_bound_}};
-        results->AppendObject("Boundaries", matrix);
-        field<mat> objects = CalculateRatios();
-        results->AppendObject("Peak Centers", objects(0), column_headings);
-        results->AppendObject("Peak Intensities", objects(1), column_headings);
-        results->AppendObject("Adjusted Peak Intensities", objects(2), column_headings);
-        results->AppendObject("Total Area", objects(3), column_headings);
-        results->AppendObject("Adjusted Area", objects(4), column_headings);
-        results->AppendObject("Area Between Inflection Points", objects(5), column_headings);
-        results->AppendObject("Adjusted Area Between Inflection Points", objects(6), column_headings);
-        results->AppendObject("Empirical Full-Width at Half-Maximum", objects(7), column_headings);
-    }
-    else if (correlation_){
-        results->AppendObject("Correlation Coefficients", first_results_);
-    }
-    else{
-        results->AppendObject("Peak Centers", first_results_.col(0), column_headings);
-        results->AppendObject("Peak Intensities", first_results_.col(1), column_headings);
-        results->AppendObject("Adjusted Peak Intensities", first_results_.col(2), column_headings);
-        results->AppendObject("Total Area", first_results_.col(3), column_headings);
-        results->AppendObject("Adjusted Area", first_results_.col(4), column_headings);
-        results->AppendObject("Area Between Inflection Points", first_results_.col(5), column_headings);
-        results->AppendObject("Adjusted Area Between Inflection Points", first_results_.col(6), column_headings);
-        results->AppendObject("Empirical Full-Width at Half-Maximum", first_results_.col(7),column_headings);
-    }
+const mat &UnivariateData::GetMatrix(const QString &name)
+{
+    if (name == "Results"
+            || name == "First Region Results"
+            || name == "Correlation Coefficients")
+        return first_results_;
+    else if (name == "Second Region Results") return second_results_;
+    else return EmptyMatrix();
+}
 
-    return results;
+QMap<QString, QString> UnivariateData::GetMetadata()
+{
+    return metadata_;
+}
+
+///
+/// \brief UnivariateData::GetColumnHeading
+/// \param key
+/// \param column
+/// \return
+/// Will throw exception if column out of bounds (should always check first)
+QString UnivariateData::GetColumnHeading(const QString &key, int column)
+{
+    if ((correlation_ && column > 1)
+            || (key == "First Region Results" && column >= first_results_.n_cols)
+            || (key == "Second Region Results" && column >= second_results_.n_cols)){
+        throw invalid_argument("Column out of bounds");
+    }
+    QStringList headings({
+                           "Peak Centers",
+                           "Peak Intensities",
+                           "Adjusted Peak Intensities",
+                           "Total Area",
+                           "Adjusted Area",
+                           "Area Between Inflection Points",
+                           "Adjusted Area Between Inflection Points",
+                           "Empirical Full-Width at Half-Maximum"});
+
+    if (key == "Correlation Coefficients"){return "Correlation Coefficients";}
+    else if (key == "First Region Results" || key == "Second Region Results"
+             || key == "Results"){return headings[column];}
+    else{return QString();}
 }
 
 

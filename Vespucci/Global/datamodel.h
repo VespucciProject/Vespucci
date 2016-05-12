@@ -52,6 +52,9 @@ public:
     const mat& GetMatrix(const QString &dataset_key, const QString &matrix_key) const;
     const mat& GetMatrix(const QStringList &keys) const;
 
+    bool Mappable(const QStringList &keys) const;
+    bool Plottable(const QStringList &keys) const;
+
     QStringList DatasetNames() const;
     QStringList AnalysisResultsNames(const QString &dataset_key) const;
     QStringList AuxiliaryMatrixNames(const QString &dataset_key) const;
@@ -59,9 +62,10 @@ public:
     void AddDataset(QSharedPointer<VespucciDataset> dataset);
     void RemoveDataset(const QString &name);
     const mat& EmptyMatrix() const;
+    bool HasDataset(const QString &key) const;
 
 private:
-    QMap<QString, QSharedPointer<VespucciDataset> > datasets_;
+    QList<QSharedPointer<VespucciDataset> > datasets_;
     mat empty_matrix_;
 };
 

@@ -19,9 +19,10 @@
 *******************************************************************************/
 #include "Data/Analysis/plsdata.h"
 
-PLSData::PLSData(QString name, QSharedPointer<VespucciDataset> parent, QString *directory)
+PLSData::PLSData(QString name, QSharedPointer<VespucciDataset> parent, QString *directory):
+    AnalysisResults(name, "Partial Least Squares Results"),
+    name_(name)
 {
-    name_ = name;
     parent_ = parent;
     directory_ = directory;
 }
@@ -139,31 +140,41 @@ colvec PLSData::Results(const uword i, bool &valid)
 
 }
 
-QSharedPointer<AnalysisResults> PLSData::GetResults()
+QStringList PLSData::KeyList()
 {
-    QSharedPointer<AnalysisResults> results(new AnalysisResults(name_, "PLS Data"));
-    QStringList column_headings;
-    column_headings << "Percent Variance";
-    results->AppendObject("Percent Variance", percent_variance_, column_headings);
-    column_headings.clear();
-    for (int i = 1; i < 16; ++i)
-        column_headings << "Predictor Loading " + QString::number(i);
-    results->AppendObject("Predictor Loadings", X_loadings_, column_headings);;
-    column_headings.clear();
-    for (int i = 1; i < 16; ++i)
-        column_headings << "Response Loading " + QString::number(i);
-    results->AppendObject("Response Loadings", Y_loadings_, column_headings);;
-    column_headings.clear();
-    for (int i = 1; i < 16; ++i)
-        column_headings << "Predictor Score " + QString::number(i);
-    results->AppendObject("Predictor Scores", X_scores_, column_headings);;
-    column_headings.clear();
-    for (int i = 1; i < 16; ++i)
-        column_headings << "Response Score " + QString::number(i);
-    results->AppendObject("Response Scores", Y_scores_, column_headings);;
-    column_headings.clear();
-    for (int i = 1; i < 16; ++i)
-        column_headings << "Coefficient " + QString::number(i);
-    results->AppendObject("Coefficients", coefficients_, column_headings);;
-    return results;
+    return QStringList({
+                           "Percent Variance",
+                           "Predictor Loadings",
+                           "Response Loadings",
+                           "Predictor Scores",
+                           "Response Scores",
+                           "Coefficients"
+                       });
+}
+
+const mat &PLSData::GetMatrix(const QString &key)
+{
+    if (key == "Percent Variance") return percent_variance_;
+    else if (key == "Predictor Loadings") return X_loadings_;
+    else if (key == "Response Loadings") return Y_loadings_;
+    else if (key == "Predictor Scores") return X_scores_;
+    else if (key == "Response Scores") return Y_scores_;
+    else if (key == "Coefficients") return coefficients_;
+    else return EmptyMatrix();
+}
+
+QMap<QString, QString> PLSData::GetMetadata()
+{
+    return metadata_;
+}
+
+QString PLSData::GetColumnHeading(const QString &key, int column)
+{
+    if (key == "Percent Variance") return "Percent Variance";
+    else if (key == "Predictor Loadings") return "Predictor Loading " + QString::number(column+1);
+    else if (key == "Response Loadings") return "Response Loading " + QString::number(column + 1);
+    else if (key == "Predictor Scores") return "Predictor Score " + QString::number(column + 1);
+    else if (key == "Response Scores") return "Response Score " + QString::number(column + 1);
+    else if (key == "Coefficients") return "Coefficient " + QString::number(column + 1);
+    else return QString();
 }

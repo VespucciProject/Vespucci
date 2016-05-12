@@ -160,7 +160,6 @@ public:
 
 
     void ExportText();
-    void ShowStatsDialog();
 
     void DrawScaleBar(double width, double height, QString units, QColor color, QString position, QFont font);
 

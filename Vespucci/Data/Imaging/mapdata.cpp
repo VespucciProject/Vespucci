@@ -465,11 +465,6 @@ void MapData::ExportText()
     }
 }
 
-void MapData::ShowStatsDialog()
-{
-    StatsDialog *stats_dialog = new StatsDialog(map_display_, results_);
-    stats_dialog->show();
-}
 
 ///
 /// \brief MapData::RemoveThis

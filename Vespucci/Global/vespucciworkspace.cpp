@@ -182,7 +182,7 @@ double VespucciWorkspace::GetWavelengthMax(const QString &key) const
 /// Will throw invalid argument (from DataModel) if key does not exist
 QSharedPointer<VespucciDataset> VespucciWorkspace::GetDataset(const QString &key) const
 {
-    return data_model_->GetDataset(key);
+    return QSharedPointer<VespucciDataset>(data_model_->GetDataset(key));
 }
 
 ///
@@ -440,6 +440,26 @@ const mat &VespucciWorkspace::GetMatrix(const QStringList &keys) const
     }catch(exception e){
         main_window_->DisplayExceptionWarning("VespucciWorkspace::GetMatrix", e);
         return data_model_->EmptyMatrix();
+    }
+}
+
+bool VespucciWorkspace::Mappable(const QStringList &keys) const
+{
+    try{
+        return data_model_->Mappable(keys);
+    }catch(exception e){
+        main_window_->DisplayExceptionWarning("VespucciWorkspace::Mappable", e);
+        return false;
+    }
+}
+
+bool VespucciWorkspace::Plottable(const QStringList &keys) const
+{
+    try{
+        return data_model_->Plottable(keys);
+    }catch(exception e){
+        main_window_->DisplayExceptionWarning("VespucciWorkspace::Plottable", e);
+        return false;
     }
 }
 

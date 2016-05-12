@@ -17,18 +17,31 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef CONFIDENCEINTERVAL_H
-#define CONFIDENCEINTERVAL_H
-#include <utility>
-namespace Vespucci{
-    namespace Math{
-        namespace Stats{
-            double TInterval(double alpha, double stddev, unsigned int n);
-            std::pair<double,double> ChiSquaredInterval(double alpha, double stddev, unsigned int n);
+#include "genericanalysisresults.h"
 
-
-
-        }
-    }
+GenericAnalysisResults::GenericAnalysisResults(const QString &name, const QString &type, QMap<QString, mat> matrices):
+    AnalysisResults(name, type)
+{
+    matrices_ = matrices;
 }
-#endif // CONFIDENCEINTERVAL_H
+
+const mat &GenericAnalysisResults::GetMatrix(const QString &key)
+{
+    if (matrices_.contains(key)) return matrices_.value(key);
+    else return EmptyMatrix();
+}
+
+QStringList GenericAnalysisResults::KeyList()
+{
+    return matrices_.keys();
+}
+
+QMap<QString, QString> GenericAnalysisResults::GetMetadata()
+{
+    return QMap<QString, QString>();
+}
+
+QString GenericAnalysisResults::GetColumnHeading(const QString &key, int column)
+{
+    return QString();
+}

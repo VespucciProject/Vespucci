@@ -23,6 +23,7 @@
 #include <QAbstractItemModel>
 #include <GUI/QAbstractItemModel/treeitem.h>
 #include <Global/datamodel.h>
+#include <Data/Analysis/analysisresults.h>
 class TreeItem;
 class DatasetTreeItem;
 class MatrixTreeItem;

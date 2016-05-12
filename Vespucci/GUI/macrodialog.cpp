@@ -20,13 +20,12 @@
 #include "macrodialog.h"
 #include "ui_macrodialog.h"
 
-MacroDialog::MacroDialog(QWidget *parent, VespucciWorkspace *ws) :
+MacroDialog::MacroDialog(MainWindow *parent, VespucciWorkspace *ws) :
     QDialog(parent),
     ui(new Ui::MacroDialog)
 {
     ui->setupUi(this);
     workspace = ws;
-    dataset_ = QSharedPointer<VespucciDataset>(0);
 }
 
 MacroDialog::~MacroDialog()
@@ -36,5 +35,5 @@ MacroDialog::~MacroDialog()
 
 void MacroDialog::SetActiveDataset(QSharedPointer<VespucciDataset> dataset)
 {
-    dataset_ = dataset;
+    //dataset_ = dataset;
 }

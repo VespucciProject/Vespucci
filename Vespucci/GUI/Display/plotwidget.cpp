@@ -114,10 +114,10 @@ void PlotWidget::AddTransientPlot(const vec &abscissa, const vec &data)
     if (abscissa.n_rows != data.n_rows) return;
 
     if (transient_graph_){
-        QVector<double> absiccsa_qvec =
+        QVector<double> abscissa_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(abscissa));
         QVector<double> data_qvec =
-                QVector<double>::fromStdVector(conv_to<vector<dobule> >::from(data));
+                QVector<double>::fromStdVector(conv_to<vector<double> >::from(data));
         transient_graph_->setData(abscissa_qvec, data_qvec);
     }
     else{
@@ -133,10 +133,10 @@ void PlotWidget::AddTransientPlot(const vec &abscissa, const vec &data)
         }
         plot_->addGraph(key_axis, value_axis);
         transient_graph_ = plot_->graph(plot_->graphCount() - 1);
-        QVector<double> absiccsa_qvec =
+        QVector<double> abscissa_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(abscissa));
         QVector<double> data_qvec =
-                QVector<double>::fromStdVector(conv_to<vector<dobule> >::from(data));
+                QVector<double>::fromStdVector(conv_to<vector<double> >::from(data));
         transient_graph_->addData(abscissa_qvec, data_qvec);
     }
 
@@ -149,10 +149,10 @@ void PlotWidget::AddTransientPlot(const mat &paired_data)
     QCPAxis *key_axis;
     QCPAxis *value_axis;
     if (transient_graph_){
-        QVector<double> absiccsa_qvec =
+        QVector<double> abscissa_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(0)));
         QVector<double> data_qvec =
-                QVector<double>::fromStdVector(conv_to<vector<dobule> >::from(paire_data.col(1)));
+                QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(1)));
         transient_graph_->setData(abscissa_qvec, data_qvec);
     }
     else{
@@ -166,10 +166,10 @@ void PlotWidget::AddTransientPlot(const mat &paired_data)
         }
         plot_->addGraph(key_axis, value_axis);
         transient_graph_ = plot_->graph(plot_->graphCount() - 1);
-        QVector<double> absiccsa_qvec =
+        QVector<double> abscissa_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(0)));
         QVector<double> data_qvec =
-                QVector<double>::fromStdVector(conv_to<vector<dobule> >::from(paired_data.col(1)));
+                QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(1)));
         transient_graph_->addData(abscissa_qvec, data_qvec);
     }
 }

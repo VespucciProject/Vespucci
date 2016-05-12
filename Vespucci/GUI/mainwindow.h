@@ -26,6 +26,9 @@
 #include "GUI/Display/plotviewer.h"
 #include "GUI/Display/spectrumselectiondialog.h"
 #include "GUI/macrodialog.h"
+#include "GUI/pythonshelldialog.h"
+#include "GUI/Display/statsdialog.h"
+class PythonShellDialog;
 class SpectrumSelectionDialog;
 class VespucciWorkspace;
 class VespucciDataset;
@@ -35,6 +38,8 @@ class SpectrumViewer;
 class DataViewer;
 class PlotViewer;
 class DataModel;
+class StatsDialog;
+class MacroDialog;
 namespace Ui {
 class MainWindow;
 }
@@ -173,14 +178,33 @@ private slots:
 
     void on_datasetTreeView_activated(const QModelIndex &index);
 
+    void on_actionPlot_Viewer_toggled(bool arg1);
+
+    void ChildDialogVisibleToggled(const QString &key, bool arg1);
+
+    void on_actionData_Viewer_toggled(bool arg1);
+
+    void on_actionStatistics_Viewer_toggled(bool arg1);
+
+    void on_actionSpectrum_Editor_toggled(bool arg1);
+
+    void on_actionPython_Shell_toggled(bool arg1);
+
+    void on_actionMacro_Editor_toggled(bool arg1);
+
+    void on_datasetTreeView_clicked(const QModelIndex &index);
+
+    void on_datasetTreeView_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
 
     PlotViewer *plot_viewer_;
     DataViewer *data_viewer_;
-    StatsViewer *stats_viewer_;
+    StatsDialog *stats_viewer_;
     MacroDialog *macro_editor_;
     SpectrumSelectionDialog *spectrum_editor_;
+    PythonShellDialog *python_shell_;
 
 
     ///

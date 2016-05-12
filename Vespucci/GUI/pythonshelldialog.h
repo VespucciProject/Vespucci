@@ -32,7 +32,7 @@ class PythonShellDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PythonShellDialog(QWidget *parent = 0, VespucciWorkspace *ws);
+    explicit PythonShellDialog(MainWindow *parent, VespucciWorkspace *ws);
     ~PythonShellDialog();
 
 private:

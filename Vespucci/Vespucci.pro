@@ -176,7 +176,8 @@ SOURCES += main.cpp\
     GUI/macrodialog.cpp \
     Global/datamodel.cpp \
     GUI/QAbstractItemModel/datasetlistmodel.cpp \
-    GUI/pythonshelldialog.cpp
+    GUI/pythonshelldialog.cpp \
+    Data/Analysis/genericanalysisresults.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -247,7 +248,8 @@ HEADERS  += \
     GUI/macrodialog.h \
     Global/datamodel.h \
     GUI/QAbstractItemModel/datasetlistmodel.h \
-    GUI/pythonshelldialog.h
+    GUI/pythonshelldialog.h \
+    Data/Analysis/genericanalysisresults.h
 
 
 FORMS    += \

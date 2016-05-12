@@ -48,8 +48,6 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     arma::uword max_index = right_bound(0);
     min = abscissa(min_index);
     max = abscissa(max_index);
-    std::cout << "min_index: " << min_index <<  " max_index: " << max_index << std::endl;
-    std::cout << "calculated min: " << min << " calcuated max: " << max << std::endl;
 
     arma::uword min_start = min_index - bound_window;
     arma::uword min_end = min_index + bound_window;
@@ -59,27 +57,20 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     arma::uword max_end = max_index + bound_window;
     max_end = (max_end >= abscissa.n_rows ? abscissa.n_rows - 1 : max_end);
 
-    std::cout << min_index << " " << max_index << std::endl;
     double total_area = arma::sum(spectrum.rows(min_index, max_index));
     total_area = total_area / (abscissa(max_index) - abscissa(min_index));
 
-    std::cout << "compose inflection baseline" << std::endl;
     arma::uword window_size = max_index - min_index + 1;
     total_baseline = arma::linspace(spectrum(min_index), spectrum(max_index), window_size);
     arma::vec total_abscissa = abscissa.rows(min_index, max_index);
     double baseline_area = arma::accu(total_baseline) / (abscissa(max_index) - abscissa(min_index));
     total_baseline = arma::join_horiz(total_abscissa, total_baseline);
 
-    std::cout << min_start << " " << min_end << std::endl;
-    std::cout << max_start << " " << max_end << std::endl;
-
     arma::vec min_window = spectrum.rows(min_start, min_end);
     arma::vec max_window = spectrum.rows(max_start, max_end);
     arma::uword inflection_min_index = Vespucci::Math::LocalMinimum(min_window, min) + min_start;
     arma::uword inflection_max_index = Vespucci::Math::LocalMinimum(max_window, max) + max_start;
 
-    std::cout << "inflection min: " << abscissa(inflection_min_index)
-              << " inflection max: " << abscissa(inflection_max_index) << std::endl;
     double area_between_inflection;
     try{
         area_between_inflection = arma::sum(spectrum.rows(min_index, max_index));
@@ -90,7 +81,6 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
         inflection_max_index = max_index;
     }
 
-    std::cout << "find area between inflection points" << std::endl;
     area_between_inflection = area_between_inflection / (abscissa(inflection_max_index) - abscissa(inflection_min_index));
     window_size = inflection_max_index - inflection_min_index + 1;
     inflection_baseline = arma::linspace(spectrum(inflection_min_index), spectrum(inflection_max_index), window_size);
@@ -98,7 +88,6 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
 
 
 
-    std::cout << "find maximum and peak center" << std::endl;
     //we need to make sure the peak center is within the originally specified range
     arma::uword search_min_index = (inflection_min_index < min_index ? min_index : inflection_min_index);
     arma::uword search_max_index = (inflection_max_index > max_index ? max_index : inflection_max_index);
@@ -112,37 +101,29 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     double peak_center = region_abscissa(max_pos);
     double adj_maximum = maximum - search_baseline(max_pos);
 
-    std::cout << "fwhm calculations" << std::endl;
     double half_maximum = adj_maximum / 2.0;
     //find left inflection points
 
     arma::vec bandwidth_region = spectrum.rows(search_min_index, search_max_index);
-    std::cout << "define bandwidth_baseline" << std::endl;
     arma::vec bandwidth_baseline = arma::linspace(bandwidth_region(0), bandwidth_region(bandwidth_region.n_rows - 1), bandwidth_region.n_rows);
     bandwidth_region = bandwidth_region - bandwidth_baseline;
     arma::vec bandwidth_abscissa = abscissa.rows(search_min_index, search_max_index);
     bandwidth_region = bandwidth_region - half_maximum * arma::ones(bandwidth_region.n_rows);
     arma::uword i = 0;
     //search for first positive point, point before is inflection
-    std::cout << "search for left bound" << std::endl;
     while (i < bandwidth_region.n_rows && bandwidth_region(i) < 0){++i;}
     arma::uword left = (i >= bandwidth_region.n_rows ? bandwidth_region.n_rows - 1 : i);
 
     //search for first negative point after first infleciton
-    std::cout << "search for right bound" << std::endl;
     while (i < bandwidth_region.n_rows && bandwidth_region(i) >= 0){++i;}
     arma::uword right = (i >= bandwidth_region.n_rows ? bandwidth_region.n_rows - 1 : i);
 
-    std::cout << "determine left and right" << std::endl;
-    std::cout << "left = " << left << " right = " << right << std::endl;
-    std::cout << "bandwidth_region.n_rows = " << bandwidth_region.n_rows << std::endl;
     if (bandwidth_region.n_rows > left)
         left = std::fabs(bandwidth_region(left)) < std::fabs(bandwidth_region(left + 1)) ? left : left + 1;
     if (right > 0)
         right = std::fabs(bandwidth_region(right)) < std::fabs(bandwidth_region(right - 1)) ? right : right - 1;
 
 
-    std::cout << "find fwhm" << std::endl;
     double fwhm = bandwidth_abscissa(right) - bandwidth_abscissa(left);
 
     results(0) = peak_center;
@@ -168,9 +149,7 @@ arma::mat Vespucci::Math::Quantification::QuantifyPeakMat(const arma::mat &spect
         double temp_max = max;
         arma::mat total_baseline;
         arma::mat inflection_baseline;
-        std::cout << "before call" << std::endl;
         results.row(i) = Vespucci::Math::Quantification::QuantifyPeak(spectra.col(i), abscissa, temp_min, temp_max, bound_window, total_baseline, inflection_baseline);
-        std::cout << "after call" << std::endl;
         inflection_baselines(i) = inflection_baseline;
         if (total_baselines.n_rows){
             total_baselines = arma::join_vert(total_baselines, total_baseline.t());

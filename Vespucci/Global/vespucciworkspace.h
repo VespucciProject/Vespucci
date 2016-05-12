@@ -31,9 +31,11 @@
 #include "GUI/QAbstractItemModel/datasettreemodel.h"
 #include "Global/enums.h"
 #include "Global/datamodel.h"
+#include "Data/Analysis/analysisresults.h"
 class VespucciDataset;
 class MainWindow;
 class DatasetTreeModel;
+class AnalysisResults;
 ///
 /// \brief The VespucciWorkspace class
 /// A class which contains all "global variables" (that aren't held in MainWindow)
@@ -103,6 +105,9 @@ public:
     DataModel *data_model();
 
     const mat &GetMatrix(const QStringList &keys) const;
+
+    bool Mappable(const QStringList &keys) const;
+    bool Plottable(const QStringList &keys) const;
     //bool SavePlot(QCustomPlot *plot, const QString filename) const;
 
 

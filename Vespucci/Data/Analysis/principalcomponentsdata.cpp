@@ -24,7 +24,9 @@
 /// \param parent Dataset
 /// \param directory global directory
 ///
-PrincipalComponentsData::PrincipalComponentsData(QString name)
+PrincipalComponentsData::PrincipalComponentsData(QString name):
+    AnalysisResults(name, "PCA Results"),
+    name_(name)
 {
     name_ = name;
 }
@@ -92,25 +94,38 @@ mat *PrincipalComponentsData::value(QString key)
         return NULL;
 }
 
-QSharedPointer<AnalysisResults> PrincipalComponentsData::GetResults()
+const mat &PrincipalComponentsData::GetMatrix(const QString &key)
 {
-    QSharedPointer<AnalysisResults> results(new AnalysisResults(name_, "PCA Data"));
-    QStringList column_headings;
-    for (int i = 1; i < 16; ++i)
-        column_headings << "Loading " + QString::number(i);
-    results->AppendObject("Scores", score_, column_headings);;
-    column_headings.clear();
-    for (int i = 1; i < 16; ++i)
-        column_headings << "Loading " + QString::number(i);
-    results->AppendObject("Loadings", coeff_, column_headings);;
-    column_headings.clear();
-    column_headings << "Eigenvalues";
-    results->AppendObject("Eigenvalues", latent_, column_headings);;
-    column_headings.clear();
-    column_headings << "Percent Variance";
-    results->AppendObject("Percent Variance", percent_variance_, column_headings);;
-    column_headings.clear();
-    column_headings << "Hotelling t²";
-    results->AppendObject("Hotelling t² Values", tsquared_, column_headings);;
-    return results;
+    if (key == "Scores") return score_;
+    else if (key == "Loadings") return coeff_;
+    else if (key == "Eigenvalues") return latent_;
+    else if (key == "Percent Variance") return percent_variance_;
+    else if (key == "Hotelling t²") return tsquared_;
+    else return EmptyMatrix();
+}
+
+QStringList PrincipalComponentsData::KeyList()
+{
+    return QStringList({
+                           "Scores",
+                           "Loadings",
+                           "Eigenvalues",
+                           "Percent Variance",
+                           "Hotelling t²"
+                       });
+}
+
+QMap<QString, QString> PrincipalComponentsData::GetMetadata()
+{
+    return QMap<QString, QString>();
+}
+
+QString PrincipalComponentsData::GetColumnHeading(const QString &key, int column)
+{
+    if (key == "Scores") return "Score " + QString::number(column + 1);
+    else if (key == "Loadings") return "Loading " + QString::number(column + 1);
+    else if (key == "Eigenvalues") return "Eigenvalues";
+    else if (key == "Percent Variance") return "Percent Variance";
+    else if (key == "Hotelling t²") return "Hotelling t²";
+    else return QString();
 }

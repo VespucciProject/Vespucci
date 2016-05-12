@@ -93,7 +93,7 @@ DatasetTreeModel::DatasetTreeModel(QObject *parent, const DataModel *data_model)
             foreach (QString matrix_key, results->KeyList()){
                 QStringList matrix_item_keys = {dataset_key, results_key, matrix_key};
                 QList<QVariant> matrix_item_data = {QVariant(matrix_key),
-                                                    QVariant(DescribeMatrix(results->value(matrix_key)))
+                                                    QVariant(DescribeMatrix(results->GetMatrix(matrix_key)))
                                                    };
                 TreeItem *matrix_tree_item =
                         new TreeItem(TreeItem::Matrix,
@@ -407,7 +407,7 @@ TreeItem *DatasetTreeModel::SetupAnalysisResultTreeItem(QSharedPointer<VespucciD
         TreeItem *matrix_tree_item =
                 SetupMatrixTreeItem(dataset->name(),
                                     results->name(),
-                                    results->value(matrix_key),
+                                    results->GetMatrix(matrix_key),
                                     results_tree_item);
         results_tree_item->appendChild(matrix_tree_item);
     }
@@ -474,6 +474,9 @@ TreeItem *DatasetTreeModel::SetupMapTreeItem(const QString &dataset_key,
 
 QString DatasetTreeModel::DescribeMatrix(const mat &matrix) const
 {
+    cout << "DescribeMatrix() " << endl;
+    cout << "n_rows = " << matrix.n_rows << endl;
+    cout << "n_cols = " << matrix.n_cols << endl;
     return QString::number(matrix.n_rows)
             + "×"
             + QString::number(matrix.n_cols)

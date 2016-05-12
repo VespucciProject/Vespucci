@@ -4,6 +4,8 @@
 #include <QDialog>
 #include "Data/Dataset/vespuccidataset.h"
 #include "GUI/QAbstractItemModel/spectratablemodel.h"
+
+class PlotViewer;
 class MainWindow;
 class SpectraTableModel;
 class VespucciWorkspace;

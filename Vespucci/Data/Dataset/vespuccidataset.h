@@ -50,7 +50,7 @@
 
 class MapData;
 class PrincipalComponentsData;
-class MLPACKPCAData;
+class MlpackPCAData;
 class PLSData;
 class VCAData;
 class SpectrumViewer;
@@ -333,7 +333,6 @@ public:
     MapListModel *map_list_model();
 
     void AddAnalysisResult(QSharedPointer<AnalysisResults> analysis_result);
-    void AppendAnalysisResult(const QString &result_key, const QString &object_key, const mat &object, const QStringList &column_headings);
     QStringList AnalysisResultsKeys() const;
     QMap<QString, QStringList> AnalysisResultsTreeStructure() const;
 
@@ -350,9 +349,12 @@ public:
     QSharedPointer<MapData> GetMapData(const QString &key);
 
     void CreateMap(const QString &map_name,
-                                      const QString &results_key,
-                                      const QString &matrix_key,
-                                      uword column, QCPColorGradient gradient, int tick_count);
+                   const QString &results_key,
+                   const QString &matrix_key,
+                   uword column,
+                   QCPColorGradient gradient,
+                   int tick_count);
+
     bool ShowMapViewer(const QString &map_key, bool show);
 
     QStringList MapKeys() const;
@@ -381,6 +383,8 @@ public:
     /// The spectral abscissa of the spectra in spectra_
     vec abscissa_;
     vec abscissa_old_;
+
+    VespucciWorkspace *workspace;
 
     ///
     /// \brief x_
@@ -551,7 +555,8 @@ public:
     /// \brief analysis_results_
     /// A container for various analyses indexed by name
     ///
-    QMap<QString, QSharedPointer<AnalysisResults> > analysis_results_;
+    ///
+    QVector<QSharedPointer<AnalysisResults> > analysis_results_;
 
 };
 Q_DECLARE_METATYPE(QSharedPointer<VespucciDataset> *)

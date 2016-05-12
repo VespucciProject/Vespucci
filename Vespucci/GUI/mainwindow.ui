@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>487</width>
+    <width>672</width>
     <height>435</height>
    </rect>
   </property>
@@ -47,7 +47,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>487</width>
+     <width>672</width>
      <height>22</height>
     </rect>
    </property>
@@ -173,7 +173,7 @@
     <addaction name="actionData_Viewer"/>
     <addaction name="actionStatistics_Viewer"/>
     <addaction name="actionSpectrum_Editor"/>
-    <addaction name="actionPython_Shell_2"/>
+    <addaction name="actionPython_Shell"/>
     <addaction name="actionMacro_Editor"/>
    </widget>
    <addaction name="menuFile"/>
@@ -578,6 +578,9 @@
    </property>
   </action>
   <action name="actionPython_Shell">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -589,16 +592,11 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Macro Editor</string>
-   </property>
-  </action>
-  <action name="actionPython_Shell_2">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Python Shell</string>
    </property>
   </action>
   <action name="actionCalibrate">

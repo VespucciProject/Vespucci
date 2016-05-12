@@ -24,6 +24,7 @@
 #include "Global/vespucciworkspace.h"
 class VespucciWorkspace;
 class VespucciDataset;
+class MainWindow;
 namespace Ui {
 class MacroDialog;
 }
@@ -33,7 +34,7 @@ class MacroDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit MacroDialog(QWidget *parent = 0, VespucciWorkspace *ws);
+    explicit MacroDialog(MainWindow *parent, VespucciWorkspace *ws);
     ~MacroDialog();
     void SetActiveDataset(QSharedPointer<VespucciDataset> dataset);
 

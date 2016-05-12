@@ -19,16 +19,15 @@
 *******************************************************************************/
 #ifndef PLSDATA_H
 #define PLSDATA_H
-#include "Data/Dataset/vespuccidataset.h"
 #include "Data/Analysis/analysisresults.h"
+#include "Data/Dataset/vespuccidataset.h"
 using namespace arma;
 class VespucciDataset;
-class AnalysisResults;
 ///
 /// \brief The PLSData class
 /// A class for performing and storing data related to partial least squares
 /// determinant analysis
-class PLSData
+class PLSData: public AnalysisResults
 {
 public:
     PLSData(QString name,
@@ -51,8 +50,10 @@ public:
     int NumberComponents();
     colvec Results(const uword i, bool &valid);
 
-    QSharedPointer<AnalysisResults> GetResults();
-    void AddResults(QSharedPointer<AnalysisResults> results);
+    QStringList KeyList();
+    const mat &GetMatrix(const QString &key);
+    QMap<QString, QString> GetMetadata();
+    QString GetColumnHeading(const QString &key, int column);
 private:
     ///
     /// \brief Y_
@@ -106,6 +107,8 @@ private:
     /// \brief name_
     /// The name of the AnalysisResult to be stored in VespucciDataset
     QString name_;
+
+    QMap<QString, QString> metadata_;
 };
 
 #endif // PLSDATA_H

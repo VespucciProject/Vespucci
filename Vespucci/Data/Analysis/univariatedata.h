@@ -20,10 +20,9 @@
 #ifndef UNIVARIATEDATA_H
 #define UNIVARIATEDATA_H
 #include "Global/enums.h"
-#include "Data/Dataset/vespuccidataset.h"
 #include "Math/Quantification/quantification.h"
-class AnalysisResults;
-class UnivariateData
+#include "Data/Analysis/analysisresults.h"
+class UnivariateData: public AnalysisResults
 {
 public:
     UnivariateData(QString name);
@@ -64,14 +63,17 @@ public:
 
     field<mat> CalculateRatios();
 
-    QSharedPointer<AnalysisResults> GetResults();
+    QStringList KeyList();
+    const mat &GetMatrix(const QString &name);
+    QMap<QString, QString> GetMetadata();
+    QString GetColumnHeading(const QString &key, int column);
+
 
 private:
     QString method_description_;
 
-    mat first_results_; //matrix with 8 or 16 columns and spectra count rows, depending on type
+    mat first_results_;
     mat second_results_;
-
 
     ///
     /// \brief control_
@@ -108,6 +110,7 @@ private:
     mat calibration_curve_;
 
     std::map<std::string, double> calibration_stats_;
+    QMap<QString, QString> metadata_;
     bool calibrated_;
 };
 

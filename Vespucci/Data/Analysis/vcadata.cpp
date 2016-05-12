@@ -19,10 +19,9 @@
 *******************************************************************************/
 #include "Data/Analysis/vcadata.h"
 
-VCAData::VCAData(QString name)
-{
-    name_ = name;
-}
+VCAData::VCAData(QString name):
+    AnalysisResults(name, "VCA Results"),
+    name_(name){}
 
 ///
 /// \brief VCAData::Apply
@@ -110,20 +109,49 @@ mat *VCAData::value(QString key)
         return NULL;
 }
 
-QSharedPointer<AnalysisResults> VCAData::GetResults()
+QStringList VCAData::KeyList()
 {
-    QSharedPointer<AnalysisResults> results(new AnalysisResults(name_, "VCA Data"));
-    QStringList column_headings;
-    for (int i = 1; (i < endmember_spectra_.n_cols + 1 && i < 16); ++i)
-        column_headings << "Endmember " + QString::number(i);
-
-    results->AppendObject("Endmember Spectra", endmember_spectra_, column_headings);
-    results->AppendObject("Fractional Abundances", fractional_abundances_, column_headings);
-    column_headings.clear();
-    results->AppendObject("Pure Pixel Indices", indices_mat_, column_headings);
-    results->AppendObject("Projected Data", projected_data_, column_headings);
-    return results;
+    return QStringList({
+                           "Endmembers",
+                           "Fractional Abundances",
+                           "Pure Pixel Indices",
+                           "Projected Data"
+                       });
 }
+
+const mat &VCAData::GetMatrix(const QString &key)
+{
+    if (key == "VCA Endmembers")
+        return endmember_spectra_;
+    else if (key == "VCA Fractional Abundances")
+        return fractional_abundances_;
+    else if (key == "VCA Pure Pixel Indices")
+        return indices_mat_;
+    else if (key == "VCA Projected Data")
+        return projected_data_;
+    else
+        return EmptyMatrix();
+}
+
+QMap<QString, QString> VCAData::GetMetadata()
+{
+    return QMap<QString, QString>();
+}
+
+QString VCAData::GetColumnHeading(const QString &key, int column)
+{
+    if (key == "VCA Endmembers")
+        return "Endmember " + QString::number(column + 1);
+    else if (key == "VCA Fractional Abundances")
+        return "Fractional Abundances";
+    else if (key == "VCA Pure Pixel Indices")
+        return "Pure Pixel Indices";
+    else if (key == "VCA Projected Data")
+        return "Score " + QString::number(column + 1);
+    else
+        return QString();
+}
+
 
 ///
 /// \brief VCAData::EndmemberMin

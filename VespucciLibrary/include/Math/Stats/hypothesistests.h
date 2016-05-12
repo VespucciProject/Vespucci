@@ -17,18 +17,19 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef CONFIDENCEINTERVAL_H
-#define CONFIDENCEINTERVAL_H
-#include <utility>
+#ifndef HYPOTHESISTESTS_H
+#define HYPOTHESISTESTS_H
 namespace Vespucci{
     namespace Math{
         namespace Stats{
-            double TInterval(double alpha, double stddev, unsigned int n);
-            std::pair<double,double> ChiSquaredInterval(double alpha, double stddev, unsigned int n);
+            double ZTest(double alpha, int tail,
+                         double mean1, double stddev1, unsigned int n1,
+                         double mean2, double stddev2, unsigned int n2);
 
-
-
+            double TTest(double alpha, int tail,
+                         double mean1, double stddev1, unsigned int n1,
+                         double mean2, double stddev2, unsigned int n2);
         }
     }
 }
-#endif // CONFIDENCEINTERVAL_H
+#endif // HYPOTHESISTESTS_H

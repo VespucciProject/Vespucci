@@ -22,6 +22,7 @@
 #include <mlpack/methods/quic_svd/quic_svd.hpp>
 #include "Data/Import/datasetloader.h"
 #include "Data/Import/datasetsaver.h"
+#include "Data/Analysis/genericanalysisresults.h"
 
 using namespace arma;
 using namespace std;
@@ -154,7 +155,11 @@ void VespucciDataset::SetOldCopies()
 /// iteratively increased until the name is unique
 bool VespucciDataset::Contains(const QString &key)
 {
-    return analysis_results_.contains(key) || auxiliary_matrices_.contains(key);
+    foreach(QSharedPointer<AnalysisResults> result, analysis_results_)
+        if (result->name() == key) return true;
+    foreach(QString name, auxiliary_matrices_.keys())
+        if (name == key) return true;
+    return false;
 }
 
 
@@ -183,6 +188,8 @@ VespucciDataset::VespucciDataset(const QString name, const QString &archive_file
     abscissa_ = core_objects["Abscissa"];
     x_ = core_objects["x"];
     y_ = core_objects["y"];
+    main_window_ = main_window;
+    workspace = main_window_->workspace_ptr();
 
 }
 
@@ -205,6 +212,7 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
     : log_text_stream_(log_file)
 {
     QDateTime datetime = QDateTime::currentDateTimeUtc();
+    workspace = main_window->workspace_ptr();
     log_file_ = log_file;
     log_text_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
     log_text_stream_ << "Version 1.0" << endl << endl;
@@ -274,6 +282,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
                                  std::string format)
     : log_text_stream_(log_file)
 {
+    workspace = main_window->workspace_ptr();
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_file_ = log_file;
 
@@ -377,6 +386,7 @@ VespucciDataset::VespucciDataset(map<pair<int, int>, string> text_filenames,
                                  int rows, int cols)
      : log_text_stream_(log_file)
 {
+    workspace = main_window->workspace_ptr();
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_text_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
     log_text_stream_ << "Version 1.0" << endl << endl;
@@ -434,6 +444,7 @@ VespucciDataset::VespucciDataset(QString name,
     : log_text_stream_(log_file)
 
 {
+    workspace = main_window->workspace_ptr();
     log_file_ = log_file;
     map_list_model_ = new MapListModel(main_window, this);
     QDateTime datetime = QDateTime::currentDateTimeUtc();
@@ -487,6 +498,7 @@ VespucciDataset::VespucciDataset(QString name,
                                  QFile *log_file)
     : log_text_stream_(log_file)
 {
+    workspace = main_window->workspace_ptr();
     map_list_model_ = new MapListModel(main_window, this);
     log_file_ = log_file;
     non_spatial_ = true;
@@ -595,6 +607,7 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
     log_text_stream_ << "y_max == " << y_max << endl;
     log_text_stream_ << "wl_min == " << wl_min << endl;
     log_text_stream_ << "wl_max == " << wl_max << endl << endl;
+    workspace->UpdateModel();
 }
 
 
@@ -782,6 +795,8 @@ void VespucciDataset::ShedZeroSpectra()
     catch(exception e){
         main_window_->DisplayExceptionWarning("VespucciDataset::ShedZeroSpectra", e);
     }
+
+    workspace->UpdateModel();
 }
 
 void VespucciDataset::ShedZeroWavelengths()
@@ -803,6 +818,7 @@ void VespucciDataset::ShedZeroWavelengths()
     catch(exception e){
         main_window_->DisplayExceptionWarning("VespucciDataset::ShedZeroWavelengths", e);
     }
+    workspace->UpdateModel();
 }
 
 ///
@@ -1022,6 +1038,8 @@ void VespucciDataset::RemoveClippedSpectra(double threshold)
 
     if (spectra_.n_rows != spectra_old_.n_rows)
         non_spatial_ = true;
+
+    workspace->UpdateModel();
 }
 
 ///
@@ -1049,6 +1067,8 @@ void VespucciDataset::RemoveFlatSpectra(double threshold)
 
     if (spectra_.n_rows != spectra_old_.n_rows)
         non_spatial_ = true;
+
+    workspace->UpdateModel();
 }
 
 //Filtering functions
@@ -1228,6 +1248,7 @@ void VespucciDataset::ShedSpectrum(const uword index)
         main_window_->DisplayExceptionWarning(exc);
     }
     cout << "spectra_ columns (post) = " << spectra_.n_cols;
+    workspace->UpdateModel();
 }
 
 ///
@@ -1400,6 +1421,7 @@ void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa, unsigned
     abscissa_ = new_abscissa;
     spectra_ = new_spectra;
     last_operation_ = "Abscissa Interpolation";
+    workspace->UpdateModel();
 }
 
 ///
@@ -1422,6 +1444,7 @@ void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa)
     abscissa_ = new_abscissa;
     spectra_ = new_spectra;
     last_operation_ = "Abscissa Interpolation";
+    workspace->UpdateModel();
 }
 
 ///
@@ -1539,13 +1562,18 @@ void VespucciDataset::Univariate(QString name,
     log_text_stream_ << "left_bound = " << left_bound << endl;
     log_text_stream_ << "right_bound = " << right_bound << endl;
     log_text_stream_ << "bound_window = " << bound_window;
-    UnivariateData univariate_data(name);
+
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name));
     try{
-        univariate_data.Apply(left_bound, right_bound, bound_window, spectra_, abscissa_);
+        univariate_data->Apply(left_bound, right_bound, bound_window, spectra_, abscissa_);
     }catch(exception e){
         main_window_->DisplayExceptionWarning(e);
+        return;
     }
-    analysis_results_[name] = univariate_data.GetResults();
+    analysis_results_.append(univariate_data);
+    workspace->UpdateModel();
+    cout << "end of VespucciDataset::Univariate" << endl;
+
 }
 
 ///
@@ -1565,16 +1593,21 @@ void VespucciDataset::BandRatio(QString name, double &first_left_bound, double &
     log_text_stream_ << "second_left_bound = " << second_left_bound << endl;
     log_text_stream_ << "second_right_bound = " << second_right_bound << endl;
     log_text_stream_ << "bound_window = " << bound_window;
-    UnivariateData univariate_data(name);
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name));
     try{
-        univariate_data.Apply(first_left_bound, first_right_bound,
+        univariate_data->Apply(first_left_bound, first_right_bound,
                                second_left_bound, second_right_bound,
                                bound_window,
                                spectra_, abscissa_);
     }catch(exception e){
         main_window_->DisplayExceptionWarning(e);
+        return;
     }
-    analysis_results_[name] = univariate_data.GetResults();
+    analysis_results_.append(univariate_data);
+    workspace->UpdateModel();
+
+
+
 }
 
 
@@ -1586,15 +1619,17 @@ void VespucciDataset::BandRatio(QString name, double &first_left_bound, double &
 /// reduction, not classification, so there is no corresponding imaging function
 void VespucciDataset::PrincipalComponents(const QString &name, bool scale_data)
 {
-    MLPACKPCAData mlpack_pca_data(name, scale_data);
+    QSharedPointer<MlpackPCAData> mlpack_pca_data(new MlpackPCAData(name, scale_data));
     log_text_stream_ << "PrincipalComponents (mlpack)" << endl;
     try{
-        mlpack_pca_data.Apply(spectra_);
+        mlpack_pca_data->Apply(spectra_);
     }
     catch(exception e){
         throw std::runtime_error("VespucciDataset::PrincipalComponents");
     }
-    analysis_results_[name] = mlpack_pca_data.GetResults();
+    analysis_results_.append(mlpack_pca_data);
+    workspace->UpdateModel();
+
 }
 
 ///
@@ -1603,15 +1638,15 @@ void VespucciDataset::PrincipalComponents(const QString &name, bool scale_data)
 void VespucciDataset::PrincipalComponents(const QString &name)
 {
     log_text_stream_ << "PrincipalComponents (no image)" << endl;
-    PrincipalComponentsData pca_data(name);
-
+    QSharedPointer<PrincipalComponentsData> pca_data(new PrincipalComponentsData(name));
     try{
-        pca_data.Apply(spectra_);
+        pca_data->Apply(spectra_);
     }catch(exception e){
         string str = "PrincipalComponents: " + string(e.what());
         throw std::runtime_error(str);
     }
-    analysis_results_[name] = pca_data.GetResults();
+    analysis_results_.append(pca_data);
+    workspace->UpdateModel();
 }
 
 ///
@@ -1749,17 +1784,16 @@ void VespucciDataset::VertexComponents(QString name, uword endmembers)
         log_text_stream_ << endmembers << endl;
     }
 
-    VCAData vertex_components_data(name);
+    QSharedPointer<VCAData> vertex_components_data(new VCAData(name));
 
     try{
-        vertex_components_data.Apply(spectra_, endmembers);
+        vertex_components_data->Apply(spectra_, endmembers);
     }catch(exception e){
         cerr << "VespucciDataset::VertexComponents()" << endl;
-        string str = "VertexComponents: " + string(e.what());
-        throw std::runtime_error(str);
+        throw std::runtime_error("VertexComponents: " + string(e.what()));
     }
-
-    analysis_results_[name] = vertex_components_data.GetResults();
+    analysis_results_.append(vertex_components_data);
+    workspace->UpdateModel();
 }
 
 
@@ -1780,16 +1814,20 @@ void VespucciDataset::PartialLeastSquares(QString name, uword components)
         log_text_stream_ << components << endl;
     }
 
-    PLSData pls_data(name, QSharedPointer<VespucciDataset>(this), directory_);
+    QSharedPointer<PLSData> pls_data(new PLSData(name,
+                                                 QSharedPointer<VespucciDataset>(this),
+                                                 directory_));
+
 
     try{
-        pls_data.Apply(spectra_, abscissa_, components);
+        pls_data->Apply(spectra_, abscissa_, components);
     }catch(exception e){
         string str = "PartialLeastSquares: " + string(e.what());
         throw std::runtime_error(str);
     }
 
-    analysis_results_[name] = pls_data.GetResults();
+    analysis_results_.append(pls_data);
+    workspace->UpdateModel();
 
 }
 
@@ -1813,9 +1851,9 @@ void VespucciDataset::CorrelationAnalysis(const QString &control_key, QString na
         return;
     }
 
-    UnivariateData univariate_data(name, control);
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name, control));
     try{
-        univariate_data.ApplyCorrelation(spectra_);
+        univariate_data->ApplyCorrelation(spectra_);
     }catch(exception e){
         main_window_->DisplayExceptionWarning("UnivariateData::apply", e);
         return;
@@ -1825,7 +1863,8 @@ void VespucciDataset::CorrelationAnalysis(const QString &control_key, QString na
     log_text_stream_ << "name == " << name << endl;
     log_text_stream_ << "method == Correlation" << endl;
 
-    analysis_results_[name] = univariate_data.GetResults();
+    analysis_results_.append(univariate_data);
+    workspace->UpdateModel();
 }
 
 
@@ -1925,11 +1964,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
 
     }
 
-    //if dataset is non spatial, just quit
-    if(non_spatial_){
-        QMessageBox::warning(0, "Non-spatial dataset", "Dataset is non-spatial or non-contiguous! Mapping functions are not available");
-        return;
-    }
+
     log_text_stream_ << "KMeans" << endl;
     log_text_stream_ << "clusters == " << clusters << endl;
     log_text_stream_ << "name == " << name << endl << endl;
@@ -1939,12 +1974,10 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
         clusters = HySime();
         log_text_stream_ << clusters << endl;
     }
-    QSharedPointer<AnalysisResults> results(new AnalysisResults(name, "k-Means Analysis"));
-    QStringList column_headings;
-    column_headings << "Assignments";
-    results->AppendObject("Assignments", k_means_data, column_headings);
-    analysis_results_[name] = results;
-
+    QMap<QString, mat> matrices = {{"Assignments", k_means_data}};
+    QSharedPointer<GenericAnalysisResults> results(new GenericAnalysisResults(name, "k-Means Analysis", matrices));
+    analysis_results_.append(results);
+    workspace->UpdateModel();
 }
 
 
@@ -1965,15 +1998,11 @@ void VespucciDataset::ClassicalLeastSquares(QString name, QString reference_key)
         throw runtime_error(str);
     }
 
-    //AddAnalysisResult("CLS Coefficients", coefs);
-
-    QSharedPointer<AnalysisResults> results(new AnalysisResults(name, "Classical Least Squares Analysis"));
-    QStringList column_headings;
-    for (int i = 1; i < reference.n_cols + 1; ++i)
-        column_headings << "Coefficient " + QString::number(i);
-
-    results->AppendObject("Coefficients", coefs, column_headings);
-    analysis_results_[name] = results;
+    QMap<QString, mat> matrices = {{"Coefficients", coefs},
+                                   {"Reference Matrix", reference}};
+    QSharedPointer<GenericAnalysisResults> results(new GenericAnalysisResults(name, "CLS Analysis", matrices));
+    analysis_results_.append(results);
+    workspace->UpdateModel();
 
 }
 
@@ -2708,20 +2737,6 @@ MapListModel* VespucciDataset::map_list_model()
     return map_list_model_;
 }
 
-///
-/// \brief VespucciDataset::AppendAnalysisResult
-/// \param result_key
-/// \param object_key
-/// \param object
-/// Add an object into an existing AnalysisResult. This is used when an analysis
-/// result is modified by a modification function (such as Calibrate, normalize, etc)
-/// or the python interface, which allows modification using an external library
-void VespucciDataset::AppendAnalysisResult(const QString &result_key, const QString &object_key, const mat &object, const QStringList &column_headings)
-{
-    if (analysis_results_.contains(result_key)){
-        analysis_results_[result_key]->AppendObject(object_key, object, column_headings);
-    }
-}
 
 ///
 /// \brief VespucciDataset::AnalysisResultsKeys
@@ -2729,7 +2744,10 @@ void VespucciDataset::AppendAnalysisResult(const QString &result_key, const QStr
 /// Get a list of keys for analysis results. Used to update display model.
 QStringList VespucciDataset::AnalysisResultsKeys() const
 {
-    return analysis_results_.keys();
+    QStringList keys;
+    foreach(QSharedPointer<AnalysisResults> result, analysis_results_)
+        keys << result->name();
+    return keys;
 }
 
 ///
@@ -2739,8 +2757,8 @@ QStringList VespucciDataset::AnalysisResultsKeys() const
 QMap<QString, QStringList> VespucciDataset::AnalysisResultsTreeStructure() const
 {
     QMap<QString, QStringList> tree_structure;
-    foreach (const QString &key, analysis_results_.keys())
-        tree_structure[key] = analysis_results_[key]->KeyList();
+    foreach (QSharedPointer<AnalysisResults> result, analysis_results_)
+        tree_structure[result->name()] = result->KeyList();
     return tree_structure;
 }
 
@@ -2787,23 +2805,39 @@ QStringList VespucciDataset::CoreMatrixKeys() const
     return {"Spectra", "Spectral Abscissa", "x", "y"};
 }
 
+///
+/// \brief VespucciDataset::GetAnalysisResultMatrix
+/// \param results_key
+/// \param matrix_key
+/// \return
+/// Currently iterates over all results (O(n)) could change structure to use binary
+/// tree (O(log n)) but I don't think it should ever be necessary.
 const mat &VespucciDataset::GetAnalysisResultMatrix(const QString &results_key, const QString &matrix_key) const
 {
-    if (analysis_results_.contains(results_key))
-        return analysis_results_[results_key]->value(matrix_key);
-    else
-        return empty_matrix_;
+    foreach(QSharedPointer<AnalysisResults> result, analysis_results_){
+        if (result->name() == results_key)
+            if (result->KeyList().contains(matrix_key))
+                return result->GetMatrix(matrix_key);
+    }
+
+    return empty_matrix_;
 }
 
 QSharedPointer<AnalysisResults> VespucciDataset::GetAnalysisResult(const QString &key)
 {
-    return analysis_results_[key];
+
+    foreach(QSharedPointer<AnalysisResults> result, analysis_results_){
+        if (result->name() == key)
+            return result;
+    }
+
+    QSharedPointer<AnalysisResults> dummy(new GenericAnalysisResults("Dummy", "Dummy", QMap<QString, mat>()));
+    return dummy;
 }
 
 const mat &VespucciDataset::GetAuxiliaryMatrix(const QString &key) const
 {
-    if (analysis_results_.contains(key))
-        return auxiliary_matrices_[key];
+    if (auxiliary_matrices_.contains(key)) return auxiliary_matrices_[key];
     else
         return empty_matrix_;
 }
@@ -2852,7 +2886,7 @@ void VespucciDataset::CreateMap(const QString &map_name,
 {
     vec results;
     try{
-        results = analysis_results_[results_key]->value(matrix_key).col(column);
+        results = this->GetAnalysisResultMatrix(results_key, matrix_key).col(column);
     }catch(exception e){
         throw e; //let the caller handle the exception
     }

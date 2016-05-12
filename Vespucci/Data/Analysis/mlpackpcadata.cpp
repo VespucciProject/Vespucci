@@ -1,11 +1,11 @@
 #include "Data/Analysis/mlpackpcadata.h"
 
-MLPACKPCAData::MLPACKPCAData(QString name, bool scaleData): pca_data_(scaleData)
-{
-    name_ = name_;
-}
+MlpackPCAData::MlpackPCAData(QString name, bool scaleData):
+    AnalysisResults(name, "mlpack PCA Results"),
+    pca_data_(scaleData),
+    name_(name){}
 
-void MLPACKPCAData::Apply(mat data)
+void MlpackPCAData::Apply(mat data)
 {
    try{
         pca_data_.Apply(data, transformed_data_, eigval_, eigvec_);
@@ -18,27 +18,27 @@ void MLPACKPCAData::Apply(mat data)
     percent_variance_ /= 0.01;
 }
 
-mat *MLPACKPCAData::transformed_data()
+mat *MlpackPCAData::transformed_data()
 {
     return &transformed_data_;
 }
 
-vec *MLPACKPCAData::eigval()
+vec *MlpackPCAData::eigval()
 {
     return &eigval_;
 }
 
-mat *MLPACKPCAData::eigvec()
+mat *MlpackPCAData::eigvec()
 {
     return &eigvec_;
 }
 
-vec *MLPACKPCAData::percent_variance()
+vec *MlpackPCAData::percent_variance()
 {
     return &percent_variance_;
 }
 
-mat *MLPACKPCAData::value(QString key)
+mat *MlpackPCAData::value(QString key)
 {
     if (key == "MLPACK PCA Projection")
         return &transformed_data_;
@@ -52,23 +52,40 @@ mat *MLPACKPCAData::value(QString key)
         return NULL;
 }
 
-///
-/// \brief MLPACKPCAData::GetResults
-/// \return The AnalysisResults object that contains calculated results
-///
-QSharedPointer<AnalysisResults> MLPACKPCAData::GetResults()
+const mat &MlpackPCAData::GetMatrix(const QString &key)
 {
-    QSharedPointer<AnalysisResults> results(new AnalysisResults(name_, "mlpack PCA Data"));
-    QStringList column_headings;
-    results->AppendObject("Projection", transformed_data_, column_headings);
-    for (int i = 1; i < 16; ++i)
-        column_headings << "PCA Loading " + QString::number(i);
-    results->AppendObject("Loadings", eigvec_, column_headings);
-    column_headings.clear();
-    column_headings << "PCA Eigenvalues";
-    results->AppendObject("Eigenvalues", eigval_, column_headings);
-    column_headings.clear();
-    column_headings << "PCA Percent Variance";
-    results->AppendObject("Percent Variance", percent_variance_, column_headings);
-    return results;
+    if (key == "Projection")
+        return transformed_data_;
+    else if (key == "Loadings")
+        return eigvec_;
+    else if (key == "Eigenvalues")
+        return eigval_;
+    else if (key == "Percent Variance")
+        return percent_variance_;
+    else
+        return EmptyMatrix();
 }
+
+QStringList MlpackPCAData::KeyList()
+{
+    return QStringList({"Projection",
+                        "Loadings",
+                        "Eigenvalues",
+                        "Percent Variance"});
+}
+
+QMap<QString, QString> MlpackPCAData::GetMetadata()
+{
+    return QMap<QString, QString>();
+}
+
+QString MlpackPCAData::GetColumnHeading(const QString &key, int column)
+{
+    if (key == "Projection") return "Score " + QString::number(column+1);
+    else if (key == "Loadings") return "Loading " + QString::number(column+1);
+    else if (key == "Eigenvalues") return "Eigenvalues";
+    else if (key == "Percent Variance") return "Percent Variance";
+    else return QString();
+}
+
+

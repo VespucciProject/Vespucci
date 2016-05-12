@@ -65,9 +65,10 @@ MainWindow::MainWindow(QWidget *parent, VespucciWorkspace *ws) :
     dataset_tree_view_->setModel(dataset_tree_model_);
     data_viewer_ = new DataViewer(this);
     plot_viewer_ = new PlotViewer(this);
-    spectrum_editor_ = new SpectrumSelectionDialog(this, this);
+    spectrum_editor_ = new SpectrumSelectionDialog(this);
+    stats_viewer_ = new StatsDialog(this, workspace);
+    python_shell_ = new PythonShellDialog(this, workspace);
     global_map_count_ = 0;
-    QObject::connect(dataset_tree_view_, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(TreeItemDoubleClicked(QModelIndex)));
     workspace->SetPointers(this, dataset_tree_model_);
 }
 
@@ -84,6 +85,7 @@ void MainWindow::RefreshTreeModel(const DataModel *data_model)
 {
     dataset_tree_model_ = new DatasetTreeModel(dataset_tree_view_, data_model);
     dataset_tree_view_->setModel(dataset_tree_model_);
+    dataset_tree_view_->resizeColumnToContents(0);
 }
 
 
@@ -1148,15 +1150,16 @@ void MainWindow::on_actionView_Edit_Spectra_triggered()
     TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
-                                 "No datasets loaded",
-                                 "No dataset exists on which to perform this operation");
+                                 "No dataset selected",
+                                 "No dataset selected on which to perform this operation");
         return;
     }
-    QSharedPointer<VespucciDataset> data =
+    QSharedPointer<VespucciDataset> dataset =
             workspace->DatasetAt(dataset_tree_view_->currentIndex());
-    SpectrumSelectionDialog *spectrum_selector =
-            new SpectrumSelectionDialog(0, this, data);
-    spectrum_selector->show();
+
+    spectrum_editor_->SetActiveDataset(dataset);
+
+    spectrum_editor_->setVisible(true);
 }
 
 void MainWindow::on_actionBooleanize_Clamp_triggered()
@@ -1396,5 +1399,89 @@ void MainWindow::on_datasetTreeView_activated(const QModelIndex &index)
     if (active_item->keys().size()){
         spectrum_editor_->SetActiveDataset(workspace->GetDataset(active_item->keys()[0]));
         macro_editor_->SetActiveDataset(workspace->GetDataset(active_item->keys()[0]));
+    }
+    if (active_item->type() == TreeItem::ItemType::Matrix){
+        if (stats_viewer_->isVisible())
+            stats_viewer_->SetActiveDataKeys(active_item->keys());
+    }
+}
+
+
+void MainWindow::on_actionPlot_Viewer_toggled(bool arg1)
+{
+    plot_viewer_->setVisible(arg1);
+}
+
+void MainWindow::ChildDialogVisibleToggled(const QString &key, bool arg1)
+{
+    if (child_dialogs_.contains(key)){
+        child_dialogs_[key]->setVisible(arg1);
+    }
+}
+
+void MainWindow::on_actionData_Viewer_toggled(bool arg1)
+{
+    data_viewer_->setVisible(arg1);
+}
+
+void MainWindow::on_actionStatistics_Viewer_toggled(bool arg1)
+{
+    stats_viewer_->setVisible(arg1);
+}
+
+void MainWindow::on_actionSpectrum_Editor_toggled(bool arg1)
+{
+    spectrum_editor_->setVisible(arg1);
+}
+
+void MainWindow::on_actionPython_Shell_toggled(bool arg1)
+{
+    python_shell_->setVisible(arg1);
+}
+
+void MainWindow::on_actionMacro_Editor_toggled(bool arg1)
+{
+    macro_editor_->setVisible(arg1);
+}
+
+void MainWindow::on_datasetTreeView_clicked(const QModelIndex &index)
+{
+    if (!index.isValid()) return;
+    TreeItem *active_item = dataset_tree_model_->getItem(index);
+    if (active_item->keys().size()){
+        QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(active_item->keys()[0]);
+        spectrum_editor_->SetActiveDataset(dataset);
+        macro_editor_->SetActiveDataset(dataset);
+    }
+    if (active_item->type() == TreeItem::ItemType::Matrix){
+        if (stats_viewer_->isVisible())
+            stats_viewer_->SetActiveDataKeys(active_item->keys());
+    }
+}
+
+void MainWindow::on_datasetTreeView_doubleClicked(const QModelIndex &index)
+{
+    //if item represents a displayable (color map or matrix), then trigger its display
+    //nothing stops the user from having a matrix open in multiple tabs in the DataViewer
+    //If they want to not display the data, they can close the tab
+    TreeItem *item = dataset_tree_model_->getItem(index);
+    TreeItem::ItemType type = item->type();
+
+    if (type == TreeItem::ItemType::Map){
+        try{
+            QSharedPointer<MapData> map_data = workspace->GetMap(item->keys()[0], item->keys()[1]);
+            map_data->ShowMapWindow(!map_data->MapWindowVisible());
+        }catch (exception e){
+            DisplayExceptionWarning("on_datasetTreeView_doubleClicked", e);
+        }
+    }
+    if (type == TreeItem::ItemType::Matrix){
+        QStringList keys = item->keys();
+        try{
+            const mat &matrix = workspace->GetMatrix(keys);
+            data_viewer_->AddTab(matrix, item->data(0).toString());
+        }catch (exception e){
+            DisplayExceptionWarning("on_datasetTreeView_doubleClicked", e);
+        }
     }
 }

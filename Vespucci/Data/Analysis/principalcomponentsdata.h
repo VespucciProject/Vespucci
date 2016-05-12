@@ -20,16 +20,17 @@
 #ifndef PRINCIPALCOMPONENTSDATA_H
 #define PRINCIPALCOMPONENTSDATA_H
 
-#include "Data/Dataset/vespuccidataset.h"
 #include "Data/Analysis/analysisresults.h"
-using namespace arma;
+#include "Data/Dataset/vespuccidataset.h"
 
+using namespace arma;
 class VespucciDataset;
-class AnalysisResults;
+
 ///
 /// \brief The PrincipalComponentsData class
 /// A class for performing and storing data from principal components analysis
-class PrincipalComponentsData {
+class PrincipalComponentsData: public AnalysisResults
+{
 public:
     PrincipalComponentsData(QString name);
 
@@ -47,8 +48,11 @@ public:
 
     mat *value(QString key);
     QString name_;
+    const mat &GetMatrix(const QString &key);
+    QStringList KeyList();
+    QMap<QString, QString> GetMetadata();
+    QString GetColumnHeading(const QString &key, int column);
 
-    QSharedPointer<AnalysisResults> GetResults();
 private:
     ///
     /// \brief coeff_

@@ -19,8 +19,12 @@
 *******************************************************************************/
 #ifndef ANALYSISRESULTS_H
 #define ANALYSISRESULTS_H
-#include "Data/Dataset/vespuccidataset.h"
 #include "Global/libvespucci.h"
+#include "Math/VespucciMath.h"
+#include <QStringList>
+#include <QMap>
+#include <QSharedPointer>
+using namespace std;
 using namespace arma;
 ///
 /// \brief The AnalysisResults class
@@ -29,22 +33,20 @@ using namespace arma;
 /// should be heap-allocated inside smart pointers.
 class AnalysisResults
 {
-public:
+public:    
     AnalysisResults(QString name, QString type);
-    AnalysisResults(const AnalysisResults &other);
-    void AppendObject(const QString &key, const mat &object, QStringList column_headings=QStringList());
-    QStringList GetColumnHeadings(const QString &key);
-    void AppendObjects(QMap<QString, mat> objects);
-    QMap<QString, mat> data() const;
-    const mat& value(const QString & key) const;
-    QStringList KeyList();
+    virtual ~AnalysisResults();
+    const mat &GetMatrix(const QString &key);
+    QStringList KeyList() const;
     QString name() const;
     QString type() const;
+    const mat &EmptyMatrix();
+    QMap<QString, QString> GetMetadata();
+    QString GetColumnHeading(const QString &key, int column);
 private:
     ///
     /// \brief data_
     /// key-value store for the data associated with this analysis
-    QMap<QString, mat> data_;
     ///
     /// \brief empty_matrix_
     /// A matrix that is initialized with the default empty constructor
@@ -59,8 +61,6 @@ private:
     /// \brief type_
     /// Type desciption displayed to user.
     QString type_;
-
-    QMap<QString, QStringList> column_headings_;
 };
 
 #endif // ANALYSISRESULTS_H

@@ -111,7 +111,7 @@ void BandRatioDialog::on_buttonBox_accepted()
         return;
     }
 
-    if (first_entered_max > dataset_->abscissa_ptr()->min() || second_entered_max > dataset_->abscissa_ptr()->min()){
+    if (first_entered_max > dataset_->abscissa_ptr()->max() || second_entered_max > dataset_->abscissa_ptr()->max()){
         QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abscissa");
         return;
     }

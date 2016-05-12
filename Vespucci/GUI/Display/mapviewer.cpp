@@ -347,7 +347,6 @@ void MapViewer::closeEvent(QCloseEvent *event)
 
 void MapViewer::on_actionStats_triggered()
 {
-    parent_map_data_->ShowStatsDialog();
 }
 
 void MapViewer::on_actionExport_Values_triggered()

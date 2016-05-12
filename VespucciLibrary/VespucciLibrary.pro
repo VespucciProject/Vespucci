@@ -107,7 +107,8 @@ SOURCES +=\
     src/Math/Transform/fft.cpp \
     src/Math/Quantification/correlation.cpp \
     src/Math/Quantification/quantification.cpp \
-    src/Math/Stats/confidenceinterval.cpp
+    src/Math/Stats/confidenceinterval.cpp \
+    src/Math/Stats/hyptothesistests.cpp
 
 
 HEADERS  += \
@@ -136,7 +137,8 @@ HEADERS  += \
     include/Math/Quantification/maximum.h \
     include/Math/Quantification/bandwidth.h \
     include/Math/Quantification/correlation.h \
-    include/Math/Stats/confidenceinterval.h
+    include/Math/Stats/confidenceinterval.h \
+    include/Math/Stats/hypothesistests.h
 
 
 #linux and mac osx libraries, specific to my own install. This will be handled by CMake later

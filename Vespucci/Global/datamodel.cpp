@@ -31,12 +31,12 @@ DataModel::DataModel()
 /// Throws std::invalid_argument if dataset does not exist
 QSharedPointer<VespucciDataset> DataModel::GetDataset(const QString &key) const
 {
-    if (datasets_.contains(key))
-        return datasets_[key];
-    else
-        throw invalid_argument("Dataset "
-                               + key.toStdString()
-                               + " does not exist!");
+    for (int i = 0; i < datasets_.size(); ++i)
+        if (key == datasets_.at(i)->name()) return datasets_.at(i);
+    throw invalid_argument("Dataset "
+                           + key.toStdString()
+                           + " does not exist!");
+
 }
 
 ///
@@ -49,9 +49,9 @@ QSharedPointer<VespucciDataset> DataModel::GetDataset(const QString &key) const
 QSharedPointer<AnalysisResults> DataModel::GetResults(const QString &dataset_key,
                                                       const QString &results_key) const
 {
-    if (datasets_.contains(dataset_key)){
-        if (datasets_[dataset_key]->AnalysisResultsKeys().contains(results_key))
-            return datasets_[dataset_key]->GetAnalysisResult(results_key);
+    if (HasDataset(dataset_key)){
+        if (GetDataset(dataset_key)->AnalysisResultsKeys().contains(results_key))
+            return GetDataset(dataset_key)->GetAnalysisResult(results_key);
         else
             throw invalid_argument("Dataset "
                                    + dataset_key.toStdString()
@@ -81,9 +81,9 @@ QSharedPointer<AnalysisResults> DataModel::GetResults(const QStringList &keys) c
 QSharedPointer<MapData> DataModel::GetMap(const QString &dataset_key,
                                           const QString &map_key) const
 {
-    if (datasets_.contains(dataset_key)){
-        if (datasets_[dataset_key]->MapKeys().contains(map_key))
-            return datasets_[dataset_key]->GetMapData(map_key);
+    if (HasDataset(dataset_key)){
+        if (GetDataset(dataset_key)->MapKeys().contains(map_key))
+            return GetDataset(dataset_key)->GetMapData(map_key);
         else
             throw invalid_argument("Dataset "
                                    + dataset_key.toStdString()
@@ -107,10 +107,10 @@ const mat &DataModel::GetResultsMatrix(const QString &dataset_key,
                                        const QString &results_key,
                                        const QString &matrix_key) const
 {
-    if (datasets_.contains(dataset_key)){
-        if (datasets_[dataset_key]->AnalysisResultsKeys().contains(results_key)){
-            if (datasets_[dataset_key]->GetAnalysisResult(results_key)->KeyList().contains(matrix_key))
-                return datasets_[dataset_key]->GetAnalysisResultMatrix(results_key, matrix_key);
+    if (HasDataset(dataset_key)){
+        if (GetDataset(dataset_key)->AnalysisResultsKeys().contains(results_key)){
+            if (GetDataset(dataset_key)->GetAnalysisResult(results_key)->KeyList().contains(matrix_key))
+                return GetDataset(dataset_key)->GetAnalysisResultMatrix(results_key, matrix_key);
             else
                 throw invalid_argument("Analysis Result"
                                        + results_key.toStdString()
@@ -146,10 +146,10 @@ const mat &DataModel::GetResultsMatrix(const QStringList &keys) const
 /// Throws invalid_argument if invalid core matrix name given
 const mat &DataModel::GetCoreMatrix(const QString &dataset_key, const QString &matrix_key) const
 {
-    if (datasets_.contains(dataset_key)){
+    if (HasDataset(dataset_key)){
         if (matrix_key == "Spectra" || matrix_key == "Spectral Absicssa"
                 || matrix_key == "x" || matrix_key == "y")
-            return datasets_[dataset_key]->GetCoreMatrix(matrix_key);
+            return GetDataset(dataset_key)->GetCoreMatrix(matrix_key);
         else
             throw invalid_argument("Dataset "
                                    + dataset_key.toStdString()
@@ -178,9 +178,9 @@ const mat &DataModel::GetCoreMatrix(const QStringList &keys) const
 const mat &DataModel::GetAuxiliaryMatrix(const QString &dataset_key,
                                          const QString &matrix_key) const
 {
-    if (datasets_.contains(dataset_key)){
-        if (datasets_[dataset_key]->AuxiliaryMatrixKeys().contains(matrix_key))
-            return datasets_[dataset_key]->GetAuxiliaryMatrix(matrix_key);
+    if (HasDataset(dataset_key)){
+        if (GetDataset(dataset_key)->AuxiliaryMatrixKeys().contains(matrix_key))
+            return GetDataset(dataset_key)->GetAuxiliaryMatrix(matrix_key);
         else
             throw invalid_argument("Dataset "
                                    + dataset_key.toStdString()
@@ -201,11 +201,11 @@ const mat &DataModel::GetAuxiliaryMatrix(const QStringList &keys) const
 
 const mat &DataModel::GetMatrix(const QString &dataset_key, const QString &matrix_key) const
 {
-    if (datasets_.contains(dataset_key)){
-        if (datasets_[dataset_key]->CoreMatrixKeys().contains(matrix_key))
-            return datasets_[dataset_key]->GetCoreMatrix(matrix_key);
-        else if (datasets_[dataset_key]->AuxiliaryMatrixKeys().contains(matrix_key))
-            return datasets_[dataset_key]->GetAuxiliaryMatrix(matrix_key);
+    if (HasDataset(dataset_key)){
+        if (GetDataset(dataset_key)->CoreMatrixKeys().contains(matrix_key))
+            return GetDataset(dataset_key)->GetCoreMatrix(matrix_key);
+        else if (GetDataset(dataset_key)->AuxiliaryMatrixKeys().contains(matrix_key))
+            return GetDataset(dataset_key)->GetAuxiliaryMatrix(matrix_key);
         else
             throw invalid_argument("Dataset "
                                    + dataset_key.toStdString()
@@ -226,13 +226,30 @@ const mat &DataModel::GetMatrix(const QStringList &keys) const
     throw invalid_argument("too few keys provided");
 }
 
+bool DataModel::Mappable(const QStringList &keys) const
+{
+    uword spatial_rows = GetDataset(keys[0])->x_ptr()->n_rows;
+    uword data_rows = GetMatrix(keys).n_rows;
+    return (data_rows == spatial_rows);
+}
+
+bool DataModel::Plottable(const QStringList &keys) const
+{
+    uword abscissa_rows = GetDataset(keys[0])->abscissa_ptr()->n_rows;
+    uword data_rows = GetMatrix(keys).n_rows;
+    return (data_rows == abscissa_rows);
+}
+
 ///
 /// \brief DataModel::DatasetNames
 /// \return A list of the names of the datasets handled by this model
 ///
 QStringList DataModel::DatasetNames() const
 {
-    return datasets_.keys();
+    QStringList dataset_names;
+    foreach (QSharedPointer<VespucciDataset> dataset, datasets_)
+        dataset_names << dataset->name();
+    return dataset_names;
 }
 
 ///
@@ -242,8 +259,8 @@ QStringList DataModel::DatasetNames() const
 /// Throws invalid_argument if dataset doesn't exist
 QStringList DataModel::AnalysisResultsNames(const QString &dataset_key) const
 {
-    if (datasets_.contains(dataset_key))
-        return datasets_[dataset_key]->AnalysisResultsKeys();
+    if (HasDataset(dataset_key))
+        return GetDataset(dataset_key)->AnalysisResultsKeys();
     else
         throw invalid_argument("Dataset "
                                + dataset_key.toStdString()
@@ -257,8 +274,8 @@ QStringList DataModel::AnalysisResultsNames(const QString &dataset_key) const
 /// Throws invalid_argument if dataset doesn't exist
 QStringList DataModel::AuxiliaryMatrixNames(const QString &dataset_key) const
 {
-    if (datasets_.contains(dataset_key))
-        return datasets_[dataset_key]->AuxiliaryMatrixKeys();
+    if (HasDataset(dataset_key))
+        return GetDataset(dataset_key)->AuxiliaryMatrixKeys();
     else
         throw invalid_argument("Dataset "
                                + dataset_key.toStdString()
@@ -267,8 +284,8 @@ QStringList DataModel::AuxiliaryMatrixNames(const QString &dataset_key) const
 
 QStringList DataModel::CoreMatrixNames(const QString &dataset_key)
 {
-    if (datasets_.contains(dataset_key))
-        return datasets_[dataset_key]->CoreMatrixKeys();
+    if (HasDataset(dataset_key))
+        return GetDataset(dataset_key)->CoreMatrixKeys();
     else
         throw invalid_argument("Dataset "
                                + dataset_key.toStdString()
@@ -283,8 +300,8 @@ QStringList DataModel::CoreMatrixNames(const QString &dataset_key)
 /// VespucciWorkspace should handle it.
 void DataModel::AddDataset(QSharedPointer<VespucciDataset> dataset)
 {
-    if (!datasets_.contains(dataset->name()))
-        datasets_[dataset->name()] = dataset;
+    if (!HasDataset(dataset->name()))
+        datasets_.append(dataset);
 }
 
 ///
@@ -293,12 +310,19 @@ void DataModel::AddDataset(QSharedPointer<VespucciDataset> dataset)
 ///
 void DataModel::RemoveDataset(const QString &name)
 {
-    if (datasets_.contains(name))
-        datasets_.remove(name);
+    for (int i = 0; i < datasets_.size(); ++i)
+        if (datasets_.at(i)->name() == name) datasets_.removeAt(i);
 }
 
 const mat &DataModel::EmptyMatrix() const
 {
     return empty_matrix_;
+}
+
+bool DataModel::HasDataset(const QString &key) const
+{
+    for (int i = 0; i < datasets_.size(); ++i)
+        if (datasets_.at(i)->name() == key) return true;
+    return false;
 }
 

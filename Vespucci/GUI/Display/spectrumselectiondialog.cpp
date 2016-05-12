@@ -30,7 +30,7 @@ void SpectrumSelectionDialog::on_tableView_clicked(const QModelIndex &index)
 {
     if (!dataset_.data()) return; //should never happen, but let's be safe
     if (index.isValid() && table_model_->rowCount(index)){
-        uvec spectrum_indices = {index.row()};
+        uvec spectrum_indices = {uword(index.row())};
         mat data = join_horiz(dataset_->abscissa(), dataset_->spectra(spectrum_indices));
 
         if (hold_check_box_->isChecked())
@@ -50,7 +50,7 @@ void SpectrumSelectionDialog::SpectrumRemoved(int row)
         row = dataset_->spectra_ptr()->n_cols - 1; //make the last row appear.
 
     try{
-        uvec indices = {row};
+        uvec indices = {uword(row)};
         if (hold_check_box_->isChecked())
             plot_viewer_->AddPlot(dataset_->abscissa(),
                                   dataset_->spectra(indices),

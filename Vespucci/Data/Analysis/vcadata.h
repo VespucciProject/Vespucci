@@ -19,13 +19,13 @@
 *******************************************************************************/
 #ifndef VCADATA_H
 #define VCADATA_H
-#include "Data/Dataset/vespuccidataset.h"
-class VespucciDataset;
+#include "Data/Analysis/analysisresults.h"
+#include <QVector>
 using namespace arma;
 ///
 /// \brief The VCAData class
 /// A class for performing and storing data from Vertex Components Analysis
-class VCAData
+class VCAData: public AnalysisResults
 {
 public:
     VCAData(QString name);
@@ -38,7 +38,10 @@ public:
     double EndmemberMin(const uword i);
     double EndmemberMax(const uword i);
     mat *value(QString key);
-    QSharedPointer<AnalysisResults> GetResults();
+    QStringList KeyList();
+    const mat &GetMatrix(const QString &key);
+    QMap<QString, QString> GetMetadata();
+    QString GetColumnHeading(const QString &key, int column);
 private:
     QString name_;
 

@@ -20,7 +20,7 @@
 #include "pythonshelldialog.h"
 #include "ui_pythonshelldialog.h"
 
-PythonShellDialog::PythonShellDialog(QWidget *parent, VespucciWorkspace *ws) :
+PythonShellDialog::PythonShellDialog(MainWindow *parent, VespucciWorkspace *ws) :
     QDialog(parent),
     ui(new Ui::PythonShellDialog)
 {
