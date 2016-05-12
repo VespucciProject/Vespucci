@@ -1,7 +1,7 @@
 TEMPLATE = app
 CONFIG += console
 CONFIG -= app_bundle
-CONFIG -= qt
+QT += testlib
 
 SOURCES += main.cpp \
     test_dataset_stitching.cpp \
@@ -44,46 +44,69 @@ win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
                          -isystem "C:/Tools/R/R-3.1.3/library/Rcpp/include" \
                          -isystem "C:/Tools/R/R-3.1.3/library/RcppArmadillo/include/armadillo_bits"
 
-#for inclusion of LibVespucci headers
-INCLUDEPATH += $$PWD/../Library/include
-DEPENDPATH += $$PWD/../Library/include
+HEADERS += test.h
 
 #linux libraries, specific to my own install. This will be handled by CMake later
 #I hope...
 
+#linux and mac osx libraries, specific to my own install. This will be handled by CMake later
+#I hope...
+#For these paths to work, everything except for armadillo, mlpack and cminpack
+#should be installed using the package manager for your distribution
+# (these work for ubuntu and for the homebrew mac os package manager).
+# include paths a
 unix:!macx: INCLUDEPATH += /usr/include
 unix:!macx: DEPENDPATH += /usr/include
 unix:!macx: INCLUDEPATH += /usr/local/include
 unix:!macx: DEPENDPATH += /usr/local/include
-unix:!macx: INCLUDEPATH += /usr/local/include/cminpack-1
-unix:!macx: DEPENDPATH += /usr/local/include/cminpack-1
-unix:!macx: INCLUDEPATH += $$PWD/../../../R/x86_64-pc-linux-gnu-library/3.1/RInside/include
-unix:!macx: DEPENDPATH += $$PWD/../../../R/x86_64-pc-linux-gnu-library/3.1/RInside/include
-unix:!macx: INCLUDEPATH += $$PWD/../../../R/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/include
-unix:!macx: DEPENDPATH += $$PWD/../../../R/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/include
-unix:!macx: INCLUDEPATH += $$PWD/../../../R/x86_64-pc-linux-gnu-library/3.1/Rcpp/include
-unix:!macx: DEPENDPATH += $$PWD/../../../R/x86_64-pc-linux-gnu-library/3.1/RCpp/include
+unix:macx: INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
+unix:macx: DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
 
-unix:!macx: INCLUDEPATH += $$PWD/../../Vespucci-QCP-sharedlib/include
-unix:!macx: DEPENDPATH += $$PWD/../../Vespucci-QCP-sharedlib/include
+#for inclusion of LibVespucci headers
+INCLUDEPATH += $$PWD/../VespucciLibrary/include
+DEPENDPATH += $$PWD/../VespucciLibrary/include
 
+count(travis_ci, 1){
+  unix:!macx: QMAKE_CXX=/usr/bin/g++-4.9
+  unix:!macx: LIBS += -L/home/travis/depts/lib -lmlpack
+  unix:!macx: LIBS += -L/home/travis/depts/lib -larmadillo
+  unix:!macx: LIBS += -L/usr/lib -larpack
+  unix:!macx: PRE_TARGETDEPS += /usr/lib/libarpack.a
+  unix:!macx: LIBS += -L/usr/lib/x86_64-linux-gnu -lhdf5
+  unix:!macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5.a
+  unix:!macx: LIBS += -L/usr/lib -lcminpack
+  unix:!macx: LIBS += -L/usr/lib -lblas
+  unix:!macx: LIBS += -L/usr/lib -llapack
+  unix:!macx: LIBS += -L/home/travis/depts/lib -lqcustomplot
+  unix:!macx: LIBS += -L/home/travis/build/VespucciProject/Vespucci/build-VespucciLibrary -lvespucci
+  unix:!macx: INCLUDEPATH += /home/travis/depts/include
+  unix:!macx: DEPENDPATH += /home/travis/depts/include
+  unix:!macx: INCLUDEPATH += /home/travis/depts/include/armadillo_bits
+  unix:!macx: DEPENDPATH += /home/travis/depts/include/armadillo_bits
+}
+count(travis_ci, 0){
+    unix:!macx: LIBS += -L/usr/local/lib -lmlpack
+    unix:!macx: LIBS += -L/usr/lib -larmadillo
+    unix:!macx: LIBS += -L/usr/local/lib -larpack
+    unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
+    unix:!macx: LIBS += -L/usr/local/lib -lhdf5
+    unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
+    unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
+    unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
+    unix:!macx: LIBS += -L/usr/lib -lopenblas
+    unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
+    unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
+    unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
+    unix:!macx: INCLUDEPATH += /usr/local/include/cminpack-1
+    unix:!macx: DEPENDPATH += /usr/local/include/cminpack-1
+    INCLUDEPATH += $$PWD/../Vespucci-QCP-sharedlib/include
+    DEPENDPATH += $$PWD/../Vespucci-QCP-sharedlib/include
+    unix:!macx: CONFIG(release, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplot
+    else:unix:!macx: CONFIG(debug, debug|release): LIBS += -L$$PWD/../Vespucci-QCP/lib/ -lqcustomplotd
+    unix:!macx:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary/release -lvespucci
+    else:unix:!macx:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-VespucciLibrary/debug -lvespucci
+}
 
-#mlpack and dependencies
-unix:!macx: LIBS += -L/usr/local/lib/ -lmlpack
-unix:!macx: LIBS += -L/usr/lib/ -larmadillo
-unix:!macx: LIBS += -L/usr/local/lib/ -larpack
-unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
-unix:!macx: LIBS += -L/usr/lib/ -lopenblas
-unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
-unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
-unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
-
-unix:!macx: LIBS += -L$$PWD/../../../R/x86_64-pc-linux-gnu-library/3.1/RInside/lib/ -lRInside
-#unix:!macx: LIBS += -L$$PWD/../../../R/x86_64-pc-linux-gnu-library/3.1/Rcpp/libs/ -lRcpp
-#unix:!macx: LIBS += -L$$PWD/../../../R/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/libs/ -lRCppArmadillo
-unix:!macx: LIBS += -L/usr/lib/R/lib/ -lR
-unix:!macx:CONFIG(release, debug|release): LIBS += -L$$PWD/../../Vespucci-QCP-sharedlib/lib/ -lqcustomplot
-else:unix:!macx:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../Vespucci-QCP-sharedlib/lib/ -lqcustomplotd
 
 unix:!macx: INCLUDEPATH += /usr/include
 unix:!macx: DEPENDPATH += /usr/include
@@ -91,150 +114,103 @@ unix:!macx: DEPENDPATH += /usr/include
 unix:!macx: INCLUDEPATH += /usr/include/libxml2
 unix:!macx: DEPENDPATH += /usr/include/libxml2
 
+unix:!macx: INCLUDEPATH += /usr/include
+unix:!macx: DEPENDPATH += /usr/include
+unix:!macx: INCLUDEPATH += /usr/local/include
+unix:!macx: DEPENDPATH += /usr/local/include
+unix:!macx: INCLUDEPATH += /usr/local/include/cminpack-1
+unix:!macx: DEPENDPATH += /usr/local/include/cminpack-1
 
-unix:!macx:CONFIG(release, debug|release): LIBS += -L$$PWD/../../build-VespucciLibrary-Desktop-Release/ -lvespucci
-unix:!macx:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../build-VespucciLibrary-Desktop-Debug/ -lvespucci
 
-unix:!macx: LIBS += -L$$PWD/../../../R/x86_64-pc-linux-gnu-library/3.1/RInside/lib/ -lRInside
-unix:!macx: PRE_TARGETDEPS += $$PWD/../../../R/x86_64-pc-linux-gnu-library/3.1/RInside/lib/libRInside.a
+#we will no longer support MinGW-w64 for Windows. Users who want to use it will have to
+#reckon the config themselves
 
+#MSVC for deployment (used for build using static qt and all libraries compiled in msvc linked statically)
+count(deploy_win64, 1){
+    win32:!win32-g++: LIBS += -L$$PWD/../build-VespucciLibrary/release/ -lvespucci
+    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../build-VespucciLibrary/release/vespucci.lib
 
+    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/MLPACK/ -lmlpack
+    INCLUDEPATH += $$PWD/../MSVC_deployment_deps/MLPACK/include
+    DEPENDPATH += $$PWD/../MSVC_deployment_deps/MLPACK/include
+    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/MLPACK/mlpack.lib
 
-#Mac Libraries
-#include paths
-mac: INCLUDEPATH += $$PWD/../../mac_libs/include
-mac: DEPENDPATH += $$PWD/../../mac_libs/include
-mac: INCLUDEPATH += $$PWD/../../mac_libs/include/libxml2
-mac: DEPENDPATH += $$PWD/../../mac_libs/include/libxml2
+    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/Armadillo/lib/ -larmadillo
+    INCLUDEPATH += $$PWD/../MSVC_deployment_deps/Armadillo/include
+    DEPENDPATH += $$PWD/../MSVC_deployment_deps/Armadillo/include
+    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/Armadillo/lib/armadillo.lib
 
-mac: LIBS += -L$$PWD/../../mac_libs/lib -lmlpack
-mac: PRE_TARGETDEPS += $$PWD/../../mac_libs/lib/libmlpack.dylib
+    INCLUDEPATH += $$PWD/../MSVC_deployment_deps/boost_1_60_0
+    DEPENDPATH += $$PWD/../MSVC_deployment_deps/boost_1_60_0
 
-mac: LIBS += -L$$PWD/../../mac_libs/lib -larmadillo
-mac: PRE_TARGETDEPS += $$PWD/../../mac_libs/lib/libarmadillo.dylib
+    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_math_c99-vc140-mt-s-1_60
+    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_math_c99-vc140-mt-s-1_60.lib
 
-mac: LIBS += -L$$PWD/../../mac_libs/lib -larpack
-mac: PRE_TARGETDEPS += $$PWD/../../mac_libs/lib/libarpack.dylib
+    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_serialization-vc140-mt-s-1_60
+    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_serialization-vc140-mt-s-1_60.lib
+
+    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_random-vc140-mt-s-1_60
+    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_random-vc140-mt-s-1_60.lib
+
+    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_unit_test_framework-vc140-mt-s-1_60
+    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_unit_test_framework-vc140-mt-s-1_60.lib
+
+    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_program_options-vc140-mt-s-1_60
+    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_program_options-vc140-mt-s-1_60.lib
+
+    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/LAPACK/ -llapack_x64
+    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/LAPACK/lapack_x64.lib
+
+    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/OpenBLAS/ -llibopenblas
+    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/OpenBLAS/libopenblas.lib
+
+    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/ARPACK/ -larpack_x64
+    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/ARPACK/arpack_x64.lib
+
+    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/cminpack/ -lcminpack
+    INCLUDEPATH += $$PWD/../MSVC_deployment_deps/cminpack
+    DEPENDPATH += $$PWD/../MSVC_deployment_deps/cminpack
+    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/cminpack/cminpack.lib
+
+    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/QCustomPlot/Release/ -lqcustomplot
+    INCLUDEPATH += $$PWD/../MSVC_deployment_deps/QCustomPlot
+    DEPENDPATH += $$PWD/../MSVC_deployment_deps/QCustomPlot
+    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/QCustomPlot/Release/qcustomplot.lib
+}
+
+#mac libraries. These are the same in Travis-CI as in most local environments
+#with all dependencies of armadillo and mlpack installed using homebrew
+mac: LIBS += -L$$OUT_PWD/../VespucciLibrary -lvespucci
+
+mac: LIBS += -L$$PWD/../../mlpack/lib/ -lmlpack
+mac: INCLUDEPATH += $$PWD/../../mlpack/include
+mac: DEPENDPATH += $$PWD/../../mlpack/include
+
+mac: LIBS += -L$$PWD/../../armadillo/lib/ -larmadillo
+mac: INCLUDEPATH += $$PWD/../../armadillo/include
+mac: DEPENDPATH += $$PWD/../../armadillo/include
+
+mac: LIBS += -L/usr/local/lib/ -larpack
+mac: INCLUDEPATH += /usr/local/include
+mac: DEPENDPATH += /usr/local/include
 
 mac: LIBS += -framework Accelerate
 
-mac: LIBS += -L$$PWD/../../mac_libs/lib -lboost_math_c99-mt
-mac: PRE_TARGETDEPS += $$PWD/../../mac_libs/lib/libboost_math_c99-mt.dylib
+macx: LIBS += -L/usr/local/lib/ -lhdf5
+macx: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
 
-mac: LIBS += -L$$PWD/../../mac_libs/lib -lboost_program_options-mt
-mac: PRE_TARGETDEPS += $$PWD/../../mac_libs/lib/libboost_program_options-mt.dylib
+mac: LIBS += -F$$PWD/../../Vespucci-QCP/lib/ -framework QCustomPlot
+mac: INCLUDEPATH += $$PWD/../../Vespucci-QCP/include
+mac: DEPENDPATH += $$PWD/../../Vespucci-QCP/include
 
-mac: LIBS += -L$$PWD/../../mac_libs/lib -lboost_random-mt
-mac: PRE_TARGETDEPS += $$PWD/../../mac_libs/lib/libboost_random-mt.dylib
+macx: LIBS += -L$$PWD/../../quazip/lib/ -lquazip
+INCLUDEPATH += $$PWD/../../quazip/include
+DEPENDPATH += $$PWD/../../quazip/include
+macx: PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
 
-mac: LIBS += -L$$PWD/../../mac_libs/lib -lboost_unit_test_framework-mt
-mac: PRE_TARGETDEPS += $$PWD/../../mac_libs/lib/libboost_unit_test_framework-mt.dylib
+macx: LIBS += -L$$PWD/../../yaml-cpp/lib/ -lyaml-cpp
+INCLUDEPATH += $$PWD/../../yaml-cpp/include
+DEPENDPATH += $$PWD/../../yaml-cpp/include
+macx: PRE_TARGETDEPS += $$PWD/../../yaml-cpp/lib/libyaml-cpp.a
 
-macx: LIBS += -L$$PWD/../../mac_libs/lib/ -lqcustomplot
-
-
-#Windows Libraries
-#Binaries for windows libraries are included in the MinGW_libs branch of the repository
-win32: INCLUDEPATH += $$PWD/../../MinGW_libs/include
-win32: DEPENDPATH += $$PWD/../../MinGW_libs/include
-win32: INCLUDEPATH += $$PWD/../../MinGW_libs/boost/
-win32: DEPENDPATH += $$PWD/../../MinGW_libs/boost/
-
-#MLPACK
-win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lmlpack
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libmlpack.a
-
-#Armadillo
-win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -larmadillo
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libarmadillo.a
-
-#HDF5
-win32: LIBS += -L$$PWD/../../MinGW_libs/lib -lhdf5
-wind32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libhdf5.a
-
-#ARPACK-NG
-win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -larpack
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libarpack.a
-
-#OpenBLAS (linked dynamically because arpack links it dynamically)
-win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -llibopenblas
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libopenblas.dll.a
-
-#Libgfortran
-win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lgfortran
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libgfortran.a
-
-#Boost random (C99)
-win32: LIBS += -L$$PWD/../../MinGW_libs/boost/stage/lib/ -lboost_math_c99-mgw49-mt-1_57
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/boost/stage/lib/libboost_math_c99-mgw49-mt-1_57.a
-
-#Boost math
-win32: LIBS += -L$$PWD/../../MinGW_libs/boost/stage/lib/ -lboost_math_c99-mgw49-mt-1_57
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/boost/stage/lib/libboost_math_c99-mgw49-mt-1_57.a
-
-#Boost test
-win32: LIBS += -L$$PWD/../../MinGW_libs/boost/stage/lib/ -lboost_unit_test_framework-mgw49-mt-1_57
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/boost/stage/lib/libboost_unit_test_framework-mgw49-mt-1_57.a
-
-#Boost program_options
-win32: LIBS += -L$$PWD/../../MinGW_libs/boost/stage/lib/ -lboost_program_options-mgw49-mt-1_57
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/boost/stage/lib/libboost_program_options-mgw49-mt-1_57.a
-
-#LibXML2
-win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lxml2
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libxml2.a
-
-#LibICONV
-win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -liconv
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libiconv.a
-
-#Zlib
-win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lz
-else:win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libz.a
-
-#The standard C++ library (linked dynmically by openblas)
-win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lstdc++
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libstdc++.a
-
-#QCustomPlot
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../MinGW_libs/lib/ -lqcustomplot
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../MinGW_libs/lib/ -lqcustomplotd
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libqcustomplot.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libqcustomplotd.a
-
-#R Integration (these libraries will depend on your R installation)
-win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\Library\RInside\include
-win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\Library\RCpp\include
-win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\Library\RCppArmadillo\include
-win32-g++: INCLUDEPATH += C:\Tools\R\R-3.1.3\include
-
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\library\RInside\libs\x64 -lRInside
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\library\RCppArmadillo\libs\x64 -lRCppArmadillo
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\library\RCpp\libs\x64 -lRCpp
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lR
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRlapack
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRblas
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRiconv
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRzlib
-win32-g++: LIBS += -LC:\Tools\R\R-3.1.3\bin\x64 -lRgraphapp
-
-#levmar
-win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -llevmar
-INCLUDEPATH += $$PWD/../../MinGW_libs/include/levmar
-DEPENDPATH += $$PWD/../../MinGW_libs/include/levmar
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/liblevmar.a
-
-win32: LIBS += -L$$PWD/../../MinGW_libs/lib/ -lcminpack
-INCLUDEPATH += $$PWD/../../MinGW_libs/include/cminpack-1
-DEPENDPATH += $$PWD/../../MinGW_libs/include/cminpack-1
-win32-g++: PRE_TARGETDEPS += $$PWD/../../MinGW_libs/lib/libcminpack.a
-
-#libvespucci
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../build-library/release -lvespucci
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../build/release/libvespucci.a
-
-win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../build-library/debug -lvespucci
-win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../build/debug/libvespucci.a
-
-HEADERS += \
-    test.h
+macx: LIBS += -lz.1

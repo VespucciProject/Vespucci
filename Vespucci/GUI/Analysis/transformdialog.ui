@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TransformDialog</class>
+ <widget class="QDialog" name="TransformDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>280</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Transform Matrix</string>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Matrix</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Behavior</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QComboBox" name="behaviorComboBox">
+     <item>
+      <property name="text">
+       <string>Make new matrix</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Replace this matrix</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Operation</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QComboBox" name="operationComboBox">
+     <item>
+      <property name="text">
+       <string>Constant addition</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Constant subtraction</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Constant multiplication</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Constant division</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Matrix addition</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Matrix subtraction</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Matrix multiplication (dot product)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Element-wise multiplication</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Element-wise division</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Cross Product</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Minimum Subtraction</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Maximum Division</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Min/Max Normalization</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>SNV Normalization</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Z-score Normalization</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Calibration</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Constant</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLineEdit" name="constantLineEdit"/>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="operandLabel">
+     <property name="text">
+      <string>Second Operand</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QComboBox" name="operandComboBox"/>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLineEdit" name="nameLineEdit"/>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="nameLabel">
+     <property name="text">
+      <string>Name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Dimensions</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="dimensionsLabel">
+     <property name="text">
+      <string>m x n</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string>Dimensions</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QLabel" name="operandDimensionsLabel">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>TransformDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>TransformDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

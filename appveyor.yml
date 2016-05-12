@@ -1,0 +1,61 @@
+version: 1.0.{build}
+os: Visual Studio 2015
+clone_folder: C:\Projects\Vespucci
+environment:
+  DEPLOY_WIN64: 1
+build_script:
+- cmd: >-
+    "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+
+    cd C:\Projects
+
+    appveyor DownloadFile https://github.com/VespucciProject/MSVC_deployment_deps/releases/download/1/jom_1_1_0.zip
+
+    7z x jom_1_1_0.zip -aoa > NUL
+
+    appveyor DownloadFile https://github.com/VespucciProject/MSVC_deployment_deps/releases/download/1/MSVC_deployment_deps.7z
+
+    7z x MSVC_deployment_deps.7z -aoa > NUL
+
+    set PATH=%PATH%;C:\Projects\MSVC_deployment_deps\static_qt5.5.1_msvc2015\bin
+
+    mkdir build-VespucciLibrary && cd build-VespucciLibrary
+
+    qmake ..\Vespucci\Library\VespucciLibrary.pro
+
+    C:\Projects\jom.exe release > libbuild_log.txt
+
+    cd .. && mkdir build-Vespucci && cd build-Vespucci
+
+    qmake ..\Vespucci\Vespucci.pro
+
+    C:\Projects\jom.exe release > build_log.txt
+
+    cd ..
+
+
+    set DEPLOYMENT_DIR=Vespucci-w64-build_%APPVEYOR_BUILD_NUMBER%
+
+    mkdir %DEPLOYMENT_DIR%
+
+    Copy /b build-VespucciLibrary\release\vespucci.dll %DEPLOYMENT_DIR%
+
+    Copy /b build-Vespucci\release\vespucci.exe %DEPLOYMENT_DIR%
+
+    FOR %%i IN (MSVC_deployment_deps\DLLs\*.dll) DO Copy /b %%i %DEPLOYMENT_DIR%
+
+    7z a -tzip C:\Projects\Vespucci\Vespucci_w64_%APPVEYOR_BUILD_NUMBER%.zip %DEPLOYMENT_DIR%
+artifacts:
+- path: Vespucci_w64_$(appveyor_build_number).zip
+  name: Vespucci_w64_$(appveyor_build_number).zip
+deploy:
+- provider: BinTray
+  username: dpfoose
+  api_key:
+    secure: xJeROKVvw5l5QAfaHijL0+J7PKDG/QzvSV/aNpd0eZliEeQI1WWVP4T6FXmje1A3
+  subject: vespucciproject
+  repo: Vespucci_automated_builds
+  package: Vespucci-w64-latest
+  artifact: Vespucci_w64_$(appveyor_build_number).zip
+  publish: true
+  explode: false
