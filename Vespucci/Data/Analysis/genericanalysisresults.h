@@ -35,6 +35,7 @@ public:
     QString GetColumnHeading(const QString &key, int column);
 private:
     QMap<QString, mat> matrices_;
+    mat current_matrix_;
 };
 
 #endif // GENERICANALYSISRESULTS_H

@@ -27,7 +27,15 @@ GenericAnalysisResults::GenericAnalysisResults(const QString &name, const QStrin
 
 const mat &GenericAnalysisResults::GetMatrix(const QString &key)
 {
-    if (matrices_.contains(key)) return matrices_.value(key);
+    //This is ugly, but I already designed everything else to take references...
+    //requires two copies of whatever matrix is most recently created
+    //If GetMatrix is called again, views will likely change in a confusing way for the user
+    //I will have to reconsider always passing matrices by reference
+    //Perhaps smart pointers are a better idea?
+    if (matrices_.contains(key)){
+        current_matrix_ = matirces_.value(key);
+        return current_matrix_;
+    }
     else return EmptyMatrix();
 }
 
