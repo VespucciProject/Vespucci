@@ -36,13 +36,13 @@ class AnalysisResults
 public:    
     AnalysisResults(QString name, QString type);
     virtual ~AnalysisResults();
-    const mat &GetMatrix(const QString &key);
-    QStringList KeyList() const;
+    virtual const mat &GetMatrix(const QString &key);
+    virtual QStringList KeyList() const;
     QString name() const;
     QString type() const;
     const mat &EmptyMatrix();
-    QMap<QString, QString> GetMetadata();
-    QString GetColumnHeading(const QString &key, int column);
+    virtual QMap<QString, QString> GetMetadata();
+    virtual QString GetColumnHeading(const QString &key, int column);
 private:
     ///
     /// \brief data_

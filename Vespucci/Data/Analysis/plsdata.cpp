@@ -140,7 +140,7 @@ colvec PLSData::Results(const uword i, bool &valid)
 
 }
 
-QStringList PLSData::KeyList()
+QStringList PLSData::KeyList() const
 {
     return QStringList({
                            "Percent Variance",

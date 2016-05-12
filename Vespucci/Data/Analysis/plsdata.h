@@ -50,10 +50,10 @@ public:
     int NumberComponents();
     colvec Results(const uword i, bool &valid);
 
-    QStringList KeyList();
-    const mat &GetMatrix(const QString &key);
-    QMap<QString, QString> GetMetadata();
-    QString GetColumnHeading(const QString &key, int column);
+    QStringList KeyList() const override;
+    const mat &GetMatrix(const QString &key) override;
+    QMap<QString, QString> GetMetadata() override;
+    QString GetColumnHeading(const QString &key, int column) override;
 private:
     ///
     /// \brief Y_

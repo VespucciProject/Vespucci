@@ -38,10 +38,10 @@ public:
     double EndmemberMin(const uword i);
     double EndmemberMax(const uword i);
     mat *value(QString key);
-    QStringList KeyList();
-    const mat &GetMatrix(const QString &key);
-    QMap<QString, QString> GetMetadata();
-    QString GetColumnHeading(const QString &key, int column);
+    QStringList KeyList() const override;
+    const mat &GetMatrix(const QString &key) override;
+    QMap<QString, QString> GetMetadata() override;
+    QString GetColumnHeading(const QString &key, int column) override;
 private:
     QString name_;
 

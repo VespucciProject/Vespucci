@@ -193,7 +193,7 @@ field<mat> UnivariateData::CalculateRatios()
     return objects;
 }
 
-QStringList UnivariateData::KeyList()
+QStringList UnivariateData::KeyList() const
 {
     if (band_ratio_) return QStringList({"First Region Results", "Second Region Results"});
     else if (correlation_) return QStringList({"Correlation Coefficients"});

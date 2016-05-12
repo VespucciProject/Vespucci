@@ -43,45 +43,45 @@ MapViewer::MapViewer(QString name, QString *directory, MapData *parent):
     //color_map_ = qobject_cast<QCPColorMap *>(color_map_abs);
 
 
-    color_list_ << "ColorBrewerBlueGreen"
-                << "ColorBrewerBluePurple"
-                << "ColorBrewerGreenBlue"
-                << "ColorBrewerOrangeRed"
-                << "ColorBrewerPurpleBlue"
-                << "ColorBrewerPurpleBlueGreen"
-                << "ColorBrewerPurpleRed"
-                << "ColorBrewerRedPurple"
-                << "ColorBrewerYellowGreen"
-                << "ColorBrewerYellowGreenBlue"
-                << "ColorBrewerYellowOrangeBrown"
-                << "ColorBrewerYellowOrangeRed"
-                << "ColorBrewerBlues"
-                << "ColorBrewerGreens"
-                << "ColorBrewerOranges"
-                << "ColorBrewerPurples"
-                << "ColorBrewerReds"
-                << "ColorBrewerGrayscale"
-                << "QCustomPlotGrayscale"
-                << "QCustomPlotNight"
-                << "QCustomPlotCandy"
-                << "QCustomPlotIon"
-                << "QCustomPlotThermal"
-                << "↔QCustomPlotPolar"
-                << "↔QCustomPlotSpectrum"
-                << "QCustomPlotJet"
-                << "QCustomPlotHues"
-                << "QCustomPlotHot"
-                << "QCustomPlotCold"
-                << "↔ColorBrewerBrownBlueGreen"
-                << "↔ColorBrewerPinkYellowGreen"
-                << "↔ColorBrewerPurpleGreen"
-                << "↔ColorBrewerPurpleOrange"
-                << "↔ColorBrewerRedBlue"
-                << "↔ColorBrewerRedGray"
-                << "↔ColorBrewerRedYellowBlue"
-                << "↔ColorBrewerRedYellowGreen"
-                << "↔ColorBrewerSpectral"
-                << "↔VespucciSpectral";
+    color_list_ = QStringList({"ColorBrewerBlueGreen",
+                               "ColorBrewerBluePurple",
+                               "ColorBrewerGreenBlue",
+                               "ColorBrewerOrangeRed",
+                               "ColorBrewerPurpleBlue",
+                               "ColorBrewerPurpleBlueGreen",
+                               "ColorBrewerPurpleRed",
+                               "ColorBrewerRedPurple",
+                               "ColorBrewerYellowGreen",
+                               "ColorBrewerYellowGreenBlue",
+                               "ColorBrewerYellowOrangeBrown",
+                               "ColorBrewerYellowOrangeRed",
+                               "ColorBrewerBlues",
+                               "ColorBrewerGreens",
+                               "ColorBrewerOranges",
+                               "ColorBrewerPurples",
+                               "ColorBrewerReds",
+                               "ColorBrewerGrayscale",
+                               "QCustomPlotGrayscale",
+                               "QCustomPlotNight",
+                               "QCustomPlotCandy",
+                               "QCustomPlotIon",
+                               "QCustomPlotThermal",
+                               "↔QCustomPlotPolar",
+                               "↔QCustomPlotSpectrum",
+                               "QCustomPlotJet",
+                               "QCustomPlotHues",
+                               "QCustomPlotHot",
+                               "QCustomPlotCold",
+                               "↔ColorBrewerBrownBlueGreen",
+                               "↔ColorBrewerPinkYellowGreen",
+                               "↔ColorBrewerPurpleGreen",
+                               "↔ColorBrewerPurpleOrange",
+                               "↔ColorBrewerRedBlue",
+                               "↔ColorBrewerRedGray",
+                               "↔ColorBrewerRedYellowBlue",
+                               "↔ColorBrewerRedYellowGreen",
+                               "↔ColorBrewerSpectral",
+                               "↔VespucciSpectral"});
 }
 
 MapViewer::~MapViewer()

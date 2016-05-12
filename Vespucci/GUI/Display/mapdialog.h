@@ -21,7 +21,8 @@
 #define MAPDIALOG_H
 
 #include <QDialog>
-
+#include "Global/vespucciworkspace.h"
+class MainWindow;
 namespace Ui {
 class MapDialog;
 }
@@ -31,11 +32,22 @@ class MapDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit MapDialog(QWidget *parent = 0);
+    explicit MapDialog(MainWindow *parent, QStringList data_keys);
     ~MapDialog();
+
+private slots:
+    void on_buttonBox_accepted();
 
 private:
     Ui::MapDialog *ui;
+    MainWindow *main_window_;
+    QComboBox *gradient_combo_box_;
+    QCheckBox *invert_check_box_;
+    QSpinBox *column_spin_box_;
+    QLineEdit *name_line_edit_;
+    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciDataset> dataset_;
+    QStringList data_keys_;
 };
 
 #endif // MAPDIALOG_H

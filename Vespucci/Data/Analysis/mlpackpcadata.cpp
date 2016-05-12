@@ -66,7 +66,8 @@ const mat &MlpackPCAData::GetMatrix(const QString &key)
         return EmptyMatrix();
 }
 
-QStringList MlpackPCAData::KeyList()
+
+QStringList MlpackPCAData::KeyList() const
 {
     return QStringList({"Projection",
                         "Loadings",

@@ -109,7 +109,7 @@ mat *VCAData::value(QString key)
         return NULL;
 }
 
-QStringList VCAData::KeyList()
+QStringList VCAData::KeyList() const
 {
     return QStringList({
                            "Endmembers",

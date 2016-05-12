@@ -474,9 +474,6 @@ TreeItem *DatasetTreeModel::SetupMapTreeItem(const QString &dataset_key,
 
 QString DatasetTreeModel::DescribeMatrix(const mat &matrix) const
 {
-    cout << "DescribeMatrix() " << endl;
-    cout << "n_rows = " << matrix.n_rows << endl;
-    cout << "n_cols = " << matrix.n_cols << endl;
     return QString::number(matrix.n_rows)
             + "×"
             + QString::number(matrix.n_cols)

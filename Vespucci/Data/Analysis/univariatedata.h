@@ -63,10 +63,10 @@ public:
 
     field<mat> CalculateRatios();
 
-    QStringList KeyList();
-    const mat &GetMatrix(const QString &name);
-    QMap<QString, QString> GetMetadata();
-    QString GetColumnHeading(const QString &key, int column);
+    QStringList KeyList() const override;
+    const mat &GetMatrix(const QString &name) override;
+    QMap<QString, QString> GetMetadata() override;
+    QString GetColumnHeading(const QString &key, int column) override;
 
 
 private:

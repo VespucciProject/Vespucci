@@ -196,6 +196,8 @@ private slots:
 
     void on_datasetTreeView_doubleClicked(const QModelIndex &index);
 
+    void on_actionMapResult_triggered();
+
 private:
     Ui::MainWindow *ui;
 

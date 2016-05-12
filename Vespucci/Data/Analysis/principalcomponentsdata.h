@@ -48,10 +48,10 @@ public:
 
     mat *value(QString key);
     QString name_;
-    const mat &GetMatrix(const QString &key);
-    QStringList KeyList();
-    QMap<QString, QString> GetMetadata();
-    QString GetColumnHeading(const QString &key, int column);
+    const mat &GetMatrix(const QString &key) override;
+    QStringList KeyList() const override;
+    QMap<QString, QString> GetMetadata() override;
+    QString GetColumnHeading(const QString &key, int column) override;
 
 private:
     ///

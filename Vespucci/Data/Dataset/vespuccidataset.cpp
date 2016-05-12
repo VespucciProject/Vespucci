@@ -2506,7 +2506,7 @@ QCPColorGradient VespucciDataset::GetClusterGradient(int clusters) const
     case 7: return QCPColorGradient::cbCluster7;
     case 8: return QCPColorGradient::cbCluster8;
     case 9: return QCPColorGradient::cbCluster9;
-    default: return QCPColorGradient::cbCluster9;
+    default: return QCPColorGradient::gpJet; //not as good, but should still be different
     }
 }
 
@@ -2900,6 +2900,28 @@ void VespucciDataset::CreateMap(const QString &map_name,
                                                 directory_, gradient,
                                                 source_index, tick_count, main_window_));
     maps_[map_name] = new_map;
+    workspace->UpdateModel();
+}
+
+void VespucciDataset::CreateMap(const QString &map_name, const QString &matrix_key, uword column, QCPColorGradient gradient, int tick_count)
+{
+    vec results;
+    try{
+        results = auxiliary_matrices_.value(matrix_key).col(column);
+    }catch(exception e){
+        throw e; //let the caller handle the exception
+    }
+    int source_index = maps_.size();
+
+    QSharedPointer<MapData> new_map(new MapData(map_name,
+                                                x_axis_description_,
+                                                y_axis_description_,
+                                                x_, y_, results,
+                                                QSharedPointer<VespucciDataset>(this),
+                                                directory_, gradient,
+                                                source_index, tick_count, main_window_));
+    maps_[map_name] = new_map;
+    workspace->UpdateModel();
 }
 
 bool VespucciDataset::ShowMapViewer(const QString &map_key, bool show)

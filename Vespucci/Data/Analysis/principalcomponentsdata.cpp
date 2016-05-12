@@ -41,6 +41,8 @@ void PrincipalComponentsData::Apply(const mat &spectra)
     double eigenvalue_sum = sum(latent_);
     percent_variance_ = latent_ / eigenvalue_sum;
     percent_variance_ /= 0.01;
+    vec cumulative = cumsum(percent_variance_);
+    percent_variance_ = join_horiz(percent_variance_, cumulative);
 }
 
 ///
@@ -104,7 +106,7 @@ const mat &PrincipalComponentsData::GetMatrix(const QString &key)
     else return EmptyMatrix();
 }
 
-QStringList PrincipalComponentsData::KeyList()
+QStringList PrincipalComponentsData::KeyList() const
 {
     return QStringList({
                            "Scores",
@@ -125,7 +127,8 @@ QString PrincipalComponentsData::GetColumnHeading(const QString &key, int column
     if (key == "Scores") return "Score " + QString::number(column + 1);
     else if (key == "Loadings") return "Loading " + QString::number(column + 1);
     else if (key == "Eigenvalues") return "Eigenvalues";
-    else if (key == "Percent Variance") return "Percent Variance";
+    else if (key == "Percent Variance")
+        return (column ? "Cumulative Percent Variance" : "Percent Variance");
     else if (key == "Hotelling t²") return "Hotelling t²";
     else return QString();
 }

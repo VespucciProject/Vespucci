@@ -354,6 +354,11 @@ public:
                    uword column,
                    QCPColorGradient gradient,
                    int tick_count);
+    void CreateMap(const QString &map_name,
+                   const QString &matrix_key,
+                   uword column,
+                   QCPColorGradient gradient,
+                   int tick_count);
 
     bool ShowMapViewer(const QString &map_key, bool show);
 

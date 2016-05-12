@@ -49,6 +49,7 @@
 #include "GUI/Processing/abscissainterpolationdialog.h"
 #include "GUI/Processing/stitchimportdialog.h"
 #include "GUI/Analysis/plotmakerdialog.h"
+#include "GUI/Display/mapdialog.h"
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent usually 0
@@ -1484,4 +1485,12 @@ void MainWindow::on_datasetTreeView_doubleClicked(const QModelIndex &index)
             DisplayExceptionWarning("on_datasetTreeView_doubleClicked", e);
         }
     }
+}
+
+void MainWindow::on_actionMapResult_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    QStringList item_keys = item->keys();
+    MapDialog *map_dialog = new MapDialog(this, item_keys);
+    map_dialog->show();
 }

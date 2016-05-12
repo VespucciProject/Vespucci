@@ -110,7 +110,6 @@ public:
     bool Plottable(const QStringList &keys) const;
     //bool SavePlot(QCustomPlot *plot, const QString filename) const;
 
-
 private:
 
     void UpdateTreeModel();

@@ -97,7 +97,7 @@
       <bool>true</bool>
      </property>
      <property name="title">
-      <string>&amp;Multiviariate Analysis</string>
+      <string>&amp;Multivariate Analysis</string>
      </property>
      <addaction name="actionPrincipal_Components_Analysis"/>
      <addaction name="actionPartial_Least_Squares"/>

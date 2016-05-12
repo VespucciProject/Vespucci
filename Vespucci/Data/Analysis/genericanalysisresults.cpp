@@ -33,13 +33,13 @@ const mat &GenericAnalysisResults::GetMatrix(const QString &key)
     //I will have to reconsider always passing matrices by reference
     //Perhaps smart pointers are a better idea?
     if (matrices_.contains(key)){
-        current_matrix_ = matirces_.value(key);
+        current_matrix_ = matrices_.value(key);
         return current_matrix_;
     }
     else return EmptyMatrix();
 }
 
-QStringList GenericAnalysisResults::KeyList()
+QStringList GenericAnalysisResults::KeyList() const
 {
     return matrices_.keys();
 }
