@@ -17,14 +17,20 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
+#ifndef TESTSMOOTHING_H
+#define TESTSMOOTHING_H
 
-#include "test.h"
-/*
-vec VespucciTest::CreateGaussianPeak(const vec &x, double sigma, double &fwhm, double &area)
+#include <QObject>
+
+class TestSmoothing : public QObject
 {
-    fwhm = 2.0*std::sqrt(2 * std::log(2));
-    area = 1.0 / std::sqrt(2*datum::pi*sigma);
-    return (1.0 / (sigma * std::sqrt(2*datum::pi)))
-            * (arma::exp((-1.0/(2*std::pow(sigma, 2.0)))*arma::pow(x, 2.0)));
-}
-*/
+    Q_OBJECT
+public:
+    explicit TestSmoothing(QObject *parent = 0);
+
+signals:
+
+public slots:
+};
+
+#endif // TESTSMOOTHING_H

@@ -147,9 +147,6 @@ SOURCES += main.cpp\
     GUI/Analysis/vcadialog.cpp \
     GUI/QAbstractItemModel/vespuccitablemodel.cpp \
     GUI/scriptdialog.cpp \
-    Data/Analysis/cwtdata.cpp \
-    GUI/Analysis/peakfindingdialog.cpp \
-    GUI/Analysis/haspeaksdialog.cpp \
     GUI/Processing/multiimportdialog.cpp \
     GUI/Processing/bulkconversiondialog.cpp \
     GUI/Display/reportmessagedialog.cpp \
@@ -219,9 +216,6 @@ HEADERS  += \
     GUI/QAbstractItemModel/vespuccitablemodel.h \
     GUI/Analysis/plotmakerdialog.h \
     GUI/scriptdialog.h \
-    Data/Analysis/cwtdata.h \
-    GUI/Analysis/peakfindingdialog.h \
-    GUI/Analysis/haspeaksdialog.h \
     GUI/Processing/multiimportdialog.h \
     GUI/Processing/bulkconversiondialog.h \
     GUI/Display/reportmessagedialog.h \

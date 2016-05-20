@@ -42,7 +42,6 @@
 #include "Data/Analysis/univariatedata.h"
 #include "Data/Analysis/mlpackpcadata.h"
 #include "Data/Analysis/analysisresults.h"
-#include "Data/Analysis/cwtdata.h"
 #include "GUI/QAbstractItemModel/treeitem.h"
 
 
@@ -229,23 +228,7 @@ public:
     void PrincipalComponents(const QString &name, bool scale_data);
     void FindPeaks(QString name, double sel, double threshold,
                    uword poly_order, uword window_size);
-    void FindPeaksCWT(QString name,
-                      std::string wavelet,
-                      uword max_scale, uword gap_threshold,
-                      uword min_ridge_length,
-                      uword search_width,
-                      double noise_threshold,
-                      std::string noise_method,
-                      uword noise_window_size,
-                      bool save_coefs,
-                      bool save_coef_plots,
-                      bool save_ridge_plots,
-                      bool save_ridge_plot_data,
-                      bool estimate_width,
-                      QString save_directory,
-                      QString image_format,
-                      QCPColorGradient gradient);
-    void HasPeaksCWT(const mat &range_list);
+
 
 
     //MEMBER ACCESS FUNCTIONS:

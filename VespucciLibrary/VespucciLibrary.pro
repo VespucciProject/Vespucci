@@ -100,7 +100,6 @@ SOURCES +=\
     src/Math/Smoothing/whittaker.cpp \
     src/Math/Transform/cwt.cpp \
     src/Math/PeakFinding/peakfinding.cpp \
-    src/Math/PeakFinding/cwtridge.cpp \
     src/Math/Fitting/linleastsq.cpp \
     #src/Math/Fitting/nonlinleastsq.cpp \
     src/Global/vespucci.cpp \
@@ -108,7 +107,8 @@ SOURCES +=\
     src/Math/Quantification/correlation.cpp \
     src/Math/Quantification/quantification.cpp \
     src/Math/Stats/confidenceinterval.cpp \
-    src/Math/Stats/hyptothesistests.cpp
+    src/Math/Stats/hyptothesistests.cpp \
+    src/Math/PeakFinding/kernelpeakfinding.cpp
 
 
 HEADERS  += \
@@ -124,7 +124,6 @@ HEADERS  += \
     include/Math/Transform/cwt.h \
     include/Math/PeakFinding/peakfinding.h \
     include/Math/Accessory/accessory_impl.h \
-    include/Math/PeakFinding/cwtridge.h \
     include/Math/Fitting/linleastsq.h \
     #include/Math/Fitting/nonlinleastsq.h \
     include/Global/vespucci.h \
@@ -138,7 +137,8 @@ HEADERS  += \
     include/Math/Quantification/bandwidth.h \
     include/Math/Quantification/correlation.h \
     include/Math/Stats/confidenceinterval.h \
-    include/Math/Stats/hypothesistests.h
+    include/Math/Stats/hypothesistests.h \
+    include/Math/PeakFinding/kernelpeakfinding.h
 
 
 #linux and mac osx libraries, specific to my own install. This will be handled by CMake later

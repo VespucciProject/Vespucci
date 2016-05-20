@@ -38,8 +38,6 @@
 #include "GUI/Processing/booleanizedialog.h"
 #include "GUI/Processing/thresholddialog.h"
 #include "GUI/scriptdialog.h"
-#include "GUI/Analysis/peakfindingdialog.h"
-#include "GUI/Analysis/haspeaksdialog.h"
 #include "GUI/Processing/multiimportdialog.h"
 #include "GUI/Processing/bulkconversiondialog.h"
 #include "GUI/Analysis/classicalleastsquaresdialog.h"
@@ -1248,8 +1246,6 @@ void MainWindow::on_actionDetect_Peaks_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    PeakFindingDialog *peak_dialog = new PeakFindingDialog(this, workspace, dataset_key);
-    peak_dialog->show();
 }
 
 void MainWindow::on_actionCalculate_Peak_Populations_triggered()
@@ -1265,8 +1261,7 @@ void MainWindow::on_actionCalculate_Peak_Populations_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    HasPeaksDialog *peaks_dialog = new HasPeaksDialog(this, workspace, dataset_key);
-    peaks_dialog->show();
+
 }
 
 void MainWindow::on_actionImport_From_Multiple_Point_Spectra_triggered()

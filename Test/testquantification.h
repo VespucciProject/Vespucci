@@ -17,5 +17,20 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-//compare the outputs of functions to outputs of functions in R and Octave using
-//the external code interfaces.
+#ifndef TESTQUANTIFICATION_H
+#define TESTQUANTIFICATION_H
+
+#include <QObject>
+
+class TestQuantification : public QObject
+{
+    Q_OBJECT
+public:
+    explicit TestQuantification(QObject *parent = 0);
+
+signals:
+
+public slots:
+};
+
+#endif // TESTQUANTIFICATION_H

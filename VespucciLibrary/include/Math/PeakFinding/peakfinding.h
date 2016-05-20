@@ -24,7 +24,6 @@
     #include "Math/VespucciMath.h"
     #include "Global/libvespucci.h"
 #endif
-#include "Math/PeakFinding/cwtridge.h"
 namespace Vespucci
 {
     namespace Math
@@ -36,19 +35,6 @@ namespace Vespucci
     ///
         namespace PeakFinding
         {
-            VESPUCCI_EXPORT std::vector<Vespucci::Math::CWTRidge> FindRidges(arma::mat &coefs,
-                                                             arma::uvec scales,
-                                                             arma::uword gap_threshold,
-                                                             arma::uword ridge_length,
-                                                             arma::uword search_width, double noise_threshold, std::string noise_method, arma::uword noise_window);
-
-
-            VESPUCCI_EXPORT std::vector<Vespucci::Math::CWTRidge> LinkRidges(const arma::sp_mat &maxima,
-                                                             arma::uvec scales,
-                                                             arma::mat &coefs,
-                                                             arma::uword min_window_size,
-                                                             arma::uword gap_threshold);
-            VESPUCCI_EXPORT void EstimateWidth(const arma::vec &spectrum, const arma::vec &abscissa, std::vector<Vespucci::Math::CWTRidge> &ridges);
 
             VESPUCCI_EXPORT arma::vec FindPeaks(arma::vec X, arma::vec dX,
                           double sel,
@@ -76,10 +62,6 @@ namespace Vespucci
                                    arma::vec &peak_magnitudes);
             VESPUCCI_EXPORT arma::vec PeakPopulation(arma::uword vector_size, arma::umat peak_positions);
             VESPUCCI_EXPORT arma::vec PeakExtrema(arma::uword vector_size, arma::umat peak_positions);
-            VESPUCCI_EXPORT arma::mat CWTPeakAnalysis(arma::mat X,
-                                std::string wavelet, arma::uvec scales,
-                                double threshold, std::string threshold_method,
-                                arma::mat &transform);
 
         }
     }

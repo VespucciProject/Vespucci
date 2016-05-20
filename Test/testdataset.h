@@ -17,5 +17,20 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-//Assert that our output matches the outputs of Octave and R using the external
-//code interface
+#ifndef TESTDATASET_H
+#define TESTDATASET_H
+
+#include <QObject>
+
+class TestDataset : public QObject
+{
+    Q_OBJECT
+public:
+    explicit TestDataset(QObject *parent = 0);
+
+signals:
+
+public slots:
+};
+
+#endif // TESTDATASET_H

@@ -17,5 +17,9 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-//Assert that peak centers in mock spectra are properly found at various levels
-//of noise
+#include "testpeakfinding.h"
+
+TestPeakFinding::TestPeakFinding(QObject *parent) : QObject(parent)
+{
+
+}

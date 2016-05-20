@@ -2,17 +2,26 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= app_bundle
 QT += testlib
+QT += widgets
+QT += printsupport
+QT += svg
 
 SOURCES += main.cpp \
-    test_dataset_stitching.cpp \
-    test_math_accessory.cpp \
-    test_ols.cpp \
-    test_pls.cpp \
-    test_quantification.cpp \
-    test_smoothing.cpp \
-    test.cpp \
-    test_peak_finding.cpp
-
+    testfileio.cpp \
+    testhelpers.cpp \
+    testquantification.cpp \
+    testnormalization.cpp \
+    testsmoothing.cpp \
+    testfitting.cpp \
+    testpeakfinding.cpp \
+    testdatamodel.cpp \
+    testworkspace.cpp \
+    testdataset.cpp \
+    testsession.cpp
+INCLUDEPATH += ../VespucciLibrary/include
+DEPENDPATH += ../VespucciLibrary/include
+INCLUDEPATH += ../Vespucci
+DEPENDPATH += ../Vespucci
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
 unix: !macx: QMAKE_CXXFLAGS += -std=c++11 \
                         -isystem "/home/dan/libraries/include" \
@@ -44,7 +53,18 @@ win32-g++: QMAKE_CXXFLAGS += -std=gnu++11 \
                          -isystem "C:/Tools/R/R-3.1.3/library/Rcpp/include" \
                          -isystem "C:/Tools/R/R-3.1.3/library/RcppArmadillo/include/armadillo_bits"
 
-HEADERS += test.h
+HEADERS += test.h \
+    testfileio.h \
+    testhelpers.h \
+    testquantification.h \
+    testnormalization.h \
+    testsmoothing.h \
+    testfitting.h \
+    testpeakfinding.h \
+    testdatamodel.h \
+    testworkspace.h \
+    testdataset.h \
+    testsession.h
 
 #linux libraries, specific to my own install. This will be handled by CMake later
 #I hope...
@@ -180,7 +200,7 @@ count(deploy_win64, 1){
 
 #mac libraries. These are the same in Travis-CI as in most local environments
 #with all dependencies of armadillo and mlpack installed using homebrew
-mac: LIBS += -L$$OUT_PWD/../VespucciLibrary -lvespucci
+macx: LIBS += -L$$OUT_PWD/../VespucciLibrary/ -lvespucci
 
 mac: LIBS += -L$$PWD/../../mlpack/lib/ -lmlpack
 mac: INCLUDEPATH += $$PWD/../../mlpack/include
@@ -208,9 +228,11 @@ INCLUDEPATH += $$PWD/../../quazip/include
 DEPENDPATH += $$PWD/../../quazip/include
 macx: PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
 
+
 macx: LIBS += -L$$PWD/../../yaml-cpp/lib/ -lyaml-cpp
 INCLUDEPATH += $$PWD/../../yaml-cpp/include
 DEPENDPATH += $$PWD/../../yaml-cpp/include
 macx: PRE_TARGETDEPS += $$PWD/../../yaml-cpp/lib/libyaml-cpp.a
 
 macx: LIBS += -lz.1
+
