@@ -138,7 +138,6 @@ uvec Vespucci::Math::PeakFinding::FindPeakCenters(const vec &signal, const vec &
         if (!peak_centers.n_rows) peak_centers = {ridge(max_indices(0), 1)};
         else peak_centers = join_vert(peak_centers, uvec({ridge(max_indices(0), 1)}));
     }
-    cout << "return: " << endl;
     return peak_centers;
 }
 
