@@ -19,12 +19,10 @@
 *******************************************************************************/
 #include "Data/Analysis/plsdata.h"
 
-PLSData::PLSData(QString name, QSharedPointer<VespucciDataset> parent, QString *directory):
-    AnalysisResults(name, "Partial Least Squares Results"),
-    name_(name)
+PLSData::PLSData(QString name):
+    AnalysisResults(name, "Partial Least Squares Results")
 {
-    parent_ = parent;
-    directory_ = directory;
+
 }
 
 ///
@@ -33,148 +31,68 @@ PLSData::PLSData(QString name, QSharedPointer<VespucciDataset> parent, QString *
 /// \param wavelength Spectral abscissa
 /// \param components Number of components to calculate
 /// \return
-/// Performs PLS analysis on a copy of the spectra matrix.
-bool PLSData::Apply(mat spectra, vec wavelength, int components)
+/// Performs PLS analysis on the spectra matrix.
+bool PLSData::Classify(const mat &spectra, const vec &wavelength, int components)
 {
     mat Y = repmat(wavelength, 1, components);
+    mat X_loadings, Y_loadings, X_scores, Y_scores, coefficients, percent_variance, fitted;
     bool success = Vespucci::Math::DimensionReduction::plsregress(spectra, Y, components,
-                                        X_loadings_, Y_loadings_,
-                                        X_scores_, Y_scores_,
-                                        coefficients_, percent_variance_,
-                                        fitted_);
+                                        X_loadings, Y_loadings,
+                                        X_scores, Y_scores,
+                                        coefficients, percent_variance,
+                                        fitted);
+
+    if (success){
+        AddMetadata("Type", "Classification (PCA)");
+        AddMetadata("Components calculated", QString::number(components));
+        AddMatrix("Percent Variance", percent_variance);
+        AddMatrix("Predictor Loadings", X_loadings);
+        AddMatrix("Response Loadings", Y_loadings);
+        AddMatrix("Predictor Scores", X_scores);
+        AddMatrix("Response Scores", Y_scores);
+        AddMatrix("Coefficients", coefficients);
+        AddMatrix("Fitted Data", fitted);
+    }
 
     return success;
 
 }
 
-bool PLSData::Calibrate(mat spectra, mat controls)
+bool PLSData::Calibrate(const mat &spectra, const mat &controls)
 {
     //spectra is y
     //controls are X
-
+    mat X_loadings, Y_loadings, X_scores, Y_scores, coefficients, percent_variance, fitted;
     bool success = Vespucci::Math::DimensionReduction::plsregress(controls, spectra, controls.n_cols,
-                                                                  X_loadings_, Y_loadings_,
-                                                                  X_scores_, Y_scores_,
-                                                                  coefficients_, percent_variance_,
-                                                                  fitted_);
+                                                                  X_loadings, Y_loadings,
+                                                                  X_scores, Y_scores,
+                                                                  coefficients, percent_variance,
+                                                                  fitted);
+
+    if (success){
+        AddMetadata("Type", "Calibration");
+        AddMetadata("Components calculated", QString::number(controls.n_cols));
+        AddMatrix("Percent Variance", percent_variance);
+        AddMatrix("Predictor Loadings", X_loadings);
+        AddMatrix("Response Loadings", Y_loadings);
+        AddMatrix("Predictor Scores", X_scores);
+        AddMatrix("Response Scores", Y_scores);
+        AddMatrix("Coefficients", coefficients);
+        AddMatrix("Fitted Data", fitted);
+    }
+
     return success;
 }
 
 ///
-/// \brief DiscriminantAnalysis
-/// \param spectra
+/// \brief PLSData::Discriminate
+/// \param data
 /// \param labels
-/// \param components
 /// \return
 /// Perform PLS-DA
-bool DiscriminantAnalysis(mat spectra, vec labels, int components)
+bool PLSData::Discriminate(const mat &data, const vec &labels)
 {
-    //mat Y = repmat();
+    //coming soon!
+    //uword unique_labels = unique(labels).n_rows;
     return false;
-}
-
-mat *PLSData::X_loadings()
-{
-    return &X_loadings_;
-}
-
-mat *PLSData::Y_loadings()
-{
-    return &Y_loadings_;
-}
-
-mat *PLSData::X_scores()
-{
-    return &X_scores_;
-}
-
-mat* PLSData::Y_scores()
-{
-    return &Y_scores_;
-}
-
-mat* PLSData::coefficients()
-{
-    return &coefficients_;
-}
-
-mat *PLSData::percent_variance()
-{
-    return &percent_variance_;
-}
-
-mat *PLSData::value(QString key)
-{
-    if (key == "PLS Variance")
-        return &percent_variance_;
-    else if (key == "PLS Predictor Loadings")
-        return &X_loadings_;
-    else if (key == "PLS Response Loadings")
-        return &Y_loadings_;
-    else if (key == "PLS Predictor Scores")
-        return &X_scores_;
-    else if (key == "PLS Response Scores")
-        return &Y_scores_;
-    else if (key == "PLS Coefficients")
-        return &coefficients_;
-    else
-        return NULL;
-}
-
-int PLSData::NumberComponents()
-{
-    return coefficients_.n_cols;
-}
-
-colvec PLSData::Results(const uword i, bool &valid)
-{
-    if (coefficients_.n_cols < i){
-        valid = false;
-        return X_loadings_.col(coefficients_.n_cols - 1);
-    }
-
-    else{
-        valid = true;
-        return X_loadings_.col(i);
-    }
-
-}
-
-QStringList PLSData::KeyList() const
-{
-    return QStringList({
-                           "Percent Variance",
-                           "Predictor Loadings",
-                           "Response Loadings",
-                           "Predictor Scores",
-                           "Response Scores",
-                           "Coefficients"
-                       });
-}
-
-const mat &PLSData::GetMatrix(const QString &key)
-{
-    if (key == "Percent Variance") return percent_variance_;
-    else if (key == "Predictor Loadings") return X_loadings_;
-    else if (key == "Response Loadings") return Y_loadings_;
-    else if (key == "Predictor Scores") return X_scores_;
-    else if (key == "Response Scores") return Y_scores_;
-    else if (key == "Coefficients") return coefficients_;
-    else return EmptyMatrix();
-}
-
-QMap<QString, QString> PLSData::GetMetadata()
-{
-    return metadata_;
-}
-
-QString PLSData::GetColumnHeading(const QString &key, int column)
-{
-    if (key == "Percent Variance") return "Percent Variance";
-    else if (key == "Predictor Loadings") return "Predictor Loading " + QString::number(column+1);
-    else if (key == "Response Loadings") return "Response Loading " + QString::number(column + 1);
-    else if (key == "Predictor Scores") return "Predictor Score " + QString::number(column + 1);
-    else if (key == "Response Scores") return "Response Score " + QString::number(column + 1);
-    else if (key == "Coefficients") return "Coefficient " + QString::number(column + 1);
-    else return QString();
 }

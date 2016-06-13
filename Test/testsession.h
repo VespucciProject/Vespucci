@@ -17,19 +17,28 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef VCADATA_H
-#define VCADATA_H
-#include "Data/Analysis/analysisresults.h"
-#include <QVector>
+#ifndef TESTSESSION_H
+#define TESTSESSION_H
+#include "../Vespucci/Data/Dataset/vespuccidataset.h"
+using namespace std;
 using namespace arma;
 ///
-/// \brief The VCAData class
-/// A class for performing and storing data from Vertex Components Analysis
-class VCAData: public AnalysisResults
+/// \brief The TestSession class
+/// Loads mock datasets for testing classes.
+class TestSession
 {
 public:
-    VCAData(QString name);
-    void Apply(const mat &spectra, int endmembers);
+    TestSession();
+    void LoadMockData(QString manifest_path);
+    QSharedPointer<VespucciDataset> DatasetAt(int row);
+    void GetData(mat &spectra, vec &abscissa, vec &x, vec &y);
+private:
+    QVector<QSharedPointer<VespucciDataset> > datasets_;
+    QVector<mat> spectra_;
+    QVector<mat> abscissa_;
+    QVector<mat> x_;
+    QVector<mat> y_;
+
 };
 
-#endif // VCADATA_H
+#endif // TESTSESSION_H

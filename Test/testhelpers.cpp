@@ -17,19 +17,9 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef VCADATA_H
-#define VCADATA_H
-#include "Data/Analysis/analysisresults.h"
-#include <QVector>
-using namespace arma;
-///
-/// \brief The VCAData class
-/// A class for performing and storing data from Vertex Components Analysis
-class VCAData: public AnalysisResults
-{
-public:
-    VCAData(QString name);
-    void Apply(const mat &spectra, int endmembers);
-};
+#include "testhelpers.h"
 
-#endif // VCADATA_H
+TestHelpers::TestHelpers(QObject *parent) : QObject(parent)
+{
+
+}

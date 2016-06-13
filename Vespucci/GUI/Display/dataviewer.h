@@ -45,7 +45,8 @@ class DataViewer : public QDialog
 public:
     explicit DataViewer(MainWindow *parent = 0);
     ~DataViewer();
-    void AddTab(const mat &object, const QString &name);
+    void AddTab(const mat & object, const QString &name);
+    const mat & EmptyMatrix();
 
 public slots:
     void RemoveTab(int index);

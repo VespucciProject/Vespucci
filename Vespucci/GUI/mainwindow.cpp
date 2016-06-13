@@ -38,8 +38,6 @@
 #include "GUI/Processing/booleanizedialog.h"
 #include "GUI/Processing/thresholddialog.h"
 #include "GUI/scriptdialog.h"
-#include "GUI/Analysis/peakfindingdialog.h"
-#include "GUI/Analysis/haspeaksdialog.h"
 #include "GUI/Processing/multiimportdialog.h"
 #include "GUI/Processing/bulkconversiondialog.h"
 #include "GUI/Analysis/classicalleastsquaresdialog.h"
@@ -1134,7 +1132,7 @@ void MainWindow::TreeItemDoubleClicked(const QModelIndex &index)
         }
         if (keys.size() == 3){
             try{
-                const mat &matrix = workspace->GetResultsMatrix(keys[0], keys[1], keys[2]);
+                const mat & matrix = workspace->GetResultsMatrix(keys[0], keys[1], keys[2]);
                 data_viewer_->AddTab(matrix, item->data(0).toString());
             }catch (exception e){
                 DisplayExceptionWarning("TreeItemDoubleClicked", e);
@@ -1248,8 +1246,6 @@ void MainWindow::on_actionDetect_Peaks_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    PeakFindingDialog *peak_dialog = new PeakFindingDialog(this, workspace, dataset_key);
-    peak_dialog->show();
 }
 
 void MainWindow::on_actionCalculate_Peak_Populations_triggered()
@@ -1265,8 +1261,7 @@ void MainWindow::on_actionCalculate_Peak_Populations_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    HasPeaksDialog *peaks_dialog = new HasPeaksDialog(this, workspace, dataset_key);
-    peaks_dialog->show();
+
 }
 
 void MainWindow::on_actionImport_From_Multiple_Point_Spectra_triggered()
@@ -1479,7 +1474,7 @@ void MainWindow::on_datasetTreeView_doubleClicked(const QModelIndex &index)
     if (type == TreeItem::ItemType::Matrix){
         QStringList keys = item->keys();
         try{
-            const mat &matrix = workspace->GetMatrix(keys);
+            const mat & matrix = workspace->GetMatrix(keys);
             data_viewer_->AddTab(matrix, item->data(0).toString());
         }catch (exception e){
             DisplayExceptionWarning("on_datasetTreeView_doubleClicked", e);
@@ -1493,4 +1488,30 @@ void MainWindow::on_actionMapResult_triggered()
     QStringList item_keys = item->keys();
     MapDialog *map_dialog = new MapDialog(this, item_keys);
     map_dialog->show();
+}
+
+void MainWindow::on_actionSave_Selected_Matrix_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    if (item->type() == TreeItem::ItemType::Matrix){
+        QString filename = QFileDialog::getSaveFileName(this, "Save " + item->keys().last(),
+                                                        workspace->directory(),
+                                                        "Comma-separated text (*.csv);;"
+                                                        "Space-delimited text (*.txt);;"
+                                                        "Armadillo binary (*.arma);;"
+                                                        "Raw binary (*.bin)");
+        QString extension = QFileInfo(filename).suffix();
+        try{
+            if (extension == "bin")
+                workspace->GetMatrix(item->keys()).save(filename.toStdString(), raw_binary);
+            else if (extension == "arma")
+                workspace->GetMatrix(item->keys()).save(filename.toStdString(), arma_binary);
+            else if (extension == "csv")
+                workspace->GetMatrix(item->keys()).save(filename.toStdString(), csv_ascii);
+            else
+                workspace->GetMatrix(item->keys()).save(filename.toStdString(), raw_ascii);
+        }catch(exception e){
+            DisplayExceptionWarning(e);
+        }
+    }
 }

@@ -57,3 +57,8 @@ void DataViewer::AddTab(const mat &object, const QString &name)
     tab_widget_->addTab(new_widget, name);
 }
 
+const mat & DataViewer::EmptyMatrix()
+{
+    return empty_matrix_;
+}
+

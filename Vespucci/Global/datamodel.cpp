@@ -103,7 +103,7 @@ QSharedPointer<MapData> DataModel::GetMap(const QStringList &keys) const
     return GetMap(keys[0], keys[1]);
 }
 
-const mat &DataModel::GetResultsMatrix(const QString &dataset_key,
+const mat & DataModel::GetResultsMatrix(const QString &dataset_key,
                                        const QString &results_key,
                                        const QString &matrix_key) const
 {
@@ -132,7 +132,7 @@ const mat &DataModel::GetResultsMatrix(const QString &dataset_key,
     }
 }
 
-const mat &DataModel::GetResultsMatrix(const QStringList &keys) const
+const mat & DataModel::GetResultsMatrix(const QStringList &keys) const
 {
     if (keys.size() != 3) throw invalid_argument("Wrong number of keys provided");
     return GetResultsMatrix(keys[0], keys[1], keys[2]);
@@ -144,7 +144,7 @@ const mat &DataModel::GetResultsMatrix(const QStringList &keys) const
 /// \param matrix_key
 /// \return The core matrix (spectra_, abscissa_, x_, y_ with key matrix_key from dataset with key dataset_key
 /// Throws invalid_argument if invalid core matrix name given
-const mat &DataModel::GetCoreMatrix(const QString &dataset_key, const QString &matrix_key) const
+const mat & DataModel::GetCoreMatrix(const QString &dataset_key, const QString &matrix_key) const
 {
     if (HasDataset(dataset_key)){
         if (matrix_key == "Spectra" || matrix_key == "Spectral Absicssa"
@@ -163,7 +163,7 @@ const mat &DataModel::GetCoreMatrix(const QString &dataset_key, const QString &m
     }
 }
 
-const mat &DataModel::GetCoreMatrix(const QStringList &keys) const
+const mat & DataModel::GetCoreMatrix(const QStringList &keys) const
 {
     if (keys.size() != 2) throw invalid_argument("Wrong number of keys provided");
     return GetCoreMatrix(keys[0], keys[1]);
@@ -175,7 +175,7 @@ const mat &DataModel::GetCoreMatrix(const QStringList &keys) const
 /// \param matrix_key
 /// \return reference to the auxiliary matrix named matrix_key in the dataset named dataset_key
 /// Throws invalid argument if invalid auxiliary matrix name given
-const mat &DataModel::GetAuxiliaryMatrix(const QString &dataset_key,
+const mat & DataModel::GetAuxiliaryMatrix(const QString &dataset_key,
                                          const QString &matrix_key) const
 {
     if (HasDataset(dataset_key)){
@@ -193,13 +193,13 @@ const mat &DataModel::GetAuxiliaryMatrix(const QString &dataset_key,
     }
 }
 
-const mat &DataModel::GetAuxiliaryMatrix(const QStringList &keys) const
+const mat & DataModel::GetAuxiliaryMatrix(const QStringList &keys) const
 {
     if (keys.size() != 2) throw invalid_argument("Wrong number of keys provided");
     return GetAuxiliaryMatrix(keys[0], keys[1]);
 }
 
-const mat &DataModel::GetMatrix(const QString &dataset_key, const QString &matrix_key) const
+const mat & DataModel::GetMatrix(const QString &dataset_key, const QString &matrix_key) const
 {
     if (HasDataset(dataset_key)){
         if (GetDataset(dataset_key)->CoreMatrixKeys().contains(matrix_key))
@@ -219,7 +219,7 @@ const mat &DataModel::GetMatrix(const QString &dataset_key, const QString &matri
     }
 }
 
-const mat &DataModel::GetMatrix(const QStringList &keys) const
+const mat & DataModel::GetMatrix(const QStringList &keys) const
 {
     if (keys.size() == 2) return GetMatrix(keys[0], keys[1]);
     if (keys.size() == 3) return GetResultsMatrix(keys);
@@ -314,7 +314,7 @@ void DataModel::RemoveDataset(const QString &name)
         if (datasets_.at(i)->name() == name) datasets_.removeAt(i);
 }
 
-const mat &DataModel::EmptyMatrix() const
+const mat & DataModel::EmptyMatrix() const
 {
     return empty_matrix_;
 }

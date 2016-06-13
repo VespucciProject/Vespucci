@@ -33,62 +33,7 @@ class PrincipalComponentsData: public AnalysisResults
 {
 public:
     PrincipalComponentsData(QString name);
-
     void Apply(const mat &spectra);
-
-    bool SaveCoefficientMatrix();
-
-    colvec Results(int component);
-
-    vec *tsquared();
-    mat *score();
-    vec *latent();
-    mat *coeff();
-    vec *percent_variance();
-
-    mat *value(QString key);
-    QString name_;
-    const mat &GetMatrix(const QString &key) override;
-    QStringList KeyList() const override;
-    QMap<QString, QString> GetMetadata() override;
-    QString GetColumnHeading(const QString &key, int column) override;
-
-private:
-    ///
-    /// \brief coeff_
-    /// Principal components coefficients
-    mat coeff_;
-
-    ///
-    /// \brief score_
-    /// Projected data
-    mat score_;
-
-    ///
-    /// \brief percent_variance_
-    /// Percentage of variance accounted for by each component
-    vec percent_variance_;
-
-    ///
-    /// \brief latent_
-    /// Eigenvalues of the covariance matrix of spectra_
-    vec latent_;
-
-    ///
-    /// \brief tsquared_
-    /// Hotteling's statistic for each sample
-    vec tsquared_;
-
-    ///
-    /// \brief parent_
-    /// The current dataset
-    QSharedPointer<VespucciDataset> parent_;
-
-    ///
-    /// \brief directory_
-    /// Global working directory
-    QString *directory_;
-
 };
 
 #endif // PRINCIPALCOMPONENTSDATA_H

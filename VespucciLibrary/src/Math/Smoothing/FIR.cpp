@@ -129,9 +129,7 @@ arma::vec Vespucci::Math::Smoothing::ApplyFilter(const arma::vec &x, arma::mat c
     arma::vec filter = trans(coefficients.row(k));
     //coefficients output by sgolay are in reverse order expected.
     filter = fliplr(filter);
-    arma::vec filtered_data = conv(filter, x);
-    //for conv() to be equivalent to filter, we have to chop off the last window_size - 1 elements
-    filtered_data = filtered_data.rows(0, x.n_rows - 1);
+    arma::vec filtered_data = arma::conv(x, filter, "same");
     //Now we have to fix the ends of the filtered data
     filtered_data.rows(0, k) = coefficients.rows(k, window_size-1)*x.rows(0, window_size-1);
     filtered_data.rows(x.n_rows - k, x.n_rows - 1) = coefficients.rows(0, k - 1)*x.rows(x.n_rows - window_size, x.n_rows - 1);
@@ -147,9 +145,7 @@ arma::vec Vespucci::Math::Smoothing::ApplyFilter(const arma::vec &x, arma::mat c
 arma::vec Vespucci::Math::Smoothing::ApplyFilter(const arma::vec &x, arma::vec filter)
 {
     arma::uword k = (filter.n_elem - 1)/ 2;
-    arma::vec out = conv(filter, x);
-    //cut off the part that hangs over
-    out = out.rows(0, x.n_elem - 1);
+    arma::vec out = conv(x, filter, "same");
     //replace boundaries with values from the original
     out.rows(0, k) = x.rows(0, k);
     out.rows(x.n_elem - k, x.n_elem - 1) = x.rows(x.n_elem - k, x.n_elem - 1);

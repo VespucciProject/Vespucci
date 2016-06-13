@@ -17,11 +17,20 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-//assert that if we have more than one row block, then there will be more unique
-//y values than in either dataset. Likewise if we have more than one column in a row block
-//assert that the stitched dataset has the same values as the original
+#ifndef TESTSMOOTHING_H
+#define TESTSMOOTHING_H
 
-//make a mock dataset
-//split the mock dataset into segments with one row block, multiple row blocks
-//single datasets per row block and multiple datasets per row block.
+#include <QObject>
 
+class TestSmoothing : public QObject
+{
+    Q_OBJECT
+public:
+    explicit TestSmoothing(QObject *parent = 0);
+
+signals:
+
+public slots:
+};
+
+#endif // TESTSMOOTHING_H

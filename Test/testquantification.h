@@ -17,25 +17,20 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef GENERICANALYSISRESULTS_H
-#define GENERICANALYSISRESULTS_H
+#ifndef TESTQUANTIFICATION_H
+#define TESTQUANTIFICATION_H
 
-#include "Data/Dataset/vespuccidataset.h"
-#include "Data/Analysis/analysisresults.h"
-using namespace std;
-using namespace arma;
+#include <QObject>
 
-class GenericAnalysisResults : public AnalysisResults
+class TestQuantification : public QObject
 {
+    Q_OBJECT
 public:
-    GenericAnalysisResults(const QString &name, const QString &type, QMap<QString, mat> matrices);
-    const mat &GetMatrix(const QString &key) override;
-    QStringList KeyList() const override;
-    QMap<QString, QString> GetMetadata() override;
-    QString GetColumnHeading(const QString &key, int column) override;
-private:
-    QMap<QString, mat> matrices_;
-    mat current_matrix_;
+    explicit TestQuantification(QObject *parent = 0);
+
+signals:
+
+public slots:
 };
 
-#endif // GENERICANALYSISRESULTS_H
+#endif // TESTQUANTIFICATION_H

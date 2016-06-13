@@ -22,7 +22,6 @@
 #include <mlpack/methods/quic_svd/quic_svd.hpp>
 #include "Data/Import/datasetloader.h"
 #include "Data/Import/datasetsaver.h"
-#include "Data/Analysis/genericanalysisresults.h"
 
 using namespace arma;
 using namespace std;
@@ -513,6 +512,32 @@ VespucciDataset::VespucciDataset(QString name,
     name_ = name;
     main_window_ = main_window;
     directory_ = directory;
+}
+
+///
+/// \brief VespucciDataset::VespucciDataset
+/// \param name The name of the dataset
+/// \param main_window The main window of the program
+/// \param directory A pointer to the working directory string
+/// \param log_file A file to save the log in
+/// \param spectra The spectra matrix (column major)
+/// \param abscissa The spectral abscissa (x-axis)
+/// \param x The x spatial coordinate
+/// \param y The y spatial coordinate
+/// Used by all parsing functions in VespucciDatasetFactory
+VespucciDataset::VespucciDataset(const QString &name,
+                                 MainWindow *main_window,
+                                 QString *directory,
+                                 QFile *log_file,
+                                 mat &spectra,
+                                 vec &abscissa,
+                                 vec &x,
+                                 vec &y)
+    :log_text_stream_(log_file),
+      spectra_(spectra), abscissa_(abscissa), x_(x), y_(y), name_(name)
+{
+    main_window_ = main_window;
+
 }
 
 
@@ -1162,18 +1187,13 @@ int VespucciDataset::QUIC_SVD(double epsilon)
     int SVD_rank;
     log_text_stream_ << "QUIC_SVD" << endl;
     log_text_stream_ << "epsilon == " << epsilon << endl << endl;
-    mat u, sigma, v, copy;
-    cout << "Call QUIC_SVD" << endl;
+    mat u, sigma, v;
     mlpack::svd::QUIC_SVD svd_obj(spectra_, u, v, sigma, epsilon, 0.1);
-    cout << "create copy" << endl;
     SVD_rank = u.n_cols;
     log_text_stream_ << "rank of approximation = " << SVD_rank << endl;
     spectra_ = u * sigma * v.t();
     last_operation_ = "truncated SVD de-noise";
-    cout << "Copy operations" << endl;
-    spectra_ = copy;
     return SVD_rank;
-
 }
 
 ///
@@ -1619,10 +1639,10 @@ void VespucciDataset::BandRatio(QString name, double &first_left_bound, double &
 /// reduction, not classification, so there is no corresponding imaging function
 void VespucciDataset::PrincipalComponents(const QString &name, bool scale_data)
 {
-    QSharedPointer<MlpackPCAData> mlpack_pca_data(new MlpackPCAData(name, scale_data));
+    QSharedPointer<MlpackPCAData> mlpack_pca_data(new MlpackPCAData(name));
     log_text_stream_ << "PrincipalComponents (mlpack)" << endl;
     try{
-        mlpack_pca_data->Apply(spectra_);
+        mlpack_pca_data->Apply(spectra_, scale_data);
     }
     catch(exception e){
         throw std::runtime_error("VespucciDataset::PrincipalComponents");
@@ -1685,75 +1705,6 @@ void VespucciDataset::FindPeaks(QString name, double sel, double threshold, uwor
 
 */}
 
-void VespucciDataset::FindPeaksCWT(QString name, string wavelet,
-                                   uword max_scale,
-                                   uword gap_threshold,
-                                   uword min_ridge_length,
-                                   uword search_width,
-                                   double noise_threshold,
-                                   string noise_method,
-                                   uword noise_window_size,
-                                   bool save_coefs,
-                                   bool save_coef_plots,
-                                   bool save_ridge_plots,
-                                   bool save_ridge_plot_data,
-                                   bool estimate_width,
-                                   QString save_directory,
-                                   QString image_format,
-                                   QCPColorGradient gradient)
-{
-    cwt_peak_data_ = QSharedPointer<CWTData>(new CWTData(QSharedPointer<VespucciDataset>(this)));
-    try{
-        cwt_peak_data_->Apply(wavelet,
-                              max_scale,
-                              gap_threshold,
-                              min_ridge_length,
-                              search_width,
-                              noise_threshold,
-                              noise_method,
-                              noise_window_size,
-                              save_coefs,
-                              save_coef_plots,
-                              save_ridge_plots,
-                              save_ridge_plot_data,
-                              estimate_width,
-                              save_directory,
-                              image_format,
-                              gradient);
-    }
-    catch(exception e){
-        main_window_->DisplayExceptionWarning("VespucciDataset::FindPeaksCWT", e);
-    }
-
-    //mat centers = cwt_peak_data_->centers();
-    //QSharedPointer<AnalysisResults> result(new AnalysisResults(centers));
-    //analysis_results_.insert("CWT Peak Finding Results", result);
-    mat counts = cwt_peak_data_->counts();
-    //QSharedPointer<AnalysisResults> count_result(new AnalysisResults(counts));
-    //analysis_results_.insert("Detected Peak Counts", count_result);
-}
-
-void VespucciDataset::HasPeaksCWT(const mat &range_list)
-{
-    //if this pointer evaluates void, stop
-    if (!cwt_peak_data_){
-        QMessageBox::warning(main_window_,
-                             "Peak Finding Not Performed",
-                             "You must perform peak finding before determining "
-                             "peak populations.");
-        return;
-    }
-
-    mat peak_existence = cwt_peak_data_->HasPeaks(range_list);
-    mat peak_pop = trans(sum(peak_existence, 0));
-    peak_pop.insert_cols(0, range_list);
-
-    //QSharedPointer<AnalysisResults> exist_result(new AnalysisResults(peak_existence));
-    //QSharedPointer<AnalysisResults> pop_results(new AnalysisResults(peak_pop));
-    //analysis_results_.insert("Peak Presence by Spectrum", exist_result);
-    //analysis_results_.insert("Peak Population", pop_results);
-}
-
 
 ///
 /// \brief VespucciDataset::VertexComponents
@@ -1814,13 +1765,11 @@ void VespucciDataset::PartialLeastSquares(QString name, uword components)
         log_text_stream_ << components << endl;
     }
 
-    QSharedPointer<PLSData> pls_data(new PLSData(name,
-                                                 QSharedPointer<VespucciDataset>(this),
-                                                 directory_));
+    QSharedPointer<PLSData> pls_data(new PLSData(name));
 
 
     try{
-        pls_data->Apply(spectra_, abscissa_, components);
+        pls_data->Classify(spectra_, abscissa_, components);
     }catch(exception e){
         string str = "PartialLeastSquares: " + string(e.what());
         throw std::runtime_error(str);
@@ -1845,15 +1794,15 @@ void VespucciDataset::CorrelationAnalysis(const QString &control_key, QString na
     }
     vec control;
     try{
-        control = auxiliary_matrices_[control_key].col(0);
+        control = auxiliary_matrices_[control_key]->col(0);
     }catch(exception e){
         main_window_->DisplayExceptionWarning("VespucciDataset::CorrelationAnalysis", e);
         return;
     }
 
-    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name, control));
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name));
     try{
-        univariate_data->ApplyCorrelation(spectra_);
+        univariate_data->ApplyCorrelation(spectra_, control);
     }catch(exception e){
         main_window_->DisplayExceptionWarning("UnivariateData::apply", e);
         return;
@@ -1974,8 +1923,8 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
         clusters = HySime();
         log_text_stream_ << clusters << endl;
     }
-    QMap<QString, mat> matrices = {{"Assignments", k_means_data}};
-    QSharedPointer<GenericAnalysisResults> results(new GenericAnalysisResults(name, "k-Means Analysis", matrices));
+    QSharedPointer<AnalysisResults> results(new AnalysisResults(name, "k-Means Analysis"));
+    results->AddMatrix("Assignments", k_means_data);
     analysis_results_.append(results);
     workspace->UpdateModel();
 }
@@ -1989,7 +1938,7 @@ void VespucciDataset::ClassicalLeastSquares(QString name, QString reference_key)
         main_window_->DisplayWarning("Matrix Not Found", "The reference matrix could not be found!");
         return;
     }
-    mat reference = auxiliary_matrices_[reference_key];
+    mat reference = *auxiliary_matrices_[reference_key].data();
     mat coefs;
     try{
         coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(reference, spectra_);
@@ -1998,9 +1947,9 @@ void VespucciDataset::ClassicalLeastSquares(QString name, QString reference_key)
         throw runtime_error(str);
     }
 
-    QMap<QString, mat> matrices = {{"Coefficients", coefs},
-                                   {"Reference Matrix", reference}};
-    QSharedPointer<GenericAnalysisResults> results(new GenericAnalysisResults(name, "CLS Analysis", matrices));
+    QSharedPointer<AnalysisResults> results(new AnalysisResults(name, "CLS Analysis"));
+    results->AddMatrix("Coefficients", coefs);
+    results->AddMatrix("Reference Matrix", reference);
     analysis_results_.append(results);
     workspace->UpdateModel();
 
@@ -2769,8 +2718,8 @@ QMap<QString, QStringList> VespucciDataset::AnalysisResultsTreeStructure() const
 /// Load a file into the auxiliary matrix map
 void VespucciDataset::ImportAuxiliaryMatrix(const QString &name, const QString &filename)
 {
-    mat matrix;
-    bool ok = matrix.load(filename.toStdString());
+    QSharedPointer<mat> matrix(new mat());
+    bool ok = matrix->load(filename.toStdString());
     if (ok)
         auxiliary_matrices_[name] = matrix;
     else
@@ -2784,7 +2733,7 @@ void VespucciDataset::ImportAuxiliaryMatrix(const QString &name, const QString &
 ///
 void VespucciDataset::AddAuxiliaryMatrix(const QString &name, mat &matrix)
 {
-    auxiliary_matrices_[name] = matrix;
+    auxiliary_matrices_[name] = QSharedPointer<mat>(new mat(matrix));
 }
 
 ///
@@ -2812,7 +2761,7 @@ QStringList VespucciDataset::CoreMatrixKeys() const
 /// \return
 /// Currently iterates over all results (O(n)) could change structure to use binary
 /// tree (O(log n)) but I don't think it should ever be necessary.
-const mat &VespucciDataset::GetAnalysisResultMatrix(const QString &results_key, const QString &matrix_key) const
+const mat & VespucciDataset::GetAnalysisResultMatrix(const QString &results_key, const QString &matrix_key) const
 {
     foreach(QSharedPointer<AnalysisResults> result, analysis_results_){
         if (result->name() == results_key)
@@ -2831,13 +2780,13 @@ QSharedPointer<AnalysisResults> VespucciDataset::GetAnalysisResult(const QString
             return result;
     }
 
-    QSharedPointer<AnalysisResults> dummy(new GenericAnalysisResults("Dummy", "Dummy", QMap<QString, mat>()));
+    QSharedPointer<AnalysisResults> dummy(new AnalysisResults("Dummy", "Dummy"));
     return dummy;
 }
 
-const mat &VespucciDataset::GetAuxiliaryMatrix(const QString &key) const
+const mat & VespucciDataset::GetAuxiliaryMatrix(const QString &key) const
 {
-    if (auxiliary_matrices_.contains(key)) return auxiliary_matrices_[key];
+    if (auxiliary_matrices_.contains(key)) return *auxiliary_matrices_[key];
     else
         return empty_matrix_;
 }
@@ -2907,7 +2856,7 @@ void VespucciDataset::CreateMap(const QString &map_name, const QString &matrix_k
 {
     vec results;
     try{
-        results = auxiliary_matrices_.value(matrix_key).col(column);
+        results = auxiliary_matrices_.value(matrix_key)->col(column);
     }catch(exception e){
         throw e; //let the caller handle the exception
     }

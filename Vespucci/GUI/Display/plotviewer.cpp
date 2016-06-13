@@ -22,7 +22,7 @@ PlotViewer::~PlotViewer()
     delete ui;
 }
 
-void PlotViewer::AddPlot(const mat &paired_data, const QString &tab_title)
+void PlotViewer::AddPlot(const mat & paired_data, const QString &tab_title)
 {
     if (hold_check_box_->isChecked() && tab_widget_->count()){
         PlotWidget *plot_widget = qobject_cast<PlotWidget *>(tab_widget_->currentWidget());
@@ -64,7 +64,7 @@ void PlotViewer::AddTransientPlot(const vec &abscissa, const vec &data, const QS
     }
 }
 
-void PlotViewer::AddTransientPlot(const mat &paired_data, const QString &tab_title)
+void PlotViewer::AddTransientPlot(const mat & paired_data, const QString &tab_title)
 {
 
 }

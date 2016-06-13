@@ -147,9 +147,6 @@ SOURCES += main.cpp\
     GUI/Analysis/vcadialog.cpp \
     GUI/QAbstractItemModel/vespuccitablemodel.cpp \
     GUI/scriptdialog.cpp \
-    Data/Analysis/cwtdata.cpp \
-    GUI/Analysis/peakfindingdialog.cpp \
-    GUI/Analysis/haspeaksdialog.cpp \
     GUI/Processing/multiimportdialog.cpp \
     GUI/Processing/bulkconversiondialog.cpp \
     GUI/Display/reportmessagedialog.cpp \
@@ -176,8 +173,7 @@ SOURCES += main.cpp\
     GUI/macrodialog.cpp \
     Global/datamodel.cpp \
     GUI/QAbstractItemModel/datasetlistmodel.cpp \
-    GUI/pythonshelldialog.cpp \
-    Data/Analysis/genericanalysisresults.cpp
+    GUI/pythonshelldialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -219,9 +215,6 @@ HEADERS  += \
     GUI/QAbstractItemModel/vespuccitablemodel.h \
     GUI/Analysis/plotmakerdialog.h \
     GUI/scriptdialog.h \
-    Data/Analysis/cwtdata.h \
-    GUI/Analysis/peakfindingdialog.h \
-    GUI/Analysis/haspeaksdialog.h \
     GUI/Processing/multiimportdialog.h \
     GUI/Processing/bulkconversiondialog.h \
     GUI/Display/reportmessagedialog.h \
@@ -248,8 +241,7 @@ HEADERS  += \
     GUI/macrodialog.h \
     Global/datamodel.h \
     GUI/QAbstractItemModel/datasetlistmodel.h \
-    GUI/pythonshelldialog.h \
-    Data/Analysis/genericanalysisresults.h
+    GUI/pythonshelldialog.h
 
 
 FORMS    += \
@@ -385,56 +377,131 @@ unix:!macx: DEPENDPATH += /usr/local/include/cminpack-1
 
 #MSVC for deployment (used for build using static qt and all libraries compiled in msvc linked statically)
 count(deploy_win64, 1){
-    win32:!win32-g++: LIBS += -L$$PWD/../build-VespucciLibrary/release/ -lvespucci
-    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../build-VespucciLibrary/release/vespucci.lib
+    LIBS += -L$$PWD/../build-VespucciLibrary/release/ -lvespucci
+    PRE_TARGETDEPS += $$PWD/../build-VespucciLibrary/release/vespucci.lib
 
-    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/MLPACK/ -lmlpack
+    LIBS += -L$$PWD/../MSVC_deployment_deps/MLPACK/ -lmlpack
     INCLUDEPATH += $$PWD/../MSVC_deployment_deps/MLPACK/include
     DEPENDPATH += $$PWD/../MSVC_deployment_deps/MLPACK/include
-    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/MLPACK/mlpack.lib
+    PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/MLPACK/mlpack.lib
 
-    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/Armadillo/lib/ -larmadillo
+    LIBS += -L$$PWD/../MSVC_deployment_deps/Armadillo/lib/ -larmadillo
     INCLUDEPATH += $$PWD/../MSVC_deployment_deps/Armadillo/include
     DEPENDPATH += $$PWD/../MSVC_deployment_deps/Armadillo/include
-    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/Armadillo/lib/armadillo.lib
+    PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/Armadillo/lib/armadillo.lib
 
     INCLUDEPATH += $$PWD/../MSVC_deployment_deps/boost_1_60_0
     DEPENDPATH += $$PWD/../MSVC_deployment_deps/boost_1_60_0
 
-    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_math_c99-vc140-mt-s-1_60
-    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_math_c99-vc140-mt-s-1_60.lib
+    LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_math_c99-vc140-mt-s-1_60
+    PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_math_c99-vc140-mt-s-1_60.lib
 
-    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_serialization-vc140-mt-s-1_60
-    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_serialization-vc140-mt-s-1_60.lib
+    LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_serialization-vc140-mt-s-1_60
+    PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_serialization-vc140-mt-s-1_60.lib
 
-    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_random-vc140-mt-s-1_60
-    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_random-vc140-mt-s-1_60.lib
+    LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_random-vc140-mt-s-1_60
+    PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_random-vc140-mt-s-1_60.lib
 
-    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_unit_test_framework-vc140-mt-s-1_60
-    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_unit_test_framework-vc140-mt-s-1_60.lib
+    LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_unit_test_framework-vc140-mt-s-1_60
+    PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_unit_test_framework-vc140-mt-s-1_60.lib
 
-    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_program_options-vc140-mt-s-1_60
-    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_program_options-vc140-mt-s-1_60.lib
+    LIBS += -L$$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_program_options-vc140-mt-s-1_60
+    PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_program_options-vc140-mt-s-1_60.lib
 
-    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/LAPACK/ -llapack_x64
-    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/LAPACK/lapack_x64.lib
+    LIBS += -L$$PWD/../MSVC_deployment_deps/LAPACK/ -llapack_x64
+    PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/LAPACK/lapack_x64.lib
 
-    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/OpenBLAS/ -llibopenblas
-    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/OpenBLAS/libopenblas.lib
+    LIBS += -L$$PWD/../MSVC_deployment_deps/OpenBLAS/ -llibopenblas
+    PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/OpenBLAS/libopenblas.lib
 
-    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/ARPACK/ -larpack_x64
-    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/ARPACK/arpack_x64.lib
+    LIBS += -L$$PWD/../MSVC_deployment_deps/ARPACK/ -larpack_x64
+    PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/ARPACK/arpack_x64.lib
 
-    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/cminpack/ -lcminpack
+    LIBS += -L$$PWD/../MSVC_deployment_deps/cminpack/ -lcminpack
     INCLUDEPATH += $$PWD/../MSVC_deployment_deps/cminpack
     DEPENDPATH += $$PWD/../MSVC_deployment_deps/cminpack
-    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/cminpack/cminpack.lib
+    PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/cminpack/cminpack.lib
 
-    win32:!win32-g++: LIBS += -L$$PWD/../MSVC_deployment_deps/QCustomPlot/Release/ -lqcustomplot
+    LIBS += -L$$PWD/../MSVC_deployment_deps/QCustomPlot/Release/ -lqcustomplot
     INCLUDEPATH += $$PWD/../MSVC_deployment_deps/QCustomPlot
     DEPENDPATH += $$PWD/../MSVC_deployment_deps/QCustomPlot
-    win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/QCustomPlot/Release/qcustomplot.lib
+    PRE_TARGETDEPS += $$PWD/../MSVC_deployment_deps/QCustomPlot/Release/qcustomplot.lib
+
+    LIBS += -L$$PWD/../../MSVC_deployment_deps/yaml-cpp/Release/ -llibyaml-cppmt
+    INCLUDEPATH += $$PWD/../../MSVC_deployment_deps/yaml-cpp/Release
+    DEPENDPATH += $$PWD/../../MSVC_deployment_deps/yaml-cpp/Release
+    PRE_TARGETDEPS += $$PWD/../../MSVC_deployment_deps/yaml-cpp/Release/libyaml-cppmt.lib
+
+    LIBS += -L$$PWD/../../MSVC_deployment_deps/quazip/Release/ -lquazip
+    INCLUDEPATH += $$PWD/../../MSVC_deployment_deps/quazip/Release
+    DEPENDPATH += $$PWD/../../MSVC_deployment_deps/quazip/Release
+    PRE_TARGETDEPS += $$PWD/../../MSVC_deployment_deps/quazip/Release/quazip.lib
 }
+
+
+count(develop_win64, 1){
+    CONFIG(debug, debug|release): LIBS += -L$$PWD/../../MSVC_development_deps/MLPACK/Debug -lmlpack
+    CONFIG(release, debug|release): LIBS += -L$$PWD/../../MSVC_development_deps/MLPACK/Release -lmlpack
+    INCLUDEPATH += $$PWD/../../MSVC_development_deps/MLPACK/include
+    DEPENDPATH += $$PWD/../../MSVC_development_deps/MLPACK/include
+    CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/MLPACK/Debug/mlpack.lib
+    CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/MLPACK/Release/mlpack.lib
+
+    LIBS += -L$$PWD/../../MSVC_development_deps/Armadillo/lib/ -larmadillo
+    INCLUDEPATH += $$PWD/../../MSVC_development_deps/Armadillo/include
+    DEPENDPATH += $$PWD/../../MSVC_development_deps/Armadillo/include
+    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/Armadillo/lib/armadillo.lib
+
+    INCLUDEPATH += $$PWD/../../MSVC_development_deps/boost_1_60_0
+    DEPENDPATH += $$PWD/../../MSVC_development_deps/boost_1_60_0
+
+    LIBS += -L$$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_math_c99-vc140-mt-s-1_60
+    INCLUDEPATH += $$PWD/../../MSVC_development_deps/boost_1_60_0
+    DEPENDPATH += $$PWD/../../MSVC_development_deps/boost_1_60_0
+    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/libboost_math_c99-vc140-mt-s-1_60.lib
+
+    LIBS += -L$$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_serialization-vc140-mt-s-1_60
+    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/libboost_serialization-vc140-mt-s-1_60.lib
+
+    LIBS += -L$$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_random-vc140-mt-s-1_60
+    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/libboost_random-vc140-mt-s-1_60.lib
+
+    LIBS += -L$$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_unit_test_framework-vc140-mt-s-1_60
+    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/libboost_unit_test_framework-vc140-mt-s-1_60.lib
+
+    LIBS += -L$$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_program_options-vc140-mt-s-1_60
+    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/libboost_program_options-vc140-mt-s-1_60.lib
+
+    LIBS += -L$$PWD/../../MSVC_development_deps/LAPACK/ -llapack_x64
+    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/LAPACK/lapack_x64.lib
+
+    LIBS += -L$$PWD/../../MSVC_development_deps/OpenBLAS/ -llibopenblas
+    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/OpenBLAS/libopenblas.lib
+
+    LIBS += -L$$PWD/../../MSVC_development_deps/ARPACK/ -larpack_x64
+    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/ARPACK/arpack_x64.lib
+
+    LIBS += -L$$PWD/../../MSVC_development_deps/cminpack/ -lcminpack
+    INCLUDEPATH += $$PWD/../../MSVC_development_deps/cminpack
+    DEPENDPATH += $$PWD/../../MSVC_development_deps/cminpack
+    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/cminpack/cminpack.lib
+
+    LIBS += -L$$PWD/../MSVC_development_deps/QCustomPlot/Release/ -lqcustomplot
+    INCLUDEPATH += $$PWD/../MSVC_development_deps/QCustomPlot
+    DEPENDPATH += $$PWD/../MSVC_development_deps/QCustomPlot
+    PRE_TARGETDEPS += $$PWD/../MSVC_development_deps/QCustomPlot/Release/qcustomplot.lib
+
+    LIBS += -L$$PWD/../../MSVC_development_deps/yaml-cpp/Release/ -llibyaml-cppmt
+    INCLUDEPATH += $$PWD/../../MSVC_development_deps/yaml-cpp/Release
+    DEPENDPATH += $$PWD/../../MSVC_development_deps/yaml-cpp/Release
+    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/yaml-cpp/Release/libyaml-cppmt.lib
+
+    LIBS += -L$$PWD/../../MSVC_development_deps/quazip/Release/ -lquazip
+    INCLUDEPATH += $$PWD/../../MSVC_development_deps/quazip/Release
+    DEPENDPATH += $$PWD/../../MSVC_development_deps/quazip/Release
+    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/quazip/Release/quazip.lib
+}
+
 
 #mac libraries. These are the same in Travis-CI as in most local environments
 #with all dependencies of armadillo and mlpack installed using homebrew

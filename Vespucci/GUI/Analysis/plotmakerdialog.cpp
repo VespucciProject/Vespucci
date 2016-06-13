@@ -2,12 +2,13 @@
 #include "ui_plotmakerdialog.h"
 #include "GUI/Display/plotviewer.h"
 
-PlotMakerDialog::PlotMakerDialog(MainWindow *parent, VespucciWorkspace *ws, const mat &data) :
+PlotMakerDialog::PlotMakerDialog(MainWindow *parent, VespucciWorkspace *ws, const mat & data) :
     QDialog(parent),
     ui(new Ui::PlotMakerDialog),
     data_(data)
 {
     ui->setupUi(this);
+    workspace = ws;
     x_spin_box_ = findChild<QDoubleSpinBox *>("xDoubleSpinBox");
     y_spin_box_ = findChild<QDoubleSpinBox *>("yDoubleSpinBox");
     dimension_combo_box_ = findChild<QComboBox *>("dimensionComboBox");

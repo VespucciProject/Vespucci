@@ -17,10 +17,20 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-//create mock peaks using various gaussian, lorentzian and pseudo-voigt functions.
-//assert that the calculated areas and bandwidths are equivalent
-#include <Math/Quantification/quantification.h>
-#include "test.h"
-using namespace std;
-using namespace arma;
+#ifndef TESTHELPERS_H
+#define TESTHELPERS_H
 
+#include <QObject>
+
+class TestHelpers : public QObject
+{
+    Q_OBJECT
+public:
+    explicit TestHelpers(QObject *parent = 0);
+
+signals:
+
+public slots:
+};
+
+#endif // TESTHELPERS_H

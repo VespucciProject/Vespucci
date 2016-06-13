@@ -17,5 +17,9 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-//compare the outputs of functions to outputs of functions in R and Octave using
-//the external code interfaces.
+#include "testfitting.h"
+
+TestFitting::TestFitting(QObject *parent) : QObject(parent)
+{
+
+}

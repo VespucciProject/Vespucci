@@ -6,69 +6,67 @@
 /// \param type
 /// Base constructor
 AnalysisResults::AnalysisResults(QString name, QString type) :
-    empty_matrix_(),
     name_(name),
     type_(type)
 {
 
 }
 
-///
-/// \brief AnalysisResults::~AnalysisResults
-/// Virtual destructor
 AnalysisResults::~AnalysisResults()
 {
 
 }
 
-///
-/// \brief AnalysisResults::GetMatrix
-/// \param name
-/// \return
-/// Returns empty matrix in the base class, implemented separately for subclasses
-const mat &AnalysisResults::GetMatrix(const QString &key)
+const mat & AnalysisResults::GetMatrix(const QString &key)
 {
-    return empty_matrix_;
+    if (matrices_.contains(key)) return *matrices_[key];
+    else return EmptyMatrix();
 }
 
-///
-/// \brief AnalysisResults::KeyList
-/// \return
-/// Returns empty list in the base class, implemented separately for subclasses
-QStringList AnalysisResults::KeyList() const
+void AnalysisResults::AddMetadata(QString key, QString value)
 {
-    return QStringList();
+    metadata_[key] = value;
 }
 
-///
-/// \brief AnalysisResults::name
-/// \return
-///
-QString AnalysisResults::name() const
+bool AnalysisResults::HasMatrix(const QString &key) const
+{
+    return matrices_.contains(key);
+}
+
+void AnalysisResults::AddMatrix(const QString &key, const mat &value, QStringList column_headings)
+{
+    matrices_[key] = QSharedPointer<mat>(new mat(value));
+    column_headings_[key] = column_headings;
+}
+
+const QStringList AnalysisResults::KeyList() const
+{
+    return matrices_.keys();
+}
+
+const QString AnalysisResults::name() const
 {
     return name_;
 }
 
-///
-/// \brief AnalysisResults::type
-/// \return
-///
-QString AnalysisResults::type() const
+const QString AnalysisResults::type() const
 {
     return type_;
 }
 
-const mat &AnalysisResults::EmptyMatrix()
+const mat & AnalysisResults::EmptyMatrix()
 {
     return empty_matrix_;
 }
 
-QMap<QString, QString> AnalysisResults::GetMetadata()
+const QMap<QString, QString> AnalysisResults::GetMetadata() const
 {
-    return QMap<QString, QString>();
+    return metadata_;
 }
 
-QString AnalysisResults::GetColumnHeading(const QString &key, int column)
+const QString AnalysisResults::GetColumnHeading(const QString &key, int column)
 {
-    return QString();
+    if (column_headings_.contains(key) && column_headings_[key].size() < column)
+        return column_headings_[key][column];
+    else return QString();
 }

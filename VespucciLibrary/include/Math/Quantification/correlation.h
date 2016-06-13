@@ -29,7 +29,7 @@
 namespace Vespucci{
     namespace Math{
         namespace Quantification{
-            VESPUCCI_EXPORT arma::vec CorrelationMat(const arma::mat &X, arma::vec control);
+            VESPUCCI_EXPORT arma::mat CorrelationMat(const arma::mat &X, const arma::mat &control);
         }
     }
 }

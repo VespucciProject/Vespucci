@@ -31,87 +31,9 @@ public:
     void Apply(double left_bound, double right_bound, uword bound_window, const mat &spectra, const vec &abscissa);
     void Apply(double first_left_bound, double first_right_bound,
                double second_left_bound, double second_right_bound, uword bound_window, const mat &spectra, const vec &abscissa);
-    void ApplyCorrelation(const mat &spectra);
+    void ApplyCorrelation(const mat &spectra, const vec &control);
+    void Calibrate(const vec &x, const vec &y, uword column);
 
-    void Calibrate(const vec &values, const vec &concentrations);
-
-    mat results() const;
-    const mat *results_ptr() const;
-    bool band_ratio() const;
-    double left_bound() const;
-    double right_bound() const;
-    double first_left_bound() const;
-    double first_right_bound() const;
-    double second_left_bound() const;
-    double second_right_bound() const;
-    QString MethodDescription() const;
-
-    mat calibration_curve() const;
-    const mat *calibration_curve_ptr() const;
-    const std::map<std::string, double> calibration_stats() const;
-
-
-    uvec Boundaries() const;
-    uvec MidlineBoundaries() const;
-    mat first_baselines() const;
-    mat second_baselines() const;
-
-    QString name() const;
-    void SetName(QString name);
-
-    bool calibrated() const;
-
-    field<mat> CalculateRatios();
-
-    QStringList KeyList() const override;
-    const mat &GetMatrix(const QString &name) override;
-    QMap<QString, QString> GetMetadata() override;
-    QString GetColumnHeading(const QString &key, int column) override;
-
-
-private:
-    QString method_description_;
-
-    mat first_results_;
-    mat second_results_;
-
-    ///
-    /// \brief control_
-    /// Control correlation is calculated for.
-    vec control_;
-
-    ///
-    /// \brief band_ratio_
-    /// Whether or not this is a band ratio map
-    bool band_ratio_;
-
-    ///
-    /// \brief correlation_
-    /// Whether or not this is a correlation map
-    bool correlation_;
-
-    //only first_ ones used when not band ratio
-    double first_left_bound_;
-    double first_right_bound_;
-    double second_left_bound_;
-    double second_right_bound_;
-
-    uword bound_window_;
-    mat first_inflection_points_;
-    mat second_inflection_points_;
-    mat first_baselines_;
-    mat second_baselines_;
-    field<mat> inflection_first_baselines_;
-    field<mat> inflection_second_baselines_;
-
-    QString name_;
-
-    uvec boundaries_;
-    mat calibration_curve_;
-
-    std::map<std::string, double> calibration_stats_;
-    QMap<QString, QString> metadata_;
-    bool calibrated_;
 };
 
 #endif // UNIVARIATEDATA_H

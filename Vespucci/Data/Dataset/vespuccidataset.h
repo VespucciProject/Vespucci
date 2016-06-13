@@ -42,7 +42,6 @@
 #include "Data/Analysis/univariatedata.h"
 #include "Data/Analysis/mlpackpcadata.h"
 #include "Data/Analysis/analysisresults.h"
-#include "Data/Analysis/cwtdata.h"
 #include "GUI/QAbstractItemModel/treeitem.h"
 
 
@@ -128,6 +127,15 @@ public:
                     MainWindow *main_window,
                     QString *directory,
                     QFile *log_file);
+
+    VespucciDataset(const QString &name,
+                    MainWindow *main_window,
+                    QString *directory,
+                    QFile *log_file,
+                    mat &spectra,
+                    vec &abscissa,
+                    vec &x,
+                    vec &y);
 
     ~VespucciDataset();
     // PRE-PROCESSING FUNCTIONS //
@@ -229,23 +237,7 @@ public:
     void PrincipalComponents(const QString &name, bool scale_data);
     void FindPeaks(QString name, double sel, double threshold,
                    uword poly_order, uword window_size);
-    void FindPeaksCWT(QString name,
-                      std::string wavelet,
-                      uword max_scale, uword gap_threshold,
-                      uword min_ridge_length,
-                      uword search_width,
-                      double noise_threshold,
-                      std::string noise_method,
-                      uword noise_window_size,
-                      bool save_coefs,
-                      bool save_coef_plots,
-                      bool save_ridge_plots,
-                      bool save_ridge_plot_data,
-                      bool estimate_width,
-                      QString save_directory,
-                      QString image_format,
-                      QCPColorGradient gradient);
-    void HasPeaksCWT(const mat &range_list);
+
 
 
     //MEMBER ACCESS FUNCTIONS:
@@ -341,10 +333,10 @@ public:
     QStringList AuxiliaryMatrixKeys() const;
     QStringList CoreMatrixKeys() const;
 
-    const mat& GetAnalysisResultMatrix(const QString &results_key, const QString &matrix_key) const;
+    const mat & GetAnalysisResultMatrix(const QString &results_key, const QString &matrix_key) const;
     QSharedPointer<AnalysisResults> GetAnalysisResult(const QString &key);
-    const mat& GetAuxiliaryMatrix(const QString &key) const;
-    const mat& GetCoreMatrix(const QString &key) const;
+    const mat & GetAuxiliaryMatrix(const QString &key) const;
+    const mat &GetCoreMatrix(const QString &key) const;
     bool IsCoreMatrix(const QString &key) const;
     QSharedPointer<MapData> GetMapData(const QString &key);
 
@@ -381,7 +373,7 @@ public:
     /// \brief auxiliary_matrices_
     /// A container holding additional matrices that may be imported by the users
     /// such as control spectra, calibration concentrations,
-    QMap<QString, mat> auxiliary_matrices_;
+    QMap<QString, QSharedPointer<mat> > auxiliary_matrices_;
 
     ///
     /// \brief abscissa_

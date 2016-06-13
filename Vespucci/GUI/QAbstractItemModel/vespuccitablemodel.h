@@ -33,8 +33,8 @@ class VespucciTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    VespucciTableModel(QObject *parent, const mat &input_data);
-    VespucciTableModel(QObject *parent, const mat &input_data, const uword &start_column);
+    VespucciTableModel(QObject *parent, const mat & input_data);
+    VespucciTableModel(QObject *parent, const mat & input_data, const uword &start_column);
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
@@ -55,7 +55,7 @@ private:
     ///
     /// \brief data_
     /// Pointer to the object being displayed
-    const mat &data_;
+    const mat & data_;
 };
 
 #endif // VESPUCCITABLEMODEL_H

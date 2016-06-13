@@ -22,7 +22,6 @@
 #include "Data/Analysis/analysisresults.h"
 #include "Data/Dataset/vespuccidataset.h"
 using namespace arma;
-class VespucciDataset;
 ///
 /// \brief The PLSData class
 /// A class for performing and storing data related to partial least squares
@@ -30,85 +29,10 @@ class VespucciDataset;
 class PLSData: public AnalysisResults
 {
 public:
-    PLSData(QString name,
-            QSharedPointer<VespucciDataset> parent,
-            QString *directory);
-
-    bool Apply(mat spectra, vec wavelength, int components);
-    bool Calibrate(mat spectra, mat controls);
-    bool DiscriminantAnalysis(mat spectra, vec labels, int components);
-
-    mat *X_loadings();
-    mat *Y_loadings();
-    mat *X_scores();
-    mat *Y_scores();
-    mat *coefficients();
-    mat *percent_variance();  
-
-    mat *value(QString key);
-
-    int NumberComponents();
-    colvec Results(const uword i, bool &valid);
-
-    QStringList KeyList() const override;
-    const mat &GetMatrix(const QString &key) override;
-    QMap<QString, QString> GetMetadata() override;
-    QString GetColumnHeading(const QString &key, int column) override;
-private:
-    ///
-    /// \brief Y_
-    /// In this case, "dummy" data.
-    mat Y_;
-
-    ///
-    /// \brief X_loadings_
-    /// Output
-    mat X_loadings_;
-
-    ///
-    /// \brief Y_loadings_
-    /// Output
-    mat Y_loadings_;
-    ///
-    /// \brief X_scores_
-    /// Output
-    mat X_scores_;
-
-    ///
-    /// \brief Y_scores_
-    /// Output
-    mat Y_scores_;
-
-    ///
-    /// \brief coefficients_
-    /// Output
-    mat coefficients_;
-
-    ///
-    /// \brief percent_variance_
-    /// Output. This determines how much each determinant
-    mat percent_variance_;
-
-    ///
-    /// \brief fitted_
-    /// Fitted data, pretty much useless for our purposes
-    mat fitted_;
-    ///
-    /// \brief parent_
-    /// The dataset that starts this instance
-    QSharedPointer<VespucciDataset> parent_;
-
-    ///
-    /// \brief directory_
-    /// Global working directory
-    QString *directory_;
-
-    ///
-    /// \brief name_
-    /// The name of the AnalysisResult to be stored in VespucciDataset
-    QString name_;
-
-    QMap<QString, QString> metadata_;
+    PLSData(QString name);
+    bool Classify(const mat &spectra, const vec &wavelength, int components);
+    bool Calibrate(const mat &spectra, const mat &controls);
+    bool Discriminate(const mat &data, const vec &labels);
 };
 
 #endif // PLSDATA_H
