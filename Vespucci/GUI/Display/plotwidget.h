@@ -39,10 +39,10 @@ class PlotWidget : public QWidget
 public:
     explicit PlotWidget(QWidget *parent = 0, VespucciWorkspace *ws=0);
     ~PlotWidget();
-    void AddPlot(const mat &paired_data);
+    void AddPlot(const mat & paired_data);
     void AddPlot(const vec &abscissa, const vec &data);
     void AddTransientPlot(const vec &abscissa, const vec &data);
-    void AddTransientPlot(const mat &paired_data);
+    void AddTransientPlot(const mat & paired_data);
     void RemoveTransientPlot();
     void StackPlots(bool stack);
     bool offset_plots() const;

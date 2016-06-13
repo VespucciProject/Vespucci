@@ -29,45 +29,7 @@ class VCAData: public AnalysisResults
 {
 public:
     VCAData(QString name);
-    void Apply(mat spectra, int endmembers);
-    colvec Results(const uword component);
-    QVector<double> EndmemberQVec(const uword i);
-    vec Endmember(const uword i);
-    mat EndmembersAsRows(uvec indices);
-    int NumberComponents();
-    double EndmemberMin(const uword i);
-    double EndmemberMax(const uword i);
-    mat *value(QString key);
-    QStringList KeyList() const override;
-    const mat &GetMatrix(const QString &key) override;
-    QMap<QString, QString> GetMetadata() override;
-    QString GetColumnHeading(const QString &key, int column) override;
-private:
-    QString name_;
-
-    ///
-    /// \brief endmember_spectra_
-    /// Spectra of the endmembers (stored as columns)
-    mat endmember_spectra_;
-
-    ///
-    /// \brief projected_data_
-    /// "Projected data". Not particularly useful. Will be same size as spectra_
-    mat projected_data_;
-
-    ///
-    /// \brief fractional_abundances_
-    /// Fractional abundances of each endmember for each line
-    mat fractional_abundances_;
-    ///
-    /// \brief indices_
-    /// Indices of endmembers
-    uvec indices_;
-
-    ///
-    /// \brief indices_mat_
-    /// For VespucciTableModel
-    mat indices_mat_;
+    void Apply(const mat &spectra, int endmembers);
 };
 
 #endif // VCADATA_H

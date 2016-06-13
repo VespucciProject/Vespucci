@@ -198,6 +198,8 @@ private slots:
 
     void on_actionMapResult_triggered();
 
+    void on_actionSave_Selected_Matrix_triggered();
+
 private:
     Ui::MainWindow *ui;
 

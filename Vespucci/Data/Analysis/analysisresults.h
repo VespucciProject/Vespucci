@@ -36,22 +36,18 @@ class AnalysisResults
 public:    
     AnalysisResults(QString name, QString type);
     virtual ~AnalysisResults();
-    virtual const mat &GetMatrix(const QString &key);
-    virtual QStringList KeyList() const;
-    QString name() const;
-    QString type() const;
-    const mat &EmptyMatrix();
-    virtual QMap<QString, QString> GetMetadata();
-    virtual QString GetColumnHeading(const QString &key, int column);
-private:
-    ///
-    /// \brief data_
-    /// key-value store for the data associated with this analysis
-    ///
-    /// \brief empty_matrix_
-    /// A matrix that is initialized with the default empty constructor
-    const mat empty_matrix_;
+    const mat & GetMatrix(const QString &key);
+    void AddMatrix(const QString &key, const mat &value, QStringList column_headings = QStringList());
+    void AddMetadata(QString key, QString value);
+    bool HasMatrix(const QString &key) const;
+    const QStringList KeyList() const;
+    const QString name() const;
+    const QString type() const;
+    const mat & EmptyMatrix();
+    const QMap<QString, QString> GetMetadata() const;
+    const QString GetColumnHeading(const QString &key, int column);
 
+private:
     ///
     /// \brief name_
     /// The name used by VespucciDataset and the TreeModel to reference this result
@@ -61,6 +57,16 @@ private:
     /// \brief type_
     /// Type desciption displayed to user.
     QString type_;
+
+    ///
+    /// \brief matrices_
+    /// Structure containing all the matrices in this result indexed by name
+    QMap<QString, QSharedPointer<mat> > matrices_;
+
+    QMap<QString, QString> metadata_;
+    QMap<QString, QStringList> column_headings_;
+
+    mat empty_matrix_;
 };
 
 #endif // ANALYSISRESULTS_H

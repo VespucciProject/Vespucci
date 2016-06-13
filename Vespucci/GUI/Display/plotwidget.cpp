@@ -55,7 +55,7 @@ PlotWidget::~PlotWidget()
     delete ui;
 }
 
-void PlotWidget::AddPlot(const mat &paired_data)
+void PlotWidget::AddPlot(const mat & paired_data)
 {
     if (paired_data.n_cols < 2)
         return;
@@ -142,7 +142,7 @@ void PlotWidget::AddTransientPlot(const vec &abscissa, const vec &data)
 
 }
 
-void PlotWidget::AddTransientPlot(const mat &paired_data)
+void PlotWidget::AddTransientPlot(const mat & paired_data)
 {
     if (paired_data.n_cols != 2) return;
 

@@ -64,14 +64,14 @@ public:
 private:
     TreeItem *SetupDatasetTreeItem(QSharedPointer<VespucciDataset> dataset);
     TreeItem *SetupAnalysisResultTreeItem(QSharedPointer<VespucciDataset> dataset, QSharedPointer<AnalysisResults> results, TreeItem *parent);
-    TreeItem *SetupMatrixTreeItem(const QString &dataset_key, const QString &results_key, const QString &matrix_key, const mat &matrix, TreeItem *parent);
-    TreeItem *SetupMatrixTreeItem(const QString &dataset_key, const QString &matrix_key, const mat &matrix, TreeItem *parent);
+    TreeItem *SetupMatrixTreeItem(const QString &dataset_key, const QString &results_key, const QString &matrix_key, const mat & matrix, TreeItem *parent);
+    TreeItem *SetupMatrixTreeItem(const QString &dataset_key, const QString &matrix_key, const mat & matrix, TreeItem *parent);
     TreeItem *SetupMapTreeItem(const QString &dataset_key,
                                const QString &map_key,
                                QSharedPointer<MapData> data,
                                TreeItem *parent);
-    QString DescribeMatrix(const mat &matrix) const;
-    QString DescribeSpectra(const mat &spectra_matrix) const;
+    QString DescribeMatrix(const mat & matrix) const;
+    QString DescribeSpectra(const mat & spectra_matrix) const;
     QString DescribeAbscissa(const vec &abscissa) const;
     bool DatasetAdded() const;
     bool DatasetRemoved() const;

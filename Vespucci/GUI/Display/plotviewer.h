@@ -23,7 +23,7 @@ public:
     void AddPlot(const mat& paired_data, const QString &tab_title);
     void AddPlot(const vec& abscissa, const vec& data, const QString &tab_title);
     void AddTransientPlot(const vec &abscissa, const vec &data, const QString &tab_title);
-    void AddTransientPlot(const mat &paired_data, const QString &tab_title);
+    void AddTransientPlot(const mat & paired_data, const QString &tab_title);
     void CloseTransientTab();
 public slots:
 private slots:

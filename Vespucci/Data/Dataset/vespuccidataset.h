@@ -128,6 +128,15 @@ public:
                     QString *directory,
                     QFile *log_file);
 
+    VespucciDataset(const QString &name,
+                    MainWindow *main_window,
+                    QString *directory,
+                    QFile *log_file,
+                    mat &spectra,
+                    vec &abscissa,
+                    vec &x,
+                    vec &y);
+
     ~VespucciDataset();
     // PRE-PROCESSING FUNCTIONS //
     //general
@@ -324,10 +333,10 @@ public:
     QStringList AuxiliaryMatrixKeys() const;
     QStringList CoreMatrixKeys() const;
 
-    const mat& GetAnalysisResultMatrix(const QString &results_key, const QString &matrix_key) const;
+    const mat & GetAnalysisResultMatrix(const QString &results_key, const QString &matrix_key) const;
     QSharedPointer<AnalysisResults> GetAnalysisResult(const QString &key);
-    const mat& GetAuxiliaryMatrix(const QString &key) const;
-    const mat& GetCoreMatrix(const QString &key) const;
+    const mat & GetAuxiliaryMatrix(const QString &key) const;
+    const mat &GetCoreMatrix(const QString &key) const;
     bool IsCoreMatrix(const QString &key) const;
     QSharedPointer<MapData> GetMapData(const QString &key);
 
@@ -364,7 +373,7 @@ public:
     /// \brief auxiliary_matrices_
     /// A container holding additional matrices that may be imported by the users
     /// such as control spectra, calibration concentrations,
-    QMap<QString, mat> auxiliary_matrices_;
+    QMap<QString, QSharedPointer<mat> > auxiliary_matrices_;
 
     ///
     /// \brief abscissa_

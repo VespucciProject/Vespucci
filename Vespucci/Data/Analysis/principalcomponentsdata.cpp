@@ -25,10 +25,9 @@
 /// \param directory global directory
 ///
 PrincipalComponentsData::PrincipalComponentsData(QString name):
-    AnalysisResults(name, "PCA Results"),
-    name_(name)
+    AnalysisResults(name, "PCA Results")
 {
-    name_ = name;
+
 }
 
 ///
@@ -37,98 +36,18 @@ PrincipalComponentsData::PrincipalComponentsData(QString name):
 /// Perform analysis using arma::princomp
 void PrincipalComponentsData::Apply(const mat &spectra)
 {
-    princomp(coeff_, score_, latent_, tsquared_, spectra.t());
-    double eigenvalue_sum = sum(latent_);
-    percent_variance_ = latent_ / eigenvalue_sum;
-    percent_variance_ /= 0.01;
-    vec cumulative = cumsum(percent_variance_);
-    percent_variance_ = join_horiz(percent_variance_, cumulative);
-}
+    mat coeff, score;
+    vec latent, tsquared, percent_variance;
+    princomp(coeff, score, latent, tsquared, spectra.t());
+    double eigenvalue_sum = sum(latent);
+    percent_variance = latent / eigenvalue_sum;
+    percent_variance /= 0.01;
+    vec cumulative = cumsum(percent_variance);
+    percent_variance = join_horiz(percent_variance, cumulative);
 
-///
-/// \brief PrincipalComponentsData::Results
-/// \param component
-/// \return
-/// Return the score for a particular column
-colvec PrincipalComponentsData::Results(int component)
-{
-    return score_.col(component);
-}
-
-vec* PrincipalComponentsData::tsquared()
-{
-    return &tsquared_;
-}
-
-mat* PrincipalComponentsData::coeff()
-{
-    return &coeff_;
-}
-
-vec* PrincipalComponentsData::latent()
-{
-    return &latent_;
-}
-
-mat* PrincipalComponentsData::score()
-{
-    return &score_;
-}
-
-vec* PrincipalComponentsData::percent_variance()
-{
-    return &percent_variance_;
-}
-
-mat *PrincipalComponentsData::value(QString key)
-{
-    if (key == "PCA Projected Data (Scores)")
-        return &score_;
-    else if (key == "PCA Coefficients (Loadings)")
-        return &coeff_;
-    else if (key == "PCA Hotelling t² Values" || "PCA Hotelling t^2 Values" || "PCA Hotelling t-squared Values")
-        return (mat *) &tsquared_;
-    else if (key == "PCA Eigenvalues of Covariance Matrix")
-        return (mat *) &latent_;
-    else if (key == "PCA Percent Variance")
-        return (mat *) &percent_variance_;
-    else
-        return NULL;
-}
-
-const mat &PrincipalComponentsData::GetMatrix(const QString &key)
-{
-    if (key == "Scores") return score_;
-    else if (key == "Loadings") return coeff_;
-    else if (key == "Eigenvalues") return latent_;
-    else if (key == "Percent Variance") return percent_variance_;
-    else if (key == "Hotelling t²") return tsquared_;
-    else return EmptyMatrix();
-}
-
-QStringList PrincipalComponentsData::KeyList() const
-{
-    return QStringList({
-                           "Scores",
-                           "Loadings",
-                           "Eigenvalues",
-                           "Percent Variance",
-                           "Hotelling t²"
-                       });
-}
-
-QMap<QString, QString> PrincipalComponentsData::GetMetadata()
-{
-    return QMap<QString, QString>();
-}
-
-QString PrincipalComponentsData::GetColumnHeading(const QString &key, int column)
-{
-    if (key == "Scores") return "Score " + QString::number(column + 1);
-    else if (key == "Loadings") return "Loading " + QString::number(column + 1);
-    else if (key == "Eigenvalues") return "Eigenvalues";
-    else if (key == "Percent Variance")
-        return (column ? "Cumulative Percent Variance" : "Percent Variance");
-    else if (key == "Hotelling t²") return "Hotelling t²";
-    else return QString();
+    AddMatrix("Scores", score);
+    AddMatrix("Loadings", coeff);
+    AddMatrix("Eigenvalues", latent);
+    AddMatrix("Percent Variance", percent_variance);
+    AddMatrix("Hotelling t²", tsquared);
 }

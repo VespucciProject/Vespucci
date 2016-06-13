@@ -20,8 +20,10 @@
 #include "Data/Analysis/vcadata.h"
 
 VCAData::VCAData(QString name):
-    AnalysisResults(name, "VCA Results"),
-    name_(name){}
+    AnalysisResults(name, "VCA Results")
+{
+
+}
 
 ///
 /// \brief VCAData::Apply
@@ -29,167 +31,30 @@ VCAData::VCAData(QString name):
 /// \param X
 /// \param endmembers
 ///
-void VCAData::Apply(mat spectra, int endmembers)
+void VCAData::Apply(const mat &spectra, int endmembers)
 {
+    uvec indices;
+    mat projected_data, fractional_abundances, endmember_spectra, indices_mat;
     Vespucci::Math::DimensionReduction::VCA(spectra,
                   endmembers,
-                  indices_,
-                  endmember_spectra_,
-                  projected_data_,
-                  fractional_abundances_);
-    indices_mat_.set_size(indices_.n_elem, 1);
-    for (uword i = 0; i < indices_.n_elem; ++i)
-        indices_mat_(i, 0) = indices_(i);
-}
+                  indices,
+                  endmember_spectra,
+                  projected_data,
+                  fractional_abundances);
+    indices_mat.set_size(indices.n_elem, 1);
 
-///
-/// \brief VCAData::Endmember
-/// \param i Index of endmember column
-/// \return Plottable QVector of an endmember
-///
-QVector<double> VCAData::EndmemberQVec(const uword i)
-{
-    vec spectrum = Endmember(i);
-    std::vector<double> spectrum_std = conv_to<std::vector<double> >::from(spectrum);
-    return QVector<double>::fromStdVector(spectrum_std);
-}
+    for (uword i = 0; i < indices.n_elem; ++i)
+        indices_mat(i, 0) = indices(i);
 
-///
-/// \brief VCAData::Endmember
-/// \param i
-/// \return
-/// Get a vector corresponding to a single endmember
-vec VCAData::Endmember(const uword i)
-{
-    if (i >= endmember_spectra_.n_cols)
-        return endmember_spectra_.col(endmember_spectra_.n_cols - 1);
-    else
-        return endmember_spectra_.col(i);
-}
+    QStringList em_col_headings;
+    for (uword i = 1; i <= endmembers; ++i)
+        em_col_headings << "Endmember " + QString::number(i);
 
-int VCAData::NumberComponents()
-{
-    return endmember_spectra_.n_cols;
-}
-
-colvec VCAData::Results(const uword component)
-{
-    return fractional_abundances_.col(component);
-}
-
-double VCAData::EndmemberMax(const uword i)
-{
-    colvec endmember;
-    double max;
-    try{
-        if (i >= endmember_spectra_.n_cols)
-            endmember = endmember_spectra_.col(endmember_spectra_.n_cols - 1);
-        else
-            endmember = endmember_spectra_.col(i);
-        max = endmember.max();
-    }
-    catch(std::exception e){
-        throw std::runtime_error("VCAData::EndmemberMax");
-    }
-
-    return max;
-}
-
-mat *VCAData::value(QString key)
-{
-    if (key == "VCA Endmembers")
-        return &endmember_spectra_;
-    else if (key == "VCA Fractional Abundances")
-        return &fractional_abundances_;
-    else if (key == "VCA Pure Pixel Indices")
-        return (mat *) &indices_;
-    else if (key == "VCA Projected Data")
-        return &projected_data_;
-    else
-        return NULL;
-}
-
-QStringList VCAData::KeyList() const
-{
-    return QStringList({
-                           "Endmembers",
-                           "Fractional Abundances",
-                           "Pure Pixel Indices",
-                           "Projected Data"
-                       });
-}
-
-const mat &VCAData::GetMatrix(const QString &key)
-{
-    if (key == "VCA Endmembers")
-        return endmember_spectra_;
-    else if (key == "VCA Fractional Abundances")
-        return fractional_abundances_;
-    else if (key == "VCA Pure Pixel Indices")
-        return indices_mat_;
-    else if (key == "VCA Projected Data")
-        return projected_data_;
-    else
-        return EmptyMatrix();
-}
-
-QMap<QString, QString> VCAData::GetMetadata()
-{
-    return QMap<QString, QString>();
-}
-
-QString VCAData::GetColumnHeading(const QString &key, int column)
-{
-    if (key == "VCA Endmembers")
-        return "Endmember " + QString::number(column + 1);
-    else if (key == "VCA Fractional Abundances")
-        return "Fractional Abundances";
-    else if (key == "VCA Pure Pixel Indices")
-        return "Pure Pixel Indices";
-    else if (key == "VCA Projected Data")
-        return "Score " + QString::number(column + 1);
-    else
-        return QString();
+    AddMetadata("Endmembers calculated", QString::number(endmembers));
+    AddMatrix("Endmembers", endmember_spectra, em_col_headings);
+    AddMatrix("Fractional Abundances", fractional_abundances, em_col_headings);
+    AddMatrix("Pure Pixel Indices", indices_mat, QStringList());
+    AddMatrix("Projected Data", projected_data, QStringList());
 }
 
 
-///
-/// \brief VCAData::EndmemberMin
-/// \param i Index of a column of the endmember_spectra_ matrix.
-/// \return The minimum value of the endmember in column i
-///
-double VCAData::EndmemberMin(const uword i)
-{
-    colvec endmember;
-    double min;
-    try{
-        if (i >= endmember_spectra_.n_cols)
-            endmember = endmember_spectra_.col(endmember_spectra_.n_cols - 1);
-        else
-            endmember = endmember_spectra_.col(i);
-        min = endmember.min();
-    }
-    catch(std::exception e){
-        throw std::runtime_error("Improper VCAData member function call");
-    }
-
-    return min;
-}
-
-///
-/// \brief VCAData::EndmembersAsRows
-/// \param indices A list of indices of desired endmemebrs
-/// \return Endmember spectra in the same format used in the spectra_ matrix
-/// This is used in the MetaDataset constructor to grab specific endmembers.
-mat VCAData::EndmembersAsRows(uvec indices)
-{
-    mat endmembers;
-    try{
-        endmembers = endmember_spectra_.cols(indices);
-    }
-    catch(std::exception e){
-        throw std::runtime_error("VCAData::EndmembersAsRows");
-    }
-
-    return trans(endmembers);
-}

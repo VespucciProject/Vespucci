@@ -14,7 +14,7 @@ class PlotMakerDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PlotMakerDialog(MainWindow *parent, VespucciWorkspace *ws, const mat &data);
+    explicit PlotMakerDialog(MainWindow *parent, VespucciWorkspace *ws, const mat & data);
     ~PlotMakerDialog();
 
 private slots:
@@ -22,7 +22,7 @@ private slots:
 
 private:
     Ui::PlotMakerDialog *ui;
-    const mat &data_;
+    const mat & data_;
     VespucciWorkspace *workspace;
     QDoubleSpinBox *x_spin_box_;
     QDoubleSpinBox *y_spin_box_;

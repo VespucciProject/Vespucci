@@ -66,7 +66,7 @@ unix:!macx: QMAKE_CXXFLAGS += -std=c++0x \
                         -isystem $$PWD/../../Vespucci-QCP-sharedlib/include \
                         -isystem $$PWD/include
 #Warnings in boost library not suppressed with -isystem in Clang++. These are always
-macx: QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -std=c++11 -stdlib=libc+
+macx: QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -std=c++11 -stdlib=libc++
 macx: QMAKE_CXXFLAGS_WARN_ON = -Wall -Wno-unused-parameter
 
 

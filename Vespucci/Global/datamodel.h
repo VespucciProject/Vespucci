@@ -36,21 +36,21 @@ public:
                                    const QString &map_key) const;
     QSharedPointer<MapData> GetMap(const QStringList &keys) const;
 
-    const mat& GetResultsMatrix(const QString &dataset_key,
+    const mat & GetResultsMatrix(const QString &dataset_key,
                           const QString &results_key,
                           const QString &matrix_key) const;
-    const mat& GetResultsMatrix(const QStringList &keys) const;
+    const mat & GetResultsMatrix(const QStringList &keys) const;
 
-    const mat& GetCoreMatrix(const QString &dataset_key,
+    const mat &GetCoreMatrix(const QString &dataset_key,
                              const QString &matrix_key) const;
-    const mat& GetCoreMatrix(const QStringList &keys) const;
+    const mat &GetCoreMatrix(const QStringList &keys) const;
 
-    const mat& GetAuxiliaryMatrix(const QString &dataset_key,
+    const mat & GetAuxiliaryMatrix(const QString &dataset_key,
                                   const QString &matrix_key) const;
-    const mat& GetAuxiliaryMatrix(const QStringList &keys) const;
+    const mat & GetAuxiliaryMatrix(const QStringList &keys) const;
 
-    const mat& GetMatrix(const QString &dataset_key, const QString &matrix_key) const;
-    const mat& GetMatrix(const QStringList &keys) const;
+    const mat & GetMatrix(const QString &dataset_key, const QString &matrix_key) const;
+    const mat & GetMatrix(const QStringList &keys) const;
 
     bool Mappable(const QStringList &keys) const;
     bool Plottable(const QStringList &keys) const;
@@ -61,7 +61,7 @@ public:
     QStringList CoreMatrixNames(const QString &dataset_key);
     void AddDataset(QSharedPointer<VespucciDataset> dataset);
     void RemoveDataset(const QString &name);
-    const mat& EmptyMatrix() const;
+    const mat & EmptyMatrix() const;
     bool HasDataset(const QString &key) const;
 
 private:

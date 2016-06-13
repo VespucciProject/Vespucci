@@ -29,48 +29,8 @@ class VespucciDataset;
 class MlpackPCAData: public AnalysisResults
 {
 public:
-    MlpackPCAData(QString name, bool scaleData);
-    void Apply(mat data);
-    mat *transformed_data();
-    vec *eigval();
-    mat *eigvec();
-    vec *percent_variance();
-    mat *value(QString key);
-    const mat &GetMatrix(const QString &key) override;
-    QStringList KeyList() const override;
-    QMap<QString, QString> GetMetadata() override;
-    QString GetColumnHeading(const QString &key, int column) override;
-
-private:
-    ///
-    /// \brief pca_data_
-    /// The MLPACK PCA object that performs analysis
-    mlpack::pca::PCA pca_data_;
-
-    ///
-    /// \brief transformed_data_
-    /// The transformed data
-    mat transformed_data_;
-
-    ///
-    /// \brief eigval_
-    /// Eigenvalues of covariance matrix
-    vec eigval_;
-
-    ///
-    /// \brief eigvec_
-    /// Eigenvectors of covariance matrix (loadings)
-    mat eigvec_;
-
-    ///
-    /// \brief percent_variance_
-    /// Percent variance attributed to each loading.
-    vec percent_variance_;
-
-    ///
-    /// \brief name_
-    /// Name of the AnalysisResults object to be created
-    QString name_;
+    MlpackPCAData(QString name);
+    void Apply(const mat &data, bool scale_data);
 };
 
 #endif // MLPACKPCADATA_H

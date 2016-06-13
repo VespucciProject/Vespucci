@@ -21,16 +21,16 @@
 ///
 /// \brief VespucciTableModel::VespucciTableModel
 /// \param parent See QDialog
-/// \param input_data The matrix that is displayed by the model
+/// \param iinput_data The matrix that is displayed by the model
 ///
-VespucciTableModel::VespucciTableModel(QObject *parent, const mat &input_data) :
+VespucciTableModel::VespucciTableModel(QObject *parent, const mat & input_data) :
     QAbstractTableModel(parent),
     data_(input_data)
 {
     start_column_ = 0;
 }
 
-VespucciTableModel::VespucciTableModel(QObject *parent, const mat &input_data, const uword &start_column)
+VespucciTableModel::VespucciTableModel(QObject *parent, const mat & input_data, const uword &start_column)
     : QAbstractTableModel(parent),
       data_(input_data)
 {
@@ -83,7 +83,7 @@ int VespucciTableModel::rowCount(const QModelIndex &parent) const
 /// \brief VespucciTableModel::GetMatrix
 /// \return
 /// Get a reference to the data
-const mat &VespucciTableModel::GetMatrix() const
+const mat & VespucciTableModel::GetMatrix() const
 {
     return data_;
 }

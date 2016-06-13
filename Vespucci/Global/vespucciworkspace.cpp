@@ -201,17 +201,17 @@ QSharedPointer<MapData> VespucciWorkspace::GetMap(const QString &dataset_key, co
     return data_model_->GetMap(dataset_key, map_key);
 }
 
-const mat &VespucciWorkspace::GetAuxiliaryMatrix(const QString &dataset_key, const QString &matrix_key) const
+const mat & VespucciWorkspace::GetAuxiliaryMatrix(const QString &dataset_key, const QString &matrix_key) const
 {
     return data_model_->GetAuxiliaryMatrix(dataset_key, matrix_key);
 }
 
-const mat &VespucciWorkspace::GetResultsMatrix(const QString &dataset_key, const QString &results_key, const QString &matrix_key) const
+const mat & VespucciWorkspace::GetResultsMatrix(const QString &dataset_key, const QString &results_key, const QString &matrix_key) const
 {
     return data_model_->GetResultsMatrix(dataset_key, results_key, matrix_key);
 }
 
-const mat &VespucciWorkspace::GetCoreMatrix(const QString &dataset_key, const QString &matrix_key) const
+const mat & VespucciWorkspace::GetCoreMatrix(const QString &dataset_key, const QString &matrix_key) const
 {
     return data_model_->GetCoreMatrix(dataset_key, matrix_key);
 }
@@ -432,7 +432,7 @@ DataModel *VespucciWorkspace::data_model()
 /// \param keys
 /// \return
 /// Retruns empty matrix if invalid keys
-const mat &VespucciWorkspace::GetMatrix(const QStringList &keys) const
+const mat & VespucciWorkspace::GetMatrix(const QStringList &keys) const
 {
     if (keys.size() < 2) return data_model_->EmptyMatrix();
     try{

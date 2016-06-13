@@ -427,7 +427,7 @@ TreeItem *DatasetTreeModel::SetupAnalysisResultTreeItem(QSharedPointer<VespucciD
 TreeItem *DatasetTreeModel::SetupMatrixTreeItem(const QString &dataset_key,
                                                 const QString &results_key,
                                                 const QString &matrix_key,
-                                                const mat &matrix,
+                                                const mat & matrix,
                                                 TreeItem *parent)
 {
     QStringList matrix_key_list = {dataset_key, results_key, matrix_key};
@@ -445,7 +445,7 @@ TreeItem *DatasetTreeModel::SetupMatrixTreeItem(const QString &dataset_key,
 ///
 TreeItem *DatasetTreeModel::SetupMatrixTreeItem(const QString &dataset_key,
                                                 const QString &matrix_key,
-                                                const mat &matrix,
+                                                const mat & matrix,
                                                 TreeItem *parent)
 {
     QStringList matrix_key_list = {dataset_key, matrix_key};
@@ -472,7 +472,7 @@ TreeItem *DatasetTreeModel::SetupMapTreeItem(const QString &dataset_key,
 }
 
 
-QString DatasetTreeModel::DescribeMatrix(const mat &matrix) const
+QString DatasetTreeModel::DescribeMatrix(const mat & matrix) const
 {
     return QString::number(matrix.n_rows)
             + "×"
@@ -480,7 +480,7 @@ QString DatasetTreeModel::DescribeMatrix(const mat &matrix) const
             + " matrix";
 }
 
-QString DatasetTreeModel::DescribeSpectra(const mat &spectra_matrix) const
+QString DatasetTreeModel::DescribeSpectra(const mat & spectra_matrix) const
 {
     return QString::number(spectra_matrix.n_cols) + " spectra";
 }

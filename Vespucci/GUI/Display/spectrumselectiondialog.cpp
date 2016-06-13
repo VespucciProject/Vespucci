@@ -30,13 +30,12 @@ void SpectrumSelectionDialog::on_tableView_clicked(const QModelIndex &index)
 {
     if (!dataset_.data()) return; //should never happen, but let's be safe
     if (index.isValid() && table_model_->rowCount(index)){
-        uvec spectrum_indices = {uword(index.row())};
-        mat data = join_horiz(dataset_->abscissa(), dataset_->spectra(spectrum_indices));
-
+        QSharedPointer<mat> data(new mat(join_horiz(dataset_->abscissa(),
+                                                    dataset_->spectra_ptr()->col(index.row()))));
         if (hold_check_box_->isChecked())
-            plot_viewer_->AddPlot(data, dataset_->name());
+            plot_viewer_->AddPlot(*data, dataset_->name());
         else
-            plot_viewer_->AddTransientPlot(data, dataset_->name());
+            plot_viewer_->AddTransientPlot(*data, dataset_->name());
     }
 
 }

@@ -35,7 +35,7 @@ unix: !macx: QMAKE_CXXFLAGS += -std=c++11 \
                         -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.0/Rcpp/include" \
                         -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.0/RInside/include" \
                         -isystem "/usr/share/R/include"
-macx: QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -std=gnu0x -stdlib=libc+
+macx: QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -std=gnu0x -stdlib=libc++
 
 macx: CONFIG +=c++11
 
