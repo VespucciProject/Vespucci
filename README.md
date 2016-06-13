@@ -17,6 +17,11 @@ Windows, Mac OS X, and GNU/Linux.
 
 Nightly builds will be availible for Windows soon.
 
+Versioning:
+-----------
+Versions up to 1.0.0 are not considered stable and changes between 0.n.0 and 0.n+1.0 may be major.
+After 1.0.0, 1.n+1.0 will contain new features to 1.n.0, but will have an API that is mostly compatible. n+1.0.0 contains major changes in the API that may break programs built from it. 1.n.x+1 contains a bug fix or minor improvement to 1.n.x
+
 Compiling Vespucci:
 ===================
 Compiling Vespucci from source is easy on Unix-like systems. Assuming you
@@ -61,5 +66,8 @@ Mac OS dependences are installed with homebrew.
 
 For Unix-like systems, shared libraries are the default. You will need to
 compile and install static versions of these libraries if you want a stand-alone executable.
+
+Windows dependencies can mostly be installed using NuGet.
+
 
  

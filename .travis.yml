@@ -1,4 +1,33 @@
 language: cpp
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: gcc
+#    - os: osx
+#      osx_image: xcode7.2
+#      compiler: clang
+
+
+before_install:
+#    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ;fi
+#    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt5 ;fi
+
+    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then wget https://github.com/VespucciProject/Vespucci-QCP/releases/download/1.3.1/vespucci_travis_depts.tar.gz ;fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then tar xvf vespucci_travis_depts.tar.gz -C /home/travis ;fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-add-repository -y ppa:ubuntu-sdk-team ;fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test ;fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-add-repository -y ppa:beineri/opt-qt551-trusty ;fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-get -y update ;fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-get install gcc-4.9 g++-4.9 ;fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9 ;fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-get -y install qt55base qt55tools qt55imageformats qt55location qt55declarative libsqlite3-dev qt55svg ;fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-get -y install libhdf5-dev libarpack2-dev ;fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-get -y install libxml2-dev libboost1.55-dev libboost-math1.55-dev libboost-program-options1.55-dev libboost-test1.55-dev libboost-random1.55-dev libcminpack-dev ;fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then source /opt/qt55/bin/qt55-env.sh ;fi
+
 matrix:
     include:
       - os: linux
