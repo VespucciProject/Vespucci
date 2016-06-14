@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>672</width>
+    <height>435</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Vespucci</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>vespuccilogo.svg</normaloff>vespuccilogo.svg</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Loaded Data:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTreeView" name="datasetTreeView"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>672</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>Fi&amp;le</string>
+    </property>
+    <addaction name="actionImport_Dataset_from_File"/>
+    <addaction name="actionImport_From_Multiple_Point_Spectra"/>
+    <addaction name="actionImport_Dataset_from_Multiple_Files"/>
+    <addaction name="separator"/>
+    <addaction name="actionImport_Data_Into_Dataset"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_Selected_Matrix"/>
+    <addaction name="actionBatch_File_Conversion"/>
+    <addaction name="separator"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionDocumentation"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout_Vespucci"/>
+    <addaction name="actionCiting_Vespucci"/>
+   </widget>
+   <widget class="QMenu" name="menuData">
+    <property name="title">
+     <string>Dataset</string>
+    </property>
+    <addaction name="actionUndo"/>
+    <addaction name="separator"/>
+    <addaction name="actionDelete_Map"/>
+    <addaction name="separator"/>
+    <addaction name="actionNew_Composite_Dataset"/>
+    <addaction name="actionNew_Dataset_from_Object"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_Log_File"/>
+    <addaction name="actionClose_Dataset"/>
+   </widget>
+   <widget class="QMenu" name="menuMap">
+    <property name="title">
+     <string>A&amp;nalysis</string>
+    </property>
+    <widget class="QMenu" name="menuNew_Multivariate_Map">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="title">
+      <string>&amp;Multivariate Analysis</string>
+     </property>
+     <addaction name="actionPrincipal_Components_Analysis"/>
+     <addaction name="actionPartial_Least_Squares"/>
+     <addaction name="actionVertex_Components"/>
+     <addaction name="actionK_Means_Clustering"/>
+     <addaction name="actionClassical_Least_Squares"/>
+    </widget>
+    <widget class="QMenu" name="menuPeak_Detection">
+     <property name="title">
+      <string>&amp;Peak Detection</string>
+     </property>
+     <addaction name="actionDetect_Peaks"/>
+     <addaction name="actionCalculate_Peak_Populations"/>
+    </widget>
+    <widget class="QMenu" name="menuUnivariate_Analysis">
+     <property name="title">
+      <string>&amp;Univariate Analysis...</string>
+     </property>
+     <addaction name="actionNew_Univariate_Map"/>
+     <addaction name="actionNew_Band_Ratio_Map"/>
+    </widget>
+    <widget class="QMenu" name="menuBetween_Datasets">
+     <property name="title">
+      <string>Between Datasets</string>
+     </property>
+     <addaction name="actionT_Test"/>
+     <addaction name="actionANOVA"/>
+    </widget>
+    <addaction name="menuUnivariate_Analysis"/>
+    <addaction name="menuNew_Multivariate_Map"/>
+    <addaction name="menuPeak_Detection"/>
+    <addaction name="menuBetween_Datasets"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionSettings"/>
+    <addaction name="actionSet_Global_Color_Scale"/>
+   </widget>
+   <widget class="QMenu" name="menuProcessing">
+    <property name="title">
+     <string>Processin&amp;g</string>
+    </property>
+    <addaction name="actionFilter_Derivatize"/>
+    <addaction name="actionNormalize_Standardize"/>
+    <addaction name="actionSubtract_Background"/>
+    <addaction name="actionCorrect_Baseline"/>
+    <addaction name="actionCrop"/>
+    <addaction name="actionReject_Clipped_Spectra"/>
+    <addaction name="actionBooleanize_Clamp"/>
+    <addaction name="actionRemove_Vectors_of_Zeros"/>
+    <addaction name="actionTransform_Abscissa"/>
+    <addaction name="actionInterpolate_to_New_Abscissa"/>
+    <addaction name="actionFourierTransform"/>
+   </widget>
+   <widget class="QMenu" name="menuObject">
+    <property name="title">
+     <string>Matrix</string>
+    </property>
+    <addaction name="actionShow_in_Data_Viewer"/>
+    <addaction name="actionMapResult"/>
+    <addaction name="actionPlotResult"/>
+    <addaction name="actionView_Statistics"/>
+    <addaction name="actionCalibrate"/>
+    <addaction name="actionTransform"/>
+   </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="actionPlot_Viewer"/>
+    <addaction name="actionData_Viewer"/>
+    <addaction name="actionStatistics_Viewer"/>
+    <addaction name="actionSpectrum_Editor"/>
+    <addaction name="actionPython_Shell"/>
+    <addaction name="actionMacro_Editor"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuData"/>
+   <addaction name="menuObject"/>
+   <addaction name="menuProcessing"/>
+   <addaction name="menuMap"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuWindow"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>24</width>
+     <height>24</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpenDataset"/>
+   <addaction name="actionImport_Dataset_from_File"/>
+   <addaction name="actionImport_From_Multiple_Point_Spectra"/>
+   <addaction name="actionSaveDataset"/>
+   <addaction name="actionClose_Dataset"/>
+   <addaction name="separator"/>
+   <addaction name="actionShow_in_Data_Viewer"/>
+   <addaction name="actionPlotResult"/>
+   <addaction name="actionMapResult"/>
+   <addaction name="actionView_Statistics"/>
+  </widget>
+  <action name="actionExit">
+   <property name="text">
+    <string>&amp;Exit</string>
+   </property>
+  </action>
+  <action name="actionImport_Dataset_from_File">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/toolbar_icons/import.svg</normaloff>:/icons/toolbar_icons/import.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Import Dataset from File</string>
+   </property>
+   <property name="iconText">
+    <string>Import</string>
+   </property>
+   <property name="toolTip">
+    <string>Import a hyperspectral dataset from a text or instrument file</string>
+   </property>
+  </action>
+  <action name="actionDocumentation">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Vespucci Webpage</string>
+   </property>
+  </action>
+  <action name="actionAbout_Vespucci">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;About Vespucci</string>
+   </property>
+  </action>
+  <action name="actionNew_Univariate_Map">
+   <property name="text">
+    <string>&amp;Univariate</string>
+   </property>
+  </action>
+  <action name="actionNew_Band_Ratio_Map">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Band Ratio</string>
+   </property>
+  </action>
+  <action name="actionCiting_Vespucci">
+   <property name="text">
+    <string>&amp;Citing Vespucci</string>
+   </property>
+  </action>
+  <action name="actionPrincipal_Components_Analysis">
+   <property name="text">
+    <string>&amp;Principal Components</string>
+   </property>
+  </action>
+  <action name="actionPartial_Least_Squares">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Partial &amp;Least Squares</string>
+   </property>
+  </action>
+  <action name="actionVertex_Components">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Vertex Components</string>
+   </property>
+  </action>
+  <action name="actionFilter_Derivatize">
+   <property name="text">
+    <string>&amp;Filter/Derivatize</string>
+   </property>
+  </action>
+  <action name="actionNormalize_Standardize">
+   <property name="text">
+    <string>&amp;Normalize/Standardize</string>
+   </property>
+  </action>
+  <action name="actionSubtract_Background">
+   <property name="text">
+    <string>&amp;Subtract Background</string>
+   </property>
+  </action>
+  <action name="actionCorrect_Baseline">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Correct Baseline</string>
+   </property>
+  </action>
+  <action name="actionSpectra">
+   <property name="text">
+    <string>&amp;Spectra</string>
+   </property>
+  </action>
+  <action name="actionSpectral_Abscissa">
+   <property name="text">
+    <string>S&amp;pectral Abscissa</string>
+   </property>
+   <property name="toolTip">
+    <string>Spectral Abscissa</string>
+   </property>
+  </action>
+  <action name="actionAll_Data">
+   <property name="text">
+    <string>All &amp;Data</string>
+   </property>
+  </action>
+  <action name="actionAverage_Spectra">
+   <property name="text">
+    <string>&amp;Average Spectra</string>
+   </property>
+  </action>
+  <action name="actionAverage_Spectra_with_Abscissa">
+   <property name="text">
+    <string>Average Spectra (&amp;with Abscissa)</string>
+   </property>
+   <property name="toolTip">
+    <string>Average Spectra (with Abscissa)</string>
+   </property>
+  </action>
+  <action name="actionClose_Dataset">
+   <property name="icon">
+    <iconset>
+     <normaloff>../toolbar_icons/close.svg</normaloff>../toolbar_icons/close.svg</iconset>
+   </property>
+   <property name="text">
+    <string>C&amp;lose Dataset</string>
+   </property>
+  </action>
+  <action name="actionCrop">
+   <property name="text">
+    <string>Cro&amp;p</string>
+   </property>
+  </action>
+  <action name="actionView_Dataset_Elements">
+   <property name="text">
+    <string>V&amp;iew Dataset Elements</string>
+   </property>
+  </action>
+  <action name="actionSet_Global_Color_Scale">
+   <property name="text">
+    <string>&amp;Set Global Color Scale...</string>
+   </property>
+  </action>
+  <action name="actionK_Means_Clustering">
+   <property name="text">
+    <string>&amp;K-Means Clustering</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>&amp;Undo/Redo</string>
+   </property>
+  </action>
+  <action name="actionCreate_Plot">
+   <property name="text">
+    <string>&amp;Create Plot</string>
+   </property>
+  </action>
+  <action name="actionDelete_Map">
+   <property name="text">
+    <string>Delete Object</string>
+   </property>
+  </action>
+  <action name="actionNew_Composite_Dataset">
+   <property name="text">
+    <string>&amp;New Composite Dataset</string>
+   </property>
+  </action>
+  <action name="actionReject_Clipped_Spectra">
+   <property name="text">
+    <string>&amp;Reject Spectra by Threshold</string>
+   </property>
+  </action>
+  <action name="actionSpectra_as_Columns">
+   <property name="text">
+    <string>Spectra (as Columns)</string>
+   </property>
+  </action>
+  <action name="actionView_Edit_Spectra">
+   <property name="text">
+    <string>&amp;View/Remove Spectra</string>
+   </property>
+  </action>
+  <action name="actionBooleanize_Clamp">
+   <property name="text">
+    <string>&amp;Booleanize/Clamp</string>
+   </property>
+  </action>
+  <action name="actionRemove_Vectors_of_Zeros">
+   <property name="text">
+    <string>Remove &amp;Vectors of Zeros</string>
+   </property>
+  </action>
+  <action name="actionRun_script">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Run Macro</string>
+   </property>
+  </action>
+  <action name="actionDetect_Peaks">
+   <property name="text">
+    <string>&amp;Detect Peaks...</string>
+   </property>
+  </action>
+  <action name="actionCalculate_Peak_Populations">
+   <property name="text">
+    <string>&amp;Calculate Peak Populations</string>
+   </property>
+  </action>
+  <action name="actionImport_From_Multiple_Point_Spectra">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/toolbar_icons/import_multiple.svg</normaloff>:/icons/toolbar_icons/import_multiple.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Import &amp;From Multiple Point Spectra</string>
+   </property>
+   <property name="iconText">
+    <string>Import From Multiple</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new dataset by importing multiple files representing single points</string>
+   </property>
+  </action>
+  <action name="actionTransform_Abscissa">
+   <property name="text">
+    <string>&amp;Transform Abscissa</string>
+   </property>
+  </action>
+  <action name="actionInterpolate_to_New_Abscissa">
+   <property name="text">
+    <string>&amp;Interpolate to New Abscissa</string>
+   </property>
+  </action>
+  <action name="actionFourierTransform">
+   <property name="text">
+    <string>F&amp;ourier Transform</string>
+   </property>
+  </action>
+  <action name="actionBatch_File_Conversion">
+   <property name="text">
+    <string>&amp;Batch File Conversion</string>
+   </property>
+  </action>
+  <action name="actionClassical_Least_Squares">
+   <property name="text">
+    <string>&amp;Classical Least Squares</string>
+   </property>
+  </action>
+  <action name="actionBand_Ratio">
+   <property name="text">
+    <string>Band Ratio</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>&amp;Settings</string>
+   </property>
+  </action>
+  <action name="actionSave_Log_File">
+   <property name="text">
+    <string>&amp;Save Log File</string>
+   </property>
+  </action>
+  <action name="actionImport_Dataset_from_Multiple_Files">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Import Dataset from Multiple Files</string>
+   </property>
+   <property name="toolTip">
+    <string>Import a dataset from a CSV file containing paths to files, concatenating spatially based on relative positions of file names in the CSV file.</string>
+   </property>
+  </action>
+  <action name="actionPlotResult">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/toolbar_icons/plot.svg</normaloff>:/icons/toolbar_icons/plot.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Create Plot</string>
+   </property>
+   <property name="toolTip">
+    <string>Plot the currently selected analysis result</string>
+   </property>
+  </action>
+  <action name="actionMapResult">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/toolbar_icons/map.svg</normaloff>:/icons/toolbar_icons/map.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Create Color Map</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a color map of the currently selected analysis result</string>
+   </property>
+  </action>
+  <action name="actionOpenDataset">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/toolbar_icons/open.svg</normaloff>:/icons/toolbar_icons/open.svg</iconset>
+   </property>
+   <property name="text">
+    <string>OpenDataset</string>
+   </property>
+   <property name="toolTip">
+    <string>Open a dataset previously saved from Vespucci</string>
+   </property>
+  </action>
+  <action name="actionSaveDataset">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/toolbar_icons/save.svg</normaloff>:/icons/toolbar_icons/save.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Save Dataset</string>
+   </property>
+   <property name="toolTip">
+    <string>Save the current dataset</string>
+   </property>
+  </action>
+  <action name="actionImport_Data_Into_Dataset">
+   <property name="text">
+    <string>Import Data Into Dataset</string>
+   </property>
+   <property name="toolTip">
+    <string>Add data from an external source into the selected dataset</string>
+   </property>
+  </action>
+  <action name="actionView_Statistics">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/toolbar_icons/stats.svg</normaloff>:/icons/toolbar_icons/stats.svg</iconset>
+   </property>
+   <property name="text">
+    <string>View Statistics</string>
+   </property>
+   <property name="toolTip">
+    <string>View statistics, calculate confidence intervals, view histogram</string>
+   </property>
+  </action>
+  <action name="actionShow_in_Data_Viewer">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/toolbar_icons/table.svg</normaloff>:/icons/toolbar_icons/table.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Show in Data Viewer</string>
+   </property>
+  </action>
+  <action name="actionPython_Shell">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Python Shell</string>
+   </property>
+  </action>
+  <action name="actionMacro_Editor">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Macro Editor</string>
+   </property>
+  </action>
+  <action name="actionCalibrate">
+   <property name="text">
+    <string>Calibrate...</string>
+   </property>
+  </action>
+  <action name="actionNew_Dataset_from_Object">
+   <property name="text">
+    <string>New Dataset from Matrix</string>
+   </property>
+  </action>
+  <action name="actionTransform">
+   <property name="text">
+    <string>Transform...</string>
+   </property>
+  </action>
+  <action name="actionANOVA">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>ANOVA...</string>
+   </property>
+  </action>
+  <action name="actionT_Test">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>t-Test...</string>
+   </property>
+  </action>
+  <action name="actionPlot_Viewer">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Plot Viewer</string>
+   </property>
+  </action>
+  <action name="actionData_Viewer">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Data Viewer</string>
+   </property>
+  </action>
+  <action name="actionSpectrum_Editor">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Spectrum Editor</string>
+   </property>
+  </action>
+  <action name="actionStatistics_Viewer">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Statistics Viewer</string>
+   </property>
+  </action>
+  <action name="actionSave_Selected_Matrix">
+   <property name="text">
+    <string>Save Selected Matrix</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

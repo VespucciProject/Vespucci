@@ -1,3 +1,23 @@
+/*******************************************************************************
+    Copyright (C) 2014-2016 Wright State University - All Rights Reserved
+    Daniel P. Foose - Maintainer/Lead Developer
+
+    This file is part of Vespucci.
+
+    Vespucci is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Vespucci is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
+*******************************************************************************/
+
 #include <Global/libvespucci.h>
 
 #include <QCoreApplication>
@@ -13,7 +33,8 @@
 /// \return
 /// Options:
 /// batchvca components
-/// -i indir : perform VCA on datasets in this directory, rather than working directory
+/// -i indir : perform VCA on datasets in this directory, rather than working
+/// directory
 /// -o outdir
 /// -f window_size : perform median filtering with specified window size
 /// -b poly_order max_it threshold : perform IModPoly baseline correction
@@ -32,35 +53,50 @@ int main(int argc, char *argv[])
     parser.addVersionOption();
     parser.addPositionalArgument("components",
                                  QCoreApplication::translate("main",
-                                                             "VCA components to calculate."));
+                                                             "VCA components to "
+                                                             "calculate."));
 
-    QCommandLineOption indir_option(QStringList() << "-i" << "--indir",
+    QCommandLineOption
+            indir_option(QStringList() << "-i" << "--indir",
+                                QCoreApplication::translate("main",
+                                                            "Parse files from "
+                                                            "<directory>"),
+                                QCoreApplication::translate("main",
+                                                            "directory"));
+
+    QCommandLineOption
+            outdir_option(QStringList() << "-o" << "--outdir",
+                                 QCoreApplication::translate("main",
+                                                             "Save output files "
+                                                             "to <directory>."),
+                                 QCoreApplication::translate("main", "directory"));
+
+    QCommandLineOption
+            filter_option(QStringList() << "-f" << "--filter",
+                                 QCoreApplication::translate("main",
+                                                             "Perform median "
+                                                             "filtering with "
+                                                             "<window_size>"),
+                                 QCoreApplication::translate("main",
+                                                             "window_size"));
+
+    QCommandLineOption
+            normalize_option(QStringList() << "-n" << "--normalize",
                                     QCoreApplication::translate("main",
-                                                                "Parse files from <directory>"),
+                                                                "Perform "
+                                                                "normalization "
+                                                                "using <method>."),
                                     QCoreApplication::translate("main",
-                                                                "directory"));
-
-    QCommandLineOption outdir_option(QStringList() << "-o" << "--outdir",
-                                     QCoreApplication::translate("main",
-                                                                 "Save output files to <directory>."),
-                                     QCoreApplication::translate("main", "directory"));
-
-    QCommandLineOption filter_option(QStringList() << "-f" << "--filter",
-                                     QCoreApplication::translate("main",
-                                                                 "Perform median filtering with <window_size>"),
-                                     QCoreApplication::translate("main",
-                                                                 "window_size"));
-
-    QCommandLineOption normalize_option(QStringList() << "-n" << "--normalize",
-                                        QCoreApplication::translate("main",
-                                                                    "Perform normalization using <method>."),
-                                        QCoreApplication::translate("main",
-                                                                    "method"));
-    QCommandLineOption baseline_option(QStringList() << "-b" << "--baseline",
-                                       QCoreApplication::translate("main",
-                                                                   "Perform IModPoly baselinbe correction with <opts>"),
-                                       QCoreApplication::translate("main",
-                                                                   "opts"));
+                                                                "method"));
+    QCommandLineOption
+            baseline_option(QStringList() << "-b" << "--baseline",
+                                   QCoreApplication::translate("main",
+                                                               "Perform IModPoly "
+                                                               "baselinbe "
+                                                               "correction with "
+                                                               "<opts>"),
+                                   QCoreApplication::translate("main",
+                                                               "opts"));
 
 
     parser.addOption(indir_option);

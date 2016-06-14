@@ -1,6 +1,6 @@
 /*******************************************************************************
-    Copyright (C) 2015 Wright State University - All Rights Reserved
-    Daniel P. Foose - Author
+    Copyright (C) 2014-2016 Wright State University - All Rights Reserved
+    Daniel P. Foose - Maintainer/Lead Developer
 
     This file is part of Vespucci.
 
@@ -24,6 +24,8 @@ using namespace std;
 using namespace arma;
 
 namespace VespucciTest{
+    //we use pre-made mock spectra with gaussian, lorentzian and voigt peak profiles.
+    //and various levels of noise
     vec CreateMockSpectrum(const vec &abscissa, vec peak_heights, vec peak_centers, vec peak_widths);
     vec CreateGaussianPeak(const vec &x, double sigma, double &fwhm, double &area);
     //vec CreateMockSpectrum(const vec &abscissa, const vec &a, const vec &b, const vec &c)
