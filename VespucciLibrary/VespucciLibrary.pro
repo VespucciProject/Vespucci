@@ -42,10 +42,10 @@ isEmpty(PREFIX) {
     PREFIX = $$PWD/../../Vespucci-install
 }
 travis_ci = $$(TRAVIS_CI)
-deploy_win64 = $$(DEPLOY_WIN64)
-develop_win64 = $$(DEVELOP_WIN64)
+
 # it is assumed that casual windows users will not use the build system to install
-TARGET = vespucci
+!win32:TARGET = vespucci
+win32:TARGET = libvespucci
 TEMPLATE = lib
 DEFINES += VESPUCCI_LIBRARY
 

@@ -3,4 +3,5 @@ IF NOT EXIST "Vespucci\release\libgfortran-3.dll" copy /y "..\Vespucci_dependenc
 IF NOT EXIST "Vespucci\release\libopenblas.dll" copy /y "..\Vespucci_dependencies\DLL\libopenblas.dll" "Vespucci\release"
 IF NOT EXIST "Vespucci\release\libquadmath-0.dll" copy /y "..\Vespucci_dependencies\DLL\libquadmath-0.dll" "Vespucci\release"
 IF NOT EXIST "Vespucci\release\lapack_x64.dll" copy /y "..\Vespucci_dependencies\DLL\lapack_x64.dll" "Vespucci\release"
-copy /y "VespucciLibrary\release\vespucci.dll" "Vespucci\release"
+copy /y "VespucciLibrary\release\libvespucci.dll" "Vespucci\release"
+copy /y "VespucciLibrary\release\libvespucci.pdb"
