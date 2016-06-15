@@ -31,6 +31,7 @@ public:
 private:
     void ExecuteCommand(QString command, QStringList params);
     bool ValidateCommand(QString command, QStringList params, int &param_error);
+	bool ToBool(const QString &param);
 
     ///
     /// \brief commands_
