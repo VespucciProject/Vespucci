@@ -61,6 +61,8 @@ bool MacroParser::LoadMacro(QString macro)
         QPair<QString, QStringList> processed_command(function_name, pieces);
         commands_.push_back(processed_command);//insert at the end of the list
     }
+
+    return false;
 }
 
 ///
@@ -137,4 +139,5 @@ bool MacroParser::ValidateCommand(QString command, QStringList params, int &para
 
     //The input_type will be "Bool, Int, UInt, String, Double, Invalid"
     QString input_type;
+    return false;
 }

@@ -51,7 +51,7 @@ void DatasetLoader::LoadManifest()
 ///
 bool DatasetLoader::ParseManifest()
 {
-
+    return false;
 }
 
 ///
@@ -59,7 +59,7 @@ bool DatasetLoader::ParseManifest()
 /// Fills the appropraite members with data loaded from bin files
 bool DatasetLoader::LoadObjects()
 {
-
+    return false;
 }
 
 ///
