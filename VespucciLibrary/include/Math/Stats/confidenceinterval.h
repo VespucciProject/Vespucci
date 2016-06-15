@@ -20,14 +20,12 @@
 #ifndef CONFIDENCEINTERVAL_H
 #define CONFIDENCEINTERVAL_H
 #include <utility>
+#include "Global/libvespucci.h"
 namespace Vespucci{
     namespace Math{
         namespace Stats{
-            double TInterval(double alpha, double stddev, unsigned int n);
-            std::pair<double,double> ChiSquaredInterval(double alpha, double stddev, unsigned int n);
-
-
-
+            VESPUCCI_EXPORT double TInterval(double alpha, double stddev, unsigned int n);
+            VESPUCCI_EXPORT std::pair<double,double> ChiSquaredInterval(double alpha, double stddev, unsigned int n);
         }
     }
 }

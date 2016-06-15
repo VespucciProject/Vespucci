@@ -211,99 +211,66 @@ unix:!macx: DEPENDPATH += /usr/include
 unix:!macx: INCLUDEPATH += /usr/include/libxml2
 unix:!macx: DEPENDPATH += /usr/include/libxml2
 
-#MSVC for deployment (used for build using static qt and all libraries compiled in msvc linked statically)
-count(deploy_win64, 1){
-    LIBS += -L$$PWD/../../MSVC_deployment_deps/MLPACK/ -lmlpack
-    INCLUDEPATH += $$PWD/../../MSVC_deployment_deps/MLPACK/include
-    DEPENDPATH += $$PWD/../../MSVC_deployment_deps/MLPACK/include
-    PRE_TARGETDEPS += $$PWD/../../MSVC_deployment_deps/MLPACK/mlpack.lib
+win32:!win32-g++{
+    CONFIG += release force_debug_info
 
-    LIBS += -L$$PWD/../../MSVC_deployment_deps/Armadillo/lib/ -larmadillo
-    INCLUDEPATH += $$PWD/../../MSVC_deployment_deps/Armadillo/include
-    DEPENDPATH += $$PWD/../../MSVC_deployment_deps/Armadillo/include
-    PRE_TARGETDEPS += $$PWD/../../MSVC_deployment_deps/Armadillo/lib/armadillo.lib
+    LIBS += -L$$PWD/../../Vespucci_dependencies/mlpack/lib/ -lmlpack
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/mlpack/include
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/mlpack/include
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/mlpack/lib/mlpack.lib
 
-    INCLUDEPATH += $$PWD/../../MSVC_deployment_deps/boost_1_60_0
-    DEPENDPATH += $$PWD/../../MSVC_deployment_deps/boost_1_60_0
+    LIBS += -L$$PWD/../../Vespucci_dependencies/armadillo/lib/ -larmadillo
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/armadillo/include
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/armadillo/include
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/armadillo/lib/armadillo.lib
 
-    LIBS += -L$$PWD/../../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_math_c99-vc140-mt-s-1_60
-    INCLUDEPATH += $$PWD/../../MSVC_deployment_deps/boost_1_60_0
-    DEPENDPATH += $$PWD/../../MSVC_deployment_deps/boost_1_60_0
-    PRE_TARGETDEPS += $$PWD/../../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_math_c99-vc140-mt-s-1_60.lib
+    LIBS += -L$$PWD/../../Vespucci_dependencies/OpenBLAS/ -llibopenblas
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/OpenBLAS
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/OpenBLAS
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/OpenBLAS/libopenblas.lib
 
-    LIBS += -L$$PWD/../../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_serialization-vc140-mt-s-1_60
-    PRE_TARGETDEPS += $$PWD/../../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_serialization-vc140-mt-s-1_60.lib
+    LIBS += -L$$PWD/../../Vespucci_dependencies/LAPACK/ -llapack_x64
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/LAPACK
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/LAPACK
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/LAPACK/lapack_x64.lib
 
-    LIBS += -L$$PWD/../../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_random-vc140-mt-s-1_60
-    PRE_TARGETDEPS += $$PWD/../../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_random-vc140-mt-s-1_60.lib
+    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lhdf5
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/hdf5.lib
 
-    LIBS += -L$$PWD/../../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_unit_test_framework-vc140-mt-s-1_60
-    PRE_TARGETDEPS += $$PWD/../../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_unit_test_framework-vc140-mt-s-1_60.lib
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/boost_1_61_0
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/boost_1_61_0
 
-    LIBS += -L$$PWD/../../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_program_options-vc140-mt-s-1_60
-    PRE_TARGETDEPS += $$PWD/../../MSVC_deployment_deps/boost_1_60_0/lib64-msvc-14.0/libboost_program_options-vc140-mt-s-1_60.lib
+    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_program_options-vc140-mt-1_61
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_program_options-vc140-mt-1_61.lib
 
-    LIBS += -L$$PWD/../../MSVC_deployment_deps/LAPACK/ -llapack_x64
-    PRE_TARGETDEPS += $$PWD/../../MSVC_deployment_deps/LAPACK/lapack_x64.lib
+    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_math_c99-vc140-mt-1_61
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_math_c99-vc140-mt-1_61.lib
 
-    LIBS += -L$$PWD/../../MSVC_deployment_deps/OpenBLAS/ -llibopenblas
-    PRE_TARGETDEPS += $$PWD/../../MSVC_deployment_deps/OpenBLAS/libopenblas.lib
+    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_random-vc140-mt-1_61
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_random-vc140-mt-1_61.lib
 
-    LIBS += -L$$PWD/../../MSVC_deployment_deps/ARPACK/ -larpack_x64
-    PRE_TARGETDEPS += $$PWD/../../MSVC_deployment_deps/ARPACK/arpack_x64.lib
+    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_serialization-vc140-mt-1_61
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_serialization-vc140-mt-1_61.lib
 
-    LIBS += -L$$PWD/../../MSVC_deployment_deps/cminpack/ -lcminpack
-    INCLUDEPATH += $$PWD/../../MSVC_deployment_deps/cminpack
-    DEPENDPATH += $$PWD/../../MSVC_deployment_deps/cminpack
-    PRE_TARGETDEPS += $$PWD/../../MSVC_deployment_deps/cminpack/cminpack.lib
-}
+    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_unit_test_framework-vc140-mt-1_61
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_unit_test_framework-vc140-mt-1_61.lib
 
-count(develop_win64, 1){
-    CONFIG(debug, debug|release): LIBS += -L$$PWD/../../MSVC_development_deps/MLPACK/Debug -lmlpack
-    CONFIG(release, debug|release): LIBS += -L$$PWD/../../MSVC_development_deps/MLPACK/Release -lmlpack
-    INCLUDEPATH += $$PWD/../../MSVC_development_deps/MLPACK/include
-    DEPENDPATH += $$PWD/../../MSVC_development_deps/MLPACK/include
-    CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/MLPACK/Debug/mlpack.lib
-    CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/MLPACK/Release/mlpack.lib
+    LIBS += -L$$PWD/../../Vespucci_dependencies/quazip/lib/ -lquazip
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/quazip/include
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/quazip/include
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/quazip/lib/quazip.lib
 
-    LIBS += -L$$PWD/../../MSVC_development_deps/Armadillo/lib/ -larmadillo
-    INCLUDEPATH += $$PWD/../../MSVC_development_deps/Armadillo/include
-    DEPENDPATH += $$PWD/../../MSVC_development_deps/Armadillo/include
-    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/Armadillo/lib/armadillo.lib
+    LIBS += -L$$PWD/../../Vespucci_dependencies/yaml-cpp/lib/ -llibyaml-cppmdd
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/yaml-cpp/include
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/yaml-cpp/include
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/yaml-cpp/lib/libyaml-cppmdd.lib
 
-    INCLUDEPATH += $$PWD/../../MSVC_development_deps/boost_1_60_0
-    DEPENDPATH += $$PWD/../../MSVC_development_deps/boost_1_60_0
-
-    LIBS += -L$$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_math_c99-vc140-mt-s-1_60
-    INCLUDEPATH += $$PWD/../../MSVC_development_deps/boost_1_60_0
-    DEPENDPATH += $$PWD/../../MSVC_development_deps/boost_1_60_0
-    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/libboost_math_c99-vc140-mt-s-1_60.lib
-
-    LIBS += -L$$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_serialization-vc140-mt-s-1_60
-    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/libboost_serialization-vc140-mt-s-1_60.lib
-
-    LIBS += -L$$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_random-vc140-mt-s-1_60
-    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/libboost_random-vc140-mt-s-1_60.lib
-
-    LIBS += -L$$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_unit_test_framework-vc140-mt-s-1_60
-    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/libboost_unit_test_framework-vc140-mt-s-1_60.lib
-
-    LIBS += -L$$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/ -llibboost_program_options-vc140-mt-s-1_60
-    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/boost_1_60_0/lib64-msvc-14.0/libboost_program_options-vc140-mt-s-1_60.lib
-
-    LIBS += -L$$PWD/../../MSVC_development_deps/LAPACK/ -llapack_x64
-    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/LAPACK/lapack_x64.lib
-
-    LIBS += -L$$PWD/../../MSVC_development_deps/OpenBLAS/ -llibopenblas
-    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/OpenBLAS/libopenblas.lib
-
-    LIBS += -L$$PWD/../../MSVC_development_deps/ARPACK/ -larpack_x64
-    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/ARPACK/arpack_x64.lib
-
-    LIBS += -L$$PWD/../../MSVC_development_deps/cminpack/ -lcminpack
-    INCLUDEPATH += $$PWD/../../MSVC_development_deps/cminpack
-    DEPENDPATH += $$PWD/../../MSVC_development_deps/cminpack
-    PRE_TARGETDEPS += $$PWD/../../MSVC_development_deps/cminpack/cminpack.lib
+    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lzlib
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/zlib.lib
 }
 
 
@@ -325,3 +292,6 @@ mac: LIBS += -framework Accelerate
 
 mac: LIBS += -L/usr/local/lib/ -lhdf5
 mac: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
+
+
+
