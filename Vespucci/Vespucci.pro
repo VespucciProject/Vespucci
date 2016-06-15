@@ -424,7 +424,7 @@ macx: LIBS += -lz.1
 win32:!win32-g++{
     CONFIG += release force_debug_info
 
-    LIBS += -L$$OUT_PWD/../VespucciLibrary/release -lvespucci
+    LIBS += -L$$OUT_PWD/../VespucciLibrary/release -llibvespucci
     PRE_TARGETDEPS += $$OUT_PWD/../VespucciLibrary/release/vespucci.lib
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/mlpack/lib/ -lmlpack
