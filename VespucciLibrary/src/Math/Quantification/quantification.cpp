@@ -40,12 +40,10 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
 {
     //performs analysis of peak shape and magnitude
     arma::rowvec results(8);
-    double delta = std::abs(abscissa(1) - abscissa(0)); //assumes monotonic to some degree of precision
-    arma::uvec left_bound = find(((min-delta) <= abscissa) && (abscissa <= (min+delta)));
-    arma::uvec right_bound = find(((max-delta) <= abscissa) && (abscissa <= (max+delta)));
-    //initial centers
-    arma::uword min_index = left_bound(0);
-    arma::uword max_index = right_bound(0);
+
+    arma::uword min_index = Vespucci::Math::ClosestIndex(min, abscissa);
+    arma::uword max_index = Vespucci::Math::ClosestIndex(max, abscissa);
+
     min = abscissa(min_index);
     max = abscissa(max_index);
 
@@ -143,7 +141,9 @@ arma::mat Vespucci::Math::Quantification::QuantifyPeakMat(const arma::mat &spect
     arma::mat results(spectra.n_cols, 8);
     inflection_baselines.clear();
     total_baselines.clear();
+    //total_baselines.set_size(spectra.n_cols, )
     inflection_baselines.set_size(spectra.n_cols);
+
     for (arma::uword i = 0; i < spectra.n_cols; ++i){
         double temp_min = min;
         double temp_max = max;

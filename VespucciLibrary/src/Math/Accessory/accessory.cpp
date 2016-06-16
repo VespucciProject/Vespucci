@@ -952,3 +952,17 @@ arma::cx_vec Vespucci::Math::cx_zeros(arma::uword n)
 {
     return arma::cx_vec(arma::zeros(n), arma::zeros(n));
 }
+
+arma::uword Vespucci::Math::ClosestIndex(double value, const arma::vec &vector)
+{
+    double delta = std::abs(vector(1) - vector(0)); //assumes monotonic to some degree of precision
+    arma::uvec indices = find(((value-delta) <= vector) && (abscissa <= (value+delta)));
+
+
+    arma::uword index;
+    if (indices.n_elem) index = indices(0);
+    else if (!indices.n_elem && value < vector.min()) index = 0;
+    else index = vector.n_elem - 1;
+
+    return index;
+}
