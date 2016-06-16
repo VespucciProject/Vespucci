@@ -28,6 +28,27 @@ void AnalysisResults::AddMetadata(QString key, QString value)
     metadata_[key] = value;
 }
 
+void AnalysisResults::AddField(const QString &key, const field<mat> &value)
+{
+    fields_[key] = QSharedPointer<field<mat> >(new field<mat>(value));
+}
+
+const field<mat> &AnalysisResults::GetField(const QString &key)
+{
+    return *fields_[key];
+}
+
+const mat &AnalysisResults::GetFieldElement(const QString &key, const uword &index)
+{
+    if (!HasField(key) || HasField(key) && index >= fields_[key]->n_elem) return empty_matrix_;
+    else return fields_[key]->at(index);
+}
+
+bool AnalysisResults::HasField(const QString &key) const
+{
+    return fields_.contains(key);
+}
+
 bool AnalysisResults::HasMatrix(const QString &key) const
 {
     return matrices_.contains(key);
