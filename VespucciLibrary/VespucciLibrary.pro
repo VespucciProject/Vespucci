@@ -213,6 +213,7 @@ unix:!macx: DEPENDPATH += /usr/include/libxml2
 
 win32:!win32-g++{
     CONFIG += release force_debug_info
+    QMAKE_CXXFLAGS += /MP /openmp
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/mlpack/lib/ -lmlpack
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/mlpack/include
