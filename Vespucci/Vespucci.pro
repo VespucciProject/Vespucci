@@ -423,6 +423,7 @@ macx: LIBS += -lz.1
 
 win32:!win32-g++{
     CONFIG += release force_debug_info
+    QMAKE_CXXFLAGS += /MP /openmp
 
     LIBS += -L$$OUT_PWD/../VespucciLibrary/release -llibvespucci
     PRE_TARGETDEPS += $$OUT_PWD/../VespucciLibrary/release/vespucci.lib
