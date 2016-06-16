@@ -24,10 +24,8 @@ arma::mat Vespucci::Math::Quantification::CorrelationMat(const arma::mat &X, con
     arma::mat results;
     results.set_size(X.n_cols, control.n_cols);
 
-#pragma omp parallel for default(none) \
-    shared(X, control, results)
-    for (intmax_t i = 0; i < X.n_cols; ++i)
-        for (intmax_t j = 0; j < control.n_cols; ++j)
+    for (arma::uword i = 0; i < X.n_cols; ++i)
+        for (arma::uword j = 0; j < control.n_cols; ++j)
             results(i, j) = arma::as_scalar(arma::cor(control.col(i), X.col(j)));
     return results;
 }
