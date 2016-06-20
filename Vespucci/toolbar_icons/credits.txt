@@ -1,10 +1,2 @@
-Icons from The Noun Project:
-Empty by Rflor
-HPLC by Fredrik Ddfors
-Open by Jevgeni Striganov
-Save by Jevgeni Striganov
-Compass by Ed Harrison
-Import by Ribbla
-Erase by Ribbla
-Close by Juan Garces
-Information by Iris Sun
+Icons from Font Awesome: fontawesome.io
+SVG files from https://github.com/encharm/Font-Awesome-SVG-PNG
