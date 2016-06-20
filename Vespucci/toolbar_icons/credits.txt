@@ -1,2 +1,5 @@
-Icons from Font Awesome: fontawesome.io
+Icons from Font Awesome unless otherwise specified: fontawesome.io
 SVG files from https://github.com/encharm/Font-Awesome-SVG-PNG
+From Noun Project:
+Import by Ribbla
+Empty by Rflor
