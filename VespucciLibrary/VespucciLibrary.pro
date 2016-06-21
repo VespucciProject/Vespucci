@@ -137,10 +137,10 @@ unix:!macx{
     PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5.a
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
-    LIBS += -L$$PWD/../../yaml-cpp/lib -lyaml-cpp
-    PRE_TARGETDEPS += $$PWD/../../yaml-cpp/lib/yaml-cpp.a
-    LIBS += -L$$PWD/../../quazip/lib -lquazip
-    PRE_TARGETDEPS += $$PWD/../../quazip/lib/quazip.a
+    LIBS += -L$$PWD/../../yaml-cpp/lib -llibyaml-cpp
+    PRE_TARGETDEPS += $$PWD/../../yaml-cpp/lib/libyaml-cpp.a
+    LIBS += -L$$PWD/../../quazip/lib -llibquazip
+    PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
 
     INCLUDEPATH += /usr/include
     DEPENDPATH += /usr/include
