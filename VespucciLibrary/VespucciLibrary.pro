@@ -18,19 +18,6 @@
 ################################################################################
 ##############               LibVespucci Qt Profile               ##############
 ################################################################################
-# The configuration for windows assumes that you have downloaded the compiled
-# windows libraries from the MinGW_libs branch of the Vespucci repository.
-# To use these libraries, you must be using 64-bit MinGW-w64 toolkit, with SEH
-# for exception handling. All libraries must be compiled in such a manner.
-# A link to download the exact compiler build I used is available on the GitHub
-# page.
-# R- and Octave-related libraries will be based on your installation of those
-# tools.
-
-
-# Configuration settings for unix systems are based on my own personal environment
-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
-
 QT       += core gui
 QT       += widgets printsupport
 QT       += svg
@@ -102,7 +89,6 @@ SOURCES +=\
     src/Math/Transform/cwt.cpp \
     src/Math/PeakFinding/peakfinding.cpp \
     src/Math/Fitting/linleastsq.cpp \
-    #src/Math/Fitting/nonlinleastsq.cpp \
     src/Global/vespucci.cpp \
     src/Math/Transform/fft.cpp \
     src/Math/Quantification/correlation.cpp \
@@ -126,7 +112,6 @@ HEADERS  += \
     include/Math/PeakFinding/peakfinding.h \
     include/Math/Accessory/accessory_impl.h \
     include/Math/Fitting/linleastsq.h \
-    #include/Math/Fitting/nonlinleastsq.h \
     include/Global/vespucci.h \
     include/Global/libvespucci.h \
     include/Math/Transform/fft.h \
@@ -142,75 +127,76 @@ HEADERS  += \
     include/Math/PeakFinding/kernelpeakfinding.h
 
 
-#linux and mac osx libraries, specific to my own install. This will be handled by CMake later
-#I hope...
-#For these paths to work, everything except for armadillo, mlpack and cminpack
-#should be installed using the package manager for your distribution
-# (these work for ubuntu and for the homebrew mac os package manager).
-# include paths a
-
-unix:!macx: INCLUDEPATH += /usr/include
-unix:!macx: DEPENDPATH += /usr/include
-unix:!macx: INCLUDEPATH += /usr/local/include
-unix:!macx: DEPENDPATH += /usr/local/include
-unix:macx: INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
-unix:macx: DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
-
-
-INCLUDEPATH += $$PWD/../../Vespucci-QCP-sharedlib/include
-DEPENDPATH += $$PWD/../../Vespucci-QCP-sharedlib/include
-
-INCLUDEPATH += $$PWD/include
-DEPENDPATH += $$PWD/include
-unix:!macx: INCLDEPATH += /usr/include/cminpack-1
-unix:!macx: DEPENDPATH += /usr/include/cminpack-1
-#mlpack and dependencies
-#we use the Accelerate Framework on OS X but OpenBLAS on linux.
-
-
-#travis-ci builds
-count(travis_ci, 1){
+unix:!macx{
     QMAKE_CXX=/usr/bin/g++-4.9
-    unix:!macx: LIBS += -L/home/travis/depts/lib -lmlpack
-    unix:!macx: LIBS += -L/home/travis/depts/lib -larmadillo
-    unix:!macx: LIBS += -L/usr/lib -larpack
-    unix:!macx: PRE_TARGETDEPS += /usr/lib/libarpack.a
-    unix:!macx: LIBS += -L/usr/lib/x86_64-linux-gnu -lhdf5
-    unix:!macx: PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5.a
-    unix:!macx: LIBS += -L/usr/lib/ -lcminpack
-    unix:!macx: LIBS += -L/usr/lib -lblas
-    unix:!macx: LIBS += -L/usr/lib -llapack
-    unix:!macx: INCLUDEPATH += /home/travis/depts/include
-    unix:!macx: DEPENDPATH += /home/travis/depts/include
-    unix:!macx: INCLUDEPATH += /home/travis/depts/include/armadillo_bits
-    unix:!macx: DEPENDPATH += /home/travis/depts/include/armadillo_bits
-    unix:!macx: INCLUDEPATH += /usr/include/cminpack-1
-    unix:!macx: DEPENDPATH += /usr/include/cminpack-1
-}
-count(travis_ci, 0){
-    unix:!macx: LIBS += -L/usr/local/lib -lmlpack
-    unix:!macx: LIBS += -L/usr/lib -larmadillo
-    unix:!macx: LIBS += -L/usr/local/lib -larpack
-    unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libarpack.a
-    unix:!macx: LIBS += -L/usr/local/lib -lhdf5
-    unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
-    unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
-    unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
-    unix:!macx: LIBS += -L/usr/lib -lopenblas
-    unix:!macx: PRE_TARGETDEPS += /usr/lib/libopenblas.a
-    unix:!macx: LIBS += -L/usr/local/lib64/ -lcminpack
-    unix:!macx: PRE_TARGETDEPS += /usr/local/lib64/libcminpack.a
-    unix:!macx: INCLUDEPATH += /usr/local/include/cminpack-1
-    unix:!macx: DEPENDPATH += /usr/local/include/cminpack-1
+    LIBS += -L$$PWD/../../mlpack/lib -lmlpack
+    LIBS += -L$$PWD/../../armadillo/lib -larmadillo
+    LIBS += -L/usr/lib -larpack
+    PRE_TARGETDEPS += /usr/lib/libarpack.a
+    LIBS += -L/usr/lib/x86_64-linux-gnu -lhdf5
+    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5.a
+    LIBS += -L/usr/lib -lblas
+    LIBS += -L/usr/lib -llapack
+    LIBS += -L$$PWD/../../yaml-cpp/lib -lyaml-cpp
+    PRE_TARGETDEPS += $$PWD/../../yaml-cpp/lib/yaml-cpp.a
+    LIBS += -L$$PWD/../../quazip/lib -lquazip
+    PRE_TARGETDEPS += $$PWD/../../quazip/lib/quazip.a
+
+    INCLUDEPATH += /usr/include
+    DEPENDPATH += /usr/include
+
+    INCLUDEPATH += /usr/include/libxml2
+    DEPENDPATH += /usr/include/libxml2
+
+    INCLUDEPATH += /usr/local/include
+    DEPENDPATH += /usr/local/include
+
 }
 
+#mac libraries. These are the same in Travis-CI as in most local environments
+#with all dependencies of armadillo and mlpack installed using homebrew
+#and armadillo and mlpack installed to the ../armadillo and ../mlpack directories
+macx{
+    CONFIG += app_bundle
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 
-unix:!macx: INCLUDEPATH += /usr/include
-unix:!macx: DEPENDPATH += /usr/include
+    ICON = vespuccilogo.icns
+    LIBS += -L/usr/lib -lc++
 
-unix:!macx: INCLUDEPATH += /usr/include/libxml2
-unix:!macx: DEPENDPATH += /usr/include/libxml2
+    LIBS += -L$$PWD/../../mlpack/lib/ -lmlpack
+    INCLUDEPATH += $$PWD/../../mlpack/include
+    DEPENDPATH += $$PWD/../../mlpack/include
 
+    LIBS += -L$$PWD/../../armadillo/lib/ -larmadillo
+    INCLUDEPATH += $$PWD/../../armadillo/include
+    DEPENDPATH += $$PWD/../../armadillo/include
+
+    LIBS += -L/usr/local/lib/ -larpack
+    INCLUDEPATH += /usr/local/include
+    DEPENDPATH += /usr/local/include
+
+    LIBS += -framework Accelerate
+
+    LIBS += -L/usr/local/lib/ -lhdf5
+    PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
+
+    LIBS += -L$$PWD/../../quazip/lib/ -lquazip
+    INCLUDEPATH += $$PWD/../../quazip/include
+    DEPENDPATH += $$PWD/../../quazip/include
+    PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
+
+    LIBS += -L$$PWD/../../yaml-cpp/lib/ -lyaml-cpp
+    INCLUDEPATH += $$PWD/../../yaml-cpp/include
+    DEPENDPATH += $$PWD/../../yaml-cpp/include
+    PRE_TARGETDEPS += $$PWD/../../yaml-cpp/lib/libyaml-cpp.a
+
+    LIBS += -lz.1
+
+    INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
+    DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
+}
+
+#windows libraries for msvc (we don't currently build the libraries for g++ on windows)
 win32:!win32-g++{
     CONFIG += release force_debug_info
     QMAKE_CXXFLAGS += /MP /openmp
@@ -226,13 +212,9 @@ win32:!win32-g++{
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/armadillo/lib/armadillo.lib
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/OpenBLAS/ -llibopenblas
-    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/OpenBLAS
-    DEPENDPATH += $$PWD/../../Vespucci_dependencies/OpenBLAS
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/OpenBLAS/libopenblas.lib
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/LAPACK/ -llapack_x64
-    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/LAPACK
-    DEPENDPATH += $$PWD/../../Vespucci_dependencies/LAPACK
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/LAPACK/lapack_x64.lib
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lhdf5
@@ -272,27 +254,6 @@ win32:!win32-g++{
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/zlib.lib
+
+    RC_ICONS=vespuccilogo.ico
 }
-
-
-#mac libraries. These are the same in Travis-CI as in most local environments
-#assuming that all dependencies for armadillo and mlpack are installed using homebrew
-mac: LIBS += -L$$PWD/../../mlpack/lib/ -lmlpack
-mac: INCLUDEPATH += $$PWD/../../mlpack/include
-mac: DEPENDPATH += $$PWD/../../mlpack/include
-
-mac: LIBS += -L$$PWD/../../armadillo/lib/ -larmadillo
-mac: INCLUDEPATH += $$PWD/../../armadillo/include
-mac: DEPENDPATH += $$PWD/../../armadillo/include
-
-mac: LIBS += -L/usr/local/lib/ -larpack
-mac: INCLUDEPATH += /usr/local/include
-mac: DEPENDPATH += /usr/local/include
-
-mac: LIBS += -framework Accelerate
-
-mac: LIBS += -L/usr/local/lib/ -lhdf5
-mac: PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
-
-
-
