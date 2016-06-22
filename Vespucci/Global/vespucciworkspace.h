@@ -42,7 +42,7 @@ class AnalysisResults;
 class VespucciWorkspace
 {
 public:
-    VespucciWorkspace();
+    VespucciWorkspace(QString settings_file);
     ~VespucciWorkspace();
     QStringList dataset_names() const;
     //QStringList map_names();

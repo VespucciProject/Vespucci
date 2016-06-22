@@ -177,10 +177,8 @@ macx{
 
     LIBS += -framework Accelerate
 
-    LIBS += -L/usr/local/lib/ -lhdf5
-    PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
+    LIBS += -L/usr/local/opt/hdf5/lib -lhdf5
 
-    LIBS += -L$$PWD/../../quazip/lib/ -lquazip
     INCLUDEPATH += $$PWD/../../quazip/include
     DEPENDPATH += $$PWD/../../quazip/include
     PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a

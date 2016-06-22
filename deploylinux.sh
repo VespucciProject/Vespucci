@@ -18,7 +18,6 @@ if [! -f $deploymentDir/bin ]; then mkdir $deploymentDir/bin fi
 if [! -f $deploymentDir/include ]; then mkdir $deploymentDir/include fi
 if [! -f $deploymentDir/lib ]; then mkdir $deploymentDir/lib fi
 
-cp -LR $libDir/armadillo/lib/libarmadillo.so
-cp -LR $libDir/mlpack/lib/libmlpack.so
 find $libDir/mlpack/lib -name \*.so -exec cp {} $deploymentDir/lib \;
-find $libDir/armadillo/lib -name \*.so -exec cp {} Vespucci/Vespucci.app/Contents/Frameworks \
+find $libDir/armadillo/lib -name \*.so -exec cp {} $deploymentDir/Contents/Frameworks $deploymentDir/ \;
+

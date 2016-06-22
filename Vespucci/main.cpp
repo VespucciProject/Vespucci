@@ -56,8 +56,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
     QApplication a(argc, argv);
 
-    //A pointer to this goes by "workspace" in every window that needs it
-    VespucciWorkspace ws;
+    VespucciWorkspace ws(a.applicationDirPath() + "/settings.ini");
 
     //Clean up dataset log files from when it crashed last
     ws.CleanLogFiles();

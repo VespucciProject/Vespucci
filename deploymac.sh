@@ -5,13 +5,13 @@
 #Vespucci Mac OS X deployment script
 #Assumes that all libraries were installed using homebrew
 #This should be run from the after building Vepsucci
-#to $deploymentDir/Contents/Frameworks and then use install_name_tool
+#to $deploymentDir/Contents/lib and then use install_name_tool
 
 #this is based on my local setup (which is represented in the .pro file)
 #This script should be run from the build directory
 
 #make sure a "Frameworks" directory exists
-mkdir -p "$deploymentDir/Contents/Frameworks"
+mkdir -p "$deploymentDir/Contents/lib"
 
 if [ $# -eq 0 ]; then
     echo "Usage: $0 [source dir] [build dir] [deployment dir] [lib dir]";
@@ -24,33 +24,51 @@ srcDir=$1
 buildDir=$2
 deploymentDir=$3
 libDir=$4
-#copy over the Qt Frameworks
-cp -LR /usr/local/opt/qt5/lib/QtPrintSupport.framework $deploymentDir/Contents/Frameworks/
-cp -LR /usr/local/opt/qt5/lib/QtWidgets.framework $deploymentDir/Contents/Frameworks
-cp -LR /usr/local/opt/qt5/lib/QtGui.framework $deploymentDir/Contents/Frameworks
-cp -LR /usr/local/opt/qt5/lib/QtCore.framework $deploymentDir/Contents/Frameworks
-cp -LR /usr/local/opt/qt5/lib/QtSvg.framework $deploymentDir/Contents/Frameworks
 
-#remove header files and symlinks to them
-yes |rm -r $deploymentDir/Contents/Frameworks/QtPrintSupport.framework/Versions/5/Headers
-yes |rm $deploymentDir/Contents/Frameworks/QtPrintSupport.framework/Headers
-yes |rm -r $deploymentDir/Contents/Frameworks/QtWidgets.framework/Versions/5/Headers
-yes |rm $deploymentDir/Contents/Frameworks/QtWidgets.framework/Headers
-yes |rm -r $deploymentDir/Contents/Frameworks/QtGui.framework/Versions/5/Headers
-yes |rm $deploymentDir/Contents/Frameworks/QtGui.framework/Headers
-yes |rm -r $deploymentDir/Contents/Frameworks/QtCore.framework/Versions/5/Headers
-yes |rm $deploymentDir/Contents/Frameworks/QtCore.framework/Headers
-yes |rm -r $deploymentDir/Contents/Frameworks/QtSvg.framework/Versions/5/Headers
-yes |rm $deploymentDir/Contents/Frameworks/QtSvg.framework/Headers
+#copy over the Qt Frameworks
+cp -LR /usr/local/opt/qt5/lib/QtPrintSupport.framework $deploymentDir/Contents/lib/
+cp -LR /usr/local/opt/qt5/lib/QtWidgets.framework $deploymentDir/Contents/lib
+cp -LR /usr/local/opt/qt5/lib/QtGui.framework $deploymentDir/Contents/lib
+cp -LR /usr/local/opt/qt5/lib/QtCore.framework $deploymentDir/Contents/lib
+cp -LR /usr/local/opt/qt5/lib/QtSvg.framework $deploymentDir/Contents/lib
+
+#remove Qt header files and symlinks to them
+yes |rm -r $deploymentDir/Contents/lib/QtPrintSupport.framework/Versions/5/Headers
+yes |rm $deploymentDir/Contents/lib/QtPrintSupport.framework/Headers
+yes |rm -r $deploymentDir/Contents/lib/QtWidgets.framework/Versions/5/Headers
+yes |rm $deploymentDir/Contents/lib/QtWidgets.framework/Headers
+yes |rm -r $deploymentDir/Contents/lib/QtGui.framework/Versions/5/Headers
+yes |rm $deploymentDir/Contents/lib/QtGui.framework/Headers
+yes |rm -r $deploymentDir/Contents/lib/QtCore.framework/Versions/5/Headers
+yes |rm $deploymentDir/Contents/lib/QtCore.framework/Headers
+yes |rm -r $deploymentDir/Contents/lib/QtSvg.framework/Versions/5/Headers
+yes |rm $deploymentDir/Contents/lib/QtSvg.framework/Headers
 
 #copy over third-party libraries and the required symlinks
-find $buildDir/VespucciLibrary -name \*.dylib -exec cp {} $deploymentDir/Contents/Frameworks \;
-find $libDir/mlpack/lib -name \*.dylib -exec cp {} $deploymentDir/Contents/Frameworks \;
-find $libDir/armadillo/lib -name \*.dylib -exec cp {} $deploymentDir/Contents/Frameworks \;
-cp -L /usr/local/opt/arpack/libexec/lib/libarpack.2.dylib $deploymentDir/Contents/Frameworks
-cp /usr/local/opt/arpack/libexec/lib/libarpack.2.dylib $deploymentDir/Contents/Frameworks
-cp -L /usr/local/lib/libhdf5.10.dylib $deploymentDir/Contents/Frameworks
-cp /usr/local/lib/libhdf5.10.dylib $deploymentDir/Contents/Frameworks
+find $buildDir/VespucciLibrary -name \*.dylib -exec cp {} $deploymentDir/Contents/lib \;
+find $libDir/mlpack/lib -name \*.dylib -exec cp {} $deploymentDir/Contents/lib \;
+find $libDir/armadillo/lib -name \*.dylib -exec cp {} $deploymentDir/Contents/lib \;
+cp -L /usr/local/opt/arpack/libexec/lib/libarpack.2.dylib $deploymentDir/Contents/lib
+cp /usr/local/opt/arpack/libexec/lib/libarpack.2.dylib $deploymentDir/Contents/lib
+cp -L /usr/local/lib/libhdf5.10.dylib $deploymentDir/Contents/lib
+cp /usr/local/lib/libhdf5.10.dylib $deploymentDir/Contents/lib
+ln -s $deploymentDir/Contents/lib/libhdf5.10.dylib $deploymentDir/Contents/lib/libhdf5.dylib
+
+#Configure the executable to use the libraries in Frameworks directory
+install_name_tool -change libmlpack.2.dylib \
+    @executable_path/../Frameworks/libmlpack.2.dylib \
+    $deploymentDir/Contents/MacOS/Vespucci
+
+install_name_tool -change libvespucci.1.dylib \
+    @executable_path/../lib/libvespucci.1.dylib\
+    $deploymentDir/Contents/MacOS/Vespucci
+
+install_name_tool -change libarmadillo.6.dylib \
+    @executable_path/../lib/libarmadillo.6.dylib \
+    $deploymentDir/Contents/MacOS/Vespucci
+
+install_name_tool -change /usr/local/opt/hdf5/lib/libhdf5.10.dylib \
+    @executable_path/../lib/libhdf5.dylib
 
 #set the application icon
 iconSource=$srcDir/Vespucci/vespuccilogo.icns
@@ -69,4 +87,8 @@ elif [-d $iconDestination ]; then
     setfile -a V $iconDestination/Icon?
 fi
 rm $rsrc $icon
+
+#copy header files from the source directory
+cp -r $srcDir/VespucciLibrary/include $deploymentDir/Contents/
+
 
