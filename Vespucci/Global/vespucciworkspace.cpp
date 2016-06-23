@@ -23,8 +23,8 @@
 ///
 /// \brief VespucciWorkspace::VespucciWorkspace
 /// Constructor
-VespucciWorkspace::VespucciWorkspace() :
-    settings_("settings.ini", QSettings::IniFormat)
+VespucciWorkspace::VespucciWorkspace(QString settings_file) :
+    settings_(settings_file, QSettings::IniFormat)
 {
     settings_.setIniCodec("UTF-8");
     dataset_loading_count_ = 0;

@@ -346,8 +346,8 @@
   </action>
   <action name="actionClose_Dataset">
    <property name="icon">
-    <iconset>
-     <normaloff>../toolbar_icons/close.svg</normaloff>../toolbar_icons/close.svg</iconset>
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/toolbar_icons/close.svg</normaloff>:/icons/toolbar_icons/close.svg</iconset>
    </property>
    <property name="text">
     <string>C&amp;lose Dataset</string>

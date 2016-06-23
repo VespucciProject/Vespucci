@@ -1,66 +1,57 @@
 language: cpp
-
 matrix:
   include:
-    - os: linux
-      dist: trusty
-      sudo: required
-      compiler: gcc
-#    - os: osx
-#      osx_image: xcode7.2
-#      compiler: clang
-
-
-before_install:
-#    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ;fi
-#    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt5 ;fi
-
-    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then wget https://github.com/VespucciProject/Vespucci-QCP/releases/download/1.3.1/vespucci_travis_depts.tar.gz ;fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then tar xvf vespucci_travis_depts.tar.gz -C /home/travis ;fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-add-repository -y ppa:ubuntu-sdk-team ;fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test ;fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-add-repository -y ppa:beineri/opt-qt551-trusty ;fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-get -y update ;fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-get install gcc-4.9 g++-4.9 ;fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9 ;fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-get -y install qt55base qt55tools qt55imageformats qt55location qt55declarative libsqlite3-dev qt55svg ;fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-get -y install libhdf5-dev libarpack2-dev ;fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then sudo apt-get -y install libxml2-dev libboost1.55-dev libboost-math1.55-dev libboost-program-options1.55-dev libboost-test1.55-dev libboost-random1.55-dev libcminpack-dev ;fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux"]]; then source /opt/qt55/bin/qt55-env.sh ;fi
-
-matrix:
-    include:
-      - os: linux
-        dist: trusty
-        sudo: required
-        compiler: gcc
-        before_install:
-            - wget https://github.com/VespucciProject/Vespucci-QCP/releases/download/1.3.1/vespucci_travis_depts.tar.gz
-            - tar xvf vespucci_travis_depts.tar.gz -C /home/travis
-            - sudo apt-add-repository -y ppa:ubuntu-sdk-team
-            - sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
-            - sudo apt-add-repository -y ppa:beineri/opt-qt551-trusty
-            - sudo apt-get -y update+
-            - sudo apt-get -y install gcc-4.9 g++-4.9
-            - sudo apt-get -y install qt55base qt55tools qt55imageformats qt55location qt55declarative libsqlite3-dev qt55svg
-            - sudo apt-get -y install libhdf5-dev libarpack2-dev
-            - sudo apt-get -y install libxml2-dev libboost1.55-dev libboost-math1.55-dev libboost-program-options1.55-dev libboost-test1.55-dev libboost-random1.55-dev libcminpack-dev
-            - source /opt/qt55/bin/qt55-env.sh
-      - os: osx
-        osx_image: xcode7.2
-        compiler: clang
-        before_install:
-          - brew install wget
-          - brew tap homebrew/science
-          - brew install qt5
-          - brew link --force qt5
-          - brew install hdf5
-          - brew install arpack
-          - brew install libxml2
-          - brew install boost
-
+  - os: linux
+    dist: trusty
+    sudo: required
+    compiler: gcc
+  - os: osx
+    osx_image: xcode7.2
+    compiler: clang
+install:
+- cd $TRAVIS_BUILD_DIR/../
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x getlinuxdeps.sh && ./getlinuxdeps.sh;
+  fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt56/bin/qt56-env.sh
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x getosxdeps.sh && ./getosxdeps.sh;
+  fi
 script:
-    - mkdir build-VespucciLibrary && cd build-VespucciLibrary
-    - qmake ../Library/VespucciLibrary.pro && make
-    - cd ../ && mkdir build-Vespucci && cd build-Vespucci
-    - qmake ../Vespucci.pro && make
+- cd $TRAVIS_BUILD_DIR
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export ARMA_HDF5_INCLUDE_DIR=/usr/local/opt/hdf5/include;
+  fi
+- mkdir ../build && cd ../build
+- qmake ../buildall.pro
+- make
+after_success:
+- export BUILD_DIR=$TRAVIS_BUILD_DIR/../build
+- export LIB_DIR=$TRAVIS_BUILD_DIR/..
+- export SRC_DIR=$TRAVIS_BUILD_DIR
+- export PKG_DIR=$TRAVIS_BUILD_DIR/package
+- mkdir $PKG_DIR
+- export PKG_NAME=Vespucci_1.0.0-$TRAVIS_BUILD_NUMBER
+- if [[ "TRAVIS_OS_NAME" == "osx" ]]; then export $OUT_PKG = $PKG_DIR/$PKG_NAME.dmg;
+  fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cp -r $BUILD_DIR/Vespucci/Vespucci.app
+  $TRAVIS_BUILD_DIR/../; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export DEPLOY_DIR=$TRAVIS_BUILD_DIR/../Vespucci.app;
+  fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x deploymac.sh && ./deploymac.sh
+  $SRC_DIR $BUILD_DIR $DEPLOY_DIR $LIB_DIR; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x createdmg.sh && ./createdmg.sh
+  $DEPLOY_DIR $OUT_PKG $SRC_DIR
+- if [[ "TRAVIS_OS_NAME" == "linux" ]]; then export $OUT_PKG=$PKG_DIR/$PKG_NAME.tar.gz
+- if [[ "TRAVIS_OS_NAME" == "linux" ]]; then export DEPLOY_DIR=$TRAVIS_BUILD_DIR/Vespucci_$TRAVIS_COMMIT
+  && mkdir DEPLOY_DIR; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x deploylinux.sh && ./deploylinux.sh
+  $SRC_DIR $BUILD_DIR $DEPLOY_DIR $LIB_DIR; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x createtarball.sh && ./createtarball.sh $DEPLOY_DIR $OUT_PKG $SRC_DIR; fi
+
+deploy:
+- skip_cleanup: true
+- provider: bintray
+bintray:
+    file: deploybintray.json
+    user: dpfoose
+    key:
+        secure: CkzrPKCuAAQxnPSEXbtIbJzjFP1dDDQs0KdyxA10KvTapEOp/JppsUd2BQ7PRSIU1vdvLZM7ysnpMWsjAZQ2+MR5HxBBKRjgqjwy93XFgXS+RP36AagQIEhlu+aqvbDl9/cgMAxrj57lizQA2KUF+zIkonKByDmVNc6oExlUq0WfeCNQZ+RBb7aPfckVdViMsTtfP/3S56cY4kgcc+uVx9Au/YXTB+BHFiON7TL40CLm+FW3HArvBrmIQIBDNE50JfSBe+jCk2/wPFZnsv0FH6KcnT32cNiT2b8gUltOpHWoPbh2y5cRur6NgaAg+WaXy3XIb2KhphkA4ih5WhXGgJ+6X7V+DX1lJd/2abSJzstI+RfPnuIOxP4KjijjdhT96Gq9OLVAYT7VUcM+IyWmu/0PJCWlnFb03uJRos4QJ05QV8FxWD8K80TwfN3BIPvPwlN+uIaTsuGV6LSXIpj8zrBToM8r990kbDunxEAPBKZEP9SCpUT/26UPOp0ON2oMRSAgcFOw7c0nz+fkShWqzlaQ/VXZL4/4TYlga3ZGGWPDiEMQ0GUKZHylZZ11SrI4kuHbspGCBTb5xMrFqJ2pI+zUlPKSsInnDUHa+VDAUb0FoTwX/wSBnO6pQvT19LQLGIORMfOhTYARmz+6ChEGr4X5iO6+PQDGe95oJzy4tVI=
+  
