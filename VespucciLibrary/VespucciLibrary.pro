@@ -252,6 +252,4 @@ win32:!win32-g++{
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/zlib.lib
-
-    RC_ICONS=vespuccilogo.ico
 }
