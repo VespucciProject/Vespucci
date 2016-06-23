@@ -1,6 +1,18 @@
 {
     "package": {
-        "name": ,
-        "repo": ,
+        "name": "Vespucci_latest",
+        "repo": "Vespucci_automated_builds",
+        "subject": "VespucciProject"
     },
+
+    "version": {
+        "name": "1.0.0"
+    },
+
+    "files":
+        [
+        {"includePattern": "target/(.*)", "uploadPattern":"/$1"}
+        ],
+    
+    "publish":"true"
 }
