@@ -354,7 +354,7 @@ win32:!win32-g++{
     QMAKE_CXXFLAGS += /MP /openmp
 
     LIBS += -L$$OUT_PWD/../VespucciLibrary/release -llibvespucci
-    PRE_TARGETDEPS += $$OUT_PWD/../VespucciLibrary/release/vespucci.lib
+    PRE_TARGETDEPS += $$OUT_PWD/../VespucciLibrary/release/libvespucci.lib
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/mlpack/lib/ -lmlpack
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/mlpack/include
