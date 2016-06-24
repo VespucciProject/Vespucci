@@ -126,6 +126,9 @@ HEADERS  += \
     include/Math/Stats/hypothesistests.h \
     include/Math/PeakFinding/kernelpeakfinding.h
 
+#For all platforms:
+INCLUDEPATH += $$PWD/include
+DEPENDPATH += $$PWD/include
 
 unix:!macx{
     QMAKE_CXX=/usr/bin/g++-4.9

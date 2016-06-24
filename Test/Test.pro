@@ -76,7 +76,6 @@ macx{
     CONFIG += app_bundle c++11
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 
-    ICON = vespuccilogo.icns
     LIBS += -L/usr/lib -lc++
 
     LIBS += -L$$OUT_PWD/../VespucciLibrary/ -lvespucci
