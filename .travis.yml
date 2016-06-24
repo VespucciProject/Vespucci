@@ -10,10 +10,10 @@ matrix:
     compiler: clang
 install:
 - cd $TRAVIS_BUILD_DIR/../
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x $TRAVIS_BUILD_DIR/getlinuxdeps.sh && TRAVIS_BUILD_DIR/getlinuxdeps.sh;
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x $TRAVIS_BUILD_DIR/getlinuxdeps.sh && $TRAVIS_BUILD_DIR/getlinuxdeps.sh;
   fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt56/bin/qt56-env.sh
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x $TRAVIS_BUILD_DIR/getosxdeps.sh && TRAVIS_BUILD_DIR/getosxdeps.sh;
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x $TRAVIS_BUILD_DIR/getosxdeps.sh && $TRAVIS_BUILD_DIR/getosxdeps.sh;
   fi
 script:
 - cd $TRAVIS_BUILD_DIR
@@ -35,16 +35,16 @@ after_success:
   $TRAVIS_BUILD_DIR/../; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export DEPLOY_DIR=$TRAVIS_BUILD_DIR/../Vespucci.app;
   fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x $TRAVIS_BUILD_DIR/deploymac.sh && TRAVIS_BUILD_DIR/deploymac.sh
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x $TRAVIS_BUILD_DIR/deploymac.sh && $TRAVIS_BUILD_DIR/deploymac.sh
   $SRC_DIR $BUILD_DIR $DEPLOY_DIR $LIB_DIR; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x $TRAVIS_BUILD_DIR/createdmg.sh && TRAVIS_BUILD_DIR/createdmg.sh
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x $TRAVIS_BUILD_DIR/createdmg.sh && $TRAVIS_BUILD_DIR/createdmg.sh
   $DEPLOY_DIR $OUT_PKG $SRC_DIR
 - if [[ "TRAVIS_OS_NAME" == "linux" ]]; then export $OUT_PKG=$PKG_DIR/$PKG_NAME.tar.gz
 - if [[ "TRAVIS_OS_NAME" == "linux" ]]; then export DEPLOY_DIR=$TRAVIS_BUILD_DIR/Vespucci_$TRAVIS_COMMIT
   && mkdir DEPLOY_DIR; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x $TRAVIS_BUILD_DIR/deploylinux.sh && TRAVIS_BUILD_DIR/deploylinux.sh
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x $TRAVIS_BUILD_DIR/deploylinux.sh && $TRAVIS_BUILD_DIR/deploylinux.sh
   $SRC_DIR $BUILD_DIR $DEPLOY_DIR $LIB_DIR; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x $TRAVIS_BUILD_DIR/createtarball.sh && TRAVIS_BUILD_DIR/createtarball.sh $DEPLOY_DIR $OUT_PKG $SRC_DIR; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x $TRAVIS_BUILD_DIR/createtarball.sh && $TRAVIS_BUILD_DIR/createtarball.sh $DEPLOY_DIR $OUT_PKG $SRC_DIR; fi
 
 deploy:
 - skip_cleanup: true
