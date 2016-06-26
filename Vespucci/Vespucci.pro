@@ -302,6 +302,18 @@ unix:!macx{
     INCLUDEPATH += /usr/local/include
     DEPENDPATH += /usr/local/include
 
+    INCLUDEPATH += $$PWD/../../mlpack/include
+    DEPENDPATH += $$PWD/../../mlpack/include
+
+    INCLUDEPATH += $$PWD/../../armadillo/include
+    DEPENDPATH += $$PWD/../../armadillo/include
+
+    INCLUDEPATH += $$PWD/../../quazip/include
+    DEPENDPATH += $$PWD/../../quazip/include
+
+    INCLUDEPATH += $$PWD/../../yaml-cpp/include
+    DEPENDPATH += $$PWD/../../yaml-cpp/include
+
 }
 
 #mac libraries. These are the same in Travis-CI as in most local environments
