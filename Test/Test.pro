@@ -55,7 +55,7 @@ unix:!macx{
     LIBS += -L$$PWD/../../quazip/lib -lquazip
     PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
 
-    LIBS += -L$$OUT_PWD/VespucciLibrary -lvespucci
+    LIBS += -L$$OUT_PWD/../VespucciLibrary -lvespucci
 
     INCLUDEPATH += /usr/include
     DEPENDPATH += /usr/include
