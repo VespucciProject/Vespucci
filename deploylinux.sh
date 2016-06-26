@@ -18,6 +18,7 @@ if [ ! -f $deploymentDir/bin ]; then mkdir $deploymentDir/bin; fi
 if [ ! -f $deploymentDir/include ]; then mkdir $deploymentDir/include; fi
 if [ ! -f $deploymentDir/lib ]; then mkdir $deploymentDir/lib; fi
 
+cp $buildDir/Vespucci/vespucci $deploymentDir/bin
 find $buildDir/VespucciProject -name libvespucci.* -exec cp {} $deploymentDir/lib \;
 find $libDir/mlpack/lib -name \*.so -exec cp {} $deploymentDir/lib \;
 find $libDir/armadillo/lib -name \*.so -exec cp {} $deploymentDir/lib \;
