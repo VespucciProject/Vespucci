@@ -292,8 +292,7 @@ unix:!macx{
     LIBS += -L$$PWD/../../quazip/lib -lquazip
     PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
 
-    CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/VespucciLibrary/debug -lvespucci
-    else: CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/VespucciLibrary/release -lvespucci
+    LIBS += -L$$OUT_PWD/VespucciLibrary -lvespucci
 
     INCLUDEPATH += /usr/include
     DEPENDPATH += /usr/include

@@ -13,11 +13,12 @@ buildDir=$2
 deploymentDir=$3
 libDir=$4
 
-if [! -f $deploymentDir ]; then mkdir $deploymentDir fi
-if [! -f $deploymentDir/bin ]; then mkdir $deploymentDir/bin fi
-if [! -f $deploymentDir/include ]; then mkdir $deploymentDir/include fi
-if [! -f $deploymentDir/lib ]; then mkdir $deploymentDir/lib fi
+if [ ! -f $deploymentDir ]; then mkdir $deploymentDir; fi
+if [ ! -f $deploymentDir/bin ]; then mkdir $deploymentDir/bin; fi
+if [ ! -f $deploymentDir/include ]; then mkdir $deploymentDir/include; fi
+if [ ! -f $deploymentDir/lib ]; then mkdir $deploymentDir/lib; fi
 
+find $buildDir/VespucciProject -name libvespucci.* -exec cp {} $deploymentDir/lib \;
 find $libDir/mlpack/lib -name \*.so -exec cp {} $deploymentDir/lib \;
-find $libDir/armadillo/lib -name \*.so -exec cp {} $deploymentDir/Contents/Frameworks $deploymentDir/ \;
+find $libDir/armadillo/lib -name \*.so -exec cp {} $deploymentDir/lib \;
 
