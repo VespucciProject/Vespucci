@@ -40,6 +40,7 @@ HEADERS += test.h \
 
 unix:!macx{
     QMAKE_CXX=/usr/bin/g++-4.9
+    CONFIG += c++11
     LIBS += -L$$PWD/../../mlpack/lib -lmlpack
     LIBS += -L$$PWD/../../armadillo/lib -larmadillo
     LIBS += -L/usr/lib -larpack
