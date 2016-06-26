@@ -294,6 +294,9 @@ unix:!macx{
 
     LIBS += -L$$OUT_PWD/../VespucciLibrary -lvespucci
 
+    LIBS += -L/usr/lib/x86_64-linux-gnu/ -lz
+    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libz.a
+
     INCLUDEPATH += /usr/include
     DEPENDPATH += /usr/include
 

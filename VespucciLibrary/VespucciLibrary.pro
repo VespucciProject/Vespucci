@@ -147,6 +147,9 @@ unix:!macx{
     LIBS += -L$$PWD/../../quazip/lib -lquazip
     PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
 
+    LIBS += -L/usr/lib/x86_64-linux-gnu/ -lz
+    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libz.a
+
     INCLUDEPATH += /usr/include
     DEPENDPATH += /usr/include
 
