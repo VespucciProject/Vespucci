@@ -286,9 +286,9 @@ unix:!macx{
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
 
-    LIBS += -L$$PWD/../../yaml-cpp/lib -llibyaml-cpp
+    LIBS += -L$$PWD/../../yaml-cpp/lib -lyaml-cpp
     PRE_TARGETDEPS += $$PWD/../../yaml-cpp/lib/libyaml-cpp.a
-    LIBS += -L$$PWD/../../quazip/lib -llibquazip
+    LIBS += -L$$PWD/../../quazip/lib -lquazip
     PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
 
     CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/VespucciLibrary/debug -lvespucci
