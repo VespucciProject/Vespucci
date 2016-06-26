@@ -277,6 +277,7 @@ DEPENDPATH += $$PWD/../VespucciLibrary/include
 unix:!macx{
     QMAKE_CXX=/usr/bin/g++-4.9
     CONFIG += c++11
+    QMAKE_CXXFLAGS += -fext-numeric-literals
     LIBS += -L$$PWD/../../mlpack/lib -lmlpack
     LIBS += -L$$PWD/../../armadillo/lib -larmadillo
     LIBS += -L/usr/lib -larpack
