@@ -10,17 +10,16 @@ matrix:
     compiler: clang
 install:
 - cd $TRAVIS_BUILD_DIR/../
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x getlinuxdeps.sh && ./getlinuxdeps.sh;
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x $TRAVIS_BUILD_DIR/getlinuxdeps.sh && $TRAVIS_BUILD_DIR/getlinuxdeps.sh;
   fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt56/bin/qt56-env.sh
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x getosxdeps.sh && ./getosxdeps.sh;
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt56/bin/qt56-env.sh; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x $TRAVIS_BUILD_DIR/getosxdeps.sh && $TRAVIS_BUILD_DIR/getosxdeps.sh;
   fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH=$PATH:/usr/local/opt/qt5/bin; fi
 script:
-- cd $TRAVIS_BUILD_DIR
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export ARMA_HDF5_INCLUDE_DIR=/usr/local/opt/hdf5/include;
-  fi
-- mkdir ../build && cd ../build
-- qmake ../buildall.pro
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export ARMA_HDF5_INCLUDE_DIR=/usr/local/opt/hdf5/include; fi
+- mkdir $TRAVIS_BUILD_DIR/../build && cd $TRAVIS_BUILD_DIR/../build
+- qmake $TRAVIS_BUILD_DIR/buildall.pro
 - make
 after_success:
 - export BUILD_DIR=$TRAVIS_BUILD_DIR/../build
@@ -35,23 +34,21 @@ after_success:
   $TRAVIS_BUILD_DIR/../; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export DEPLOY_DIR=$TRAVIS_BUILD_DIR/../Vespucci.app;
   fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x deploymac.sh && ./deploymac.sh
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x $TRAVIS_BUILD_DIR/deploymac.sh && $TRAVIS_BUILD_DIR/deploymac.sh
   $SRC_DIR $BUILD_DIR $DEPLOY_DIR $LIB_DIR; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x createdmg.sh && ./createdmg.sh
-  $DEPLOY_DIR $OUT_PKG $SRC_DIR
-- if [[ "TRAVIS_OS_NAME" == "linux" ]]; then export $OUT_PKG=$PKG_DIR/$PKG_NAME.tar.gz
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then chmod +x $TRAVIS_BUILD_DIR/createdmg.sh && $TRAVIS_BUILD_DIR/createdmg.sh
+  $DEPLOY_DIR $OUT_PKG $SRC_DIR; fi
+- if [[ "TRAVIS_OS_NAME" == "linux" ]]; then export $OUT_PKG=$PKG_DIR/$PKG_NAME.tar.gz; fi
 - if [[ "TRAVIS_OS_NAME" == "linux" ]]; then export DEPLOY_DIR=$TRAVIS_BUILD_DIR/Vespucci_$TRAVIS_COMMIT
   && mkdir DEPLOY_DIR; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x deploylinux.sh && ./deploylinux.sh
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x $TRAVIS_BUILD_DIR/deploylinux.sh && $TRAVIS_BUILD_DIR/deploylinux.sh
   $SRC_DIR $BUILD_DIR $DEPLOY_DIR $LIB_DIR; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x createtarball.sh && ./createtarball.sh $DEPLOY_DIR $OUT_PKG $SRC_DIR; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x $TRAVIS_BUILD_DIR/createtarball.sh && $TRAVIS_BUILD_DIR/createtarball.sh $DEPLOY_DIR $OUT_PKG $SRC_DIR; fi
 
 deploy:
 - skip_cleanup: true
 - provider: bintray
-bintray:
-    file: deploybintray.json
-    user: dpfoose
-    key:
-        secure: CkzrPKCuAAQxnPSEXbtIbJzjFP1dDDQs0KdyxA10KvTapEOp/JppsUd2BQ7PRSIU1vdvLZM7ysnpMWsjAZQ2+MR5HxBBKRjgqjwy93XFgXS+RP36AagQIEhlu+aqvbDl9/cgMAxrj57lizQA2KUF+zIkonKByDmVNc6oExlUq0WfeCNQZ+RBb7aPfckVdViMsTtfP/3S56cY4kgcc+uVx9Au/YXTB+BHFiON7TL40CLm+FW3HArvBrmIQIBDNE50JfSBe+jCk2/wPFZnsv0FH6KcnT32cNiT2b8gUltOpHWoPbh2y5cRur6NgaAg+WaXy3XIb2KhphkA4ih5WhXGgJ+6X7V+DX1lJd/2abSJzstI+RfPnuIOxP4KjijjdhT96Gq9OLVAYT7VUcM+IyWmu/0PJCWlnFb03uJRos4QJ05QV8FxWD8K80TwfN3BIPvPwlN+uIaTsuGV6LSXIpj8zrBToM8r990kbDunxEAPBKZEP9SCpUT/26UPOp0ON2oMRSAgcFOw7c0nz+fkShWqzlaQ/VXZL4/4TYlga3ZGGWPDiEMQ0GUKZHylZZ11SrI4kuHbspGCBTb5xMrFqJ2pI+zUlPKSsInnDUHa+VDAUb0FoTwX/wSBnO6pQvT19LQLGIORMfOhTYARmz+6ChEGr4X5iO6+PQDGe95oJzy4tVI=
-  
+- file: $TRAVIS_BUILD_DIR/deploybintray.json
+- user: dpfoose
+- key:
+    secure: CkzrPKCuAAQxnPSEXbtIbJzjFP1dDDQs0KdyxA10KvTapEOp/JppsUd2BQ7PRSIU1vdvLZM7ysnpMWsjAZQ2+MR5HxBBKRjgqjwy93XFgXS+RP36AagQIEhlu+aqvbDl9/cgMAxrj57lizQA2KUF+zIkonKByDmVNc6oExlUq0WfeCNQZ+RBb7aPfckVdViMsTtfP/3S56cY4kgcc+uVx9Au/YXTB+BHFiON7TL40CLm+FW3HArvBrmIQIBDNE50JfSBe+jCk2/wPFZnsv0FH6KcnT32cNiT2b8gUltOpHWoPbh2y5cRur6NgaAg+WaXy3XIb2KhphkA4ih5WhXGgJ+6X7V+DX1lJd/2abSJzstI+RfPnuIOxP4KjijjdhT96Gq9OLVAYT7VUcM+IyWmu/0PJCWlnFb03uJRos4QJ05QV8FxWD8K80TwfN3BIPvPwlN+uIaTsuGV6LSXIpj8zrBToM8r990kbDunxEAPBKZEP9SCpUT/26UPOp0ON2oMRSAgcFOw7c0nz+fkShWqzlaQ/VXZL4/4TYlga3ZGGWPDiEMQ0GUKZHylZZ11SrI4kuHbspGCBTb5xMrFqJ2pI+zUlPKSsInnDUHa+VDAUb0FoTwX/wSBnO6pQvT19LQLGIORMfOhTYARmz+6ChEGr4X5iO6+PQDGe95oJzy4tVI=

@@ -126,9 +126,14 @@ HEADERS  += \
     include/Math/Stats/hypothesistests.h \
     include/Math/PeakFinding/kernelpeakfinding.h
 
+#For all platforms:
+INCLUDEPATH += $$PWD/include
+DEPENDPATH += $$PWD/include
 
 unix:!macx{
     QMAKE_CXX=/usr/bin/g++-4.9
+    CONFIG += c++11
+    QMAKE_CXXFLAGS += -fext-numeric-literals
     LIBS += -L$$PWD/../../mlpack/lib -lmlpack
     LIBS += -L$$PWD/../../armadillo/lib -larmadillo
     LIBS += -L/usr/lib -larpack
@@ -137,10 +142,13 @@ unix:!macx{
     PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5.a
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
-    LIBS += -L$$PWD/../../yaml-cpp/lib -llibyaml-cpp
+    LIBS += -L$$PWD/../../yaml-cpp/lib -lyaml-cpp
     PRE_TARGETDEPS += $$PWD/../../yaml-cpp/lib/libyaml-cpp.a
-    LIBS += -L$$PWD/../../quazip/lib -llibquazip
+    LIBS += -L$$PWD/../../quazip/lib -lquazip
     PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
+
+    LIBS += -L/usr/lib/x86_64-linux-gnu/ -lz
+    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libz.a
 
     INCLUDEPATH += /usr/include
     DEPENDPATH += /usr/include
@@ -151,6 +159,17 @@ unix:!macx{
     INCLUDEPATH += /usr/local/include
     DEPENDPATH += /usr/local/include
 
+    INCLUDEPATH += $$PWD/../../mlpack/include
+    DEPENDPATH += $$PWD/../../mlpack/include
+
+    INCLUDEPATH += $$PWD/../../armadillo/include
+    DEPENDPATH += $$PWD/../../armadillo/include
+
+    INCLUDEPATH += $$PWD/../../quazip/include
+    DEPENDPATH += $$PWD/../../quazip/include
+
+    INCLUDEPATH += $$PWD/../../yaml-cpp/include
+    DEPENDPATH += $$PWD/../../yaml-cpp/include
 }
 
 #mac libraries. These are the same in Travis-CI as in most local environments
