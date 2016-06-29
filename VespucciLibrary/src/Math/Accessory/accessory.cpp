@@ -18,6 +18,8 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include <Math/Accessory/accessory.h>
+#include <mlpack/core/metrics/lmetric.hpp>
+#include <climits>
 
 ///
 /// \brief Vespucci::Math::LocalMaximum
@@ -953,6 +955,12 @@ arma::cx_vec Vespucci::Math::cx_zeros(arma::uword n)
     return arma::cx_vec(arma::zeros(n), arma::zeros(n));
 }
 
+///
+/// \brief Vespucci::Math::ClosestIndex
+/// \param value
+/// \param vector
+/// \return
+/// Find the index of value in vector closest to the specified value
 arma::uword Vespucci::Math::ClosestIndex(double value, const arma::vec &vector)
 {
     double delta = std::abs(vector(1) - vector(0)); //assumes monotonic to some degree of precision
@@ -965,4 +973,63 @@ arma::uword Vespucci::Math::ClosestIndex(double value, const arma::vec &vector)
     else index = vector.n_elem - 1;
 
     return index;
+}
+
+///
+/// \brief Vespucci::Math::RepresentativeSpectrum
+/// \param spectra
+/// \param metric Distance metric
+/// \param center
+/// \return
+///
+arma::vec Vespucci::Math::RepresentativeSpectrum(const mat &spectra, uword &index, std::string metric_name, std::string center_type)
+{
+    arma::vec center;
+    unsigned int power;
+    bool take_root;
+
+    if (center_type == "centroid")
+        center = arma::mean(spectra, 1);
+    else if (center_type == "medoid")
+        center = arma::median(spectra, 1);
+    else throw std::invalid_argument("center must be either centroid or medoid");
+
+    if (metric_name == "euclidean"){
+        power = 2;
+        take_root = true;
+    }
+    else if (metric_name == "squaredeuclidean"){
+        power = 2;
+        take_root = false;
+    }
+    else if (metric_name == "manhattan"){
+        power = 1;
+        take_root = false;
+    }
+    else if (metric_name == "chebyshev"){
+        power = INT_MAX;
+        take_root = false;
+    }
+    else{ //default to euclidean
+        throw invalid_argument("Metric type " + metric_name + " is not valid");
+    }
+
+    mlpack::metric::LMetric<power, take_root> metric;
+
+    arma::vec distances(spectra.n_cols);
+
+#ifdef _WIN32
+  #pragma omp parallel for default(none) \
+      shared(spectra, metric, distances)
+   for (intmax_t i = 0; i < (intmax_t) spectra.n_cols; ++i)
+#else
+  #pragma omp parallel for default(none) \
+      shared(spectra, metric, distances)
+  for (size_t i = 0; i < spectra.n_cols; ++ i)
+#endif
+    {
+        distances(i) = metric.Evaluate(center, spectra.col(i));
+    }
+
+    return distances;
 }
