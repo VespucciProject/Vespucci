@@ -22,6 +22,7 @@
 #include <QtSvg>
 #include <cstdlib>
 #include <QProcess>
+#include <climits>
 
 
 ///
@@ -234,7 +235,8 @@ void Vespucci::ResetDataset(arma::mat &spectra, arma::vec &x, arma::vec &y, arma
 /// \brief Vespucci::CleanString
 /// \param in
 /// \return
-///
+/// Remove any tabs or commas from an input string so armadillo parses it properly.
+/// This function is probably not necessary
 std::string Vespucci::CleanString(const std::string &in)
 {
     std::string out;

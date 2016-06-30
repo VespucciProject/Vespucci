@@ -1831,19 +1831,20 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
         clusters = HySime();
         log_text_stream_ << clusters << endl;
     }
-    mat k_means_data;
+    mat assignments;
+    mat centroids;
 
     if (metric_text == "Euclidean"){
         mlpack::kmeans::KMeans<mlpack::metric::EuclideanDistance> k;
         try{
             Row<size_t> assignments;
-            k.Cluster(spectra_, clusters, assignments);
-            k_means_data.set_size(assignments.n_elem, 1);
+            k.Cluster(spectra_, clusters, assignments, centroids);
+            assignments.set_size(assignments.n_elem, 1);
             //assignments += ones(assignments.n_elem);
             //k_means_data_ = assignments;
             //The assignment operator no longer works in armadillo this is temp kludge
-            for (uword i = 0; i < k_means_data.n_elem; ++i){
-                k_means_data(i) = assignments(i) + 1.0;
+            for (uword i = 0; i < assignments.n_elem; ++i){
+                assignments(i) = assignments(i) + 1.0;
             }
         }
         catch(exception e){
@@ -1857,13 +1858,13 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
         mlpack::kmeans::KMeans<mlpack::metric::ManhattanDistance> k;
         try{
             Row<size_t> assignments;
-            k.Cluster(spectra_, clusters, assignments);
-            k_means_data.set_size(assignments.n_elem, 1);
+            k.Cluster(spectra_, clusters, assignments, centroids);
+            assignments.set_size(assignments.n_elem, 1);
             //assignments += ones(assignments.n_elem);
             //k_means_data_ = assignments;
             //The assignment operator no longer works in armadillo this is temp kludge
-            for (uword i = 0; i < k_means_data.n_elem; ++i){
-                k_means_data(i) = assignments(i) + 1.0;
+            for (uword i = 0; i < assignments.n_elem; ++i){
+                assignments(i) = assignments(i) + 1.0;
             }
         }
         catch(exception e){
@@ -1877,13 +1878,13 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
         mlpack::kmeans::KMeans<mlpack::metric::ChebyshevDistance> k;
         try{
             Row<size_t> assignments;
-            k.Cluster(spectra_, clusters, assignments);
-            k_means_data.set_size(assignments.n_elem, 1);
+            k.Cluster(spectra_, clusters, assignments, centroids);
+            assignments.set_size(assignments.n_elem, 1);
             //assignments += ones(assignments.n_elem);
             //k_means_data_ = assignments;
             //The assignment operator no longer works in armadillo this is temp kludge
-            for (uword i = 0; i < k_means_data.n_elem; ++i){
-                k_means_data(i) = assignments(i) + 1.0;
+            for (uword i = 0; i < assignments.n_elem; ++i){
+                assignments(i) = assignments(i) + 1.0;
             }
         }
         catch(exception e){
@@ -1897,13 +1898,13 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
         mlpack::kmeans::KMeans<mlpack::metric::SquaredEuclideanDistance> k;
         try{
             Row<size_t> assignments;
-            k.Cluster(spectra_, clusters, assignments);
-            k_means_data.set_size(assignments.n_elem, 1);
+            k.Cluster(spectra_, clusters, assignments, centroids);
+            assignments.set_size(assignments.n_elem, 1);
             //assignments += ones(assignments.n_elem);
             //k_means_data_ = assignments;
             //The assignment operator no longer works in armadillo this is temp kludge
-            for (uword i = 0; i < k_means_data.n_elem; ++i){
-                k_means_data(i) = assignments(i) + 1.0;
+            for (uword i = 0; i < assignments.n_elem; ++i){
+                assignments(i) = assignments(i) + 1.0;
             }
         }
         catch(exception e){
@@ -1924,7 +1925,8 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
         log_text_stream_ << clusters << endl;
     }
     QSharedPointer<AnalysisResults> results(new AnalysisResults(name, "k-Means Analysis"));
-    results->AddMatrix("Assignments", k_means_data);
+    results->AddMatrix("Assignments", assignments);
+    results->AddMatrix("Centroids", centroids);
     analysis_results_.append(results);
     workspace->UpdateModel();
 }
