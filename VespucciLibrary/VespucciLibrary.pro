@@ -95,7 +95,8 @@ SOURCES +=\
     src/Math/Quantification/quantification.cpp \
     src/Math/Stats/confidenceinterval.cpp \
     src/Math/Stats/hyptothesistests.cpp \
-    src/Math/PeakFinding/kernelpeakfinding.cpp
+    src/Math/PeakFinding/kernelpeakfinding.cpp \
+    src/Math/Accessory/distancemetricwrapper.cpp
 
 
 HEADERS  += \
@@ -124,7 +125,8 @@ HEADERS  += \
     include/Math/Quantification/correlation.h \
     include/Math/Stats/confidenceinterval.h \
     include/Math/Stats/hypothesistests.h \
-    include/Math/PeakFinding/kernelpeakfinding.h
+    include/Math/PeakFinding/kernelpeakfinding.h \
+    include/Math/Accessory/distancemetricwrapper.h
 
 #For all platforms:
 INCLUDEPATH += $$PWD/include

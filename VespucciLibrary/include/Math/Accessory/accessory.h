@@ -74,9 +74,7 @@ namespace Vespucci
 
         VESPUCCI_EXPORT double CalcPoly(const double x, const arma::vec &coefs);
 
-        VESPUCCI_EXPORT arma::vec RepresentativeSpectrum(const mat &spectra, uword &index, std::string metric_name="euclidean", std::string center="centroid");
-
-
+        VESPUCCI_EXPORT arma::vec RepresentativeSpectrum(const arma::mat &spectra, arma::uword &index, std::string metric_name="euclidean", std::string center="centroid");
 
 
         //Abscissa transforms

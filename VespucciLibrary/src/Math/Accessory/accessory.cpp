@@ -17,9 +17,9 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include <Math/Accessory/accessory.h>
-#include <mlpack/core/metrics/lmetric.hpp>
+#include "Math/Accessory/accessory.h"
 #include <climits>
+#include "Math/Accessory/distancemetricwrapper.h"
 
 ///
 /// \brief Vespucci::Math::LocalMaximum
@@ -982,11 +982,9 @@ arma::uword Vespucci::Math::ClosestIndex(double value, const arma::vec &vector)
 /// \param center
 /// \return
 ///
-arma::vec Vespucci::Math::RepresentativeSpectrum(const mat &spectra, uword &index, std::string metric_name, std::string center_type)
+arma::vec Vespucci::Math::RepresentativeSpectrum(const arma::mat &spectra, arma::uword &index, std::string metric_name, std::string center_type)
 {
     arma::vec center;
-    unsigned int power;
-    bool take_root;
 
     if (center_type == "centroid")
         center = arma::mean(spectra, 1);
@@ -994,27 +992,7 @@ arma::vec Vespucci::Math::RepresentativeSpectrum(const mat &spectra, uword &inde
         center = arma::median(spectra, 1);
     else throw std::invalid_argument("center must be either centroid or medoid");
 
-    if (metric_name == "euclidean"){
-        power = 2;
-        take_root = true;
-    }
-    else if (metric_name == "squaredeuclidean"){
-        power = 2;
-        take_root = false;
-    }
-    else if (metric_name == "manhattan"){
-        power = 1;
-        take_root = false;
-    }
-    else if (metric_name == "chebyshev"){
-        power = INT_MAX;
-        take_root = false;
-    }
-    else{ //default to euclidean
-        throw invalid_argument("Metric type " + metric_name + " is not valid");
-    }
-
-    mlpack::metric::LMetric<power, take_root> metric;
+    Vespucci::Math::DistanceMetricWrapper metric(metric_name);
 
     arma::vec distances(spectra.n_cols);
 
@@ -1028,8 +1006,9 @@ arma::vec Vespucci::Math::RepresentativeSpectrum(const mat &spectra, uword &inde
   for (size_t i = 0; i < spectra.n_cols; ++ i)
 #endif
     {
-        distances(i) = metric.Evaluate(center, spectra.col(i));
+        arma::vec spectrum = spectra.col(i);
+        distances(i) = metric.Evaluate(center, spectrum);
     }
-
-    return distances;
+    index = distances.index_min();
+    return spectra.col(index);
 }
