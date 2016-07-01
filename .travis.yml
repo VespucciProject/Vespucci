@@ -19,10 +19,10 @@ addons:
     project:
       name: "VespucciProject/Vespucci"
       description: "Build submitted via Travis CI"
-      notification_email: vespuccispectra@gmail.com
-      build_command_prepend: "source /opt/qt56/bin/qt56-env.sh && make clean && qmake buildall.pro"
-      build_command: "make -j 4"
-      branch_pattern: coverity_scan
+    notification_email: vespuccispectra@gmail.com
+    build_command_prepend: "source /opt/qt56/bin/qt56-env.sh && make clean && qmake buildall.pro"
+    build_command: "make -j 4"
+    branch_pattern: coverity_scan
 
 install:
 - cd $TRAVIS_BUILD_DIR/../
