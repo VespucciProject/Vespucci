@@ -1,6 +1,6 @@
 Vespucci 
 ========
-[![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/yvo16f9ojkkkxi56?svg=true)](https://ci.appveyor.com/project/dpfoose/vespucci) [!["Travis-CI Build Status"](https://travis-ci.org/VespucciProject/Vespucci.svg?branch=master)](https://travis-ci.org/VespucciProject/Vespucci) [!["Coverity Scan Build Status"](https://scan.coverity.com/projects/9309/badge.svg)](https://scan.coverity.com/projects/vespucciproject-vespucci)
+[![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/yvo16f9ojkkkxi56?svg=true)](https://ci.appveyor.com/project/dpfoose/vespucci) [!["Travis-CI Build Status"](https://travis-ci.org/VespucciProject/Vespucci.svg?branch=master)](https://travis-ci.org/VespucciProject/Vespucci) 
 
 Vespucci is a free/libre/open-source, cross-platform tool for spectroscopic
 imaging. Vespucci is regularly built on Windows, Mac and Linux operating systems.
