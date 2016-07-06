@@ -19,7 +19,7 @@
 *******************************************************************************/
 #include "Math/Accessory/distancemetricwrapper.h"
 
-Vespucci::Math::DistanceMetricWrapper::DistanceMetricWrapper(std::__1::string metric_description)
+Vespucci::Math::DistanceMetricWrapper::DistanceMetricWrapper(std::string metric_description)
     : metric_description_(metric_description){}
 
 double Vespucci::Math::DistanceMetricWrapper::Evaluate(arma::vec &first, arma::vec &second)
