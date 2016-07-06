@@ -188,7 +188,7 @@ VespucciDataset::VespucciDataset(const QString name, const QString &archive_file
     x_ = core_objects["x"];
     y_ = core_objects["y"];
     main_window_ = main_window;
-    workspace = main_window_->workspace_ptr();
+    workspace_ = main_window_->workspace_ptr();
 
 }
 
@@ -211,7 +211,7 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
     : log_text_stream_(log_file)
 {
     QDateTime datetime = QDateTime::currentDateTimeUtc();
-    workspace = main_window->workspace_ptr();
+    workspace_ = main_window->workspace_ptr();
     log_file_ = log_file;
     log_text_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
     log_text_stream_ << "Version 1.0" << endl << endl;
@@ -281,7 +281,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
                                  std::string format)
     : log_text_stream_(log_file)
 {
-    workspace = main_window->workspace_ptr();
+    workspace_ = main_window->workspace_ptr();
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_file_ = log_file;
 
@@ -385,7 +385,7 @@ VespucciDataset::VespucciDataset(map<pair<int, int>, string> text_filenames,
                                  int rows, int cols)
      : log_text_stream_(log_file)
 {
-    workspace = main_window->workspace_ptr();
+    workspace_ = main_window->workspace_ptr();
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     log_text_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
     log_text_stream_ << "Version 1.0" << endl << endl;
@@ -443,7 +443,7 @@ VespucciDataset::VespucciDataset(QString name,
     : log_text_stream_(log_file)
 
 {
-    workspace = main_window->workspace_ptr();
+    workspace_ = main_window->workspace_ptr();
     log_file_ = log_file;
     map_list_model_ = new MapListModel(main_window, this);
     QDateTime datetime = QDateTime::currentDateTimeUtc();
@@ -497,7 +497,7 @@ VespucciDataset::VespucciDataset(QString name,
                                  QFile *log_file)
     : log_text_stream_(log_file)
 {
-    workspace = main_window->workspace_ptr();
+    workspace_ = main_window->workspace_ptr();
     map_list_model_ = new MapListModel(main_window, this);
     log_file_ = log_file;
     non_spatial_ = true;
@@ -632,7 +632,7 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
     log_text_stream_ << "y_max == " << y_max << endl;
     log_text_stream_ << "wl_min == " << wl_min << endl;
     log_text_stream_ << "wl_max == " << wl_max << endl << endl;
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 
@@ -821,7 +821,7 @@ void VespucciDataset::ShedZeroSpectra()
         main_window_->DisplayExceptionWarning("VespucciDataset::ShedZeroSpectra", e);
     }
 
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 void VespucciDataset::ShedZeroWavelengths()
@@ -843,7 +843,7 @@ void VespucciDataset::ShedZeroWavelengths()
     catch(exception e){
         main_window_->DisplayExceptionWarning("VespucciDataset::ShedZeroWavelengths", e);
     }
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 ///
@@ -1064,7 +1064,7 @@ void VespucciDataset::RemoveClippedSpectra(double threshold)
     if (spectra_.n_rows != spectra_old_.n_rows)
         non_spatial_ = true;
 
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 ///
@@ -1093,7 +1093,7 @@ void VespucciDataset::RemoveFlatSpectra(double threshold)
     if (spectra_.n_rows != spectra_old_.n_rows)
         non_spatial_ = true;
 
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 //Filtering functions
@@ -1268,7 +1268,7 @@ void VespucciDataset::ShedSpectrum(const uword index)
         main_window_->DisplayExceptionWarning(exc);
     }
     cout << "spectra_ columns (post) = " << spectra_.n_cols;
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 ///
@@ -1441,7 +1441,7 @@ void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa, unsigned
     abscissa_ = new_abscissa;
     spectra_ = new_spectra;
     last_operation_ = "Abscissa Interpolation";
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 ///
@@ -1464,7 +1464,7 @@ void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa)
     abscissa_ = new_abscissa;
     spectra_ = new_spectra;
     last_operation_ = "Abscissa Interpolation";
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 ///
@@ -1591,7 +1591,7 @@ void VespucciDataset::Univariate(QString name,
         return;
     }
     analysis_results_.append(univariate_data);
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
     cout << "end of VespucciDataset::Univariate" << endl;
 
 }
@@ -1624,7 +1624,7 @@ void VespucciDataset::BandRatio(QString name, double &first_left_bound, double &
         return;
     }
     analysis_results_.append(univariate_data);
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 
 
 
@@ -1648,7 +1648,7 @@ void VespucciDataset::PrincipalComponents(const QString &name, bool scale_data)
         throw std::runtime_error("VespucciDataset::PrincipalComponents");
     }
     analysis_results_.append(mlpack_pca_data);
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 
 }
 
@@ -1666,7 +1666,7 @@ void VespucciDataset::PrincipalComponents(const QString &name)
         throw std::runtime_error(str);
     }
     analysis_results_.append(pca_data);
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 ///
@@ -1744,7 +1744,7 @@ void VespucciDataset::VertexComponents(QString name, uword endmembers)
         throw std::runtime_error("VertexComponents: " + string(e.what()));
     }
     analysis_results_.append(vertex_components_data);
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 
@@ -1776,7 +1776,7 @@ void VespucciDataset::PartialLeastSquares(QString name, uword components)
     }
 
     analysis_results_.append(pls_data);
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 
 }
 
@@ -1813,7 +1813,7 @@ void VespucciDataset::CorrelationAnalysis(const QString &control_key, QString na
     log_text_stream_ << "method == Correlation" << endl;
 
     analysis_results_.append(univariate_data);
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 
@@ -1928,7 +1928,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
     results->AddMatrix("Assignments", assignments);
     results->AddMatrix("Centroids", centroids);
     analysis_results_.append(results);
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 
@@ -1953,7 +1953,7 @@ void VespucciDataset::ClassicalLeastSquares(QString name, QString reference_key)
     results->AddMatrix("Coefficients", coefs);
     results->AddMatrix("Reference Matrix", reference);
     analysis_results_.append(results);
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 
 }
 
@@ -2688,6 +2688,12 @@ MapListModel* VespucciDataset::map_list_model()
     return map_list_model_;
 }
 
+void VespucciDataset::AddAnalysisResult(QSharedPointer<AnalysisResults> analysis_result)
+{
+    analysis_results_.append(analysis_result);
+    workspace_->UpdateModel();
+}
+
 
 ///
 /// \brief VespucciDataset::AnalysisResultsKeys
@@ -2851,7 +2857,7 @@ void VespucciDataset::CreateMap(const QString &map_name,
                                                 directory_, gradient,
                                                 source_index, tick_count, main_window_));
     maps_[map_name] = new_map;
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 void VespucciDataset::CreateMap(const QString &map_name, const QString &matrix_key, uword column, QCPColorGradient gradient, int tick_count)
@@ -2872,7 +2878,7 @@ void VespucciDataset::CreateMap(const QString &map_name, const QString &matrix_k
                                                 directory_, gradient,
                                                 source_index, tick_count, main_window_));
     maps_[map_name] = new_map;
-    workspace->UpdateModel();
+    workspace_->UpdateModel();
 }
 
 bool VespucciDataset::ShowMapViewer(const QString &map_key, bool show)

@@ -56,13 +56,13 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
     QApplication a(argc, argv);
 
-    VespucciWorkspace ws(a.applicationDirPath() + "/settings.ini");
+    QSharedPointer<VespucciWorkspace> ws(new VespucciWorkspace(a.applicationDirPath()));
 
     //Clean up dataset log files from when it crashed last
-    ws.CleanLogFiles();
+    ws->CleanLogFiles();
 
     //Instantiate main window
-    MainWindow w(0, &ws);
+    MainWindow w(0, ws);
 
     //show main window
     w.show();

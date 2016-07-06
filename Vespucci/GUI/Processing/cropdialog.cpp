@@ -28,13 +28,13 @@
 /// \param ws The current workspace
 /// \param row Currently selected row
 ///
-CropDialog::CropDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
+CropDialog::CropDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::CropDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
-    dataset_ = workspace->GetDataset(dataset_key);
+    workspace_ = ws;
+    dataset_ = workspace_->GetDataset(dataset_key);
 
     x_min_box_ = findChild<QDoubleSpinBox*>("xMinDoubleSpinBox");
     x_max_box_ = findChild<QDoubleSpinBox*>("xMaxDoubleSpinBox");

@@ -32,17 +32,17 @@ MapDialog::MapDialog(MainWindow *parent, QStringList data_keys) :
     }
     main_window_ = parent;
     data_keys_ = data_keys;
-    workspace = main_window_->workspace_ptr();
+    workspace_ = main_window_->workspace_ptr();
     uword col_count;
     try{
-        col_count = workspace->GetMatrix(data_keys_).n_cols;
+        col_count = workspace_->GetMatrix(data_keys_).n_cols;
     }catch(exception e){
         main_window_->DisplayExceptionWarning("MapDialog constructor, VespucciWorkspace::GetMatrix", e);
         close();
     }
 
     try{
-        dataset_ = workspace->data_model()->GetDataset(data_keys_[0]);
+        dataset_ = workspace_->data_model()->GetDataset(data_keys_[0]);
     }catch(exception e){
         main_window_->DisplayExceptionWarning("MapDialog constructor, DataModel::GetDataset", e);
         close();
@@ -111,7 +111,7 @@ void MapDialog::on_buttonBox_accepted()
     QString map_name = name_line_edit_->text();
     vec data;
     try{
-        data = workspace->data_model()->GetMatrix(data_keys_).col(column_index);
+        data = workspace_->data_model()->GetMatrix(data_keys_).col(column_index);
     }catch(exception e){
         main_window_->DisplayExceptionWarning("DataModel::GetMatrix or mat::col", e);
         close();

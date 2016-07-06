@@ -36,7 +36,7 @@ class BandRatioDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit BandRatioDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit BandRatioDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~BandRatioDialog();
 
 private slots:
@@ -58,7 +58,7 @@ private:
     ///
     /// \brief workspace
     /// Pointer to the workspace (which contains dataset list)
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief spectrum_custom_plot_

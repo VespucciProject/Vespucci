@@ -12,7 +12,7 @@ class AbscissaInterpolationDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AbscissaInterpolationDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit AbscissaInterpolationDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~AbscissaInterpolationDialog();
 
 private slots:
@@ -39,7 +39,7 @@ private:
     QLabel *dataset_label_;
 
     QSharedPointer<VespucciDataset> dataset_;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 };
 
 #endif // ABSCISSAINTERPOLATIONDIALOG_H

@@ -20,14 +20,14 @@
 #include "GUI/Processing/metadatasetdialog.h"
 #include "ui_metadatasetdialog.h"
 #include "Data/Dataset/metadataset.h"
-MetaDatasetDialog::MetaDatasetDialog(QWidget *parent, VespucciWorkspace *ws) :
+MetaDatasetDialog::MetaDatasetDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
     ui(new Ui::MetaDatasetDialog)
 {
     ui->setupUi(this);
     dataset_list_view_ = findChild<QListView*>("datasetListView");
-    workspace = ws;
-    dataset_list_model_ = new DatasetListModel(this, workspace->dataset_names());
+    workspace_ = ws;
+    dataset_list_model_ = new DatasetListModel(this, workspace_->dataset_names());
     dataset_list_view_->setModel(dataset_list_model_);
     dataset_list_view_->setSelectionMode(QAbstractItemView::MultiSelection);
     method_selection_box_ = findChild<QComboBox *>("methodComboBox");
@@ -52,7 +52,7 @@ void MetaDatasetDialog::on_buttonBox_accepted()
         return;
     }
     for (int i = 0; i < selected_indices.size(); ++i){
-        parent_datasets.append(workspace->GetDataset(dataset_list_model_->DatasetName(selected_indices[i].row())));
+        parent_datasets.append(workspace_->GetDataset(dataset_list_model_->DatasetName(selected_indices[i].row())));
     }
 
     QString method_description = method_selection_box_->currentText();
@@ -71,10 +71,10 @@ void MetaDatasetDialog::on_buttonBox_accepted()
     }
 
     QString name = name_line_edit_->text();
-    QFile *log_file = workspace->CreateLogFile(name);
+    QFile *log_file = workspace_->CreateLogFile(name);
     QSharedPointer<MetaDataset> new_dataset;
     try{
-        new_dataset = QSharedPointer<MetaDataset>(new MetaDataset(name, workspace->main_window(), log_file, workspace->directory_ptr(), method_description, method, parent_datasets));
+        new_dataset = QSharedPointer<MetaDataset>(new MetaDataset(name, workspace_->main_window(), log_file, workspace_->directory_ptr(), method_description, method, parent_datasets));
     }
     catch(exception e){
         cerr << "Exception thrown" << endl;
@@ -82,6 +82,6 @@ void MetaDatasetDialog::on_buttonBox_accepted()
         QMessageBox::warning(this, "Exception Occured", "An exception was thrown in the MetaDataset constructor");
         return;
     }
-    workspace->AddDataset(new_dataset);
+    workspace_->AddDataset(new_dataset);
 
 }

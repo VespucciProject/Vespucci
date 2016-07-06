@@ -102,7 +102,7 @@ private:
     ///
     /// \brief workspace
     /// The workspace
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief main_window_

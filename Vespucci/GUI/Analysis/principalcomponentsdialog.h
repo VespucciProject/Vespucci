@@ -37,7 +37,7 @@ class PrincipalComponentsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PrincipalComponentsDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit PrincipalComponentsDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~PrincipalComponentsDialog();
 
 private slots:
@@ -51,7 +51,7 @@ private:
     ///
     /// \brief workspace
     /// The current dataset
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief name_line_edit_

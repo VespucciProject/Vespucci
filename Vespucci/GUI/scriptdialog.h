@@ -13,7 +13,7 @@ class ScriptDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ScriptDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit ScriptDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~ScriptDialog();
 
 private slots:
@@ -26,7 +26,7 @@ private:
     QPlainTextEdit *send_plain_test_edit_;
     QComboBox *interpreter_selector_combo_box_;
     QSharedPointer<VespucciDataset> dataset_;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
 };
 

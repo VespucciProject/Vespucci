@@ -1,13 +1,13 @@
 #include "GUI/Processing/thresholddialog.h"
 #include "ui_thresholddialog.h"
 
-ThresholdDialog::ThresholdDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
+ThresholdDialog::ThresholdDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::ThresholdDialog)
 {
     ui->setupUi(this);
     dataset_ = ws->GetDataset(dataset_key);
-    workspace = ws;
+    workspace_ = ws;
     threshold_box_ = findChild<QDoubleSpinBox*>("doubleSpinBox");
     method_box_ = findChild<QComboBox*>("comboBox");
 }
@@ -28,7 +28,7 @@ void ThresholdDialog::on_buttonBox_accepted()
             dataset_->RemoveFlatSpectra(threshold);
     }
     catch(exception e){
-        workspace->main_window()->DisplayExceptionWarning(e);
+        workspace_->main_window()->DisplayExceptionWarning(e);
     }
 }
 

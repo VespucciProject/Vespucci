@@ -26,13 +26,13 @@
 /// \param ws Current workspace
 /// \param row Row of current dataset
 ///
-FilterDialog::FilterDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
+FilterDialog::FilterDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::FilterDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
-    dataset_ = workspace->GetDataset(dataset_key);
+    workspace_ = ws;
+    dataset_ = workspace_->GetDataset(dataset_key);
     method_box_ = findChild<QComboBox *>("methodComboBox");
     derivative_box_ = findChild<QSpinBox *>("derivativeSpinBox");
     polynomial_box_ = findChild<QSpinBox *>("polynomialSpinBox");
@@ -89,7 +89,7 @@ void FilterDialog::on_buttonBox_accepted()
             dataset_->MedianFilter(window_box_->value());
         }
         catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
         break;
 
@@ -98,7 +98,7 @@ void FilterDialog::on_buttonBox_accepted()
             dataset_->LinearMovingAverage(window_box_->value());
         }
         catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
         break;
     case 2:
@@ -108,7 +108,7 @@ void FilterDialog::on_buttonBox_accepted()
                                  window_box_->value());
         }
         catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
         break;
     case 3:
@@ -116,7 +116,7 @@ void FilterDialog::on_buttonBox_accepted()
             dataset_->SingularValue(singular_values_box_->value());
         }
         catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
         break;
     case 4:
@@ -124,7 +124,7 @@ void FilterDialog::on_buttonBox_accepted()
             SVD_rank = dataset_->QUIC_SVD(epsilon_box_->value());
         }
         catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
             break;
         }
         QMessageBox::information(this,

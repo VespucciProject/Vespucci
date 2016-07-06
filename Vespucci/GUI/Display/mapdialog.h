@@ -45,7 +45,7 @@ private:
     QCheckBox *invert_check_box_;
     QSpinBox *column_spin_box_;
     QLineEdit *name_line_edit_;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
     QStringList data_keys_;
 };

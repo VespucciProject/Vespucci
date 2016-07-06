@@ -35,7 +35,7 @@ class UnivariateDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit UnivariateDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~UnivariateDialog();
 
 private slots:
@@ -59,7 +59,7 @@ private:
     ///
     /// \brief workspace
     /// The current workspace
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief spectrum_plot_

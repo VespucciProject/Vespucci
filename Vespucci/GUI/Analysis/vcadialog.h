@@ -34,7 +34,7 @@ class VCADialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit VCADialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit VCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~VCADialog();
 
 private slots:
@@ -49,7 +49,7 @@ private:
     ///
     /// \brief workspace
     /// The current workspace
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief components_selector_spin_box_

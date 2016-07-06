@@ -26,7 +26,7 @@
 /// \param ws Current workspace
 /// \param row Row of current dataset
 ///
-KMeansDialog::KMeansDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
+KMeansDialog::KMeansDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::KMeansDialog)
 {
@@ -35,8 +35,8 @@ KMeansDialog::KMeansDialog(QWidget *parent, VespucciWorkspace *ws, const QString
     cluster_spin_box_ = findChild<QSpinBox *>("clustersSpinBox");
     prediction_check_box_ = findChild<QCheckBox *>("predictionCheckBox");
     metric_combo_box_ = findChild<QComboBox *>("metricComboBox");
-    workspace = ws;
-    dataset_ = workspace->GetDataset(dataset_key);
+    workspace_ = ws;
+    dataset_ = workspace_->GetDataset(dataset_key);
     name_line_edit_->setEnabled(false);
 }
 
@@ -61,7 +61,7 @@ void KMeansDialog::on_buttonBox_accepted()
     try{
         dataset_->KMeans(clusters, metric_text, name);
     }catch(exception e){
-        workspace->main_window()->DisplayExceptionWarning(e);
+        workspace_->main_window()->DisplayExceptionWarning(e);
     }
 
     dataset_.clear();

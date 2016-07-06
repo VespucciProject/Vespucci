@@ -39,6 +39,7 @@ private:
     QTabWidget *tab_widget_;
     QCheckBox *hold_check_box_;
     QCheckBox *stack_check_box_;
+    QSharedPointer<VespucciWorkspace> workspace_;
 };
 
 #endif // PLOTVIEWER_H

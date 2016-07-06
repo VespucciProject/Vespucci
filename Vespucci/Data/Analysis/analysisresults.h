@@ -50,6 +50,7 @@ public:
     const mat & EmptyMatrix();
     const QMap<QString, QString> GetMetadata() const;
     const QString GetColumnHeading(const QString &key, int column);
+    const QString GetRowHeading(const QString &key, int row);
 
 private:
     ///
@@ -69,6 +70,7 @@ private:
 
     QMap<QString, QString> metadata_;
     QMap<QString, QStringList> column_headings_;
+    QMap<QString, QStringList> row_headings_;
     QMap<QString, QSharedPointer<field<mat> > > fields_;
 
     mat empty_matrix_;

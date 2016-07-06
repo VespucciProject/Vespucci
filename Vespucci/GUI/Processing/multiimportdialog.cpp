@@ -2,12 +2,12 @@
 #include "ui_multiimportdialog.h"
 #include "Data/Import/textimport.h"
 
-MultiImportDialog::MultiImportDialog(QWidget *parent, VespucciWorkspace *ws) :
+MultiImportDialog::MultiImportDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
     ui(new Ui::MultiImportDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
+    workspace_ = ws;
     filename_table_ = findChild<QTableWidget*>("filenameTableWidget");
     count_label_ = findChild<QLabel*>("countLabel");
     abscissa_label_box_ = findChild<QLineEdit*>("abscissaLineEdit");
@@ -39,14 +39,14 @@ void MultiImportDialog::on_colSpinBox_valueChanged(int arg1)
 
 void MultiImportDialog::on_addFilesPushButton_clicked()
 {
-    QStringList filenames = QFileDialog::getOpenFileNames(this, "Select Files", workspace->directory(), "Text Files (*.txt *.csv *.dat);;"
+    QStringList filenames = QFileDialog::getOpenFileNames(this, "Select Files", workspace_->directory(), "Text Files (*.txt *.csv *.dat);;"
                                                                                                         "All Files");
     QStringList filenames_cpy = filenames;
     filenames_cpy.sort();
     QString path = filenames_cpy.first();
     QFileInfo file_info(path);
     QString new_directory = file_info.absoluteDir().absolutePath();
-    workspace->set_directory(new_directory);
+    workspace_->set_directory(new_directory);
 
     QStringList::Iterator it = filenames_cpy.begin();
     int current_row = filename_table_->currentRow();
@@ -112,14 +112,14 @@ void MultiImportDialog::on_buttonBox_accepted()
 
     else{
         QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename_map,
-                                                                    workspace->main_window(),
-                                                                    workspace->directory_ptr(),
-                                                                    workspace->CreateLogFile(name),
+                                                                    workspace_->main_window(),
+                                                                    workspace_->directory_ptr(),
+                                                                    workspace_->CreateLogFile(name),
                                                                     name,
                                                                     x_axis_description,
                                                                     y_axis_description,
                                                                     rows, cols));
-        workspace->AddDataset(dataset);
+        workspace_->AddDataset(dataset);
     }
 
 }

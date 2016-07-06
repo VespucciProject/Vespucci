@@ -6,12 +6,12 @@
 #include "GUI/Display/reportmessagedialog.h"
 
 BulkConversionDialog::BulkConversionDialog(MainWindow *parent,
-                                           VespucciWorkspace *ws) :
+                                           QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
     ui(new Ui::BulkConversionDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
+    workspace_ = ws;
     filename_list_widget_ = findChild<QListWidget*>("filenameListWidget");
     swap_box_ = findChild<QCheckBox*>("swapCheckBox");
     intype_box_ = findChild<QComboBox*>("inputComboBox");
@@ -36,7 +36,7 @@ void BulkConversionDialog::on_browsePushButton_clicked()
     QStringList filename_list =
             QFileDialog::getOpenFileNames(this,
                                           "Select files",
-                                          workspace->directory(),
+                                          workspace_->directory(),
                                           "Text (*.txt *.csv);;"
                                           "Binary(*.arma *.bin *.dat)");
     filename_list_widget_->addItems(filename_list);
@@ -178,6 +178,7 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
             WriteFile(outtype, outfilename, spectra, abscissa, x, y);
         }//for (infiles)
     }//switch (intype)
+    delete progress; //not sure what happens to a QProgress dialog instantiated with null parent
     return skipped_files;
 }
 
@@ -222,6 +223,6 @@ void BulkConversionDialog::WriteFile(const arma::file_type &type,
 void BulkConversionDialog::on_BrowsePushButton_clicked()
 {
     QString path = QFileDialog::getExistingDirectory(this, "Select Folder",
-                                                     workspace->directory());
+                                                     workspace_->directory());
     target_line_edit_->setText(path);
 }

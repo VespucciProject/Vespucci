@@ -7,7 +7,7 @@ SpectrumSelectionDialog::SpectrumSelectionDialog(MainWindow *main_window) :
 {
     ui->setupUi(this);
     main_window_ = main_window;
-    workspace = main_window->workspace_ptr();
+    workspace_ = main_window->workspace_ptr();
     plot_viewer_ = main_window_->plot_viewer();
     table_view_ = findChild<QTableView *>("tableView");
     hold_check_box_ = findChild<QCheckBox*>("holdCheckBox");
@@ -96,7 +96,7 @@ void SpectrumSelectionDialog::on_pushButton_2_clicked()
     int row = table_view_->currentIndex().row();
     QString filename =
             QFileDialog::getSaveFileName(this, "Save Spectrum",
-                                         workspace->directory(),
+                                         workspace_->directory(),
                                          "Comma-separated variables (*.csv);; "
                                          "Tab-delimited text (*.txt);; "
                                          "Armadillo binary (*.arma)");

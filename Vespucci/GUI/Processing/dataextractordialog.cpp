@@ -34,7 +34,7 @@ DataExtractorDialog::DataExtractorDialog(QWidget *parent, MapData *map, QSharedP
 {
     ui->setupUi(this);
     main_window_ = main_window;
-    workspace = main_window->workspace_ptr();
+    workspace_ = main_window->workspace_ptr();
     name_line_edit_ = findChild<QLineEdit*>("nameLineEdit");
     upper_box_ = findChild<QDoubleSpinBox*>("upperDoubleSpinBox");
     lower_box_ = findChild<QDoubleSpinBox*>("lowerDoubleSpinBox");
@@ -62,7 +62,7 @@ DataExtractorDialog::DataExtractorDialog(QWidget *parent,
     condition_ = data;
 
     main_window_ = main_window;
-    workspace = main_window->workspace_ptr();
+    workspace_ = main_window->workspace_ptr();
     name_line_edit_ = findChild<QLineEdit*>("nameLineEdit");
     filename_line_edit_ = findChild<QLineEdit *>("filenameLineEdit");
     upper_box_ = findChild<QDoubleSpinBox*>("upperDoubleSpinBox");
@@ -111,16 +111,16 @@ void DataExtractorDialog::on_buttonBox_accepted()
         indices = arma::find(condition_ >= lower && condition_ <= upper);
     }
 
-    QFile *log_file = workspace->CreateLogFile(name);
+    QFile *log_file = workspace_->CreateLogFile(name);
     QSharedPointer<VespucciDataset> new_dataset;
     try{
         new_dataset = QSharedPointer<VespucciDataset>(new VespucciDataset(name,
                                                       main_window_,
-                                                      workspace->directory_ptr(),
+                                                      workspace_->directory_ptr(),
                                                       log_file,
                                                       dataset_,
                                                       indices));
-        workspace->AddDataset(new_dataset);
+        workspace_->AddDataset(new_dataset);
     }
     catch(exception e){
         main_window_->DisplayExceptionWarning(e);
@@ -158,7 +158,7 @@ void DataExtractorDialog::on_browsePushButton_clicked()
     QString filename =
             QFileDialog::getOpenFileName(this,
                                          "Select Index File",
-                                         workspace->directory(),
+                                         workspace_->directory(),
                                          "Data Files (*.txt *.csv *.arma)");
     filename_line_edit_->setText(filename);
 }

@@ -35,7 +35,7 @@ class KMeansDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit KMeansDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit KMeansDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~KMeansDialog();
 
 private slots:
@@ -49,7 +49,7 @@ private:
     ///
     /// \brief workspace
     /// Current workspace
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief cluster_spin_box_

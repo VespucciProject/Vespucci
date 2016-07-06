@@ -17,42 +17,25 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef MULTIIMPORTDIALOG_H
-#define MULTIIMPORTDIALOG_H
+#ifndef HYPOTHESISTESTDIALOG_H
+#define HYPOTHESISTESTDIALOG_H
 
 #include <QDialog>
-#include "Global/vespucciworkspace.h"
 
 namespace Ui {
-class MultiImportDialog;
+class HypothesisTestDialog;
 }
 
-class MultiImportDialog : public QDialog
+class HypothesisTestDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit MultiImportDialog(QWidget *parent, QSharedPointer<VespucciWorkspace>  ws);
-    ~MultiImportDialog();
-
-private slots:
-    void on_rowSpinBox_valueChanged(int arg1);
-
-    void on_colSpinBox_valueChanged(int arg1);
-
-    void on_addFilesPushButton_clicked();
-
-    void on_buttonBox_accepted();
+    explicit HypothesisTestDialog(QWidget *parent = 0);
+    ~HypothesisTestDialog();
 
 private:
-    Ui::MultiImportDialog *ui;
-    QSharedPointer<VespucciWorkspace> workspace_;
-    QTableWidget *filename_table_;
-    QLabel *count_label_;
-    QLineEdit *name_box_;
-    QLineEdit *abscissa_label_box_;
-    QLineEdit *ordinate_label_box_;
-
+    Ui::HypothesisTestDialog *ui;
 };
 
-#endif // MULTIIMPORTDIALOG_H
+#endif // HYPOTHESISTESTDIALOG_H

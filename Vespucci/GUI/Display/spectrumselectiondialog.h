@@ -39,7 +39,7 @@ private:
     QCheckBox *hold_check_box_;
     PlotViewer *plot_viewer_;
     MainWindow *main_window_;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 };
 
 #endif // SPECTRUMSELECTIONDIALOG_H

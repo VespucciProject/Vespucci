@@ -150,7 +150,10 @@ SOURCES += main.cpp\
     Global/datamodel.cpp \
     GUI/QAbstractItemModel/datasetlistmodel.cpp \
     GUI/pythonshelldialog.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    Data/Analysis/multianalyzer.cpp \
+    GUI/Analysis/multianalysisdialog.cpp \
+    GUI/Analysis/hypothesistestdialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -218,7 +221,10 @@ HEADERS  += \
     Global/datamodel.h \
     GUI/QAbstractItemModel/datasetlistmodel.h \
     GUI/pythonshelldialog.h \
-    qcustomplot.h
+    qcustomplot.h \
+    Data/Analysis/multianalyzer.h \
+    GUI/Analysis/multianalysisdialog.h \
+    GUI/Analysis/hypothesistestdialog.h
 
 
 FORMS    += \
@@ -265,7 +271,9 @@ FORMS    += \
     GUI/Display/datawidget.ui \
     GUI/Display/plotwidget.ui \
     GUI/macrodialog.ui \
-    GUI/pythonshelldialog.ui
+    GUI/pythonshelldialog.ui \
+    GUI/Analysis/multianalysisdialog.ui \
+    GUI/Analysis/hypothesistestdialog.ui
 
 RESOURCES += \
     resources.qrc

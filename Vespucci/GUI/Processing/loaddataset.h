@@ -35,7 +35,7 @@ class LoadDataset : public QDialog
     Q_OBJECT
 
 public:
-    explicit LoadDataset(QWidget *parent, VespucciWorkspace * ws);
+    explicit LoadDataset(QWidget *parent, QSharedPointer<VespucciWorkspace>  ws);
     ~LoadDataset();
 public slots:
     void FilenameChanged(QString new_filename);
@@ -53,7 +53,7 @@ private:
     ///
     /// \brief workspace
     /// The current workspace
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief directory_

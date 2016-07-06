@@ -33,7 +33,7 @@ class MetaDatasetDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit MetaDatasetDialog(QWidget *parent, VespucciWorkspace * ws);
+    explicit MetaDatasetDialog(QWidget *parent, QSharedPointer<VespucciWorkspace>  ws);
     ~MetaDatasetDialog();
 
 private slots:
@@ -47,7 +47,7 @@ private:
     QComboBox *method_selection_box_;
     QLineEdit *name_line_edit_;
     DatasetListModel *dataset_list_model_;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 };
 
 #endif // METADATASETDIALOG_H

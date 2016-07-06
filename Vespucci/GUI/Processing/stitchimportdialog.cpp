@@ -3,12 +3,12 @@
 #include <Data/Import/binaryimport.h>
 #include "Data/Import/textimportqpd.h"
 
-StitchImportDialog::StitchImportDialog(QWidget *parent, VespucciWorkspace *ws) :
+StitchImportDialog::StitchImportDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
     ui(new Ui::StitchImportDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
+    workspace_ = ws;
 
     x_line_edit_ = findChild<QLineEdit*>("xLineEdit");
     y_line_edit_ = findChild<QLineEdit*>("yLineEdit");
@@ -31,7 +31,7 @@ void StitchImportDialog::on_browsePushButton_clicked()
     QString filename =
             QFileDialog::getOpenFileName(this,
                                          "Select Instruction File",
-                                         workspace->directory(),
+                                         workspace_->directory(),
                                          "Instruction File (*.csv)");
     filename_line_edit_->setText(filename);
 }
@@ -112,7 +112,7 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
     try{
         ok = Vespucci::StitchDatasets(datasets, spectra, x, y, abscissa);
     }catch(exception e){
-        workspace->main_window()->DisplayExceptionWarning("Vespucci::StitchDatasets", e);
+        workspace_->main_window()->DisplayExceptionWarning("Vespucci::StitchDatasets", e);
         ok = false;
     }
 
@@ -140,7 +140,7 @@ void StitchImportDialog::on_buttonBox_accepted()
                           spectra, x, y, abscissa,
                           swap_spatial, data_format);
     }catch (exception e){
-        workspace->main_window()->DisplayExceptionWarning(e);
+        workspace_->main_window()->DisplayExceptionWarning(e);
         ok = false;
     }
     if (!ok){
@@ -157,12 +157,12 @@ void StitchImportDialog::on_buttonBox_accepted()
         QString name = name_line_edit_->text();
         QSharedPointer<VespucciDataset>
                 dataset(new VespucciDataset(name,
-                                            workspace->main_window(),
-                                            workspace->directory_ptr(),
-                                            workspace->CreateLogFile(name)));
+                                            workspace_->main_window(),
+                                            workspace_->directory_ptr(),
+                                            workspace_->CreateLogFile(name)));
         dataset->SetData(spectra, abscissa, x, y);
         dataset->SetXDescription(x_description + " (" + x_units + ")");
         dataset->SetYDescription(y_description + " (" + y_units + ")");
-        workspace->AddDataset(dataset);
+        workspace_->AddDataset(dataset);
     }
 }

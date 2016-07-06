@@ -16,7 +16,7 @@ class BulkConversionDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit BulkConversionDialog(MainWindow *parent = 0, VespucciWorkspace *ws = 0);
+    explicit BulkConversionDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws);
     ~BulkConversionDialog();
 
 private slots:
@@ -34,7 +34,7 @@ private:
     QComboBox *intype_box_;
     QComboBox *outtype_box_;
     QLineEdit *target_line_edit_;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     enum infile_type{long_text, wide_text, binary};
     enum outfile_type{v_binary, text};

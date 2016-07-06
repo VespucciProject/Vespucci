@@ -91,3 +91,10 @@ const QString AnalysisResults::GetColumnHeading(const QString &key, int column)
         return column_headings_[key][column];
     else return QString();
 }
+
+const QString AnalysisResults::GetRowHeading(const QString &key, int row)
+{
+    if (row_headings_.contains(key) && row_headings_[key].size() < row)
+        return row_headings_[key][row];
+    else return QString();
+}

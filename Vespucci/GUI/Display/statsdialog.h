@@ -13,7 +13,7 @@ class StatsDialog : public QDialog
     Q_OBJECT
 
 public:
-    StatsDialog(MainWindow *parent, VespucciWorkspace *ws);
+    StatsDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws);
     void SetActiveMatrix(const vec &data);
     void SetActiveDataKeys(const QStringList &keys);
     ~StatsDialog();
@@ -45,7 +45,7 @@ private:
     QLabel *name_label_;
     QLabel *mappable_label_;
     QStringList data_keys_;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 };
 
 #endif // STATSDIALOG_H

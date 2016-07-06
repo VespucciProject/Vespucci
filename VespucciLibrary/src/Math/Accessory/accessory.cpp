@@ -1003,7 +1003,7 @@ arma::vec Vespucci::Math::RepresentativeSpectrum(const arma::mat &spectra, arma:
 #else
   #pragma omp parallel for default(none) \
       shared(spectra, metric, distances)
-  for (size_t i = 0; i < spectra.n_cols; ++ i)
+  for (size_t i = 0; i < spectra.n_cols; ++i)
 #endif
     {
         arma::vec spectrum = spectra.col(i);

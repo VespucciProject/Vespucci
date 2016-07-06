@@ -36,7 +36,7 @@ class StitchImportDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit StitchImportDialog(QWidget *parent, VespucciWorkspace *ws);
+    explicit StitchImportDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws);
     ~StitchImportDialog();
 
 private slots:
@@ -46,7 +46,7 @@ private slots:
 
 private:
     Ui::StitchImportDialog *ui;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
     QLineEdit *x_line_edit_;
     QLineEdit *x_units_line_edit_;
     QLineEdit *y_line_edit_;

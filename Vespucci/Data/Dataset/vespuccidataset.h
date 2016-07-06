@@ -325,6 +325,7 @@ public:
     MapListModel *map_list_model();
 
     void AddAnalysisResult(QSharedPointer<AnalysisResults> analysis_result);
+
     QStringList AnalysisResultsKeys() const;
     QMap<QString, QStringList> AnalysisResultsTreeStructure() const;
 
@@ -381,7 +382,7 @@ public:
     vec abscissa_;
     vec abscissa_old_;
 
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief x_

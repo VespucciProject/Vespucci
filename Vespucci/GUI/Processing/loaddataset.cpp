@@ -28,15 +28,15 @@
 /// \param parent QWidget parent (see QDialog)
 /// \param ws Current workspace
 ///
-LoadDataset::LoadDataset(QWidget *parent, VespucciWorkspace *ws) :
+LoadDataset::LoadDataset(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
     ui(new Ui::LoadDataset)
 {
     ui->setupUi(this);
-    workspace = ws;
+    workspace_ = ws;
     directory_ = ws->directory_ptr();
     name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
-    QString name = "Dataset" + QString::number(workspace->dataset_loading_count());
+    QString name = "Dataset" + QString::number(workspace_->dataset_loading_count());
     name_line_edit_->setText(name); //puts in default name
 
     QDialogButtonBox *button_box = findChild<QDialogButtonBox *>("buttonBox");
@@ -84,7 +84,7 @@ void LoadDataset::FilenameChanged(QString new_filename)
     QString basename = info.baseName();
     QString dataset_name = basename;
     int i = 1;
-    while (workspace->dataset_names().contains(dataset_name)){
+    while (workspace_->dataset_names().contains(dataset_name)){
         dataset_name = basename + " (" + QString::number(i) + ")";
         ++i;
     }
@@ -99,7 +99,7 @@ void LoadDataset::on_browseButton_clicked()
     QString filename;
 
     filename = QFileDialog::getOpenFileName(this, tr("Open Data File"),
-                                            workspace->directory(),
+                                            workspace_->directory(),
                                             tr("Text Files (*.txt);;"
                                                "Vespucci Dataset Files (*.vds);;"));
     filename_line_edit_->setText(filename);
@@ -120,7 +120,7 @@ void LoadDataset::on_buttonBox_accepted()
     QFileInfo file_info(filename);
     QString extension = file_info.suffix();
 
-    if (workspace->dataset_names().contains(name)){
+    if (workspace_->dataset_names().contains(name)){
         QMessageBox::warning(this, "Name Exists", "A dataset with this name already exists.");
         return;
     }
@@ -147,7 +147,7 @@ void LoadDataset::on_buttonBox_accepted()
     //int position;
     bool swap = swap_check_box_->isChecked();
 
-    QStringList names_list = workspace->dataset_names();
+    QStringList names_list = workspace_->dataset_names();
     QStringList::iterator i;
 
     int warning_response=QMessageBox::Yes;
@@ -170,23 +170,23 @@ void LoadDataset::on_buttonBox_accepted()
 
 
     if (warning_response == QMessageBox::Yes && file_info.exists()){
-        QFile *log_file = workspace->CreateLogFile(name);
+        QFile *log_file = workspace_->CreateLogFile(name);
 
         if (format == "VespucciBinary"){
             try{
                 QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename,
-                                                            workspace->main_window(),
+                                                            workspace_->main_window(),
                                                             directory_,
                                                             log_file,
                                                             name,
                                                             x_description,
                                                             y_description));
-                    workspace->AddDataset(dataset);
-                    workspace->set_directory(file_info.dir().absolutePath());
+                    workspace_->AddDataset(dataset);
+                    workspace_->set_directory(file_info.dir().absolutePath());
                     //dataset.clear(); //dataset should be copied to list
             }
             catch(exception e){
-                workspace->main_window()->DisplayExceptionWarning(e);
+                workspace_->main_window()->DisplayExceptionWarning(e);
                 delete log_file;
                 return;
             }
@@ -195,7 +195,7 @@ void LoadDataset::on_buttonBox_accepted()
         else{
             try{
                 QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename,
-                                                         workspace->main_window(),
+                                                         workspace_->main_window(),
                                                          directory_,
                                                          log_file,
                                                          name,
@@ -204,13 +204,13 @@ void LoadDataset::on_buttonBox_accepted()
                                                          swap,
                                                          format));
                 if (!dataset->ConstructorCancelled()){
-                    workspace->AddDataset(dataset);
-                    workspace->set_directory(file_info.dir().absolutePath());
+                    workspace_->AddDataset(dataset);
+                    workspace_->set_directory(file_info.dir().absolutePath());
                     dataset.clear();
                 }
             }
             catch(exception e){
-                workspace->main_window()->DisplayExceptionWarning(e);
+                workspace_->main_window()->DisplayExceptionWarning(e);
                 delete log_file;
                 return;
             }

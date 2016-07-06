@@ -2,11 +2,11 @@
 #include "ui_statsdialog.h"
 #include <Math/Stats/confidenceinterval.h>
 
-StatsDialog::StatsDialog(MainWindow *parent, VespucciWorkspace *ws) :
+StatsDialog::StatsDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
     ui(new Ui::StatsDialog)
 {
-    workspace = ws;
+    workspace_ = ws;
     ui->setupUi(this);
     min_line_edit_ = findChild<QLineEdit *>("minLineEdit");
     max_line_edit_ = findChild<QLineEdit *>("maxLineEdit");
@@ -18,6 +18,7 @@ StatsDialog::StatsDialog(MainWindow *parent, VespucciWorkspace *ws) :
     plottable_label_ = findChild<QLabel *>("plottableLabel");
     mappable_label_ = findChild<QLabel *>("mappableLabel");
     name_label_ = findChild<QLabel *>("nameLabel");
+    alpha_double_spin_box_ = findChild<QDoubleSpinBox *>("alphaDoubleSpinBox");
 }
 
 void StatsDialog::SetActiveDataKeys(const QStringList &keys)
@@ -38,7 +39,7 @@ void StatsDialog::on_buttonBox_accepted()
 
 double StatsDialog::CalculateMedian()
 {
-    const mat& data = workspace->GetMatrix(data_keys_);
+    const mat& data = workspace_->GetMatrix(data_keys_);
     if (!data.n_elem) return 0;
     if (data.n_cols == 1) return as_scalar(median(data));
     if (data.n_cols > 1){
@@ -52,7 +53,7 @@ double StatsDialog::CalculateMedian()
 
 double StatsDialog::CalculateStdDev()
 {
-    const mat& data = workspace->GetMatrix(data_keys_);
+    const mat& data = workspace_->GetMatrix(data_keys_);
     if (!data.n_elem) return 0;
     if (data.n_cols == 1) return as_scalar(stddev(data));
     if (data.n_cols > 1){
@@ -65,7 +66,7 @@ double StatsDialog::CalculateStdDev()
 
 double StatsDialog::CalculateMean()
 {
-    const mat& data = workspace->GetMatrix(data_keys_);
+    const mat& data = workspace_->GetMatrix(data_keys_);
     if (!data.n_elem) return 0;
     if (data.n_cols == 1) return as_scalar(mean(data));
     if (data.n_cols > 1){
@@ -78,7 +79,7 @@ double StatsDialog::CalculateMean()
 
 void StatsDialog::GenerateHistogram()
 {
-    const mat& data = workspace->GetMatrix(data_keys_);
+    const mat& data = workspace_->GetMatrix(data_keys_);
     if (!data.n_elem) return;
     //Sturges' rule for finding bin counts automagically
     uword bin_count = std::round(1.0 + 3.332*std::log10((double) data.n_elem));
@@ -111,7 +112,7 @@ void StatsDialog::UpdateDisplayData()
 {
     GenerateHistogram();
     CalculateCI();
-    const mat& data = workspace->GetMatrix(data_keys_);
+    const mat& data = workspace_->GetMatrix(data_keys_);
     min_line_edit_->setText(QString::number(data.min()));
     max_line_edit_->setText(QString::number(data.max()));
     median_line_edit_->setText(QString::number(CalculateMedian()));
@@ -120,15 +121,15 @@ void StatsDialog::UpdateDisplayData()
     name_label_->setText(data_keys_.last());
     QString dimensions = QString::number(data.n_rows) + "×" + QString::number(data.n_cols);
     dimension_label_->setText(dimensions);
-    plottable_label_->setText(workspace->Plottable(data_keys_) ? "True" : "False");
-    mappable_label_->setText(workspace->Mappable(data_keys_) ? "True" : "False");
+    plottable_label_->setText(workspace_->Plottable(data_keys_) ? "True" : "False");
+    mappable_label_->setText(workspace_->Mappable(data_keys_) ? "True" : "False");
 }
 
 void StatsDialog::CalculateCI()
 {
     double alpha = alpha_double_spin_box_->value();
     double stddev = CalculateStdDev();
-    const mat& data = workspace->GetMatrix(data_keys_);
+    const mat& data = workspace_->GetMatrix(data_keys_);
     unsigned int n = data.n_elem;
     double w = Vespucci::Math::Stats::TInterval(alpha, stddev, n);
     confidence_line_edit_->setText(QString::number(w));

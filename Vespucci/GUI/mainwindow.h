@@ -53,7 +53,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent, VespucciWorkspace *ws);
+    explicit MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws);
     ~MainWindow();
     void RefreshTreeModel(const DataModel *data_model);
     QCPRange *global_data_range();
@@ -61,7 +61,7 @@ public:
     void RecalculateGlobalDataRange(QCPRange* new_data_range);
     void RefreshGlobalColorGradient(QCPColorGradient new_gradient);
     void SetGlobalDataRange(QCPRange* new_data_range);
-    VespucciWorkspace *workspace_ptr(); //return the workspace
+    QSharedPointer<VespucciWorkspace> workspace_ptr(); //return the workspace
     void DisplayExceptionWarning(std::exception e);
     void DisplayExceptionWarning(std::string where, std::exception e);
     QListView *map_list_view();
@@ -214,7 +214,7 @@ private:
     ///
     /// \brief workspace
     /// The current workspace
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief map_list_view_

@@ -13,7 +13,7 @@ class AbscissaTransformDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AbscissaTransformDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit AbscissaTransformDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~AbscissaTransformDialog();
 
 private slots:
@@ -21,7 +21,7 @@ private slots:
 
 private:
     Ui::AbscissaTransformDialog *ui;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
     QLineEdit *out_factor_edit_;
     QLineEdit *in_factor_edit_;

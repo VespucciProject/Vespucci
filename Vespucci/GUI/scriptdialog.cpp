@@ -4,7 +4,7 @@
 #include <cstdio>
 #include "External/fileinterprocess.h"
 
-ScriptDialog::ScriptDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
+ScriptDialog::ScriptDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::ScriptDialog)
 {
@@ -14,7 +14,7 @@ ScriptDialog::ScriptDialog(QWidget *parent, VespucciWorkspace *ws, const QString
     receive_plain_test_edit_ = findChild<QPlainTextEdit *>("receivePlainTextEdit");
     send_plain_test_edit_ = findChild<QPlainTextEdit *>("sendPlainTextEdit");
     interpreter_selector_combo_box_ = findChild<QComboBox *>("interpreterComboBox");
-    workspace = ws;
+    workspace_ = ws;
 }
 
 ScriptDialog::~ScriptDialog()
@@ -67,9 +67,9 @@ void ScriptDialog::on_buttonBox_accepted()
         std::map<std::string, arma::mat> data;
         std::cout << "R stuff" << endl;
         if (interpreter_selector_combo_box_->currentText() == "R"){
-            workspace->settings()->beginGroup("environment");
-            QString r_home = workspace->settings()->value("R_HOME").toString();
-            workspace->settings()->endGroup();
+            workspace_->settings()->beginGroup("environment");
+            QString r_home = workspace_->settings()->value("R_HOME").toString();
+            workspace_->settings()->endGroup();
             r_home = "R_HOME=" + r_home;
             char* R_HOME;
             snprintf(R_HOME, r_home.size(), r_home.toStdString().c_str());

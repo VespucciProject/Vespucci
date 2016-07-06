@@ -1,12 +1,12 @@
 #include "abscissainterpolationdialog.h"
 #include "ui_abscissainterpolationdialog.h"
-AbscissaInterpolationDialog::AbscissaInterpolationDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
+AbscissaInterpolationDialog::AbscissaInterpolationDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::AbscissaInterpolationDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
-    dataset_ = workspace->GetDataset(dataset_key);
+    workspace_ = ws;
+    dataset_ = workspace_->GetDataset(dataset_key);
 
     dataset_combo_box_ = findChild<QComboBox*>("datasetComboBox");
     dataset_radio_button_ = findChild<QRadioButton*>("datasetRadioButton");
@@ -33,7 +33,7 @@ AbscissaInterpolationDialog::AbscissaInterpolationDialog(QWidget *parent, Vespuc
     browse_push_button_->setVisible(false);
     filename_line_edit_->setVisible(false);
 
-    QStringList dataset_names = workspace->dataset_names();
+    QStringList dataset_names = workspace_->dataset_names();
     dataset_combo_box_->addItems(dataset_names);
 
 }
@@ -50,8 +50,8 @@ void AbscissaInterpolationDialog::on_buttonBox_accepted()
     arma::vec new_abscissa;
     if (source_combo_box_->currentText() == "Dataset"){
         new_abscissa =
-                workspace->DatasetAtt)
-                workspace->DatasetAt(dataset_combo_box_->currentIndex())->abscissa();
+                workspace_->DatasetAtt)
+                workspace_->DatasetAt(dataset_combo_box_->currentIndex())->abscissa();
     }
     else if (source_combo_box_->currentText() == "File"){
         arma::mat infile;
@@ -78,7 +78,7 @@ void AbscissaInterpolationDialog::on_buttonBox_accepted()
             dataset_->InterpolateToNewAbscissa(new_abscissa);
         }catch(exception e){
             progress.close();
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
     else if (method_combo_box_->currentText() == "Spline"){
@@ -90,7 +90,7 @@ void AbscissaInterpolationDialog::on_buttonBox_accepted()
                                                window_size);
         }catch(exception e){
             progress.close();
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
 
     }

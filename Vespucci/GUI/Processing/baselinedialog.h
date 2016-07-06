@@ -36,7 +36,7 @@ class BaselineDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit BaselineDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit BaselineDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~BaselineDialog();
 
 private slots:
@@ -59,7 +59,7 @@ private:
     ///
     /// \brief workspace
     /// Current workspace
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief iterations_box_

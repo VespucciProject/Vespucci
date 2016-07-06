@@ -37,7 +37,7 @@ class PlotWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit PlotWidget(QWidget *parent = 0, VespucciWorkspace *ws=0);
+    explicit PlotWidget(QWidget *parent, QSharedPointer<VespucciWorkspace> ws);
     ~PlotWidget();
     void AddPlot(const mat & paired_data);
     void AddPlot(const vec &abscissa, const vec &data);
@@ -62,7 +62,7 @@ private:
     QVector<double> GetAbscissa(const QList<QCPData> &keys) const;
     QList<QColor> colors_;
     QColor GetNextColor();
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
     QCPGraph *transient_graph_;
 };
 

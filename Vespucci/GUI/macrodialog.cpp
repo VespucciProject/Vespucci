@@ -20,12 +20,12 @@
 #include "macrodialog.h"
 #include "ui_macrodialog.h"
 
-MacroDialog::MacroDialog(MainWindow *parent, VespucciWorkspace *ws) :
+MacroDialog::MacroDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
     ui(new Ui::MacroDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
+    workspace_ = ws;
 }
 
 MacroDialog::~MacroDialog()

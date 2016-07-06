@@ -61,8 +61,6 @@ bool TextImport::ImportWideText(QString filename,
     for(i=0; i<rows; ++i){
         abscissa(i) = abscissa_string_list.at(i).toDouble();
     }
-    i=0;
-    j=0;
 
     QString spectra_string;
 
@@ -87,7 +85,7 @@ bool TextImport::ImportWideText(QString filename,
     inputstream.readLine(); //discard it to advance to next line
     bool ok = true;
     //iterate through each row of the input file, loading spatial and spectral values
-    for(j=0; j<spectra_count; ++j){
+    for(int j=0; j<spectra_count; ++j){
         spectra_string = inputstream.readLine();
         spectra_string_list =
                 spectra_string.split(sep, QString::SkipEmptyParts);

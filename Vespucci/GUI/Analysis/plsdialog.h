@@ -35,7 +35,7 @@ class PLSDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PLSDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit PLSDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~PLSDialog();
 
 private slots:
@@ -50,7 +50,7 @@ private:
     ///
     /// \brief workspace
     /// Current workspace
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief image_component_selector_spin_box_

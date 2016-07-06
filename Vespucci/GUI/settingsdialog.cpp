@@ -1,19 +1,19 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
 
-SettingsDialog::SettingsDialog(QWidget *parent, VespucciWorkspace *ws) :
+SettingsDialog::SettingsDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
     ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
+    workspace_ = ws;
     r_home_line_edit_ = findChild<QLineEdit*>("rHomeLineEdit");
     abs_label_line_edit_ = findChild<QLineEdit*>("absLabelLineEdit");
     abs_units_line_edit_ = findChild<QLineEdit*>("absUnitsLineEdit");
     ord_label_line_edit_ = findChild<QLineEdit*>("ordLabelLineEdit");
     ord_units_line_edit_ = findChild<QLineEdit*>("ordUnitsLineEdit");
 
-    settings_ = workspace->settings();
+    settings_ = workspace_->settings();
     settings_->beginGroup("environment");
     QString r_home = settings_->value("R_HOME").toString();
     settings_->endGroup();

@@ -26,13 +26,13 @@
 /// \param ws The current workspace
 /// \param row The currently selected row in the dataset list widget
 ///
-BaselineDialog::BaselineDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
+BaselineDialog::BaselineDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::BaselineDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
-    dataset_ = workspace->GetDataset(dataset_key);
+    workspace_ = ws;
+    dataset_ = workspace_->GetDataset(dataset_key);
 
     param_0_spin_box_ = findChild<QSpinBox *>("param_0SpinBox");
     method_box_ = findChild<QComboBox *>("methodComboBox");
@@ -96,7 +96,7 @@ void BaselineDialog::on_buttonBox_accepted()
             dataset_->MFBaseline(window_size, iterations);
         }
         catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
     else if (method == "Vancouver Raman Algorithm (IModPoly)"){
@@ -106,7 +106,7 @@ void BaselineDialog::on_buttonBox_accepted()
         try{
             dataset_->IModPolyBaseline(poly_order, max_it, threshold);
         }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
     else if (method == "CWT"){
@@ -117,7 +117,7 @@ void BaselineDialog::on_buttonBox_accepted()
         try{
             dataset_->CWTBaseline(lambda, penalty_order, SNR_threshold, peak_shape_threshold);
         }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
     else{
@@ -241,7 +241,7 @@ void BaselineDialog::on_pushButton_clicked()
             spectrum_plot_->graph(2)->setData(abscissa_q_, corrected_q);
         }
         catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
     else if (method == "Vancouver Raman Algorithm (IModPoly)"){
@@ -262,7 +262,7 @@ void BaselineDialog::on_pushButton_clicked()
             spectrum_plot_->graph(2)->setPen(QColor("red"));
             spectrum_plot_->graph(2)->setData(abscissa_q_, corrected_q);
         }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
     else if (method == "CWT"){
@@ -276,7 +276,7 @@ void BaselineDialog::on_pushButton_clicked()
         try{
             dataset_->CWTBaseline(lambda, penalty_order, SNR_threshold, peak_shape_threshold);
         }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
         */
     }

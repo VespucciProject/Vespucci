@@ -33,7 +33,7 @@ class ThresholdDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ThresholdDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit ThresholdDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~ThresholdDialog();
 
 private slots:
@@ -44,7 +44,7 @@ private slots:
 private:
     Ui::ThresholdDialog *ui;
     QSharedPointer<VespucciDataset> dataset_;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
     QDoubleSpinBox *threshold_box_;
     QComboBox *method_box_;
 

@@ -20,11 +20,11 @@
 #include "plotwidget.h"
 #include "ui_plotwidget.h"
 
-PlotWidget::PlotWidget(QWidget *parent, VespucciWorkspace *ws) :
+PlotWidget::PlotWidget(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QWidget(parent),
     ui(new Ui::PlotWidget)
 {
-    workspace = ws;
+    workspace_ = ws;
     transient_graph_ = 0;
     ui->setupUi(this);
     plot_ = findChild<QCustomPlot *>("customPlot");
@@ -67,6 +67,8 @@ void PlotWidget::AddPlot(const mat & paired_data)
     if (graph_count < 1){
         plot_->addGraph();
         plot_->graph(graph_count)->addData(abscissa, data);
+        plot_->rescaleAxes();
+        plot_->replot();
     }
     else{
         plot_->addGraph(plot_->graph(0)->keyAxis(), plot_->graph(0)->valueAxis());
@@ -75,9 +77,13 @@ void PlotWidget::AddPlot(const mat & paired_data)
             DetermineOffset(data);
             plot_->graph(graph_count)->addData(abscissa, data);
             ApplyOffset();
+            plot_->rescaleAxes();
+            plot_->replot();
         }
         else{
             plot_->graph(graph_count)->addData(abscissa, data);
+            plot_->rescaleAxes();
+            plot_->replot();
         }
 
     }
@@ -93,6 +99,8 @@ void PlotWidget::AddPlot(const vec &abscissa, const vec &data)
     if (graph_count < 1){
         plot_->addGraph();
         plot_->graph(graph_count)->addData(abscissa_qvec, data_qvec);
+        plot_->rescaleAxes();
+        plot_->replot();
     }
     else{
         plot_->addGraph(plot_->graph(0)->keyAxis(), plot_->graph(0)->valueAxis());
@@ -101,9 +109,13 @@ void PlotWidget::AddPlot(const vec &abscissa, const vec &data)
             DetermineOffset(data_qvec);
             plot_->graph(graph_count)->addData(abscissa_qvec, data_qvec);
             ApplyOffset();
+            plot_->rescaleAxes();
+            plot_->replot();
         }
         else{
             plot_->graph(graph_count)->addData(abscissa_qvec, data_qvec);
+            plot_->rescaleAxes();
+            plot_->replot();
         }
 
     }
@@ -119,6 +131,8 @@ void PlotWidget::AddTransientPlot(const vec &abscissa, const vec &data)
         QVector<double> data_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(data));
         transient_graph_->setData(abscissa_qvec, data_qvec);
+        plot_->rescaleAxes();
+        plot_->replot();
     }
     else{
         QCPAxis *key_axis;
@@ -138,6 +152,8 @@ void PlotWidget::AddTransientPlot(const vec &abscissa, const vec &data)
         QVector<double> data_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(data));
         transient_graph_->addData(abscissa_qvec, data_qvec);
+        plot_->rescaleAxes();
+        plot_->replot();
     }
 
 }
@@ -154,6 +170,8 @@ void PlotWidget::AddTransientPlot(const mat & paired_data)
         QVector<double> data_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(1)));
         transient_graph_->setData(abscissa_qvec, data_qvec);
+        plot_->rescaleAxes();
+        plot_->replot();
     }
     else{
         if (plot_->graphCount()){
@@ -171,6 +189,8 @@ void PlotWidget::AddTransientPlot(const mat & paired_data)
         QVector<double> data_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(1)));
         transient_graph_->addData(abscissa_qvec, data_qvec);
+        plot_->rescaleAxes();
+        plot_->replot();
     }
 }
 
@@ -179,6 +199,8 @@ void PlotWidget::RemoveTransientPlot()
     if (transient_graph_){
         plot_->removeGraph(transient_graph_);
         transient_graph_ = 0;
+        plot_->rescaleAxes();
+        plot_->replot();
     }
 }
 
@@ -198,6 +220,8 @@ void PlotWidget::StackPlots(bool stack)
     }
 
     offset_plots_ = stack;
+    plot_->rescaleAxes();
+    plot_->replot();
 
 }
 
@@ -257,6 +281,7 @@ void PlotWidget::ApplyOffset()
         QVector<double> abscissa = GetAbscissa(plot_->graph(i)->data()->values());
         for (int i = 0; i < data.size(); ++i){data[i] = data[i] + offset_by_;}
         plot_->graph(i)->setData(abscissa, data);
+        plot_->replot();
     }
 }
 
@@ -267,6 +292,7 @@ void PlotWidget::RemoveOffset()
         QVector<double> abscissa = GetAbscissa(plot_->graph(i)->data()->values());
         for (int i = 0; i < data.size(); ++i){data[i] = data[i] - offset_by_;}
         plot_->graph(i)->setData(abscissa, data);
+        plot_->replot();
     }
 }
 

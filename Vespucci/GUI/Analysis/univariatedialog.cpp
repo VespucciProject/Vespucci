@@ -26,13 +26,13 @@
 /// \param ws Current workspace
 /// \param row Selected row in the dataset list widget
 ///
-UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
+UnivariateDialog::UnivariateDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::UnivariateDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
-    dataset_ = workspace->GetDataset(dataset_key);
+    workspace_ = ws;
+    dataset_ = workspace_->GetDataset(dataset_key);
 
     min_line_edit_ = findChild<QLineEdit *>("minLineEdit");
     max_line_edit_ = findChild<QLineEdit *>("maxLineEdit");
@@ -56,7 +56,7 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, VespucciWorkspace *ws, const
     }
     catch(exception e){
         cerr << e.what();
-        workspace->main_window()->DisplayExceptionWarning(e);
+        workspace_->main_window()->DisplayExceptionWarning(e);
         min = 0;
         max = 0;
     }
@@ -111,7 +111,7 @@ void UnivariateDialog::on_buttonBox_accepted()
         try{
             dataset_->Univariate(name, entered_min, entered_max, bound_window);
         }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
     else if (value_method == "Gaussian Fit"){

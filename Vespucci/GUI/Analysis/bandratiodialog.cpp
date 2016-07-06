@@ -21,15 +21,15 @@
 #include "ui_bandratiodialog.h"
 
 BandRatioDialog::BandRatioDialog(QWidget *parent,
-                                 VespucciWorkspace *ws,
+                                 QSharedPointer<VespucciWorkspace> ws,
                                  const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::BandRatioDialog)
 {
     ui->setupUi(this);
 
-    workspace = ws;
-    dataset_ = workspace->GetDataset(dataset_key);
+    workspace_ = ws;
+    dataset_ = workspace_->GetDataset(dataset_key);
 
     spectrum_custom_plot_ = findChild<QCustomPlot *>("spectrumPlot");
     first_min_line_edit_ = findChild<QLineEdit *>("firstMinLineEdit");
@@ -127,14 +127,14 @@ void BandRatioDialog::on_buttonBox_accepted()
                              second_entered_min, second_entered_max,
                              bound_window);
         }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
     else if (value_method == "Gaussian Fit"){
         try{
 
         }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
     else{

@@ -1,13 +1,13 @@
 #include "fouriertransformdialog.h"
 #include "ui_fouriertransformdialog.h"
 #include "Global/global.h"
-FourierTransformDialog::FourierTransformDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
+FourierTransformDialog::FourierTransformDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::FourierTransformDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
-    dataset_ = workspace->GetDataset(dataset_key);
+    workspace_ = ws;
+    dataset_ = workspace_->GetDataset(dataset_key);
 
     end_double_spin_box_ = findChild<QDoubleSpinBox*>("endDoubleSpinBox");
     end_label_ = findChild<QLabel*>("endLabel");
@@ -154,7 +154,7 @@ void FourierTransformDialog::on_previewPushButton_clicked()
             abs_qvec = qvec::fromStdVector(arma::conv_to<stdvec>::from(f_abscissa));
             spc_qvec = qvec::fromStdVector(arma::conv_to<stdvec>::from(arma::real(f_spectrum)));
         }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
             close();
         }
     }
@@ -172,7 +172,7 @@ void FourierTransformDialog::on_previewPushButton_clicked()
             spc_qvec =
                     qvec::fromStdVector(arma::conv_to<stdvec>::from(arma::real(t_spectrum)));
         }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
             close();
         }
     }
@@ -225,7 +225,7 @@ void FourierTransformDialog::on_buttonBox_accepted()
         try{
             dataset_->FourierTransform(n);
         }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
             progress->cancel();
         }
         progress->cancel();
@@ -238,7 +238,7 @@ void FourierTransformDialog::on_buttonBox_accepted()
         try{
             dataset_->InverseFourierTransform(n);
         }catch(exception e){
-            workspace->main_window()->DisplayExceptionWarning(e);
+            workspace_->main_window()->DisplayExceptionWarning(e);
             progress->cancel();
         }
         progress->cancel();

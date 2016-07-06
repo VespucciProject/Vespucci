@@ -53,11 +53,11 @@
 /// \param parent usually 0
 /// \param ws the workspace of this instance of Vespucci
 ///Default constructor
-MainWindow::MainWindow(QWidget *parent, VespucciWorkspace *ws) :
+MainWindow::MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    workspace = ws;
+    workspace_ = ws;
     ui->setupUi(this);
     dataset_tree_view_ = findChild<QTreeView *>("datasetTreeView");
     dataset_tree_model_ = new DatasetTreeModel(dataset_tree_view_);
@@ -65,10 +65,10 @@ MainWindow::MainWindow(QWidget *parent, VespucciWorkspace *ws) :
     data_viewer_ = new DataViewer(this);
     plot_viewer_ = new PlotViewer(this);
     spectrum_editor_ = new SpectrumSelectionDialog(this);
-    stats_viewer_ = new StatsDialog(this, workspace);
-    python_shell_ = new PythonShellDialog(this, workspace);
+    stats_viewer_ = new StatsDialog(this, workspace_);
+    python_shell_ = new PythonShellDialog(this, workspace_);
     global_map_count_ = 0;
-    workspace->SetPointers(this, dataset_tree_model_);
+    workspace_->SetPointers(this, dataset_tree_model_);
 }
 
 MainWindow::~MainWindow()
@@ -128,7 +128,7 @@ void MainWindow::on_actionExit_triggered()
 ///Triggers the dialog to load a dataset.
 void MainWindow::on_actionImport_Dataset_from_File_triggered()
 {
-    LoadDataset *load_dataset_window = new LoadDataset(this,workspace);
+    LoadDataset *load_dataset_window = new LoadDataset(this,workspace_);
     load_dataset_window->show();
 }
 
@@ -164,7 +164,7 @@ void MainWindow::on_actionNew_Univariate_Map_triggered()
     }
     QString dataset_key = item->DatasetKey();
     UnivariateDialog *univariate_dialog =
-        new UnivariateDialog(this, workspace, dataset_key);
+        new UnivariateDialog(this, workspace_, dataset_key);
 
     univariate_dialog->show();
 
@@ -186,7 +186,7 @@ void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    BandRatioDialog *band_ratio_dialog = new BandRatioDialog(this, workspace, dataset_key);
+    BandRatioDialog *band_ratio_dialog = new BandRatioDialog(this, workspace_, dataset_key);
     band_ratio_dialog->show();
 }
 
@@ -208,7 +208,7 @@ void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
 
 
     PrincipalComponentsDialog *principal_components_dialog =
-            new PrincipalComponentsDialog(this, workspace, dataset_key);
+            new PrincipalComponentsDialog(this, workspace_, dataset_key);
     principal_components_dialog->show();
 
 
@@ -232,7 +232,7 @@ void MainWindow::on_actionVertex_Components_triggered()
     QString dataset_key = item->DatasetKey();
 
 
-    VCADialog *vca_dialog = new VCADialog(this, workspace, dataset_key);
+    VCADialog *vca_dialog = new VCADialog(this, workspace_, dataset_key);
     vca_dialog->show();
 
 
@@ -258,7 +258,7 @@ void MainWindow::on_actionPartial_Least_Squares_triggered()
 
 
     PLSDialog *pls_dialog =
-            new PLSDialog(this, workspace, dataset_key);
+            new PLSDialog(this, workspace_, dataset_key);
     pls_dialog->show();
 
 
@@ -283,7 +283,7 @@ void MainWindow::on_actionK_Means_Clustering_triggered()
 
 
     KMeansDialog *k_means_dialog =
-            new KMeansDialog(this, workspace, dataset_key);
+            new KMeansDialog(this, workspace_, dataset_key);
     k_means_dialog->show();
 
 
@@ -304,7 +304,7 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
         return;
     }
     QString dataset_key = item->DatasetKey();
-    QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(dataset_key);
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
     QStringList methods;
     methods << "Min/Max" << "Vector Norm" << "Unit Area" << "Z-score"
             << "Standard Normal Variate" << "Peak Intensity" << "Scale Spectra"
@@ -368,15 +368,15 @@ void MainWindow::on_actionSubtract_Background_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(dataset_key);
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
     QString filename =
             QFileDialog::getOpenFileName(this,
                                          tr("Select Background File"),
-                                         workspace->directory(),
+                                         workspace_->directory(),
                                          "Vespucci Spectrum Files (*.arma *.txt *.csv)");
     mat input;
     QFileInfo file_info(filename);
-    workspace->set_directory(file_info.dir().path());
+    workspace_->set_directory(file_info.dir().path());
     bool success = input.load(filename.toStdString());
     //We take spectra inputs as row-major
     if (input.n_rows < input.n_cols){
@@ -426,16 +426,16 @@ void MainWindow::on_actionSpectra_triggered()
 
     bool success;
     QString dataset_key = item->DatasetKey();
-    QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(dataset_key);
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
     QString filename =
             QFileDialog::getSaveFileName(this,
                                          tr("Save Spectra Matrix"),
-                                         workspace->directory(),
+                                         workspace_->directory(),
                                          tr("Vespucci Binary (*.arma);;"
                                             "Comma-separated Values (*.csv);;"
                                             "Tab-separated Txt (*.txt);;"));
     QFileInfo file_info(filename);
-    workspace->set_directory(file_info.dir().path());
+    workspace_->set_directory(file_info.dir().path());
 
     if (file_info.suffix() == "arma")
         success = dataset->spectra().save(filename.toStdString(), arma_binary);
@@ -466,17 +466,17 @@ void MainWindow::on_actionSpectra_as_Columns_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(dataset_key);
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
                                          tr("Save Spectra Matrix"),
-                                         workspace->directory(),
+                                         workspace_->directory(),
                                          tr("Vespucci Binary (*.arma);;"
                                             "Comma-separated Values (*.csv);;"
                                             "Tab-separated Txt (*.txt);;"));
     QFileInfo file_info(filename);
-    workspace->set_directory(file_info.dir().path());
+    workspace_->set_directory(file_info.dir().path());
     mat output = dataset->spectra().t();
 
     if (file_info.suffix() == "arma")
@@ -508,17 +508,17 @@ void MainWindow::on_actionAverage_Spectra_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(dataset_key);
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
                                          tr("Save Average Spectrum"),
-                                         workspace->directory(),
+                                         workspace_->directory(),
                                          tr("Vespucci Binary (*.arma);;"
                                             "Comma-separated Values (*.csv);;"
                                             "Tab-separated Txt (*.txt);;"));
     QFileInfo file_info(filename);
-    workspace->set_directory(file_info.dir().path());
+    workspace_->set_directory(file_info.dir().path());
 
     if (file_info.suffix() == "arma")
         success = dataset->AverageSpectrum(false).save(filename.toStdString(), arma_binary);
@@ -549,17 +549,17 @@ void MainWindow::on_actionAverage_Spectra_with_Abscissa_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(dataset_key);
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
                                          tr("Save Spectra Matrix"),
-                                         workspace->directory(),
+                                         workspace_->directory(),
                                          tr("Vespucci Binary (*.arma);;"
                                             "Comma-separated Values (*.csv);;"
                                             "Tab-separated Txt (*.txt);;"));
     QFileInfo file_info(filename);
-    workspace->set_directory(file_info.dir().path());
+    workspace_->set_directory(file_info.dir().path());
 
 
     vec wavelength = dataset->wavelength();
@@ -600,17 +600,17 @@ void MainWindow::on_actionSpectral_Abscissa_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(dataset_key);
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
                                          tr("Save Spectra Matrix"),
-                                         workspace->directory(),
+                                         workspace_->directory(),
                                          tr("Vespucci Binary (*.arma);;"
                                             "Comma-separated Values (*.csv);;"
                                             "Tab-separated Txt (*.txt);;"));
     QFileInfo file_info(filename);
-    workspace->set_directory(file_info.dir().path());
+    workspace_->set_directory(file_info.dir().path());
 
 
     if (file_info.suffix() == "arma")
@@ -644,16 +644,16 @@ void MainWindow::on_actionAll_Data_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(dataset_key);
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
 
     QString filename =
             QFileDialog::getSaveFileName(this,
                                          tr("Save Spectra Matrix"),
-                                         workspace->directory(),
+                                         workspace_->directory(),
                                          tr("Vespucci Dataset (*.vds)"));
 
     QFileInfo file_info(filename);
-    workspace->set_directory(file_info.dir().path());
+    workspace_->set_directory(file_info.dir().path());
 
     //exception can be thrown when intializing field
     try{
@@ -685,7 +685,7 @@ void MainWindow::on_actionFilter_Derivatize_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    FilterDialog *filter_dialog = new FilterDialog(this, workspace, dataset_key);
+    FilterDialog *filter_dialog = new FilterDialog(this, workspace_, dataset_key);
     filter_dialog->show();
 }
 
@@ -712,7 +712,7 @@ void MainWindow::on_actionClose_Dataset_triggered()
                                          QMessageBox::Ok, QMessageBox::Cancel);
 
     if (response == QMessageBox::Ok)
-        workspace->RemoveDataset(dataset_key);
+        workspace_->RemoveDataset(dataset_key);
 }
 
 ///
@@ -738,7 +738,7 @@ void MainWindow::on_actionCrop_triggered()
     }
 
     QString dataset_key = item->DatasetKey();
-    CropDialog *crop_dialog = new CropDialog(this, workspace, dataset_key);
+    CropDialog *crop_dialog = new CropDialog(this, workspace_, dataset_key);
     crop_dialog->show();
 }
 
@@ -758,7 +758,7 @@ void MainWindow::on_actionCorrect_Baseline_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    BaselineDialog *baseline_dialog = new BaselineDialog(this, workspace, dataset_key);
+    BaselineDialog *baseline_dialog = new BaselineDialog(this, workspace_, dataset_key);
     baseline_dialog->show();
 }
 
@@ -778,7 +778,7 @@ void MainWindow::on_actionView_Dataset_Elements_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    //DataViewer *data_viewer = new DataViewer(0, workspace, index);
+    //DataViewer *data_viewer = new DataViewer(0, workspace_, index);
     //data_viewer->show();
 }
 
@@ -874,7 +874,7 @@ void MainWindow::on_actionSet_Global_Color_Scale_triggered()
         case 38: gradient =  QCPColorGradient::vSpectral; break;
         default: gradient =  QCPColorGradient::gpCold;
         }
-    workspace->RefreshGlobalColorGradient(gradient);
+    workspace_->RefreshGlobalColorGradient(gradient);
 }
 
 ///
@@ -883,7 +883,7 @@ void MainWindow::on_actionSet_Global_Color_Scale_triggered()
 /// Return the global data range (to MapViewer widgets)
 QCPRange* MainWindow::global_data_range()
 {
-    return workspace->global_data_range();
+    return workspace_->global_data_range();
 }
 
 ///
@@ -892,7 +892,7 @@ QCPRange* MainWindow::global_data_range()
 /// Return the global color gradient (to MapViewer widgets)
 QCPColorGradient* MainWindow::global_gradient()
 {
-    return workspace->global_gradient();
+    return workspace_->global_gradient();
 }
 
 ///
@@ -903,9 +903,9 @@ void MainWindow::RecalculateGlobalDataRange(QCPRange* new_data_range)
 {
     bool changed = false;
     if (global_map_count_ <= 1)
-        workspace->SetGlobalDataRange(new_data_range);
+        workspace_->SetGlobalDataRange(new_data_range);
     else
-        changed = workspace->RecalculateGlobalDataRange(new_data_range);
+        changed = workspace_->RecalculateGlobalDataRange(new_data_range);
 
     if (changed){
         emit GlobalDataRangeChanged(*new_data_range);
@@ -918,7 +918,7 @@ void MainWindow::RecalculateGlobalDataRange(QCPRange* new_data_range)
 /// Change the global color gradient and update it for all objects using it
 void MainWindow::RefreshGlobalColorGradient(QCPColorGradient new_gradient)
 {
-    workspace->RefreshGlobalColorGradient(new_gradient);
+    workspace_->RefreshGlobalColorGradient(new_gradient);
     emit GlobalGradientChanged(new_gradient);
 }
 
@@ -928,7 +928,7 @@ void MainWindow::RefreshGlobalColorGradient(QCPColorGradient new_gradient)
 /// Set the global data range and update it for all objects using it
 void MainWindow::SetGlobalDataRange(QCPRange* new_data_range)
 {
-    workspace->SetGlobalDataRange(new_data_range);
+    workspace_->SetGlobalDataRange(new_data_range);
     emit GlobalDataRangeChanged(*new_data_range);
 }
 
@@ -936,9 +936,9 @@ void MainWindow::SetGlobalDataRange(QCPRange* new_data_range)
 /// \brief MainWindow::workspace_ptr
 /// \return
 /// Very kludgy way of getting the workspace variable to window variables.
-VespucciWorkspace* MainWindow::workspace_ptr()
+QSharedPointer<VespucciWorkspace> MainWindow::workspace_ptr()
 {
-    return workspace;
+    return workspace_;
 }
 
 void MainWindow::on_actionUndo_triggered()
@@ -954,7 +954,7 @@ void MainWindow::on_actionUndo_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(dataset_key);
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
 
     if (!dataset->Undoable()){
         dataset.clear();
@@ -1065,7 +1065,7 @@ void MainWindow::on_actionNew_Composite_Dataset_triggered()
                                  "No dataset exists on which to perform this operation");
         return;
     }
-    MetaDatasetDialog *meta_dialog = new MetaDatasetDialog(this, workspace);
+    MetaDatasetDialog *meta_dialog = new MetaDatasetDialog(this, workspace_);
     meta_dialog->show();
 }
 
@@ -1081,7 +1081,7 @@ void MainWindow::on_actionReject_Clipped_Spectra_triggered()
         return;
     }
     QString dataset_key = item->DatasetKey();
-    ThresholdDialog *dialog = new ThresholdDialog(this, workspace, dataset_key);
+    ThresholdDialog *dialog = new ThresholdDialog(this, workspace_, dataset_key);
     dialog->show();
 }
 
@@ -1094,7 +1094,7 @@ void MainWindow::RangeDialogAccepted(double min, double max)
 
     QString dataset_key = item->DatasetKey();
 
-    QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(dataset_key);
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
     try{
         dataset->PeakIntensityNormalize(min, max);
     }
@@ -1114,7 +1114,7 @@ void MainWindow::TreeItemDoubleClicked(const QModelIndex &index)
 
     if (type == TreeItem::ItemType::Map){
         try{
-            QSharedPointer<MapData> map_data = workspace->GetMap(item->keys()[0], item->keys()[1]);
+            QSharedPointer<MapData> map_data = workspace_->GetMap(item->keys()[0], item->keys()[1]);
             map_data->ShowMapWindow(!map_data->MapWindowVisible());
         }catch (exception e){
             DisplayExceptionWarning("TreeItemDoubleClicked", e);
@@ -1124,7 +1124,7 @@ void MainWindow::TreeItemDoubleClicked(const QModelIndex &index)
         QStringList keys = item->keys();
         if (keys.size() == 2){
             try{
-                const mat & matrix = workspace->GetAuxiliaryMatrix(keys[0], keys[1]);
+                const mat & matrix = workspace_->GetAuxiliaryMatrix(keys[0], keys[1]);
                 data_viewer_->AddTab(matrix, item->data(0).toString());
             }catch(exception e){
                 DisplayExceptionWarning("TreeItemDoubleClicked", e);
@@ -1132,7 +1132,7 @@ void MainWindow::TreeItemDoubleClicked(const QModelIndex &index)
         }
         if (keys.size() == 3){
             try{
-                const mat & matrix = workspace->GetResultsMatrix(keys[0], keys[1], keys[2]);
+                const mat & matrix = workspace_->GetResultsMatrix(keys[0], keys[1], keys[2]);
                 data_viewer_->AddTab(matrix, item->data(0).toString());
             }catch (exception e){
                 DisplayExceptionWarning("TreeItemDoubleClicked", e);
@@ -1154,7 +1154,7 @@ void MainWindow::on_actionView_Edit_Spectra_triggered()
         return;
     }
     QSharedPointer<VespucciDataset> dataset =
-            workspace->DatasetAt(dataset_tree_view_->currentIndex());
+            workspace_->DatasetAt(dataset_tree_view_->currentIndex());
 
     spectrum_editor_->SetActiveDataset(dataset);
 
@@ -1171,7 +1171,7 @@ void MainWindow::on_actionBooleanize_Clamp_triggered()
         return;
     }
     QString dataset_key = item->DatasetKey();
-    BooleanizeDialog *booleanize_dialog = new BooleanizeDialog(this, workspace, dataset_key);
+    BooleanizeDialog *booleanize_dialog = new BooleanizeDialog(this, workspace_, dataset_key);
     booleanize_dialog->show();
 }
 
@@ -1184,7 +1184,7 @@ void MainWindow::on_actionRemove_Vectors_of_Zeros_triggered()
                                  "No dataset exists on which to perform this operation");
         return;
     }
-    QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(item->DatasetKey());
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
     QStringList items;
     bool ok;
     items << "Remove columns of zeros (removes spectra)" << "Remove rows of zeros (removes wavelengths)";
@@ -1193,7 +1193,7 @@ void MainWindow::on_actionRemove_Vectors_of_Zeros_triggered()
         return;
     }
     else{
-        QSharedPointer<VespucciDataset> data = workspace->DatasetAt(dataset_tree_view_->currentIndex());
+        QSharedPointer<VespucciDataset> data = workspace_->DatasetAt(dataset_tree_view_->currentIndex());
         if (input == "Remove columns of zeros (removes spectra)"){
             try{
                 dataset->ShedZeroSpectra();
@@ -1229,7 +1229,7 @@ void MainWindow::on_actionRun_script_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    ScriptDialog *script_dialog = new ScriptDialog(this, workspace, dataset_key);
+    ScriptDialog *script_dialog = new ScriptDialog(this, workspace_, dataset_key);
     script_dialog->show();
 }
 
@@ -1266,14 +1266,14 @@ void MainWindow::on_actionCalculate_Peak_Populations_triggered()
 
 void MainWindow::on_actionImport_From_Multiple_Point_Spectra_triggered()
 {
-    MultiImportDialog *import_dialog = new MultiImportDialog(this, workspace);
+    MultiImportDialog *import_dialog = new MultiImportDialog(this, workspace_);
     import_dialog->show();
 }
 
 
 void MainWindow::on_actionBatch_File_Conversion_triggered()
 {
-    BulkConversionDialog *conversion_dialog = new BulkConversionDialog(this, workspace);
+    BulkConversionDialog *conversion_dialog = new BulkConversionDialog(this, workspace_);
     conversion_dialog->show();
 }
 
@@ -1290,13 +1290,13 @@ void MainWindow::on_actionClassical_Least_Squares_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    ClassicalLeastSquaresDialog *cls_dialog = new ClassicalLeastSquaresDialog(this, workspace, dataset_key);
+    ClassicalLeastSquaresDialog *cls_dialog = new ClassicalLeastSquaresDialog(this, workspace_, dataset_key);
     cls_dialog->show();
 }
 
 void MainWindow::on_actionSettings_triggered()
 {
-    SettingsDialog *settings_dialog = new SettingsDialog(this, workspace);
+    SettingsDialog *settings_dialog = new SettingsDialog(this, workspace_);
     settings_dialog->show();
 }
 
@@ -1313,7 +1313,7 @@ void MainWindow::on_actionTransform_Abscissa_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    AbscissaTransformDialog *abscissa_transform_dialog = new AbscissaTransformDialog(this, workspace, dataset_key);
+    AbscissaTransformDialog *abscissa_transform_dialog = new AbscissaTransformDialog(this, workspace_, dataset_key);
     abscissa_transform_dialog->show();
 }
 
@@ -1330,7 +1330,7 @@ void MainWindow::on_actionFourierTransform_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    FourierTransformDialog *fourier_transform_dialog = new FourierTransformDialog(this, workspace, dataset_key);
+    FourierTransformDialog *fourier_transform_dialog = new FourierTransformDialog(this, workspace_, dataset_key);
     fourier_transform_dialog->show();
 
 }
@@ -1348,7 +1348,7 @@ void MainWindow::on_actionInterpolate_to_New_Abscissa_triggered()
     QString dataset_key = item->DatasetKey();
 
     AbscissaInterpolationDialog *abs_interp_dialog =
-            new AbscissaInterpolationDialog(this, workspace, dataset_key);
+            new AbscissaInterpolationDialog(this, workspace_, dataset_key);
     abs_interp_dialog->show();
 }
 
@@ -1364,10 +1364,10 @@ void MainWindow::on_actionSave_Log_File_triggered()
 
 
     QString dataset_key = item->DatasetKey();
-    QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(dataset_key);
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
     QString filename = QFileDialog::getSaveFileName(this,
                                                     "Save Log File",
-                                                    workspace->directory(),
+                                                    workspace_->directory(),
                                                     "Text Files (*.txt)");
     bool ok = dataset->SaveLogFile(filename);
     QString message = (ok? "File Saved Successfully" : "Saving Log File Failed");
@@ -1379,7 +1379,7 @@ void MainWindow::on_actionSave_Log_File_triggered()
 
 void MainWindow::on_actionImport_Dataset_from_Multiple_Files_triggered()
 {
-    StitchImportDialog *stitch_dialog = new StitchImportDialog(this, workspace);
+    StitchImportDialog *stitch_dialog = new StitchImportDialog(this, workspace_);
     stitch_dialog->show();
 }
 
@@ -1393,8 +1393,8 @@ void MainWindow::on_datasetTreeView_activated(const QModelIndex &index)
     if (!index.isValid()) return;
     TreeItem *active_item = dataset_tree_model_->getItem(index);
     if (active_item->keys().size()){
-        spectrum_editor_->SetActiveDataset(workspace->GetDataset(active_item->keys()[0]));
-        macro_editor_->SetActiveDataset(workspace->GetDataset(active_item->keys()[0]));
+        spectrum_editor_->SetActiveDataset(workspace_->GetDataset(active_item->keys()[0]));
+        macro_editor_->SetActiveDataset(workspace_->GetDataset(active_item->keys()[0]));
     }
     if (active_item->type() == TreeItem::ItemType::Matrix){
         if (stats_viewer_->isVisible())
@@ -1445,14 +1445,12 @@ void MainWindow::on_datasetTreeView_clicked(const QModelIndex &index)
     if (!index.isValid()) return;
     TreeItem *active_item = dataset_tree_model_->getItem(index);
     if (active_item->keys().size()){
-        QSharedPointer<VespucciDataset> dataset = workspace->GetDataset(active_item->keys()[0]);
+        QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(active_item->keys()[0]);
         spectrum_editor_->SetActiveDataset(dataset);
         macro_editor_->SetActiveDataset(dataset);
     }
-    if (active_item->type() == TreeItem::ItemType::Matrix){
-        if (stats_viewer_->isVisible())
-            stats_viewer_->SetActiveDataKeys(active_item->keys());
-    }
+    if (active_item->type() == TreeItem::ItemType::Matrix)
+        stats_viewer_->SetActiveDataKeys(active_item->keys());
 }
 
 void MainWindow::on_datasetTreeView_doubleClicked(const QModelIndex &index)
@@ -1465,7 +1463,7 @@ void MainWindow::on_datasetTreeView_doubleClicked(const QModelIndex &index)
 
     if (type == TreeItem::ItemType::Map){
         try{
-            QSharedPointer<MapData> map_data = workspace->GetMap(item->keys()[0], item->keys()[1]);
+            QSharedPointer<MapData> map_data = workspace_->GetMap(item->keys()[0], item->keys()[1]);
             map_data->ShowMapWindow(!map_data->MapWindowVisible());
         }catch (exception e){
             DisplayExceptionWarning("on_datasetTreeView_doubleClicked", e);
@@ -1474,7 +1472,7 @@ void MainWindow::on_datasetTreeView_doubleClicked(const QModelIndex &index)
     if (type == TreeItem::ItemType::Matrix){
         QStringList keys = item->keys();
         try{
-            const mat & matrix = workspace->GetMatrix(keys);
+            const mat & matrix = workspace_->GetMatrix(keys);
             data_viewer_->AddTab(matrix, item->data(0).toString());
         }catch (exception e){
             DisplayExceptionWarning("on_datasetTreeView_doubleClicked", e);
@@ -1495,7 +1493,7 @@ void MainWindow::on_actionSave_Selected_Matrix_triggered()
     TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
     if (item->type() == TreeItem::ItemType::Matrix){
         QString filename = QFileDialog::getSaveFileName(this, "Save " + item->keys().last(),
-                                                        workspace->directory(),
+                                                        workspace_->directory(),
                                                         "Comma-separated text (*.csv);;"
                                                         "Space-delimited text (*.txt);;"
                                                         "Armadillo binary (*.arma);;"
@@ -1503,13 +1501,13 @@ void MainWindow::on_actionSave_Selected_Matrix_triggered()
         QString extension = QFileInfo(filename).suffix();
         try{
             if (extension == "bin")
-                workspace->GetMatrix(item->keys()).save(filename.toStdString(), raw_binary);
+                workspace_->GetMatrix(item->keys()).save(filename.toStdString(), raw_binary);
             else if (extension == "arma")
-                workspace->GetMatrix(item->keys()).save(filename.toStdString(), arma_binary);
+                workspace_->GetMatrix(item->keys()).save(filename.toStdString(), arma_binary);
             else if (extension == "csv")
-                workspace->GetMatrix(item->keys()).save(filename.toStdString(), csv_ascii);
+                workspace_->GetMatrix(item->keys()).save(filename.toStdString(), csv_ascii);
             else
-                workspace->GetMatrix(item->keys()).save(filename.toStdString(), raw_ascii);
+                workspace_->GetMatrix(item->keys()).save(filename.toStdString(), raw_ascii);
         }catch(exception e){
             DisplayExceptionWarning(e);
         }

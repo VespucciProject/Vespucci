@@ -12,7 +12,7 @@ class FourierTransformDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit FourierTransformDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit FourierTransformDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~FourierTransformDialog();
 
 private slots:
@@ -46,7 +46,7 @@ private:
     QLabel *value_label_;
 
     QSharedPointer<VespucciDataset> dataset_;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
 };
 

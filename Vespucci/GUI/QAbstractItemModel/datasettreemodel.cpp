@@ -208,7 +208,7 @@ int DatasetTreeModel::columnCount(const QModelIndex &parent) const
 
 bool DatasetTreeModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    TreeItem *parent_item = getItem(parent);
+    //TreeItem *parent_item = getItem(parent);
     bool success = true;
     beginRemoveRows(parent, row, count + row - 1);
     endRemoveRows();
