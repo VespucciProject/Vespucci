@@ -8,33 +8,19 @@ AbscissaInterpolationDialog::AbscissaInterpolationDialog(QWidget *parent, QShare
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
 
-    dataset_combo_box_ = findChild<QComboBox*>("datasetComboBox");
-    dataset_radio_button_ = findChild<QRadioButton*>("datasetRadioButton");
-    filename_line_edit_ = findChild<QLineEdit*>("filenameLineEdit");
-    browse_push_button_ = findChild<QPushButton*>("browsePushButton");
-    method_combo_box_ = findChild<QComboBox *>("methodComboBox");
-    order_spin_box_ = findChild<QSpinBox *>("orderSpinBox");
-    window_spin_box_ = findChild<QSpinBox *>("windowSpinBox");
-    source_combo_box_ = findChild<QComboBox*>("sourceComboBox");
+    ui->orderSpinBox->setVisible(false);
+    ui->orderLabel->setVisible(false);
+    ui->windowSpinBox->setVisible(false);
+    ui->windowLabel->setVisible(false);
 
-    window_label_ = findChild<QLabel *>("windowLabel");
-    order_label_ = findChild<QLabel *>("orderLabel");
-    file_label_ = findChild<QLabel *>("fileLabel");
-    dataset_label_=  findChild<QLabel *>("datasetLabel");
-
-    order_spin_box_->setVisible(false);
-    order_label_->setVisible(false);
-    window_spin_box_->setVisible(false);
-    window_label_->setVisible(false);
-
-    dataset_combo_box_->setVisible(true);
-    dataset_label_->setVisible(true);
-    file_label_->setVisible(false);
-    browse_push_button_->setVisible(false);
-    filename_line_edit_->setVisible(false);
+    ui->datasetComboBox->setVisible(true);
+    ui->datasetLabel->setVisible(true);
+    ui->fileLabel->setVisible(false);
+    ui->browsePushButton->setVisible(false);
+    ui->filenameLineEdit->setVisible(false);
 
     QStringList dataset_names = workspace_->dataset_names();
-    dataset_combo_box_->addItems(dataset_names);
+    ui->datasetComboBox->addItems(dataset_names);
 
 }
 
@@ -48,20 +34,20 @@ void AbscissaInterpolationDialog::on_buttonBox_accepted()
 {
     /*
     arma::vec new_abscissa;
-    if (source_combo_box_->currentText() == "Dataset"){
+    if (ui->sourceComboBox->currentText() == "Dataset"){
         new_abscissa =
                 workspace_->DatasetAtt)
-                workspace_->DatasetAt(dataset_combo_box_->currentIndex())->abscissa();
+                workspace_->DatasetAt(ui->datasetComboBox->currentIndex())->abscissa();
     }
-    else if (source_combo_box_->currentText() == "File"){
+    else if (ui->sourceComboBox->currentText() == "File"){
         arma::mat infile;
-        bool ok = infile.load(filename_line_edit_->text().toStdString());
+        bool ok = infile.load(ui->filenameLineEdit->text().toStdString());
         if (ok){
             new_abscissa = infile.col(0);
         }
         else{
             QMessageBox::warning(this, "Error Opening File",
-                                 "The file " + filename_line_edit_->text()\
+                                 "The file " + ui->filenameLineEdit->text()\
                                  + " could not be opened");\
             return;
         }
@@ -73,7 +59,7 @@ void AbscissaInterpolationDialog::on_buttonBox_accepted()
     progress.setCancelButton(0);
     progress.setRange(0,0);
     progress.exec();
-    if (method_combo_box_->currentText() == "Two-Point Linear"){
+    if (ui->methodComboBox->currentText() == "Two-Point Linear"){
         try{
             dataset_->InterpolateToNewAbscissa(new_abscissa);
         }catch(exception e){
@@ -81,9 +67,9 @@ void AbscissaInterpolationDialog::on_buttonBox_accepted()
             workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
-    else if (method_combo_box_->currentText() == "Spline"){
-        int poly_order = order_spin_box_->value();
-        int window_size = window_spin_box_->value();
+    else if (ui->methodComboBox->currentText() == "Spline"){
+        int poly_order = ui->orderSpinBox->value();
+        int window_size = ui->windowSpinBox->value();
         try{
             dataset_->InterpolateToNewAbscissa(new_abscissa,
                                                poly_order,
@@ -107,34 +93,34 @@ void AbscissaInterpolationDialog::on_buttonBox_accepted()
 void AbscissaInterpolationDialog::on_sourceComboBox_currentIndexChanged(const QString &arg1)
 {
     if (arg1 == "Dataset"){
-        dataset_combo_box_->setVisible(true);
-        dataset_label_->setVisible(true);
-        file_label_->setVisible(false);
-        browse_push_button_->setVisible(false);
-        filename_line_edit_->setVisible(false);
+        ui->datasetComboBox->setVisible(true);
+        ui->datasetLabel->setVisible(true);
+        ui->fileLabel->setVisible(false);
+        ui->browsePushButton->setVisible(false);
+        ui->filenameLineEdit->setVisible(false);
     }
 
     if (arg1 == "File"){
-        dataset_combo_box_->setVisible(false);
-        dataset_label_->setVisible(false);
-        file_label_->setVisible(true);
-        browse_push_button_->setVisible(true);
-        filename_line_edit_->setVisible(true);
+        ui->datasetComboBox->setVisible(false);
+        ui->datasetLabel->setVisible(false);
+        ui->fileLabel->setVisible(true);
+        ui->browsePushButton->setVisible(true);
+        ui->filenameLineEdit->setVisible(true);
     }
 }
 
 void AbscissaInterpolationDialog::on_methodComboBox_currentIndexChanged(const QString &arg1)
 {
     if (arg1 == "Two-Point Linear"){
-        order_spin_box_->setVisible(false);
-        order_label_->setVisible(false);
-        window_spin_box_->setVisible(false);
-        window_label_->setVisible(false);
+        ui->orderSpinBox->setVisible(false);
+        ui->orderLabel->setVisible(false);
+        ui->windowSpinBox->setVisible(false);
+        ui->windowLabel->setVisible(false);
     }
     if (arg1 == "Spline"){
-        order_spin_box_->setVisible(true);
-        order_label_->setVisible(true);
-        window_spin_box_->setVisible(true);
-        window_label_->setVisible(true);
+        ui->orderSpinBox->setVisible(true);
+        ui->orderLabel->setVisible(true);
+        ui->windowSpinBox->setVisible(true);
+        ui->windowLabel->setVisible(true);
     }
 }

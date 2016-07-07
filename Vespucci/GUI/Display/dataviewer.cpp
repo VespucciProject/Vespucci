@@ -31,11 +31,8 @@ DataViewer::DataViewer(MainWindow *parent)
      ui(new Ui::DataViewer)
 {
     ui->setupUi(this);
-    tab_widget_ = findChild<QTabWidget *>("tabWidget");
-    //clear the tab widget of pages. The DataViewer isn't shown until a tab is added
-    //while(tab_widget_->count()){tab_widget_->removeTab(0);}
-    tab_widget_->addTab(new DataWidget(this, new VespucciTableModel(this, empty_matrix_)), "Data");
-    QObject::connect(tab_widget_, SIGNAL(tabCloseRequested(int)), this, SLOT(RemoveTab(int)));
+    ui->tabWidget->addTab(new DataWidget(this, new VespucciTableModel(this, empty_matrix_)), "Data");
+    QObject::connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(RemoveTab(int)));
 
 }
 
@@ -47,14 +44,14 @@ DataViewer::~DataViewer()
 void DataViewer::RemoveTab(int index)
 {
     //if we wanted to warn the user about closing a tab, we'd put it here
-    tab_widget_->removeTab(index);
+    ui->tabWidget->removeTab(index);
 }
 
 void DataViewer::AddTab(const mat &object, const QString &name)
 {
     VespucciTableModel *new_model = new VespucciTableModel(this, object);
     DataWidget *new_widget = new DataWidget(this, new_model);
-    tab_widget_->addTab(new_widget, name);
+    ui->tabWidget->addTab(new_widget, name);
 }
 
 const mat & DataViewer::EmptyMatrix()

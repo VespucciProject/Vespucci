@@ -35,25 +35,11 @@ LoadDataset::LoadDataset(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) 
     ui->setupUi(this);
     workspace_ = ws;
     directory_ = ws->directory_ptr();
-    name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
     QString name = "Dataset" + QString::number(workspace_->dataset_loading_count());
-    name_line_edit_->setText(name); //puts in default name
+    ui->nameLineEdit->setText(name); //puts in default name
 
-    QDialogButtonBox *button_box = findChild<QDialogButtonBox *>("buttonBox");
-    QPushButton *ok_button = button_box->button(QDialogButtonBox::Ok);
+    QPushButton *ok_button = ui->buttonBox->button(QDialogButtonBox::Ok);
     ok_button->setDisabled(true);
-
-    file_size_label_ = findChild<QLabel *>("fileSizeLabel");
-    swap_check_box_ = findChild<QCheckBox *>("swapCheckBox");
-    filename_line_edit_ = findChild<QLineEdit *>("filenameLineEdit");
-    name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
-    y_description_line_edit_ = findChild<QLineEdit *>("yDescriptionLineEdit");
-    x_description_line_edit_ = findChild<QLineEdit *>("xDescriptionLineEdit");
-    y_units_line_edit_ = findChild<QLineEdit *>("yUnitsLineEdit");
-    x_units_line_edit_ = findChild<QLineEdit *>("xUnitsLineEdit");
-    data_format_combo_box_ = findChild<QComboBox *>("dataFormatComboBox");
-    button_box_ = findChild<QDialogButtonBox *>("buttonBox");
-
 
     ws->settings()->beginGroup("specdata");
     QString abs_label = ws->settings()->value("absLabel").toString();
@@ -62,12 +48,12 @@ LoadDataset::LoadDataset(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) 
     QString ord_units = ws->settings()->value("ordUnits").toString();
     ws->settings()->endGroup();
 
-    y_description_line_edit_->setText(ord_label);
-    y_units_line_edit_->setText(ord_units);
-    x_description_line_edit_->setText(abs_label);
-    x_units_line_edit_->setText(abs_units);
+    ui->yDescriptionLineEdit->setText(ord_label);
+    ui->yUnitsLineEdit->setText(ord_units);
+    ui->xDescriptionLineEdit->setText(abs_label);
+    ui->xUnitsLineEdit->setText(abs_units);
 
-    QObject::connect(filename_line_edit_,
+    QObject::connect(ui->filenameLineEdit,
                      SIGNAL(textChanged(QString)),
                      this,
                      SLOT(FilenameChanged(QString)));
@@ -88,7 +74,7 @@ void LoadDataset::FilenameChanged(QString new_filename)
         dataset_name = basename + " (" + QString::number(i) + ")";
         ++i;
     }
-    name_line_edit_->setText(dataset_name);
+    ui->nameLineEdit->setText(dataset_name);
 }
 
 ///
@@ -102,7 +88,7 @@ void LoadDataset::on_browseButton_clicked()
                                             workspace_->directory(),
                                             tr("Text Files (*.txt);;"
                                                "Vespucci Dataset Files (*.vds);;"));
-    filename_line_edit_->setText(filename);
+    ui->filenameLineEdit->setText(filename);
 
 }
 
@@ -112,11 +98,11 @@ void LoadDataset::on_browseButton_clicked()
 /// constructor.
 void LoadDataset::on_buttonBox_accepted()
 {
-    QString y_description = y_description_line_edit_->text() + " (" + y_units_line_edit_->text() + ")";
-    QString x_description = x_description_line_edit_->text() + " (" + x_units_line_edit_->text() + ")";
+    QString y_description = ui->yDescriptionLineEdit->text() + " (" + ui->yUnitsLineEdit->text() + ")";
+    QString x_description = ui->xDescriptionLineEdit->text() + " (" + ui->xUnitsLineEdit->text() + ")";
 
-    QString name = name_line_edit_->text();
-    QString filename = filename_line_edit_->text();
+    QString name = ui->nameLineEdit->text();
+    QString filename = ui->filenameLineEdit->text();
     QFileInfo file_info(filename);
     QString extension = file_info.suffix();
 
@@ -126,7 +112,7 @@ void LoadDataset::on_buttonBox_accepted()
     }
 
     std::string format;
-    const QString data_format_string = data_format_combo_box_->currentText();
+    const QString data_format_string = ui->dataFormatComboBox->currentText();
     if (extension == "vds" || (data_format_string == "Vespucci Dataset" && extension != "txt"))
         format = "VespucciBinary";
     else if (data_format_string == "Wide Text")
@@ -145,7 +131,7 @@ void LoadDataset::on_buttonBox_accepted()
     //bool remove_at_position = false;
     //int temp_position=0;
     //int position;
-    bool swap = swap_check_box_->isChecked();
+    bool swap = ui->swapCheckBox->isChecked();
 
     QStringList names_list = workspace_->dataset_names();
     QStringList::iterator i;
@@ -234,17 +220,17 @@ void LoadDataset::on_buttonBox_rejected()
 void LoadDataset::on_filenameLineEdit_textChanged(const QString &arg1)
 {
     QFileInfo file_info(arg1);
-    QPushButton *ok_button = button_box_->button(QDialogButtonBox::Ok);
+    QPushButton *ok_button = ui->buttonBox->button(QDialogButtonBox::Ok);
 
     if(file_info.exists()){
         double file_size = file_info.size()/1048576;
         QString file_size_string = QString::number(file_size, 'f', 3);
-        file_size_label_->setText(file_size_string);
+        ui->fileSizeLabel->setText(file_size_string);
         ok_button->setEnabled(true);
     }
 
     else{
-        file_size_label_->setText("File does not exist!");
+        ui->fileSizeLabel->setText("File does not exist!");
         ok_button->setDisabled(true);
     }
 }

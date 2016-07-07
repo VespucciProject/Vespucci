@@ -9,8 +9,6 @@ SpectrumSelectionDialog::SpectrumSelectionDialog(MainWindow *main_window) :
     main_window_ = main_window;
     workspace_ = main_window->workspace_ptr();
     plot_viewer_ = main_window_->plot_viewer();
-    table_view_ = findChild<QTableView *>("tableView");
-    hold_check_box_ = findChild<QCheckBox*>("holdCheckBox");
     dataset_ = QSharedPointer<VespucciDataset>(0);
 }
 
@@ -23,7 +21,7 @@ void SpectrumSelectionDialog::SetActiveDataset(QSharedPointer<VespucciDataset> d
 {
     dataset_ = dataset;
     table_model_ = new SpectraTableModel(this, dataset);
-    table_view_->setModel(table_model_);
+    ui->tableView->setModel(table_model_);
 }
 
 void SpectrumSelectionDialog::on_tableView_clicked(const QModelIndex &index)
@@ -32,7 +30,7 @@ void SpectrumSelectionDialog::on_tableView_clicked(const QModelIndex &index)
     if (index.isValid() && table_model_->rowCount(index)){
         QSharedPointer<mat> data(new mat(join_horiz(dataset_->abscissa(),
                                                     dataset_->spectra_ptr()->col(index.row()))));
-        if (hold_check_box_->isChecked())
+        if (ui->holdCheckBox->isChecked())
             plot_viewer_->AddPlot(*data, dataset_->name());
         else
             plot_viewer_->AddTransientPlot(*data, dataset_->name());
@@ -50,7 +48,7 @@ void SpectrumSelectionDialog::SpectrumRemoved(int row)
 
     try{
         uvec indices = {uword(row)};
-        if (hold_check_box_->isChecked())
+        if (ui->holdCheckBox->isChecked())
             plot_viewer_->AddPlot(dataset_->abscissa(),
                                   dataset_->spectra(indices),
                                   dataset_->name());
@@ -71,7 +69,7 @@ void SpectrumSelectionDialog::on_pushButton_clicked()
 {
     if (!dataset_.data()) return; //should never happen, but let's be safe
 
-    int row = table_view_->currentIndex().row();
+    int row = ui->tableView->currentIndex().row();
 
     int response = QMessageBox::question(this, "Delete Spectrum?",
                                         "Are you sure you want to delete the spectrum at index " + QString::number(row) + "?",
@@ -93,7 +91,7 @@ void SpectrumSelectionDialog::on_pushButton_2_clicked()
 {
     if (!dataset_.data()) return; //should never happen, but let's be safe
 
-    int row = table_view_->currentIndex().row();
+    int row = ui->tableView->currentIndex().row();
     QString filename =
             QFileDialog::getSaveFileName(this, "Save Spectrum",
                                          workspace_->directory(),

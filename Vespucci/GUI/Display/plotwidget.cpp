@@ -27,14 +27,13 @@ PlotWidget::PlotWidget(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     workspace_ = ws;
     transient_graph_ = 0;
     ui->setupUi(this);
-    plot_ = findChild<QCustomPlot *>("customPlot");
-    plot_->setInteraction(QCP::iRangeDrag);
-    plot_->setInteraction(QCP::iRangeZoom);
-    plot_->setInteraction(QCP::iSelectItems);
-    plot_->setInteraction(QCP::iMultiSelect);
-    plot_->setInteraction(QCP::iSelectLegend);
-    plot_->setInteraction(QCP::iSelectOther);
-    plot_->setInteraction(QCP::iSelectPlottables);
+    ui->customPlot->setInteraction(QCP::iRangeDrag);
+    ui->customPlot->setInteraction(QCP::iRangeZoom);
+    ui->customPlot->setInteraction(QCP::iSelectItems);
+    ui->customPlot->setInteraction(QCP::iMultiSelect);
+    ui->customPlot->setInteraction(QCP::iSelectLegend);
+    ui->customPlot->setInteraction(QCP::iSelectOther);
+    ui->customPlot->setInteraction(QCP::iSelectPlottables);
     offset_by_ = 0;
 
     colors_.append(QColor(228,26,28));
@@ -63,27 +62,27 @@ void PlotWidget::AddPlot(const mat & paired_data)
             QVector<double>::fromStdVector(conv_to<stdvec>::from(paired_data.col(0)));
     QVector<double> data =
             QVector<double>::fromStdVector(conv_to<stdvec>::from(paired_data.col(1)));
-    int graph_count = plot_->graphCount();
+    int graph_count = ui->customPlot->graphCount();
     if (graph_count < 1){
-        plot_->addGraph();
-        plot_->graph(graph_count)->addData(abscissa, data);
-        plot_->rescaleAxes();
-        plot_->replot();
+        ui->customPlot->addGraph();
+        ui->customPlot->graph(graph_count)->addData(abscissa, data);
+        ui->customPlot->rescaleAxes();
+        ui->customPlot->replot();
     }
     else{
-        plot_->addGraph(plot_->graph(0)->keyAxis(), plot_->graph(0)->valueAxis());
+        ui->customPlot->addGraph(ui->customPlot->graph(0)->keyAxis(), ui->customPlot->graph(0)->valueAxis());
         if (offset_plots_){
             RemoveOffset();
             DetermineOffset(data);
-            plot_->graph(graph_count)->addData(abscissa, data);
+            ui->customPlot->graph(graph_count)->addData(abscissa, data);
             ApplyOffset();
-            plot_->rescaleAxes();
-            plot_->replot();
+            ui->customPlot->rescaleAxes();
+            ui->customPlot->replot();
         }
         else{
-            plot_->graph(graph_count)->addData(abscissa, data);
-            plot_->rescaleAxes();
-            plot_->replot();
+            ui->customPlot->graph(graph_count)->addData(abscissa, data);
+            ui->customPlot->rescaleAxes();
+            ui->customPlot->replot();
         }
 
     }
@@ -95,27 +94,27 @@ void PlotWidget::AddPlot(const vec &abscissa, const vec &data)
             QVector<double>::fromStdVector(conv_to<stdvec>::from(abscissa));
     QVector<double> data_qvec =
             QVector<double>::fromStdVector(conv_to<stdvec>::from(data));
-    int graph_count = plot_->graphCount();
+    int graph_count = ui->customPlot->graphCount();
     if (graph_count < 1){
-        plot_->addGraph();
-        plot_->graph(graph_count)->addData(abscissa_qvec, data_qvec);
-        plot_->rescaleAxes();
-        plot_->replot();
+        ui->customPlot->addGraph();
+        ui->customPlot->graph(graph_count)->addData(abscissa_qvec, data_qvec);
+        ui->customPlot->rescaleAxes();
+        ui->customPlot->replot();
     }
     else{
-        plot_->addGraph(plot_->graph(0)->keyAxis(), plot_->graph(0)->valueAxis());
+        ui->customPlot->addGraph(ui->customPlot->graph(0)->keyAxis(), ui->customPlot->graph(0)->valueAxis());
         if (offset_plots_){
             RemoveOffset();
             DetermineOffset(data_qvec);
-            plot_->graph(graph_count)->addData(abscissa_qvec, data_qvec);
+            ui->customPlot->graph(graph_count)->addData(abscissa_qvec, data_qvec);
             ApplyOffset();
-            plot_->rescaleAxes();
-            plot_->replot();
+            ui->customPlot->rescaleAxes();
+            ui->customPlot->replot();
         }
         else{
-            plot_->graph(graph_count)->addData(abscissa_qvec, data_qvec);
-            plot_->rescaleAxes();
-            plot_->replot();
+            ui->customPlot->graph(graph_count)->addData(abscissa_qvec, data_qvec);
+            ui->customPlot->rescaleAxes();
+            ui->customPlot->replot();
         }
 
     }
@@ -131,29 +130,29 @@ void PlotWidget::AddTransientPlot(const vec &abscissa, const vec &data)
         QVector<double> data_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(data));
         transient_graph_->setData(abscissa_qvec, data_qvec);
-        plot_->rescaleAxes();
-        plot_->replot();
+        ui->customPlot->rescaleAxes();
+        ui->customPlot->replot();
     }
     else{
         QCPAxis *key_axis;
         QCPAxis *value_axis;
-        if (plot_->graphCount()){
-            key_axis = plot_->graph(0)->keyAxis();
-            value_axis = plot_->graph(0)->valueAxis();
+        if (ui->customPlot->graphCount()){
+            key_axis = ui->customPlot->graph(0)->keyAxis();
+            value_axis = ui->customPlot->graph(0)->valueAxis();
         }
         else{
             key_axis = 0;
             value_axis = 0;
         }
-        plot_->addGraph(key_axis, value_axis);
-        transient_graph_ = plot_->graph(plot_->graphCount() - 1);
+        ui->customPlot->addGraph(key_axis, value_axis);
+        transient_graph_ = ui->customPlot->graph(ui->customPlot->graphCount() - 1);
         QVector<double> abscissa_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(abscissa));
         QVector<double> data_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(data));
         transient_graph_->addData(abscissa_qvec, data_qvec);
-        plot_->rescaleAxes();
-        plot_->replot();
+        ui->customPlot->rescaleAxes();
+        ui->customPlot->replot();
     }
 
 }
@@ -170,43 +169,43 @@ void PlotWidget::AddTransientPlot(const mat & paired_data)
         QVector<double> data_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(1)));
         transient_graph_->setData(abscissa_qvec, data_qvec);
-        plot_->rescaleAxes();
-        plot_->replot();
+        ui->customPlot->rescaleAxes();
+        ui->customPlot->replot();
     }
     else{
-        if (plot_->graphCount()){
-            key_axis = plot_->graph(0)->keyAxis();
-            value_axis = plot_->graph(0)->valueAxis();
+        if (ui->customPlot->graphCount()){
+            key_axis = ui->customPlot->graph(0)->keyAxis();
+            value_axis = ui->customPlot->graph(0)->valueAxis();
         }
         else{
             key_axis = 0;
             value_axis = 0;
         }
-        plot_->addGraph(key_axis, value_axis);
-        transient_graph_ = plot_->graph(plot_->graphCount() - 1);
+        ui->customPlot->addGraph(key_axis, value_axis);
+        transient_graph_ = ui->customPlot->graph(ui->customPlot->graphCount() - 1);
         QVector<double> abscissa_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(0)));
         QVector<double> data_qvec =
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(1)));
         transient_graph_->addData(abscissa_qvec, data_qvec);
-        plot_->rescaleAxes();
-        plot_->replot();
+        ui->customPlot->rescaleAxes();
+        ui->customPlot->replot();
     }
 }
 
 void PlotWidget::RemoveTransientPlot()
 {
     if (transient_graph_){
-        plot_->removeGraph(transient_graph_);
+        ui->customPlot->removeGraph(transient_graph_);
         transient_graph_ = 0;
-        plot_->rescaleAxes();
-        plot_->replot();
+        ui->customPlot->rescaleAxes();
+        ui->customPlot->replot();
     }
 }
 
 void PlotWidget::StackPlots(bool stack)
 {
-    if (!plot_->graphCount()){
+    if (!ui->customPlot->graphCount()){
         offset_plots_ = true;
         return;
     }
@@ -220,8 +219,8 @@ void PlotWidget::StackPlots(bool stack)
     }
 
     offset_plots_ = stack;
-    plot_->rescaleAxes();
-    plot_->replot();
+    ui->customPlot->rescaleAxes();
+    ui->customPlot->replot();
 
 }
 
@@ -232,22 +231,22 @@ bool PlotWidget::offset_plots() const
 
 bool PlotWidget::TransientOnly() const
 {
-    return (transient_graph_ && plot_->graphCount() == 1);
+    return (transient_graph_ && ui->customPlot->graphCount() == 1);
 }
 
 
 
 void PlotWidget::DetermineOffset()
 {
-    if (!plot_->graphCount()){
+    if (!ui->customPlot->graphCount()){
         offset_by_ = 0;
         return;
     }
-    stdvec first_y = GetData(plot_->graph(0)->data()->values()).toStdVector();
+    stdvec first_y = GetData(ui->customPlot->graph(0)->data()->values()).toStdVector();
     double min = *min_element(first_y.begin(), first_y.end());
     double max = *max_element(first_y.begin(), first_y.end());
-    for (int i = 1; i < plot_->graphCount(); ++i){
-        stdvec y = GetData(plot_->graph(i)->data()->values()).toStdVector();
+    for (int i = 1; i < ui->customPlot->graphCount(); ++i){
+        stdvec y = GetData(ui->customPlot->graph(i)->data()->values()).toStdVector();
         double current_min = *min_element(y.begin(), y.end());
         double current_max = *max_element(y.begin(), y.end());
         min = current_min < min ? current_min : min;
@@ -264,8 +263,8 @@ void PlotWidget::DetermineOffset(const QVector<double> &new_data)
     double min = *min_element(new_y.begin(), new_y.end());
     double max = *max_element(new_y.begin(), new_y.end());
 
-    for (int i = 0; i < plot_->graphCount(); ++i){
-        stdvec y = GetData(plot_->graph(i)->data()->values()).toStdVector();
+    for (int i = 0; i < ui->customPlot->graphCount(); ++i){
+        stdvec y = GetData(ui->customPlot->graph(i)->data()->values()).toStdVector();
         double current_min = *min_element(y.begin(), y.end());
         double current_max = *max_element(y.begin(), y.end());
         min = std::min(current_min, min);
@@ -276,23 +275,23 @@ void PlotWidget::DetermineOffset(const QVector<double> &new_data)
 
 void PlotWidget::ApplyOffset()
 {
-    for (int i = 0; i < plot_->graphCount(); ++i){
-        QVector<double> data = GetData(plot_->graph(i)->data()->values());
-        QVector<double> abscissa = GetAbscissa(plot_->graph(i)->data()->values());
+    for (int i = 0; i < ui->customPlot->graphCount(); ++i){
+        QVector<double> data = GetData(ui->customPlot->graph(i)->data()->values());
+        QVector<double> abscissa = GetAbscissa(ui->customPlot->graph(i)->data()->values());
         for (int i = 0; i < data.size(); ++i){data[i] = data[i] + offset_by_;}
-        plot_->graph(i)->setData(abscissa, data);
-        plot_->replot();
+        ui->customPlot->graph(i)->setData(abscissa, data);
+        ui->customPlot->replot();
     }
 }
 
 void PlotWidget::RemoveOffset()
 {
-    for (int i = 0; i < plot_->graphCount(); ++i){
-        QVector<double> data = GetData(plot_->graph(i)->data()->values());
-        QVector<double> abscissa = GetAbscissa(plot_->graph(i)->data()->values());
+    for (int i = 0; i < ui->customPlot->graphCount(); ++i){
+        QVector<double> data = GetData(ui->customPlot->graph(i)->data()->values());
+        QVector<double> abscissa = GetAbscissa(ui->customPlot->graph(i)->data()->values());
         for (int i = 0; i < data.size(); ++i){data[i] = data[i] - offset_by_;}
-        plot_->graph(i)->setData(abscissa, data);
-        plot_->replot();
+        ui->customPlot->graph(i)->setData(abscissa, data);
+        ui->customPlot->replot();
     }
 }
 
@@ -314,7 +313,7 @@ QColor PlotWidget::GetNextColor()
 {
     //there are nine colors in the list
     //we alternate between them then rotate back to the first
-    int color_index = plot_->graphCount();
+    int color_index = ui->customPlot->graphCount();
     while (color_index > 8){color_index -= 9;}
     return colors_[color_index];
 }

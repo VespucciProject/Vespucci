@@ -10,10 +10,6 @@ ScriptDialog::ScriptDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws
 {
     ui->setupUi(this);
     dataset_ = ws->GetDataset(dataset_key);
-    code_plain_test_edit_ = findChild<QPlainTextEdit *>("codePlainTextEdit");
-    receive_plain_test_edit_ = findChild<QPlainTextEdit *>("receivePlainTextEdit");
-    send_plain_test_edit_ = findChild<QPlainTextEdit *>("sendPlainTextEdit");
-    interpreter_selector_combo_box_ = findChild<QComboBox *>("interpreterComboBox");
     workspace_ = ws;
 }
 
@@ -27,9 +23,9 @@ void ScriptDialog::on_buttonBox_accepted()
     //Parse input
     /*
     try{
-        std::string cmd = code_plain_test_edit_->document()->toPlainText().toStdString();
-        QStringList invars = send_plain_test_edit_->document()->toPlainText().split("\n");
-        QStringList outvars = receive_plain_test_edit_->document()->toPlainText().split("\n");
+        std::string cmd = ui->codePlainTextEdit->document()->toPlainText().toStdString();
+        QStringList invars = ui->sendPlainTextEdit->document()->toPlainText().split("\n");
+        QStringList outvars = ui->receivePlainTextEdit->document()->toPlainText().split("\n");
 
         //parse syntax for input box
         std::map<std::string, arma::mat> in_data;
@@ -66,7 +62,7 @@ void ScriptDialog::on_buttonBox_accepted()
         }
         std::map<std::string, arma::mat> data;
         std::cout << "R stuff" << endl;
-        if (interpreter_selector_combo_box_->currentText() == "R"){
+        if (ui->interpreterComboBox->currentText() == "R"){
             workspace_->settings()->beginGroup("environment");
             QString r_home = workspace_->settings()->value("R_HOME").toString();
             workspace_->settings()->endGroup();
@@ -90,7 +86,7 @@ void ScriptDialog::on_buttonBox_accepted()
             std::cout << "Add Results" << std::endl;
             dataset_->AddAnalysisResults(data);
         }
-        else if (interpreter_selector_combo_box_->currentText() == "Octave"){
+        else if (ui->interpreterComboBox->currentText() == "Octave"){
             //Do Octave stuff
         }
         else{

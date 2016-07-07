@@ -8,9 +8,6 @@ PlotViewer::PlotViewer(MainWindow *parent) :
     ui(new Ui::PlotViewer)
 {
     ui->setupUi(this);
-    tab_widget_ = findChild<QTabWidget*>("tabWidget");
-    stack_check_box_ = findChild<QCheckBox*>("stackCheckBox");
-    hold_check_box_ = findChild<QCheckBox*>("holdCheckBox");
     workspace_ = parent->workspace_ptr();
 }
 
@@ -21,64 +18,64 @@ PlotViewer::~PlotViewer()
 
 void PlotViewer::AddPlot(const mat & paired_data, const QString &tab_title)
 {
-    if (hold_check_box_->isChecked() && tab_widget_->count()){
-        PlotWidget *plot_widget = qobject_cast<PlotWidget *>(tab_widget_->currentWidget());
+    if (ui->holdCheckBox->isChecked() && ui->tabWidget->count()){
+        PlotWidget *plot_widget = qobject_cast<PlotWidget *>(ui->tabWidget->currentWidget());
         plot_widget->AddPlot(paired_data);
-        plot_widget->StackPlots(stack_check_box_->isChecked());
+        plot_widget->StackPlots(ui->stackCheckBox->isChecked());
     }
     else{
         PlotWidget *plot_widget = new PlotWidget(this, workspace_);
         plot_widget->AddPlot(paired_data);
-        tab_widget_->addTab(plot_widget, tab_title);
+        ui->tabWidget->addTab(plot_widget, tab_title);
     }
 }
 
 void PlotViewer::AddPlot(const vec &abscissa, const vec &data, const QString &tab_title)
 {
-    if (hold_check_box_->isChecked() && tab_widget_->count()){
-        PlotWidget *plot_widget = qobject_cast<PlotWidget *>(tab_widget_->currentWidget());
+    if (ui->holdCheckBox->isChecked() && ui->tabWidget->count()){
+        PlotWidget *plot_widget = qobject_cast<PlotWidget *>(ui->tabWidget->currentWidget());
         plot_widget->AddPlot(abscissa, data);
-        plot_widget->StackPlots(stack_check_box_->isChecked());
+        plot_widget->StackPlots(ui->stackCheckBox->isChecked());
     }
     else{
         PlotWidget *plot_widget = new PlotWidget(this, workspace_);
         plot_widget->AddPlot(abscissa, data);
-        tab_widget_->addTab(plot_widget, tab_title);
+        ui->tabWidget->addTab(plot_widget, tab_title);
     }
 }
 
 void PlotViewer::AddTransientPlot(const vec &abscissa, const vec &data, const QString &tab_title)
 {
-    if (hold_check_box_->isChecked() && tab_widget_->count()){
-        PlotWidget *plot_widget = qobject_cast<PlotWidget*>(tab_widget_->currentWidget());
+    if (ui->holdCheckBox->isChecked() && ui->tabWidget->count()){
+        PlotWidget *plot_widget = qobject_cast<PlotWidget*>(ui->tabWidget->currentWidget());
         plot_widget->AddTransientPlot(abscissa, data);
-        plot_widget->StackPlots(stack_check_box_->isChecked());
+        plot_widget->StackPlots(ui->stackCheckBox->isChecked());
     }
     else{
         PlotWidget *plot_widget = new PlotWidget(this, workspace_);
         plot_widget->AddTransientPlot(abscissa, data);
-        tab_widget_->addTab(plot_widget, tab_title);
+        ui->tabWidget->addTab(plot_widget, tab_title);
     }
 }
 
 void PlotViewer::AddTransientPlot(const mat & paired_data, const QString &tab_title)
 {
-    if (hold_check_box_->isChecked() && tab_widget_->count()){
-        PlotWidget *plot_widget = qobject_cast<PlotWidget*>(tab_widget_->currentWidget());
+    if (ui->holdCheckBox->isChecked() && ui->tabWidget->count()){
+        PlotWidget *plot_widget = qobject_cast<PlotWidget*>(ui->tabWidget->currentWidget());
         plot_widget->AddTransientPlot(paired_data);
-        plot_widget->StackPlots(stack_check_box_->isChecked());
+        plot_widget->StackPlots(ui->stackCheckBox->isChecked());
     }
     else{
         PlotWidget *plot_widget = new PlotWidget(this, workspace_);
         plot_widget->AddTransientPlot(paired_data);
-        tab_widget_->addTab(plot_widget, tab_title);
+        ui->tabWidget->addTab(plot_widget, tab_title);
     }
 }
 
 void PlotViewer::CloseTransientTab()
 {
-    PlotWidget *plot_widget = qobject_cast<PlotWidget*>(tab_widget_->currentWidget());
-    if (plot_widget->TransientOnly()) tab_widget_->removeTab(tab_widget_->currentIndex());
+    PlotWidget *plot_widget = qobject_cast<PlotWidget*>(ui->tabWidget->currentWidget());
+    if (plot_widget->TransientOnly()) ui->tabWidget->removeTab(ui->tabWidget->currentIndex());
 }
 
 
@@ -86,20 +83,20 @@ void PlotViewer::on_stackCheckBox_stateChanged(int arg1)
 {
     bool stack_plots;
     stack_plots = (arg1 == Qt::Checked);
-    if (tab_widget_->count()){
-        PlotWidget *plot_widget = qobject_cast<PlotWidget *>(tab_widget_->currentWidget());
+    if (ui->tabWidget->count()){
+        PlotWidget *plot_widget = qobject_cast<PlotWidget *>(ui->tabWidget->currentWidget());
         plot_widget->StackPlots(stack_plots);
     }
 }
 
 void PlotViewer::on_tabWidget_currentChanged(int index)
 {
-    if (!tab_widget_->currentWidget()){return;}
-    PlotWidget *plot_widget = qobject_cast<PlotWidget *>(tab_widget_->currentWidget());
-    stack_check_box_->setChecked(plot_widget->offset_plots());
+    if (!ui->tabWidget->currentWidget()){return;}
+    PlotWidget *plot_widget = qobject_cast<PlotWidget *>(ui->tabWidget->currentWidget());
+    ui->stackCheckBox->setChecked(plot_widget->offset_plots());
 }
 
 void PlotViewer::on_tabWidget_tabCloseRequested(int index)
 {
-    tab_widget_->removeTab(index);
+    ui->tabWidget->removeTab(index);
 }

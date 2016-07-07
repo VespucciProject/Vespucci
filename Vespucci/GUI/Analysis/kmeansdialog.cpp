@@ -31,13 +31,9 @@ KMeansDialog::KMeansDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws
     ui(new Ui::KMeansDialog)
 {
     ui->setupUi(this);
-    name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
-    cluster_spin_box_ = findChild<QSpinBox *>("clustersSpinBox");
-    prediction_check_box_ = findChild<QCheckBox *>("predictionCheckBox");
-    metric_combo_box_ = findChild<QComboBox *>("metricComboBox");
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
-    name_line_edit_->setEnabled(false);
+    ui->nameLineEdit->setEnabled(false);
 }
 
 KMeansDialog::~KMeansDialog()
@@ -51,13 +47,13 @@ KMeansDialog::~KMeansDialog()
 void KMeansDialog::on_buttonBox_accepted()
 {
 
-    QString metric_text = metric_combo_box_->currentText();
+    QString metric_text = ui->metricComboBox->currentText();
     int clusters;
-    QString name = name_line_edit_->text();
-    if (prediction_check_box_->isChecked())
+    QString name = ui->nameLineEdit->text();
+    if (ui->predictionCheckBox->isChecked())
         clusters = 0;
     else
-        clusters = cluster_spin_box_->value();
+        clusters = ui->clustersSpinBox->value();
     try{
         dataset_->KMeans(clusters, metric_text, name);
     }catch(exception e){
@@ -79,5 +75,5 @@ void KMeansDialog::on_buttonBox_rejected()
 
 void KMeansDialog::on_predictionCheckBox_clicked(bool checked)
 {
-    cluster_spin_box_->setEnabled(!checked);
+    ui->clustersSpinBox->setEnabled(!checked);
 }

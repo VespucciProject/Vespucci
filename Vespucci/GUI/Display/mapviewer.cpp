@@ -36,8 +36,7 @@ MapViewer::MapViewer(QString name, QString *directory, MapData *parent):
     name_ = name;
     directory_ = directory;
 
-    qcp_= findChild<QCustomPlot *>("mapView");
-    qcp_->setBackground(palette().window());
+    ui->mapView->setBackground(palette().window());
 
     parent_map_data_ = parent;
     //color_map_ = qobject_cast<QCPColorMap *>(color_map_abs);
@@ -178,7 +177,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
                                             "Windows Bitmap (*.bmp);; "
                                             "Portable Network Graphics (*.png);; "
                                             "JPEG (*.jpg)"));
-    Vespucci::SavePlot(qcp_, filename);
+    Vespucci::SavePlot(ui->mapView, filename);
 
     /*
     QStringList filename_list = filename.split(".");
@@ -191,7 +190,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
 
 
     if (extension == "bmp")
-        Vespucci::SavePlot(qcp_, filename);
+        Vespucci::SavePlot(ui->mapView, filename);
         parent_map_data_->saveBmp(filename, 0, 0, 1.0);
     else if (extension == "pdf")
         parent_map_data_->savePdf(filename, 0, 0);

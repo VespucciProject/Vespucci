@@ -25,13 +25,10 @@ MetaDatasetDialog::MetaDatasetDialog(QWidget *parent, QSharedPointer<VespucciWor
     ui(new Ui::MetaDatasetDialog)
 {
     ui->setupUi(this);
-    dataset_list_view_ = findChild<QListView*>("datasetListView");
     workspace_ = ws;
     dataset_list_model_ = new DatasetListModel(this, workspace_->dataset_names());
-    dataset_list_view_->setModel(dataset_list_model_);
-    dataset_list_view_->setSelectionMode(QAbstractItemView::MultiSelection);
-    method_selection_box_ = findChild<QComboBox *>("methodComboBox");
-    name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
+    ui->datasetListView->setModel(dataset_list_model_);
+    ui->datasetListView->setSelectionMode(QAbstractItemView::MultiSelection);
 }
 
 MetaDatasetDialog::~MetaDatasetDialog()
@@ -47,7 +44,7 @@ void MetaDatasetDialog::on_buttonBox_rejected()
 void MetaDatasetDialog::on_buttonBox_accepted()
 {
     QList<QSharedPointer<VespucciDataset> > parent_datasets;
-    QModelIndexList selected_indices = dataset_list_view_->selectionModel()->selectedRows();
+    QModelIndexList selected_indices = ui->datasetListView->selectionModel()->selectedRows();
     if (selected_indices.size() <= 0){
         return;
     }
@@ -55,9 +52,9 @@ void MetaDatasetDialog::on_buttonBox_accepted()
         parent_datasets.append(workspace_->GetDataset(dataset_list_model_->DatasetName(selected_indices[i].row())));
     }
 
-    QString method_description = method_selection_box_->currentText();
+    QString method_description = ui->methodComboBox->currentText();
     MetaMethod::Method method;
-    switch(method_selection_box_->currentIndex()){
+    switch(ui->methodComboBox->currentIndex()){
     case 0:
         cout << method_description.toStdString() << endl;
         cout << "0" << endl;
@@ -70,7 +67,7 @@ void MetaDatasetDialog::on_buttonBox_accepted()
         break;
     }
 
-    QString name = name_line_edit_->text();
+    QString name = ui->nameLineEdit->text();
     QFile *log_file = workspace_->CreateLogFile(name);
     QSharedPointer<MetaDataset> new_dataset;
     try{

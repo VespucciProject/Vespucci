@@ -29,11 +29,6 @@ private slots:
 
 private:
     Ui::BulkConversionDialog *ui;
-    QListWidget *filename_list_widget_;
-    QCheckBox *swap_box_;
-    QComboBox *intype_box_;
-    QComboBox *outtype_box_;
-    QLineEdit *target_line_edit_;
     QSharedPointer<VespucciWorkspace> workspace_;
 
     enum infile_type{long_text, wide_text, binary};

@@ -9,16 +9,6 @@ StitchImportDialog::StitchImportDialog(QWidget *parent, QSharedPointer<VespucciW
 {
     ui->setupUi(this);
     workspace_ = ws;
-
-    x_line_edit_ = findChild<QLineEdit*>("xLineEdit");
-    y_line_edit_ = findChild<QLineEdit*>("yLineEdit");
-    x_units_line_edit_ = findChild<QLineEdit*>("xUnitsLineEdit");
-    y_units_line_edit_ = findChild<QLineEdit*>("yUnitsLineEdit");
-    filename_line_edit_ = findChild<QLineEdit*>("filenameLineEdit");
-    data_format_combo_box_ = findChild<QComboBox*>("formatComboBox");
-    name_line_edit_ = findChild<QLineEdit*>("nameLineEdit");
-    swap_spatial_check_box_ = findChild<QCheckBox*>("swapSpatialCheckBox");
-
 }
 
 StitchImportDialog::~StitchImportDialog()
@@ -33,7 +23,7 @@ void StitchImportDialog::on_browsePushButton_clicked()
                                          "Select Instruction File",
                                          workspace_->directory(),
                                          "Instruction File (*.csv)");
-    filename_line_edit_->setText(filename);
+    ui->filenameLineEdit->setText(filename);
 }
 
 bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec &x, vec &y, vec &abscissa, bool swap_spatial, QString type)
@@ -121,10 +111,10 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
 
 void StitchImportDialog::on_buttonBox_accepted()
 {
-    QString filename = filename_line_edit_->text();
+    QString filename = ui->filenameLineEdit->text();
     path_ = QFileInfo(filename).absolutePath();
-    QString data_format = data_format_combo_box_->currentText();
-    bool swap_spatial = swap_spatial_check_box_->isChecked();
+    QString data_format = ui->formatComboBox->currentText();
+    bool swap_spatial = ui->swapSpatialCheckBox->isChecked();
     bool ok;
     mat spectra;
     vec x, y, abscissa;
@@ -150,11 +140,11 @@ void StitchImportDialog::on_buttonBox_accepted()
                              "datasets of incompatible spatial coordinates.");
     }
     else{
-        QString x_description = x_line_edit_->text();
-        QString x_units = x_units_line_edit_->text();
-        QString y_description = y_line_edit_->text();
-        QString y_units = y_units_line_edit_->text();
-        QString name = name_line_edit_->text();
+        QString x_description = ui->xLineEdit->text();
+        QString x_units = ui->xUnitsLineEdit->text();
+        QString y_description = ui->yLineEdit->text();
+        QString y_units = ui->yUnitsLineEdit->text();
+        QString name = ui->nameLineEdit->text();
         QSharedPointer<VespucciDataset>
                 dataset(new VespucciDataset(name,
                                             workspace_->main_window(),

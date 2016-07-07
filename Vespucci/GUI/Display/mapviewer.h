@@ -100,11 +100,6 @@ private:
     QString *directory_;
 
     ///
-    /// \brief qcp_
-    /// The QCustomPlot object located within this window
-    QCustomPlot *qcp_;
-
-    ///
     /// \brief parent_map_data_
     /// The MapData object that creates this display
     MapData *parent_map_data_;

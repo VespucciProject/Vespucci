@@ -9,29 +9,15 @@ FourierTransformDialog::FourierTransformDialog(QWidget *parent, QSharedPointer<V
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
 
-    end_double_spin_box_ = findChild<QDoubleSpinBox*>("endDoubleSpinBox");
-    end_label_ = findChild<QLabel*>("endLabel");
-    spectrum_spin_box_ = findChild<QSpinBox*>("spectrumSpinBox");
-    weights_combo_box_ = findChild<QComboBox*>("weightsComboBox");
-    weights_label_ = findChild<QLabel *>("weightsLabel");
-    parameter_double_spin_box_ = findChild<QDoubleSpinBox*>("parameterDoubleSpinBox");
-    parameter_label_ = findChild<QLabel *>("parameterLabel");
-    spectrum_custom_plot_ = findChild<QCustomPlot *>("spectrumCustomPlot");
-    sine_power_label_ = findChild<QLabel*>("sinePowerLabel");
-    sine_power_double_spin_box_ = findChild<QDoubleSpinBox*>("sinePowerDoubleSpinBox");
-    power_spin_box_ = findChild<QSpinBox*>("powerSpinBox");
-    value_label_ = findChild<QLabel*>("valueLabel");
-    type_combo_box_ = findChild<QComboBox*>("typeComboBox");
+    ui->parameterDoubleSpinBox->setVisible(false);
+    ui->parameterLabel->setVisible(false);
+    ui->endDoubleSpinBox->setVisible(false);
+    ui->endLabel->setVisible(false);
+    ui->sinePowerDoubleSpinBox->setVisible(false);
+    ui->sinePowerLabel->setVisible(false);
+    ui->spectrumSpinBox->setRange(1, dataset_->spectra_ptr()->n_cols);
 
-    parameter_double_spin_box_->setVisible(false);
-    parameter_label_->setVisible(false);
-    end_double_spin_box_->setVisible(false);
-    end_label_->setVisible(false);
-    sine_power_double_spin_box_->setVisible(false);
-    sine_power_label_->setVisible(false);
-    spectrum_spin_box_->setRange(1, dataset_->spectra_ptr()->n_cols);
-
-    spectrum_custom_plot_->addGraph();
+    ui->spectrumCustomPlot->addGraph();
 
 }
 
@@ -45,51 +31,51 @@ FourierTransformDialog::~FourierTransformDialog()
 void FourierTransformDialog::on_typeComboBox_currentIndexChanged(const QString &arg1)
 {
     if (arg1 == "Inverse FFT"){
-        end_double_spin_box_->setVisible(false);
-        end_label_->setVisible(false);
-        weights_combo_box_->setVisible(false);
-        weights_label_->setVisible(false);
-        parameter_label_->setVisible(false);
-        parameter_double_spin_box_->setVisible(false);
+        ui->endDoubleSpinBox->setVisible(false);
+        ui->endLabel->setVisible(false);
+        ui->weightsComboBox->setVisible(false);
+        ui->weightsLabel->setVisible(false);
+        ui->parameterLabel->setVisible(false);
+        ui->parameterDoubleSpinBox->setVisible(false);
     }
-    QString weights = weights_combo_box_->currentText();
+    QString weights = ui->weightsComboBox->currentText();
     if (arg1 == "FFT"){
-        weights_combo_box_->setVisible(true);
-        weights_label_->setVisible(true);
+        ui->weightsComboBox->setVisible(true);
+        ui->weightsLabel->setVisible(true);
         if (weights == "Sine"){
-            end_double_spin_box_->setVisible(true);
-            end_label_->setVisible(true);
-            end_label_->setText("Ending Offset");
-            parameter_label_->setVisible(true);
-            parameter_label_->setText("Starting Offset");
-            sine_power_double_spin_box_->setVisible(true);
-            sine_power_label_->setVisible(true);
+            ui->endDoubleSpinBox->setVisible(true);
+            ui->endLabel->setVisible(true);
+            ui->endLabel->setText("Ending Offset");
+            ui->parameterLabel->setVisible(true);
+            ui->parameterLabel->setText("Starting Offset");
+            ui->sinePowerDoubleSpinBox->setVisible(true);
+            ui->sinePowerLabel->setVisible(true);
         }
         else if (weights == "Gaussian"){
-            parameter_double_spin_box_->setVisible(true);
-            parameter_label_->setVisible(true);
-            end_double_spin_box_->setVisible(false);
-            end_label_->setVisible(false);
-            sine_power_label_->setVisible(false);
-            sine_power_double_spin_box_->setVisible(false);
-            parameter_label_->setText("σ");
+            ui->parameterDoubleSpinBox->setVisible(true);
+            ui->parameterLabel->setVisible(true);
+            ui->endDoubleSpinBox->setVisible(false);
+            ui->endLabel->setVisible(false);
+            ui->sinePowerLabel->setVisible(false);
+            ui->sinePowerDoubleSpinBox->setVisible(false);
+            ui->parameterLabel->setText("σ");
         }
         else if (weights == "Exponential"){
-            parameter_double_spin_box_->setVisible(true);
-            parameter_label_->setVisible(true);
-            end_double_spin_box_->setVisible(false);
-            end_label_->setVisible(false);
-            sine_power_label_->setVisible(false);
-            sine_power_double_spin_box_->setVisible(false);
-            parameter_label_->setText("λ");
+            ui->parameterDoubleSpinBox->setVisible(true);
+            ui->parameterLabel->setVisible(true);
+            ui->endDoubleSpinBox->setVisible(false);
+            ui->endLabel->setVisible(false);
+            ui->sinePowerLabel->setVisible(false);
+            ui->sinePowerDoubleSpinBox->setVisible(false);
+            ui->parameterLabel->setText("λ");
         }
         else{
-            parameter_double_spin_box_->setVisible(false);
-            parameter_label_->setVisible(false);
-            end_double_spin_box_->setVisible(false);
-            end_label_->setVisible(false);
-            sine_power_double_spin_box_->setVisible(false);
-            sine_power_label_->setVisible(false);
+            ui->parameterDoubleSpinBox->setVisible(false);
+            ui->parameterLabel->setVisible(false);
+            ui->endDoubleSpinBox->setVisible(false);
+            ui->endLabel->setVisible(false);
+            ui->sinePowerDoubleSpinBox->setVisible(false);
+            ui->sinePowerLabel->setVisible(false);
         }
     }
 }
@@ -98,39 +84,39 @@ void FourierTransformDialog::on_weightsComboBox_currentIndexChanged(const QStrin
 {
 
     if (arg1 == "Sine Bell"){
-        end_double_spin_box_->setVisible(true);
-        end_label_->setVisible(true);
-        end_label_->setText("Ending Offset");
-        parameter_label_->setVisible(true);
-        parameter_label_->setText("Starting Offset");
-        sine_power_double_spin_box_->setVisible(true);
-        sine_power_label_->setVisible(true);
+        ui->endDoubleSpinBox->setVisible(true);
+        ui->endLabel->setVisible(true);
+        ui->endLabel->setText("Ending Offset");
+        ui->parameterLabel->setVisible(true);
+        ui->parameterLabel->setText("Starting Offset");
+        ui->sinePowerDoubleSpinBox->setVisible(true);
+        ui->sinePowerLabel->setVisible(true);
     }
     else if (arg1 == "Gaussian"){
-        parameter_double_spin_box_->setVisible(true);
-        parameter_label_->setVisible(true);
-        end_double_spin_box_->setVisible(false);
-        end_label_->setVisible(false);
-        sine_power_label_->setVisible(false);
-        sine_power_double_spin_box_->setVisible(false);
-        parameter_label_->setText("σ");
+        ui->parameterDoubleSpinBox->setVisible(true);
+        ui->parameterLabel->setVisible(true);
+        ui->endDoubleSpinBox->setVisible(false);
+        ui->endLabel->setVisible(false);
+        ui->sinePowerLabel->setVisible(false);
+        ui->sinePowerDoubleSpinBox->setVisible(false);
+        ui->parameterLabel->setText("σ");
     }
     else if (arg1 == "Exponential"){
-        parameter_double_spin_box_->setVisible(true);
-        parameter_label_->setVisible(true);
-        end_double_spin_box_->setVisible(false);
-        end_label_->setVisible(false);
-        sine_power_label_->setVisible(false);
-        sine_power_double_spin_box_->setVisible(false);
-        parameter_label_->setText("λ");
+        ui->parameterDoubleSpinBox->setVisible(true);
+        ui->parameterLabel->setVisible(true);
+        ui->endDoubleSpinBox->setVisible(false);
+        ui->endLabel->setVisible(false);
+        ui->sinePowerLabel->setVisible(false);
+        ui->sinePowerDoubleSpinBox->setVisible(false);
+        ui->parameterLabel->setText("λ");
     }
     else{
-        parameter_double_spin_box_->setVisible(false);
-        parameter_label_->setVisible(false);
-        end_double_spin_box_->setVisible(false);
-        end_label_->setVisible(false);
-        sine_power_double_spin_box_->setVisible(false);
-        sine_power_label_->setVisible(false);
+        ui->parameterDoubleSpinBox->setVisible(false);
+        ui->parameterLabel->setVisible(false);
+        ui->endDoubleSpinBox->setVisible(false);
+        ui->endLabel->setVisible(false);
+        ui->sinePowerDoubleSpinBox->setVisible(false);
+        ui->sinePowerLabel->setVisible(false);
     }
 }
 
@@ -142,10 +128,10 @@ void FourierTransformDialog::on_previewPushButton_clicked()
     qvec spc_qvec;
 
     arma::vec abscissa = dataset_->abscissa();
-    arma::uvec ind = {(arma::uword) spectrum_spin_box_->value() - 1};
-    arma::uword n = std::pow(2.0, power_spin_box_->value());
+    arma::uvec ind = {(arma::uword) ui->spectrumSpinBox->value() - 1};
+    arma::uword n = std::pow(2.0, ui->powerSpinBox->value());
 
-    if (type_combo_box_->currentText() == "FFT"){
+    if (ui->typeComboBox->currentText() == "FFT"){
         arma::cx_mat f_spectrum;
         arma::vec f_abscissa;
         arma::mat spectrum = dataset_->spectra(ind);
@@ -158,7 +144,7 @@ void FourierTransformDialog::on_previewPushButton_clicked()
             close();
         }
     }
-    else if (type_combo_box_->currentText() == "Inverse FFT"){
+    else if (ui->typeComboBox->currentText() == "Inverse FFT"){
         arma::cx_mat t_spectrum;
         arma::vec t_abscissa;
         arma::cx_mat cx_spectrum = dataset_->cx_spectra(ind);
@@ -178,20 +164,20 @@ void FourierTransformDialog::on_previewPushButton_clicked()
     }
     else{return;}
 
-    spectrum_custom_plot_->graph(0)->setData(abs_qvec, spc_qvec);
-    spectrum_custom_plot_->replot();
+    ui->spectrumCustomPlot->graph(0)->setData(abs_qvec, spc_qvec);
+    ui->spectrumCustomPlot->replot();
 
 }
 
 
 void FourierTransformDialog::on_powerSpinBox_valueChanged(int arg1)
 {
-    value_label_->setText("= " + QString::number( std::pow(2.0, arg1) ) );
+    ui->valueLabel->setText("= " + QString::number( std::pow(2.0, arg1) ) );
 }
 
 void FourierTransformDialog::on_weightsPushButton_clicked()
 {
-    QString type = weights_combo_box_->currentText();
+    QString type = ui->weightsComboBox->currentText();
     int response = QMessageBox::warning(this, "Apply Weights",
                          "Applying weights will change the spectra permanently."
                          "This can be undone, but only once. Are you sure you "
@@ -199,13 +185,13 @@ void FourierTransformDialog::on_weightsPushButton_clicked()
                          QMessageBox::Ok, QMessageBox::Cancel);
     if (response == QMessageBox::Cancel){return;}
     if (type == "Sine Bell"){
-        dataset_->ApplyFTWeight(parameter_double_spin_box_->value(),
-                                end_double_spin_box_->value(),
-                                sine_power_double_spin_box_->value());
+        dataset_->ApplyFTWeight(ui->parameterDoubleSpinBox->value(),
+                                ui->endDoubleSpinBox->value(),
+                                ui->sinePowerDoubleSpinBox->value());
     }
     else if (type == "Exponential"
              || type == "Gaussian"){
-        dataset_->ApplyFTWeight(type, parameter_double_spin_box_->value());
+        dataset_->ApplyFTWeight(type, ui->parameterDoubleSpinBox->value());
     }
     else{
         return;
@@ -214,10 +200,10 @@ void FourierTransformDialog::on_weightsPushButton_clicked()
 
 void FourierTransformDialog::on_buttonBox_accepted()
 {
-    int n = std::pow(2, power_spin_box_->value());
+    int n = std::pow(2, ui->powerSpinBox->value());
     cout << "n = " << n << endl;
 
-    if (type_combo_box_->currentText() == "FFT"){
+    if (ui->typeComboBox->currentText() == "FFT"){
         QProgressDialog *progress =
                 Vespucci::DisplayProgressDialog(this,
                                                 "Performing FFT",
@@ -230,7 +216,7 @@ void FourierTransformDialog::on_buttonBox_accepted()
         }
         progress->cancel();
     }
-    else if (type_combo_box_->currentText() == "Inverse FFT"){
+    else if (ui->typeComboBox->currentText() == "Inverse FFT"){
         QProgressDialog *progress =
                 Vespucci::DisplayProgressDialog(this,
                                                 "Performing Inverse FFT",

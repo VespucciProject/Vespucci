@@ -14,13 +14,10 @@ RangeDialog::RangeDialog(QWidget *parent, double min, double max) :
     ui->setupUi(this);
     min_ = min;
     max_ = max;
-    range_label_ = findChild<QLabel*>("rangeLabel");
-    min_box_ = findChild<QDoubleSpinBox*>("minBox");
-    max_box_ = findChild<QDoubleSpinBox*>("maxBox");
     QString range_label_text = QString::number(min) + " - " + QString::number(max);
-    range_label_->setText(range_label_text);
-    min_box_->setRange(min, max);
-    max_box_->setRange(min, max);
+    ui->rangeLabel->setText(range_label_text);
+    ui->minBox->setRange(min, max);
+    ui->maxBox->setRange(min, max);
     is_accepted_ = false;
 
 }
@@ -32,8 +29,8 @@ RangeDialog::~RangeDialog()
 
 void RangeDialog::on_buttonBox_accepted()
 {
-    min_ = min_box_->value();
-    max_ = max_box_->value();
+    min_ = ui->minBox->value();
+    max_ = ui->maxBox->value();
     is_accepted_ = true;
     emit DialogAccepted(min_, max_);
 }

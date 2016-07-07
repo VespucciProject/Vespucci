@@ -21,10 +21,6 @@ private slots:
     
 private:
     Ui::ScriptDialog *ui;
-    QPlainTextEdit *code_plain_test_edit_;
-    QPlainTextEdit *receive_plain_test_edit_;
-    QPlainTextEdit *send_plain_test_edit_;
-    QComboBox *interpreter_selector_combo_box_;
     QSharedPointer<VespucciDataset> dataset_;
     QSharedPointer<VespucciWorkspace> workspace_;
 

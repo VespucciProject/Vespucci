@@ -92,6 +92,12 @@ macx{
     CONFIG += app_bundle c++11
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 
+    QMAKE_CXXFLAGS += --system-header-prefix=/usr \
+                      --system-header-prefix=$$PWD/../armadillo \
+                      --system-header-prefix=$$PWD/../mlpack \
+                      --system-header-prefix=$$PWD/../yaml-cpp \
+                      --system-header-prefix=$$PWD/../quazip
+
     LIBS += -L/usr/lib -lc++
 
     LIBS += -L$$OUT_PWD/../VespucciLibrary/ -lvespucci

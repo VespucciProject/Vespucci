@@ -52,7 +52,6 @@ public slots:
     void RemoveTab(int index);
 private:
     Ui::DataViewer *ui;
-    QTabWidget *tab_widget_;
     mat empty_matrix_;
 };
 

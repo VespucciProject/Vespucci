@@ -9,10 +9,6 @@ PlotMakerDialog::PlotMakerDialog(MainWindow *parent, QSharedPointer<VespucciWork
 {
     ui->setupUi(this);
     workspace_ = ws;
-    x_spin_box_ = findChild<QDoubleSpinBox *>("xDoubleSpinBox");
-    y_spin_box_ = findChild<QDoubleSpinBox *>("yDoubleSpinBox");
-    dimension_combo_box_ = findChild<QComboBox *>("dimensionComboBox");
-
 
 }
 

@@ -45,8 +45,6 @@ private:
     Ui::ThresholdDialog *ui;
     QSharedPointer<VespucciDataset> dataset_;
     QSharedPointer<VespucciWorkspace> workspace_;
-    QDoubleSpinBox *threshold_box_;
-    QComboBox *method_box_;
 
 };
 

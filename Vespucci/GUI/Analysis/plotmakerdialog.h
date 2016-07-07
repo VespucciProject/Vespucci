@@ -24,10 +24,6 @@ private:
     Ui::PlotMakerDialog *ui;
     const mat & data_;
     QSharedPointer<VespucciWorkspace> workspace_;
-    QDoubleSpinBox *x_spin_box_;
-    QDoubleSpinBox *y_spin_box_;
-    QComboBox *mapping_combo_box_;
-    QComboBox *dimension_combo_box_;
 };
 
 #endif // PLOTMAKERDIALOG_H

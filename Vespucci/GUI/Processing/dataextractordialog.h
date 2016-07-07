@@ -58,33 +58,6 @@ private:
     vec condition_;
 
     ///
-    /// \brief method_combo_box_
-    /// User selects method (value-based or index-based) here.
-    QComboBox *method_combo_box_;
-
-
-    ///
-    /// \brief name_line_edit_
-    /// User sets the dataset name here
-    QLineEdit *name_line_edit_;
-
-    ///
-    /// \brief name_line_edit_
-    /// User sets the dataset name here
-    QLineEdit *filename_line_edit_;
-
-
-    ///
-    /// \brief lower_box_
-    /// User sets the lower bound here
-    QDoubleSpinBox *lower_box_;
-
-    ///
-    /// \brief upper_box_
-    /// User sets the upper bound here
-    QDoubleSpinBox *upper_box_;
-
-    ///
     /// \brief map_
     /// Pointer the map from which the dataset is formed
     MapData *map_;

@@ -35,18 +35,15 @@ DataExtractorDialog::DataExtractorDialog(QWidget *parent, MapData *map, QSharedP
     ui->setupUi(this);
     main_window_ = main_window;
     workspace_ = main_window->workspace_ptr();
-    name_line_edit_ = findChild<QLineEdit*>("nameLineEdit");
-    upper_box_ = findChild<QDoubleSpinBox*>("upperDoubleSpinBox");
-    lower_box_ = findChild<QDoubleSpinBox*>("lowerDoubleSpinBox");
     map_ = map;
     condition_ = map_->results_;
     dataset_ = dataset;
     data_range_ = map->dataRange();
-    upper_box_->setValue(data_range_.upper);
-    lower_box_->setValue(data_range_.lower);
-    upper_box_->setRange(data_range_.lower, data_range_.upper);
-    lower_box_->setRange(data_range_.lower, data_range_.upper);
-    name_line_edit_->setText(dataset_->name() + "-" + map_->name());
+    ui->upperDoubleSpinBox->setValue(data_range_.upper);
+    ui->lowerDoubleSpinBox->setValue(data_range_.lower);
+    ui->upperDoubleSpinBox->setRange(data_range_.lower, data_range_.upper);
+    ui->lowerDoubleSpinBox->setRange(data_range_.lower, data_range_.upper);
+    ui->nameLineEdit->setText(dataset_->name() + "-" + map_->name());
 }
 
 DataExtractorDialog::DataExtractorDialog(QWidget *parent,
@@ -63,22 +60,17 @@ DataExtractorDialog::DataExtractorDialog(QWidget *parent,
 
     main_window_ = main_window;
     workspace_ = main_window->workspace_ptr();
-    name_line_edit_ = findChild<QLineEdit*>("nameLineEdit");
-    filename_line_edit_ = findChild<QLineEdit *>("filenameLineEdit");
-    upper_box_ = findChild<QDoubleSpinBox*>("upperDoubleSpinBox");
-    lower_box_ = findChild<QDoubleSpinBox*>("lowerDoubleSpinBox");
-    method_combo_box_ = findChild<QComboBox *>("methodComboBox");
     dataset_ = dataset;
 
     data_range_.lower = data.min();
     data_range_.upper = data.max();
 
-    upper_box_->setValue(data_range_.upper);
-    lower_box_->setValue(data_range_.lower);
-    upper_box_->setRange(data_range_.lower, data_range_.upper);
-    lower_box_->setRange(data_range_.lower, data_range_.upper);
+    ui->upperDoubleSpinBox->setValue(data_range_.upper);
+    ui->lowerDoubleSpinBox->setValue(data_range_.lower);
+    ui->upperDoubleSpinBox->setRange(data_range_.lower, data_range_.upper);
+    ui->lowerDoubleSpinBox->setRange(data_range_.lower, data_range_.upper);
 
-    name_line_edit_->setText(dataset_->name() + "-" + name);
+    ui->nameLineEdit->setText(dataset_->name() + "-" + name);
 }
 
 DataExtractorDialog::~DataExtractorDialog()
@@ -92,11 +84,11 @@ DataExtractorDialog::~DataExtractorDialog()
 void DataExtractorDialog::on_buttonBox_accepted()
 {
     uvec indices;
-    QString name = name_line_edit_->text();
+    QString name = ui->nameLineEdit->text();
     mat index_mat;
 
-    if (method_combo_box_->currentText() == "Index File"){
-        string filename = filename_line_edit_->text().toStdString();
+    if (ui->methodComboBox->currentText() == "Index File"){
+        string filename = ui->filenameLineEdit->text().toStdString();
         uword index;
         index_mat.load(filename);
         indices.set_size(index_mat.n_elem);
@@ -106,8 +98,8 @@ void DataExtractorDialog::on_buttonBox_accepted()
         }
     }
     else{
-        double upper = upper_box_->value();
-        double lower = lower_box_->value();
+        double upper = ui->upperDoubleSpinBox->value();
+        double lower = ui->lowerDoubleSpinBox->value();
         indices = arma::find(condition_ >= lower && condition_ <= upper);
     }
 
@@ -142,14 +134,14 @@ void DataExtractorDialog::on_buttonBox_rejected()
 void DataExtractorDialog::on_methodComboBox_currentIndexChanged(const QString &arg1)
 {
     if (arg1 == "Index File"){
-        upper_box_->setDisabled(true);
-        lower_box_->setDisabled(true);
-        filename_line_edit_->setDisabled(false);
+        ui->upperDoubleSpinBox->setDisabled(true);
+        ui->lowerDoubleSpinBox->setDisabled(true);
+        ui->filenameLineEdit->setDisabled(false);
     }
     else{
-        upper_box_->setDisabled(false);
-        lower_box_->setDisabled(false);
-        filename_line_edit_->setDisabled(true);
+        ui->upperDoubleSpinBox->setDisabled(false);
+        ui->lowerDoubleSpinBox->setDisabled(false);
+        ui->filenameLineEdit->setDisabled(true);
     }
 }
 
@@ -160,5 +152,5 @@ void DataExtractorDialog::on_browsePushButton_clicked()
                                          "Select Index File",
                                          workspace_->directory(),
                                          "Data Files (*.txt *.csv *.arma)");
-    filename_line_edit_->setText(filename);
+    ui->filenameLineEdit->setText(filename);
 }

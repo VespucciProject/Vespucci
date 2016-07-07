@@ -48,9 +48,6 @@ private slots:
 
 private:
     Ui::RangeDialog *ui;
-    QDoubleSpinBox *min_box_;
-    QDoubleSpinBox *max_box_;
-    QLabel *range_label_;
     double min_;
     double max_;
 

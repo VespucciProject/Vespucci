@@ -48,14 +48,8 @@ MapDialog::MapDialog(MainWindow *parent, QStringList data_keys) :
         close();
     }
 
-
-
-    gradient_combo_box_ = findChild<QComboBox*>("gradientComboBox");
-    invert_check_box_ = findChild<QCheckBox*>("invertCheckBox");
-    column_spin_box_ = findChild<QSpinBox*>("columnSpinBox");
-    column_spin_box_->setRange(1, col_count);
-    name_line_edit_ = findChild<QLineEdit*>("nameLineEdit");
-    name_line_edit_->setText(data_keys_.last());
+    ui->columnSpinBox->setRange(1, col_count);
+    ui->nameLineEdit->setText(data_keys_.last());
     QStringList color_list({"ColorBrewer BlueGreen",
                             "ColorBrewer BluePurple",
                             "ColorBrewer GreenBlue",
@@ -96,7 +90,7 @@ MapDialog::MapDialog(MainWindow *parent, QStringList data_keys) :
                             "↔ColorBrewer Spectral",
                             "↔Vespucci Spectral",
                             "ColorBrewer Cluster"});
-    gradient_combo_box_->addItems(color_list);
+    ui->gradientComboBox->addItems(color_list);
 }
 
 MapDialog::~MapDialog()
@@ -106,9 +100,9 @@ MapDialog::~MapDialog()
 
 void MapDialog::on_buttonBox_accepted()
 {
-    uint gradient_index = gradient_combo_box_->currentIndex();
-    uint column_index = column_spin_box_->value() - 1;
-    QString map_name = name_line_edit_->text();
+    uint gradient_index = ui->gradientComboBox->currentIndex();
+    uint column_index = ui->columnSpinBox->value() - 1;
+    QString map_name = ui->nameLineEdit->text();
     vec data;
     try{
         data = workspace_->data_model()->GetMatrix(data_keys_).col(column_index);
@@ -120,7 +114,7 @@ void MapDialog::on_buttonBox_accepted()
     QCPColorGradient gradient;
     uint tick_count;
 
-    if (gradient_combo_box_->currentText() == "ColorBrewer Cluster"){
+    if (ui->gradientComboBox->currentText() == "ColorBrewer Cluster"){
         vec unique_values = unique(data);
         tick_count = unique_values.n_rows;
         gradient = dataset_->GetClusterGradient(tick_count);

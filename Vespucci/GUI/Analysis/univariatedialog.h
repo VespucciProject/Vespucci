@@ -50,12 +50,6 @@ private slots:
 private:
     Ui::UnivariateDialog *ui;
 
-    QCheckBox *map_check_box_;
-    ///
-    /// \brief range_label_
-    /// Displays the range of the spectral abscissa.
-    QLabel *range_label_;
-
     ///
     /// \brief workspace
     /// The current workspace
@@ -66,31 +60,6 @@ private:
     /// The plot displaying a spectrum
     QCustomPlot *spectrum_plot_;
 
-    ///
-    /// \brief min_line_edit_
-    /// The user enters her desired minimum value here.
-    QLineEdit *min_line_edit_;
-
-    ///
-    /// \brief max_line_edit_
-    /// The user enters her desired maximum value here.
-    QLineEdit *max_line_edit_;
-
-    ///
-    /// \brief name_line_edit_
-    /// The user enters the name of the dataset her
-    QLineEdit *name_line_edit_;
-
-
-    ///
-    /// \brief value_method_combo_box_
-    /// User selects value determination method here
-    QComboBox *value_method_combo_box_;
-
-    ///
-    /// \brief search_window_spin_box_
-    ///
-    QSpinBox *search_window_spin_box_;
 
     ///
     /// \brief data_index_

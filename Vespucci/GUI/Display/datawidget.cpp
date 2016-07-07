@@ -26,25 +26,21 @@ DataWidget::DataWidget(QWidget *parent, VespucciTableModel *table_model) :
 {
     ui->setupUi(this);
     table_model_ = table_model;
-    table_view_ = findChild<QTableView *>("tableView");
-    table_view_->setModel(table_model);
+    ui->tableView->setModel(table_model);
     matrix_columns_=table_model->MatrixColumns();
     subviews_ = std::ceil(matrix_columns_/15);
     current_start_column_ = 1; //user sees indexing start at 1
-    column_label_ = findChild<QLabel*>("columnLabel");
-    forward_push_button_ = findChild<QPushButton*>("forwardPushButton");
-    back_push_button_ = findChild<QPushButton*>("backPushButton");
 
-    back_push_button_->setEnabled(false);
-    forward_push_button_->setEnabled(subviews_ > 1);
+    ui->backPushButton->setEnabled(false);
+    ui->forwardPushButton->setEnabled(subviews_ > 1);
     uint last_column = (matrix_columns_ > 15 ? 15 : matrix_columns_);
     QString label = "Showing columns 1–" + QString::number(last_column);
-    column_label_->setText(label);
+    ui->columnLabel->setText(label);
 }
 
 void DataWidget::SetTableModel(VespucciTableModel *table_model)
 {
-    table_view_->setModel(table_model);
+    ui->tableView->setModel(table_model);
     table_model_ = table_model;
 }
 
@@ -59,14 +55,14 @@ void DataWidget::on_forwardPushButton_clicked()
     uint next_start_column = current_start_column_ + 15;
     uint next_end_column = next_start_column + 15;
     next_end_column = (next_end_column < matrix_columns_ ? next_end_column : matrix_columns_);
-    back_push_button_->setEnabled(true);
-    forward_push_button_->setEnabled(next_end_column - 1 < matrix_columns_);
+    ui->backPushButton->setEnabled(true);
+    ui->forwardPushButton->setEnabled(next_end_column - 1 < matrix_columns_);
     current_start_column_ = next_start_column;
-    table_model_ = new VespucciTableModel(table_view_, table_model_->GetMatrix(), next_start_column-1);
-    table_view_->setModel(table_model_);
+    table_model_ = new VespucciTableModel(ui->tableView, table_model_->GetMatrix(), next_start_column-1);
+    ui->tableView->setModel(table_model_);
     QString label = "Showing columns " + QString::number(current_start_column_)
             + "–" + QString::number(next_end_column);
-    column_label_->setText(label);
+    ui->columnLabel->setText(label);
 }
 
 void DataWidget::on_backPushButton_clicked()
@@ -75,15 +71,15 @@ void DataWidget::on_backPushButton_clicked()
     //since it's unsigned, next_start_column evaluates false if current_start_column_
     //is less than or equal to 15, which means we're at the first view, which
     //means we aren't able to go back any more views
-    back_push_button_->setEnabled(next_start_column);
-    forward_push_button_->setEnabled(true);//we can always move forward from the
+    ui->backPushButton->setEnabled(next_start_column);
+    ui->forwardPushButton->setEnabled(true);//we can always move forward from the
     //previous page, because in order for the back button to even be active,
     //a viewable next page must be availible
     current_start_column_ = next_start_column;
     uint next_end_column = current_start_column_ - 15;
-    table_model_ = new VespucciTableModel(table_view_, table_model_->GetMatrix(), next_start_column-1);
-    table_view_->setModel(table_model_);
+    table_model_ = new VespucciTableModel(ui->tableView, table_model_->GetMatrix(), next_start_column-1);
+    ui->tableView->setModel(table_model_);
     QString label = "Showing columns " + QString::number(current_start_column_)
             + "–" + QString::number(next_end_column);
-    column_label_->setText(label);
+    ui->columnLabel->setText(label);
 }

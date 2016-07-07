@@ -52,27 +52,6 @@ private:
     QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
-    /// \brief components_selector_spin_box_
-    /// The user selects the number of components to compute here
-    QSpinBox *components_selector_spin_box_;
-
-    ///
-    /// \brief color_selector_combo_box_
-    /// The user selects the color gradient of the image here
-    QComboBox *color_selector_combo_box_;
-
-    ///
-    /// \brief name_line_edit_
-    /// User sets the name of the image to be created here
-    QLineEdit *name_line_edit_;
-
-
-    ///
-    /// \brief prediction_check_box_
-    /// User selects whether or not to allow prediction of dimensionality
-    QCheckBox *prediction_check_box_;
-
-    ///
     /// \brief data_index_
     /// Index of the current dataset in the relevant lists
     int data_index_;

@@ -46,30 +46,26 @@ SpectrumViewer::SpectrumViewer(MapViewer *parent,
     ui->setupUi(this);
     linked_to_map_ = true;
     map_data_ = map_data;
-    spectrum_plot_ = findChild<QCustomPlot *>("spectrum");
-    spectrum_plot_->addGraph();
-    spectrum_plot_->xAxis->setLabel(x_axis_description);
-    spectrum_plot_->yAxis->setLabel(y_axis_description);
+    ui->spectrum->addGraph();
+    ui->spectrum->xAxis->setLabel(x_axis_description);
+    ui->spectrum->yAxis->setLabel(y_axis_description);
 
-    spectrum_plot_->replot();
+    ui->spectrum->replot();
 
     QVector<double> plot_data = dataset->PointSpectrum(0);
     QVector<double> wavelength = dataset->WavelengthQVector();
 
-    coordinate_label_ = findChild<QLabel *>("coordinateLabel");
-    value_label_ = findChild<QLabel *>("valueLabel");
-
-    spectrum_plot_->graph(0)->addData(wavelength, plot_data);
+    ui->spectrum->graph(0)->addData(wavelength, plot_data);
 
 
-    spectrum_plot_->xAxis->setRange(dataset->WavelengthRange());
-    spectrum_plot_->yAxis->setRange(dataset->PointSpectrumRange(0));
+    ui->spectrum->xAxis->setRange(dataset->WavelengthRange());
+    ui->spectrum->yAxis->setRange(dataset->PointSpectrumRange(0));
     dataset_ = dataset;
     widget_size_ = widget_size;
     directory_ = directory;
 
-    spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
-    spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
+    ui->spectrum->setInteraction(QCP::iRangeDrag, true);
+    ui->spectrum->setInteraction(QCP::iRangeZoom, true);
 }
 
 ///
@@ -90,26 +86,21 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
 {
     ui->setupUi(this);
     dataset_ = dataset;
-    coordinate_label_ = findChild<QLabel *>("coordinateLabel");
-    value_label_ = findChild<QLabel *>("valueLabel");
-    coordinate_label_->setVisible(false);
-    value_label_->setVisible(false);
-    spectrum_plot_ = findChild<QCustomPlot *>("spectrum");
-    spectrum_plot_->addGraph();
-    spectrum_plot_->xAxis->setLabel(dataset->x_axis_description());
-    spectrum_plot_->yAxis->setLabel(dataset->y_axis_description());
+    ui->coordinateLabel->setVisible(false);
+    ui->valueLabel->setVisible(false);
+    ui->spectrum->addGraph();
+    ui->spectrum->xAxis->setLabel(dataset->x_axis_description());
+    ui->spectrum->yAxis->setLabel(dataset->y_axis_description());
     QVector<double> plot_data;
-    spectrum_plot_->replot();
+    ui->spectrum->replot();
 
     QVector<double> wavelength = dataset->WavelengthQVector();
-    coordinate_label_ = findChild<QLabel *>("coordinateLabel");
-    value_label_ = findChild<QLabel *>("valueLabel");
-    spectrum_plot_->graph(0)->addData(wavelength, plot_data);
+    ui->spectrum->graph(0)->addData(wavelength, plot_data);
     directory_ = directory;
 
-    spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
-    spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
-    spectrum_plot_->rescaleAxes();
+    ui->spectrum->setInteraction(QCP::iRangeDrag, true);
+    ui->spectrum->setInteraction(QCP::iRangeZoom, true);
+    ui->spectrum->rescaleAxes();
 }
 
 SpectrumViewer::SpectrumViewer(SpectrumSelectionDialog *parent,
@@ -118,33 +109,25 @@ SpectrumViewer::SpectrumViewer(SpectrumSelectionDialog *parent,
     ui(new Ui::SpectrumViewer)
 {
     ui->setupUi(this);
-    cout << "alternative SpectrumViewer constructor" << endl;
     dataset_ = dataset;
 
-    cout << "find labels " << endl;
-    coordinate_label_ = findChild<QLabel *>("coordinateLabel");
-    value_label_ = findChild<QLabel *>("valueLabel");
-    cout << "edit labels" << endl;
-    coordinate_label_->setVisible(false);
-    value_label_->setVisible(false);
+    ui->coordinateLabel->setVisible(false);
+    ui->valueLabel->setVisible(false);
 
-    cout << "find plot" << endl;
-    spectrum_plot_ = findChild<QCustomPlot *>("spectrum");
 
-    cout << "set labels" << endl;
-    spectrum_plot_->addGraph();
-    spectrum_plot_->xAxis->setLabel(dataset->x_axis_description());
-    spectrum_plot_->yAxis->setLabel(dataset->y_axis_description());
+    ui->spectrum->addGraph();
+    ui->spectrum->xAxis->setLabel(dataset->x_axis_description());
+    ui->spectrum->yAxis->setLabel(dataset->y_axis_description());
 
     cout << "set data" << endl;
     QVector<double> wavelength = dataset->WavelengthQVector();
     QVector<double> plot_data = dataset->PointSpectrum(0);
-    spectrum_plot_->graph(0)->addData(wavelength, plot_data);
+    ui->spectrum->graph(0)->addData(wavelength, plot_data);
     dataset_ = dataset;
 
-    spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
-    spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
-    spectrum_plot_->rescaleAxes();
+    ui->spectrum->setInteraction(QCP::iRangeDrag, true);
+    ui->spectrum->setInteraction(QCP::iRangeZoom, true);
+    ui->spectrum->rescaleAxes();
     cout << "end of constructor" << endl;
 }
 
@@ -155,34 +138,24 @@ SpectrumViewer::SpectrumViewer(DataViewer *parent,
     ui(new Ui::SpectrumViewer)
 {
     ui->setupUi(this);
-    cout << "alternative SpectrumViewer constructor" << endl;
     dataset_ = dataset;
 
-    cout << "find labels " << endl;
-    coordinate_label_ = findChild<QLabel *>("coordinateLabel");
-    value_label_ = findChild<QLabel *>("valueLabel");
-    cout << "edit labels" << endl;
-    coordinate_label_->setVisible(false);
-    value_label_->setVisible(false);
+    ui->coordinateLabel->setVisible(false);
+    ui->valueLabel->setVisible(false);
 
-    cout << "find plot" << endl;
-    spectrum_plot_ = findChild<QCustomPlot *>("spectrum");
+    ui->spectrum->addGraph();
+    ui->spectrum->xAxis->setLabel(dataset->x_axis_description());
+    ui->spectrum->yAxis->setLabel(ordinate_label);
 
-    cout << "set labels" << endl;
-    spectrum_plot_->addGraph();
-    spectrum_plot_->xAxis->setLabel(dataset->x_axis_description());
-    spectrum_plot_->yAxis->setLabel(ordinate_label);
-
-    cout << "set data" << endl;
     QVector<double> wavelength = dataset->WavelengthQVector();
     QVector<double> plot_data =
             QVector<double>::fromStdVector(conv_to<std::vector<double> >::from(y));
-    spectrum_plot_->graph(0)->addData(wavelength, plot_data);
+    ui->spectrum->graph(0)->addData(wavelength, plot_data);
     dataset_ = dataset;
 
-    spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
-    spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
-    spectrum_plot_->rescaleAxes();
+    ui->spectrum->setInteraction(QCP::iRangeDrag, true);
+    ui->spectrum->setInteraction(QCP::iRangeZoom, true);
+    ui->spectrum->rescaleAxes();
 }
 
 \
@@ -202,10 +175,9 @@ SpectrumViewer::~SpectrumViewer()
 void SpectrumViewer::SetPlot(QVector<double> wavelength,
                              QVector<double> intensity)
 {
-    cout << "SetPlot" << endl;
-    spectrum_plot_->graph(0)->setData(wavelength, intensity);
-    spectrum_plot_->rescaleAxes();
-    spectrum_plot_->replot();
+    ui->spectrum->graph(0)->setData(wavelength, intensity);
+    ui->spectrum->rescaleAxes();
+    ui->spectrum->replot();
 }
 
 ///
@@ -218,21 +190,21 @@ void SpectrumViewer::SetPlot(QVector<double> wavelength,
 void SpectrumViewer::SetSecondPlot(QVector<double> first_abscissa, QVector<double> second_abscissa,
                                    QVector<double> first_intensities, QVector<double> second_intensities)
 {
-    if (spectrum_plot_->graphCount() <= 2){
-        spectrum_plot_->addGraph(spectrum_plot_->graph(0)->keyAxis(), spectrum_plot_->graph(0)->valueAxis());
-        spectrum_plot_->graph(1)->addData(first_abscissa, first_intensities);
-        spectrum_plot_->addGraph(spectrum_plot_->graph(0)->keyAxis(), spectrum_plot_->graph(0)->valueAxis());
-        spectrum_plot_->graph(2)->addData(second_abscissa, second_intensities);
+    if (ui->spectrum->graphCount() <= 2){
+        ui->spectrum->addGraph(ui->spectrum->graph(0)->keyAxis(), ui->spectrum->graph(0)->valueAxis());
+        ui->spectrum->graph(1)->addData(first_abscissa, first_intensities);
+        ui->spectrum->addGraph(ui->spectrum->graph(0)->keyAxis(), ui->spectrum->graph(0)->valueAxis());
+        ui->spectrum->graph(2)->addData(second_abscissa, second_intensities);
     }
 
-    spectrum_plot_->graph(1)->setData(first_abscissa, first_intensities);
-    spectrum_plot_->graph(1)->setPen(QPen(QColor("red")));
-    spectrum_plot_->graph(1)->setVisible(true);
+    ui->spectrum->graph(1)->setData(first_abscissa, first_intensities);
+    ui->spectrum->graph(1)->setPen(QPen(QColor("red")));
+    ui->spectrum->graph(1)->setVisible(true);
 
-    spectrum_plot_->graph(2)->setData(second_abscissa, second_intensities);
-    spectrum_plot_->graph(2)->setPen(QPen(QColor("red")));
-    spectrum_plot_->graph(2)->setVisible(true);
-    spectrum_plot_->replot();
+    ui->spectrum->graph(2)->setData(second_abscissa, second_intensities);
+    ui->spectrum->graph(2)->setPen(QPen(QColor("red")));
+    ui->spectrum->graph(2)->setVisible(true);
+    ui->spectrum->replot();
 }
 
 ///
@@ -242,15 +214,15 @@ void SpectrumViewer::SetSecondPlot(QVector<double> first_abscissa, QVector<doubl
 /// Set the second plot.
 void SpectrumViewer::SetSecondPlot(QVector<double> abscissa, QVector<double> intensities)
 {
-    if (spectrum_plot_->graphCount() <= 1){
-        spectrum_plot_->addGraph(spectrum_plot_->graph(0)->keyAxis(), spectrum_plot_->graph(0)->valueAxis());
-        spectrum_plot_->graph(1)->addData(abscissa, intensities);
+    if (ui->spectrum->graphCount() <= 1){
+        ui->spectrum->addGraph(ui->spectrum->graph(0)->keyAxis(), ui->spectrum->graph(0)->valueAxis());
+        ui->spectrum->graph(1)->addData(abscissa, intensities);
     }
 
-    spectrum_plot_->graph(1)->setData(abscissa, intensities);
-    spectrum_plot_->graph(1)->setPen(QPen(QColor("red")));
-    spectrum_plot_->graph(1)->setVisible(true);
-    spectrum_plot_->replot();
+    ui->spectrum->graph(1)->setData(abscissa, intensities);
+    ui->spectrum->graph(1)->setPen(QPen(QColor("red")));
+    ui->spectrum->graph(1)->setVisible(true);
+    ui->spectrum->replot();
 }
 
 ///
@@ -275,24 +247,24 @@ void SpectrumViewer::MapClicked(QCPAbstractPlottable *plottable, QMouseEvent *ev
     double x_value = dataset_->x(current_index_);
     double y_value = dataset_->y(current_index_);
 
-    coordinate_label_->setText("(" +
+    ui->coordinateLabel->setText("(" +
                                QString::number(x_value) +
                                ", " +
                                QString::number(y_value) +
                                ")");
-    value_label_->setText(QString::number(current_z_));
+    ui->valueLabel->setText(QString::number(current_z_));
     SetPlot(wavelength, intensities);
     if (map_data_->univariate_area())
         SetSecondPlot(map_data_->first_abscissa(), map_data_->first_baseline(current_index_));
     if (map_data_->univariate_bandwidth()){
         SetSecondPlot(map_data_->first_abscissa(), map_data_->first_baseline(current_index_));
-        if (spectrum_plot_->itemCount() == 0){
-            QCPItemLine *mid_line = new QCPItemLine(spectrum_plot_);
+        if (ui->spectrum->itemCount() == 0){
+            QCPItemLine *mid_line = new QCPItemLine(ui->spectrum);
             QVector<double> mid_line_vec = map_data_->mid_line(current_index_);
             mid_line->start->setCoords(mid_line_vec[0], mid_line_vec[1]);
             mid_line->end->setCoords(mid_line_vec[2], mid_line_vec[3]);
             mid_line->setPen(QPen(QColor("red")));
-            spectrum_plot_->addItem(mid_line);
+            ui->spectrum->addItem(mid_line);
         }
 
     }
@@ -334,7 +306,7 @@ void SpectrumViewer::on_pushButton_clicked()
                                                 "Windows Bitmap (*.bmp);; "
                                                 "Portable Network Graphics (*.png);; "
                                                 "JPEG (*.jpg)"));
-        bool success = Vespucci::SavePlot(spectrum_plot_, filename);
+        bool success = Vespucci::SavePlot(ui->spectrum, filename);
         if(success)
             QMessageBox::information(this, "Success!", "File " + filename + " written successfully");
         else
@@ -379,7 +351,7 @@ void SpectrumViewer::on_pushButton_clicked()
        ||(extension == "png")
        ||(extension == "svg")
        ||(extension == "emf")){
-        success = Vespucci::SavePlot(spectrum_plot_, filename);
+        success = Vespucci::SavePlot(ui->spectrum, filename);
     }
 
     else if (extension == "csv")

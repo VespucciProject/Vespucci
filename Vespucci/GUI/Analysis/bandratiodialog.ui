@@ -74,7 +74,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QCustomPlot" name="spectrumPlot" native="true">
+       <widget class="QCustomPlot" name="spectrumCustomPlot" native="true">
         <property name="minimumSize">
          <size>
           <width>600</width>
@@ -161,28 +161,14 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Peak Determination</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QComboBox" name="peakComboBox">
+      <item row="4" column="0">
+       <widget class="QLabel" name="label">
         <property name="toolTip">
-         <string/>
+         <string>Search window for inflection points.</string>
         </property>
-        <item>
-         <property name="text">
-          <string>Riemann Sum</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Gaussian Fit</string>
-         </property>
-        </item>
+        <property name="text">
+         <string>Search Window Size</string>
+        </property>
        </widget>
       </item>
       <item row="4" column="1">
@@ -201,14 +187,20 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label">
-        <property name="toolTip">
-         <string>Search window for inflection points.</string>
-        </property>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_6">
         <property name="text">
-         <string>Search Window Size</string>
+         <string>Quantification</string>
         </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QComboBox" name="methodComboBox">
+        <item>
+         <property name="text">
+          <string>Empirical</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>

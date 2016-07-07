@@ -47,15 +47,6 @@ private slots:
 private:
     Ui::StitchImportDialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;
-    QLineEdit *x_line_edit_;
-    QLineEdit *x_units_line_edit_;
-    QLineEdit *y_line_edit_;
-    QLineEdit *y_units_line_edit_;
-    QLineEdit *filename_line_edit_;
-    QComboBox *data_format_combo_box_;
-    QLineEdit *name_line_edit_;
-    QCheckBox *swap_spatial_check_box_;
-
     QString path_;
 
     bool LoadDatasets(field<string> filenames,

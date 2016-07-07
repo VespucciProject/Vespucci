@@ -59,9 +59,8 @@ MainWindow::MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
 {
     workspace_ = ws;
     ui->setupUi(this);
-    dataset_tree_view_ = findChild<QTreeView *>("datasetTreeView");
-    dataset_tree_model_ = new DatasetTreeModel(dataset_tree_view_);
-    dataset_tree_view_->setModel(dataset_tree_model_);
+    dataset_tree_model_ = new DatasetTreeModel(ui->datasetTreeView);
+    ui->datasetTreeView->setModel(dataset_tree_model_);
     data_viewer_ = new DataViewer(this);
     plot_viewer_ = new PlotViewer(this);
     spectrum_editor_ = new SpectrumSelectionDialog(this);
@@ -82,9 +81,9 @@ MainWindow::~MainWindow()
 /// Creates a new DatasetTreeModel and changes the tree view to the new model
 void MainWindow::RefreshTreeModel(const DataModel *data_model)
 {
-    dataset_tree_model_ = new DatasetTreeModel(dataset_tree_view_, data_model);
-    dataset_tree_view_->setModel(dataset_tree_model_);
-    dataset_tree_view_->resizeColumnToContents(0);
+    dataset_tree_model_ = new DatasetTreeModel(ui->datasetTreeView, data_model);
+    ui->datasetTreeView->setModel(dataset_tree_model_);
+    ui->datasetTreeView->resizeColumnToContents(0);
 }
 
 
@@ -155,7 +154,7 @@ void MainWindow::on_actionCiting_Vespucci_triggered()
 ///Triggers univariate dialog.
 void MainWindow::on_actionNew_Univariate_Map_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -175,7 +174,7 @@ void MainWindow::on_actionNew_Univariate_Map_triggered()
 ///Triggers band ratio dialog.
 void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -195,7 +194,7 @@ void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
 ///Triggers principal components dialog
 void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -220,7 +219,7 @@ void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
 ///Triggers vertex components dialog
 void MainWindow::on_actionVertex_Components_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -245,7 +244,7 @@ void MainWindow::on_actionVertex_Components_triggered()
 ///
 void MainWindow::on_actionPartial_Least_Squares_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -270,7 +269,7 @@ void MainWindow::on_actionPartial_Least_Squares_triggered()
 ///
 void MainWindow::on_actionK_Means_Clustering_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -296,7 +295,7 @@ void MainWindow::on_actionK_Means_Clustering_triggered()
 ///
 void MainWindow::on_actionNormalize_Standardize_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -358,7 +357,7 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
 ///Subtracts a background matrix (a saved armadillo binary matrix) from spectra
 void MainWindow::on_actionSubtract_Background_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -416,7 +415,7 @@ void MainWindow::on_actionSubtract_Background_triggered()
 ///Saves the spectra matrix of selected dataset as binary, csv, or raw ascii.
 void MainWindow::on_actionSpectra_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -455,7 +454,7 @@ void MainWindow::on_actionSpectra_triggered()
 /// Saves a transpose of spectra_
 void MainWindow::on_actionSpectra_as_Columns_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -497,7 +496,7 @@ void MainWindow::on_actionSpectra_as_Columns_triggered()
 /// Saves an average spectrum of the selected dataset
 void MainWindow::on_actionAverage_Spectra_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -538,7 +537,7 @@ void MainWindow::on_actionAverage_Spectra_triggered()
 /// Saves average spectrum (with abscissa above).
 void MainWindow::on_actionAverage_Spectra_with_Abscissa_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -589,7 +588,7 @@ void MainWindow::on_actionAverage_Spectra_with_Abscissa_triggered()
 /// Saves the spectral abscissa
 void MainWindow::on_actionSpectral_Abscissa_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -631,14 +630,14 @@ void MainWindow::on_actionSpectral_Abscissa_triggered()
 /// Saves a matrix containing all spatial and spectral data
 void MainWindow::on_actionAll_Data_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
                                  "No dataset exists on which to perform this operation");
         return;
     }
-    if (dataset_tree_view_->model()->rowCount() < 1)
+    if (ui->datasetTreeView->model()->rowCount() < 1)
         return;
     bool success;
 
@@ -675,7 +674,7 @@ void MainWindow::on_actionAll_Data_triggered()
 /// Triggers dialog to filter data
 void MainWindow::on_actionFilter_Derivatize_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -694,7 +693,7 @@ void MainWindow::on_actionFilter_Derivatize_triggered()
 /// Closes the dataset. Should force it to go out of scope
 void MainWindow::on_actionClose_Dataset_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -704,7 +703,7 @@ void MainWindow::on_actionClose_Dataset_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    QString name = dataset_tree_view_->currentIndex().data().value<QString>();
+    QString name = ui->datasetTreeView->currentIndex().data().value<QString>();
     QString text = "Are you sure you want to close the dataset " + name + "?" +
             " The data and all associated maps will be deleted.";
 
@@ -729,7 +728,7 @@ void MainWindow::on_actionDocumentation_triggered()
 /// Triggers the CropDialog
 void MainWindow::on_actionCrop_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -747,7 +746,7 @@ void MainWindow::on_actionCrop_triggered()
 /// Triggers Baseline correction dialog
 void MainWindow::on_actionCorrect_Baseline_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -767,7 +766,7 @@ void MainWindow::on_actionCorrect_Baseline_triggered()
 /// Triggers DataViewer
 void MainWindow::on_actionView_Dataset_Elements_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -943,7 +942,7 @@ QSharedPointer<VespucciWorkspace> MainWindow::workspace_ptr()
 
 void MainWindow::on_actionUndo_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1005,7 +1004,7 @@ void MainWindow::DisplayExceptionWarning(string where, exception e)
 
 void MainWindow::SetActiveDatasetTreeIndex(const QModelIndex &index)
 {
-    dataset_tree_view_->setCurrentIndex(index);
+    ui->datasetTreeView->setCurrentIndex(index);
 }
 
 
@@ -1021,7 +1020,7 @@ void MainWindow::DisplayInformation(const QString &title, const QString &text)
 
 void MainWindow::SetDatasetTreeModel(DatasetTreeModel *new_model)
 {
-    dataset_tree_view_->setModel(new_model);
+    ui->datasetTreeView->setModel(new_model);
 }
 
 DatasetTreeModel *MainWindow::dataset_tree_model()
@@ -1043,7 +1042,7 @@ DataViewer *MainWindow::data_viewer()
 void MainWindow::on_actionDelete_Map_triggered()
 {
     /*
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1058,7 +1057,7 @@ void MainWindow::on_actionDelete_Map_triggered()
 
 void MainWindow::on_actionNew_Composite_Dataset_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1073,7 +1072,7 @@ void MainWindow::on_actionNew_Composite_Dataset_triggered()
 
 void MainWindow::on_actionReject_Clipped_Spectra_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1088,9 +1087,9 @@ void MainWindow::on_actionReject_Clipped_Spectra_triggered()
 
 void MainWindow::RangeDialogAccepted(double min, double max)
 {
-    if (dataset_tree_view_->model()->rowCount() < 1)
+    if (ui->datasetTreeView->model()->rowCount() < 1)
         return;
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
 
     QString dataset_key = item->DatasetKey();
 
@@ -1146,7 +1145,7 @@ void MainWindow::TreeItemDoubleClicked(const QModelIndex &index)
 
 void MainWindow::on_actionView_Edit_Spectra_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No dataset selected",
@@ -1154,7 +1153,7 @@ void MainWindow::on_actionView_Edit_Spectra_triggered()
         return;
     }
     QSharedPointer<VespucciDataset> dataset =
-            workspace_->DatasetAt(dataset_tree_view_->currentIndex());
+            workspace_->DatasetAt(ui->datasetTreeView->currentIndex());
 
     spectrum_editor_->SetActiveDataset(dataset);
 
@@ -1163,7 +1162,7 @@ void MainWindow::on_actionView_Edit_Spectra_triggered()
 
 void MainWindow::on_actionBooleanize_Clamp_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1177,7 +1176,7 @@ void MainWindow::on_actionBooleanize_Clamp_triggered()
 
 void MainWindow::on_actionRemove_Vectors_of_Zeros_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1193,7 +1192,7 @@ void MainWindow::on_actionRemove_Vectors_of_Zeros_triggered()
         return;
     }
     else{
-        QSharedPointer<VespucciDataset> data = workspace_->DatasetAt(dataset_tree_view_->currentIndex());
+        QSharedPointer<VespucciDataset> data = workspace_->DatasetAt(ui->datasetTreeView->currentIndex());
         if (input == "Remove columns of zeros (removes spectra)"){
             try{
                 dataset->ShedZeroSpectra();
@@ -1219,7 +1218,7 @@ void MainWindow::on_actionRemove_Vectors_of_Zeros_triggered()
 
 void MainWindow::on_actionRun_script_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1235,7 +1234,7 @@ void MainWindow::on_actionRun_script_triggered()
 
 void MainWindow::on_actionDetect_Peaks_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1250,7 +1249,7 @@ void MainWindow::on_actionDetect_Peaks_triggered()
 
 void MainWindow::on_actionCalculate_Peak_Populations_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1279,7 +1278,7 @@ void MainWindow::on_actionBatch_File_Conversion_triggered()
 
 void MainWindow::on_actionClassical_Least_Squares_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1302,7 +1301,7 @@ void MainWindow::on_actionSettings_triggered()
 
 void MainWindow::on_actionTransform_Abscissa_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1319,7 +1318,7 @@ void MainWindow::on_actionTransform_Abscissa_triggered()
 
 void MainWindow::on_actionFourierTransform_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1337,7 +1336,7 @@ void MainWindow::on_actionFourierTransform_triggered()
 
 void MainWindow::on_actionInterpolate_to_New_Abscissa_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1354,7 +1353,7 @@ void MainWindow::on_actionInterpolate_to_New_Abscissa_triggered()
 
 void MainWindow::on_actionSave_Log_File_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
         QMessageBox::information(this,
                                  "No datasets loaded",
@@ -1482,7 +1481,7 @@ void MainWindow::on_datasetTreeView_doubleClicked(const QModelIndex &index)
 
 void MainWindow::on_actionMapResult_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     QStringList item_keys = item->keys();
     MapDialog *map_dialog = new MapDialog(this, item_keys);
     map_dialog->show();
@@ -1490,7 +1489,7 @@ void MainWindow::on_actionMapResult_triggered()
 
 void MainWindow::on_actionSave_Selected_Matrix_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(dataset_tree_view_->currentIndex());
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Matrix){
         QString filename = QFileDialog::getSaveFileName(this, "Save " + item->keys().last(),
                                                         workspace_->directory(),

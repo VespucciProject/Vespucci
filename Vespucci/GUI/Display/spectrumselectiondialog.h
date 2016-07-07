@@ -34,9 +34,7 @@ private slots:
 private:
     Ui::SpectrumSelectionDialog *ui;
     SpectraTableModel *table_model_;
-    QTableView *table_view_;
     QSharedPointer<VespucciDataset> dataset_;
-    QCheckBox *hold_check_box_;
     PlotViewer *plot_viewer_;
     MainWindow *main_window_;
     QSharedPointer<VespucciWorkspace> workspace_;

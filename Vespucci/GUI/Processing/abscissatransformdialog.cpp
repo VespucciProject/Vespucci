@@ -9,12 +9,7 @@ AbscissaTransformDialog::AbscissaTransformDialog(QWidget *parent, QSharedPointer
     ui->setupUi(this);
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
-    out_factor_edit_ = findChild<QLineEdit *>("outFactorLineEdit");
-    in_factor_edit_ = findChild<QLineEdit *>("inFactorLineEdit");
-    out_units_combo_box_ = findChild<QComboBox *>("outUnitsComboBox");
-    in_units_combo_box_ = findChild<QComboBox *>("inUnitsComboBox");
-    description_edit_=  findChild<QLineEdit *>("descriptionLineEdit");
-    description_edit_->setText(dataset_->x_axis_description());
+    ui->descriptionLineEdit->setText(dataset_->x_axis_description());
 }
 
 AbscissaTransformDialog::~AbscissaTransformDialog()
@@ -25,11 +20,11 @@ AbscissaTransformDialog::~AbscissaTransformDialog()
 
 void AbscissaTransformDialog::on_buttonBox_accepted()
 {
-    double out_factor = ParseInput(out_factor_edit_->text());
-    double in_factor = ParseInput(in_factor_edit_->text());
-    QString out_units = out_units_combo_box_->currentText();
-    QString in_units = in_units_combo_box_->currentText();
-    QString description = description_edit_->text();
+    double out_factor = ParseInput(ui->outFactorLineEdit->text());
+    double in_factor = ParseInput(ui->inFactorLineEdit->text());
+    QString out_units = ui->outUnitsComboBox->currentText();
+    QString in_units = ui->inUnitsComboBox->currentText();
+    QString description = ui->descriptionLineEdit->text();
     if (in_factor * out_factor){
         dataset_->TransformAbscissa(in_units, in_factor, out_units, out_factor, description);
     }

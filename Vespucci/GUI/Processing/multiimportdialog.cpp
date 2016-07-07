@@ -8,16 +8,11 @@ MultiImportDialog::MultiImportDialog(QWidget *parent, QSharedPointer<VespucciWor
 {
     ui->setupUi(this);
     workspace_ = ws;
-    filename_table_ = findChild<QTableWidget*>("filenameTableWidget");
-    count_label_ = findChild<QLabel*>("countLabel");
-    abscissa_label_box_ = findChild<QLineEdit*>("abscissaLineEdit");
-    ordinate_label_box_ = findChild<QLineEdit*>("ordinateLineEdit");
-    name_box_ = findChild<QLineEdit*>("nameLineEdit");
     ws->dataset_loading_count();
-    name_box_->setText("Dataset" + QString::number(ws->dataset_loading_count()));
+    ui->nameLineEdit->setText("Dataset" + QString::number(ws->dataset_loading_count()));
 
-    filename_table_->setRowCount(1);
-    filename_table_->setColumnCount(1);
+    ui->filenameTableWidget->setRowCount(1);
+    ui->filenameTableWidget->setColumnCount(1);
 }
 
 MultiImportDialog::~MultiImportDialog()
@@ -27,14 +22,14 @@ MultiImportDialog::~MultiImportDialog()
 
 void MultiImportDialog::on_rowSpinBox_valueChanged(int arg1)
 {
-    filename_table_->setRowCount(arg1);
-    count_label_->setText(QString::number(arg1 * filename_table_->columnCount()));
+    ui->filenameTableWidget->setRowCount(arg1);
+    ui->countLabel->setText(QString::number(arg1 * ui->filenameTableWidget->columnCount()));
 }
 
 void MultiImportDialog::on_colSpinBox_valueChanged(int arg1)
 {
-    filename_table_->setColumnCount(arg1);
-    count_label_->setText(QString::number(arg1 * filename_table_->rowCount()));
+    ui->filenameTableWidget->setColumnCount(arg1);
+    ui->countLabel->setText(QString::number(arg1 * ui->filenameTableWidget->rowCount()));
 }
 
 void MultiImportDialog::on_addFilesPushButton_clicked()
@@ -49,10 +44,10 @@ void MultiImportDialog::on_addFilesPushButton_clicked()
     workspace_->set_directory(new_directory);
 
     QStringList::Iterator it = filenames_cpy.begin();
-    int current_row = filename_table_->currentRow();
-    int current_col = filename_table_->currentColumn();
-    int col_count = filename_table_->columnCount();
-    int row_count = filename_table_->rowCount();
+    int current_row = ui->filenameTableWidget->currentRow();
+    int current_col = ui->filenameTableWidget->currentColumn();
+    int col_count = ui->filenameTableWidget->columnCount();
+    int row_count = ui->filenameTableWidget->rowCount();
     //add selected file names to the table in alphabetical order starting with
     //the currently highlighted cell
     while (current_row < row_count){
@@ -61,7 +56,7 @@ void MultiImportDialog::on_addFilesPushButton_clicked()
             //add approprate widget item containing the filename to the
             QTableWidgetItem *current_item = new QTableWidgetItem;
             current_item->setText(*it);
-            filename_table_->setItem(current_row, current_col, current_item);
+            ui->filenameTableWidget->setItem(current_row, current_col, current_item);
             ++it;
             ++current_col;
         }
@@ -83,17 +78,17 @@ void MultiImportDialog::on_addFilesPushButton_clicked()
 
 void MultiImportDialog::on_buttonBox_accepted()
 {
-    int cols = filename_table_->columnCount();
-    int rows = filename_table_->rowCount();
-    QString name = name_box_->text();
-    QString x_axis_description = abscissa_label_box_->text();
-    QString y_axis_description = ordinate_label_box_->text();
+    int cols = ui->filenameTableWidget->columnCount();
+    int rows = ui->filenameTableWidget->rowCount();
+    QString name = ui->nameLineEdit->text();
+    QString x_axis_description = ui->abscissaLineEdit->text();
+    QString y_axis_description = ui->ordinateLineEdit->text();
 
     map<pair<int,int>, string> filename_map;
 
     for (int row = 0; row < rows; ++row){
         for (int col = 0; col < cols; ++col){
-            QTableWidgetItem *item = filename_table_->takeItem(row, col);
+            QTableWidgetItem *item = ui->filenameTableWidget->takeItem(row, col);
             string value = item->text().toStdString();
             pair<int, int> key(row, col);
             filename_map[key] = value;

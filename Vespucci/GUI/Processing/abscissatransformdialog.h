@@ -23,11 +23,6 @@ private:
     Ui::AbscissaTransformDialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
-    QLineEdit *out_factor_edit_;
-    QLineEdit *in_factor_edit_;
-    QComboBox *out_units_combo_box_;
-    QComboBox *in_units_combo_box_;
-    QLineEdit *description_edit_;
 
     double ParseInput(QString text) const;
     double TextToDouble(QString text) const;

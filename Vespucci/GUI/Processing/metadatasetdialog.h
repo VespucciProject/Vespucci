@@ -43,9 +43,6 @@ private slots:
 
 private:
     Ui::MetaDatasetDialog *ui;
-    QListView *dataset_list_view_;
-    QComboBox *method_selection_box_;
-    QLineEdit *name_line_edit_;
     DatasetListModel *dataset_list_model_;
     QSharedPointer<VespucciWorkspace> workspace_;
 };

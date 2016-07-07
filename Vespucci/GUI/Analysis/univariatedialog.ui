@@ -93,18 +93,13 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QComboBox" name="peakComboBox">
+       <widget class="QComboBox" name="methodComboBox">
         <property name="enabled">
          <bool>true</bool>
         </property>
         <item>
          <property name="text">
-          <string>Riemann Sum</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Gaussian Fit</string>
+          <string>Empirical</string>
          </property>
         </item>
        </widget>

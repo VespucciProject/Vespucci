@@ -53,17 +53,11 @@ private:
     /// The current dataset
     QSharedPointer<VespucciWorkspace> workspace_;
 
-    ///
-    /// \brief name_line_edit_
-    /// User sets map name here
-    QLineEdit *name_line_edit_;
 
     ///
     /// \brief data_index_
     /// Index of current dataset in relevant lists
     int data_index_;
-
-    QCheckBox *map_check_box_;
 
     ///
     /// \brief dataset_

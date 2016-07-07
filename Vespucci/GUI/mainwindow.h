@@ -216,16 +216,6 @@ private:
     /// The current workspace
     QSharedPointer<VespucciWorkspace> workspace_;
 
-    ///
-    /// \brief map_list_view_
-    /// The list view displaying the currently created for the currently (or most
-    /// recently) selected map.
-    QListView *map_list_view_;
-
-    ///
-    /// \brief dataset_list_widget_
-    /// The list widget displaying the currently loaded datasets
-    QTreeView *dataset_tree_view_;
 
     ///
     /// \brief dataset_list_model_

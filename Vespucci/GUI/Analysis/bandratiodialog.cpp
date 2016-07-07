@@ -31,20 +31,10 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
 
-    spectrum_custom_plot_ = findChild<QCustomPlot *>("spectrumPlot");
-    first_min_line_edit_ = findChild<QLineEdit *>("firstMinLineEdit");
-    first_max_line_edit_ = findChild<QLineEdit *>("firstMaxLineEdit");
-    second_min_line_edit_ = findChild<QLineEdit *>("secondMinLineEdit");
-    second_max_line_edit_ = findChild<QLineEdit *>("secondMaxLineEdit");
-    name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
-    method_combo_box_ = findChild<QComboBox *>("peakComboBox");
-    range_label_ = findChild<QLabel *>("rangeLabel");
-    search_window_spin_box_ = findChild<QSpinBox*>("searchWindowSpinBox");
-
-    first_min_line_ = new QCPItemStraightLine(spectrum_custom_plot_);
-    first_max_line_ = new QCPItemStraightLine(spectrum_custom_plot_);
-    second_min_line_ = new QCPItemStraightLine(spectrum_custom_plot_);
-    second_max_line_ = new QCPItemStraightLine(spectrum_custom_plot_);
+    first_min_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
+    first_max_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
+    second_min_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
+    second_max_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
 
     first_min_line_->point1->setCoords(0, 0);
     first_min_line_->point2->setCoords(0, 1);
@@ -65,7 +55,7 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
 
 
     QString label_text = QString::number(min) + "–" + QString::number(max);
-    range_label_->setText(label_text);
+    ui->rangeLabel->setText(label_text);
 
     uword origin = dataset_->FindOrigin();
 
@@ -73,15 +63,15 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     QVector<double> wavelength = dataset_->WavelengthQVector();
     if (plot_data.isEmpty()){plot_data = dataset_->PointSpectrum(0);}
 
-    first_min_line_edit_->setValidator(validator);
-    first_max_line_edit_->setValidator(validator);
-    second_min_line_edit_->setValidator(validator);
-    second_max_line_edit_->setValidator(validator);
-    spectrum_custom_plot_->addGraph();
-    spectrum_custom_plot_->graph(0)->addData(wavelength, plot_data);
-    spectrum_custom_plot_->rescaleAxes();
-    spectrum_custom_plot_->setInteraction(QCP::iRangeDrag, true);
-    spectrum_custom_plot_->setInteraction(QCP::iRangeZoom, true);
+    ui->firstMinLineEdit->setValidator(validator);
+    ui->firstMaxLineEdit->setValidator(validator);
+    ui->secondMinLineEdit->setValidator(validator);
+    ui->secondMaxLineEdit->setValidator(validator);
+    ui->spectrumCustomPlot->addGraph();
+    ui->spectrumCustomPlot->graph(0)->addData(wavelength, plot_data);
+    ui->spectrumCustomPlot->rescaleAxes();
+    ui->spectrumCustomPlot->setInteraction(QCP::iRangeDrag, true);
+    ui->spectrumCustomPlot->setInteraction(QCP::iRangeZoom, true);
 }
 
 BandRatioDialog::~BandRatioDialog()
@@ -95,16 +85,16 @@ BandRatioDialog::~BandRatioDialog()
 /// instantiates the map data
 void BandRatioDialog::on_buttonBox_accepted()
 {
-    if (first_min_line_edit_->text().isEmpty() || first_max_line_edit_->text().isEmpty() || second_min_line_edit_->text().isEmpty() || second_max_line_edit_->text().isEmpty()){
+    if (ui->firstMinLineEdit->text().isEmpty() || ui->firstMaxLineEdit->text().isEmpty() || ui->secondMinLineEdit->text().isEmpty() || ui->secondMaxLineEdit->text().isEmpty()){
         QMessageBox::warning(this, "Invalid Input!", "You must enter numbers for left and right bounds.");
         return;
     }
 
 
-    double first_entered_min = first_min_line_edit_->text().toDouble();
-    double second_entered_min = second_min_line_edit_->text().toDouble();
-    double first_entered_max = first_max_line_edit_->text().toDouble();
-    double second_entered_max = second_max_line_edit_->text().toDouble();
+    double first_entered_min = ui->firstMinLineEdit->text().toDouble();
+    double second_entered_min = ui->secondMinLineEdit->text().toDouble();
+    double first_entered_max = ui->firstMaxLineEdit->text().toDouble();
+    double second_entered_max = ui->secondMaxLineEdit->text().toDouble();
 
     if (first_entered_min < dataset_->abscissa_ptr()->min() || second_entered_min < dataset_->abscissa_ptr()->min()){
         QMessageBox::warning(this, "Invalid Input!", "You have entered a left bound that is smaller than the smallest number on the spectral abscissa");
@@ -115,13 +105,13 @@ void BandRatioDialog::on_buttonBox_accepted()
         QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abscissa");
         return;
     }
-    uint bound_window = search_window_spin_box_->value();
+    uint bound_window = ui->searchWindowSpinBox->value();
 
 
-    QString name = name_line_edit_->text();
-    QString value_method = method_combo_box_->currentText();
+    QString name = ui->nameLineEdit->text();
+    QString value_method = ui->methodComboBox->currentText();
 
-    if (value_method == "Riemann Sum"){
+    if (value_method == "Empirical"){
         try{
             dataset_->BandRatio(name, first_entered_min, first_entered_max,
                              second_entered_min, second_entered_max,
@@ -138,7 +128,7 @@ void BandRatioDialog::on_buttonBox_accepted()
         }
     }
     else{
-        QMessageBox::warning(this, "Error Occurred", "A non-fatal error occurred: invalid input from method_combo_box_");
+        QMessageBox::warning(this, "Error Occurred", "A non-fatal error occurred: invalid input from ui->methodComboBox");
     }
 
     close();
@@ -163,9 +153,9 @@ void BandRatioDialog::on_firstMinLineEdit_textChanged(const QString &arg1)
         return;
     first_min_line_->point1->setCoords(value, 0);
     first_min_line_->point2->setCoords(value, 1);
-    if (!spectrum_custom_plot_->hasItem(first_min_line_))
-        spectrum_custom_plot_->addItem(first_min_line_);
-    spectrum_custom_plot_->repaint();
+    if (!ui->spectrumCustomPlot->hasItem(first_min_line_))
+        ui->spectrumCustomPlot->addItem(first_min_line_);
+    ui->spectrumCustomPlot->repaint();
 }
 
 void BandRatioDialog::on_firstMaxLineEdit_textChanged(const QString &arg1)
@@ -176,9 +166,9 @@ void BandRatioDialog::on_firstMaxLineEdit_textChanged(const QString &arg1)
         return;
     first_max_line_->point1->setCoords(value, 0);
     first_max_line_->point2->setCoords(value, 1);
-    if (!spectrum_custom_plot_->hasItem(first_max_line_))
-        spectrum_custom_plot_->addItem(first_max_line_);
-    spectrum_custom_plot_->repaint();
+    if (!ui->spectrumCustomPlot->hasItem(first_max_line_))
+        ui->spectrumCustomPlot->addItem(first_max_line_);
+    ui->spectrumCustomPlot->repaint();
 }
 
 void BandRatioDialog::on_secondMinLineEdit_textChanged(const QString &arg1)
@@ -189,8 +179,8 @@ void BandRatioDialog::on_secondMinLineEdit_textChanged(const QString &arg1)
         return;
     second_min_line_->point1->setCoords(value, 0);
     second_min_line_->point2->setCoords(value, 1);
-    if (!spectrum_custom_plot_->hasItem(second_min_line_))
-        spectrum_custom_plot_->addItem(second_min_line_);
+    if (!ui->spectrumCustomPlot->hasItem(second_min_line_))
+        ui->spectrumCustomPlot->addItem(second_min_line_);
 }
 
 void BandRatioDialog::on_secondMaxLineEdit_textChanged(const QString &arg1)
@@ -201,7 +191,7 @@ void BandRatioDialog::on_secondMaxLineEdit_textChanged(const QString &arg1)
         return;
     second_max_line_->point1->setCoords(value, 0);
     second_max_line_->point2->setCoords(value, 1);
-    if (!spectrum_custom_plot_->hasItem(second_max_line_))
-        spectrum_custom_plot_->addItem(second_max_line_);
+    if (!ui->spectrumCustomPlot->hasItem(second_max_line_))
+        ui->spectrumCustomPlot->addItem(second_max_line_);
 }
 

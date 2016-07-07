@@ -34,8 +34,6 @@ PrincipalComponentsDialog::PrincipalComponentsDialog(QWidget *parent, QSharedPoi
     ui->setupUi(this);
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
-    name_line_edit_ = findChild<QLineEdit*>("nameLineEdit");
-    map_check_box_ = findChild<QCheckBox*>("mapCheckBox");
 }
 
 PrincipalComponentsDialog::~PrincipalComponentsDialog()
@@ -48,7 +46,7 @@ PrincipalComponentsDialog::~PrincipalComponentsDialog()
 /// Trigger appropriate method of dataset when user clicks "Ok"
 void PrincipalComponentsDialog::on_buttonBox_accepted()
 {
-    QString name = name_line_edit_->text();
+    QString name = ui->nameLineEdit->text();
     QProgressDialog *progress =
             Vespucci::DisplayProgressDialog(this,
                                             "Principal Components",

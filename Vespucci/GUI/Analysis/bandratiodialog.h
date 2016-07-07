@@ -54,62 +54,14 @@ private slots:
 
 private:
     Ui::BandRatioDialog *ui;
-
-    ///
-    /// \brief workspace
-    /// Pointer to the workspace (which contains dataset list)
-    QSharedPointer<VespucciWorkspace> workspace_;
-
-    ///
-    /// \brief spectrum_custom_plot_
-    /// Pointer to the plot inside this window that displays a preview of the data
-    QCustomPlot *spectrum_custom_plot_;
-
-    ///
-    /// \brief first_min_line_edit_
-    /// User enteres first minimum here
-    QLineEdit *first_min_line_edit_;
-
-    ///
-    /// \brief first_max_line_edit_
-    /// User enters first maximum here
-    QLineEdit *first_max_line_edit_;
-
-    ///
-    /// \brief second_min_line_edit_
-    /// User enters second minimum here
-    QLineEdit *second_min_line_edit_;
-
-    ///
-    /// \brief second_max_line_edit_
-    /// User enteres second maximum here
-    QLineEdit *second_max_line_edit_;
-
-
-    ///
-    /// \brief integration_method_selector_combo_box_
-    /// User selects the integration method here
-    QComboBox *method_combo_box_;
-
-    ///
-    /// \brief name_line_edit_
-    /// User enters map name here
-    QLineEdit *name_line_edit_;
-
-    QSpinBox *search_window_spin_box_;
     ///
     /// \brief data_index_
     /// Index of the VespucciDataset object in the various lists
     int data_index_;
 
     ///
-    /// \brief range_label_
-    /// Displays the valid range
-    QLabel *range_label_;
-
-    ///
     /// \brief first_min_line_
-    ///
+   ///
     QCPItemStraightLine *first_min_line_;
     ///
     /// \brief first_max_line_
@@ -128,8 +80,8 @@ private:
     /// \brief dataset_
     /// Points to the dataset we're working with.
     QSharedPointer<VespucciDataset> dataset_;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
-    QCheckBox *map_check_box_;
 };
 
 #endif // BANDRATIODIALOG_H

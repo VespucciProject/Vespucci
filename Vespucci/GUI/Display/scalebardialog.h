@@ -50,39 +50,6 @@ private slots:
 
 private:
     Ui::ScaleBarDialog *ui;
-    ///
-    /// \brief width_spin_box_
-    /// User sets the width of the scale bar here
-    QDoubleSpinBox *width_spin_box_;
-    ///
-    /// \brief height_spin_box_
-    /// User sets the height of the scale bar here
-    QDoubleSpinBox *height_spin_box_;
-
-    ///
-    /// \brief units_line_edit_
-    /// User enters the spatial unit here
-    QLineEdit *units_line_edit_;
-
-    ///
-    /// \brief color_push_button_
-    /// Pops up a dialog for the user to select the color
-    QPushButton *color_push_button_;
-
-    ///
-    /// \brief position_combo_box_
-    /// User selects the position of the bar here
-    QComboBox *position_combo_box_;
-
-    ///
-    /// \brief font_combo_box_
-    /// User selects the font of the bar caption here
-    QFontComboBox *font_combo_box_;
-
-    ///
-    /// \brief font_size_spin_box_
-    /// User selects the size of the caption text here
-    QSpinBox *font_size_spin_box_;
 
     ///
     /// \brief color_

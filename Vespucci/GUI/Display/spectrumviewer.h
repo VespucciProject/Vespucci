@@ -125,16 +125,6 @@ private:
     double current_z_;
 
     ///
-    /// \brief coordinate_label_
-    /// A label that displays spatial position
-    QLabel *coordinate_label_;
-
-    ///
-    /// \brief value_label_
-    /// A label that displays current data value
-    QLabel *value_label_;
-
-    ///
     /// \brief linked_to_map_
     /// Whether or not there are associated MapData and MapViewer objects
     bool linked_to_map_;

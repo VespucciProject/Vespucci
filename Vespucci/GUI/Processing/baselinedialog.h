@@ -61,31 +61,6 @@ private:
     /// Current workspace
     QSharedPointer<VespucciWorkspace> workspace_;
 
-    ///
-    /// \brief iterations_box_
-    /// Number of iterations to perform filtering to find baseline
-    QSpinBox *param_1_spin_box_;
-
-    ///
-    /// \brief method_box_
-    /// User chooses the method here
-    QComboBox *method_box_;
-
-    ///
-    /// \brief window_size_box_
-    /// User chooses the window size (if using filtering to find baseline) here.
-    QSpinBox *param_0_spin_box_;
-
-    QDoubleSpinBox *param_2_double_spin_box_;
-    QDoubleSpinBox *param_3_double_spin_box_;
-
-    QLabel *param_0_label_;
-    QLabel *param_1_label_;
-    QLabel *param_2_label_;
-    QLabel *param_3_label_;
-
-    QCustomPlot *spectrum_plot_;
-
     QVector<double> abscissa_q_;
     QVector<double> spectrum_q_;
     arma::vec abscissa_;

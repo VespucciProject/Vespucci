@@ -48,13 +48,6 @@ private slots:
 private:
     Ui::CropDialog *ui;
 
-    QDoubleSpinBox *x_min_box_;
-    QDoubleSpinBox *x_max_box_;
-    QDoubleSpinBox *y_min_box_;
-    QDoubleSpinBox *y_max_box_;
-    QDoubleSpinBox *wl_max_box_;
-    QDoubleSpinBox *wl_min_box_;
-
     QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
 };

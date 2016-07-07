@@ -47,11 +47,6 @@ private slots:
 private:
     Ui::MultiImportDialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;
-    QTableWidget *filename_table_;
-    QLabel *count_label_;
-    QLineEdit *name_box_;
-    QLineEdit *abscissa_label_box_;
-    QLineEdit *ordinate_label_box_;
 
 };
 

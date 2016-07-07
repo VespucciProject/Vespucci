@@ -33,12 +33,6 @@ FilterDialog::FilterDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws
     ui->setupUi(this);
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
-    method_box_ = findChild<QComboBox *>("methodComboBox");
-    derivative_box_ = findChild<QSpinBox *>("derivativeSpinBox");
-    polynomial_box_ = findChild<QSpinBox *>("polynomialSpinBox");
-    window_box_ = findChild<QSpinBox *>("windowSpinBox");
-    singular_values_box_ = findChild<QSpinBox *>("singularValuesSpinBox");
-    epsilon_box_ = findChild<QDoubleSpinBox *>("epsilonSpinBox");
 }
 
 FilterDialog::~FilterDialog()
@@ -52,27 +46,27 @@ FilterDialog::~FilterDialog()
 ///enables and disables appropriate options based on method selected
 void FilterDialog::on_methodComboBox_currentIndexChanged(int index)
 {
-    if ((index != 4) && epsilon_box_->isEnabled())
-        epsilon_box_->setEnabled(false);
-    if ((index == 4) && !epsilon_box_->isEnabled())
-        epsilon_box_->setEnabled(true);
-    if (((index == 0) || (index == 1))  && !window_box_->isEnabled())
-        window_box_->setEnabled(true);
-    if ((index!=2) && (derivative_box_->isEnabled()))
-        derivative_box_->setEnabled(false);
-    if ((index == 2) && (!derivative_box_->isEnabled()))
-        derivative_box_->setEnabled(true);
-    if ((index == 2) && (!window_box_->isEnabled()))
-        window_box_->setEnabled(true);
-    if ((index != 2) && (polynomial_box_->isEnabled()))
-        polynomial_box_->setEnabled(false);
-    if ((index == 2)&&(!polynomial_box_->isEnabled()))
-        polynomial_box_->setEnabled(true);
+    if ((index != 4) && ui->epsilonSpinBox->isEnabled())
+        ui->epsilonSpinBox->setEnabled(false);
+    if ((index == 4) && !ui->epsilonSpinBox->isEnabled())
+        ui->epsilonSpinBox->setEnabled(true);
+    if (((index == 0) || (index == 1))  && !ui->windowSpinBox->isEnabled())
+        ui->windowSpinBox->setEnabled(true);
+    if ((index!=2) && (ui->derivativeSpinBox->isEnabled()))
+        ui->derivativeSpinBox->setEnabled(false);
+    if ((index == 2) && (!ui->derivativeSpinBox->isEnabled()))
+        ui->derivativeSpinBox->setEnabled(true);
+    if ((index == 2) && (!ui->windowSpinBox->isEnabled()))
+        ui->windowSpinBox->setEnabled(true);
+    if ((index != 2) && (ui->polynomialSpinBox->isEnabled()))
+        ui->polynomialSpinBox->setEnabled(false);
+    if ((index == 2)&&(!ui->polynomialSpinBox->isEnabled()))
+        ui->polynomialSpinBox->setEnabled(true);
     if ((index != 3))
-        singular_values_box_->setDisabled(true);
+        ui->singularValuesSpinBox->setDisabled(true);
     if (index == 3){
-        singular_values_box_->setEnabled(true);
-        window_box_->setDisabled(true);
+        ui->singularValuesSpinBox->setEnabled(true);
+        ui->windowSpinBox->setDisabled(true);
     }
 }
 
@@ -82,11 +76,11 @@ void FilterDialog::on_methodComboBox_currentIndexChanged(int index)
 void FilterDialog::on_buttonBox_accepted()
 {
     int SVD_rank;
-    switch (method_box_->currentIndex())
+    switch (ui->methodComboBox->currentIndex())
     {
     case 0:
         try{
-            dataset_->MedianFilter(window_box_->value());
+            dataset_->MedianFilter(ui->windowSpinBox->value());
         }
         catch(exception e){
             workspace_->main_window()->DisplayExceptionWarning(e);
@@ -95,7 +89,7 @@ void FilterDialog::on_buttonBox_accepted()
 
     case 1:
         try{
-            dataset_->LinearMovingAverage(window_box_->value());
+            dataset_->LinearMovingAverage(ui->windowSpinBox->value());
         }
         catch(exception e){
             workspace_->main_window()->DisplayExceptionWarning(e);
@@ -103,9 +97,9 @@ void FilterDialog::on_buttonBox_accepted()
         break;
     case 2:
         try{
-            dataset_->SavitzkyGolay(derivative_box_->value(),
-                                 polynomial_box_->value(),
-                                 window_box_->value());
+            dataset_->SavitzkyGolay(ui->derivativeSpinBox->value(),
+                                 ui->polynomialSpinBox->value(),
+                                 ui->windowSpinBox->value());
         }
         catch(exception e){
             workspace_->main_window()->DisplayExceptionWarning(e);
@@ -113,7 +107,7 @@ void FilterDialog::on_buttonBox_accepted()
         break;
     case 3:
         try{
-            dataset_->SingularValue(singular_values_box_->value());
+            dataset_->SingularValue(ui->singularValuesSpinBox->value());
         }
         catch(exception e){
             workspace_->main_window()->DisplayExceptionWarning(e);
@@ -121,7 +115,7 @@ void FilterDialog::on_buttonBox_accepted()
         break;
     case 4:
         try{
-            SVD_rank = dataset_->QUIC_SVD(epsilon_box_->value());
+            SVD_rank = dataset_->QUIC_SVD(ui->epsilonSpinBox->value());
         }
         catch(exception e){
             workspace_->main_window()->DisplayExceptionWarning(e);

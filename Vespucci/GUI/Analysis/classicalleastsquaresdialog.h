@@ -21,8 +21,6 @@ private slots:
 
 private:
     Ui::ClassicalLeastSquaresDialog *ui;
-    QComboBox *reference_combo_box_;
-    QLineEdit *name_line_edit_;
     QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
 };

@@ -27,30 +27,16 @@ PLSDialog::PLSDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, cons
     ui->setupUi(this);
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
-    components_spin_box_ = findChild<QSpinBox *>("componentsSpinBox");
-    recalculate_check_box_ = findChild<QCheckBox *>("recalculateCheckBox");
-    prediction_check_box_ = findChild<QCheckBox *>("predictionCheckBox");
-    name_line_edit_ = findChild<QLineEdit*>("mapNameLineEdit");
-    map_check_box_ = findChild<QCheckBox *>("mapCheckBox");
 
-    name_line_edit_->setEnabled(false);
-    recalculate_check_box_->setEnabled(false);
+    ui->nameLineEdit->setEnabled(false);
     color_selector_combo_box_->setEnabled(false);
     image_component_selector_spin_box_->setEnabled(false);
 
-
-
-    browse_push_button_ = findChild<QPushButton*>("browsePushButton");
-    dataset_label_ = findChild<QLabel*>("datasetLabel");
-    file_label_ = findChild<QLabel*>("fileLabel");
-    file_line_edit_ = findChild<QLineEdit *>("fileLineEdit");
-    dataset_combo_box_ = findChild<QComboBox*>("datasetComboBox");
-
-    browse_push_button_->setVisible(false);
-    dataset_label_->setVisible(false);
-    file_label_->setVisible(false);
-    file_line_edit_->setVisible(false);
-    dataset_combo_box_->setVisible(false);
+    ui->browsePushButton->setVisible(false);
+    ui->datasetLabel->setVisible(false);
+    ui->fileLabel->setVisible(false);
+    ui->fileLineEdit->setVisible(false);
+    ui->datasetComboBox->setVisible(false);
 
 }
 
@@ -65,8 +51,8 @@ PLSDialog::~PLSDialog()
 /// the user has entered when the user clicks "Ok"
 void PLSDialog::on_buttonBox_accepted()
 {
-    int components = components_spin_box_->value();
-    QString name = name_line_edit_->text();
+    int components = ui->componentsSpinBox->value();
+    QString name = ui->nameLineEdit->text();
     try{
         dataset_->PartialLeastSquares(name, components);
     }catch(exception e){
@@ -87,5 +73,5 @@ void PLSDialog::on_buttonBox_rejected()
 
 void PLSDialog::on_predictionCheckBox_clicked(bool checked)
 {
-    components_spin_box_->setVisible(!checked);
+    ui->componentsSpinBox->setVisible(!checked);
 }

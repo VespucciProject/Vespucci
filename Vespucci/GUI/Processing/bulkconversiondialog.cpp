@@ -12,16 +12,11 @@ BulkConversionDialog::BulkConversionDialog(MainWindow *parent,
 {
     ui->setupUi(this);
     workspace_ = ws;
-    filename_list_widget_ = findChild<QListWidget*>("filenameListWidget");
-    swap_box_ = findChild<QCheckBox*>("swapCheckBox");
-    intype_box_ = findChild<QComboBox*>("inputComboBox");
-    outtype_box_ = findChild<QComboBox*>("outputComboBox");
-    target_line_edit_ = findChild<QLineEdit*>("targetLineEdit");
 
-    filename_list_widget_->setSelectionMode(QAbstractItemView::MultiSelection);
+    ui->filenameListWidget->setSelectionMode(QAbstractItemView::MultiSelection);
     //so delete key can be used to remove filenames from list
     QShortcut *shortcut =
-            new QShortcut(QKeySequence(Qt::Key_Delete), filename_list_widget_);
+            new QShortcut(QKeySequence(Qt::Key_Delete), ui->filenameListWidget);
     connect(shortcut, SIGNAL(activated()), this, SLOT(DeleteItem()));
 
 }
@@ -39,32 +34,32 @@ void BulkConversionDialog::on_browsePushButton_clicked()
                                           workspace_->directory(),
                                           "Text (*.txt *.csv);;"
                                           "Binary(*.arma *.bin *.dat)");
-    filename_list_widget_->addItems(filename_list);
+    ui->filenameListWidget->addItems(filename_list);
 }
 
 void BulkConversionDialog::DeleteItem()
 {
-    QList<QListWidgetItem*> items = filename_list_widget_->selectedItems();
+    QList<QListWidgetItem*> items = ui->filenameListWidget->selectedItems();
     foreach(QListWidgetItem *item, items)
-        filename_list_widget_->removeItemWidget(item);
+        ui->filenameListWidget->removeItemWidget(item);
 }
 
 void BulkConversionDialog::on_buttonBox_accepted()
 {
     close();
     using namespace arma;
-    filename_list_widget_->selectAll();
-    QList<QListWidgetItem *> items = filename_list_widget_->selectedItems();
+    ui->filenameListWidget->selectAll();
+    QList<QListWidgetItem *> items = ui->filenameListWidget->selectedItems();
     vector<string> infile_names;
 
     foreach(QListWidgetItem * item, items)
         infile_names.push_back(item->text().toStdString());
 
-    string outfile_path = target_line_edit_->text().toStdString();
+    string outfile_path = ui->targetLineEdit->text().toStdString();
     infile_type intype;
     arma::file_type outtype;
 
-    switch (intype_box_->currentIndex()){
+    switch (ui->inputComboBox->currentIndex()){
       case 0:
         intype = wide_text;
         break;
@@ -75,7 +70,7 @@ void BulkConversionDialog::on_buttonBox_accepted()
         intype = binary;
     }
 
-    switch (outtype_box_->currentIndex()){
+    switch (ui->outputComboBox->currentIndex()){
     case 0:
         outtype = arma::arma_binary;
         break;
@@ -224,5 +219,5 @@ void BulkConversionDialog::on_BrowsePushButton_clicked()
 {
     QString path = QFileDialog::getExistingDirectory(this, "Select Folder",
                                                      workspace_->directory());
-    target_line_edit_->setText(path);
+    ui->targetLineEdit->setText(path);
 }

@@ -27,13 +27,6 @@ private slots:
 private:
     Ui::BooleanizeDialog *ui;
 
-
-    QDoubleSpinBox *min_box_;
-    QDoubleSpinBox *max_box_;
-    QCheckBox *oneify_box_;
-    QComboBox *behavior_box_;
-
-
     QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
 };

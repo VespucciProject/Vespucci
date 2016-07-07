@@ -55,13 +55,6 @@ private:
     Ui::FilterDialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
-
-    QComboBox *method_box_;
-    QSpinBox *derivative_box_;
-    QSpinBox *polynomial_box_;
-    QSpinBox *window_box_;
-    QSpinBox *singular_values_box_;
-    QDoubleSpinBox *epsilon_box_;
 };
 
 #endif // FILTERDIALOG_H

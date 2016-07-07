@@ -51,7 +51,6 @@ public:
 public slots:
 private:
     Ui::PlotWidget *ui;
-    QCustomPlot *plot_;
     double offset_by_;
     bool offset_plots_;
     void DetermineOffset();

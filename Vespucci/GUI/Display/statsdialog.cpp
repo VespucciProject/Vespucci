@@ -8,17 +8,6 @@ StatsDialog::StatsDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> w
 {
     workspace_ = ws;
     ui->setupUi(this);
-    min_line_edit_ = findChild<QLineEdit *>("minLineEdit");
-    max_line_edit_ = findChild<QLineEdit *>("maxLineEdit");
-    median_line_edit_ = findChild<QLineEdit *>("medLineEdit");
-    stddev_line_edit_ = findChild<QLineEdit *>("stddevLineEdit");
-    mean_line_edit_ = findChild<QLineEdit *>("meanLineEdit");
-    histogram_custom_plot_ = findChild<QCustomPlot *>("histogramCustomPlot");
-    dimension_label_ = findChild<QLabel *>("dimensionLabel");
-    plottable_label_ = findChild<QLabel *>("plottableLabel");
-    mappable_label_ = findChild<QLabel *>("mappableLabel");
-    name_label_ = findChild<QLabel *>("nameLabel");
-    alpha_double_spin_box_ = findChild<QDoubleSpinBox *>("alphaDoubleSpinBox");
 }
 
 void StatsDialog::SetActiveDataKeys(const QStringList &keys)
@@ -102,10 +91,10 @@ void StatsDialog::GenerateHistogram()
     QVector<double> hist_abs_qvec =
             QVector<double>::fromStdVector(conv_to<vector<double> >::from(edges.rows(1, edges.n_rows - 2)));
 
-    QCPBars *hist_plot = new QCPBars(histogram_custom_plot_->xAxis,
-                                     histogram_custom_plot_->yAxis);
+    QCPBars *hist_plot = new QCPBars(ui->histogramCustomPlot->xAxis,
+                                     ui->histogramCustomPlot->yAxis);
     hist_plot->setData(hist_abs_qvec, hist_data_qvec);
-    histogram_custom_plot_->addPlottable(hist_plot);
+    ui->histogramCustomPlot->addPlottable(hist_plot);
 }
 
 void StatsDialog::UpdateDisplayData()
@@ -113,26 +102,26 @@ void StatsDialog::UpdateDisplayData()
     GenerateHistogram();
     CalculateCI();
     const mat& data = workspace_->GetMatrix(data_keys_);
-    min_line_edit_->setText(QString::number(data.min()));
-    max_line_edit_->setText(QString::number(data.max()));
-    median_line_edit_->setText(QString::number(CalculateMedian()));
-    stddev_line_edit_->setText(QString::number(CalculateStdDev()));
-    mean_line_edit_->setText(QString::number(CalculateMean()));
-    name_label_->setText(data_keys_.last());
+    ui->minLineEdit->setText(QString::number(data.min()));
+    ui->maxLineEdit->setText(QString::number(data.max()));
+    ui->medLineEdit->setText(QString::number(CalculateMedian()));
+    ui->stddevLineEdit->setText(QString::number(CalculateStdDev()));
+    ui->meanLineEdit->setText(QString::number(CalculateMean()));
+    ui->nameLabel->setText(data_keys_.last());
     QString dimensions = QString::number(data.n_rows) + "×" + QString::number(data.n_cols);
-    dimension_label_->setText(dimensions);
-    plottable_label_->setText(workspace_->Plottable(data_keys_) ? "True" : "False");
-    mappable_label_->setText(workspace_->Mappable(data_keys_) ? "True" : "False");
+    ui->dimensionLabel->setText(dimensions);
+    ui->plottableLabel->setText(workspace_->Plottable(data_keys_) ? "True" : "False");
+    ui->mappableLabel->setText(workspace_->Mappable(data_keys_) ? "True" : "False");
 }
 
 void StatsDialog::CalculateCI()
 {
-    double alpha = alpha_double_spin_box_->value();
+    double alpha = ui->alphaDoubleSpinBox->value();
     double stddev = CalculateStdDev();
     const mat& data = workspace_->GetMatrix(data_keys_);
     unsigned int n = data.n_elem;
     double w = Vespucci::Math::Stats::TInterval(alpha, stddev, n);
-    confidence_line_edit_->setText(QString::number(w));
+    ui->confidenceLineEdit->setText(QString::number(w));
 }
 
 

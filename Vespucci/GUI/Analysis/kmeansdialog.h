@@ -52,27 +52,6 @@ private:
     QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
-    /// \brief cluster_spin_box_
-    /// User selects the number of clusters to compute here
-    QSpinBox *cluster_spin_box_;
-
-    ///
-    /// \brief prediction_check_box_
-    /// User selects whether or not to allow prediction of dimensionality
-    QCheckBox *prediction_check_box_;
-
-
-    ///
-    /// \brief name_line_edit_
-    /// User enters the name of the map here
-    QLineEdit *name_line_edit_;
-
-    ///
-    /// \brief metric_combo_box_
-    /// Selector for distance metric
-    QComboBox *metric_combo_box_;
-
-    ///
     /// \brief data_index_
     /// Index of the selected dataset in the master lists
     int data_index_;

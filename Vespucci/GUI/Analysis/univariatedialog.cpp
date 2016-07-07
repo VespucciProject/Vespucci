@@ -34,19 +34,10 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, QSharedPointer<VespucciWorks
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
 
-    min_line_edit_ = findChild<QLineEdit *>("minLineEdit");
-    max_line_edit_ = findChild<QLineEdit *>("maxLineEdit");
-    name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
-    spectrum_plot_ = findChild<QCustomPlot *>("spectrumPlot");
-    value_method_combo_box_ = findChild<QComboBox *>("peakComboBox");
-    range_label_ = findChild<QLabel *>("rangeLabel");
-    map_check_box_ = findChild<QCheckBox *>("mapCheckBox");
-    search_window_spin_box_ = findChild<QSpinBox *>("searchWindowSpinBox");
-
-    min_line_ = new QCPItemStraightLine(spectrum_plot_);
+    min_line_ = new QCPItemStraightLine(ui->spectrumPlot);
     min_line_->point1->setCoords(0, 0);
     min_line_->point2->setCoords(0, 1);
-    max_line_ = new QCPItemStraightLine(spectrum_plot_);
+    max_line_ = new QCPItemStraightLine(ui->spectrumPlot);
     max_line_->point1->setCoords(0, 0);
     max_line_->point2->setCoords(0, 1);
     double min, max;
@@ -62,10 +53,10 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, QSharedPointer<VespucciWorks
     }
 
     QString label_text = QString::number(min) + "–" + QString::number(max);
-    range_label_->setText(label_text);
+    ui->rangeLabel->setText(label_text);
 
-    min_line_edit_->setValidator(new QDoubleValidator(min, max, 2, this));
-    max_line_edit_->setValidator(new QDoubleValidator(min, max, 2, this));
+    ui->minLineEdit->setValidator(new QDoubleValidator(min, max, 2, this));
+    ui->maxLineEdit->setValidator(new QDoubleValidator(min, max, 2, this));
 
     uword origin = dataset_->FindOrigin();
     QVector<double> plot_data, wavelength;
@@ -76,11 +67,11 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, QSharedPointer<VespucciWorks
     }
     catch(exception e){}
     if (plot_data.isEmpty()){plot_data = dataset_->PointSpectrum(0);}
-    spectrum_plot_->addGraph();
-    spectrum_plot_->graph(0)->addData(wavelength, plot_data);
-    spectrum_plot_->rescaleAxes();
-    spectrum_plot_->setInteraction(QCP::iRangeDrag, true);
-    spectrum_plot_->setInteraction(QCP::iRangeZoom, true);
+    ui->spectrumPlot->addGraph();
+    ui->spectrumPlot->graph(0)->addData(wavelength, plot_data);
+    ui->spectrumPlot->rescaleAxes();
+    ui->spectrumPlot->setInteraction(QCP::iRangeDrag, true);
+    ui->spectrumPlot->setInteraction(QCP::iRangeZoom, true);
 
 }
 
@@ -95,19 +86,19 @@ UnivariateDialog::~UnivariateDialog()
 void UnivariateDialog::on_buttonBox_accepted()
 {
     close();
-    if (min_line_edit_->text().isEmpty() || max_line_edit_->text().isEmpty()){
+    if (ui->minLineEdit->text().isEmpty() || ui->maxLineEdit->text().isEmpty()){
         QMessageBox::warning(this, "Invalid Input!", "You must enter numbers for left and right bounds.");
         return;
     }
-    double entered_min = min_line_edit_->text().toDouble();
-    double entered_max = max_line_edit_->text().toDouble();
-    uint bound_window = search_window_spin_box_->value();
-    QString name = name_line_edit_->text();
+    double entered_min = ui->minLineEdit->text().toDouble();
+    double entered_max = ui->maxLineEdit->text().toDouble();
+    uint bound_window = ui->searchWindowSpinBox->value();
+    QString name = ui->nameLineEdit->text();
     if(!name.size()){
         name = "Univariate " + QString::number(dataset_->UnivariateCount());
     }
-    QString value_method = value_method_combo_box_->currentText();
-    if (value_method == "Riemann Sum"){
+    QString value_method = ui->methodComboBox->currentText();
+    if (value_method == "Empirical"){
         try{
             dataset_->Univariate(name, entered_min, entered_max, bound_window);
         }catch(exception e){
@@ -143,8 +134,8 @@ void UnivariateDialog::on_minLineEdit_textChanged(const QString &arg1)
 
     min_line_->point1->setCoords(value, 0);
     min_line_->point2->setCoords(value, 1);
-    if(!spectrum_plot_->hasItem(min_line_))
-        spectrum_plot_->addItem(min_line_);
+    if(!ui->spectrumPlot->hasItem(min_line_))
+        ui->spectrumPlot->addItem(min_line_);
 }
 
 void UnivariateDialog::on_maxLineEdit_textChanged(const QString &arg1)
@@ -157,6 +148,6 @@ void UnivariateDialog::on_maxLineEdit_textChanged(const QString &arg1)
     max_line_->point1->setCoords(value, 0);
     max_line_->point2->setCoords(value, 1);
 
-    if(!spectrum_plot_->hasItem(max_line_))
-        spectrum_plot_->addItem(max_line_);
+    if(!ui->spectrumPlot->hasItem(max_line_))
+        ui->spectrumPlot->addItem(max_line_);
 }
