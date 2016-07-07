@@ -341,7 +341,7 @@ macx{
                       --system-header-prefix=$$PWD/../quazip
 
 
-    ICON = vespuccilogo.icns
+    ICON = $$PWD/vespuccilogo.icns
     LIBS += -L/usr/lib -lc++
 
     LIBS += -L$$OUT_PWD/../VespucciLibrary/ -lvespucci
@@ -440,7 +440,7 @@ win32:!win32-g++{
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/zlib.lib
 
-    RC_ICONS=vespuccilogo.ico
+    RC_ICONS=$$PWD/vespuccilogo.ico
 }
 
 

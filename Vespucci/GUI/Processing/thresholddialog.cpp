@@ -18,7 +18,7 @@ ThresholdDialog::~ThresholdDialog()
 void ThresholdDialog::on_buttonBox_accepted()
 {
     QString method = ui->comboBox->currentText();
-    double threshold = ui->doubleSpinBox->value();
+    double threshold = ui->thresholdDoubleSpinBox->value();
     try{
         if (method == "Reject Maximum Above Threshold")
             dataset_->RemoveClippedSpectra(threshold);
@@ -33,9 +33,9 @@ void ThresholdDialog::on_buttonBox_accepted()
 void ThresholdDialog::on_comboBox_currentTextChanged(const QString &arg1)
 {
     if (arg1 == "Reject Maximum Above Threshold"){
-        ui->doubleSpinBox->setValue(100);
+        ui->thresholdDoubleSpinBox->setValue(100);
     }
     else{
-        ui->doubleSpinBox->setValue(64000);
+        ui->thresholdDoubleSpinBox->setValue(64000);
     }
 }

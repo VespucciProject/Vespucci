@@ -20,7 +20,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="datasetsLabel">
      <property name="text">
       <string>Select Datasets</string>
      </property>
@@ -32,7 +32,7 @@
       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
      </property>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="methodLabel">
        <property name="text">
         <string>Method</string>
        </property>
@@ -53,7 +53,7 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="nameLabel">
        <property name="text">
         <string>Name</string>
        </property>

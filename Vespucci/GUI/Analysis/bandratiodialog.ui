@@ -20,7 +20,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QGroupBox" name="groupBox_3">
+    <widget class="QGroupBox" name="nameGroupBox">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -34,7 +34,7 @@
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
       <item row="0" column="0">
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel" name="nameLabel">
         <property name="text">
          <string>Name</string>
         </property>
@@ -51,7 +51,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_5">
+    <widget class="QGroupBox" name="previewGroupBox">
      <property name="minimumSize">
       <size>
        <width>707</width>
@@ -87,7 +87,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="regionGroupBox">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -98,7 +98,7 @@
      </property>
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="rangeLabel2">
         <property name="text">
          <string>Wavelength Range</string>
         </property>
@@ -112,7 +112,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="region1Label">
         <property name="text">
          <string>Region 1</string>
         </property>
@@ -137,14 +137,14 @@
        </layout>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="region2Label">
         <property name="text">
          <string>Region 2</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QHBoxLayout" name="region2Layout">
         <item>
          <widget class="QLineEdit" name="secondMinLineEdit">
           <property name="placeholderText">
@@ -162,7 +162,7 @@
        </layout>
       </item>
       <item row="4" column="0">
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="windowLabel">
         <property name="toolTip">
          <string>Search window for inflection points.</string>
         </property>
@@ -188,7 +188,7 @@
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QLabel" name="label_6">
+       <widget class="QLabel" name="quantificationLabel">
         <property name="text">
          <string>Quantification</string>
         </property>

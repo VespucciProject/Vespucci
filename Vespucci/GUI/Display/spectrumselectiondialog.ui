@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>315</width>
-    <height>335</height>
+    <height>347</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,14 +33,14 @@
    <item row="4" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="deletePushButton">
        <property name="text">
         <string>Delete Spectrum</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="exportPushButton">
        <property name="text">
         <string>Export Spectrum</string>
        </property>

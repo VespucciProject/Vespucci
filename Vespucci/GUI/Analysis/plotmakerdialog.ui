@@ -15,14 +15,14 @@
   </property>
   <layout class="QFormLayout" name="formLayout">
    <item row="0" column="0">
-    <widget class="QLabel" name="label_5">
+    <widget class="QLabel" name="dimensionLabel">
      <property name="text">
       <string>Dimension</string>
      </property>
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="abscissaLabel">
      <property name="text">
       <string>Abscissa</string>
      </property>
@@ -43,14 +43,14 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLabel" name="label_4">
+    <widget class="QLabel" name="xyComboBox">
      <property name="text">
       <string>y vs. x</string>
      </property>
     </widget>
    </item>
    <item row="3" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="xyLayout">
      <item>
       <widget class="QSpinBox" name="ySpinBox">
        <property name="minimum">
@@ -62,7 +62,7 @@
       </widget>
      </item>
      <item alignment="Qt::AlignHCenter">
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="vsLabel">
        <property name="text">
         <string>vs.</string>
        </property>
@@ -78,7 +78,7 @@
     </layout>
    </item>
    <item row="4" column="0">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="mappingLabel">
      <property name="text">
       <string>Color Mapping</string>
      </property>
@@ -132,7 +132,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QLabel" name="label_6">
+    <widget class="QLabel" name="typeComboBox">
      <property name="text">
       <string>Plot Type</string>
      </property>

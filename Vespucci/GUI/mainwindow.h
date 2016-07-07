@@ -200,6 +200,8 @@ private slots:
 
     void on_actionSave_Selected_Matrix_triggered();
 
+    void on_actionOnline_Documentation_triggered();
+
 private:
     Ui::MainWindow *ui;
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>344</height>
+    <height>368</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,13 +15,13 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="fileInfoGroupBox">
      <property name="title">
       <string>File Information</string>
      </property>
      <layout class="QFormLayout" name="formLayout_3">
       <item row="0" column="0">
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="instructionLabel">
         <property name="text">
          <string>Instruction File</string>
         </property>
@@ -51,7 +51,7 @@
        </layout>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_11">
+       <widget class="QLabel" name="formatLabel">
         <property name="text">
          <string>Data Format</string>
         </property>
@@ -87,7 +87,7 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_12">
+       <widget class="QLabel" name="nameLabel">
         <property name="text">
          <string>Dataset Name</string>
         </property>
@@ -111,7 +111,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="spectraInfoGroupBox">
      <property name="title">
       <string>Spectra Information</string>
      </property>
@@ -120,7 +120,7 @@
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
       <item row="0" column="0">
-       <widget class="QLabel" name="label_13">
+       <widget class="QLabel" name="yLabel">
         <property name="text">
          <string>Y-axis Description</string>
         </property>
@@ -134,7 +134,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_14">
+       <widget class="QLabel" name="xLabel">
         <property name="text">
          <string>X-axis Description</string>
         </property>
@@ -148,14 +148,14 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_15">
+       <widget class="QLabel" name="yUnitsLabel">
         <property name="text">
          <string>Y-axis Units</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QLabel" name="label_16">
+       <widget class="QLabel" name="xUnitsLabel">
         <property name="text">
          <string>X-axis Units</string>
         </property>

@@ -15,7 +15,7 @@
   </property>
   <layout class="QFormLayout" name="formLayout">
    <item row="0" column="0">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="rHomeLabel">
      <property name="text">
       <string>Path to R (R_HOME): </string>
      </property>
@@ -32,7 +32,7 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="rHomeLayout">
      <item>
       <widget class="QLineEdit" name="rHomeLineEdit"/>
      </item>
@@ -55,21 +55,21 @@
     <widget class="QLineEdit" name="absLabelLineEdit"/>
    </item>
    <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="ordLabelLabel">
      <property name="text">
       <string>Default Ordinate Label</string>
      </property>
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="ordUnitsLabel">
      <property name="text">
       <string>Default Ordinate Units</string>
      </property>
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLabel" name="label_4">
+    <widget class="QLabel" name="absLabelLabel">
      <property name="text">
       <string>Default Abscissa Label</string>
      </property>
@@ -79,7 +79,7 @@
     <widget class="QLineEdit" name="absUnitsLineEdit"/>
    </item>
    <item row="4" column="0">
-    <widget class="QLabel" name="label_5">
+    <widget class="QLabel" name="absUnitsLabel">
      <property name="text">
       <string>Default Abscissa Units</string>
      </property>

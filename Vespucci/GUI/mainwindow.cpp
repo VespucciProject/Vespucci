@@ -719,7 +719,7 @@ void MainWindow::on_actionClose_Dataset_triggered()
 /// Triggers the window that takes you to the website
 void MainWindow::on_actionDocumentation_triggered()
 {
-    QUrl website_url("http://dpfoose.github.io/Vespucci/");
+    QUrl website_url("http://vespucciproject.org/");
     QDesktopServices::openUrl(website_url);
 }
 
@@ -1511,4 +1511,10 @@ void MainWindow::on_actionSave_Selected_Matrix_triggered()
             DisplayExceptionWarning(e);
         }
     }
+}
+
+void MainWindow::on_actionOnline_Documentation_triggered()
+{
+    QUrl website_url("http://vespucciproject.org/Vespucci-docs");
+    QDesktopServices::openUrl(website_url);
 }

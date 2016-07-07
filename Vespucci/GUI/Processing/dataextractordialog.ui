@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>165</height>
+    <height>167</height>
    </rect>
   </property>
   <property name="font">
@@ -20,7 +20,7 @@
   </property>
   <layout class="QFormLayout" name="formLayout">
    <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="rangeLabel">
      <property name="text">
       <string>Range</string>
      </property>
@@ -54,7 +54,7 @@
     </layout>
    </item>
    <item row="3" column="0">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="nameLabel">
      <property name="text">
       <string>Dataset Name</string>
      </property>
@@ -79,7 +79,7 @@
     </widget>
    </item>
    <item row="4" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <layout class="QHBoxLayout" name="indicesLayout">
      <item>
       <widget class="QLineEdit" name="filenameLineEdit">
        <property name="enabled">
@@ -109,14 +109,14 @@
     </layout>
    </item>
    <item row="4" column="0">
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="indicesLabel">
      <property name="text">
       <string>Indices File</string>
      </property>
     </widget>
    </item>
    <item row="0" column="0">
-    <widget class="QLabel" name="label_4">
+    <widget class="QLabel" name="methodLabel">
      <property name="text">
       <string>Method</string>
      </property>

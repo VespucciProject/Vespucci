@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>390</width>
-    <height>202</height>
+    <width>398</width>
+    <height>217</height>
    </rect>
   </property>
   <property name="font">
@@ -20,7 +20,7 @@
   </property>
   <layout class="QFormLayout" name="formLayout">
    <item row="0" column="0">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="widthLabel">
      <property name="text">
       <string>Bar Width (in spatial units)</string>
      </property>
@@ -34,7 +34,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QLabel" name="label_5">
+    <widget class="QLabel" name="heightLabel">
      <property name="text">
       <string>Bar Height (in spatial units)</string>
      </property>
@@ -48,7 +48,7 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="unitsLabel">
      <property name="text">
       <string>Units</string>
      </property>
@@ -62,7 +62,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="positionLabel">
      <property name="text">
       <string>Position</string>
      </property>
@@ -93,7 +93,7 @@
     </widget>
    </item>
    <item row="4" column="0">
-    <widget class="QLabel" name="label_4">
+    <widget class="QLabel" name="colorLabel">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -113,7 +113,7 @@
     </widget>
    </item>
    <item row="5" column="0">
-    <widget class="QLabel" name="label_6">
+    <widget class="QLabel" name="fontLabel">
      <property name="text">
       <string>Font</string>
      </property>

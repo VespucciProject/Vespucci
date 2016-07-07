@@ -20,13 +20,13 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QGroupBox" name="groupBox_3">
+    <widget class="QGroupBox" name="attributesGroupBox">
      <property name="title">
       <string>Attributes</string>
      </property>
      <layout class="QFormLayout" name="formLayout_2">
       <item row="0" column="0">
-       <widget class="QLabel" name="label_8">
+       <widget class="QLabel" name="nameLabel_2">
         <property name="text">
          <string>Name</string>
         </property>
@@ -40,7 +40,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_9">
+       <widget class="QLabel" name="dimensionDescriptionLabel">
         <property name="text">
          <string>Dimensions</string>
         </property>
@@ -54,7 +54,7 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_11">
+       <widget class="QLabel" name="plottableLabel_2">
         <property name="text">
          <string>Plottable</string>
         </property>
@@ -68,7 +68,7 @@
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QLabel" name="label_13">
+       <widget class="QLabel" name="mappableLabel_2">
         <property name="text">
          <string>Mappable</string>
         </property>
@@ -91,7 +91,7 @@
      </property>
      <layout class="QFormLayout" name="formLayout">
       <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="maxLabel">
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -115,7 +115,7 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="minLabel">
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -139,7 +139,7 @@
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="medLabel">
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -163,7 +163,7 @@
        </widget>
       </item>
       <item row="4" column="0">
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="meanLabel">
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -187,7 +187,7 @@
        </widget>
       </item>
       <item row="5" column="0">
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel" name="stdevLabel">
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -211,7 +211,7 @@
        </widget>
       </item>
       <item row="6" column="0">
-       <widget class="QLabel" name="label_6">
+       <widget class="QLabel" name="widthLabel">
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -232,7 +232,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_7">
+         <widget class="QLabel" name="alphaLabel">
           <property name="font">
            <font>
             <italic>true</italic>
@@ -272,7 +272,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="histogramGroupBox">
      <property name="title">
       <string>Histogram</string>
      </property>
@@ -295,7 +295,7 @@
        </widget>
       </item>
       <item alignment="Qt::AlignRight">
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="exportPushButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
           <horstretch>0</horstretch>

@@ -63,14 +63,14 @@
     </widget>
    </item>
    <item row="0" column="0">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="inUnitsLabel">
      <property name="text">
       <string>Input Units</string>
      </property>
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="outUnitsLabel">
      <property name="text">
       <string>Output Units</string>
      </property>
@@ -87,7 +87,7 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="inFactorLabel">
      <property name="text">
       <string>Input Factor</string>
      </property>
@@ -114,7 +114,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLabel" name="label_4">
+    <widget class="QLabel" name="outFactorLabel">
      <property name="text">
       <string>Output Factor</string>
      </property>
@@ -124,7 +124,7 @@
     <widget class="QLineEdit" name="descriptionLineEdit"/>
    </item>
    <item row="4" column="0">
-    <widget class="QLabel" name="label_5">
+    <widget class="QLabel" name="abscissaLabel">
      <property name="text">
       <string>Abscissa Label</string>
      </property>

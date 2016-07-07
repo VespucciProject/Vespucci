@@ -15,7 +15,7 @@
   </property>
   <layout class="QFormLayout" name="formLayout">
    <item row="0" column="0">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="methodLabel">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -41,7 +41,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QLabel" name="label_4">
+    <widget class="QLabel" name="scaleLabel">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -68,7 +68,7 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="label_5">
+    <widget class="QLabel" name="lengthLabel">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -92,7 +92,7 @@
     </widget>
    </item>
    <item row="4" column="0">
-    <widget class="QLabel" name="label_6">
+    <widget class="QLabel" name="widthLabel">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -116,7 +116,7 @@
     </widget>
    </item>
    <item row="5" column="0">
-    <widget class="QLabel" name="label_7">
+    <widget class="QLabel" name="snrLabel">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -200,7 +200,7 @@
     </widget>
    </item>
    <item row="14" column="0">
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="gradientLabel">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -422,7 +422,7 @@
     </widget>
    </item>
    <item row="16" column="0">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="saveLabel">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -434,7 +434,7 @@
     </widget>
    </item>
    <item row="16" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="saveLayout">
      <item>
       <widget class="QLineEdit" name="directoryLineEdit">
        <property name="enabled">
@@ -477,7 +477,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLabel" name="label_8">
+    <widget class="QLabel" name="thresholdLabel">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -501,7 +501,7 @@
     </widget>
    </item>
    <item row="15" column="0">
-    <widget class="QLabel" name="label_9">
+    <widget class="QLabel" name="formatLabel">
      <property name="font">
       <font>
        <pointsize>10</pointsize>

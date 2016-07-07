@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/icons">
-        <file>vespuccilogo.svg</file>
         <file>vespuccilogo.ico</file>
         <file>vespuccilogo.icns</file>
         <file>toolbar_icons/close.svg</file>

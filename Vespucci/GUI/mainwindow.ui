@@ -71,10 +71,10 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionDocumentation"/>
-    <addaction name="separator"/>
+    <addaction name="actionOnline_Documentation"/>
     <addaction name="actionAbout_Vespucci"/>
     <addaction name="actionCiting_Vespucci"/>
+    <addaction name="actionDocumentation"/>
    </widget>
    <widget class="QMenu" name="menuData">
     <property name="title">
@@ -222,7 +222,7 @@
   </action>
   <action name="actionImport_Dataset_from_File">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/import.svg</normaloff>:/icons/toolbar_icons/import.svg</iconset>
    </property>
    <property name="text">
@@ -346,7 +346,7 @@
   </action>
   <action name="actionClose_Dataset">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/close.svg</normaloff>:/icons/toolbar_icons/close.svg</iconset>
    </property>
    <property name="text">
@@ -438,7 +438,7 @@
   </action>
   <action name="actionImport_From_Multiple_Point_Spectra">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/import_multiple.svg</normaloff>:/icons/toolbar_icons/import_multiple.svg</iconset>
    </property>
    <property name="text">
@@ -504,7 +504,7 @@
   </action>
   <action name="actionPlotResult">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/plot.svg</normaloff>:/icons/toolbar_icons/plot.svg</iconset>
    </property>
    <property name="text">
@@ -516,7 +516,7 @@
   </action>
   <action name="actionMapResult">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/map.svg</normaloff>:/icons/toolbar_icons/map.svg</iconset>
    </property>
    <property name="text">
@@ -528,7 +528,7 @@
   </action>
   <action name="actionOpenDataset">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/open.svg</normaloff>:/icons/toolbar_icons/open.svg</iconset>
    </property>
    <property name="text">
@@ -540,7 +540,7 @@
   </action>
   <action name="actionSaveDataset">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/save.svg</normaloff>:/icons/toolbar_icons/save.svg</iconset>
    </property>
    <property name="text">
@@ -560,7 +560,7 @@
   </action>
   <action name="actionView_Statistics">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/stats.svg</normaloff>:/icons/toolbar_icons/stats.svg</iconset>
    </property>
    <property name="text">
@@ -572,7 +572,7 @@
   </action>
   <action name="actionShow_in_Data_Viewer">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/table.svg</normaloff>:/icons/toolbar_icons/table.svg</iconset>
    </property>
    <property name="text">
@@ -679,8 +679,15 @@
     <string>Hypothesis Test/ANOVA</string>
    </property>
   </action>
+  <action name="actionOnline_Documentation">
+   <property name="text">
+    <string>Online Documentation</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

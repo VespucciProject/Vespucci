@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="headerLayout">
      <item alignment="Qt::AlignLeft">
       <widget class="QToolButton" name="openToolButton">
        <property name="font">
