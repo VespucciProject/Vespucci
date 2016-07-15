@@ -198,7 +198,7 @@ void MultiAnalyzer::PartialLeastSquares(const QStringList &keys, const QString &
 /// Validates that all the keys exist and have the same number of rows in spectra_
 bool MultiAnalyzer::CheckMergability(QStringList &keys, QStringList &problematic_keys)
 {
-    foreach(const QString &key, keys){
+    for (auto key: keys){
         if (!workspace_->dataset_names().contains(key))
             problematic_keys << key;
     }
@@ -215,7 +215,7 @@ bool MultiAnalyzer::CheckMergability(QStringList &keys, QStringList &problematic
     if (!found) return false;
 
     uword rows = workspace_->GetDataset(first_key)->spectra_ptr()->n_rows;
-    foreach (const QString &key, keys){
+    for (auto key: keys){
         if (!problematic_keys.contains(key)){
             uword current_rows = workspace_->GetDataset(key)->spectra_ptr()->n_rows;
             if (current_rows != rows) problematic_keys << key;
@@ -233,7 +233,7 @@ bool MultiAnalyzer::CheckMergability(QStringList &keys, QStringList &problematic
 QList<QSharedPointer<VespucciDataset> > MultiAnalyzer::GetDatasets(QStringList keys)
 {
     QList<QSharedPointer<VespucciDataset> > datasets;
-    foreach (const QString &key, keys){
+    for (auto key: keys){
         if (workspace_->dataset_names().contains(key)){
             datasets.append(workspace_->GetDataset(key));
         }

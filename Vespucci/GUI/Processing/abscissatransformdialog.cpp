@@ -36,7 +36,7 @@ double AbscissaTransformDialog::ParseInput(QString text) const
     text.remove(" "); //remove whitespace
     QStringList segments = text.split("*", QString::SkipEmptyParts);
     double factor = 1.0;
-    foreach (const QString &segment, segments){
+    for (auto segment: segments){
         factor *= TextToDouble(segment);
     }
     return factor;

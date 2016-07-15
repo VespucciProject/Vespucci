@@ -103,6 +103,19 @@ QSharedPointer<MapData> DataModel::GetMap(const QStringList &keys) const
     return GetMap(keys[0], keys[1]);
 }
 
+QList<QSharedPointer<MapData> > DataModel::GetMapsUsingColorRange(const QString &range_key)
+{
+    QList<QSharedPointer<MapData> > maps_using_range;
+    for (auto dataset: datasets_){
+        for (auto key: dataset->MapKeys()){
+            QSharedPointer<MapData> map = dataset->GetMapData(key);
+            if (map->global_gradient_key() == range_key)
+                maps_using_range << map;
+        }
+    }
+    return maps_using_range;
+}
+
 const mat & DataModel::GetResultsMatrix(const QString &dataset_key,
                                        const QString &results_key,
                                        const QString &matrix_key) const
@@ -147,7 +160,7 @@ const mat & DataModel::GetResultsMatrix(const QStringList &keys) const
 const mat & DataModel::GetCoreMatrix(const QString &dataset_key, const QString &matrix_key) const
 {
     if (HasDataset(dataset_key)){
-        if (matrix_key == "Spectra" || matrix_key == "Spectral Absicssa"
+        if (matrix_key == "Spectra" || matrix_key == "Spectral Abscissa"
                 || matrix_key == "x" || matrix_key == "y")
             return GetDataset(dataset_key)->GetCoreMatrix(matrix_key);
         else
@@ -247,7 +260,7 @@ bool DataModel::Plottable(const QStringList &keys) const
 QStringList DataModel::DatasetNames() const
 {
     QStringList dataset_names;
-    foreach (QSharedPointer<VespucciDataset> dataset, datasets_)
+    for (auto dataset: datasets_)
         dataset_names << dataset->name();
     return dataset_names;
 }
@@ -323,6 +336,21 @@ bool DataModel::HasDataset(const QString &key) const
 {
     for (int i = 0; i < datasets_.size(); ++i)
         if (datasets_.at(i)->name() == key) return true;
+    return false;
+}
+
+bool DataModel::HasMatrix(const QStringList &keys) const
+{
+    if (!HasDataset(keys.first())) return false;
+
+    QSharedPointer<VespucciDataset> dataset = GetDataset(keys.first());
+
+    if (keys.size() == 2)
+        return dataset->AuxiliaryMatrixKeys().contains(keys.last());
+
+    if (keys.size() == 3 && dataset->AnalysisResultsKeys().contains(keys[1]))
+        return dataset->GetAnalysisResult(keys[1])->HasMatrix(keys[2]);
+
     return false;
 }
 

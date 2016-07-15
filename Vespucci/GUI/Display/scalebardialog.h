@@ -38,7 +38,7 @@ class ScaleBarDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ScaleBarDialog(QWidget *parent, MapData *map_data);
+    explicit ScaleBarDialog(QWidget *parent, QSharedPointer<MapData> map_data);
     ~ScaleBarDialog();
 
 private slots:
@@ -59,7 +59,7 @@ private:
     ///
     /// \brief map_data_
     /// The MapData object associated with this image
-    MapData *map_data_;
+    QSharedPointer<MapData> map_data_;
 };
 
 #endif // SCALEBARDIALOG_H

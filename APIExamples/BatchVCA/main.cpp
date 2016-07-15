@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
     QStringList in_filenames = in_dir.entryList(QDir::Files);
     mat spectra;
     vec abscissa, x, y;
-    foreach(QString filename, in_filenames){
+    for (auto filename: in_filenames){
         try{
             cout << "Loading " << filename.toStdString() << "." << endl;
             TextImport::ImportWideText(filename.toStdString(),

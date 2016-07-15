@@ -298,14 +298,14 @@ void PlotWidget::RemoveOffset()
 QVector<double> PlotWidget::GetData(const QList<QCPData> &values) const
 {
     QVector<double> data;
-    foreach(QCPData value, values){data.push_back(value.value);}
+    for (auto value: values) data.push_back(value.value);
     return data;
 }
 
 QVector<double> PlotWidget::GetAbscissa(const QList<QCPData> &keys) const
 {
     QVector<double> values;
-    foreach(QCPData data, keys){values.push_back(data.key);}
+    for (auto data: keys) values.push_back(data.key);
     return values;
 }
 

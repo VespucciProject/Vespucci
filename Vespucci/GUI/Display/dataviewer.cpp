@@ -19,21 +19,21 @@
 *******************************************************************************/
 #include "GUI/Display/dataviewer.h"
 #include "ui_dataviewer.h"
-#include "GUI/Display/spectrumviewer.h"
 #include "GUI/Display/datawidget.h"
+#include "Global/global.h"
 ///
 /// \brief DataViewer::DataViewer
-/// \param parent Usually MainWindow, because ther
-/// \param ws The "global" workspace, provides access to other dialogs
+/// \param parent the main window
+/// \param ws The "global" workspace, provides access to the data model.
 ///
-DataViewer::DataViewer(MainWindow *parent)
+DataViewer::DataViewer(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws)
     :QDialog(parent),
      ui(new Ui::DataViewer)
 {
     ui->setupUi(this);
-    ui->tabWidget->addTab(new DataWidget(this, new VespucciTableModel(this, empty_matrix_)), "Data");
-    QObject::connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(RemoveTab(int)));
-
+    workspace_ = ws;
+    connect(ui->tabWidget, &QTabWidget::tabCloseRequested,
+            this, &DataViewer::RemoveTab);
 }
 
 DataViewer::~DataViewer()
@@ -44,18 +44,58 @@ DataViewer::~DataViewer()
 void DataViewer::RemoveTab(int index)
 {
     //if we wanted to warn the user about closing a tab, we'd put it here
+    //but we don't have to because they can always get it back as long as the
+    //matrix exists
     ui->tabWidget->removeTab(index);
 }
 
-void DataViewer::AddTab(const mat &object, const QString &name)
+///
+/// \brief DataViewer::DatasetRemoved
+/// \param name
+/// The signal that triggers this slot must be issued BEFORE a dataset is removed
+/// from the model, or else a segfault could occur with open tabs containing the
+/// data (because the table model holds a reference and the reference becomes invalid
+/// when the dataset is removed)
+void DataViewer::DatasetToBeRemoved(QString name)
 {
-    VespucciTableModel *new_model = new VespucciTableModel(this, object);
-    DataWidget *new_widget = new DataWidget(this, new_model);
-    ui->tabWidget->addTab(new_widget, name);
+    //iterate backwards through widgets and remove any widgets that represent
+    //matrices coming from the dataset about to be removed.
+    int i = ui->tabWidget->count();
+    while (i--){
+        DataWidget *widget = qobject_cast<DataWidget *>(ui->tabWidget->widget(i));
+        if (widget->GetTableModel()->data_keys().first() == name)
+            ui->tabWidget->removeTab(i);
+    }
 }
 
-const mat & DataViewer::EmptyMatrix()
+///
+/// \brief DataViewer::MatrixToBeRemoved
+/// \param keys
+/// The signal that triggers this slot must be emitted BEFORE the matrix is removed
+/// if not, bad things will happen.
+void DataViewer::MatrixToBeRemoved(QStringList keys)
 {
-    return empty_matrix_;
+    int i = ui->tabWidget->count();
+    while (i--){
+        DataWidget *widget = qobject_cast<DataWidget *>(ui->tabWidget->widget(i));
+        QStringList data_keys = widget->GetTableModel()->data_keys();
+        if (Vespucci::KeysAreEqual(data_keys, keys))
+            ui->tabWidget->removeTab(i);
+    }
+}
+
+void DataViewer::AddTab(QStringList keys)
+{
+    VespucciTableModel *new_model = new VespucciTableModel(this,
+                                                           workspace_->GetMatrix(keys),
+                                                           keys);
+    DataWidget *widget = new DataWidget(this, new_model);
+    ui->tabWidget->addTab(widget, keys.last());
+}
+
+void DataViewer::closeEvent(QCloseEvent *ev)
+{
+    QDialog::closeEvent(ev);
+    emit SetActionChecked(false);
 }
 

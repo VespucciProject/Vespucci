@@ -78,6 +78,12 @@ void PlotViewer::CloseTransientTab()
     if (plot_widget->TransientOnly()) ui->tabWidget->removeTab(ui->tabWidget->currentIndex());
 }
 
+void PlotViewer::closeEvent(QCloseEvent *ev)
+{
+    QDialog::closeEvent(ev);
+    emit SetActionChecked(false);
+}
+
 
 void PlotViewer::on_stackCheckBox_stateChanged(int arg1)
 {

@@ -36,7 +36,7 @@ DatasetTreeModel::DatasetTreeModel(QObject *parent, const DataModel *data_model)
     root_item_ = new TreeItem(TreeItem::ItemType::Base, root_keys, root_data, 0);
     QStringList dataset_keys = data_model->DatasetNames();
 
-    foreach (QString dataset_key, dataset_keys){
+    for (auto dataset_key: dataset_keys){
         QStringList dataset_item_keys = {dataset_key};
         QList<QVariant> dataset_item_data = {QVariant(dataset_key),
                                         QVariant("Dataset")};
@@ -66,7 +66,7 @@ DatasetTreeModel::DatasetTreeModel(QObject *parent, const DataModel *data_model)
             dataset_tree_item->appendChild(coreitem);
         }
 
-        foreach (QString matrix_key, dataset->AuxiliaryMatrixKeys()){
+        for (auto matrix_key: dataset->AuxiliaryMatrixKeys()){
             QStringList item_keys = {dataset_key, matrix_key};
             QList<QVariant> item_data =
             {QVariant(matrix_key),
@@ -78,7 +78,7 @@ DatasetTreeModel::DatasetTreeModel(QObject *parent, const DataModel *data_model)
             dataset_tree_item->appendChild(matrix_item);
         }
 
-        foreach (QString results_key, dataset->AnalysisResultsKeys()){
+        for (auto results_key: dataset->AnalysisResultsKeys()){
             QSharedPointer<AnalysisResults> results =
                     dataset->GetAnalysisResult(results_key);
             QStringList results_item_keys = {dataset_key, results_key};
@@ -90,7 +90,7 @@ DatasetTreeModel::DatasetTreeModel(QObject *parent, const DataModel *data_model)
                                  results_item_data,
                                  dataset_tree_item);
 
-            foreach (QString matrix_key, results->KeyList()){
+            for (auto matrix_key: results->KeyList()){
                 QStringList matrix_item_keys = {dataset_key, results_key, matrix_key};
                 QList<QVariant> matrix_item_data = {QVariant(matrix_key),
                                                     QVariant(DescribeMatrix(results->GetMatrix(matrix_key)))
@@ -105,7 +105,7 @@ DatasetTreeModel::DatasetTreeModel(QObject *parent, const DataModel *data_model)
             dataset_tree_item->appendChild(results_tree_item);
         }
 
-        foreach (QString map_key, dataset->MapKeys()){
+        for (auto map_key: dataset->MapKeys()){
             QSharedPointer<MapData> mapdata = dataset->GetMapData(map_key);
             QStringList map_item_keys = {dataset_key, map_key};
             QList<QVariant> map_item_data = {QVariant(map_key),
@@ -128,7 +128,7 @@ DatasetTreeModel::DatasetTreeModel(QObject *parent, const DataModel *data_model)
 void DatasetTreeModel::SetupModelData(const DataModel *data_model)
 {
     QStringList dataset_keys = data_model->DatasetNames();
-    foreach(const QString dataset_key, dataset_keys){
+    for (auto dataset_key: dataset_keys){
         QSharedPointer<VespucciDataset> dataset = data_model->GetDataset(dataset_key);
         TreeItem *dataset_tree_item = SetupDatasetTreeItem(dataset);
         root_item_->appendChild(dataset_tree_item);
@@ -220,13 +220,13 @@ void DatasetTreeModel::UpdateData(const DataModel *data_model)
     QList<TreeItem*> items = root_item_->child_items();
     //From top level (dataset level), make sure that any items in items
     //that are not in the data model are removed
-    foreach(TreeItem* item, items)
+    for (auto item: items)
         if (!data_model->DatasetNames().contains(item->data(0).toString()))
             root_item_->removeChild(item);
 
     //Check if a dataset has been added and set it up if it has been
     QStringList dataset_names = root_item_->ChildNames();
-    foreach(const QString dataset_key, data_model->DatasetNames()){
+    for (auto dataset_key: data_model->DatasetNames()){
         if (!dataset_names.contains(dataset_key)){
             TreeItem *dataset_tree_item = SetupDatasetTreeItem(data_model->GetDataset(dataset_key));
             root_item_->appendChild(dataset_tree_item);
@@ -234,7 +234,7 @@ void DatasetTreeModel::UpdateData(const DataModel *data_model)
     }
 
     //check all the datasets to see if anything changed in them:
-    foreach(TreeItem *item, root_item_->child_items()){
+    for (auto item: root_item_->child_items()){
         QString dataset_name = item->data(0).toString();
         QStringList analysis_results_names = data_model->AnalysisResultsNames(dataset_name);
         QStringList auxiliary_matrix_names = data_model->AuxiliaryMatrixNames(dataset_name);
@@ -243,7 +243,7 @@ void DatasetTreeModel::UpdateData(const DataModel *data_model)
         //check for changed analysis results
         QStringList child_names = item->ChildNames();
         //add new analysis results
-        foreach (const QString &results_name, analysis_results_names){
+        for (auto results_name: analysis_results_names){
             if (!child_names.contains(results_name)){
                 TreeItem *analysis_results_item =
                         SetupAnalysisResultTreeItem(data_model->GetDataset(dataset_name),
@@ -251,9 +251,9 @@ void DatasetTreeModel::UpdateData(const DataModel *data_model)
                                                     item);
                 item->appendChild(analysis_results_item);
             }//if
-        }//foreach (AnalysisResultsNames)
+        }//for (AnalysisResultsNames)
 
-        foreach (const QString &auxiliary_matrix_name, auxiliary_matrix_names){
+        for (auto auxiliary_matrix_name: auxiliary_matrix_names){
             if (!child_names.contains(auxiliary_matrix_name)){
                 TreeItem *matrix_item =
                         SetupMatrixTreeItem(dataset_name, auxiliary_matrix_name,
@@ -267,16 +267,16 @@ void DatasetTreeModel::UpdateData(const DataModel *data_model)
 
 
         //Remove old subobjects
-        foreach(TreeItem *child_item, item->child_items()){
+        for (auto child_item: item->child_items()){
             QString child_name = child_item->data(0).toString();
             if (!analysis_results_names.contains(child_name)
                     && !core_matrix_names.contains(child_name)
                     && !auxiliary_matrix_names.contains(child_name)){
                 item->removeChild(child_item);
             }
-        }//foreach (item->child_items)
+        }//for (item->child_items)
 
-    }//foreach (root_item->child_items)
+    }//for (root_item->child_items)
 
 
 }
@@ -352,7 +352,7 @@ TreeItem *DatasetTreeModel::SetupDatasetTreeItem(QSharedPointer<VespucciDataset>
         dataset_tree_item->appendChild(coreitem);
     }
 
-    foreach(const QString results_key, dataset->AnalysisResultsKeys()){
+    for (auto results_key: dataset->AnalysisResultsKeys()){
         QSharedPointer<AnalysisResults> results = dataset->GetAnalysisResult(results_key);
         TreeItem *analysis_results_item =
                 SetupAnalysisResultTreeItem(dataset,
@@ -361,7 +361,7 @@ TreeItem *DatasetTreeModel::SetupDatasetTreeItem(QSharedPointer<VespucciDataset>
         dataset_tree_item->appendChild(analysis_results_item);
     }
 
-    foreach(const QString matrix_key, dataset->AuxiliaryMatrixKeys()){
+    for (auto matrix_key: dataset->AuxiliaryMatrixKeys()){
         const mat& matrix = dataset->GetAuxiliaryMatrix(matrix_key);
         TreeItem *matrix_item = SetupMatrixTreeItem(dataset->name(),
                                                     matrix_key,
@@ -370,7 +370,7 @@ TreeItem *DatasetTreeModel::SetupDatasetTreeItem(QSharedPointer<VespucciDataset>
         dataset_tree_item->appendChild(matrix_item);
     }
 
-    foreach(const QString &map_key, dataset->MapKeys()){
+    for (auto map_key: dataset->MapKeys()){
         QSharedPointer<MapData> map = dataset->GetMapData(map_key);
         TreeItem *map_item = SetupMapTreeItem(dataset->name(),
                                               map_key,
@@ -403,7 +403,7 @@ TreeItem *DatasetTreeModel::SetupAnalysisResultTreeItem(QSharedPointer<VespucciD
                          analysis_results_item_data,
                          parent);
 
-    foreach(const QString &matrix_key, results->KeyList()){
+    for (auto matrix_key: results->KeyList()){
         TreeItem *matrix_tree_item =
                 SetupMatrixTreeItem(dataset->name(),
                                     results->name(),

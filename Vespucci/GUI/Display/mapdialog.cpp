@@ -50,46 +50,7 @@ MapDialog::MapDialog(MainWindow *parent, QStringList data_keys) :
 
     ui->columnSpinBox->setRange(1, col_count);
     ui->nameLineEdit->setText(data_keys_.last());
-    QStringList color_list({"ColorBrewer BlueGreen",
-                            "ColorBrewer BluePurple",
-                            "ColorBrewer GreenBlue",
-                            "ColorBrewer OrangeRed",
-                            "ColorBrewer PurpleBlue",
-                            "ColorBrewer PurpleBlueGreen",
-                            "ColorBrewer PurpleRed",
-                            "ColorBrewer RedPurple",
-                            "ColorBrewer YellowGreen",
-                            "ColorBrewer YellowGreenBlue",
-                            "ColorBrewer YellowOrangeBrown",
-                            "ColorBrewer YellowOrangeRed",
-                            "ColorBrewer Blues",
-                            "ColorBrewer Greens",
-                            "ColorBrewer Oranges",
-                            "ColorBrewer Purples",
-                            "ColorBrewer Reds",
-                            "ColorBrewer Grayscale",
-                            "QCustomPlot Grayscale",
-                            "QCustomPlot Night",
-                            "QCustomPlot Candy",
-                            "QCustomPlot Ion",
-                            "QCustomPlot Thermal",
-                            "↔QCustomPlot Polar",
-                            "↔QCustomPlot Spectrum",
-                            "QCustomPlot Jet",
-                            "QCustomPlot Hues",
-                            "QCustomPlot Hot",
-                            "QCustomPlot Cold",
-                            "↔ColorBrewer BrownBlueGreen",
-                            "↔ColorBrewer PinkYellowGreen",
-                            "↔ColorBrewer PurpleGreen",
-                            "↔ColorBrewer PurpleOrange",
-                            "↔ColorBrewer RedBlue",
-                            "↔ColorBrewer RedGray",
-                            "↔ColorBrewer RedYellowBlue",
-                            "↔ColorBrewer RedYellowGreen",
-                            "↔ColorBrewer Spectral",
-                            "↔Vespucci Spectral",
-                            "ColorBrewer Cluster"});
+    QStringList color_list = workspace_->GradientNames();
     ui->gradientComboBox->addItems(color_list);
 }
 
@@ -118,7 +79,6 @@ void MapDialog::on_buttonBox_accepted()
         vec unique_values = unique(data);
         tick_count = unique_values.n_rows;
         gradient = dataset_->GetClusterGradient(tick_count);
-
     }
     else{
         tick_count = 6;

@@ -37,7 +37,10 @@ public:
     explicit MacroDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws);
     ~MacroDialog();
     void SetActiveDataset(QSharedPointer<VespucciDataset> dataset);
-
+signals:
+    void SetActionChecked(bool checked);
+protected:
+    void closeEvent(QCloseEvent *ev);
 private:
     Ui::MacroDialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;

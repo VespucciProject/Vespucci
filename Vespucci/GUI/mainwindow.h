@@ -76,15 +76,23 @@ public:
     DataViewer *data_viewer();
 
 signals:
-    void GlobalGradientChanged(QCPColorGradient gradient);
-    void GlobalDataRangeChanged(QCPRange data_range);
-
+    void DatasetSelectionChanged(QString dataset_key);
+    void MatrixSelectionChanged(QStringList matrix_keys);
+    void DatasetToBeRemoved(QString name);
+    void MatrixToBeRemoved(QStringList keys);
 
 protected:
     void closeEvent(QCloseEvent *event);
 public slots:
-    void RangeDialogAccepted(double min, double max);
+    void TreeItemSelected(const QModelIndex &index);
     void TreeItemDoubleClicked(const QModelIndex &index);
+    void RangeDialogAccepted(double min, double max);
+    void SetPlotViewerActionChecked(bool checked);
+    void SetDataViewerActionChecked(bool checked);
+    void SetStatsViewerActionChecked(bool checked);
+    void SetSpectrumEditorActionChecked(bool checked);
+    void SetMacroEditorActionChecked(bool checked);
+    void SetPythonShellActionChecked(bool checked);
 private slots:
     void on_actionExit_triggered();
 
@@ -124,10 +132,6 @@ private slots:
 
     void on_actionCorrect_Baseline_triggered();
 
-    void on_actionView_Dataset_Elements_triggered();
-
-    void on_actionSet_Global_Color_Scale_triggered();
-
     void on_actionPartial_Least_Squares_triggered();
 
     void on_actionK_Means_Clustering_triggered();
@@ -143,8 +147,6 @@ private slots:
     void on_actionReject_Clipped_Spectra_triggered();
 
     void on_actionSpectra_as_Columns_triggered();
-
-    void on_actionView_Edit_Spectra_triggered();
 
     void on_actionBooleanize_Clamp_triggered();
 
@@ -176,8 +178,6 @@ private slots:
 
     void on_actionCreate_Plot_triggered();
 
-    void on_datasetTreeView_activated(const QModelIndex &index);
-
     void on_actionPlot_Viewer_toggled(bool arg1);
 
     void ChildDialogVisibleToggled(const QString &key, bool arg1);
@@ -192,15 +192,13 @@ private slots:
 
     void on_actionMacro_Editor_toggled(bool arg1);
 
-    void on_datasetTreeView_clicked(const QModelIndex &index);
-
-    void on_datasetTreeView_doubleClicked(const QModelIndex &index);
-
     void on_actionMapResult_triggered();
 
     void on_actionSave_Selected_Matrix_triggered();
 
     void on_actionOnline_Documentation_triggered();
+
+    void on_actionGlobal_Color_Scales_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -227,6 +225,7 @@ private:
     unsigned int global_map_count_;
 
     QMap<QString, QDialog*> child_dialogs_;
+
 };
 
 #endif // MAINWINDOW_H

@@ -34,7 +34,10 @@ class PythonShellDialog : public QDialog
 public:
     explicit PythonShellDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws);
     ~PythonShellDialog();
-
+signals:
+    void SetActionChecked(bool checked);
+protected:
+    void closeEvent(QCloseEvent *ev);
 private:
     Ui::PythonShellDialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;

@@ -48,6 +48,8 @@
 #include "GUI/Processing/stitchimportdialog.h"
 #include "GUI/Analysis/plotmakerdialog.h"
 #include "GUI/Display/mapdialog.h"
+#include "GUI/Display/globalgradientdialog.h"
+
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent usually 0
@@ -61,13 +63,48 @@ MainWindow::MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     ui->setupUi(this);
     dataset_tree_model_ = new DatasetTreeModel(ui->datasetTreeView);
     ui->datasetTreeView->setModel(dataset_tree_model_);
-    data_viewer_ = new DataViewer(this);
+    data_viewer_ = new DataViewer(this, workspace_);
     plot_viewer_ = new PlotViewer(this);
     spectrum_editor_ = new SpectrumSelectionDialog(this);
     stats_viewer_ = new StatsDialog(this, workspace_);
+    macro_editor_ = new MacroDialog(this, workspace_);
     python_shell_ = new PythonShellDialog(this, workspace_);
+
     global_map_count_ = 0;
     workspace_->SetPointers(this, dataset_tree_model_);
+
+    //Connects the closing of persistent dialogs to unchecking their menu entries
+    connect(data_viewer_, &DataViewer::SetActionChecked,
+            this, &MainWindow::SetDataViewerActionChecked);
+    connect(plot_viewer_, &PlotViewer::SetActionChecked,
+            this, &MainWindow::SetPlotViewerActionChecked);
+    connect(spectrum_editor_, &SpectrumSelectionDialog::SetActionChecked,
+            this, &MainWindow::SetSpectrumEditorActionChecked);
+    connect(stats_viewer_, &StatsDialog::SetActionChecked,
+            this, &MainWindow::SetStatsViewerActionChecked);
+    connect(macro_editor_, &MacroDialog::SetActionChecked,
+            this, &MainWindow::SetMacroEditorActionChecked);
+    connect(python_shell_, &PythonShellDialog::SetActionChecked,
+            this, &MainWindow::SetPythonShellActionChecked);
+
+    //connects the change in active dataset connected to change in display
+    connect(this, &MainWindow::MatrixSelectionChanged,
+            stats_viewer_, &StatsDialog::MatrixSelectionChanged);
+    connect(this, &MainWindow::DatasetSelectionChanged,
+            spectrum_editor_, &SpectrumSelectionDialog::DatasetSelectionChanged);
+
+    //Triggers the removal of references that are about to become bad
+    connect(this, &MainWindow::DatasetToBeRemoved,
+            data_viewer_, &DataViewer::DatasetToBeRemoved);
+    connect(this, &MainWindow::DatasetToBeRemoved,
+            spectrum_editor_, &SpectrumSelectionDialog::DatasetToBeRemoved);
+    connect(this, &MainWindow::DatasetToBeRemoved,
+            stats_viewer_, &StatsDialog::DatasetToBeRemoved);
+    connect(this, &MainWindow::MatrixToBeRemoved,
+            data_viewer_, &DataViewer::MatrixToBeRemoved);
+    connect(this, &MainWindow::MatrixToBeRemoved,
+            stats_viewer_, &StatsDialog::MatrixToBeRemoved);
+
 }
 
 MainWindow::~MainWindow()
@@ -107,6 +144,17 @@ void MainWindow::closeEvent(QCloseEvent *event)
         event->ignore();
     }
 }
+
+void MainWindow::TreeItemSelected(const QModelIndex &index)
+{
+    if (!index.isValid()) return;
+    TreeItem *selected_item = dataset_tree_model_->getItem(index);
+    emit DatasetSelectionChanged(selected_item->keys()[0]);
+    if (selected_item->type() == TreeItem::ItemType::Matrix)
+        emit MatrixSelectionChanged(selected_item->keys());
+}
+
+
 ///
 /// \brief MainWindow::on_actionExit_triggered
 ///Exits the program.
@@ -128,6 +176,7 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::on_actionImport_Dataset_from_File_triggered()
 {
     LoadDataset *load_dataset_window = new LoadDataset(this,workspace_);
+    load_dataset_window->setAttribute(Qt::WA_DeleteOnClose);
     load_dataset_window->show();
 }
 
@@ -137,6 +186,7 @@ void MainWindow::on_actionImport_Dataset_from_File_triggered()
 void MainWindow::on_actionAbout_Vespucci_triggered()
 {
     AboutDialog *about_window = new AboutDialog(this);
+    about_window->setAttribute(Qt::WA_DeleteOnClose);
     about_window->show();
 }
 
@@ -146,6 +196,7 @@ void MainWindow::on_actionAbout_Vespucci_triggered()
 void MainWindow::on_actionCiting_Vespucci_triggered()
 {
     CitationDialog *citation_window = new CitationDialog(this);
+    citation_window->setAttribute(Qt::WA_DeleteOnClose);
     citation_window->show();
 }
 
@@ -164,7 +215,7 @@ void MainWindow::on_actionNew_Univariate_Map_triggered()
     QString dataset_key = item->DatasetKey();
     UnivariateDialog *univariate_dialog =
         new UnivariateDialog(this, workspace_, dataset_key);
-
+    univariate_dialog->setAttribute(Qt::WA_DeleteOnClose);
     univariate_dialog->show();
 
 }
@@ -186,6 +237,7 @@ void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
     QString dataset_key = item->DatasetKey();
 
     BandRatioDialog *band_ratio_dialog = new BandRatioDialog(this, workspace_, dataset_key);
+    band_ratio_dialog->setAttribute(Qt::WA_DeleteOnClose);
     band_ratio_dialog->show();
 }
 
@@ -208,6 +260,7 @@ void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
 
     PrincipalComponentsDialog *principal_components_dialog =
             new PrincipalComponentsDialog(this, workspace_, dataset_key);
+    principal_components_dialog->setAttribute(Qt::WA_DeleteOnClose);
     principal_components_dialog->show();
 
 
@@ -232,6 +285,7 @@ void MainWindow::on_actionVertex_Components_triggered()
 
 
     VCADialog *vca_dialog = new VCADialog(this, workspace_, dataset_key);
+    vca_dialog->setAttribute(Qt::WA_DeleteOnClose);
     vca_dialog->show();
 
 
@@ -258,6 +312,7 @@ void MainWindow::on_actionPartial_Least_Squares_triggered()
 
     PLSDialog *pls_dialog =
             new PLSDialog(this, workspace_, dataset_key);
+    pls_dialog->setAttribute(Qt::WA_DeleteOnClose);
     pls_dialog->show();
 
 
@@ -283,10 +338,8 @@ void MainWindow::on_actionK_Means_Clustering_triggered()
 
     KMeansDialog *k_means_dialog =
             new KMeansDialog(this, workspace_, dataset_key);
+    k_means_dialog->setAttribute(Qt::WA_DeleteOnClose);
     k_means_dialog->show();
-
-
-
 }
 
 
@@ -329,7 +382,8 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
             double max = dataset->wavelength_ptr()->max();
             RangeDialog *range_dialog = new RangeDialog(this, min, max);
             range_dialog->setWindowTitle("Peak Intensity Normalization");
-            QObject::connect(range_dialog, SIGNAL(DialogAccepted(double,double)), this, SLOT(RangeDialogAccepted(double,double)));
+            connect(range_dialog, &RangeDialog::DialogAccepted,
+                    this, &MainWindow::RangeDialogAccepted);
             range_dialog->show();
         }
         else if (ok && method == "Scale Spectra"){
@@ -685,6 +739,7 @@ void MainWindow::on_actionFilter_Derivatize_triggered()
     QString dataset_key = item->DatasetKey();
 
     FilterDialog *filter_dialog = new FilterDialog(this, workspace_, dataset_key);
+    filter_dialog->setAttribute(Qt::WA_DeleteOnClose);
     filter_dialog->show();
 }
 
@@ -710,8 +765,10 @@ void MainWindow::on_actionClose_Dataset_triggered()
     int response = QMessageBox::question(this, "Close Dataset?", text,
                                          QMessageBox::Ok, QMessageBox::Cancel);
 
-    if (response == QMessageBox::Ok)
+    if (response == QMessageBox::Ok){
+        emit DatasetToBeRemoved(dataset_key);
         workspace_->RemoveDataset(dataset_key);
+    }
 }
 
 ///
@@ -738,6 +795,7 @@ void MainWindow::on_actionCrop_triggered()
 
     QString dataset_key = item->DatasetKey();
     CropDialog *crop_dialog = new CropDialog(this, workspace_, dataset_key);
+    crop_dialog->setAttribute(Qt::WA_DeleteOnClose);
     crop_dialog->show();
 }
 
@@ -758,177 +816,8 @@ void MainWindow::on_actionCorrect_Baseline_triggered()
     QString dataset_key = item->DatasetKey();
 
     BaselineDialog *baseline_dialog = new BaselineDialog(this, workspace_, dataset_key);
+    baseline_dialog->setAttribute(Qt::WA_DeleteOnClose);
     baseline_dialog->show();
-}
-
-///
-/// \brief MainWindow::on_actionView_Dataset_Elements_triggered
-/// Triggers DataViewer
-void MainWindow::on_actionView_Dataset_Elements_triggered()
-{
-    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
-    if (item->type() == TreeItem::ItemType::Base){
-        QMessageBox::information(this,
-                                 "No datasets loaded",
-                                 "No dataset exists on which to perform this operation");
-        return;
-    }
-
-
-    QString dataset_key = item->DatasetKey();
-
-    //DataViewer *data_viewer = new DataViewer(0, workspace_, index);
-    //data_viewer->show();
-}
-
-///
-/// \brief MainWindow::on_actionSet_Global_Color_Scale_triggered
-/// Set the global color scale.
-void MainWindow::on_actionSet_Global_Color_Scale_triggered()
-{
-    //populate a list
-    QStringList color_list;
-    color_list  << "ColorBrewerBlueGreen"
-                << "ColorBrewerBluePurple"
-                << "ColorBrewerGreenBlue"
-                << "ColorBrewerOrangeRed"
-                << "ColorBrewerPurpleBlue"
-                << "ColorBrewerPurpleBlueGreen"
-                << "ColorBrewerPurpleRed"
-                << "ColorBrewerRedPurple"
-                << "ColorBrewerYellowGreen"
-                << "ColorBrewerYellowGreenBlue"
-                << "ColorBrewerYellowOrangeBrown"
-                << "ColorBrewerYellowOrangeRed"
-                << "ColorBrewerBlues"
-                << "ColorBrewerGreens"
-                << "ColorBrewerOranges"
-                << "ColorBrewerPurples"
-                << "ColorBrewerReds"
-                << "ColorBrewerGrayscale"
-                << "QCustomPlotGrayscale"
-                << "QCustomPlotNight"
-                << "QCustomPlotCandy"
-                << "QCustomPlotIon"
-                << "QCustomPlotThermal"
-                << "↔QCustomPlotPolar"
-                << "↔QCustomPlotSpectrum"
-                << "QCustomPlotJet"
-                << "QCustomPlotHues"
-                << "QCustomPlotHot"
-                << "QCustomPlotCold"
-                << "↔ColorBrewerBrownBlueGreen"
-                << "↔ColorBrewerPinkYellowGreen"
-                << "↔ColorBrewerPurpleGreen"
-                << "↔ColorBrewerPurpleOrange"
-                << "↔ColorBrewerRedBlue"
-                << "↔ColorBrewerRedGray"
-                << "↔ColorBrewerRedYellowBlue"
-                << "↔ColorBrewerRedYellowGreen"
-                << "↔ColorBrewerSpectral"
-                << "↔VespucciSpectral";
-    QString color_name = QInputDialog::getItem(this, "Select Color Scheme", "Choose Scheme", color_list);
-    int color_index = color_list.indexOf(color_name);
-    QCPColorGradient gradient;
-    switch (color_index)
-        {
-        case 0: gradient =  QCPColorGradient::cbBuGn; break;
-        case 1: gradient =  QCPColorGradient::cbBuPu; break;
-        case 2: gradient =  QCPColorGradient::cbGnBu; break;
-        case 3: gradient =  QCPColorGradient::cbOrRd; break;
-        case 4: gradient =  QCPColorGradient::cbPuBu; break;
-        case 5: gradient =  QCPColorGradient::cbPuBuGn; break;
-        case 6: gradient =  QCPColorGradient::cbPuRd; break;
-        case 7: gradient =  QCPColorGradient::cbRdPu; break;
-        case 8: gradient =  QCPColorGradient::cbYlGn; break;
-        case 9: gradient =  QCPColorGradient::cbYlGnBu; break;
-        case 10: gradient =  QCPColorGradient::cbYlOrBr; break;
-        case 11: gradient =  QCPColorGradient::cbYlOrRd; break;
-        case 12: gradient =  QCPColorGradient::cbBlues; break;
-        case 13: gradient =  QCPColorGradient::cbGreens; break;
-        case 14: gradient =  QCPColorGradient::cbOranges; break;
-        case 15: gradient =  QCPColorGradient::cbPurples; break;
-        case 16: gradient =  QCPColorGradient::cbReds; break;
-        case 17: gradient =  QCPColorGradient::cbGreys; break;
-        case 18: gradient =  QCPColorGradient::gpGrayscale; break;
-        case 19: gradient =  QCPColorGradient::gpNight; break;
-        case 20: gradient =  QCPColorGradient::gpCandy; break;
-        case 21: gradient =  QCPColorGradient::gpIon; break;
-        case 22: gradient =  QCPColorGradient::gpThermal; break;
-        case 23: gradient =  QCPColorGradient::gpPolar; break;
-        case 24: gradient =  QCPColorGradient::gpSpectrum; break;
-        case 25: gradient =  QCPColorGradient::gpJet; break;
-        case 26: gradient =  QCPColorGradient::gpHues; break;
-        case 27: gradient =  QCPColorGradient::gpHot; break;
-        case 28: gradient =  QCPColorGradient::gpCold; break;
-        case 29: gradient =  QCPColorGradient::cbBrBG; break;
-        case 30: gradient =  QCPColorGradient::cbPiYG; break;
-        case 31: gradient =  QCPColorGradient::cbPRGn; break;
-        case 32: gradient =  QCPColorGradient::cbPuOr; break;
-        case 33: gradient =  QCPColorGradient::cbRdBu; break;
-        case 34: gradient =  QCPColorGradient::cbRdGy; break;
-        case 35: gradient =  QCPColorGradient::cbRdYlBu; break;
-        case 36: gradient =  QCPColorGradient::cbRdYlGn; break;
-        case 37: gradient =  QCPColorGradient::cbSpectral; break;
-        case 38: gradient =  QCPColorGradient::vSpectral; break;
-        default: gradient =  QCPColorGradient::gpCold;
-        }
-    workspace_->RefreshGlobalColorGradient(gradient);
-}
-
-///
-/// \brief MainWindow::global_data_range
-/// \return
-/// Return the global data range (to MapViewer widgets)
-QCPRange* MainWindow::global_data_range()
-{
-    return workspace_->global_data_range();
-}
-
-///
-/// \brief MainWindow::global_gradient
-/// \return
-/// Return the global color gradient (to MapViewer widgets)
-QCPColorGradient* MainWindow::global_gradient()
-{
-    return workspace_->global_gradient();
-}
-
-///
-/// \brief MainWindow::RecalculateGlobalDataRange
-/// \param new_data_range
-/// Recalculate the global data range based on previous range and the new data
-void MainWindow::RecalculateGlobalDataRange(QCPRange* new_data_range)
-{
-    bool changed = false;
-    if (global_map_count_ <= 1)
-        workspace_->SetGlobalDataRange(new_data_range);
-    else
-        changed = workspace_->RecalculateGlobalDataRange(new_data_range);
-
-    if (changed){
-        emit GlobalDataRangeChanged(*new_data_range);
-    }
-}
-
-///
-/// \brief MainWindow::RefreshGlobalColorGradient
-/// \param new_gradient
-/// Change the global color gradient and update it for all objects using it
-void MainWindow::RefreshGlobalColorGradient(QCPColorGradient new_gradient)
-{
-    workspace_->RefreshGlobalColorGradient(new_gradient);
-    emit GlobalGradientChanged(new_gradient);
-}
-
-///
-/// \brief MainWindow::SetGlobalDataRange
-/// \param new_data_range
-/// Set the global data range and update it for all objects using it
-void MainWindow::SetGlobalDataRange(QCPRange* new_data_range)
-{
-    workspace_->SetGlobalDataRange(new_data_range);
-    emit GlobalDataRangeChanged(*new_data_range);
 }
 
 ///
@@ -1041,18 +930,10 @@ DataViewer *MainWindow::data_viewer()
 
 void MainWindow::on_actionDelete_Map_triggered()
 {
-    /*
     TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
-    if (item->type() == TreeItem::ItemType::Base){
-        QMessageBox::information(this,
-                                 "No datasets loaded",
-                                 "No dataset exists on which to perform this operation");
-        return;
+    if (item->type() == TreeItem::ItemType::Map){
+        workspace_->GetDataset(item->keys().first())->RemoveMap(item->keys().last());
     }
-    MapListModel *map_list_model = qobject_cast<MapListModel*>(//map_list_view_->model());
-    QModelIndex index = //map_list_view_->currentIndex();
-    map_list_model->removeRow(index(), index);
-    */
 }
 
 void MainWindow::on_actionNew_Composite_Dataset_triggered()
@@ -1065,6 +946,7 @@ void MainWindow::on_actionNew_Composite_Dataset_triggered()
         return;
     }
     MetaDatasetDialog *meta_dialog = new MetaDatasetDialog(this, workspace_);
+    meta_dialog->setAttribute(Qt::WA_DeleteOnClose);
     meta_dialog->show();
 }
 
@@ -1081,6 +963,7 @@ void MainWindow::on_actionReject_Clipped_Spectra_triggered()
     }
     QString dataset_key = item->DatasetKey();
     ThresholdDialog *dialog = new ThresholdDialog(this, workspace_, dataset_key);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->show();
 }
 
@@ -1123,16 +1006,14 @@ void MainWindow::TreeItemDoubleClicked(const QModelIndex &index)
         QStringList keys = item->keys();
         if (keys.size() == 2){
             try{
-                const mat & matrix = workspace_->GetAuxiliaryMatrix(keys[0], keys[1]);
-                data_viewer_->AddTab(matrix, item->data(0).toString());
+                data_viewer_->AddTab(item->keys());
             }catch(exception e){
                 DisplayExceptionWarning("TreeItemDoubleClicked", e);
             }
         }
         if (keys.size() == 3){
             try{
-                const mat & matrix = workspace_->GetResultsMatrix(keys[0], keys[1], keys[2]);
-                data_viewer_->AddTab(matrix, item->data(0).toString());
+                data_viewer_->AddTab(item->keys());
             }catch (exception e){
                 DisplayExceptionWarning("TreeItemDoubleClicked", e);
             }
@@ -1143,21 +1024,34 @@ void MainWindow::TreeItemDoubleClicked(const QModelIndex &index)
     }
 }
 
-void MainWindow::on_actionView_Edit_Spectra_triggered()
+void MainWindow::SetPlotViewerActionChecked(bool checked)
 {
-    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
-    if (item->type() == TreeItem::ItemType::Base){
-        QMessageBox::information(this,
-                                 "No dataset selected",
-                                 "No dataset selected on which to perform this operation");
-        return;
-    }
-    QSharedPointer<VespucciDataset> dataset =
-            workspace_->DatasetAt(ui->datasetTreeView->currentIndex());
+    ui->actionPlot_Viewer->setChecked(checked);
+}
 
-    spectrum_editor_->SetActiveDataset(dataset);
+void MainWindow::SetDataViewerActionChecked(bool checked)
+{
+    ui->actionData_Viewer->setChecked(checked);
+}
 
-    spectrum_editor_->setVisible(true);
+void MainWindow::SetStatsViewerActionChecked(bool checked)
+{
+    ui->actionStatistics_Viewer->setChecked(checked);
+}
+
+void MainWindow::SetSpectrumEditorActionChecked(bool checked)
+{
+    ui->actionSpectrum_Editor->setChecked(checked);
+}
+
+void MainWindow::SetMacroEditorActionChecked(bool checked)
+{
+    ui->actionMacro_Editor->setChecked(checked);
+}
+
+void MainWindow::SetPythonShellActionChecked(bool checked)
+{
+    ui->actionPython_Shell->setChecked(checked);
 }
 
 void MainWindow::on_actionBooleanize_Clamp_triggered()
@@ -1171,6 +1065,7 @@ void MainWindow::on_actionBooleanize_Clamp_triggered()
     }
     QString dataset_key = item->DatasetKey();
     BooleanizeDialog *booleanize_dialog = new BooleanizeDialog(this, workspace_, dataset_key);
+    booleanize_dialog->setAttribute(Qt::WA_DeleteOnClose);
     booleanize_dialog->show();
 }
 
@@ -1229,6 +1124,7 @@ void MainWindow::on_actionRun_script_triggered()
     QString dataset_key = item->DatasetKey();
 
     ScriptDialog *script_dialog = new ScriptDialog(this, workspace_, dataset_key);
+    script_dialog->setAttribute(Qt::WA_DeleteOnClose);
     script_dialog->show();
 }
 
@@ -1266,6 +1162,7 @@ void MainWindow::on_actionCalculate_Peak_Populations_triggered()
 void MainWindow::on_actionImport_From_Multiple_Point_Spectra_triggered()
 {
     MultiImportDialog *import_dialog = new MultiImportDialog(this, workspace_);
+    import_dialog->setAttribute(Qt::WA_DeleteOnClose);
     import_dialog->show();
 }
 
@@ -1273,6 +1170,7 @@ void MainWindow::on_actionImport_From_Multiple_Point_Spectra_triggered()
 void MainWindow::on_actionBatch_File_Conversion_triggered()
 {
     BulkConversionDialog *conversion_dialog = new BulkConversionDialog(this, workspace_);
+    conversion_dialog->setAttribute(Qt::WA_DeleteOnClose);
     conversion_dialog->show();
 }
 
@@ -1290,12 +1188,14 @@ void MainWindow::on_actionClassical_Least_Squares_triggered()
     QString dataset_key = item->DatasetKey();
 
     ClassicalLeastSquaresDialog *cls_dialog = new ClassicalLeastSquaresDialog(this, workspace_, dataset_key);
+    cls_dialog->setAttribute(Qt::WA_DeleteOnClose);
     cls_dialog->show();
 }
 
 void MainWindow::on_actionSettings_triggered()
 {
     SettingsDialog *settings_dialog = new SettingsDialog(this, workspace_);
+    settings_dialog->setAttribute(Qt::WA_DeleteOnClose);
     settings_dialog->show();
 }
 
@@ -1313,6 +1213,7 @@ void MainWindow::on_actionTransform_Abscissa_triggered()
     QString dataset_key = item->DatasetKey();
 
     AbscissaTransformDialog *abscissa_transform_dialog = new AbscissaTransformDialog(this, workspace_, dataset_key);
+    abscissa_transform_dialog->setAttribute(Qt::WA_DeleteOnClose);
     abscissa_transform_dialog->show();
 }
 
@@ -1330,6 +1231,7 @@ void MainWindow::on_actionFourierTransform_triggered()
     QString dataset_key = item->DatasetKey();
 
     FourierTransformDialog *fourier_transform_dialog = new FourierTransformDialog(this, workspace_, dataset_key);
+    fourier_transform_dialog->setAttribute(Qt::WA_DeleteOnClose);
     fourier_transform_dialog->show();
 
 }
@@ -1348,6 +1250,7 @@ void MainWindow::on_actionInterpolate_to_New_Abscissa_triggered()
 
     AbscissaInterpolationDialog *abs_interp_dialog =
             new AbscissaInterpolationDialog(this, workspace_, dataset_key);
+    abs_interp_dialog->setAttribute(Qt::WA_DeleteOnClose);
     abs_interp_dialog->show();
 }
 
@@ -1379,6 +1282,7 @@ void MainWindow::on_actionSave_Log_File_triggered()
 void MainWindow::on_actionImport_Dataset_from_Multiple_Files_triggered()
 {
     StitchImportDialog *stitch_dialog = new StitchImportDialog(this, workspace_);
+    stitch_dialog->setAttribute(Qt::WA_DeleteOnClose);
     stitch_dialog->show();
 }
 
@@ -1386,21 +1290,6 @@ void MainWindow::on_actionCreate_Plot_triggered()
 {
 
 }
-
-void MainWindow::on_datasetTreeView_activated(const QModelIndex &index)
-{
-    if (!index.isValid()) return;
-    TreeItem *active_item = dataset_tree_model_->getItem(index);
-    if (active_item->keys().size()){
-        spectrum_editor_->SetActiveDataset(workspace_->GetDataset(active_item->keys()[0]));
-        macro_editor_->SetActiveDataset(workspace_->GetDataset(active_item->keys()[0]));
-    }
-    if (active_item->type() == TreeItem::ItemType::Matrix){
-        if (stats_viewer_->isVisible())
-            stats_viewer_->SetActiveDataKeys(active_item->keys());
-    }
-}
-
 
 void MainWindow::on_actionPlot_Viewer_toggled(bool arg1)
 {
@@ -1416,67 +1305,32 @@ void MainWindow::ChildDialogVisibleToggled(const QString &key, bool arg1)
 
 void MainWindow::on_actionData_Viewer_toggled(bool arg1)
 {
-    data_viewer_->setVisible(arg1);
+    if (arg1) data_viewer_->show();
+    else data_viewer_->close();
 }
 
 void MainWindow::on_actionStatistics_Viewer_toggled(bool arg1)
 {
-    stats_viewer_->setVisible(arg1);
+    if (arg1) stats_viewer_->show();
+    else stats_viewer_->close();
 }
 
 void MainWindow::on_actionSpectrum_Editor_toggled(bool arg1)
 {
-    spectrum_editor_->setVisible(arg1);
+    if (arg1) spectrum_editor_->show();
+    else spectrum_editor_->close();
 }
 
 void MainWindow::on_actionPython_Shell_toggled(bool arg1)
 {
-    python_shell_->setVisible(arg1);
+    if (arg1) python_shell_->show();
+    else python_shell_->close();
 }
 
 void MainWindow::on_actionMacro_Editor_toggled(bool arg1)
 {
-    macro_editor_->setVisible(arg1);
-}
-
-void MainWindow::on_datasetTreeView_clicked(const QModelIndex &index)
-{
-    if (!index.isValid()) return;
-    TreeItem *active_item = dataset_tree_model_->getItem(index);
-    if (active_item->keys().size()){
-        QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(active_item->keys()[0]);
-        spectrum_editor_->SetActiveDataset(dataset);
-        macro_editor_->SetActiveDataset(dataset);
-    }
-    if (active_item->type() == TreeItem::ItemType::Matrix)
-        stats_viewer_->SetActiveDataKeys(active_item->keys());
-}
-
-void MainWindow::on_datasetTreeView_doubleClicked(const QModelIndex &index)
-{
-    //if item represents a displayable (color map or matrix), then trigger its display
-    //nothing stops the user from having a matrix open in multiple tabs in the DataViewer
-    //If they want to not display the data, they can close the tab
-    TreeItem *item = dataset_tree_model_->getItem(index);
-    TreeItem::ItemType type = item->type();
-
-    if (type == TreeItem::ItemType::Map){
-        try{
-            QSharedPointer<MapData> map_data = workspace_->GetMap(item->keys()[0], item->keys()[1]);
-            map_data->ShowMapWindow(!map_data->MapWindowVisible());
-        }catch (exception e){
-            DisplayExceptionWarning("on_datasetTreeView_doubleClicked", e);
-        }
-    }
-    if (type == TreeItem::ItemType::Matrix){
-        QStringList keys = item->keys();
-        try{
-            const mat & matrix = workspace_->GetMatrix(keys);
-            data_viewer_->AddTab(matrix, item->data(0).toString());
-        }catch (exception e){
-            DisplayExceptionWarning("on_datasetTreeView_doubleClicked", e);
-        }
-    }
+    if (arg1) macro_editor_->show();
+    else macro_editor_->close();
 }
 
 void MainWindow::on_actionMapResult_triggered()
@@ -1484,6 +1338,7 @@ void MainWindow::on_actionMapResult_triggered()
     TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     QStringList item_keys = item->keys();
     MapDialog *map_dialog = new MapDialog(this, item_keys);
+    map_dialog->setAttribute(Qt::WA_DeleteOnClose);
     map_dialog->show();
 }
 
@@ -1517,4 +1372,12 @@ void MainWindow::on_actionOnline_Documentation_triggered()
 {
     QUrl website_url("http://vespucciproject.org/Vespucci-docs");
     QDesktopServices::openUrl(website_url);
+}
+
+void MainWindow::on_actionGlobal_Color_Scales_triggered()
+{
+   GlobalGradientDialog *gradient_dialog = new GlobalGradientDialog(this, workspace_);
+   gradient_dialog->setAttribute(Qt::WA_DeleteOnClose);
+   gradient_dialog->show();
+
 }

@@ -174,3 +174,15 @@ QProgressDialog *Vespucci::DisplayProgressDialog(QWidget *parent, QString title,
     progress->exec();
     return progress;
 }
+
+bool Vespucci::KeysAreEqual(QStringList &keys1, QStringList &keys2)
+{
+    if (keys1.size() != keys2.size()) return false;
+    else{
+        bool key_equal = false;
+        for (int i = 0; i < keys1.size(); ++i){
+            key_equal = (keys1[i] == keys2[i]);
+        }
+        return key_equal;
+    }
+}

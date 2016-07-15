@@ -17,18 +17,37 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef GLOBAL
-#define GLOBAL
-#include "qcustomplot.h"
-namespace Vespucci{
-    bool SavePlot(QCustomPlot *plot, QString filename);
-    void SetQCPFonts(QCustomPlot *plot, const QFont &font);
-    QProgressDialog *DisplayProgressDialog(QWidget *parent, QString title, QString text);
-    bool KeysAreEqual(QStringList &keys1, QStringList &keys2);
-    struct GlobalGradient{
-        QCPColorGradient gradient;
-        QCPRange range;
-    };
-}
-#endif // GLOBAL
+#ifndef COLORRANGEDIALOG_H
+#define COLORRANGEDIALOG_H
 
+#include <QDialog>
+#include "GUI/Display/globalgradientdialog.h"
+
+class GlobalGradientDialog;
+
+namespace Ui {
+class ColorRangeDialog;
+}
+
+class ColorRangeDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit ColorRangeDialog(GlobalGradientDialog *parent = 0);
+    void SetGradientNames(QStringList gradient_names);
+    void SetRange(double lower, double upper);
+    void SetName(QString name, bool editable);
+    ~ColorRangeDialog();
+
+private slots:
+    void on_buttonBox_accepted();
+
+    void on_buttonBox_rejected();
+
+private:
+    Ui::ColorRangeDialog *ui;
+    GlobalGradientDialog *parent_;
+};
+
+#endif // COLORRANGEDIALOG_H

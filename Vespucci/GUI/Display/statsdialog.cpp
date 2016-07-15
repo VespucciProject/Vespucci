@@ -1,6 +1,7 @@
 #include "GUI/Display/statsdialog.h"
 #include "ui_statsdialog.h"
 #include <Math/Stats/confidenceinterval.h>
+#include "Global/global.h"
 
 StatsDialog::StatsDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
@@ -8,17 +9,51 @@ StatsDialog::StatsDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> w
 {
     workspace_ = ws;
     ui->setupUi(this);
-}
+    hist_plot_ = new QCPBars(ui->histogramCustomPlot->xAxis,
+                              ui->histogramCustomPlot->yAxis);
 
-void StatsDialog::SetActiveDataKeys(const QStringList &keys)
-{
-    data_keys_ = keys;
-    UpdateDisplayData();
+    ui->histogramCustomPlot->addPlottable(hist_plot_);
+
 }
 
 StatsDialog::~StatsDialog()
 {
     delete ui;
+}
+
+void StatsDialog::showEvent(QShowEvent *ev)
+{
+    QDialog::showEvent(ev);
+    UpdateDisplayData();
+}
+
+void StatsDialog::closeEvent(QCloseEvent *ev)
+{
+    QDialog::closeEvent(ev);
+    emit SetActionChecked(false);
+}
+
+void StatsDialog::MatrixSelectionChanged(QStringList matrix_keys)
+{
+    data_keys_ = matrix_keys;
+    if (isVisible()) UpdateDisplayData();
+}
+
+void StatsDialog::MatrixToBeRemoved(QStringList matrix_keys)
+{
+    if (Vespucci::KeysAreEqual(data_keys_, matrix_keys)){
+        data_keys_ = QStringList();
+        ClearFields();
+    }
+
+}
+
+void StatsDialog::DatasetToBeRemoved(QString name)
+{
+    if (data_keys_.first() == name){
+        data_keys_ = QStringList();
+        ClearFields();
+    }
 }
 
 void StatsDialog::on_buttonBox_accepted()
@@ -90,15 +125,14 @@ void StatsDialog::GenerateHistogram()
             QVector<double>::fromStdVector(conv_to<vector<double> >::from(hist_data));
     QVector<double> hist_abs_qvec =
             QVector<double>::fromStdVector(conv_to<vector<double> >::from(edges.rows(1, edges.n_rows - 2)));
-
-    QCPBars *hist_plot = new QCPBars(ui->histogramCustomPlot->xAxis,
-                                     ui->histogramCustomPlot->yAxis);
-    hist_plot->setData(hist_abs_qvec, hist_data_qvec);
-    ui->histogramCustomPlot->addPlottable(hist_plot);
+    hist_plot_->setData(hist_abs_qvec, hist_data_qvec);
+    ui->histogramCustomPlot->rescaleAxes();
+    ui->histogramCustomPlot->replot();
 }
 
 void StatsDialog::UpdateDisplayData()
 {
+    if (data_keys_.size() < 2) ClearFields();
     GenerateHistogram();
     CalculateCI();
     const mat& data = workspace_->GetMatrix(data_keys_);
@@ -128,4 +162,20 @@ void StatsDialog::CalculateCI()
 void StatsDialog::on_calculatePushButton_clicked()
 {
     CalculateCI();
+}
+
+void StatsDialog::ClearFields()
+{
+    ui->minLineEdit->setText("NA");
+    ui->maxLineEdit->setText("NA");
+    ui->medLineEdit->setText("NA");
+    ui->stddevLineEdit->setText("NA");
+    ui->meanLineEdit->setText("NA");
+    ui->nameLabel->setText("No matrix selected");
+    ui->dimensionLabel->setText("NA");
+    ui->plottableLabel->setText("NA");
+    ui->mappableLabel->setText("NA");
+    ui->confidenceLineEdit->setText("NA");
+    ui->histogramCustomPlot->clearPlottables();
+    ui->histogramCustomPlot->replot();
 }

@@ -278,7 +278,7 @@ public:
     void RemoveDataset(QString name);
 
     void AddMap(QSharedPointer<MapData> map);
-    void RemoveMapAt(unsigned int i);
+    void RemoveMap(const QString &name);
     int map_loading_count() const;
 
     void SetXDescription(QString description);
@@ -333,6 +333,7 @@ public:
     void AddAuxiliaryMatrix(const QString &name, mat &matrix);
     QStringList AuxiliaryMatrixKeys() const;
     QStringList CoreMatrixKeys() const;
+
 
     const mat & GetAnalysisResultMatrix(const QString &results_key, const QString &matrix_key) const;
     QSharedPointer<AnalysisResults> GetAnalysisResult(const QString &key);
@@ -449,14 +450,9 @@ public:
     MapListModel *map_list_model_;
 
     ///
-    /// \brief *maps_
-    /// A list of the maps created from this data set, managed by the MapListModel
-    QMap<QString, QSharedPointer<MapData> > maps_;
-
-
-    //CWTData *cwt_peak_data_;
-    QSharedPointer<CWTData> cwt_peak_data_;
-
+    /// \brief maps_
+    /// List of all map data types created in this dataset.
+    QList<QSharedPointer<MapData> > maps_;
 
     ///
     /// \brief parent_dataset_indices_

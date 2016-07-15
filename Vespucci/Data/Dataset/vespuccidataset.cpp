@@ -154,9 +154,9 @@ void VespucciDataset::SetOldCopies()
 /// iteratively increased until the name is unique
 bool VespucciDataset::Contains(const QString &key)
 {
-    foreach(QSharedPointer<AnalysisResults> result, analysis_results_)
+    for (auto result: analysis_results_)
         if (result->name() == key) return true;
-    foreach(QString name, auxiliary_matrices_.keys())
+    for (auto name: auxiliary_matrices_.keys())
         if (name == key) return true;
     return false;
 }
@@ -534,10 +534,10 @@ VespucciDataset::VespucciDataset(const QString &name,
                                  vec &x,
                                  vec &y)
     :log_text_stream_(log_file),
-      spectra_(spectra), abscissa_(abscissa), x_(x), y_(y), name_(name)
+      abscissa_(abscissa), x_(x), y_(y), spectra_(spectra), name_(name)
 {
     main_window_ = main_window;
-
+    directory_ = directory;
 }
 
 
@@ -2337,16 +2337,6 @@ int VespucciDataset::map_loading_count() const
     return map_loading_count_;
 }
 
-///
-/// \brief VespucciDataset::RemoveMapAt
-/// \param i index of map in the relevant lists
-///
-void VespucciDataset::RemoveMapAt(unsigned int i)
-{
-    map_list_model_->removeRow(i, QModelIndex());
-
-}
-
 
 ///
 /// \brief VespucciDataset::AddMap
@@ -2355,7 +2345,18 @@ void VespucciDataset::RemoveMapAt(unsigned int i)
 ///
 void VespucciDataset::AddMap(QSharedPointer<MapData> map)
 {
-    map_list_model_->AddMap(map);
+    maps_.append(map);
+    workspace_->UpdateModel();
+}
+
+void VespucciDataset::RemoveMap(const QString &name)
+{
+    if (!MapKeys().contains(name)) return;
+    int i = maps_.size();
+    while (i--){
+        if (maps_[i]->name() == name)
+            maps_.removeAt(i); //might be safe to break the while here
+    }
 }
 
 ///
@@ -2702,7 +2703,7 @@ void VespucciDataset::AddAnalysisResult(QSharedPointer<AnalysisResults> analysis
 QStringList VespucciDataset::AnalysisResultsKeys() const
 {
     QStringList keys;
-    foreach(QSharedPointer<AnalysisResults> result, analysis_results_)
+    for (auto result: analysis_results_)
         keys << result->name();
     return keys;
 }
@@ -2714,7 +2715,7 @@ QStringList VespucciDataset::AnalysisResultsKeys() const
 QMap<QString, QStringList> VespucciDataset::AnalysisResultsTreeStructure() const
 {
     QMap<QString, QStringList> tree_structure;
-    foreach (QSharedPointer<AnalysisResults> result, analysis_results_)
+    for (auto result: analysis_results_)
         tree_structure[result->name()] = result->KeyList();
     return tree_structure;
 }
@@ -2771,7 +2772,7 @@ QStringList VespucciDataset::CoreMatrixKeys() const
 /// tree (O(log n)) but I don't think it should ever be necessary.
 const mat & VespucciDataset::GetAnalysisResultMatrix(const QString &results_key, const QString &matrix_key) const
 {
-    foreach(QSharedPointer<AnalysisResults> result, analysis_results_){
+    for (auto result: analysis_results_){
         if (result->name() == results_key)
             if (result->KeyList().contains(matrix_key))
                 return result->GetMatrix(matrix_key);
@@ -2783,7 +2784,7 @@ const mat & VespucciDataset::GetAnalysisResultMatrix(const QString &results_key,
 QSharedPointer<AnalysisResults> VespucciDataset::GetAnalysisResult(const QString &key)
 {
 
-    foreach(QSharedPointer<AnalysisResults> result, analysis_results_){
+    for (auto result: analysis_results_){
         if (result->name() == key)
             return result;
     }
@@ -2821,7 +2822,10 @@ bool VespucciDataset::IsCoreMatrix(const QString &key) const
 
 QSharedPointer<MapData> VespucciDataset::GetMapData(const QString &key)
 {
-    return maps_[key];
+    for (auto map: maps_){
+        if (map->name() == key) return map;
+    }
+    return QSharedPointer<MapData>(0); //return null mapdata
 }
 
 ///
@@ -2841,56 +2845,56 @@ void VespucciDataset::CreateMap(const QString &map_name,
                                 QCPColorGradient gradient,
                                 int tick_count)
 {
-    vec results;
-    try{
-        results = this->GetAnalysisResultMatrix(results_key, matrix_key).col(column);
-    }catch(exception e){
-        throw e; //let the caller handle the exception
-    }
-    int source_index = maps_.size();
-
+    QStringList data_keys = {name_, results_key, matrix_key};
+    QString map_type = GetAnalysisResult(results_key)->type();
     QSharedPointer<MapData> new_map(new MapData(map_name,
-                                                x_axis_description_,
-                                                y_axis_description_,
-                                                x_, y_, results,
-                                                QSharedPointer<VespucciDataset>(this),
-                                                directory_, gradient,
-                                                source_index, tick_count, main_window_));
-    maps_[map_name] = new_map;
+                                                map_type,
+                                                data_keys,
+                                                column,
+                                                workspace_));
+    new_map->setGradient(gradient);
+    new_map->SetColorScaleTickCount(tick_count);
+    maps_.append(new_map);
     workspace_->UpdateModel();
 }
 
-void VespucciDataset::CreateMap(const QString &map_name, const QString &matrix_key, uword column, QCPColorGradient gradient, int tick_count)
+void VespucciDataset::CreateMap(const QString &map_name,
+                                const QString &matrix_key,
+                                uword column,
+                                QCPColorGradient gradient,
+                                int tick_count)
 {
-    vec results;
-    try{
-        results = auxiliary_matrices_.value(matrix_key)->col(column);
-    }catch(exception e){
-        throw e; //let the caller handle the exception
-    }
-    int source_index = maps_.size();
-
+    if (!auxiliary_matrices_.contains(matrix_key)) return;
+    QStringList data_keys = {name_, matrix_key};
     QSharedPointer<MapData> new_map(new MapData(map_name,
-                                                x_axis_description_,
-                                                y_axis_description_,
-                                                x_, y_, results,
-                                                QSharedPointer<VespucciDataset>(this),
-                                                directory_, gradient,
-                                                source_index, tick_count, main_window_));
-    maps_[map_name] = new_map;
+                                                QString(),
+                                                data_keys,
+                                                column,
+                                                workspace_));
+    new_map->setGradient(gradient);
+    new_map->SetColorScaleTickCount(tick_count);
+    maps_.append(new_map);
     workspace_->UpdateModel();
 }
 
 bool VespucciDataset::ShowMapViewer(const QString &map_key, bool show)
 {
-    if (!maps_.contains(map_key)){return false;}
-    maps_[map_key]->ShowMapWindow(show);
-    return true;
+    if (!MapKeys().contains(map_key)) return false;
+    for (auto map: maps_){
+        if (map->name() == map_key){
+            map->ShowMapWindow(show);
+            return true;
+        }
+    }
+    return false;
 }
 
 QStringList VespucciDataset::MapKeys() const
 {
-    return maps_.keys();
+    QStringList map_keys;
+    for (auto map: maps_)
+        map_keys << map->name();
+    return map_keys;
 }
 
 

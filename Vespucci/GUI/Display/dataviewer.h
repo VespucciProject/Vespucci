@@ -43,16 +43,21 @@ class DataViewer : public QDialog
     Q_OBJECT
 
 public:
-    explicit DataViewer(MainWindow *parent = 0);
+    explicit DataViewer(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws);
     ~DataViewer();
-    void AddTab(const mat & object, const QString &name);
-    const mat & EmptyMatrix();
-
+    void AddTab(QStringList keys);
+signals:
+    void SetActionChecked(bool checked);
+protected:
+    void closeEvent(QCloseEvent *ev);
 public slots:
     void RemoveTab(int index);
+    void DatasetToBeRemoved(QString name);
+    void MatrixToBeRemoved(QStringList keys);
 private:
     Ui::DataViewer *ui;
     mat empty_matrix_;
+    QSharedPointer<VespucciWorkspace> workspace_;
 };
 
 #endif // DATAVIEWER_H

@@ -36,6 +36,8 @@ public:
                                    const QString &map_key) const;
     QSharedPointer<MapData> GetMap(const QStringList &keys) const;
 
+    QList<QSharedPointer<MapData> > GetMapsUsingColorRange(const QString &range_key);
+
     const mat & GetResultsMatrix(const QString &dataset_key,
                           const QString &results_key,
                           const QString &matrix_key) const;
@@ -63,6 +65,7 @@ public:
     void RemoveDataset(const QString &name);
     const mat & EmptyMatrix() const;
     bool HasDataset(const QString &key) const;
+    bool HasMatrix(const QStringList &keys) const;
 
 private:
     QList<QSharedPointer<VespucciDataset> > datasets_;

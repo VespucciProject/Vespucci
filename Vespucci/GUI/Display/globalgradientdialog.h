@@ -17,18 +17,39 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef GLOBAL
-#define GLOBAL
-#include "qcustomplot.h"
-namespace Vespucci{
-    bool SavePlot(QCustomPlot *plot, QString filename);
-    void SetQCPFonts(QCustomPlot *plot, const QFont &font);
-    QProgressDialog *DisplayProgressDialog(QWidget *parent, QString title, QString text);
-    bool KeysAreEqual(QStringList &keys1, QStringList &keys2);
-    struct GlobalGradient{
-        QCPColorGradient gradient;
-        QCPRange range;
-    };
-}
-#endif // GLOBAL
+#ifndef GLOBALGRADIENTDIALOG_H
+#define GLOBALGRADIENTDIALOG_H
 
+#include <QDialog>
+#include "Global/vespucciworkspace.h"
+#include "GUI/Display/colorrangedialog.h"
+class ColorRangeDialog;
+namespace Ui {
+class GlobalGradientDialog;
+}
+
+class GlobalGradientDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit GlobalGradientDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> workspace);
+    ~GlobalGradientDialog();
+    void AddGradient(QString name, QString gradient_key, double lower, double upper);
+private slots:
+    void on_addPushButton_clicked();
+
+    void on_editPushButton_clicked();
+
+    void on_removePushButton_clicked();
+
+    void on_recalculatePushButton_clicked();
+
+private:
+    void RefreshListWidget();
+    Ui::GlobalGradientDialog *ui;
+    QSharedPointer<VespucciWorkspace> workspace_;
+    ColorRangeDialog *color_range_dialog_;
+};
+
+#endif // GLOBALGRADIENTDIALOG_H

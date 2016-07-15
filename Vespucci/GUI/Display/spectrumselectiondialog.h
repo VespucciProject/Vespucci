@@ -21,15 +21,19 @@ class SpectrumSelectionDialog : public QDialog
 public:
     explicit SpectrumSelectionDialog(MainWindow *main_window);
     ~SpectrumSelectionDialog();
-    void SetActiveDataset(QSharedPointer<VespucciDataset> dataset);
-
+signals:
+    void SetActionChecked(bool checked);
+protected:
+    void showEvent(QShowEvent *ev);
+    void closeEvent(QCloseEvent *ev);
+public slots:
+    void DatasetSelectionChanged(QString dataset_key);
+    void DatasetToBeRemoved(QString key);
 private slots:
     void on_tableView_clicked(const QModelIndex &index);
     void SpectrumRemoved(int row);
-
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
+    void on_deletePushButton_clicked();
+    void on_exportPushButton_clicked();
 
 private:
     Ui::SpectrumSelectionDialog *ui;

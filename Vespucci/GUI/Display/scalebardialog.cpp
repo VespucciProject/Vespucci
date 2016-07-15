@@ -25,7 +25,7 @@
 /// \param parent See QWidget
 /// \param map_data MapData associated with the MapViewer that launches this dialog
 ///
-ScaleBarDialog::ScaleBarDialog(QWidget *parent, MapData *map_data) :
+ScaleBarDialog::ScaleBarDialog(QWidget *parent, QSharedPointer<MapData> map_data) :
     QDialog(parent),
     ui(new Ui::ScaleBarDialog)
 {

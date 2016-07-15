@@ -14,10 +14,17 @@ class StatsDialog : public QDialog
 
 public:
     StatsDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws);
-    void SetActiveMatrix(const vec &data);
-    void SetActiveDataKeys(const QStringList &keys);
     ~StatsDialog();
+signals:
+    void SetActionChecked(bool checked);
+protected:
+    void showEvent(QShowEvent *ev);
+    void closeEvent(QCloseEvent *ev);
 
+public slots:
+    void MatrixSelectionChanged(QStringList matrix_keys);
+    void MatrixToBeRemoved(QStringList matrix_keys);
+    void DatasetToBeRemoved(QString name);
 
 private slots:
     void on_buttonBox_accepted();
@@ -25,6 +32,7 @@ private slots:
     void on_calculatePushButton_clicked();
 
 private:
+    void ClearFields();
     double CalculateMedian();
     double CalculateStdDev();
     double CalculateMean();
@@ -34,6 +42,7 @@ private:
     Ui::StatsDialog *ui;
     QStringList data_keys_;
     QSharedPointer<VespucciWorkspace> workspace_;
+    QCPBars *hist_plot_;
 };
 
 #endif // STATSDIALOG_H

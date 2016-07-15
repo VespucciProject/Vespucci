@@ -17,16 +17,44 @@ SpectrumSelectionDialog::~SpectrumSelectionDialog()
     delete ui;
 }
 
-void SpectrumSelectionDialog::SetActiveDataset(QSharedPointer<VespucciDataset> dataset)
+void SpectrumSelectionDialog::showEvent(QShowEvent *ev)
 {
-    dataset_ = dataset;
-    table_model_ = new SpectraTableModel(this, dataset);
-    ui->tableView->setModel(table_model_);
+    QDialog::showEvent(ev);
+    if (dataset_.data()){
+        table_model_ = new SpectraTableModel(this, dataset_);
+        ui->tableView->setModel(table_model_);
+    }
+
+}
+
+void SpectrumSelectionDialog::closeEvent(QCloseEvent *ev)
+{
+    QDialog::closeEvent(ev);
+    emit SetActionChecked(false);
+}
+
+void SpectrumSelectionDialog::DatasetSelectionChanged(QString dataset_key)
+{
+    if (dataset_->name() != dataset_key)
+        dataset_ = workspace_->GetDataset(dataset_key);
+    if (isVisible()){
+        table_model_ = new SpectraTableModel(this, dataset_);
+        ui->tableView->setModel(table_model_);
+    }
+}
+
+void SpectrumSelectionDialog::DatasetToBeRemoved(QString key)
+{
+    if (dataset_.data() && dataset_->name() == key){
+        table_model_ = new SpectraTableModel(this);
+        ui->tableView->setModel(table_model_);
+    }
+
 }
 
 void SpectrumSelectionDialog::on_tableView_clicked(const QModelIndex &index)
 {
-    if (!dataset_.data()) return; //should never happen, but let's be safe
+    if (!dataset_.data()) return; //occurs when dialog is open and parent dataset removed
     if (index.isValid() && table_model_->rowCount(index)){
         QSharedPointer<mat> data(new mat(join_horiz(dataset_->abscissa(),
                                                     dataset_->spectra_ptr()->col(index.row()))));
@@ -65,7 +93,7 @@ void SpectrumSelectionDialog::SpectrumRemoved(int row)
     }
 }
 
-void SpectrumSelectionDialog::on_pushButton_clicked()
+void SpectrumSelectionDialog::on_deletePushButton_clicked()
 {
     if (!dataset_.data()) return; //should never happen, but let's be safe
 
@@ -84,10 +112,9 @@ void SpectrumSelectionDialog::on_pushButton_clicked()
             main_window_->DisplayExceptionWarning(e);
         }
     }
-
 }
 
-void SpectrumSelectionDialog::on_pushButton_2_clicked()
+void SpectrumSelectionDialog::on_exportPushButton_clicked()
 {
     if (!dataset_.data()) return; //should never happen, but let's be safe
 
@@ -115,5 +142,4 @@ void SpectrumSelectionDialog::on_pushButton_2_clicked()
         QMessageBox::information(main_window_, "File Saved", filename + " saved successfully");
     else
         QMessageBox::warning(main_window_, "File not saved", "File not saved successfully");
-
 }

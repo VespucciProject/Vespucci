@@ -33,7 +33,7 @@ KMeansDialog::KMeansDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws
     ui->setupUi(this);
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
-    ui->nameLineEdit->setEnabled(false);
+    ui->clustersSpinBox->setRange(0, dataset_->spectra_ptr()->n_cols);
 }
 
 KMeansDialog::~KMeansDialog()

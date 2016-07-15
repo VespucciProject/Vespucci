@@ -182,10 +182,10 @@ macx{
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 
     QMAKE_CXXFLAGS += --system-header-prefix=/usr \
-                      --system-header-prefix=$$PWD/../armadillo \
-                      --system-header-prefix=$$PWD/../mlpack \
-                      --system-header-prefix=$$PWD/../yaml-cpp \
-                      --system-header-prefix=$$PWD/../quazip
+                      --system-header-prefix=$$PWD/../../armadillo \
+                      --system-header-prefix=$$PWD/../../mlpack \
+                      --system-header-prefix=$$PWD/../../yaml-cpp \
+                      --system-header-prefix=$$PWD/../../quazip
 
     ICON = vespuccilogo.icns
     LIBS += -L/usr/lib -lc++

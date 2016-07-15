@@ -25,6 +25,10 @@ public:
     void AddTransientPlot(const vec &abscissa, const vec &data, const QString &tab_title);
     void AddTransientPlot(const mat & paired_data, const QString &tab_title);
     void CloseTransientTab();
+signals:
+    void SetActionChecked(bool checked);
+protected:
+    void closeEvent(QCloseEvent *ev);
 public slots:
 private slots:
 

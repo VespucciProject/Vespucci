@@ -31,3 +31,10 @@ PythonShellDialog::~PythonShellDialog()
 {
     delete ui;
 }
+
+
+void PythonShellDialog::closeEvent(QCloseEvent *ev)
+{
+    QDialog::closeEvent(ev);
+    emit SetActionChecked(false);
+}

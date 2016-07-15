@@ -40,7 +40,7 @@ void BulkConversionDialog::on_browsePushButton_clicked()
 void BulkConversionDialog::DeleteItem()
 {
     QList<QListWidgetItem*> items = ui->filenameListWidget->selectedItems();
-    foreach(QListWidgetItem *item, items)
+    for (auto item: items)
         ui->filenameListWidget->removeItemWidget(item);
 }
 
@@ -52,7 +52,7 @@ void BulkConversionDialog::on_buttonBox_accepted()
     QList<QListWidgetItem *> items = ui->filenameListWidget->selectedItems();
     vector<string> infile_names;
 
-    foreach(QListWidgetItem * item, items)
+    for (auto item: items)
         infile_names.push_back(item->text().toStdString());
 
     string outfile_path = ui->targetLineEdit->text().toStdString();

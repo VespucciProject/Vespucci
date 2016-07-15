@@ -138,7 +138,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionSettings"/>
-    <addaction name="actionSet_Global_Color_Scale"/>
+    <addaction name="actionGlobal_Color_Scales"/>
    </widget>
    <widget class="QMenu" name="menuProcessing">
     <property name="title">
@@ -358,14 +358,9 @@
     <string>Cro&amp;p</string>
    </property>
   </action>
-  <action name="actionView_Dataset_Elements">
+  <action name="actionGlobal_Color_Scales">
    <property name="text">
-    <string>V&amp;iew Dataset Elements</string>
-   </property>
-  </action>
-  <action name="actionSet_Global_Color_Scale">
-   <property name="text">
-    <string>&amp;Set Global Color Scale...</string>
+    <string>Global Color Scales</string>
    </property>
   </action>
   <action name="actionK_Means_Clustering">
@@ -401,11 +396,6 @@
   <action name="actionSpectra_as_Columns">
    <property name="text">
     <string>Spectra (as Columns)</string>
-   </property>
-  </action>
-  <action name="actionView_Edit_Spectra">
-   <property name="text">
-    <string>&amp;View/Remove Spectra</string>
    </property>
   </action>
   <action name="actionBooleanize_Clamp">

@@ -19,9 +19,10 @@
    <string>Map Viewer</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QCustomPlot" name="mapView" native="true"/>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="MapPlot" name="mapPlot" native="true">
+     </widget>
     </item>
    </layout>
   </widget>
@@ -31,7 +32,7 @@
      <x>0</x>
      <y>0</y>
      <width>500</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMap">
@@ -51,25 +52,16 @@
     <addaction name="actionInterpolate"/>
     <addaction name="actionShow_Axes"/>
     <addaction name="actionShow_Color_Scale"/>
-    <addaction name="actionCommon_Color_Gradient"/>
     <addaction name="separator"/>
+    <addaction name="actionSet_Global_Color_Scale"/>
+    <addaction name="actionSet_Color_Scale_Label"/>
     <addaction name="actionAdd_Scale_Bar"/>
     <addaction name="actionSet_Color_Scheme"/>
     <addaction name="actionSet_Font"/>
     <addaction name="separator"/>
-    <addaction name="actionShow_Spectrum_Viewer"/>
-   </widget>
-   <widget class="QMenu" name="menuData">
-    <property name="title">
-     <string>Data</string>
-    </property>
-    <addaction name="actionNew_Dataset_from_Map"/>
-    <addaction name="actionStats"/>
-    <addaction name="actionExport_Values"/>
    </widget>
    <addaction name="menuMap"/>
    <addaction name="menuDisplay"/>
-   <addaction name="menuData"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSave_Image_As">
@@ -180,12 +172,22 @@
     <string>Set Font...</string>
    </property>
   </action>
+  <action name="actionSet_Color_Scale_Label">
+   <property name="text">
+    <string>Set Color Scale Label</string>
+   </property>
+  </action>
+  <action name="actionSet_Global_Color_Scale">
+   <property name="text">
+    <string>Set Global Color Scale...</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QCustomPlot</class>
+   <class>MapPlot</class>
    <extends>QWidget</extends>
-   <header>qcustomplot.h</header>
+   <header>GUI/Display/mapplot.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

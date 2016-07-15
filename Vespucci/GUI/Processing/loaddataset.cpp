@@ -53,10 +53,10 @@ LoadDataset::LoadDataset(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) 
     ui->xDescriptionLineEdit->setText(abs_label);
     ui->xUnitsLineEdit->setText(abs_units);
 
-    QObject::connect(ui->filenameLineEdit,
-                     SIGNAL(textChanged(QString)),
-                     this,
-                     SLOT(FilenameChanged(QString)));
+    connect(ui->filenameLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &LoadDataset::FilenameChanged);
 }
 
 LoadDataset::~LoadDataset()

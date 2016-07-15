@@ -44,6 +44,11 @@ void DataWidget::SetTableModel(VespucciTableModel *table_model)
     table_model_ = table_model;
 }
 
+VespucciTableModel *DataWidget::GetTableModel()
+{
+    return table_model_;
+}
+
 DataWidget::~DataWidget()
 {
     delete ui;
@@ -58,7 +63,10 @@ void DataWidget::on_forwardPushButton_clicked()
     ui->backPushButton->setEnabled(true);
     ui->forwardPushButton->setEnabled(next_end_column - 1 < matrix_columns_);
     current_start_column_ = next_start_column;
-    table_model_ = new VespucciTableModel(ui->tableView, table_model_->GetMatrix(), next_start_column-1);
+    table_model_ = new VespucciTableModel(ui->tableView,
+                                          table_model_->GetMatrix(),
+                                          next_start_column - 1,
+                                          table_model_->data_keys());
     ui->tableView->setModel(table_model_);
     QString label = "Showing columns " + QString::number(current_start_column_)
             + "–" + QString::number(next_end_column);
@@ -77,7 +85,10 @@ void DataWidget::on_backPushButton_clicked()
     //a viewable next page must be availible
     current_start_column_ = next_start_column;
     uint next_end_column = current_start_column_ - 15;
-    table_model_ = new VespucciTableModel(ui->tableView, table_model_->GetMatrix(), next_start_column-1);
+    table_model_ = new VespucciTableModel(ui->tableView,
+                                          table_model_->GetMatrix(),
+                                          next_start_column-1,
+                                          table_model_->data_keys());
     ui->tableView->setModel(table_model_);
     QString label = "Showing columns " + QString::number(current_start_column_)
             + "–" + QString::number(next_end_column);

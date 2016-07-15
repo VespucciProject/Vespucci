@@ -27,8 +27,6 @@
 #include <fstream>
 #include "Data/Imaging/mapdata.h"
 #include "Global/vespucciworkspace.h"
-#include <boost/program_options.hpp>
-#include <cassert>
 
 ///
 /// \brief main

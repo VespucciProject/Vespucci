@@ -31,11 +31,13 @@
 #include "GUI/QAbstractItemModel/datasettreemodel.h"
 #include "Global/enums.h"
 #include "Global/datamodel.h"
+#include "Global/global.h"
 #include "Data/Analysis/analysisresults.h"
 class VespucciDataset;
 class MainWindow;
 class DatasetTreeModel;
 class AnalysisResults;
+
 ///
 /// \brief The VespucciWorkspace class
 /// A class which contains all "global variables" (that aren't held in MainWindow)
@@ -85,14 +87,19 @@ public:
     void DestroyLogFile(QFile *log_file);
 
 
-    bool RecalculateGlobalDataRange(QCPRange* new_data_range);
-    void RefreshGlobalColorGradient(QCPColorGradient new_gradient);
-    void SetGlobalDataRange(QCPRange* new_data_range);
+    void AddGlobalGradient(QString name, QString gradient_key, double lower, double upper);
+    void RecalculateGlobalGradient(QString name);
+    void RemoveColorRange(QString name);
+    QStringList GlobalGradientKeys();
+    QMap<QString, Vespucci::GlobalGradient> global_gradients();
+    QCPColorGradient GetGradient(QString key);
+    Vespucci::GlobalGradient GetGlobalGradient(QString key);
+    QStringList GradientNames();
+
 
     void ClearDatasets();
 
     QList<QSharedPointer<VespucciDataset> > *datasets();
-    void SetDatasets(QList<QSharedPointer<VespucciDataset> > *datasets);
     unsigned int UpdateCount();
     DatasetTreeModel *dataset_tree_model() const;
     void CleanLogFiles();
@@ -105,10 +112,12 @@ public:
     DataModel *data_model();
 
     const mat & GetMatrix(const QStringList &keys) const;
+    bool HasMatrix(const QStringList &keys) const;
 
     bool Mappable(const QStringList &keys) const;
     bool Plottable(const QStringList &keys) const;
-    //bool SavePlot(QCustomPlot *plot, const QString filename) const;
+
+
 
 private:
 
@@ -157,6 +166,8 @@ private:
     /// A model that keeps track of the datasets in the workspace and their members
     DataModel *data_model_;
 
+    QMap<QString, QCPColorGradient> gradients_;
+    QMap<QString, Vespucci::GlobalGradient> global_gradients_;
 };
 
 #endif // VESPUCCIWORKSPACE_H

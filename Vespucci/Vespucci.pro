@@ -102,7 +102,6 @@ SOURCES += main.cpp\
     GUI/Processing/booleanizedialog.cpp \
     GUI/Display/citationdialog.cpp \
     GUI/Processing/cropdialog.cpp \
-    GUI/Processing/dataextractordialog.cpp \
     GUI/Display/dataviewer.cpp \
     GUI/Processing/filterdialog.cpp \
     GUI/Analysis/kmeansdialog.cpp \
@@ -117,7 +116,6 @@ SOURCES += main.cpp\
     GUI/Display/scalebardialog.cpp \
     GUI/QAbstractItemModel/spectratablemodel.cpp \
     GUI/Display/spectrumselectiondialog.cpp \
-    GUI/Display/spectrumviewer.cpp \
     GUI/Display/statsdialog.cpp \
     GUI/Processing/thresholddialog.cpp \
     GUI/Analysis/univariatedialog.cpp \
@@ -153,7 +151,10 @@ SOURCES += main.cpp\
     qcustomplot.cpp \
     Data/Analysis/multianalyzer.cpp \
     GUI/Analysis/multianalysisdialog.cpp \
-    GUI/Analysis/hypothesistestdialog.cpp
+    GUI/Analysis/hypothesistestdialog.cpp \
+    GUI/Display/mapplot.cpp \
+    GUI/Display/globalgradientdialog.cpp \
+    GUI/Display/colorrangedialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -171,7 +172,6 @@ HEADERS  += \
     GUI/Processing/baselinedialog.h \
     GUI/Processing/booleanizedialog.h \
     GUI/Processing/cropdialog.h \
-    GUI/Processing/dataextractordialog.h \
     GUI/Display/aboutdialog.h \
     GUI/Display/citationdialog.h \
     GUI/Display/dataviewer.h \
@@ -187,7 +187,6 @@ HEADERS  += \
     GUI/Display/scalebardialog.h \
     GUI/QAbstractItemModel/spectratablemodel.h \
     GUI/Display/spectrumselectiondialog.h \
-    GUI/Display/spectrumviewer.h \
     GUI/Display/statsdialog.h \
     GUI/Processing/thresholddialog.h \
     GUI/Analysis/univariatedialog.h \
@@ -224,7 +223,10 @@ HEADERS  += \
     qcustomplot.h \
     Data/Analysis/multianalyzer.h \
     GUI/Analysis/multianalysisdialog.h \
-    GUI/Analysis/hypothesistestdialog.h
+    GUI/Analysis/hypothesistestdialog.h \
+    GUI/Display/mapplot.h \
+    GUI/Display/globalgradientdialog.h \
+    GUI/Display/colorrangedialog.h
 
 
 FORMS    += \
@@ -235,7 +237,6 @@ FORMS    += \
     GUI/Processing/baselinedialog.ui \
     GUI/Display/citationdialog.ui \
     GUI/Processing/cropdialog.ui \
-    GUI/Processing/dataextractordialog.ui \
     GUI/Display/dataviewer.ui \
     GUI/Processing/filterdialog.ui \
     GUI/Analysis/kmeansdialog.ui \
@@ -248,7 +249,6 @@ FORMS    += \
     GUI/Processing/rangedialog.ui \
     GUI/Display/scalebardialog.ui \
     GUI/Display/spectrumselectiondialog.ui \
-    GUI/Display/spectrumviewer.ui \
     GUI/Display/statsdialog.ui \
     GUI/Processing/thresholddialog.ui \
     GUI/Analysis/vcadialog.ui \
@@ -273,7 +273,9 @@ FORMS    += \
     GUI/macrodialog.ui \
     GUI/pythonshelldialog.ui \
     GUI/Analysis/multianalysisdialog.ui \
-    GUI/Analysis/hypothesistestdialog.ui
+    GUI/Analysis/hypothesistestdialog.ui \
+    GUI/Display/globalgradientdialog.ui \
+    GUI/Display/colorrangedialog.ui
 
 RESOURCES += \
     resources.qrc
@@ -335,10 +337,10 @@ macx{
     CONFIG += app_bundle
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
     QMAKE_CXXFLAGS += --system-header-prefix=/usr \
-                      --system-header-prefix=$$PWD/../armadillo \
-                      --system-header-prefix=$$PWD/../mlpack \
-                      --system-header-prefix=$$PWD/../yaml-cpp \
-                      --system-header-prefix=$$PWD/../quazip
+                      --system-header-prefix=$$PWD/../../armadillo \
+                      --system-header-prefix=$$PWD/../../mlpack \
+                      --system-header-prefix=$$PWD/../../yaml-cpp \
+                      --system-header-prefix=$$PWD/../../quazip
 
 
     ICON = $$PWD/vespuccilogo.icns

@@ -35,5 +35,11 @@ MacroDialog::~MacroDialog()
 
 void MacroDialog::SetActiveDataset(QSharedPointer<VespucciDataset> dataset)
 {
-    //dataset_ = dataset;
+    dataset_ = dataset;
+}
+
+void MacroDialog::closeEvent(QCloseEvent *ev)
+{
+    QDialog::closeEvent(ev);
+    emit SetActionChecked(false);
 }

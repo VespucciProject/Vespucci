@@ -23,16 +23,19 @@
 /// \param parent See QDialog
 /// \param iinput_data The matrix that is displayed by the model
 ///
-VespucciTableModel::VespucciTableModel(QObject *parent, const mat & input_data) :
+VespucciTableModel::VespucciTableModel(QObject *parent, const mat & input_data, const QStringList &data_keys) :
     QAbstractTableModel(parent),
-    data_(input_data)
+    data_(input_data),
+    data_keys_(data_keys)
 {
     start_column_ = 0;
 }
 
-VespucciTableModel::VespucciTableModel(QObject *parent, const mat & input_data, const uword &start_column)
+
+VespucciTableModel::VespucciTableModel(QObject *parent, const mat & input_data, const uword &start_column, const QStringList &data_keys)
     : QAbstractTableModel(parent),
-      data_(input_data)
+      data_(input_data),
+      data_keys_(data_keys)
 {
     start_column_ = start_column;
 }
@@ -107,4 +110,9 @@ bool VespucciTableModel::SaveMatrix(const QString &filename, const QString &exte
 uword VespucciTableModel::MatrixColumns()
 {
     return data_.n_cols;
+}
+
+QStringList VespucciTableModel::data_keys()
+{
+    return data_keys_;
 }

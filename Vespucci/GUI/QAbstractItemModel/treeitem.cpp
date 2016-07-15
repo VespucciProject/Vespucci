@@ -108,14 +108,14 @@ const QString TreeItem::DatasetKey() const
 QStringList TreeItem::ChildNames() const
 {
     QStringList child_names;
-    foreach(TreeItem *item, child_items_)
+    for (auto item: child_items_)
         child_names << item->data(0).toString();
     return child_names;
 }
 
 bool TreeItem::HasChild(const QString &name)
 {
-    foreach(TreeItem *child_item, child_items_)
+    for (auto child_item: child_items_)
         if (child_item->data(0) == name)
             return true;
 
