@@ -107,7 +107,10 @@ void StatsDialog::GenerateHistogram()
     QCPBars *hist_plot = new QCPBars(ui->histogramCustomPlot->xAxis,
                                      ui->histogramCustomPlot->yAxis);
     hist_plot->addData(edgesq, histq);
+    hist_plot->setWidth(edges(1) - edges(0));
+    edgesq.append(data.max()); //add maximum back in for plotting purposes
     ui->histogramCustomPlot->addPlottable(hist_plot);
+    ui->histogramCustomPlot->xAxis->setTickVector(edgesq);
     ui->histogramCustomPlot->rescaleAxes();
     ui->histogramCustomPlot->replot();
 }

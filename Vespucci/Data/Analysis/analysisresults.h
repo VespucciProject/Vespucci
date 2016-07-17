@@ -38,6 +38,7 @@ public:
     virtual ~AnalysisResults();
     const mat & GetMatrix(const QString &key);
     void AddMatrix(const QString &key, const mat &value, QStringList column_headings = QStringList());
+    void AddColumns(const QStringList &keys, const mat &value);
     void AddMetadata(QString key, QString value);
     void AddField(const QString &key, const field<mat> &value);
     const field<mat> & GetField(const QString &key);

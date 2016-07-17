@@ -1290,7 +1290,7 @@ void MainWindow::on_actionMapResult_triggered()
 {
     TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     QStringList item_keys = item->keys();
-    MapDialog *map_dialog = new MapDialog(this, item_keys);
+    MapDialog *map_dialog = new MapDialog(this, item_keys, workspace_);
     map_dialog->setAttribute(Qt::WA_DeleteOnClose);
     map_dialog->show();
 }

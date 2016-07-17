@@ -30,19 +30,19 @@ void UnivariateData::Apply(double left_bound, double right_bound, uword bound_wi
     }
 
 
-    QStringList headings({ "Peak Centers",
-                           "Peak Intensities",
-                           "Adjusted Peak Intensities",
-                           "Total Area",
-                           "Adjusted Area",
-                           "Area Between Inflection Points",
-                           "Adjusted Area Between Inflection Points",
-                           "Empirical Full-Width at Half-Maximum"});
+    QStringList keys({ "Peak Centers",
+                        "Peak Intensities",
+                        "Adjusted Peak Intensities",
+                        "Total Area",
+                        "Adjusted Area",
+                        "Area Between Inflection Points",
+                        "Adjusted Area Between Inflection Points",
+                        "Empirical Full-Width at Half-Maximum"});
 
-    AddMatrix("Results", results, headings);
+    AddColumns(keys, results);
     AddMatrix("Inflection Points", inflection_points);
-    AddMatrix("Baslines", baselines);
-
+    AddMatrix("Baselines", baselines);
+    AddField("Inflection Baselines", inflection_baselines);
 }
 
 void UnivariateData::Apply(double first_left_bound, double first_right_bound, double second_left_bound, double second_right_bound, uword bound_window, const mat &spectra, const vec &abscissa)
