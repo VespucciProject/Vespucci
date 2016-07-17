@@ -20,7 +20,7 @@
 #include "mapdialog.h"
 #include "ui_mapdialog.h"
 
-MapDialog::MapDialog(MainWindow *parent, QStringList data_keys) :
+MapDialog::MapDialog(MainWindow *parent, QStringList data_keys, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
     ui(new Ui::MapDialog)
 {
@@ -32,7 +32,7 @@ MapDialog::MapDialog(MainWindow *parent, QStringList data_keys) :
     }
     main_window_ = parent;
     data_keys_ = data_keys;
-    workspace_ = main_window_->workspace_ptr();
+    workspace_ = ws;
     uword col_count;
     try{
         col_count = workspace_->GetMatrix(data_keys_).n_cols;

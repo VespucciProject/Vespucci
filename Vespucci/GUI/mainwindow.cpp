@@ -64,8 +64,8 @@ MainWindow::MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     dataset_tree_model_ = new DatasetTreeModel(ui->datasetTreeView);
     ui->datasetTreeView->setModel(dataset_tree_model_);
     data_viewer_ = new DataViewer(this, workspace_);
-    plot_viewer_ = new PlotViewer(this);
-    spectrum_editor_ = new SpectrumSelectionDialog(this);
+    plot_viewer_ = new PlotViewer(this, workspace_);
+    spectrum_editor_ = new SpectrumSelectionDialog(this, workspace_);
     stats_viewer_ = new StatsDialog(this, workspace_);
     macro_editor_ = new MacroDialog(this, workspace_);
     python_shell_ = new PythonShellDialog(this, workspace_);
@@ -104,6 +104,8 @@ MainWindow::MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
             data_viewer_, &DataViewer::MatrixToBeRemoved);
     connect(this, &MainWindow::MatrixToBeRemoved,
             stats_viewer_, &StatsDialog::MatrixToBeRemoved);
+
+
 
 }
 
@@ -144,16 +146,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
         event->ignore();
     }
 }
-
-void MainWindow::TreeItemSelected(const QModelIndex &index)
-{
-    if (!index.isValid()) return;
-    TreeItem *selected_item = dataset_tree_model_->getItem(index);
-    emit DatasetSelectionChanged(selected_item->keys()[0]);
-    if (selected_item->type() == TreeItem::ItemType::Matrix)
-        emit MatrixSelectionChanged(selected_item->keys());
-}
-
 
 ///
 /// \brief MainWindow::on_actionExit_triggered
@@ -985,45 +977,6 @@ void MainWindow::RangeDialogAccepted(double min, double max)
     }
 }
 
-void MainWindow::TreeItemDoubleClicked(const QModelIndex &index)
-{
-    //if item represents a displayable (color map or matrix), then trigger its display
-    //nothing stops the user from having a matrix open in multiple tabs in the DataViewer
-    //If they want to not display the data, they can close the tab
-    TreeItem *item = dataset_tree_model_->getItem(index);
-    TreeItem::ItemType type = item->type();
-
-
-    if (type == TreeItem::ItemType::Map){
-        try{
-            QSharedPointer<MapData> map_data = workspace_->GetMap(item->keys()[0], item->keys()[1]);
-            map_data->ShowMapWindow(!map_data->MapWindowVisible());
-        }catch (exception e){
-            DisplayExceptionWarning("TreeItemDoubleClicked", e);
-        }
-    }
-    else if (type == TreeItem::ItemType::Matrix){
-        QStringList keys = item->keys();
-        if (keys.size() == 2){
-            try{
-                data_viewer_->AddTab(item->keys());
-            }catch(exception e){
-                DisplayExceptionWarning("TreeItemDoubleClicked", e);
-            }
-        }
-        if (keys.size() == 3){
-            try{
-                data_viewer_->AddTab(item->keys());
-            }catch (exception e){
-                DisplayExceptionWarning("TreeItemDoubleClicked", e);
-            }
-        }
-    }
-    else{
-        //there is nothing to dispaly
-    }
-}
-
 void MainWindow::SetPlotViewerActionChecked(bool checked)
 {
     ui->actionPlot_Viewer->setChecked(checked);
@@ -1379,5 +1332,29 @@ void MainWindow::on_actionGlobal_Color_Scales_triggered()
    GlobalGradientDialog *gradient_dialog = new GlobalGradientDialog(this, workspace_);
    gradient_dialog->setAttribute(Qt::WA_DeleteOnClose);
    gradient_dialog->show();
+}
 
+void MainWindow::on_datasetTreeView_clicked(const QModelIndex &index)
+{
+    TreeItem *item = dataset_tree_model_->getItem(index);
+    QStringList data_keys = item->keys();
+    emit DatasetSelectionChanged(data_keys.first());
+    if (item->type() == TreeItem::ItemType::Matrix)
+        emit MatrixSelectionChanged(data_keys);
+}
+
+void MainWindow::on_datasetTreeView_doubleClicked(const QModelIndex &index)
+{
+    TreeItem *item = dataset_tree_model_->getItem(index);
+    QStringList data_keys = item->keys();
+    emit DatasetSelectionChanged(data_keys.first());
+    if (item->type() == TreeItem::ItemType::Matrix){
+        data_viewer_->AddTab(data_keys);
+        data_viewer_->setVisible(true);
+        emit MatrixSelectionChanged(data_keys);
+    }
+    if (item->type() == TreeItem::ItemType::Map)
+        workspace_->GetMap(data_keys.first(), data_keys.last())->ShowMapWindow(true);
+    if (item->type() == TreeItem::ItemType::Dataset)
+        spectrum_editor_->setVisible(true);
 }

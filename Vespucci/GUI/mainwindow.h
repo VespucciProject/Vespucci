@@ -84,8 +84,6 @@ signals:
 protected:
     void closeEvent(QCloseEvent *event);
 public slots:
-    void TreeItemSelected(const QModelIndex &index);
-    void TreeItemDoubleClicked(const QModelIndex &index);
     void RangeDialogAccepted(double min, double max);
     void SetPlotViewerActionChecked(bool checked);
     void SetDataViewerActionChecked(bool checked);
@@ -199,6 +197,10 @@ private slots:
     void on_actionOnline_Documentation_triggered();
 
     void on_actionGlobal_Color_Scales_triggered();
+
+    void on_datasetTreeView_clicked(const QModelIndex &index);
+
+    void on_datasetTreeView_doubleClicked(const QModelIndex &index);
 
 private:
     Ui::MainWindow *ui;

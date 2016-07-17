@@ -17,33 +17,28 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef MAPDIALOG_H
-#define MAPDIALOG_H
+#include "Math/Stats/histogram.h"
+arma::uvec Vespucci::Math::Stats::GenerateHistogram(const arma::mat &data,
+                                                    arma::vec &edges,
+                                                    uint bins)
+{
+    if (!data.n_elem) return arma::uvec();
+    uint bin_count = bins;
 
-#include <QDialog>
-#include "Global/vespucciworkspace.h"
-class MainWindow;
-namespace Ui {
-class MapDialog;
+    if (!bins){
+        bin_count = Vespucci::Math::Stats::EstimateBinCount(data);
+    }
+
+    bin_count = (bin_count > 2 ? bin_count : 3); //histogram will always have at least three bins
+    edges = arma::linspace<arma::vec>(data.min() - 1.0, data.max() + 1.0, bin_count + 1);
+    arma::umat hist_data = arma::histc(data, edges);
+    hist_data = arma::sum(hist_data, 1);
+
+    return arma::conv_to<arma::uvec>::from(hist_data);
 }
 
-class MapDialog : public QDialog
+uint Vespucci::Math::Stats::EstimateBinCount(const arma::mat &data)
 {
-    Q_OBJECT
-
-public:
-    explicit MapDialog(MainWindow *parent, QStringList data_keys, QSharedPointer<VespucciWorkspace> ws);
-    ~MapDialog();
-
-private slots:
-    void on_buttonBox_accepted();
-
-private:
-    Ui::MapDialog *ui;
-    MainWindow *main_window_;
-    QSharedPointer<VespucciWorkspace> workspace_;
-    QSharedPointer<VespucciDataset> dataset_;
-    QStringList data_keys_;
-};
-
-#endif // MAPDIALOG_H
+    //Sturges' rule for finding bin counts automagically
+    return uint(std::round(1.0 + 3.332*std::log10((double(data.n_elem)))));
+}

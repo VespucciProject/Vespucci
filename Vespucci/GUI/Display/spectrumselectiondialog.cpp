@@ -1,13 +1,13 @@
 #include "GUI/Display/spectrumselectiondialog.h"
 #include "ui_spectrumselectiondialog.h"
 
-SpectrumSelectionDialog::SpectrumSelectionDialog(MainWindow *main_window) :
+SpectrumSelectionDialog::SpectrumSelectionDialog(MainWindow *main_window, QSharedPointer<VespucciWorkspace> workspace) :
     QDialog(main_window),
     ui(new Ui::SpectrumSelectionDialog)
 {
     ui->setupUi(this);
     main_window_ = main_window;
-    workspace_ = main_window->workspace_ptr();
+    workspace_ = workspace;
     plot_viewer_ = main_window_->plot_viewer();
     dataset_ = QSharedPointer<VespucciDataset>(0);
 }
@@ -15,16 +15,7 @@ SpectrumSelectionDialog::SpectrumSelectionDialog(MainWindow *main_window) :
 SpectrumSelectionDialog::~SpectrumSelectionDialog()
 {
     delete ui;
-}
-
-void SpectrumSelectionDialog::showEvent(QShowEvent *ev)
-{
-    QDialog::showEvent(ev);
-    if (dataset_.data()){
-        table_model_ = new SpectraTableModel(this, dataset_);
-        ui->tableView->setModel(table_model_);
-    }
-
+    if (table_model_) delete table_model_;
 }
 
 void SpectrumSelectionDialog::closeEvent(QCloseEvent *ev)
@@ -35,12 +26,13 @@ void SpectrumSelectionDialog::closeEvent(QCloseEvent *ev)
 
 void SpectrumSelectionDialog::DatasetSelectionChanged(QString dataset_key)
 {
-    if (dataset_->name() != dataset_key)
-        dataset_ = workspace_->GetDataset(dataset_key);
-    if (isVisible()){
-        table_model_ = new SpectraTableModel(this, dataset_);
-        ui->tableView->setModel(table_model_);
-    }
+    if (dataset_.isNull()) return;
+    dataset_ = workspace_->GetDataset(dataset_key);
+    if (table_model_) delete table_model_;
+    table_model_ = new SpectraTableModel(this, dataset_);
+    ui->tableView->setModel(table_model_);
+    //we'll change even if not visible, the overhead of creating the model
+    //isn't that high.
 }
 
 void SpectrumSelectionDialog::DatasetToBeRemoved(QString key)

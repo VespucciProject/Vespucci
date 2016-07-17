@@ -19,12 +19,11 @@ class SpectrumSelectionDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit SpectrumSelectionDialog(MainWindow *main_window);
+    explicit SpectrumSelectionDialog(MainWindow *main_window, QSharedPointer<VespucciWorkspace> workspace);
     ~SpectrumSelectionDialog();
 signals:
     void SetActionChecked(bool checked);
 protected:
-    void showEvent(QShowEvent *ev);
     void closeEvent(QCloseEvent *ev);
 public slots:
     void DatasetSelectionChanged(QString dataset_key);

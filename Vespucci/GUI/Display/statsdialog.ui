@@ -287,8 +287,8 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>0</width>
-          <height>100</height>
+          <width>100</width>
+          <height>200</height>
          </size>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout"/>
@@ -308,13 +308,6 @@
        </widget>
       </item>
      </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Close</set>
-     </property>
     </widget>
    </item>
   </layout>

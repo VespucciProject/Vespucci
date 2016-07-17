@@ -3,12 +3,12 @@
 #include "ui_plotviewer.h"
 #include "Global/global.h"
 class PlotWidget;
-PlotViewer::PlotViewer(MainWindow *parent) :
-    QDialog(0),
+PlotViewer::PlotViewer(MainWindow *parent, QSharedPointer<VespucciWorkspace> workspace) :
+    QDialog(parent),
     ui(new Ui::PlotViewer)
 {
     ui->setupUi(this);
-    workspace_ = parent->workspace_ptr();
+    workspace_ = workspace;
 }
 
 PlotViewer::~PlotViewer()

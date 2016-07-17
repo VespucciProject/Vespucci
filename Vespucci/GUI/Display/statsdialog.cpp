@@ -1,6 +1,7 @@
 #include "GUI/Display/statsdialog.h"
 #include "ui_statsdialog.h"
 #include <Math/Stats/confidenceinterval.h>
+#include <Math/Stats/histogram.h>
 #include "Global/global.h"
 
 StatsDialog::StatsDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws) :
@@ -9,11 +10,6 @@ StatsDialog::StatsDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> w
 {
     workspace_ = ws;
     ui->setupUi(this);
-    hist_plot_ = new QCPBars(ui->histogramCustomPlot->xAxis,
-                              ui->histogramCustomPlot->yAxis);
-
-    ui->histogramCustomPlot->addPlottable(hist_plot_);
-
 }
 
 StatsDialog::~StatsDialog()
@@ -54,11 +50,6 @@ void StatsDialog::DatasetToBeRemoved(QString name)
         data_keys_ = QStringList();
         ClearFields();
     }
-}
-
-void StatsDialog::on_buttonBox_accepted()
-{
-    close();
 }
 
 double StatsDialog::CalculateMedian()
@@ -103,29 +94,20 @@ double StatsDialog::CalculateMean()
 
 void StatsDialog::GenerateHistogram()
 {
+    ui->histogramCustomPlot->clearPlottables();
     const mat& data = workspace_->GetMatrix(data_keys_);
     if (!data.n_elem) return;
-    //Sturges' rule for finding bin counts automagically
-    uword bin_count = std::round(1.0 + 3.332*std::log10((double) data.n_elem));
-    double range = data.max() - data.min();
-    double bin_width = range / ((double) bin_count);
-    vec edges(bin_count);
-    edges(0) = data.min();
-    for (uword i = 0; i < bin_count; ++i)
-        edges(i) = data.min() + bin_width*(double(i));
-    uvec hist_data;
-    if (data.n_cols == 1){hist_data = histc(data, edges);}
-    else{
-        mat data_copy = data;
-        data_copy.reshape(data.n_elem, 1);
-        hist_data = histc(data, edges);
-    }
+    vec edges;
+    uvec hist = Vespucci::Math::Stats::GenerateHistogram(data, edges);
+    edges.shed_row(edges.n_rows - 1);
 
-    QVector<double> hist_data_qvec =
-            QVector<double>::fromStdVector(conv_to<vector<double> >::from(hist_data));
-    QVector<double> hist_abs_qvec =
-            QVector<double>::fromStdVector(conv_to<vector<double> >::from(edges.rows(1, edges.n_rows - 2)));
-    hist_plot_->setData(hist_abs_qvec, hist_data_qvec);
+    qvec histq = qvec::fromStdVector(conv_to<stdvec>::from(hist));
+    qvec edgesq = qvec::fromStdVector(conv_to<stdvec>::from(edges));
+
+    QCPBars *hist_plot = new QCPBars(ui->histogramCustomPlot->xAxis,
+                                     ui->histogramCustomPlot->yAxis);
+    hist_plot->addData(edgesq, histq);
+    ui->histogramCustomPlot->addPlottable(hist_plot);
     ui->histogramCustomPlot->rescaleAxes();
     ui->histogramCustomPlot->replot();
 }
@@ -136,6 +118,10 @@ void StatsDialog::UpdateDisplayData()
     GenerateHistogram();
     CalculateCI();
     const mat& data = workspace_->GetMatrix(data_keys_);
+    if (!data.n_elem){
+        ClearFields();
+        return;
+    }
     ui->minLineEdit->setText(QString::number(data.min()));
     ui->maxLineEdit->setText(QString::number(data.max()));
     ui->medLineEdit->setText(QString::number(CalculateMedian()));
@@ -150,9 +136,10 @@ void StatsDialog::UpdateDisplayData()
 
 void StatsDialog::CalculateCI()
 {
+    const mat& data = workspace_->GetMatrix(data_keys_);
+    if (!data.n_elem) return;
     double alpha = ui->alphaDoubleSpinBox->value();
     double stddev = CalculateStdDev();
-    const mat& data = workspace_->GetMatrix(data_keys_);
     unsigned int n = data.n_elem;
     double w = Vespucci::Math::Stats::TInterval(alpha, stddev, n);
     ui->confidenceLineEdit->setText(QString::number(w));

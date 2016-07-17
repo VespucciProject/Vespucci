@@ -27,8 +27,6 @@ public slots:
     void DatasetToBeRemoved(QString name);
 
 private slots:
-    void on_buttonBox_accepted();
-
     void on_calculatePushButton_clicked();
 
 private:
@@ -42,7 +40,6 @@ private:
     Ui::StatsDialog *ui;
     QStringList data_keys_;
     QSharedPointer<VespucciWorkspace> workspace_;
-    QCPBars *hist_plot_;
 };
 
 #endif // STATSDIALOG_H

@@ -17,33 +17,19 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef MAPDIALOG_H
-#define MAPDIALOG_H
+#ifndef HISTOGRAM_H
+#define HISTOGRAM_H
+#include "Global/libvespucci.h"
+#include <mlpack/core.hpp>
+namespace Vespucci{
+    namespace Math{
+        namespace Stats{
+            VESPUCCI_EXPORT arma::uvec GenerateHistogram(const arma::mat &data,
+                                                        arma::vec &edges,
+                                                        uint bins = 0);
+            VESPUCCI_EXPORT uint EstimateBinCount(const arma::mat &data);
 
-#include <QDialog>
-#include "Global/vespucciworkspace.h"
-class MainWindow;
-namespace Ui {
-class MapDialog;
+        }
+    }
 }
-
-class MapDialog : public QDialog
-{
-    Q_OBJECT
-
-public:
-    explicit MapDialog(MainWindow *parent, QStringList data_keys, QSharedPointer<VespucciWorkspace> ws);
-    ~MapDialog();
-
-private slots:
-    void on_buttonBox_accepted();
-
-private:
-    Ui::MapDialog *ui;
-    MainWindow *main_window_;
-    QSharedPointer<VespucciWorkspace> workspace_;
-    QSharedPointer<VespucciDataset> dataset_;
-    QStringList data_keys_;
-};
-
-#endif // MAPDIALOG_H
+#endif // HISTOGRAM_H

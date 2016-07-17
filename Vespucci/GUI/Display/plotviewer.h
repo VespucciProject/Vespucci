@@ -18,7 +18,7 @@ class PlotViewer : public QDialog
     Q_OBJECT
 
 public:
-    explicit PlotViewer(MainWindow *parent);
+    explicit PlotViewer(MainWindow *parent, QSharedPointer<VespucciWorkspace> workspace);
     ~PlotViewer();
     void AddPlot(const mat& paired_data, const QString &tab_title);
     void AddPlot(const vec& abscissa, const vec& data, const QString &tab_title);
