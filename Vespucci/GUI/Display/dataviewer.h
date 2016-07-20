@@ -38,7 +38,7 @@ class DataViewer;
 ///
 /// \brief The DataViewer class
 /// Window that displays dataset elements in a QTableView widget inside a QTabWidget
-class DataViewer : public QDialog
+class DataViewer : public QDockWidget
 {
     Q_OBJECT
 

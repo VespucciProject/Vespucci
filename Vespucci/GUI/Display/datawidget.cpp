@@ -42,6 +42,7 @@ void DataWidget::SetTableModel(VespucciTableModel *table_model)
 {
     ui->tableView->setModel(table_model);
     table_model_ = table_model;
+    ui->tableView->resizeColumnsToContents();
 }
 
 VespucciTableModel *DataWidget::GetTableModel()
@@ -71,6 +72,7 @@ void DataWidget::on_forwardPushButton_clicked()
     QString label = "Showing columns " + QString::number(current_start_column_)
             + "–" + QString::number(next_end_column);
     ui->columnLabel->setText(label);
+    ui->tableView->resizeColumnsToContents();
 }
 
 void DataWidget::on_backPushButton_clicked()
@@ -93,4 +95,5 @@ void DataWidget::on_backPushButton_clicked()
     QString label = "Showing columns " + QString::number(current_start_column_)
             + "–" + QString::number(next_end_column);
     ui->columnLabel->setText(label);
+    ui->tableView->resizeColumnsToContents();
 }

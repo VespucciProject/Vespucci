@@ -1,14 +1,14 @@
 #ifndef STATSDIALOG_H
 #define STATSDIALOG_H
 
-#include <QDialog>
+#include <QDockWidget>
 #include "Global/vespucciworkspace.h"
 class MainWindow;
 namespace Ui {
 class StatsDialog;
 }
 
-class StatsDialog : public QDialog
+class StatsDialog : public QDockWidget
 {
     Q_OBJECT
 

@@ -39,11 +39,39 @@ MapViewer::MapViewer(MainWindow *parent, QSharedPointer<MapData> map_data, QShar
     directory_ = ws->directory_ptr();
     ui->mapPlot->setBackground(palette().window());
     map_data->SetMapPlot(ui->mapPlot);
+    ui->statusbar->addWidget(new QLabel("(0,0,0)"));
+    connect(this, &MapViewer::RequestSpectrumPlot,
+            parent, &MainWindow::SpectrumRequested);
+    connect(this, &MapViewer::RequestHeldSpectrumPlot,
+            parent, &MainWindow::HeldSpectrumRequested);
+    connect(ui->mapPlot, &MapPlot::SpectrumRequested,
+            this, &MapViewer::SpectrumRequested);
+    connect(ui->mapPlot, &MapPlot::SpectrumHoldRequested,
+            this, &MapViewer::SpectrumHoldRequested);
 }
 
 MapViewer::~MapViewer()
 {
     delete ui;
+}
+
+///
+/// \brief MapViewer::SpectrumRequested
+/// \param index
+/// Passes signal on to main window
+/// the widget doesn't know everything main window needs to know
+void MapViewer::SpectrumRequested(size_t index)
+{
+    emit RequestSpectrumPlot(map_data_->keys().first(),
+                             map_data_->keys().last(),
+                             index);
+}
+
+void MapViewer::SpectrumHoldRequested(size_t index)
+{
+    emit RequestHeldSpectrumPlot(map_data_->keys().first(),
+                                 map_data_->keys().last(),
+                                 index);
 }
 
 

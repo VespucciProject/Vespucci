@@ -115,7 +115,6 @@ SOURCES += main.cpp\
     GUI/Processing/rangedialog.cpp \
     GUI/Display/scalebardialog.cpp \
     GUI/QAbstractItemModel/spectratablemodel.cpp \
-    GUI/Display/spectrumselectiondialog.cpp \
     GUI/Display/statsdialog.cpp \
     GUI/Processing/thresholddialog.cpp \
     GUI/Analysis/univariatedialog.cpp \
@@ -154,7 +153,8 @@ SOURCES += main.cpp\
     GUI/Analysis/hypothesistestdialog.cpp \
     GUI/Display/mapplot.cpp \
     GUI/Display/globalgradientdialog.cpp \
-    GUI/Display/colorrangedialog.cpp
+    GUI/Display/colorrangedialog.cpp \
+    GUI/Display/spectrumeditor.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -186,7 +186,6 @@ HEADERS  += \
     GUI/Processing/rangedialog.h \
     GUI/Display/scalebardialog.h \
     GUI/QAbstractItemModel/spectratablemodel.h \
-    GUI/Display/spectrumselectiondialog.h \
     GUI/Display/statsdialog.h \
     GUI/Processing/thresholddialog.h \
     GUI/Analysis/univariatedialog.h \
@@ -226,7 +225,8 @@ HEADERS  += \
     GUI/Analysis/hypothesistestdialog.h \
     GUI/Display/mapplot.h \
     GUI/Display/globalgradientdialog.h \
-    GUI/Display/colorrangedialog.h
+    GUI/Display/colorrangedialog.h \
+    GUI/Display/spectrumeditor.h
 
 
 FORMS    += \
@@ -248,7 +248,6 @@ FORMS    += \
     GUI/Analysis/principalcomponentsdialog.ui \
     GUI/Processing/rangedialog.ui \
     GUI/Display/scalebardialog.ui \
-    GUI/Display/spectrumselectiondialog.ui \
     GUI/Display/statsdialog.ui \
     GUI/Processing/thresholddialog.ui \
     GUI/Analysis/vcadialog.ui \
@@ -275,7 +274,8 @@ FORMS    += \
     GUI/Analysis/multianalysisdialog.ui \
     GUI/Analysis/hypothesistestdialog.ui \
     GUI/Display/globalgradientdialog.ui \
-    GUI/Display/colorrangedialog.ui
+    GUI/Display/colorrangedialog.ui \
+    GUI/Display/spectrumeditor.ui
 
 RESOURCES += \
     resources.qrc

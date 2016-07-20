@@ -13,7 +13,7 @@ class PlotViewer;
 using namespace std;
 using namespace arma;
 class MainWindow;
-class PlotViewer : public QDialog
+class PlotViewer : public QDockWidget
 {
     Q_OBJECT
 

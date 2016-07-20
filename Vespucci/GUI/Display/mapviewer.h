@@ -48,7 +48,12 @@ public:
     MapViewer(MainWindow *parent, QSharedPointer<MapData> map_data, QSharedPointer<VespucciWorkspace> ws);
     QCPColorGradient GetGradient(int gradient_number);
     ~MapViewer();
-
+signals:
+    void RequestSpectrumPlot(QString dataset_key, QString map_name, size_t index);
+    void RequestHeldSpectrumPlot(QString dataset_key, QString map_name, size_t index);
+public slots:
+    void SpectrumRequested(size_t index);
+    void SpectrumHoldRequested(size_t index);
 private slots:
     void on_actionInterpolate_toggled(bool arg1);
 

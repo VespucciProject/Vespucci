@@ -1,5 +1,5 @@
-#ifndef SPECTRUMSELECTIONDIALOG_H
-#define SPECTRUMSELECTIONDIALOG_H
+#ifndef SPECTRUMEDITOR_H
+#define SPECTRUMEDITOR_H
 
 #include <QDialog>
 #include "Data/Dataset/vespuccidataset.h"
@@ -11,16 +11,16 @@ class SpectraTableModel;
 class VespucciWorkspace;
 
 namespace Ui {
-class SpectrumSelectionDialog;
+class SpectrumEditor;
 }
 
-class SpectrumSelectionDialog : public QDialog
+class SpectrumEditor : public QDockWidget
 {
     Q_OBJECT
 
 public:
-    explicit SpectrumSelectionDialog(MainWindow *main_window, QSharedPointer<VespucciWorkspace> workspace);
-    ~SpectrumSelectionDialog();
+    explicit SpectrumEditor(MainWindow *main_window, QSharedPointer<VespucciWorkspace> workspace);
+    ~SpectrumEditor();
 signals:
     void SetActionChecked(bool checked);
 protected:
@@ -35,7 +35,7 @@ private slots:
     void on_exportPushButton_clicked();
 
 private:
-    Ui::SpectrumSelectionDialog *ui;
+    Ui::SpectrumEditor *ui;
     SpectraTableModel *table_model_;
     QSharedPointer<VespucciDataset> dataset_;
     PlotViewer *plot_viewer_;
@@ -43,4 +43,4 @@ private:
     QSharedPointer<VespucciWorkspace> workspace_;
 };
 
-#endif // SPECTRUMSELECTIONDIALOG_H
+#endif // SPECTRUMEDITOR_H

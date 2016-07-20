@@ -215,7 +215,7 @@ void BaselineDialog::on_pushButton_clicked()
         vec baseline = spectrum_;
 
         try{
-            for (uword i = 0; i < iterations; ++i){
+            for (uword i = 0; i < uword(iterations); ++i){
 
                 baseline = Vespucci::Math::Smoothing::MedianFilter(baseline, window_size);
             }

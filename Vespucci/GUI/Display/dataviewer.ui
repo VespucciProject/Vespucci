@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>DataViewer</class>
- <widget class="QDialog" name="DataViewer">
+ <widget class="QDockWidget" name="DataViewer">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>650</width>
-    <height>400</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>250</width>
+    <height>240</height>
+   </size>
   </property>
   <property name="font">
    <font>
@@ -18,33 +24,53 @@
   <property name="windowTitle">
    <string>Data Viewer</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <property name="documentMode">
-      <bool>true</bool>
-     </property>
-     <property name="tabsClosable">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-  </layout>
-  <action name="actionSaveObject">
-   <property name="icon">
-    <iconset resource="../../resources.qrc">
-     <normaloff>:/icons/toolbar_icons/save.svg</normaloff>:/icons/toolbar_icons/save.svg</iconset>
-   </property>
-   <property name="text">
-    <string>SaveObject</string>
-   </property>
-   <property name="toolTip">
-    <string>Save the currently displayed data</string>
-   </property>
-  </action>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>500</width>
+        <height>150</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>-1</number>
+      </property>
+      <property name="documentMode">
+       <bool>true</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+   <action name="actionSaveObject">
+    <property name="icon">
+     <iconset resource="../../resources.qrc">
+      <normaloff>:/icons/toolbar_icons/save.svg</normaloff>:/icons/toolbar_icons/save.svg</iconset>
+    </property>
+    <property name="text">
+     <string>SaveObject</string>
+    </property>
+    <property name="toolTip">
+     <string>Save the currently displayed data</string>
+    </property>
+   </action>
+  </widget>
  </widget>
  <resources>
   <include location="../../resources.qrc"/>

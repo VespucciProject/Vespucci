@@ -27,7 +27,7 @@
 /// \param ws The "global" workspace, provides access to the data model.
 ///
 DataViewer::DataViewer(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws)
-    :QDialog(parent),
+    :QDockWidget(parent),
      ui(new Ui::DataViewer)
 {
     ui->setupUi(this);
@@ -95,7 +95,7 @@ void DataViewer::AddTab(QStringList keys)
 
 void DataViewer::closeEvent(QCloseEvent *ev)
 {
-    QDialog::closeEvent(ev);
+    QDockWidget::closeEvent(ev);
     emit SetActionChecked(false);
 }
 

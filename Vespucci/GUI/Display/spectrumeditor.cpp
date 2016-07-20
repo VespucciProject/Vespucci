@@ -1,9 +1,9 @@
-#include "GUI/Display/spectrumselectiondialog.h"
-#include "ui_spectrumselectiondialog.h"
+#include "GUI/Display/spectrumeditor.h"
+#include "ui_SpectrumEditor.h"
 
-SpectrumSelectionDialog::SpectrumSelectionDialog(MainWindow *main_window, QSharedPointer<VespucciWorkspace> workspace) :
-    QDialog(main_window),
-    ui(new Ui::SpectrumSelectionDialog)
+SpectrumEditor::SpectrumEditor(MainWindow *main_window, QSharedPointer<VespucciWorkspace> workspace) :
+    QDockWidget(main_window),
+    ui(new Ui::SpectrumEditor)
 {
     ui->setupUi(this);
     main_window_ = main_window;
@@ -12,41 +12,46 @@ SpectrumSelectionDialog::SpectrumSelectionDialog(MainWindow *main_window, QShare
     dataset_ = QSharedPointer<VespucciDataset>(0);
 }
 
-SpectrumSelectionDialog::~SpectrumSelectionDialog()
+SpectrumEditor::~SpectrumEditor()
 {
     delete ui;
     if (table_model_) delete table_model_;
 }
 
-void SpectrumSelectionDialog::closeEvent(QCloseEvent *ev)
+void SpectrumEditor::closeEvent(QCloseEvent *ev)
 {
-    QDialog::closeEvent(ev);
+    QDockWidget::closeEvent(ev);
     emit SetActionChecked(false);
 }
 
-void SpectrumSelectionDialog::DatasetSelectionChanged(QString dataset_key)
+void SpectrumEditor::DatasetSelectionChanged(QString dataset_key)
 {
-    if (dataset_.isNull()) return;
     dataset_ = workspace_->GetDataset(dataset_key);
+    if (dataset_.isNull()) return;
     if (table_model_) delete table_model_;
     table_model_ = new SpectraTableModel(this, dataset_);
     ui->tableView->setModel(table_model_);
+    ui->tableView->resizeColumnsToContents();
+    ui->tableView->resizeRowsToContents();
     //we'll change even if not visible, the overhead of creating the model
     //isn't that high.
 }
 
-void SpectrumSelectionDialog::DatasetToBeRemoved(QString key)
+void SpectrumEditor::DatasetToBeRemoved(QString key)
 {
-    if (dataset_.data() && dataset_->name() == key){
+    if (!dataset_.isNull() && dataset_->name() == key){
+        if (table_model_) delete table_model_;
         table_model_ = new SpectraTableModel(this);
         ui->tableView->setModel(table_model_);
+        ui->tableView->resizeColumnsToContents();
+        ui->tableView->resizeRowsToContents();
     }
 
 }
 
-void SpectrumSelectionDialog::on_tableView_clicked(const QModelIndex &index)
+void SpectrumEditor::on_tableView_clicked(const QModelIndex &index)
 {
-    if (!dataset_.data()) return; //occurs when dialog is open and parent dataset removed
+    if (dataset_.isNull()) return; //occurs when dialog is open and parent dataset removed
     if (index.isValid() && table_model_->rowCount(index)){
         QSharedPointer<mat> data(new mat(join_horiz(dataset_->abscissa(),
                                                     dataset_->spectra_ptr()->col(index.row()))));
@@ -58,12 +63,12 @@ void SpectrumSelectionDialog::on_tableView_clicked(const QModelIndex &index)
 
 }
 
-void SpectrumSelectionDialog::SpectrumRemoved(int row)
+void SpectrumEditor::SpectrumRemoved(int row)
 {
-    if (!dataset_.data()) return; //should never happen, but let's be safe
+    if (dataset_.isNull()) return; //should never happen, but let's be safe
 
     //after deletion, row may be out of bounds
-    if (row >= dataset_->spectra_ptr()->n_cols)
+    if (uword(row) >= dataset_->spectra_ptr()->n_cols)
         row = dataset_->spectra_ptr()->n_cols - 1; //make the last row appear.
 
     try{
@@ -85,9 +90,9 @@ void SpectrumSelectionDialog::SpectrumRemoved(int row)
     }
 }
 
-void SpectrumSelectionDialog::on_deletePushButton_clicked()
+void SpectrumEditor::on_deletePushButton_clicked()
 {
-    if (!dataset_.data()) return; //should never happen, but let's be safe
+    if (dataset_.isNull()) return; //should never happen, but let's be safe
 
     int row = ui->tableView->currentIndex().row();
 
@@ -106,9 +111,9 @@ void SpectrumSelectionDialog::on_deletePushButton_clicked()
     }
 }
 
-void SpectrumSelectionDialog::on_exportPushButton_clicked()
+void SpectrumEditor::on_exportPushButton_clicked()
 {
-    if (!dataset_.data()) return; //should never happen, but let's be safe
+    if (dataset_.isNull()) return; //should never happen, but let's be safe
 
     int row = ui->tableView->currentIndex().row();
     QString filename =

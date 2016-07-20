@@ -65,7 +65,7 @@ void AnalysisResults::AddColumns(const QStringList &keys, const mat &value)
 {
     //if more columns than provided column names, stop when we run out of
     //names. If more names than columns, stop when we run out of columns
-    int count = (keys.size() < value.n_cols ? keys.size() : value.n_cols);
+    uword count = (uword(keys.size()) < value.n_cols ? keys.size() : value.n_cols);
     for (uword i = 0; i < count; ++i)
         matrices_[keys[i]] = QSharedPointer<mat>(new mat(value.col(i)));
 }

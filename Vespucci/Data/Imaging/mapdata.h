@@ -121,6 +121,10 @@ public:
     void SetGlobalGradient(QString name);
     void UpdateGlobalGradient();
 
+    QStringList keys();
+
+
+
 private:
     ///
     /// \brief x_axis_description_

@@ -24,12 +24,12 @@
 #include "Global/vespucciworkspace.h"
 #include "GUI/Processing/rangedialog.h"
 #include "GUI/Display/plotviewer.h"
-#include "GUI/Display/spectrumselectiondialog.h"
+#include "GUI/Display/spectrumeditor.h"
 #include "GUI/macrodialog.h"
 #include "GUI/pythonshelldialog.h"
 #include "GUI/Display/statsdialog.h"
 class PythonShellDialog;
-class SpectrumSelectionDialog;
+class SpectrumEditor;
 class VespucciWorkspace;
 class VespucciDataset;
 class DatasetTreeModel;
@@ -91,6 +91,8 @@ public slots:
     void SetSpectrumEditorActionChecked(bool checked);
     void SetMacroEditorActionChecked(bool checked);
     void SetPythonShellActionChecked(bool checked);
+    void SpectrumRequested(QString dataset_key, QString map_name, size_t index);
+    void HeldSpectrumRequested(QString dataset_key, QString map_name, size_t index);
 private slots:
     void on_actionExit_triggered();
 
@@ -209,7 +211,7 @@ private:
     DataViewer *data_viewer_;
     StatsDialog *stats_viewer_;
     MacroDialog *macro_editor_;
-    SpectrumSelectionDialog *spectrum_editor_;
+    SpectrumEditor *spectrum_editor_;
     PythonShellDialog *python_shell_;
 
 

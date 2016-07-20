@@ -102,6 +102,11 @@ void MapData::UpdateGlobalGradient()
     map_qcp_->SetGradient(gradient.gradient);
 }
 
+QStringList MapData::keys()
+{
+    return QStringList({dataset_->name(), name_});
+}
+
 ///
 /// \brief MapData::ShowMapWindow
 /// Shows or hides the map window.

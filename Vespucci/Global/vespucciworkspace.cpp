@@ -124,6 +124,7 @@ void VespucciWorkspace::AddDataset(QSharedPointer<VespucciDataset> dataset)
 void VespucciWorkspace::RemoveDataset(QString name)
 {
     data_model_->RemoveDataset(name);
+    main_window_->RefreshTreeModel(data_model_);
 }
 
 ///

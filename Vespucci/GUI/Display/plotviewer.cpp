@@ -4,7 +4,7 @@
 #include "Global/global.h"
 class PlotWidget;
 PlotViewer::PlotViewer(MainWindow *parent, QSharedPointer<VespucciWorkspace> workspace) :
-    QDialog(parent),
+    QDockWidget(parent),
     ui(new Ui::PlotViewer)
 {
     ui->setupUi(this);
@@ -80,7 +80,7 @@ void PlotViewer::CloseTransientTab()
 
 void PlotViewer::closeEvent(QCloseEvent *ev)
 {
-    QDialog::closeEvent(ev);
+    QDockWidget::closeEvent(ev);
     emit SetActionChecked(false);
 }
 

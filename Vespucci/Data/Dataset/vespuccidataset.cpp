@@ -976,7 +976,7 @@ void VespucciDataset::MFBaseline(int window_size, int iterations)
     SetOldCopies();
     try{
         baselines_ = spectra_;
-        for (uword i = 0; i < iterations; ++i){
+        for (uword i = 0; i < uword(iterations); ++i){
             baselines_ = Vespucci::Math::Smoothing::MedianFilterMat(baselines_, window_size);
         }
         spectra_ -= baselines_;

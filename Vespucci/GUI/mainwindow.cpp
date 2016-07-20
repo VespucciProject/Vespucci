@@ -34,7 +34,7 @@
 #include "GUI/Analysis/vcadialog.h"
 #include "GUI/Processing/metadatasetdialog.h"
 #include "GUI/Processing/rangedialog.h"
-#include "GUI/Display/spectrumselectiondialog.h"
+#include "GUI/Display/spectrumeditor.h"
 #include "GUI/Processing/booleanizedialog.h"
 #include "GUI/Processing/thresholddialog.h"
 #include "GUI/scriptdialog.h"
@@ -61,24 +61,33 @@ MainWindow::MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
 {
     workspace_ = ws;
     ui->setupUi(this);
+    this->move(0, 0);
     dataset_tree_model_ = new DatasetTreeModel(ui->datasetTreeView);
     ui->datasetTreeView->setModel(dataset_tree_model_);
     data_viewer_ = new DataViewer(this, workspace_);
     plot_viewer_ = new PlotViewer(this, workspace_);
-    spectrum_editor_ = new SpectrumSelectionDialog(this, workspace_);
+    spectrum_editor_ = new SpectrumEditor(this, workspace_);
     stats_viewer_ = new StatsDialog(this, workspace_);
     macro_editor_ = new MacroDialog(this, workspace_);
     python_shell_ = new PythonShellDialog(this, workspace_);
 
+    setCentralWidget(ui->datasetTreeView);
+
     global_map_count_ = 0;
     workspace_->SetPointers(this, dataset_tree_model_);
+
+
+    addDockWidget(Qt::BottomDockWidgetArea, data_viewer_);
+    addDockWidget(Qt::BottomDockWidgetArea, plot_viewer_);
+    addDockWidget(Qt::RightDockWidgetArea, spectrum_editor_);
+    addDockWidget(Qt::RightDockWidgetArea, stats_viewer_);
 
     //Connects the closing of persistent dialogs to unchecking their menu entries
     connect(data_viewer_, &DataViewer::SetActionChecked,
             this, &MainWindow::SetDataViewerActionChecked);
     connect(plot_viewer_, &PlotViewer::SetActionChecked,
             this, &MainWindow::SetPlotViewerActionChecked);
-    connect(spectrum_editor_, &SpectrumSelectionDialog::SetActionChecked,
+    connect(spectrum_editor_, &SpectrumEditor::SetActionChecked,
             this, &MainWindow::SetSpectrumEditorActionChecked);
     connect(stats_viewer_, &StatsDialog::SetActionChecked,
             this, &MainWindow::SetStatsViewerActionChecked);
@@ -91,21 +100,19 @@ MainWindow::MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     connect(this, &MainWindow::MatrixSelectionChanged,
             stats_viewer_, &StatsDialog::MatrixSelectionChanged);
     connect(this, &MainWindow::DatasetSelectionChanged,
-            spectrum_editor_, &SpectrumSelectionDialog::DatasetSelectionChanged);
+            spectrum_editor_, &SpectrumEditor::DatasetSelectionChanged);
 
     //Triggers the removal of references that are about to become bad
     connect(this, &MainWindow::DatasetToBeRemoved,
             data_viewer_, &DataViewer::DatasetToBeRemoved);
     connect(this, &MainWindow::DatasetToBeRemoved,
-            spectrum_editor_, &SpectrumSelectionDialog::DatasetToBeRemoved);
+            spectrum_editor_, &SpectrumEditor::DatasetToBeRemoved);
     connect(this, &MainWindow::DatasetToBeRemoved,
             stats_viewer_, &StatsDialog::DatasetToBeRemoved);
     connect(this, &MainWindow::MatrixToBeRemoved,
             data_viewer_, &DataViewer::MatrixToBeRemoved);
     connect(this, &MainWindow::MatrixToBeRemoved,
             stats_viewer_, &StatsDialog::MatrixToBeRemoved);
-
-
 
 }
 
@@ -123,6 +130,7 @@ void MainWindow::RefreshTreeModel(const DataModel *data_model)
     dataset_tree_model_ = new DatasetTreeModel(ui->datasetTreeView, data_model);
     ui->datasetTreeView->setModel(dataset_tree_model_);
     ui->datasetTreeView->resizeColumnToContents(0);
+    ui->datasetTreeView->resizeColumnToContents(1);
 }
 
 
@@ -761,6 +769,7 @@ void MainWindow::on_actionClose_Dataset_triggered()
         emit DatasetToBeRemoved(dataset_key);
         workspace_->RemoveDataset(dataset_key);
     }
+
 }
 
 ///
@@ -1005,6 +1014,24 @@ void MainWindow::SetMacroEditorActionChecked(bool checked)
 void MainWindow::SetPythonShellActionChecked(bool checked)
 {
     ui->actionPython_Shell->setChecked(checked);
+}
+
+void MainWindow::SpectrumRequested(QString dataset_key, QString map_name, size_t index)
+{
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
+    if (!dataset.isNull()){
+        mat spectrum = join_horiz(dataset->abscissa(), dataset->spectra(uvec({index})));
+        plot_viewer_->AddTransientPlot(spectrum, map_name);
+    }
+}
+
+void MainWindow::HeldSpectrumRequested(QString dataset_key, QString map_name, size_t index)
+{
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
+    if (!dataset.isNull()){
+        mat spectrum = join_horiz(dataset->abscissa(), dataset->spectra(uvec({index})));
+        plot_viewer_->AddPlot(spectrum, map_name);
+    }
 }
 
 void MainWindow::on_actionBooleanize_Clamp_triggered()
