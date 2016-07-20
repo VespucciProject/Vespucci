@@ -177,6 +177,8 @@ public:
     void IModPolyBaseline(const uword poly_order, const uword max_it, double threshold);
     void RemoveClippedSpectra(double threshold);
     void RemoveFlatSpectra(double threshold);
+    void ZeroClippedSpectra(double threshold);
+    void ZeroFlatSpectra(double threshold);
     void Scale(double scaling_factor);
     void ShedSpectrum(const uword index);
     int HySime();

@@ -49,6 +49,7 @@
 #include "GUI/Analysis/plotmakerdialog.h"
 #include "GUI/Display/mapdialog.h"
 #include "GUI/Display/globalgradientdialog.h"
+#include "GUI/Analysis/plotmakerdialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -80,7 +81,6 @@ MainWindow::MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     addDockWidget(Qt::BottomDockWidgetArea, data_viewer_);
     addDockWidget(Qt::BottomDockWidgetArea, plot_viewer_);
     addDockWidget(Qt::RightDockWidgetArea, spectrum_editor_);
-    addDockWidget(Qt::RightDockWidgetArea, stats_viewer_);
 
     //Connects the closing of persistent dialogs to unchecking their menu entries
     connect(data_viewer_, &DataViewer::SetActionChecked,
@@ -1384,4 +1384,34 @@ void MainWindow::on_datasetTreeView_doubleClicked(const QModelIndex &index)
         workspace_->GetMap(data_keys.first(), data_keys.last())->ShowMapWindow(true);
     if (item->type() == TreeItem::ItemType::Dataset)
         spectrum_editor_->setVisible(true);
+}
+
+void MainWindow::on_actionShow_in_Data_Viewer_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    QStringList data_keys = item->keys();
+    if (item->type() == TreeItem::ItemType::Matrix){
+        data_viewer_->AddTab(data_keys);
+        data_viewer_->setVisible(true);
+        emit MatrixSelectionChanged(data_keys);
+    }
+}
+
+void MainWindow::on_actionView_Statistics_triggered()
+{
+    stats_viewer_->setVisible(true);
+}
+
+void MainWindow::on_actionPlotResult_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    if (item->type() == TreeItem::ItemType::Matrix){
+        QStringList data_keys = item->keys();
+        PlotMakerDialog *plot_maker_dialog = new PlotMakerDialog(this,
+                                                                 plot_viewer_,
+                                                                 workspace_,
+                                                                 data_keys);
+        plot_maker_dialog->setAttribute(Qt::WA_DeleteOnClose);
+        plot_maker_dialog->show();
+    }
 }

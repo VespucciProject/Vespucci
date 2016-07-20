@@ -25,6 +25,7 @@ signals:
     void SetActionChecked(bool checked);
 protected:
     void closeEvent(QCloseEvent *ev);
+    void keyPressEvent(QKeyEvent *event);
 public slots:
     void DatasetSelectionChanged(QString dataset_key);
     void DatasetToBeRemoved(QString key);
@@ -35,6 +36,7 @@ private slots:
     void on_exportPushButton_clicked();
 
 private:
+    void RequestSpectrumPlot(const QModelIndex &index);
     Ui::SpectrumEditor *ui;
     SpectraTableModel *table_model_;
     QSharedPointer<VespucciDataset> dataset_;

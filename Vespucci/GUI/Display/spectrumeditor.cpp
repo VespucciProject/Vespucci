@@ -10,6 +10,7 @@ SpectrumEditor::SpectrumEditor(MainWindow *main_window, QSharedPointer<VespucciW
     workspace_ = workspace;
     plot_viewer_ = main_window_->plot_viewer();
     dataset_ = QSharedPointer<VespucciDataset>(0);
+    table_model_ = NULL;
 }
 
 SpectrumEditor::~SpectrumEditor()
@@ -22,6 +23,13 @@ void SpectrumEditor::closeEvent(QCloseEvent *ev)
 {
     QDockWidget::closeEvent(ev);
     emit SetActionChecked(false);
+}
+
+void SpectrumEditor::keyPressEvent(QKeyEvent *event)
+{
+    QModelIndex current_index = ui->tableView->currentIndex();
+    if (event->key() == Qt::Key_Enter)
+        RequestSpectrumPlot(current_index);
 }
 
 void SpectrumEditor::DatasetSelectionChanged(QString dataset_key)
@@ -51,16 +59,7 @@ void SpectrumEditor::DatasetToBeRemoved(QString key)
 
 void SpectrumEditor::on_tableView_clicked(const QModelIndex &index)
 {
-    if (dataset_.isNull()) return; //occurs when dialog is open and parent dataset removed
-    if (index.isValid() && table_model_->rowCount(index)){
-        QSharedPointer<mat> data(new mat(join_horiz(dataset_->abscissa(),
-                                                    dataset_->spectra_ptr()->col(index.row()))));
-        if (ui->holdCheckBox->isChecked())
-            plot_viewer_->AddPlot(*data, dataset_->name());
-        else
-            plot_viewer_->AddTransientPlot(*data, dataset_->name());
-    }
-
+    RequestSpectrumPlot(index);
 }
 
 void SpectrumEditor::SpectrumRemoved(int row)
@@ -139,4 +138,16 @@ void SpectrumEditor::on_exportPushButton_clicked()
         QMessageBox::information(main_window_, "File Saved", filename + " saved successfully");
     else
         QMessageBox::warning(main_window_, "File not saved", "File not saved successfully");
+}
+
+void SpectrumEditor::RequestSpectrumPlot(const QModelIndex &index)
+{
+    if (!dataset_.isNull() && index.isValid() && table_model_->rowCount(index)){
+        QSharedPointer<mat> data(new mat(join_horiz(dataset_->abscissa(),
+                                                    dataset_->spectra_ptr()->col(index.row()))));
+        if (ui->holdCheckBox->isChecked())
+            plot_viewer_->AddPlot(*data, dataset_->name());
+        else
+            plot_viewer_->AddTransientPlot(*data, dataset_->name());
+    }
 }

@@ -5,7 +5,7 @@
 #include "Global/global.h"
 
 StatsDialog::StatsDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws) :
-    QDockWidget(parent),
+    QDialog(parent),
     ui(new Ui::StatsDialog)
 {
     workspace_ = ws;
@@ -19,13 +19,13 @@ StatsDialog::~StatsDialog()
 
 void StatsDialog::showEvent(QShowEvent *ev)
 {
-    QDockWidget::showEvent(ev);
+    QDialog::showEvent(ev);
     UpdateDisplayData();
 }
 
 void StatsDialog::closeEvent(QCloseEvent *ev)
 {
-    QDockWidget::closeEvent(ev);
+    QDialog::closeEvent(ev);
     emit SetActionChecked(false);
 }
 

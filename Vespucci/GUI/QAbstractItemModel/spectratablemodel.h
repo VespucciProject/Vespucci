@@ -16,6 +16,7 @@ public:
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
     void ShedRow(int row);
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 signals:
 public slots:
 

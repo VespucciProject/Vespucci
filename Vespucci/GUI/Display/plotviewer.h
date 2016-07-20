@@ -32,10 +32,6 @@ protected:
 public slots:
 private slots:
 
-    void on_stackCheckBox_stateChanged(int arg1);
-
-    void on_tabWidget_currentChanged(int index);
-
     void on_tabWidget_tabCloseRequested(int index);
 
 private:

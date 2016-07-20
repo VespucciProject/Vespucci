@@ -91,6 +91,7 @@ void DataViewer::AddTab(QStringList keys)
                                                            keys);
     DataWidget *widget = new DataWidget(this, new_model);
     ui->tabWidget->addTab(widget, keys.last());
+    ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
 }
 
 void DataViewer::closeEvent(QCloseEvent *ev)

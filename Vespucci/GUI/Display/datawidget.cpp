@@ -27,6 +27,7 @@ DataWidget::DataWidget(QWidget *parent, VespucciTableModel *table_model) :
     ui->setupUi(this);
     table_model_ = table_model;
     ui->tableView->setModel(table_model);
+    ui->tableView->resizeColumnsToContents();
     matrix_columns_=table_model->MatrixColumns();
     subviews_ = std::ceil(matrix_columns_/15);
     current_start_column_ = 1; //user sees indexing start at 1

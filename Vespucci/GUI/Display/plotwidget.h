@@ -44,21 +44,10 @@ public:
     void AddTransientPlot(const vec &abscissa, const vec &data);
     void AddTransientPlot(const mat & paired_data);
     void RemoveTransientPlot();
-    void StackPlots(bool stack);
-    bool offset_plots() const;
     bool TransientOnly() const;
 
-public slots:
 private:
     Ui::PlotWidget *ui;
-    double offset_by_;
-    bool offset_plots_;
-    void DetermineOffset();
-    void DetermineOffset(const QVector<double> &new_data);
-    void ApplyOffset();
-    void RemoveOffset();
-    QVector<double> GetData(const QList<QCPData> &values) const;
-    QVector<double> GetAbscissa(const QList<QCPData> &keys) const;
     QList<QColor> colors_;
     QColor GetNextColor();
     QSharedPointer<VespucciWorkspace> workspace_;

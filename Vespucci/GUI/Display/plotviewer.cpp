@@ -21,12 +21,12 @@ void PlotViewer::AddPlot(const mat & paired_data, const QString &tab_title)
     if (ui->holdCheckBox->isChecked() && ui->tabWidget->count()){
         PlotWidget *plot_widget = qobject_cast<PlotWidget *>(ui->tabWidget->currentWidget());
         plot_widget->AddPlot(paired_data);
-        plot_widget->StackPlots(ui->stackCheckBox->isChecked());
     }
     else{
         PlotWidget *plot_widget = new PlotWidget(this, workspace_);
         plot_widget->AddPlot(paired_data);
         ui->tabWidget->addTab(plot_widget, tab_title);
+        ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
     }
 }
 
@@ -35,7 +35,6 @@ void PlotViewer::AddPlot(const vec &abscissa, const vec &data, const QString &ta
     if (ui->holdCheckBox->isChecked() && ui->tabWidget->count()){
         PlotWidget *plot_widget = qobject_cast<PlotWidget *>(ui->tabWidget->currentWidget());
         plot_widget->AddPlot(abscissa, data);
-        plot_widget->StackPlots(ui->stackCheckBox->isChecked());
     }
     else{
         PlotWidget *plot_widget = new PlotWidget(this, workspace_);
@@ -49,7 +48,6 @@ void PlotViewer::AddTransientPlot(const vec &abscissa, const vec &data, const QS
     if (ui->holdCheckBox->isChecked() && ui->tabWidget->count()){
         PlotWidget *plot_widget = qobject_cast<PlotWidget*>(ui->tabWidget->currentWidget());
         plot_widget->AddTransientPlot(abscissa, data);
-        plot_widget->StackPlots(ui->stackCheckBox->isChecked());
     }
     else{
         PlotWidget *plot_widget = new PlotWidget(this, workspace_);
@@ -63,7 +61,6 @@ void PlotViewer::AddTransientPlot(const mat & paired_data, const QString &tab_ti
     if (ui->holdCheckBox->isChecked() && ui->tabWidget->count()){
         PlotWidget *plot_widget = qobject_cast<PlotWidget*>(ui->tabWidget->currentWidget());
         plot_widget->AddTransientPlot(paired_data);
-        plot_widget->StackPlots(ui->stackCheckBox->isChecked());
     }
     else{
         PlotWidget *plot_widget = new PlotWidget(this, workspace_);
@@ -82,24 +79,6 @@ void PlotViewer::closeEvent(QCloseEvent *ev)
 {
     QDockWidget::closeEvent(ev);
     emit SetActionChecked(false);
-}
-
-
-void PlotViewer::on_stackCheckBox_stateChanged(int arg1)
-{
-    bool stack_plots;
-    stack_plots = (arg1 == Qt::Checked);
-    if (ui->tabWidget->count()){
-        PlotWidget *plot_widget = qobject_cast<PlotWidget *>(ui->tabWidget->currentWidget());
-        plot_widget->StackPlots(stack_plots);
-    }
-}
-
-void PlotViewer::on_tabWidget_currentChanged(int index)
-{
-    if (!ui->tabWidget->currentWidget()){return;}
-    PlotWidget *plot_widget = qobject_cast<PlotWidget *>(ui->tabWidget->currentWidget());
-    ui->stackCheckBox->setChecked(plot_widget->offset_plots());
 }
 
 void PlotViewer::on_tabWidget_tabCloseRequested(int index)

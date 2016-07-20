@@ -42,3 +42,13 @@ void SpectraTableModel::ShedRow(int row)
     if (dataset_.data()) dataset_->ShedSpectrum(row);
 }
 
+QVariant SpectraTableModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role != Qt::DisplayRole) return QVariant();
+    if (orientation != Qt::Orientation::Horizontal) return QVariant();
+    if (section > 2) return QVariant();
+    if (section == 0) return QVariant("ind");
+    if (section == 1) return QVariant("x");
+    if (section == 2) return QVariant("y");
+}
+
