@@ -32,6 +32,8 @@ PlotMakerDialog::PlotMakerDialog(MainWindow *parent, PlotViewer *plot_viewer, QS
 
     ui->xSpinBox->setMaximum(workspace_->GetMatrix(data_keys_).n_cols);
     ui->ySpinBox->setMaximum(workspace_->GetMatrix(data_keys_).n_cols);
+    ui->xSpinBox->setMinimum(1);
+    ui->ySpinBox->setMinimum(1);
 }
 
 PlotMakerDialog::~PlotMakerDialog()
@@ -44,8 +46,8 @@ void PlotMakerDialog::on_buttonBox_accepted()
 
     QString abscissa_type = ui->abscissaComboBox->currentText();
     QString dimension_type = ui->dimensionComboBox->currentText();
-    uword x_ind = ui->xSpinBox->value();
-    uword y_ind = ui->ySpinBox->value();
+    uword x_ind = ui->xSpinBox->value() - 1;
+    uword y_ind = ui->ySpinBox->value() - 1;
     vec x, y;
 
 

@@ -664,13 +664,17 @@ void VespucciDataset::MinMaxNormalize()
 
 }
 
-void VespucciDataset::VectorNormalize()
+///
+/// \brief VespucciDataset::VectorNormalize
+/// \param norm If 1, unit area, if 2 unit length
+///
+void VespucciDataset::VectorNormalize(uword norm)
 {
+    if (!norm || norm > 2) return;
     log_text_stream_ << "Vector Normalization" << endl << endl;
     SetOldCopies();
     try{
-        spectra_ = normalise(spectra_old_);
-        spectra_ = spectra_;
+        spectra_ = normalise(spectra_, norm);
     }
     catch(exception e){
         string str = "VectorNormalize()" + string(e.what());
@@ -695,33 +699,6 @@ void VespucciDataset::MeanCenter()
         throw std::runtime_error("MeanCenter");
     }
     last_operation_ = "mean centering";
-}
-
-///
-/// \brief VespucciDataset::UnitAreaNormalize
-///normalizes the spectral data so that the area under each point spectrum is 1
-void VespucciDataset::UnitAreaNormalize()
-{
-    log_text_stream_ << "UnitAreaNormalize" << endl << endl;
-    SetOldCopies();
-    uword num_rows = spectra_.n_rows;
-    uword num_cols = spectra_.n_cols;
-
-    try{
-        for (uword j = 0; j < num_cols; ++j){
-            vec spectrum = spectra_.col(j);
-            double spectrum_sum = sum(spectrum);
-            for (uword i = 0; i < num_rows; ++i){
-                spectra_(i, j) = spectra_(i, j) / spectrum_sum;
-            }
-        }
-    }
-    catch(exception e){
-        string str = "UnitAreaNormalize: " + string(e.what());
-        throw std::runtime_error(str);
-    }
-
-    last_operation_ = "unit area normalize";
 }
 
 ///

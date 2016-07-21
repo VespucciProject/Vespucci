@@ -149,12 +149,11 @@ public:
 
     mat ZScoreNormCopy();
     void MinMaxNormalize();
-    void VectorNormalize();
+    void VectorNormalize(uword norm);
     void MeanCenter();
     void ZScoreNormalize();
     void SNVNormalize(double offset, bool center);
     void AbsoluteValue();
-    void UnitAreaNormalize();
     void PeakIntensityNormalize(double peak_position);
     void PeakIntensityNormalize(double left_bound, double right_bound);
     void Booleanize(double min, double max, bool keep_inside, bool oneify);

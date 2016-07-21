@@ -358,7 +358,7 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
     QString dataset_key = item->DatasetKey();
     QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
     QStringList methods;
-    methods << "Min/Max" << "Vector Norm" << "Unit Area" << "Z-score"
+    methods << "Min/Max" << "2-Norm (Unit Length)" << "1-Norm (Unit Area)" << "Z-score"
             << "Standard Normal Variate" << "Peak Intensity" << "Scale Spectra"
             << "Absolute Value" << "Mean Center";
     bool ok;
@@ -368,9 +368,9 @@ void MainWindow::on_actionNormalize_Standardize_triggered()
     double scaling_factor, offset;
     try{
         if (ok && method == "Min/Max"){dataset->MinMaxNormalize();}
-        else if (ok && method == "Vector Norm"){dataset->VectorNormalize();}
+        else if (ok && method == "2-Norm (Unit Length)"){dataset->VectorNormalize(2);}
         else if (ok && method == "Mean Center"){dataset->MeanCenter();}
-        else if (ok && method == "Unit Area"){dataset->UnitAreaNormalize();}
+        else if (ok && method == "1-Norm (Unit Area)"){dataset->VectorNormalize(1);}
         else if (ok && method == "Z-score"){
             offset = QInputDialog::getDouble(this, "Enter Offset", "Offset",
                                              0, -2147483647, 2147483647, 4, &ok);
