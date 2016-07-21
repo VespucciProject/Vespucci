@@ -34,6 +34,11 @@ PlotMakerDialog::PlotMakerDialog(MainWindow *parent, PlotViewer *plot_viewer, QS
     ui->ySpinBox->setMaximum(workspace_->GetMatrix(data_keys_).n_cols);
     ui->xSpinBox->setMinimum(1);
     ui->ySpinBox->setMinimum(1);
+
+    if (ui->abscissaComboBox->currentText() == "Spectral Abscissa")
+        ui->ySpinBox->setValue(1);
+    else
+        ui->ySpinBox->setValue(2);
 }
 
 PlotMakerDialog::~PlotMakerDialog()
@@ -53,12 +58,12 @@ void PlotMakerDialog::on_buttonBox_accepted()
 
 
     QString plot_title = data_keys_.last()
-            + " " + QString::number(y_ind);
+            + " " + QString::number(y_ind + 1);
     if (abscissa_type == "Row" || abscissa_type == "Column"){
         plot_title = plot_title
                 + " vs. "
                 + abscissa_type
-                + " " + QString::number(x_ind);
+                + " " + QString::number(x_ind + 1);
     }
 
     if (dimension_type == "Column")
