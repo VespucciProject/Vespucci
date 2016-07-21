@@ -40,6 +40,7 @@ void PlotViewer::AddPlot(const vec &abscissa, const vec &data, const QString &ta
         PlotWidget *plot_widget = new PlotWidget(this, workspace_);
         plot_widget->AddPlot(abscissa, data);
         ui->tabWidget->addTab(plot_widget, tab_title);
+        ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
     }
 }
 
@@ -53,6 +54,7 @@ void PlotViewer::AddTransientPlot(const vec &abscissa, const vec &data, const QS
         PlotWidget *plot_widget = new PlotWidget(this, workspace_);
         plot_widget->AddTransientPlot(abscissa, data);
         ui->tabWidget->addTab(plot_widget, tab_title);
+        ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
     }
 }
 
@@ -66,6 +68,7 @@ void PlotViewer::AddTransientPlot(const mat & paired_data, const QString &tab_ti
         PlotWidget *plot_widget = new PlotWidget(this, workspace_);
         plot_widget->AddTransientPlot(paired_data);
         ui->tabWidget->addTab(plot_widget, tab_title);
+        ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
     }
 }
 

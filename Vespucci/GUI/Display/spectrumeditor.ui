@@ -73,7 +73,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="zeroPushButton">
         <property name="toolTip">
          <string>Replace spectrum with vector of zeros</string>
         </property>

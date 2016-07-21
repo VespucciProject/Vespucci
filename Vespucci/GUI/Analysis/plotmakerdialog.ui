@@ -96,12 +96,12 @@
     <widget class="QComboBox" name="dimensionComboBox">
      <item>
       <property name="text">
-       <string>Columns</string>
+       <string>Column</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Rows</string>
+       <string>Row</string>
       </property>
      </item>
     </widget>

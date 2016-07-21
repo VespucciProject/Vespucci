@@ -2864,6 +2864,8 @@ void VespucciDataset::CreateMap(const QString &map_name,
                                 QCPColorGradient gradient,
                                 int tick_count)
 {
+    if (!AnalysisResultsKeys().contains(results_key)) return;
+    if (!GetAnalysisResult(results_key)->HasMatrix(matrix_key)) return;
     QStringList data_keys = {name_, results_key, matrix_key};
     QString map_type = GetAnalysisResult(results_key)->type();
     QSharedPointer<MapData> new_map(new MapData(map_name,

@@ -40,7 +40,6 @@ PlotWidget::PlotWidget(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
                QColor(77,175,74),
                QColor(152,78,163),
                QColor(255,127,0),
-               QColor(255,255,51),
                QColor(166,86,40),
                QColor(247,129,191),
                QColor(153,153,153)};
@@ -53,6 +52,8 @@ PlotWidget::~PlotWidget()
 
 void PlotWidget::AddPlot(const mat & paired_data)
 {
+    QColor pen_color = this->GetNextColor();
+    QPen pen(pen_color);
     if (paired_data.n_cols < 2)
         return;
     QVector<double> abscissa =
@@ -68,12 +69,15 @@ void PlotWidget::AddPlot(const mat & paired_data)
         ui->customPlot->addGraph(ui->customPlot->graph(0)->keyAxis(), ui->customPlot->graph(0)->valueAxis());
         ui->customPlot->graph(graph_count)->addData(abscissa, data);
     }
+    ui->customPlot->graph(graph_count)->setPen(pen);
     ui->customPlot->rescaleAxes();
     ui->customPlot->replot(QCustomPlot::rpImmediate);
 }
 
 void PlotWidget::AddPlot(const vec &abscissa, const vec &data)
 {
+    QColor pen_color = this->GetNextColor();
+    QPen pen(pen_color);
     QVector<double> abscissa_qvec =
             QVector<double>::fromStdVector(conv_to<stdvec>::from(abscissa));
     QVector<double> data_qvec =
@@ -87,12 +91,15 @@ void PlotWidget::AddPlot(const vec &abscissa, const vec &data)
         ui->customPlot->addGraph(ui->customPlot->graph(0)->keyAxis(), ui->customPlot->graph(0)->valueAxis());
         ui->customPlot->graph(graph_count)->addData(abscissa_qvec, data_qvec);
     }
+    ui->customPlot->graph(graph_count)->setPen(pen);
     ui->customPlot->rescaleAxes();
     ui->customPlot->replot(QCustomPlot::rpImmediate);
 }
 
 void PlotWidget::AddTransientPlot(const vec &abscissa, const vec &data)
 {
+    QColor pen_color = this->GetNextColor();
+    QPen pen(pen_color);
     if (abscissa.n_rows != data.n_rows) return;
 
     if (transient_graph_){
@@ -121,12 +128,16 @@ void PlotWidget::AddTransientPlot(const vec &abscissa, const vec &data)
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(data));
         transient_graph_->addData(abscissa_qvec, data_qvec);
     }
+    transient_graph_->setPen(pen);
     ui->customPlot->rescaleAxes();
     ui->customPlot->replot(QCustomPlot::rpImmediate);
 }
 
 void PlotWidget::AddTransientPlot(const mat & paired_data)
 {
+    QColor pen_color = this->GetNextColor();
+    QPen pen(pen_color);
+
     if (paired_data.n_cols != 2) return;
 
     QCPAxis *key_axis;
@@ -155,7 +166,7 @@ void PlotWidget::AddTransientPlot(const mat & paired_data)
                 QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(1)));
         transient_graph_->addData(abscissa_qvec, data_qvec);
     }
-
+    transient_graph_->setPen(pen);
     ui->customPlot->rescaleAxes();
     ui->customPlot->replot(QCustomPlot::rpImmediate);
 }
@@ -180,6 +191,6 @@ QColor PlotWidget::GetNextColor()
     //there are nine colors in the list
     //we alternate between them then rotate back to the first
     int color_index = ui->customPlot->graphCount();
-    while (color_index > 8){color_index -= 9;}
+    while (color_index > colors_.size() - 1){color_index -= colors_.size();}
     return colors_[color_index];
 }
