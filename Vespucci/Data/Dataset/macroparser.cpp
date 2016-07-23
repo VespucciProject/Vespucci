@@ -86,7 +86,7 @@ bool MacroParser::LoadMacro(QString macro)
 
 	valid_commands_["VertexComponents"] = { "String", "UInt" };
 
-	valid_commands_["KMeans"] = { "String", "UInt" };
+	valid_commands_["KMeans"] = { "String", "String", "UInt" };
 
 	valid_commands_["PrincipalComponents"] = { "String" };
 
@@ -193,7 +193,7 @@ void MacroParser::ExecuteCommand(QString command, QStringList params)
 	else if (command == "VertexComponents")
 		dataset->VertexComponents(params[0], params[1].toInt());
 	else if (command == "KMeans")
-		dataset->KMeans(params[0], params[1].toInt());
+		dataset->KMeans(params[0], params[1], params[2].toInt());
 	else if (command == "PrincipalComponents")
 		dataset->PrincipalComponents(params[0]);
 	else; //Do nothing
