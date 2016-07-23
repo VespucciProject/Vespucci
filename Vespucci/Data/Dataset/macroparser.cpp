@@ -59,15 +59,15 @@ bool MacroParser::LoadMacro(QString macro)
 
 	valid_commands_["LinearMovingAverage"] = { "UInt" };
 
-	valid_commands_["SavitzkyGolay"] = { "UInt" << "UInt" << "UInt" };
+	valid_commands_["SavitzkyGolay"] = { "UInt", "UInt", "UInt" };
 
 	valid_commands_["SingularValue"] = { "UInt" };
 
 	valid_commands_["QUIC_SVD"] = { "Double" };
 
-	valid_commands_["MFBaseline"] = { "Int" << "Int" };
+	valid_commands_["MFBaseline"] = { "Int", "Int" };
 
-	valid_commands_["IModPolyBaseline"] = { "UInt" << "UInt" << "Double" };
+	valid_commands_["IModPolyBaseline"] = { "UInt", "UInt", "Double" };
 
 	valid_commands_["RemoveClippedSpectra"] = { "Double" };
 
@@ -82,11 +82,11 @@ bool MacroParser::LoadMacro(QString macro)
 
 	valid_commands_["BandRatio"] = { "String" , "Double" , "Double" , "Double" , "Double" , "UInt" };
 
-	valid_commands_["PartialLeastSquares"] = { "String" << "UInt" };
+	valid_commands_["PartialLeastSquares"] = { "String", "UInt" };
 
-	valid_commands_["VertexComponents"] = { "String" << "UInt" };
+	valid_commands_["VertexComponents"] = { "String", "UInt" };
 
-	valid_commands_["KMeans"] = { "String" << "UInt" };
+	valid_commands_["KMeans"] = { "String", "UInt" };
 
 	valid_commands_["PrincipalComponents"] = { "String" };
 
