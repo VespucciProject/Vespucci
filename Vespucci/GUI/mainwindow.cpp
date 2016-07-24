@@ -1480,10 +1480,7 @@ void MainWindow::CloseDataset(const QString &name)
                                                         "Vespucci Dataset (*.h5)");
             dataset->Save(filename);
         }
-
-
     }
-
     emit DatasetToBeRemoved(name);
     workspace_->RemoveDataset(name);
 }

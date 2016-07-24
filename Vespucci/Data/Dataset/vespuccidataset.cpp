@@ -1302,14 +1302,9 @@ void VespucciDataset::Scale(double scaling_factor)
 /// Removes a spectrum from the dataset
 void VespucciDataset::ShedSpectrum(const uword index)
 {
-    cout << "VespucciDataset::ShedSpectrum\n";
-
-    cout << "index = " << index << "x = " << x_(index) << " y = " << y_(index) << "\n";
-
     state_changed_ = true;
 
     SetOldCopies();
-    cout << "spectra columns = " << spectra_.n_cols;
     try{
         spectra_.shed_col(index);
         x_.shed_row(index);
