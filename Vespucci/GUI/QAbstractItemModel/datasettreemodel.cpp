@@ -237,14 +237,14 @@ void DatasetTreeModel::UpdateData(const DataModel *data_model)
     for (auto item: root_item_->child_items()){
         QString dataset_name = item->data(0).toString();
         QStringList analysis_results_names = data_model->AnalysisResultsNames(dataset_name);
-        QStringList auxiliary_matrix_names = data_model->AuxiliaryMatrixNames(dataset_name);
         QStringList core_matrix_names = {"Spectra", "Spectral Abscissa", "x", "y"};
 
         //check for changed analysis results
         QStringList child_names = item->ChildNames();
         //add new analysis results
         for (auto results_name: analysis_results_names){
-            if (!child_names.contains(results_name)){
+            if (!child_names.contains(results_name)
+                    && data_model->GetResults(dataset_name, results_name)->KeyList().size()){
                 TreeItem *analysis_results_item =
                         SetupAnalysisResultTreeItem(data_model->GetDataset(dataset_name),
                                                     data_model->GetResults(dataset_name, results_name),
@@ -253,25 +253,11 @@ void DatasetTreeModel::UpdateData(const DataModel *data_model)
             }//if
         }//for (AnalysisResultsNames)
 
-        for (auto auxiliary_matrix_name: auxiliary_matrix_names){
-            if (!child_names.contains(auxiliary_matrix_name)){
-                TreeItem *matrix_item =
-                        SetupMatrixTreeItem(dataset_name, auxiliary_matrix_name,
-                                            data_model->GetAuxiliaryMatrix(dataset_name,
-                                                                          auxiliary_matrix_name),
-                                            item);
-                item->appendChild(matrix_item);
-            }
-        }
-
-
-
         //Remove old subobjects
         for (auto child_item: item->child_items()){
             QString child_name = child_item->data(0).toString();
             if (!analysis_results_names.contains(child_name)
-                    && !core_matrix_names.contains(child_name)
-                    && !auxiliary_matrix_names.contains(child_name)){
+                    && !core_matrix_names.contains(child_name)){
                 item->removeChild(child_item);
             }
         }//for (item->child_items)

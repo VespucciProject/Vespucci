@@ -210,7 +210,14 @@ private slots:
 
     void on_actionPlotResult_triggered();
 
+    void on_actionSave_Dataset_triggered();
+
+    void on_actionOpenDataset_triggered();
+
+    void on_actionSave_Dataset_As_triggered();
+
 private:
+    void CloseDataset(const QString &name);
     Ui::MainWindow *ui;
 
     PlotViewer *plot_viewer_;

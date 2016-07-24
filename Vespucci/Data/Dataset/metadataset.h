@@ -32,7 +32,6 @@ class MetaDataset : public VespucciDataset
 public:
     MetaDataset(QString name, 
                 MainWindow *main_window,
-                QFile *log_file,
                 QString *directory, 
                 QString method_description,
                 MetaMethod::Method method,

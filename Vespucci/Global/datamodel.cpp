@@ -313,8 +313,11 @@ QStringList DataModel::CoreMatrixNames(const QString &dataset_key)
 /// VespucciWorkspace should handle it.
 void DataModel::AddDataset(QSharedPointer<VespucciDataset> dataset)
 {
-    if (!HasDataset(dataset->name()))
-        datasets_.append(dataset);
+    int i = 1;
+    QString name = dataset->name();
+    while (HasDataset(dataset->name()))
+        dataset->SetName(name + "(" + QString::number(i++) + ")");
+    datasets_.append(dataset);
 }
 
 ///

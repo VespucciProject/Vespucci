@@ -43,6 +43,10 @@ public:
     void AddPlot(const vec &abscissa, const vec &data);
     void AddTransientPlot(const vec &abscissa, const vec &data);
     void AddTransientPlot(const mat & paired_data);
+    void AddScatterPlot(const mat & paired_data);
+    void AddScatterPlot(const vec &abscissa, const vec &data);
+    void AddMappedScatterPlot(const mat & paired_data, const vec &categorical);
+    void AddMappedScatterPlot(const vec & abscissa, const vec &data, const vec &categorical);
     void RemoveTransientPlot();
     bool TransientOnly() const;
 

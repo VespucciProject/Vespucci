@@ -56,26 +56,31 @@ void MetaDatasetDialog::on_buttonBox_accepted()
     MetaMethod::Method method;
     switch(ui->methodComboBox->currentIndex()){
     case 0:
-        cout << method_description.toStdString() << endl;
-        cout << "0" << endl;
+        cout << method_description.toStdString() << "\n";
+
+        cout << "0\n";
+
         method = MetaMethod::ConcatenateDatasets;
         break;
     case 1: default:
-        cout << method_description.toStdString() << endl;
-        cout << "1 or default" << endl;
+        cout << method_description.toStdString() << "\n";
+
+        cout << "1 or default\n";
+
         method = MetaMethod::AverageSpectra;
         break;
     }
 
     QString name = ui->nameLineEdit->text();
-    QFile *log_file = workspace_->CreateLogFile(name);
     QSharedPointer<MetaDataset> new_dataset;
     try{
-        new_dataset = QSharedPointer<MetaDataset>(new MetaDataset(name, workspace_->main_window(), log_file, workspace_->directory_ptr(), method_description, method, parent_datasets));
+        new_dataset = QSharedPointer<MetaDataset>(new MetaDataset(name, workspace_->main_window(), workspace_->directory_ptr(), method_description, method, parent_datasets));
     }
     catch(exception e){
-        cerr << "Exception thrown" << endl;
-        cerr << e.what() << endl;
+        cerr << "Exception thrown\n";
+
+        cerr << e.what() << "\n";
+
         QMessageBox::warning(this, "Exception Occured", "An exception was thrown in the MetaDataset constructor");
         return;
     }

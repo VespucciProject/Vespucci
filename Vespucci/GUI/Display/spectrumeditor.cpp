@@ -98,10 +98,12 @@ void SpectrumEditor::on_deletePushButton_clicked()
     int response = QMessageBox::question(this, "Delete Spectrum?",
                                         "Are you sure you want to delete the spectrum at index " + QString::number(row) + "?",
                                          QMessageBox::Yes, QMessageBox::No);
-    cout << (response == QMessageBox::Yes ? "QMessageBox::Yes" : "!QMessageBox::Yes") << endl;
+    cout << (response == QMessageBox::Yes ? "QMessageBox::Yes" : "!QMessageBox::Yes") << "\n";
+
     if (response == QMessageBox::Yes){
         try{
-            cout << "call ShedRow" << endl;
+            cout << "call ShedRow\n";
+
             dataset_->ShedSpectrum(row);
         }
         catch(std::exception e){

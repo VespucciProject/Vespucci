@@ -2,7 +2,7 @@
 #load Vespucci dependencies for osx using homebrew
 brew tap homebrew/science
 brew install qt5
-brew install hdf5
+brew install hdf5 --with-unsupported
 brew install libxml2
 brew install arpack
 brew install superlu43

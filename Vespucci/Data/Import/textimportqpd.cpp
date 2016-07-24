@@ -164,7 +164,8 @@ bool TextImport::ImportLongText(QString filename,
     }
     catch(exception e)
     {
-        cerr << "Exception thrown in TextImport::ImportLongText" << endl;
+        cerr << "Exception thrown in TextImport::ImportLongText\n";
+
         return false;
     }
 

@@ -219,7 +219,8 @@ arma::mat Vespucci::Math::orth(arma::mat X)
     }
     else{
         std::cerr << "orth: no basis found" << std::endl;
-        //cout << "end orth" << endl;
+        //cout << "end orth\n";
+
         return arma::zeros(X.n_rows, X.n_cols);
     }
 }

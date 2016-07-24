@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
     vec abscissa, x, y;
     for (auto filename: in_filenames){
         try{
-            cout << "Loading " << filename.toStdString() << "." << endl;
+            cout << "Loading " << filename.toStdString() << ".\n";
             TextImport::ImportWideText(filename.toStdString(),
                                        spectra,
                                        abscissa,
@@ -212,7 +212,8 @@ int main(int argc, char *argv[])
             projection.save(path + "/" + trunk + "_projection.csv", csv_ascii);
             abundances.save(path + "/" + trunk + "_abundances.csv", csv_ascii);
         }catch(exception e){
-            cout << "exception occurred" << endl;
+            cout << "exception occurred\n";
+
             cout << e.what();
             continue;
         }

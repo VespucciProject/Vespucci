@@ -56,10 +56,10 @@ void PlotWidget::AddPlot(const mat & paired_data)
     QPen pen(pen_color);
     if (paired_data.n_cols < 2)
         return;
-    QVector<double> abscissa =
-            QVector<double>::fromStdVector(conv_to<stdvec>::from(paired_data.col(0)));
-    QVector<double> data =
-            QVector<double>::fromStdVector(conv_to<stdvec>::from(paired_data.col(1)));
+    qvec abscissa =
+            qvec::fromStdVector(conv_to<stdvec>::from(paired_data.col(0)));
+    qvec data =
+            qvec::fromStdVector(conv_to<stdvec>::from(paired_data.col(1)));
     int graph_count = ui->customPlot->graphCount();
     if (graph_count < 1){
         ui->customPlot->addGraph();
@@ -78,10 +78,10 @@ void PlotWidget::AddPlot(const vec &abscissa, const vec &data)
 {
     QColor pen_color = this->GetNextColor();
     QPen pen(pen_color);
-    QVector<double> abscissa_qvec =
-            QVector<double>::fromStdVector(conv_to<stdvec>::from(abscissa));
-    QVector<double> data_qvec =
-            QVector<double>::fromStdVector(conv_to<stdvec>::from(data));
+    qvec abscissa_qvec =
+            qvec::fromStdVector(conv_to<stdvec>::from(abscissa));
+    qvec data_qvec =
+            qvec::fromStdVector(conv_to<stdvec>::from(data));
     int graph_count = ui->customPlot->graphCount();
     if (graph_count < 1){
         ui->customPlot->addGraph();
@@ -103,10 +103,10 @@ void PlotWidget::AddTransientPlot(const vec &abscissa, const vec &data)
     if (abscissa.n_rows != data.n_rows) return;
 
     if (transient_graph_){
-        QVector<double> abscissa_qvec =
-                QVector<double>::fromStdVector(conv_to<vector<double> >::from(abscissa));
-        QVector<double> data_qvec =
-                QVector<double>::fromStdVector(conv_to<vector<double> >::from(data));
+        qvec abscissa_qvec =
+                qvec::fromStdVector(conv_to<vector<double> >::from(abscissa));
+        qvec data_qvec =
+                qvec::fromStdVector(conv_to<vector<double> >::from(data));
         transient_graph_->setData(abscissa_qvec, data_qvec);
     }
     else{
@@ -122,10 +122,10 @@ void PlotWidget::AddTransientPlot(const vec &abscissa, const vec &data)
         }
         ui->customPlot->addGraph(key_axis, value_axis);
         transient_graph_ = ui->customPlot->graph(ui->customPlot->graphCount() - 1);
-        QVector<double> abscissa_qvec =
-                QVector<double>::fromStdVector(conv_to<vector<double> >::from(abscissa));
-        QVector<double> data_qvec =
-                QVector<double>::fromStdVector(conv_to<vector<double> >::from(data));
+        qvec abscissa_qvec =
+                qvec::fromStdVector(conv_to<vector<double> >::from(abscissa));
+        qvec data_qvec =
+                qvec::fromStdVector(conv_to<vector<double> >::from(data));
         transient_graph_->addData(abscissa_qvec, data_qvec);
     }
     transient_graph_->setPen(pen);
@@ -143,10 +143,10 @@ void PlotWidget::AddTransientPlot(const mat & paired_data)
     QCPAxis *key_axis;
     QCPAxis *value_axis;
     if (transient_graph_){
-        QVector<double> abscissa_qvec =
-                QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(0)));
-        QVector<double> data_qvec =
-                QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(1)));
+        qvec abscissa_qvec =
+                qvec::fromStdVector(conv_to<vector<double> >::from(paired_data.col(0)));
+        qvec data_qvec =
+                qvec::fromStdVector(conv_to<vector<double> >::from(paired_data.col(1)));
         transient_graph_->setData(abscissa_qvec, data_qvec);
     }
     else{
@@ -160,13 +160,159 @@ void PlotWidget::AddTransientPlot(const mat & paired_data)
         }
         ui->customPlot->addGraph(key_axis, value_axis);
         transient_graph_ = ui->customPlot->graph(ui->customPlot->graphCount() - 1);
-        QVector<double> abscissa_qvec =
-                QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(0)));
-        QVector<double> data_qvec =
-                QVector<double>::fromStdVector(conv_to<vector<double> >::from(paired_data.col(1)));
+        qvec abscissa_qvec =
+                qvec::fromStdVector(conv_to<vector<double> >::from(paired_data.col(0)));
+        qvec data_qvec =
+                qvec::fromStdVector(conv_to<vector<double> >::from(paired_data.col(1)));
         transient_graph_->addData(abscissa_qvec, data_qvec);
     }
     transient_graph_->setPen(pen);
+    ui->customPlot->rescaleAxes();
+    ui->customPlot->replot(QCustomPlot::rpImmediate);
+}
+
+///
+/// \brief PlotWidget::AddScatterPlot
+/// \param paired_data
+///
+void PlotWidget::AddScatterPlot(const mat &paired_data)
+{
+    QColor pen_color = this->GetNextColor();
+    QPen pen(pen_color);
+    if (paired_data.n_cols < 2)
+        return;
+    qvec abscissa =
+            qvec::fromStdVector(conv_to<stdvec>::from(paired_data.col(0)));
+    qvec data =
+            qvec::fromStdVector(conv_to<stdvec>::from(paired_data.col(1)));
+    int graph_count = ui->customPlot->graphCount();
+    if (graph_count < 1){
+        ui->customPlot->addGraph();
+        ui->customPlot->graph(graph_count)->addData(abscissa, data);
+    }
+    else{
+        ui->customPlot->addGraph(ui->customPlot->graph(0)->keyAxis(), ui->customPlot->graph(0)->valueAxis());
+        ui->customPlot->graph(graph_count)->addData(abscissa, data);
+    }
+    ui->customPlot->graph(graph_count)->setPen(pen);
+
+    QCPScatterStyle style(QCPScatterStyle::ssDisc, pen_color, 6);
+    ui->customPlot->graph(graph_count)->setScatterStyle(style);
+    ui->customPlot->rescaleAxes();
+    ui->customPlot->replot(QCustomPlot::rpImmediate);
+}
+
+///
+/// \brief PlotWidget::AddScatterPlot
+/// \param abscissa
+/// \param data
+///
+void PlotWidget::AddScatterPlot(const vec &abscissa, const vec &data)
+{
+    QColor pen_color = this->GetNextColor();
+    qvec abscissa_qvec =
+            qvec::fromStdVector(conv_to<stdvec>::from(abscissa));
+    qvec data_qvec =
+            qvec::fromStdVector(conv_to<stdvec>::from(data));
+    int graph_count = ui->customPlot->graphCount();
+    if (graph_count < 1){
+        ui->customPlot->addGraph();
+        ui->customPlot->graph(graph_count)->addData(abscissa_qvec, data_qvec);
+    }
+    else{
+        ui->customPlot->addGraph(ui->customPlot->graph(0)->keyAxis(), ui->customPlot->graph(0)->valueAxis());
+        ui->customPlot->graph(graph_count)->addData(abscissa_qvec, data_qvec);
+    }
+
+    QCPScatterStyle style(QCPScatterStyle::ssDisc, pen_color, 6);
+    ui->customPlot->graph(graph_count)->setScatterStyle(style);
+    ui->customPlot->rescaleAxes();
+    ui->customPlot->replot(QCustomPlot::rpImmediate);
+}
+
+///
+/// \brief PlotWidget::AddMappedScatterPlot
+/// \param paired_data
+/// \param categorical
+///
+void PlotWidget::AddMappedScatterPlot(const mat &paired_data, const vec &categorical)
+{
+    //ignore incomplete categorical data
+    if (categorical.n_rows != paired_data.n_rows){
+        AddScatterPlot(paired_data);
+        return;
+    }
+
+    vec unique_values = unique(categorical);
+    int color_index;
+    for (uword i = 0; i < unique_values.n_rows; ++i){
+        color_index = i;
+        while (color_index >= colors_.size()){color_index -= colors_.size();}
+        QColor color = colors_[color_index];
+        QCPScatterStyle style(QCPScatterStyle::ssDisc, color, 6);
+        double value = unique_values(i);
+        uvec indices = arma::find(categorical == value);
+        mat current_data = paired_data.rows(indices);
+        qvec x = qvec::fromStdVector(conv_to<stdvec>::from(current_data.col(0)));
+        qvec y = qvec::fromStdVector(conv_to<stdvec>::from(current_data.col(1)));
+
+        int graph_count = ui->customPlot->graphCount();
+        if (graph_count < 1){
+            ui->customPlot->addGraph();
+            ui->customPlot->graph(graph_count)->addData(x, y);
+        }
+        else{
+            ui->customPlot->addGraph(ui->customPlot->graph(0)->keyAxis(), ui->customPlot->graph(0)->valueAxis());
+            ui->customPlot->graph(graph_count)->addData(x, y);
+        }
+
+        ui->customPlot->graph(graph_count)->setScatterStyle(style);
+    }
+    ui->customPlot->rescaleAxes();
+    ui->customPlot->replot(QCustomPlot::rpImmediate);
+}
+
+///
+/// \brief PlotWidget::AddMappedScatterPlot
+/// \param abscissa
+/// \param data
+/// \param categorical
+///
+void PlotWidget::AddMappedScatterPlot(const vec &abscissa, const vec &data, const vec &categorical)
+{
+    if (data.n_rows != abscissa.n_rows) return;
+    //ignore incomplete categorical data
+    if (categorical.n_rows != data.n_rows){
+        AddScatterPlot(abscissa, data);
+        return;
+    }
+
+    vec unique_values = unique(categorical);
+    int color_index;
+    for (uword i = 0; i < unique_values.n_rows; ++i){
+        color_index = i;
+        while (color_index >= colors_.size()){color_index -= colors_.size();}
+        QColor color = colors_[color_index];
+        QCPScatterStyle style(QCPScatterStyle::ssDisc, color, 6);
+        double value = unique_values(i);
+        uvec indices = arma::find(categorical == value);
+        vec current_data = data.rows(indices);
+        vec current_abscissa = abscissa.rows(indices);
+        qvec x = qvec::fromStdVector(conv_to<stdvec>::from(current_abscissa));
+        qvec y = qvec::fromStdVector(conv_to<stdvec>::from(current_data));
+
+        int graph_count = ui->customPlot->graphCount();
+        if (graph_count < 1){
+            ui->customPlot->addGraph();
+            ui->customPlot->graph(graph_count)->addData(x, y);
+        }
+        else{
+            ui->customPlot->addGraph(ui->customPlot->graph(0)->keyAxis(), ui->customPlot->graph(0)->valueAxis());
+            ui->customPlot->graph(graph_count)->addData(x, y);
+        }
+
+        ui->customPlot->graph(graph_count)->setScatterStyle(style);
+    }
     ui->customPlot->rescaleAxes();
     ui->customPlot->replot(QCustomPlot::rpImmediate);
 }
@@ -191,6 +337,6 @@ QColor PlotWidget::GetNextColor()
     //there are nine colors in the list
     //we alternate between them then rotate back to the first
     int color_index = ui->customPlot->graphCount();
-    while (color_index > colors_.size() - 1){color_index -= colors_.size();}
+    while (color_index >= colors_.size()){color_index -= colors_.size();}
     return colors_[color_index];
 }

@@ -72,70 +72,41 @@ using namespace arma;
 /// \brief The VespucciDataset class
 /// This is the main class for dealing with hyperspectral data. This handles the
 ///  import and export of spectra, and the creation of maps. Images are handled
-/// by the MapData class.
+/// by the MapData class. This class is intended to be allocated on the heap inside
+/// of a smart pointer, there is no copy constructor.
 class VespucciDataset
 {
 public:
-    VespucciDataset(const VespucciDataset &dataset);
-    VespucciDataset(const QString name,
-                    const QString &archive_filename,
+    VespucciDataset(const QString &h5_filename,
                     MainWindow *main_window,
-                    QString *directory,
-                    QFile *log_file);
+                    QSharedPointer<VespucciWorkspace> ws);
 
     VespucciDataset(QString text_filename,
                     MainWindow *main_window,
                     QString *directory,
-                    QFile *log_file,
                     QString name,
                     QString x_axis_description,
                     QString y_axis_description,
                     bool swap_spatial,
                     std::string format);
+
     VespucciDataset(map<pair<int,int>, string> text_filenames,
                     MainWindow *main_window,
                     QString *directory,
-                    QFile *log_file,
                     QString name,
                     QString x_axis_description,
                     QString y_axis_description,
                     int rows, int cols);
 
-    VespucciDataset(QString vespucci_binary_filename,
-                    MainWindow *main_window,
-                    QString *directory,
-                    QFile *log_file,
-                    QString name,
-                    QString x_axis_description,
-                    QString y_axis_description);
-
-    VespucciDataset(QString binary_filename,
-                    MainWindow *main_window,
-                    QString *directory,
-                    QString name,
-                    QFile *log_file);
-
-
     VespucciDataset(QString name,
                     MainWindow *main_window,
                     QString *directory,
-                    QFile *log_file,
                     QSharedPointer<VespucciDataset> original,
                     uvec indices);
 
     VespucciDataset(QString name,
                     MainWindow *main_window,
-                    QString *directory,
-                    QFile *log_file);
-
-    VespucciDataset(const QString &name,
-                    MainWindow *main_window,
-                    QString *directory,
-                    QFile *log_file,
-                    mat &spectra,
-                    vec &abscissa,
-                    vec &x,
-                    vec &y);
+                    QString *directory);
 
     ~VespucciDataset();
     // PRE-PROCESSING FUNCTIONS //
@@ -219,8 +190,8 @@ public:
     QCPRange ValueRange() const;
 
     bool Save(QString filename);
+    bool Load(QString filename);
     bool SaveSpectrum(QString filename, uword column, file_type type);
-    bool SaveLogFile(QString filename);
     // IMAGING FUNCTIONS //
 
     void Univariate(QString name, double &left_bound, double &right_bound,
@@ -244,10 +215,10 @@ public:
     //MEMBER ACCESS FUNCTIONS:
     vec wavelength() const;
     vec abscissa() const;
-    colvec x() const;
-    colvec y() const;
-    colvec x(uvec indices) const;
-    colvec y(uvec indices) const;
+    vec x() const;
+    vec y() const;
+    vec x(uvec indices) const;
+    vec y(uvec indices) const;
     double x(uword index) const;
     double y(uword index) const;
     vec wavelength(uvec indices) const;
@@ -269,7 +240,7 @@ public:
     const QString y_axis_description() const;
 
     void SetName(QString new_name);
-    void SetData(mat spectra, vec wavelength, colvec x, colvec y);
+    void SetData(const mat &spectra, const vec &wavelength, const vec &x, const vec &y);
 
     void SetIndices(vec indices);
 
@@ -332,6 +303,7 @@ public:
 
     void ImportAuxiliaryMatrix(const QString &name, const QString &filename);
     void AddAuxiliaryMatrix(const QString &name, mat &matrix);
+    void AddMatrix(const QString &name, mat &matrix);
     QStringList AuxiliaryMatrixKeys() const;
     QStringList CoreMatrixKeys() const;
 
@@ -359,10 +331,18 @@ public:
 
     QStringList MapKeys() const;
 
-    void DestroyLogFile();
     void SetOldCopies();
 
-    bool Contains(const QString &key);
+    bool Contains(const QString &key) const;
+
+    bool IsValid() const;
+
+    bool state_changed() const;
+
+    QString filename() const;
+    QString last_save_filename() const;
+
+    bool saved() const;
 
     private:
 
@@ -374,9 +354,8 @@ public:
 
     ///
     /// \brief auxiliary_matrices_
-    /// A container holding additional matrices that may be imported by the users
-    /// such as control spectra, calibration concentrations,
-    QMap<QString, QSharedPointer<mat> > auxiliary_matrices_;
+    /// An AnalysisResults that users can add and remove matrices from
+    QSharedPointer<AnalysisResults> auxiliary_matrices_;
 
     ///
     /// \brief abscissa_
@@ -389,14 +368,14 @@ public:
     ///
     /// \brief x_
     /// The spatial horizontal position
-    colvec x_;
-    colvec x_old_;
+    vec x_;
+    vec x_old_;
 
     ///
     /// \brief y_
     /// The spatial vertical position
-    colvec y_;
-    colvec y_old_;
+    vec y_;
+    vec y_old_;
 
     ///
     /// \brief spectra_
@@ -431,24 +410,9 @@ public:
     QString name_;
 
     ///
-    /// \brief log_file_ Pointer to the QFile associated with the log stream
-    /// This is allocated with "new" outside the VespucciDataset object, then
-    /// deallocated with delete inside the VespucciDataset destructor
-    QFile *log_file_;
-
-
-
-
-    ///
     /// \brief last_operation_
     /// Description of the last operation performed
     QString last_operation_;
-
-
-    ///
-    /// \brief map_list_model_
-    /// The model that exposes the list of maps.
-    MapListModel *map_list_model_;
 
     ///
     /// \brief maps_
@@ -494,28 +458,6 @@ public:
     bool z_scores_calculated_;
 
     ///
-    /// \brief principal_components_calculated_
-    /// Whether or not PCA has been performed
-    bool principal_components_calculated_;
-
-    bool mlpack_pca_calculated_;
-
-    ///
-    /// \brief partial_least_squares_calculated_
-    /// Whether or not PLS has been performed
-    bool partial_least_squares_calculated_;
-
-    ///
-    /// \brief vertex_components_calculated_
-    /// Whether or not VCA has been performed.
-    bool vertex_components_calculated_;
-
-    ///
-    /// \brief radical_calcualted_
-    /// Whether or not RADICAL has been performed.
-    bool radical_calcualted_;
-
-    ///
     /// \brief constructor_canceled_
     /// Whether or not cancel button is clicked.
     bool constructor_canceled_;
@@ -542,16 +484,40 @@ public:
     bool meta_;
 
     ///
-    /// \brief univariate_datas_
-    /// Container for UnivariateData objects allocated on heap.
-    QList<QSharedPointer<UnivariateData> > univariate_datas_;
-
-    ///
     /// \brief analysis_results_
     /// A container for various analyses indexed by name
     ///
     ///
     QVector<QSharedPointer<AnalysisResults> > analysis_results_;
+
+    ///
+    /// \brief operations_
+    /// A list of operations performed, which can also be interptreted as a macro
+    /// by the MacroParser class.
+    QStringList operations_;
+
+    ///
+    /// \brief last_save_filename_
+    /// The filename this dataset was last saved as
+    QString last_save_filename_;
+
+    ///
+    /// \brief state_changed_
+    /// Whether or not the data is different since the last save
+    bool state_changed_;
+
+    ///
+    /// \brief filename_
+    /// Filename this dataset was imported or loaded from
+    QString filename_;
+
+    ///
+    /// \brief text_filenames_
+    /// If imported from multiple files, the filenames
+    map<pair<int, int>, string> text_filenames_;
+
+
+    bool saved_;
 
 };
 Q_DECLARE_METATYPE(QSharedPointer<VespucciDataset> *)

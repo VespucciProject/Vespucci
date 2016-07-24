@@ -201,7 +201,8 @@ void FourierTransformDialog::on_weightsPushButton_clicked()
 void FourierTransformDialog::on_buttonBox_accepted()
 {
     int n = std::pow(2, ui->powerSpinBox->value());
-    cout << "n = " << n << endl;
+    cout << "n = " << n << "\n";
+
 
     if (ui->typeComboBox->currentText() == "FFT"){
         QProgressDialog *progress =

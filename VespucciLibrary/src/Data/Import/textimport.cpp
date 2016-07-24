@@ -23,7 +23,9 @@
 #include <QtCore>
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
-
+#include <string>
+#include <iostream>
+#include <regex>
 
 using namespace arma;
 bool TextImport::CheckFileValidity(QString filename, bool &comma_decimals)
@@ -92,82 +94,40 @@ bool TextImport::ImportWideText(std::string filename,
                                 arma::vec &x, arma::vec &y,
                                 bool swap_spatial)
 {
+    bool ok;
     Vespucci::ResetDataset(spectra, x, y, abscissa);
-    std::vector<double> x_s;
-    std::vector<double> y_s;
-    std::vector<double> abs_s;
-    std::vector<double> spec_s;
-    std::ifstream file_stream(filename);
-    std::string current_line;
-    std::getline(file_stream, current_line);
-    typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-    tokenizer::iterator it;
-    boost::char_separator<char> sep(",\t");
-    tokenizer tok(current_line, sep);
-    for (it = tok.begin(); it != tok.end(); ++it){
-        try{
-            abs_s.push_back(boost::lexical_cast<double>(*it));
-        }catch(boost::bad_lexical_cast & b){
-            std::cout << b.what() << std::endl;
-        }
+    std::ifstream file(filename);
+    std::string first_line;
+    std::getline(file, first_line);
+    first_line.erase(0, 2); //remove leading empty elements
+
+    abscissa = mat(first_line).t();
+
+    ok = spectra.load(file, raw_ascii);
+    if (!ok){
+        Vespucci::ResetDataset(spectra, x, y, abscissa);
+        return false;
     }
-    while (file_stream){
-        std::getline(file_stream, current_line);
-        if (current_line.empty()){break;}
-        tok = tokenizer(current_line, sep);
-        it = tok.begin();
-        if (swap_spatial){
-            try{
-                y_s.push_back(boost::lexical_cast<double>(*it));
-            }catch (boost::bad_lexical_cast & b){
-                std::cout << b.what();
-            }
 
-            ++it;
-            try{
-                x_s.push_back(boost::lexical_cast<double>(*it));
-            }catch (boost::bad_lexical_cast & b){
-                std::cout << b.what();
-            }
-
-            ++it;
-        }
-        else{
-            try{
-                x_s.push_back(boost::lexical_cast<double>(*it));
-            }catch (boost::bad_lexical_cast & b){
-                std::cout << b.what();
-            }
-
-            ++it;
-            try{
-                y_s.push_back(boost::lexical_cast<double>(*it));
-            }catch (boost::bad_lexical_cast & b){
-                std::cout << b.what();
-            }
-
-            ++it;
-        }
-        while (it != tok.end()){
-            try{
-               spec_s.push_back(boost::lexical_cast<double>(*it));
-            }catch (boost::bad_lexical_cast & b){
-                std::cout << b.what();
-            }
-
-            ++it;
-        }
+    if (swap_spatial){
+        x = spectra.col(1);
+        y = spectra.col(0);
     }
-    abscissa = arma::vec(abs_s);
-    x = arma::vec(x_s);
-    y = arma::vec(y_s);
-    spectra = arma::mat(spec_s);
-    spectra.reshape(abscissa.n_rows, x.n_rows);
+    else{
+        x = spectra.col(0);
+        y = spectra.col(1);
+    }
+
+    spectra.shed_cols(0, 1);
+    arma::inplace_trans(spectra);
 
     //check to make sure everything is sorted the way Vespucci expects
     arma::uvec sorted_indices = arma::stable_sort_index(abscissa);
     abscissa = abscissa.rows(sorted_indices);
     spectra = spectra.rows(sorted_indices);
+    if (swap_spatial){
+
+    }
 
     return true;
 }
@@ -242,77 +202,52 @@ bool TextImport::ImportMultiplePoints(std::map<std::pair<int, int>, std::string>
     return have_abscissa;
 }
 
-///
-/// \brief TextImport::ImportWitec
-/// \param spec_filename
-/// \param x_filename
-/// \param y_filename
-/// \param spectra
-/// \param abscissa
-/// \param x
-/// \param y
-/// \return
-/// Parses a Witec dataset. These consist of the abscissa and spectra in a column-major format
-/// With the x and y values in a separate file.
-/// For each value of x, a repeating list of y values is given.
-/// This function can also automatically transpose datasets if given y for x.
-bool TextImport::ImportWitec(std::string spec_filename, std::string x_filename, std::string y_filename, arma::mat &spectra, arma::vec &abscissa, arma::vec &x, arma::vec &y)
-{
-    bool spec_ok = spectra.load(spec_filename);
-    if (!spec_ok){
-        spectra.clear();
-        abscissa.clear();
-        x.clear();
-        y.clear();
-        return false;
-    }
 
+bool TextImport::ImportWitec(std::string filename,
+                             double x_start,
+                             double y_start,
+                             double x_end,
+                             double y_end,
+                             arma::uword x_count,
+                             arma::uword y_count,
+                             arma::mat &spectra,
+                             arma::vec &abscissa,
+                             arma::vec &x,
+                             arma::vec &y)
+{
+    Vespucci::ResetDataset(spectra, x, y, abscissa);
+    spectra.load(filename);
+    if (spectra.n_cols < 2) return false;
     abscissa = spectra.col(0);
     spectra.shed_col(0);
-    bool x_ok = x.load(x_filename);
-    bool y_ok = y.load(y_filename);
-    if (!(x_ok && y_ok)){
-        spectra.clear();
-        abscissa.clear();
-        x.clear();
-        y.clear();
+    if (x_count * y_count != spectra.n_cols){
+        Vespucci::ResetDataset(spectra, x, y, abscissa);
         return false;
     }
-
-    //the repeating, unique values in y are what we keep with constant x
-    //if y has the unique values, then we keep constant x
-    arma::vec unique_x = arma::unique(x);
-    arma::vec unique_y = arma::unique(y);
-    bool x_unique = unique_x.n_rows == x.n_rows;
-
-    //if data doesn't look like we expect it to, give up
-    if (!x_unique && (unique_y.n_rows == y.n_rows)){
-        spectra.clear();
-        abscissa.clear();
-        x.clear();
-        y.clear();
+    GenerateSpatialData(x_start, y_start,
+                                  x_end, y_end,
+                                  x_count, y_count,
+                                  x, y);
+    if (!(x.n_rows == y.n_rows && x.n_rows == spectra.n_cols)){
+        Vespucci::ResetDataset(spectra, x, y, abscissa);
         return false;
-    }
-
-
-    if (x_unique){
-        //we're going to fill x with new values (y already follows Vespucci conventions)
-        x.clear();
-        for (arma::uword i = 0; i < unique_x.n_rows; ++i){
-            arma::vec x_values(unique_y.n_rows);
-            x_values.fill(unique_x(i));
-            x = arma::join_vert(x, x_values);
-        }
-    }
-    else{
-        //we're going to fill y with new values (x already follows Vespucci conventions)
-        y.clear();
-        for (arma::uword i = 0; i < unique_y.n_rows; ++i){
-            arma::vec y_values(unique_x.n_rows);
-            y_values.fill(unique_y(i));
-            y = arma::join_vert(y, y_values);
-        }
     }
 
     return true;
+}
+
+void TextImport::GenerateSpatialData(double x_start, double y_start, double x_end, double y_end, arma::uword x_count, arma::uword y_count, arma::vec &x, arma::vec &y)
+{
+    x.clear();
+    y.clear();
+    arma::vec unique_x = arma::linspace(x_start, x_end, x_count);
+    arma::vec unique_y = arma::linspace(y_start, y_end, y_count);
+    arma::uword vec_size = x_count * y_count;
+    x.set_size(vec_size);
+    y.set_size(vec_size);
+    for (arma::uword i = 0; i < unique_y.n_rows; ++i){
+        y.rows(i, i*x_count).fill(unique_y(i));
+        x.rows(i, i*x_count) = unique_x;
+    }
+
 }

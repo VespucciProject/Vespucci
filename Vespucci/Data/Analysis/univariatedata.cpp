@@ -8,7 +8,8 @@ UnivariateData::UnivariateData(QString name):
 
 void UnivariateData::Apply(double left_bound, double right_bound, uword bound_window, const mat &spectra, const vec &abscissa)
 {
-    cout << "UnivariateData::Apply" << endl;
+    cout << "UnivariateData::Apply\n";
+
 
     mat baselines;
     field<mat> inflection_baselines;

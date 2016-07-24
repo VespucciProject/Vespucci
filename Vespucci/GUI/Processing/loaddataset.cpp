@@ -113,9 +113,7 @@ void LoadDataset::on_buttonBox_accepted()
 
     std::string format;
     const QString data_format_string = ui->dataFormatComboBox->currentText();
-    if (extension == "vds" || (data_format_string == "Vespucci Dataset" && extension != "txt"))
-        format = "VespucciBinary";
-    else if (data_format_string == "Wide Text")
+    if (data_format_string == "Wide Text")
         format = "WideTabDel";
     else if (data_format_string == "Wide Text (CSV)")
         format = "WideCSV";
@@ -133,78 +131,27 @@ void LoadDataset::on_buttonBox_accepted()
     //int position;
     bool swap = ui->swapCheckBox->isChecked();
 
-    QStringList names_list = workspace_->dataset_names();
-    QStringList::iterator i;
-
-    int warning_response=QMessageBox::Yes;
-    //Warning message pops up when user enters a name that already exists
-    for (i=names_list.begin(); i != names_list.end(); ++i){
-        if (name==(*i)){
-            warning_response =
-                    QMessageBox::question(this,
-                                          "Duplicate Name",
-                                          "There is already a dataset with this"
-                                          " name in the workspace. Datasets are"
-                                          " not indexed by name, but using two"
-                                          " datasets with the same name may lead"
-                                          " to confusion. Are you sure you wish"
-                                          " to continue with this name?",
-                                          QMessageBox::No,
-                                          QMessageBox::Yes);
-        }
+    try{
+        QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename,
+                                                workspace_->main_window(),
+                                                directory_,
+                                                name,
+                                                x_description,
+                                                y_description,
+                                                swap,
+                                                format));
+        if (!dataset->ConstructorCancelled()){
+            workspace_->AddDataset(dataset);
+            workspace_->set_directory(file_info.dir().absolutePath());
+            dataset.clear();
+            }
+    }
+    catch(exception e){
+        workspace_->main_window()->DisplayExceptionWarning(e);
+        return;
     }
 
-
-    if (warning_response == QMessageBox::Yes && file_info.exists()){
-        QFile *log_file = workspace_->CreateLogFile(name);
-
-        if (format == "VespucciBinary"){
-            try{
-                QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename,
-                                                            workspace_->main_window(),
-                                                            directory_,
-                                                            log_file,
-                                                            name,
-                                                            x_description,
-                                                            y_description));
-                    workspace_->AddDataset(dataset);
-                    workspace_->set_directory(file_info.dir().absolutePath());
-                    //dataset.clear(); //dataset should be copied to list
-            }
-            catch(exception e){
-                workspace_->main_window()->DisplayExceptionWarning(e);
-                delete log_file;
-                return;
-            }
-        }
-
-        else{
-            try{
-                QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename,
-                                                         workspace_->main_window(),
-                                                         directory_,
-                                                         log_file,
-                                                         name,
-                                                         x_description,
-                                                         y_description,
-                                                         swap,
-                                                         format));
-                if (!dataset->ConstructorCancelled()){
-                    workspace_->AddDataset(dataset);
-                    workspace_->set_directory(file_info.dir().absolutePath());
-                    dataset.clear();
-                }
-            }
-            catch(exception e){
-                workspace_->main_window()->DisplayExceptionWarning(e);
-                delete log_file;
-                return;
-            }
-        }
-
-    }
     close();
-
 }
 
 

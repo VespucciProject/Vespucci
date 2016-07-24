@@ -17,12 +17,13 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "Data/Dataset/vespuccidataset.h" //VespucciDataset includes all necessary headers.
+#include "Data/Dataset/vespuccidataset.h"
 #include <mlpack/methods/kmeans/kmeans.hpp>
 #include <mlpack/methods/quic_svd/quic_svd.hpp>
 #include "Data/Import/datasetloader.h"
 #include "Data/Import/datasetsaver.h"
-
+#include "Data/Import/textimport.h"
+#include <H5Cpp.h>
 using namespace arma;
 using namespace std;
 
@@ -32,44 +33,71 @@ using namespace std;
 /// Destructor deletes everything allocated with new that isn't a smart pointer
 VespucciDataset::~VespucciDataset()
 {
-    //Delete heap-allocated objects that are not stored in smart pointers
-    /*
-    if (principal_components_calculated_)
-        delete principal_components_data_;
-    if (partial_least_squares_calculated_)
-        delete partial_least_squares_data_;
-    if (vertex_components_calculated_)
-        delete vertex_components_data_;
-    */
-    //make sure all mfaps are delted properly.
-    map_list_model_->ClearMaps();
-
-    //This will be called for each dataset in the list model when it is removed.
-    DestroyLogFile();
-    //delete map_list_model_;
-
 }
 
 bool VespucciDataset::Save(QString filename)
 {
-    bool success;
+    using namespace H5;
+    QStringList core_names = CoreMatrixKeys();
+    QStringList results_names = AnalysisResultsKeys();
     try{
-        arma::field<mat> dataset(4);
-        dataset(0) = spectra_;
-        dataset(1) = abscissa_;
-        dataset(2) = x_;
-        dataset(3) = y_;
-        success = dataset.save(filename.toStdString(), arma_binary);
+        H5File file(filename.toStdString(), H5F_ACC_TRUNC);
+        DataSpace str_dataspace(H5S_SCALAR);
+        StrType str_type(PredType::C_S1, H5T_VARIABLE);
+        Attribute str_attr = file.createAttribute("Name", str_type, str_dataspace);
+        str_attr.write(str_type, name_.toStdString());
+
+        str_attr = file.createAttribute("x-Axis Description", str_type, str_dataspace);
+        str_attr.write(str_type, x_axis_description_.toStdString());
+
+        str_attr = file.createAttribute("y-Axis Description", str_type, str_dataspace);
+        str_attr.write(str_type, y_axis_description_.toStdString());
+
+        for (auto core_name: core_names){
+            hsize_t dims[2];
+            dims[0] = GetCoreMatrix(core_name).n_rows;
+            dims[1] = GetCoreMatrix(core_name).n_cols;
+            DataSpace dataspace(2, dims);
+            DataSet ds(file.createDataSet(core_name.toStdString(),
+                                          PredType::NATIVE_DOUBLE, dataspace));
+            ds.write(GetCoreMatrix(core_name).memptr(),
+                     PredType::NATIVE_DOUBLE, dataspace);
+        }
+
+        for (auto results_name: results_names){
+            QSharedPointer<AnalysisResults> results = GetAnalysisResult(results_name);
+            QStringList matrix_names = results->KeyList();
+            Group results_group(file.createGroup(results_name.toStdString()));
+            for (auto matrix_name: matrix_names){
+                hsize_t dims[2];
+                dims[0] = results->GetMatrix(matrix_name).n_rows;
+                dims[1] = results->GetMatrix(matrix_name).n_cols;
+                DataSpace dataspace(2, dims);
+                DataSet ds(results_group.createDataSet(matrix_name.toStdString(),
+                                                       PredType::NATIVE_DOUBLE,
+                                                       dataspace));
+                ds.write(results->GetMatrix(matrix_name).memptr(),
+                         PredType::NATIVE_DOUBLE);
+            }
+        }
+        file.close();
     }
-    catch(exception e){
-        cerr << "See armadillo exception" << endl;
-
-        string str = "VespucciDataset::Save: " + string(e.what());
-        throw std::runtime_error(str);
+    catch(FileIException error){
+        QString msg = QString::fromStdString(error.getDetailMsg());
+        main_window_->DisplayWarning("HDF5 FileIException",
+                                     msg);
+        return false;
     }
-
-    return success;
-
+    catch(DataSetIException error){
+        QString msg = QString::fromStdString(error.getDetailMsg());
+        main_window_->DisplayWarning("HDF5 DataSetIException",
+                                     msg);
+        return false;
+    }
+    last_save_filename_ = filename;
+    saved_ = true;
+    state_changed_ = false;
+    return true;
 }
 
 bool VespucciDataset::SaveSpectrum(QString filename, uword column, file_type type)
@@ -89,53 +117,6 @@ bool VespucciDataset::SaveSpectrum(QString filename, uword column, file_type typ
 
 }
 
-bool VespucciDataset::SaveLogFile(QString filename)
-{
-    return log_file_->copy(filename);
-}
-
-///
-/// \brief VespucciDataset::DestroyLogFile
-/// Deletes log file unless user decides to save it elsewhere
-void VespucciDataset::DestroyLogFile()
-{
-    QMessageBox::StandardButton reply =
-            QMessageBox::question(main_window_,
-                                  "Save log?",
-                                  "Would you like to save the log for " + name_
-                                  + "?",
-                                  QMessageBox::Yes|QMessageBox::No);
-    QString filename;
-
-
-    if (reply == QMessageBox::No){
-        log_file_->remove();
-        return;
-    }
-    else{
-        filename = QFileDialog::getSaveFileName(0, QTranslator::tr("Save File"),
-                                   *directory_,
-                                   QTranslator::tr("Text Files (*.txt)"));        
-        bool success = log_file_->copy(filename);
-        if (!success){
-            bool remove_success = QFile::remove(filename); //delete old file
-            if (!remove_success){
-                QMessageBox::warning(main_window_, "Failure", "Previous file could not be removed");
-            }
-            success = log_file_->copy(filename);
-        }
-        //new log file falls out of scope
-        if(log_file_->isOpen()){log_file_->close();}
-        QFile::remove(log_file_->fileName());
-
-        if (success)
-            QMessageBox::information(main_window_, "Success!", "File " + filename + " written successfully");
-        else
-            QMessageBox::warning(main_window_, "Failure", "File not written successfully.");
-    }
-    return;
-}
-
 void VespucciDataset::SetOldCopies()
 {
     spectra_old_ = spectra_;
@@ -152,117 +133,193 @@ void VespucciDataset::SetOldCopies()
 /// called before an object is added to verify that it doesn't already exist
 /// The caller will rename the object if it exists by appending a number that is
 /// iteratively increased until the name is unique
-bool VespucciDataset::Contains(const QString &key)
+bool VespucciDataset::Contains(const QString &key) const
 {
-    for (auto result: analysis_results_)
-        if (result->name() == key) return true;
-    for (auto name: auxiliary_matrices_.keys())
-        if (name == key) return true;
-    return false;
+    return CoreMatrixKeys().contains(key) || AnalysisResultsKeys().contains(key)
+            || AuxiliaryMatrixKeys().contains(key) || key == "Auxiliary Matrices";
+}
+
+bool VespucciDataset::IsValid() const
+{
+    bool has_spatial = x_.n_rows;
+    //x and y have same size
+    bool valid_spatial = has_spatial && (x_.n_rows == y_.n_rows);
+    //x and y have same number of rows as spectra has columns
+    bool spatial_match = valid_spatial && (x_.n_rows == spectra_.n_cols);
+    //spectra and abscissa have same number of rows
+    bool spectral_match = spectra_.n_elem && abscissa_.n_rows == spectra_.n_rows;
+    return spectral_match && (spatial_match || !has_spatial);
+}
+
+bool VespucciDataset::state_changed() const
+{
+    return state_changed_;
+}
+
+QString VespucciDataset::filename() const
+{
+    return filename_;
+}
+
+QString VespucciDataset::last_save_filename() const
+{
+    return last_save_filename_;
+}
+
+bool VespucciDataset::saved() const
+{
+    return saved_;
 }
 
 
 ///
 /// \brief VespucciDataset::VespucciDataset
-/// \param archive_filename
+/// \param name
+/// \param h5_filename
 /// \param main_window
 /// \param directory
-/// \param log_file
-/// Loads archive using DatasetLoader object
-VespucciDataset::VespucciDataset(const QString name, const QString &archive_filename,
-                                 MainWindow *main_window,
-                                 QString *directory,
-                                 QFile *log_file)
-    : log_text_stream_(log_file), empty_matrix_()
-{
-    name_ = name;
-    DatasetLoader *dataset_loader = new DatasetLoader(archive_filename);
-    QMap<QString, QString> metadata;
-    QMap<QString, mat> core_objects;
-    QMap<QString, QMap<QString, mat> > calculated_objects;
-    dataset_loader->GetData(core_objects, calculated_objects, metadata);
-    //we already have all the objects we need, why waste memory storing them twice?
-    delete dataset_loader;
-    spectra_ = core_objects["Spectra"];
-    abscissa_ = core_objects["Abscissa"];
-    x_ = core_objects["x"];
-    y_ = core_objects["y"];
-    main_window_ = main_window;
-    workspace_ = main_window_->workspace_ptr();
-
-}
-
-
+/// Constructor to load dataset from an HDF5 file.
+/// Restrictions:
+/// Top level DataSets with names "Spectra" and "Spectral Abscissa" are required.
+/// Only three levels are recognized, Dataset, AnalysisResult, Matrix
+/// All matrices other than "x", "y", "abscissa" or "spectra" will be loaded
+/// into the auxiliary_matrices_ object.
 ///
-/// \brief VespucciDataset::VespucciDataset
-/// \param binary_filename The filename of the binary input file
-/// \param main_window The main window of the program
-/// \param directory The current working directory
-/// \param name The name of the dataset displayed to the user
-/// \param log_file The log file
-/// Constructor for loading saved spectral/spatial data in armadillo format
-VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
+/// All DataSets must have 2 dimensions only (column vectors stored as Nx1 matrices)
+///
+/// Attributes will be used to set metadata
+///
+///
+/// All ananalysis results groups are added as base AnalysisResults
+VespucciDataset::VespucciDataset(const QString &h5_filename,
                                  MainWindow *main_window,
-                                 QString *directory,
-                                 QFile *log_file,
-                                 QString name,
-                                 QString x_axis_description,
-                                 QString y_axis_description)
-    : log_text_stream_(log_file)
+                                 QSharedPointer<VespucciWorkspace> ws)
+    : auxiliary_matrices_(new AnalysisResults("Auxiliary Matrices", "Auxiliary Matrices")), empty_matrix_()
 {
-    QDateTime datetime = QDateTime::currentDateTimeUtc();
-    workspace_ = main_window->workspace_ptr();
-    log_file_ = log_file;
-    log_text_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
-    log_text_stream_ << "Version 1.0" << endl << endl;
-    log_text_stream_ << "Dataset " << name << "created "
-                << datetime.date().toString("yyyy-MM-dd") << "T"
-                << datetime.time().toString("hh:mm:ss") << "Z" << endl;
-    log_text_stream_ << "Imported from binary file " << vespucci_binary_filename << endl << endl;
-
-    non_spatial_ = false;
-    meta_ = false;
-    //Set up variables unrelated to hyperspectral data:
-    map_list_model_ = new MapListModel(main_window, this);
-
-    map_loading_count_ = 0;
-    principal_components_calculated_ = false;
-    mlpack_pca_calculated_ = false;
-    partial_least_squares_calculated_ = false;
-    vertex_components_calculated_ = false;
-    z_scores_calculated_ = false;
-    directory_ = directory;
+    saved_ = true;
+    filename_ = h5_filename;
+    last_save_filename_ = h5_filename;
+    workspace_ = ws;
+    QString fallback_name = "Dataset";
+    directory_ = workspace_->directory_ptr();
+    int counter = 1;
+    while (workspace_->dataset_names().contains(fallback_name))
+        fallback_name = "Dataset " + QString::number(counter++);
+    QString abs_label = workspace_->settings()->value("absLabel").toString();
+    QString abs_units = workspace_->settings()->value("absUnits").toString();
+    QString ord_label = workspace_->settings()->value("ordLabel").toString();
+    QString ord_units = workspace_->settings()->value("ordUnits").toString();
+    QString fallback_x_description = abs_label + "(" + abs_units + ")";
+    QString fallback_y_description = ord_label + "(" + ord_units + ")";
     main_window_ = main_window;
-    x_axis_description_ = x_axis_description;
-    y_axis_description_ = y_axis_description;
-    name_ = name;
-    try{
-        BinaryImport::ImportVespucciBinary(vespucci_binary_filename.toStdString(),
-                                           spectra_,
-                                           abscissa_,
-                                           x_, y_);
-        indices_.set_size(x_.n_elem);
-        for (uword i = 0; i < indices_.n_elem; ++i)
-            indices_(i) = i;
-
+    if (!QFile::exists(h5_filename)){
+        constructor_canceled_ = true;
+        return;
     }
-    catch(exception e) {
-        string str = "BinaryImport: " + string(e.what());
-        throw std::runtime_error(str);
+    using namespace H5;
 
+    try{
+        H5File file(h5_filename.toStdString(), H5F_ACC_RDONLY);
+
+        if (file.attrExists("Name")){
+            Attribute attr = file.openAttribute("Name");
+            H5std_string buf("");
+            DataType type = attr.getDataType();
+            attr.read(type, buf);
+            name_ = QString::fromStdString(buf);
+        }
+        else{
+            name_ = fallback_name;
+        }
+        if (file.attrExists("x-Axis Description")){
+            Attribute attr = file.openAttribute("x-Axis Description");
+            H5std_string buf("");
+            DataType type = attr.getDataType();
+            attr.read(type, buf);
+            x_axis_description_ = QString::fromStdString(buf);
+        }
+        else{
+            x_axis_description_ = fallback_x_description;
+        }
+        if (file.attrExists("y-Axis Description")){
+            Attribute attr = file.openAttribute("y-Axis Description");
+            H5std_string buf("");
+            DataType type = attr.getDataType();
+            attr.read(type, buf);
+            y_axis_description_ = QString::fromStdString(buf);
+        }
+        else{
+            y_axis_description_ = fallback_y_description;
+        }
+
+        for (hsize_t i = 0; i < file.getNumObjs(); ++i){
+            H5G_obj_t obj_type = file.getObjTypeByIdx(i);
+            string obj_name = file.getObjnameByIdx(i);
+
+            if (obj_type == H5G_DATASET){
+                DataSet ds = file.openDataSet(obj_name);
+                DataSpace dspace = ds.getSpace();
+                hsize_t dims[2];
+                dspace.getSimpleExtentDims(dims);
+                mat matrix(dims[0], dims[1]);
+                ds.read(matrix.memptr(), PredType::NATIVE_DOUBLE);
+                AddMatrix(QString::fromStdString(obj_name), matrix);
+            }
+            if (obj_type == H5G_GROUP){
+                Group group = file.openGroup(obj_name);
+                for (hsize_t j = 0; j < group.getNumObjs(); ++ j){
+                    QSharedPointer<AnalysisResults> result(new AnalysisResults(QString::fromStdString(obj_name), ""));
+                    H5G_obj_t subobj_type = group.getObjTypeByIdx(j);
+                    string subobj_name = group.getObjnameByIdx(j);
+                    if (subobj_type == H5G_DATASET){
+                        DataSet ds = group.openDataSet(subobj_name);
+                        DataSpace dspace = ds.getSpace();
+                        hsize_t dims[2];
+                        dspace.getSimpleExtentDims(dims);
+                        mat matrix(dims[0], dims[1]);
+                        ds.read(matrix.memptr(), PredType::NATIVE_DOUBLE);
+                        result->AddMatrix(QString::fromStdString(subobj_name),
+                                          matrix);
+                    }//if (subobj_type == H5G_DATASET
+                }//for objects in group
+            }//if (obj_type == H5G_GROUP)
+        }//for objects in file
+
+        file.close();
+        if (AnalysisResultsKeys().contains("Auxiliary Matrices")){
+            auxiliary_matrices_ = GetAnalysisResult("Auxiliary Matrices");
+        }
+        else{
+            auxiliary_matrices_ = QSharedPointer<AnalysisResults>(new AnalysisResults("Auxiliary Matrices", "Auxiliary Matrices"));
+            AddAnalysisResult(auxiliary_matrices_);
+        }
+        constructor_canceled_ = false;
+    }//try
+    catch(H5::Exception error){
+        cerr << error.getDetailMsg() << "\n";
+        constructor_canceled_ = IsValid();
+    }
+    catch(std::exception e){
+        cerr << e.what() << "\n";
+        constructor_canceled_ = IsValid();
+    }
+
+    if (!constructor_canceled_){
+        if (AnalysisResultsKeys().contains("Auxiliary Matrices")){
+            auxiliary_matrices_ = GetAnalysisResult("Auxiliary Matrices");
+        }
+        else{
+            AddAnalysisResult(auxiliary_matrices_);
+        }
     }
 
 }
-
-
-
 
 ///
 /// \brief VespucciDataset::VespucciDataset
 /// \param text_filename The filename of the text file from which data is imported
 /// \param main_window The main window of the program
 /// \param directory The current global working directory
-/// \param log_file The log file
 /// \param name The name of the dataset displayed to the user
 /// \param x_axis_description A description of the spectral abscissa
 /// \param y_axis_description A description of the spectral ordinate
@@ -273,34 +330,25 @@ VespucciDataset::VespucciDataset(QString vespucci_binary_filename,
 VespucciDataset::VespucciDataset(QString text_filename,
                                  MainWindow *main_window,
                                  QString *directory,
-                                 QFile *log_file,
                                  QString name,
                                  QString x_axis_description,
                                  QString y_axis_description,
                                  bool swap_spatial,
                                  std::string format)
-    : log_text_stream_(log_file)
+    : auxiliary_matrices_(new AnalysisResults("Auxiliary Matrices", "Auxiliary Matrices"))
 {
+    saved_ = false;
+    filename_ = text_filename;
     workspace_ = main_window->workspace_ptr();
     QDateTime datetime = QDateTime::currentDateTimeUtc();
-    log_file_ = log_file;
-
-
-    log_text_stream_ << "Dataset " << name << " created "
-                << datetime.date().toString("yyyy-MM-dd") << "T"
-                << datetime.time().toString("hh:mm:ss") << "Z" << endl;
-    log_text_stream_ << "Imported from text file " << text_filename << endl << endl;
-
+    state_changed_ = true;
+    analysis_results_.append(auxiliary_matrices_);
 
     non_spatial_ = false;
     meta_ = false;
     //Set up variables unrelated to hyperspectral data:
-    map_list_model_ = new MapListModel(main_window, this);
+    //map_list_model_ = new MapListModel(main_window, this);
     map_loading_count_ = 0;
-    principal_components_calculated_ = false;
-    mlpack_pca_calculated_ = false;
-    partial_least_squares_calculated_ = false;
-    vertex_components_calculated_ = false;
     z_scores_calculated_ = false;
     directory_ = directory;
     flipped_ = swap_spatial;
@@ -311,17 +359,11 @@ VespucciDataset::VespucciDataset(QString text_filename,
 
     if (format == "WideTabDel"){
         try{
-            constructor_canceled_ = TextImport::ImportWideText(text_filename,
-                                                                   spectra_,
-                                                                   abscissa_,
-                                                                   x_, y_,
-                                                                   swap_spatial,
-                                                                   &progress,
-                                                                   "\t");
-            indices_.set_size(x_.n_elem);
-            for (uword i = 0; i < indices_.n_elem; ++i)
-                indices_(i) = i;
-
+            constructor_canceled_ = TextImport::ImportWideText(text_filename.toStdString(),
+                                       spectra_,
+                                       abscissa_,
+                                       x_, y_, swap_spatial);
+            indices_ = linspace<vec>(0, x_.n_elem - 1, x_.n_elem);
         }
         catch(exception e){
             string str = "Text import constructor:" +  string(e.what());
@@ -330,17 +372,11 @@ VespucciDataset::VespucciDataset(QString text_filename,
     }
     else if (format == "WideCSV"){
         try{
-            constructor_canceled_ = TextImport::ImportWideText(text_filename,
-                                                               spectra_,
-                                                               abscissa_,
-                                                               x_, y_,
-                                                               swap_spatial,
-                                                               &progress,
-                                                               ",");
-            indices_.set_size(x_.n_elem);
-            for (uword i = 0; i < indices_.n_elem; ++i)
-                indices_(i) = i;
-
+            constructor_canceled_ = TextImport::ImportWideText(text_filename.toStdString(),
+                                       spectra_,
+                                       abscissa_,
+                                       x_, y_, swap_spatial);
+            indices_ = linspace<vec>(0, x_.n_elem - 1, x_.n_elem);
         }
         catch(exception e){
             string str = "Text import constructor: " + string(e.what());
@@ -378,30 +414,22 @@ VespucciDataset::VespucciDataset(QString text_filename,
 VespucciDataset::VespucciDataset(map<pair<int, int>, string> text_filenames,
                                  MainWindow *main_window,
                                  QString *directory,
-                                 QFile *log_file,
                                  QString name,
                                  QString x_axis_description,
                                  QString y_axis_description,
                                  int rows, int cols)
-     : log_text_stream_(log_file)
+     : auxiliary_matrices_(new AnalysisResults("Auxiliary Matrices", "Auxiliary Matrices"))
 {
+    saved_ = false;
+    text_filenames_ = text_filenames;
     workspace_ = main_window->workspace_ptr();
+    analysis_results_.append(auxiliary_matrices_);
     QDateTime datetime = QDateTime::currentDateTimeUtc();
-    log_text_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
-    log_text_stream_ << "Version 1.0" << endl << endl;
-    log_text_stream_ << "Dataset " << name << "created "
-                << datetime.date().toString("yyyy-MM-dd") << "T"
-                << datetime.time().toString("hh:mm:ss") << "Z" << endl;
-    log_text_stream_ << "Created from multiple text files"<< endl;
     non_spatial_ = false;
     meta_ = false;
     //Set up variables unrelated to hyperspectral data:
-    map_list_model_ = new MapListModel(main_window, this);
+    //map_list_model_ = new MapListModel(main_window, this);
     map_loading_count_ = 0;
-    principal_components_calculated_ = false;
-    mlpack_pca_calculated_ = false;
-    partial_least_squares_calculated_ = false;
-    vertex_components_calculated_ = false;
     z_scores_calculated_ = false;
     directory_ = directory;
     flipped_ = false;
@@ -429,7 +457,6 @@ VespucciDataset::VespucciDataset(map<pair<int, int>, string> text_filenames,
 /// \param name The name of the dataset displayed to the user
 /// \param main_window The main window of the program
 /// \param directory The current global working directory
-/// \param log_file The log file
 /// \param original The dataset from which this dataset is "extracted"
 /// \param indices The indices of the spectra in the previous dataset that will form this one
 /// This is a constructor to create a new dataset by "extracting" spectra from a
@@ -437,30 +464,22 @@ VespucciDataset::VespucciDataset(map<pair<int, int>, string> text_filenames,
 VespucciDataset::VespucciDataset(QString name,
                                  MainWindow *main_window,
                                  QString *directory,
-                                 QFile *log_file,
                                  QSharedPointer<VespucciDataset> original,
                                  uvec indices)
-    : log_text_stream_(log_file)
+    : auxiliary_matrices_(new AnalysisResults("Auxiliary Matrices", "Auxiliary Matrices"))
 
 {
+    saved_ = false;
     workspace_ = main_window->workspace_ptr();
-    log_file_ = log_file;
-    map_list_model_ = new MapListModel(main_window, this);
-    QDateTime datetime = QDateTime::currentDateTimeUtc();
-    log_text_stream_ << "Vespucci, a free, cross-platform tool for spectroscopic imaging" << endl;
-    log_text_stream_ << "Version 1.0" << endl << endl;
-    log_text_stream_ << "Dataset " << name << "created "
-                << datetime.date().toString("yyyy-MM-dd") << "T"
-                << datetime.time().toString("hh:mm:ss") << "Z" << endl;
-    log_text_stream_ << "Created from previous dataset " << original->name() << endl;
-
+    analysis_results_.append(auxiliary_matrices_);
+    state_changed_ = true;
     non_spatial_ = true;
     meta_ = original->meta();
     map_loading_count_ = 0;
-    principal_components_calculated_ = false;
-    mlpack_pca_calculated_ = false;
-    partial_least_squares_calculated_ = false;
-    vertex_components_calculated_ = false;
+    //principal_components_calculated_ = false;
+    //mlpack_pca_calculated_ = false;
+    //partial_least_squares_calculated_ = false;
+    //vertex_components_calculated_ = false;
     z_scores_calculated_ = false;
     directory_ = directory;
     vec parent_indices;
@@ -488,58 +507,33 @@ VespucciDataset::VespucciDataset(QString name,
 /// \param name Dataset name
 /// \param main_window The
 /// \param directory
-/// \param log_file
 /// Constructor to create a dataset without spatial and spectral data set (i.e.
-/// when using MetaDataset).
+/// when using MetaDataset or a factory method).
+/// Use SetData() to instantiate dataset members
+///
 VespucciDataset::VespucciDataset(QString name,
                                  MainWindow *main_window,
-                                 QString *directory,
-                                 QFile *log_file)
-    : log_text_stream_(log_file)
+                                 QString *directory)
+    : auxiliary_matrices_(new AnalysisResults("Auxiliary Matrices", "Auxiliary Matrices"))
 {
     workspace_ = main_window->workspace_ptr();
-    map_list_model_ = new MapListModel(main_window, this);
-    log_file_ = log_file;
+    analysis_results_.append(auxiliary_matrices_);
+    //map_list_model_ = new MapListModel(main_window, this);
+    state_changed_ = true;
     non_spatial_ = true;
     meta_ = true;
     map_loading_count_ = 0;
-    principal_components_calculated_ = false;
-    mlpack_pca_calculated_ = false;
-    partial_least_squares_calculated_ = false;
-    vertex_components_calculated_ = false;
+    //principal_components_calculated_ = false;
+    //mlpack_pca_calculated_ = false;
+    //partial_least_squares_calculated_ = false;
+    //vertex_components_calculated_ = false;
     z_scores_calculated_ = false;
     directory_ = directory;
     name_ = name;
     main_window_ = main_window;
     directory_ = directory;
+    saved_ = false;
 }
-
-///
-/// \brief VespucciDataset::VespucciDataset
-/// \param name The name of the dataset
-/// \param main_window The main window of the program
-/// \param directory A pointer to the working directory string
-/// \param log_file A file to save the log in
-/// \param spectra The spectra matrix (column major)
-/// \param abscissa The spectral abscissa (x-axis)
-/// \param x The x spatial coordinate
-/// \param y The y spatial coordinate
-/// Used by all parsing functions in VespucciDatasetFactory
-VespucciDataset::VespucciDataset(const QString &name,
-                                 MainWindow *main_window,
-                                 QString *directory,
-                                 QFile *log_file,
-                                 mat &spectra,
-                                 vec &abscissa,
-                                 vec &x,
-                                 vec &y)
-    :log_text_stream_(log_file),
-      abscissa_(abscissa), x_(x), y_(y), spectra_(spectra), name_(name)
-{
-    main_window_ = main_window;
-    directory_ = directory;
-}
-
 
 // PRE-PROCESSING FUNCTIONS //
 ///
@@ -551,8 +545,8 @@ void VespucciDataset::Undo()
 
     try{
         mat spectra_buffer = spectra_;
-        colvec x_buffer = x_;
-        colvec y_buffer = y_;
+        vec x_buffer = x_;
+        vec y_buffer = y_;
         vec abscissa_buffer = abscissa_;
 
         spectra_.swap(spectra_old_);
@@ -577,7 +571,7 @@ void VespucciDataset::Undo()
         throw std::runtime_error(str);
     }
 
-    log_text_stream_ << "Undo: " << last_operation_ << endl << endl;
+    state_changed_ = true;
     last_operation_ = "Undo";
 }
 
@@ -625,13 +619,14 @@ void VespucciDataset::CropSpectra(double x_min, double x_max,
     }
 
     last_operation_ = "crop";
-    log_text_stream_ << "CropSpectra" << endl;
-    log_text_stream_ << "x_min == " << x_min << endl;
-    log_text_stream_ << "x_max == " << x_max << endl;
-    log_text_stream_ << "y_min == " << y_min << endl;
-    log_text_stream_ << "y_max == " << y_max << endl;
-    log_text_stream_ << "wl_min == " << wl_min << endl;
-    log_text_stream_ << "wl_max == " << wl_max << endl << endl;
+    operations_ << "CropSpectra("
+                   + QString::number(x_min) + ", "
+                   + QString::number(x_max) + ", "
+                   + QString::number(y_min) + ", "
+                   + QString::number(y_max) + ", "
+                   + QString::number(wl_min) + ", "
+                   + QString::number(wl_max) + ")";
+    state_changed_ = true;
     workspace_->UpdateModel();
 }
 
@@ -660,8 +655,8 @@ void VespucciDataset::MinMaxNormalize()
         throw std::runtime_error(str);
     }
     last_operation_ = "min/max normalize";
-    log_text_stream_ << "MinMaxNormalize" << endl << endl;
-
+    operations_ << "MinMaxNormalize()";
+    state_changed_ = true;
 }
 
 ///
@@ -671,7 +666,8 @@ void VespucciDataset::MinMaxNormalize()
 void VespucciDataset::VectorNormalize(uword norm)
 {
     if (!norm || norm > 2) return;
-    log_text_stream_ << "Vector Normalization" << endl << endl;
+    state_changed_ = true;
+
     SetOldCopies();
     try{
         spectra_ = normalise(spectra_, norm);
@@ -680,6 +676,7 @@ void VespucciDataset::VectorNormalize(uword norm)
         string str = "VectorNormalize()" + string(e.what());
         throw std::runtime_error(str);
     }
+    operations_ << "VectorNormalize(" + QString::number(norm) + ")";
     last_operation_ = "vector normalize";
 }
 
@@ -689,7 +686,7 @@ void VespucciDataset::VectorNormalize(uword norm)
 /// wavelength (i.e. in preparation for PCA)
 void VespucciDataset::MeanCenter()
 {
-    log_text_stream_ << "Mean Centering" << endl << endl;
+    state_changed_ = true;
     SetOldCopies();
     try{
         vec mean_intensity = mean(spectra_, 1);
@@ -699,6 +696,7 @@ void VespucciDataset::MeanCenter()
         throw std::runtime_error("MeanCenter");
     }
     last_operation_ = "mean centering";
+    operations_ << "MeanCenter()";
 }
 
 ///
@@ -715,6 +713,9 @@ void VespucciDataset::PeakIntensityNormalize(double left_bound, double right_bou
         spectra_.col(j) /= peak_maxes(j);
     }
     last_operation_ = "Peak intensity normalize";
+    operations_ << "PeakIntensityNormalize("
+                   + QString::number(left_bound) + ", "
+                   + QString::number(right_bound) + ")";
 }
 
 ///
@@ -728,12 +729,6 @@ void VespucciDataset::Booleanize(double min, double max, bool keep_inside, bool 
 {
     SetOldCopies();
     last_operation_ = "Booleanize";
-    log_text_stream_
-            << "Booleanize" << endl << "min = " << min << endl <<"max = "
-            << max << endl
-            << (keep_inside ? "keep values in range" : "zero values in range")
-            << endl
-            << (oneify ? "set non-zero to one" : "retain magnitudes of retained values") << endl;
 
     //set all values on the outside (or inside) of the range to zero
     try{
@@ -753,7 +748,10 @@ void VespucciDataset::Booleanize(double min, double max, bool keep_inside, bool 
         runtime_error f("Booleanize");
         main_window_->DisplayExceptionWarning(f);
     }
-
+    operations_ << "Booleanize(" + QString::number(min) + ", "
+                   + QString::number(max) + ", "
+                   + (keep_inside ? "true" : "false") + ", "
+                   + (oneify ? "true" : "false") + ")";
 }
 
 ///
@@ -765,7 +763,8 @@ void VespucciDataset::Clamp(double min, double max)
 {
     SetOldCopies();
     last_operation_ = "Clamp";
-    log_text_stream_ << "Clamp" << endl << "min = "<< min << endl << "max = " << max << endl;
+    state_changed_ = true;
+
 
     try{
         spectra_ = clamp(spectra_, min, max);
@@ -775,6 +774,9 @@ void VespucciDataset::Clamp(double min, double max)
         runtime_error f("Clamp");
         main_window_->DisplayExceptionWarning(f);
     }
+    operations_ << "Clamp("
+                   + QString::number(min) + ", "
+                   + QString::number(max) + ")";
 }
 
 void VespucciDataset::ShedZeroSpectra()
@@ -799,11 +801,13 @@ void VespucciDataset::ShedZeroSpectra()
     }
 
     workspace_->UpdateModel();
+    operations_ << "ShedZeroSpectra()";
 }
 
 void VespucciDataset::ShedZeroWavelengths()
 {
-    log_text_stream_ << "ShedZeroWavelengths" << endl;
+    state_changed_ = true;
+
     SetOldCopies();
     vec current_row;
     uvec indices, indices_buffer;
@@ -821,6 +825,7 @@ void VespucciDataset::ShedZeroWavelengths()
         main_window_->DisplayExceptionWarning("VespucciDataset::ShedZeroWavelengths", e);
     }
     workspace_->UpdateModel();
+    operations_ << "ShedZeroWavelengths()";
 }
 
 ///
@@ -850,7 +855,8 @@ mat VespucciDataset::ZScoreNormCopy()
 ///
 void VespucciDataset::ZScoreNormalize()
 {
-    log_text_stream_ << "ZScoreNormalize" << endl;
+    state_changed_ = true;
+
     SetOldCopies();
 
     try{
@@ -863,15 +869,15 @@ void VespucciDataset::ZScoreNormalize()
 
     z_scores_calculated_ = true;
     last_operation_ = "Z-score normalize";
+    operations_ << "ZScoreNormalize()";
 
 }
 
 
 void VespucciDataset::SNVNormalize(double offset, bool center)
 {
-    log_text_stream_ << "SNVNormalize" << endl;
-    log_text_stream_ << "offset = " << offset << endl;
-    log_text_stream_ << "center (Z-score) = " << (center ? "true" : "false") << endl;
+    state_changed_ = true;
+
     SetOldCopies();
     try{
         spectra_ = Vespucci::Math::Normalization::SNVNorm(spectra_, offset, center);
@@ -882,11 +888,13 @@ void VespucciDataset::SNVNormalize(double offset, bool center)
     }
 
     last_operation_ = "SNVNormalize";
+    operations_ << "SNVNormalize()";
 }
 
 void VespucciDataset::AbsoluteValue()
 {
-    log_text_stream_ << "AbsoluteValue" << endl;
+    state_changed_ = true;
+
     SetOldCopies();
 
     try{
@@ -899,6 +907,7 @@ void VespucciDataset::AbsoluteValue()
     }
 
     last_operation_ = "Absolute value";
+    operations_ << "AbsoluteValue()";
 
 }
 
@@ -913,8 +922,7 @@ void VespucciDataset::AbsoluteValue()
 ///
 void VespucciDataset::SubtractBackground(mat background, QString filename)
 {
-    log_text_stream_ << "SubtractBackground" << endl;
-    log_text_stream_ << "filename == " << filename << endl << endl;
+    state_changed_ = true;
     SetOldCopies();
     if (background.n_rows != spectra_.n_rows){
         QMessageBox::warning(0,
@@ -934,6 +942,7 @@ void VespucciDataset::SubtractBackground(mat background, QString filename)
         }
     }
     last_operation_ = "background correction";
+
 }
 
 ///
@@ -948,8 +957,7 @@ void VespucciDataset::SubtractBackground(mat background, QString filename)
 ///
 void VespucciDataset::MFBaseline(int window_size, int iterations)
 {
-    log_text_stream_ << "MFBaseline" << endl;
-    log_text_stream_ << "window_size == " << window_size << endl;
+    state_changed_ = true;
     SetOldCopies();
     try{
         baselines_ = spectra_;
@@ -964,6 +972,9 @@ void VespucciDataset::MFBaseline(int window_size, int iterations)
     }
 
     last_operation_ = "baseline correction (median filter)";
+    operations_ << "MFBaseline("
+                   + QString::number(window_size) + ", "
+                   + QString::number(iterations) + ")";
 }
 
 void VespucciDataset::CWTBaseline(int lambda, int penalty_order, double SNR_threshold, double peak_shape_threshold)
@@ -973,10 +984,7 @@ void VespucciDataset::CWTBaseline(int lambda, int penalty_order, double SNR_thre
 
 void VespucciDataset::IModPolyBaseline(const uword poly_order, const uword max_it, double threshold)
 {
-    log_text_stream_ << "IModPolyBaseline" << endl;
-    log_text_stream_ << "poly_order == " << poly_order << endl;
-    log_text_stream_ << "max_it == " << max_it << endl;
-    log_text_stream_ << "threshold == " << threshold << endl;
+    state_changed_ = true;
     SetOldCopies();
     mat baselines(spectra_.n_rows, spectra_.n_cols);
     vec baseline, corrected;
@@ -1012,7 +1020,11 @@ void VespucciDataset::IModPolyBaseline(const uword poly_order, const uword max_i
     if (!progress->wasCanceled()){
         //AddAnalysisResult("IModPoly Baselines", baselines);
     }
-
+    operations_ << "IModPolyBaseline("
+                   + QString::number(poly_order) + ", "
+                   + QString::number(max_it) + ", "
+                   + QString::number(threshold) + ")";
+    last_operation_ = "IModPoly baseline";
 }
 
 ///
@@ -1042,6 +1054,8 @@ void VespucciDataset::RemoveClippedSpectra(double threshold)
         non_spatial_ = true;
 
     workspace_->UpdateModel();
+    last_operation_ = "threshold";
+    operations_ << "RemovedClippedSpectra(" + QString::number(threshold) + ")";
 }
 
 ///
@@ -1071,6 +1085,8 @@ void VespucciDataset::RemoveFlatSpectra(double threshold)
         non_spatial_ = true;
 
     workspace_->UpdateModel();
+    last_operation_ = "threshold";
+    operations_ << "RemoveFlatSpectra(" + QString::number(threshold) + ")";
 }
 
 ///
@@ -1098,6 +1114,8 @@ void VespucciDataset::ZeroClippedSpectra(double threshold)
         non_spatial_ = true;
 
     workspace_->UpdateModel();
+    last_operation_ = "threshold";
+    operations_ << "ZeroClippedSpectra(" + QString::number(threshold) + ")";
 }
 
 ///
@@ -1125,6 +1143,8 @@ void VespucciDataset::ZeroFlatSpectra(double threshold)
         non_spatial_ = true;
 
     workspace_->UpdateModel();
+    last_operation_ = "threshold";
+    operations_ << "ZeroFlatSpectra(" + QString::number(threshold) + ")";
 }
 
 //Filtering functions
@@ -1136,8 +1156,7 @@ void VespucciDataset::ZeroFlatSpectra(double threshold)
 
 void VespucciDataset::MedianFilter(unsigned int window_size)
 {
-    log_text_stream_ << "MedianFilter" << endl;
-    log_text_stream_ << "window_size == " << window_size << endl << endl;
+    state_changed_ = true;
     mat processed;
     SetOldCopies();
     try{
@@ -1150,6 +1169,7 @@ void VespucciDataset::MedianFilter(unsigned int window_size)
     }
 
     last_operation_ = "median filter";
+    operations_ << "MedianFilter(" + QString::number(window_size) + ")";
 }
 
 ///
@@ -1160,9 +1180,7 @@ void VespucciDataset::MedianFilter(unsigned int window_size)
 
 void VespucciDataset::LinearMovingAverage(unsigned int window_size)
 {
-    log_text_stream_ << "LinearMovingAverage" << endl;
-    log_text_stream_ << "window_size == " << window_size << endl << endl;
-
+    state_changed_ = true;
     SetOldCopies();
     try{
         vec filter = Vespucci::Math::Smoothing::CreateMovingAverageFilter(window_size);
@@ -1176,6 +1194,7 @@ void VespucciDataset::LinearMovingAverage(unsigned int window_size)
     }
 
     last_operation_ = "moving average filter";
+    operations_ << "LinearMovingAverage(" +QString::number(window_size) + ")";
 }
 
 ///
@@ -1188,8 +1207,7 @@ void VespucciDataset::LinearMovingAverage(unsigned int window_size)
 ///
 void VespucciDataset::SingularValue(unsigned int singular_values)
 {
-    log_text_stream_ << "SingularValue" << endl;
-    log_text_stream_ << "singular_values == " << singular_values << endl << endl;
+    state_changed_ = true;
     SetOldCopies();
     mat U;
     vec s;
@@ -1204,6 +1222,7 @@ void VespucciDataset::SingularValue(unsigned int singular_values)
     }
 
     last_operation_ = "truncated SVD de-noise";
+    operations_ << "SingularValue(" + QString::number(singular_values) + ")";
 }
 
 
@@ -1216,14 +1235,15 @@ int VespucciDataset::QUIC_SVD(double epsilon)
 {
     SetOldCopies();
     int SVD_rank;
-    log_text_stream_ << "QUIC_SVD" << endl;
-    log_text_stream_ << "epsilon == " << epsilon << endl << endl;
+    state_changed_ = true;
     mat u, sigma, v;
     mlpack::svd::QUIC_SVD svd_obj(spectra_, u, v, sigma, epsilon, 0.1);
     SVD_rank = u.n_cols;
-    log_text_stream_ << "rank of approximation = " << SVD_rank << endl;
+    state_changed_ = true;
+
     spectra_ = u * sigma * v.t();
-    last_operation_ = "truncated SVD de-noise";
+    last_operation_ = "QUIC_SVD de-noise";
+    operations_ << "QUIC_SVD(" + QString::number(epsilon) +  " )";
     return SVD_rank;
 }
 
@@ -1238,10 +1258,7 @@ void VespucciDataset::SavitzkyGolay(unsigned int derivative_order,
                                  unsigned int polynomial_order,
                                  unsigned int window_size)
 {
-    log_text_stream_ << "SavitzkyGolay" << endl;
-    log_text_stream_ << "derivative_order == " << derivative_order << endl;
-    log_text_stream_ << "polynomial_order == " << polynomial_order << endl;
-    log_text_stream_ << "window_size == " << window_size << endl << endl;
+    state_changed_ = true;
     SetOldCopies();
 
     try{
@@ -1257,12 +1274,15 @@ void VespucciDataset::SavitzkyGolay(unsigned int derivative_order,
     }
 
     last_operation_ = "Savitzky-Golay filtering";
+    operations_ << "SavitzkyGolay("
+                   + QString::number(derivative_order) + ", "
+                   + QString::number(polynomial_order) + ", "
+                   + QString::number(window_size) + ")";
 }
 
 void VespucciDataset::Scale(double scaling_factor)
 {
-    log_text_stream_ << "Scale" << endl;
-    log_text_stream_ << "scaling_factor = " << scaling_factor << endl;
+    state_changed_ = true;
     SetOldCopies();
 
     try{
@@ -1273,6 +1293,7 @@ void VespucciDataset::Scale(double scaling_factor)
     }
 
     last_operation_ = "Scaling";
+    operations_ << "Scale(" + QString::number(scaling_factor) + ")";
 }
 
 ///
@@ -1281,10 +1302,12 @@ void VespucciDataset::Scale(double scaling_factor)
 /// Removes a spectrum from the dataset
 void VespucciDataset::ShedSpectrum(const uword index)
 {
-    cout << "VespucciDataset::ShedSpectrum" << endl;
-    cout << "index = " << index << "x = " << x_(index) << " y = " << y_(index) << endl;
-    log_text_stream_ << "Shed Spectrum" << endl;
-    log_text_stream_ << "index = " << index << "x = " << x_(index) << " y = " << y_(index) << endl;
+    cout << "VespucciDataset::ShedSpectrum\n";
+
+    cout << "index = " << index << "x = " << x_(index) << " y = " << y_(index) << "\n";
+
+    state_changed_ = true;
+
     SetOldCopies();
     cout << "spectra columns = " << spectra_.n_cols;
     try{
@@ -1299,6 +1322,7 @@ void VespucciDataset::ShedSpectrum(const uword index)
         main_window_->DisplayExceptionWarning(exc);
     }
     cout << "spectra_ columns (post) = " << spectra_.n_cols;
+    operations_ << "ShedSpectrum(" + QString::number(index) + ")";
     workspace_->UpdateModel();
 }
 
@@ -1308,17 +1332,22 @@ void VespucciDataset::ShedSpectrum(const uword index)
 ///
 int VespucciDataset::HySime()
 {
-    cout << "VespucciDataset::HySime" << endl;
+    cout << "VespucciDataset::HySime\n";
+
     wall_clock timer;
     mat noise, noise_correlation, subspace;
-    cout << "call EstimateAdditiveNoise" << endl;
+    cout << "call EstimateAdditiveNoise\n";
+
     timer.tic();
     Vespucci::Math::DimensionReduction::EstimateAdditiveNoise(noise, noise_correlation, spectra_);
-    cout << "took " << timer.toc() << " seconds." << endl;
-    cout << "Call HySime" << endl;
+    cout << "took " << timer.toc() << " seconds.\n";
+
+    cout << "Call HySime\n";
+
     timer.tic();
     int k = Vespucci::Math::DimensionReduction::HySime(spectra_, noise, noise_correlation, subspace);
-    cout << "Took " << timer.toc() << " seconds." << endl;
+    cout << "Took " << timer.toc() << " seconds.\n";
+
     return k;
 }
 
@@ -1331,14 +1360,7 @@ int VespucciDataset::HySime()
 ///
 void VespucciDataset::TransformAbscissa(QString input_units, double input_factor, QString output_units, double output_factor, QString description)
 {
-    log_text_stream_ << "TransformAbscissa" << endl;
-    log_text_stream_ << "Input Units: " << input_units << endl;
-    log_text_stream_ << "Input Factor: " << input_factor << endl;
-    log_text_stream_ << "Output Units: " << output_units << endl;
-    log_text_stream_ << "Output Factor: " << output_factor << endl;
-    log_text_stream_ << "Old Label: " << x_axis_description_ << endl;
-    log_text_stream_ << "New Label: " << description << endl;
-
+    state_changed_ = true;
     if (input_units == "Wavelength"){
         if (output_units == "Energy"){
             SetOldCopies();
@@ -1458,9 +1480,7 @@ void VespucciDataset::TransformAbscissa(QString input_units, double input_factor
 /// Spline interpolation to new abscissa
 void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa, unsigned int poly_order, unsigned int window_size)
 {
-    log_text_stream_ << "InterpolateToNewAbscissa (spline)" << endl;
-    log_text_stream_ << "Old Abscissa Size: " << abscissa_.n_rows << endl;
-    log_text_stream_ << "New Abscissa Size: " << new_abscissa.n_rows << endl;
+    state_changed_ = true;
     mat new_spectra;
     try{
         new_spectra = Vespucci::Math::Smoothing::InterpolateToNewAbscissa(spectra_, abscissa_, new_abscissa, window_size, poly_order);
@@ -1481,9 +1501,7 @@ void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa, unsigned
 /// Linear interpolation to new abscissa
 void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa)
 {
-    log_text_stream_ << "InterpolateToNewAbscissa (linear)" << endl;
-    log_text_stream_ << "Old Abscissa Size: " << abscissa_.n_rows << endl;
-    log_text_stream_ << "New Abscissa Size: " << new_abscissa.n_rows << endl;
+    state_changed_ = true;
     mat new_spectra;
     try{
         new_spectra = Vespucci::Math::Smoothing::InterpolateToNewAbscissa(spectra_, abscissa_, new_abscissa);
@@ -1504,9 +1522,7 @@ void VespucciDataset::InterpolateToNewAbscissa(const vec &new_abscissa)
 ///
 void VespucciDataset::FourierTransform(int n)
 {
-    log_text_stream_ << "FourierTransform" << endl;
-    log_text_stream_ << "n = " << n << endl;
-    //cx_mat complex_spectra = cx_mat(spectra_, spectra_imag_);
+    state_changed_ = true;
     cx_mat f_spectra(spectra_.n_rows, spectra_.n_cols);
     vec f_abscissa(abscissa_.n_rows);
     try{
@@ -1526,8 +1542,7 @@ void VespucciDataset::FourierTransform(int n)
 
 void VespucciDataset::InverseFourierTransform(int n)
 {
-    log_text_stream_ << "InverseFouerierTransform" << endl;
-    log_text_stream_ << "n = " << n << endl;
+    state_changed_ = true;
     cx_mat t_spectra(spectra_.n_rows, spectra_.n_cols);
     vec t_abscissa(abscissa_.n_rows);
     try{
@@ -1555,9 +1570,7 @@ void VespucciDataset::InverseFourierTransform(int n)
 void VespucciDataset::ApplyFTWeight(QString type,
                                     double param)
 {
-    log_text_stream_ << "ApplyFTWeight" << endl;
-    log_text_stream_ << "type = " << type << endl;
-    log_text_stream_ << "parameter = " << param << endl;
+    state_changed_ = true;
     SetOldCopies();
     string shape;
     if (type == "Exponential"){shape = "exp";}
@@ -1580,10 +1593,7 @@ void VespucciDataset::ApplyFTWeight(double start_offset,
                                     double end_offset,
                                     double power)
 {
-    log_text_stream_ << "ApplyFTWeight (sine bell)" << endl;
-    log_text_stream_ << "start_offset = " << start_offset << endl;
-    log_text_stream_ << "end_offset = " << end_offset << endl;
-    log_text_stream_ << "power = " << power << endl;
+    state_changed_ = true;
     SetOldCopies();
     try{
         spectra_ = Vespucci::Math::Transform::ApplySBWeights(spectra_,
@@ -1608,12 +1618,7 @@ void VespucciDataset::Univariate(QString name,
                                  double &left_bound, double &right_bound,
                                  uword bound_window)
 {
-    log_text_stream_ << "Univariate" << endl;
-    log_text_stream_ << "name = " << name << endl;
-    log_text_stream_ << "left_bound = " << left_bound << endl;
-    log_text_stream_ << "right_bound = " << right_bound << endl;
-    log_text_stream_ << "bound_window = " << bound_window;
-
+    state_changed_ = true;
     QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name));
     try{
         univariate_data->Apply(left_bound, right_bound, bound_window, spectra_, abscissa_);
@@ -1623,7 +1628,13 @@ void VespucciDataset::Univariate(QString name,
     }
     analysis_results_.append(univariate_data);
     workspace_->UpdateModel();
-    cout << "end of VespucciDataset::Univariate" << endl;
+    cout << "end of VespucciDataset::Univariate\n";
+
+    operations_ << "Univariate("
+                   + name + ", "
+                   + QString::number(left_bound) + ", "
+                   + QString::number(right_bound) + ", "
+                   + QString::number(bound_window) + ")";
 
 }
 
@@ -1637,13 +1648,7 @@ void VespucciDataset::Univariate(QString name,
 ///
 void VespucciDataset::BandRatio(QString name, double &first_left_bound, double &first_right_bound, double &second_left_bound, double &second_right_bound, uword bound_window)
 {
-    log_text_stream_ << "Univariate" << endl;
-    log_text_stream_ << "name = " << name << endl;
-    log_text_stream_ << "first_left_bound = " << first_left_bound << endl;
-    log_text_stream_ << "first_right_bound = " << first_right_bound << endl;
-    log_text_stream_ << "second_left_bound = " << second_left_bound << endl;
-    log_text_stream_ << "second_right_bound = " << second_right_bound << endl;
-    log_text_stream_ << "bound_window = " << bound_window;
+    state_changed_ = true;
     QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name));
     try{
         univariate_data->Apply(first_left_bound, first_right_bound,
@@ -1656,7 +1661,13 @@ void VespucciDataset::BandRatio(QString name, double &first_left_bound, double &
     }
     analysis_results_.append(univariate_data);
     workspace_->UpdateModel();
-
+    operations_ << "BandRatio("
+                   + name + ", "
+                   + QString::number(first_left_bound) + ", "
+                   + QString::number(first_right_bound) + ", "
+                   + QString::number(second_left_bound) + ", "
+                   + QString::number(second_right_bound) + ", "
+                   + QString::number(bound_window) + ")";
 
 
 }
@@ -1671,7 +1682,8 @@ void VespucciDataset::BandRatio(QString name, double &first_left_bound, double &
 void VespucciDataset::PrincipalComponents(const QString &name, bool scale_data)
 {
     QSharedPointer<MlpackPCAData> mlpack_pca_data(new MlpackPCAData(name));
-    log_text_stream_ << "PrincipalComponents (mlpack)" << endl;
+    state_changed_ = true;
+
     try{
         mlpack_pca_data->Apply(spectra_, scale_data);
     }
@@ -1688,7 +1700,8 @@ void VespucciDataset::PrincipalComponents(const QString &name, bool scale_data)
 /// Perform PCA without creating an image
 void VespucciDataset::PrincipalComponents(const QString &name)
 {
-    log_text_stream_ << "PrincipalComponents (no image)" << endl;
+    state_changed_ = true;
+
     QSharedPointer<PrincipalComponentsData> pca_data(new PrincipalComponentsData(name));
     try{
         pca_data->Apply(spectra_);
@@ -1698,6 +1711,9 @@ void VespucciDataset::PrincipalComponents(const QString &name)
     }
     analysis_results_.append(pca_data);
     workspace_->UpdateModel();
+    operations_ << "PrincipalComponents(" + name + ")";
+
+
 }
 
 ///
@@ -1709,11 +1725,6 @@ void VespucciDataset::PrincipalComponents(const QString &name)
 ///
 void VespucciDataset::FindPeaks(QString name, double sel, double threshold, uword poly_order, uword window_size)
 {/*
-    log_text_stream_ << "FindPeaks" << endl;
-    log_text_stream_ << "sel = " << sel << endl;
-    log_text_stream_ << "threshold = " << threshold << endl;
-    log_text_stream_ << "poly_order = " << poly_order << endl;
-    log_text_stream_ << "window_size = " << window_size << endl;
 
     mat peak_magnitudes;
     mat peak_positions;
@@ -1743,11 +1754,9 @@ void VespucciDataset::FindPeaks(QString name, double sel, double threshold, uwor
 /// Perform VCA without creating an image
 void VespucciDataset::VertexComponents(QString name, uword endmembers)
 {
-    log_text_stream_ << "VertexComponents (no image)" << endl;
-    log_text_stream_ << "endmembers == " << endmembers << endl;
+    state_changed_ = true;
 
     if(endmembers == 0){
-        log_text_stream_ << "Endmember count predicted using HySime algorithm: ";
         QMessageBox alert;
         alert.setText("The HySime algorithm will take a long time.");
         alert.setInformativeText("OK to continue");
@@ -1763,7 +1772,6 @@ void VespucciDataset::VertexComponents(QString name, uword endmembers)
             return;
         }
         endmembers = HySime();
-        log_text_stream_ << endmembers << endl;
     }
 
     QSharedPointer<VCAData> vertex_components_data(new VCAData(name));
@@ -1771,11 +1779,15 @@ void VespucciDataset::VertexComponents(QString name, uword endmembers)
     try{
         vertex_components_data->Apply(spectra_, endmembers);
     }catch(exception e){
-        cerr << "VespucciDataset::VertexComponents()" << endl;
+        cerr << "VespucciDataset::VertexComponents()\n";
+
         throw std::runtime_error("VertexComponents: " + string(e.what()));
     }
     analysis_results_.append(vertex_components_data);
     workspace_->UpdateModel();
+    operations_ << "VertexComponents("
+                   + name + ", "
+                   + QString::number(endmembers) + ")";
 }
 
 
@@ -1787,13 +1799,9 @@ void VespucciDataset::VertexComponents(QString name, uword endmembers)
 /// Perform partial least squares without creating an image
 void VespucciDataset::PartialLeastSquares(QString name, uword components)
 {
-    log_text_stream_ << "PartialLeastSqares (no image)" << endl;
-    log_text_stream_ << "components == " << components << endl;
-
+    state_changed_ = true;
     if(components == 0){
-        log_text_stream_ << "Component count predicted using HySime algorithm: ";
         components = HySime();
-        log_text_stream_ << components << endl;
     }
 
     QSharedPointer<PLSData> pls_data(new PLSData(name));
@@ -1808,6 +1816,9 @@ void VespucciDataset::PartialLeastSquares(QString name, uword components)
 
     analysis_results_.append(pls_data);
     workspace_->UpdateModel();
+    operations_ << "PartialLeastSquares("
+                   + name + ", "
+                   + QString::number(components) + ")";
 
 }
 
@@ -1819,13 +1830,13 @@ void VespucciDataset::PartialLeastSquares(QString name, uword components)
 void VespucciDataset::CorrelationAnalysis(const QString &control_key, QString name)
 {
 
-    if (!auxiliary_matrices_.contains(control_key)){
+    if (!auxiliary_matrices_->HasMatrix(control_key)){
         main_window_->DisplayWarning("Object does not exit", "The object at the specified key does not exist!");
         return;
     }
     vec control;
     try{
-        control = auxiliary_matrices_[control_key]->col(0);
+        control = auxiliary_matrices_->GetMatrix(control_key).col(0);
     }catch(exception e){
         main_window_->DisplayExceptionWarning("VespucciDataset::CorrelationAnalysis", e);
         return;
@@ -1839,10 +1850,7 @@ void VespucciDataset::CorrelationAnalysis(const QString &control_key, QString na
         return;
     }
 
-    log_text_stream_ << "Univariate" << endl;
-    log_text_stream_ << "name == " << name << endl;
-    log_text_stream_ << "method == Correlation" << endl;
-
+    state_changed_ = true;
     analysis_results_.append(univariate_data);
     workspace_->UpdateModel();
 }
@@ -1858,9 +1866,8 @@ void VespucciDataset::CorrelationAnalysis(const QString &control_key, QString na
 void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
 {
     if(clusters == 0){
-        log_text_stream_ << "Cluster count predicted using HySime algorithm: ";
+        state_changed_ = true;
         clusters = HySime();
-        log_text_stream_ << clusters << endl;
     }
     Row<size_t> assignments;
     vec assignments_vec;
@@ -1914,30 +1921,29 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
    for (uword i = 0; i < assignments.n_elem; ++i)
        assignments_vec(i) = double(assignments(i) + 1);
 
-   log_text_stream_ << "KMeans" << endl;
-   log_text_stream_ << "clusters == " << clusters << endl;
-   log_text_stream_ << "name == " << name << endl << endl;
-   if(clusters == 0){
-       log_text_stream_ << "Cluster count predicted using HySime algorithm: ";
-       clusters = HySime();
-       log_text_stream_ << clusters << endl;
-   }
+   state_changed_ = true;
+   if (clusters == 0) clusters = HySime();
+
    QSharedPointer<AnalysisResults> results(new AnalysisResults(name, "k-Means Analysis"));
    results->AddMatrix("Assignments", assignments_vec);
    results->AddMatrix("Centroids", centroids);
    analysis_results_.append(results);
    workspace_->UpdateModel();
+   operations_ << "KMeans("
+                  + QString::number(clusters) + ", "
+                  + metric_text + ", "
+                  + name + ")";
 }
 
 void VespucciDataset::ClassicalLeastSquares(QString name, QString reference_key)
 {
-    log_text_stream_ << "Classical Least Squares" << endl;
-    log_text_stream_ << "name == " << name << endl << endl;
-    if (!auxiliary_matrices_.contains(reference_key)){
+    state_changed_ = true;
+
+    if (!auxiliary_matrices_->HasMatrix(reference_key)){
         main_window_->DisplayWarning("Matrix Not Found", "The reference matrix could not be found!");
         return;
     }
-    mat reference = *auxiliary_matrices_[reference_key].data();
+    mat reference(auxiliary_matrices_->GetMatrix(reference_key));
     mat coefs;
     try{
         coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(reference, spectra_);
@@ -1998,7 +2004,8 @@ QVector<double> VespucciDataset::PointSpectrum(const uword index) const
     //perform bounds check.
     std::vector<double> spectrum_stdvector;
     QVector<double> spectrum_qvector;
-    cout << "index  = " << index << endl;
+    cout << "index  = " << index << "\n";
+
     try{
         if (index > spectra_.n_cols){
             spectrum_stdvector =
@@ -2012,11 +2019,13 @@ QVector<double> VespucciDataset::PointSpectrum(const uword index) const
         spectrum_qvector = QVector<double>::fromStdVector(spectrum_stdvector);
     }
     catch(exception e){
-        cerr << "exception thrown!" << endl;
+        cerr << "exception thrown!\n";
+
         main_window_->DisplayExceptionWarning("VespucciDataset::PointSpectrum", e);
     }
 
-    cout << "end of PointSpectrum" << endl;
+    cout << "end of PointSpectrum\n";
+
 
     return spectrum_qvector;
 }
@@ -2167,7 +2176,7 @@ vec VespucciDataset::wavelength(uvec indices) const
 /// \brief VespucciDataset::x
 /// \return member x_
 ///
-colvec VespucciDataset::x() const
+vec VespucciDataset::x() const
 {
     return x_;
 }
@@ -2204,7 +2213,7 @@ void VespucciDataset::SetIndices(vec indices)
 /// \param indices Vector of indices
 /// \return Subvec of x corresponding to valeus in indices
 ///
-colvec VespucciDataset::x(uvec indices) const
+vec VespucciDataset::x(uvec indices) const
 {
     return x_(indices);
 }
@@ -2223,7 +2232,7 @@ double VespucciDataset::x(uword index) const
 /// \brief VespucciDataset::y
 /// \return member y_
 ///
-colvec VespucciDataset::y() const
+vec VespucciDataset::y() const
 {
     return y_;
 }
@@ -2233,7 +2242,7 @@ colvec VespucciDataset::y() const
 /// \param indices Vector of indices
 /// \return Subvec of y at indices
 ///
-colvec VespucciDataset::y(uvec indices) const
+vec VespucciDataset::y(uvec indices) const
 {
     return y_(indices);
 }
@@ -2303,10 +2312,10 @@ void VespucciDataset::SetName(QString new_name)
 /// \brief VespucciDataset::SetData
 /// \param spectra Spectra
 /// \param wavelength Spectral abscissa
-/// \param x Colvec of horizontal axis spatial data
-/// \param y Colvec of vertical axis spatial data
+/// \param x vec of horizontal axis spatial data
+/// \param y vec of vertical axis spatial data
 /// Set the data of the dataset. Used by the MetaDataset constructor
-void VespucciDataset::SetData(mat spectra, vec wavelength, colvec x, colvec y)
+void VespucciDataset::SetData(const mat &spectra, const vec &wavelength, const vec &x, const vec &y)
 {
     spectra_ = spectra;
     abscissa_ = wavelength;
@@ -2604,7 +2613,7 @@ uword VespucciDataset::UniqueY() const
 /// Number of univariate/band ratio data objects have been created
 int VespucciDataset::UnivariateCount() const
 {
-    return univariate_datas_.size();
+    return analysis_results_.size();
 }
 
 ///
@@ -2680,10 +2689,6 @@ const QString VespucciDataset::last_operation() const
     return last_operation_;
 }
 
-MapListModel* VespucciDataset::map_list_model()
-{
-    return map_list_model_;
-}
 
 void VespucciDataset::AddAnalysisResult(QSharedPointer<AnalysisResults> analysis_result)
 {
@@ -2723,10 +2728,10 @@ QMap<QString, QStringList> VespucciDataset::AnalysisResultsTreeStructure() const
 /// Load a file into the auxiliary matrix map
 void VespucciDataset::ImportAuxiliaryMatrix(const QString &name, const QString &filename)
 {
-    QSharedPointer<mat> matrix(new mat());
-    bool ok = matrix->load(filename.toStdString());
+    mat matrix;
+    bool ok = matrix.load(filename.toStdString());
     if (ok)
-        auxiliary_matrices_[name] = matrix;
+        auxiliary_matrices_->AddMatrix(name, matrix);
     else
         main_window_->DisplayWarning("Matrix Not Loaded", "The file " + name + " could not be loaded");
 }
@@ -2738,7 +2743,21 @@ void VespucciDataset::ImportAuxiliaryMatrix(const QString &name, const QString &
 ///
 void VespucciDataset::AddAuxiliaryMatrix(const QString &name, mat &matrix)
 {
-    auxiliary_matrices_[name] = QSharedPointer<mat>(new mat(matrix));
+    auxiliary_matrices_->AddMatrix(name, matrix);
+}
+
+void VespucciDataset::AddMatrix(const QString &name, mat &matrix)
+{
+    if (name == "Spectra")
+        spectra_ = matrix;
+    else if (name == "x")
+        x_ = matrix.col(0);
+    else if (name == "y")
+        y_ = matrix.col(0);
+    else if (name == "Spectral Abscissa")
+        abscissa_ = matrix.col(0);
+    else
+        AddAuxiliaryMatrix(name, matrix);
 }
 
 ///
@@ -2747,7 +2766,7 @@ void VespucciDataset::AddAuxiliaryMatrix(const QString &name, mat &matrix)
 /// Used in updating display model
 QStringList VespucciDataset::AuxiliaryMatrixKeys() const
 {
-    return auxiliary_matrices_.keys();
+    return auxiliary_matrices_->KeyList();
 }
 
 ///
@@ -2791,7 +2810,7 @@ QSharedPointer<AnalysisResults> VespucciDataset::GetAnalysisResult(const QString
 
 const mat & VespucciDataset::GetAuxiliaryMatrix(const QString &key) const
 {
-    if (auxiliary_matrices_.contains(key)) return *auxiliary_matrices_[key];
+    if (auxiliary_matrices_->HasMatrix(key)) return auxiliary_matrices_->GetMatrix(key);
     else
         return empty_matrix_;
 }
@@ -2862,7 +2881,7 @@ void VespucciDataset::CreateMap(const QString &map_name,
                                 QCPColorGradient gradient,
                                 int tick_count)
 {
-    if (!auxiliary_matrices_.contains(matrix_key)) return;
+    if (!auxiliary_matrices_->HasMatrix(matrix_key)) return;
     QStringList data_keys = {name_, matrix_key};
     QSharedPointer<MapData> new_map(new MapData(map_name,
                                                 QString(),

@@ -145,7 +145,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
                                          "Are you sure you want to exit?");
 
     if (response == QMessageBox::Yes) {
-        dataset_tree_model_->ClearDatasets();
+        for (auto name: workspace_->dataset_names()){
+            CloseDataset(name);
+        }
         event->accept();
         qApp->exit();
     }
@@ -758,18 +760,31 @@ void MainWindow::on_actionClose_Dataset_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    QString name = ui->datasetTreeView->currentIndex().data().value<QString>();
-    QString text = "Are you sure you want to close the dataset " + name + "?" +
-            " The data and all associated maps will be deleted.";
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
 
-    int response = QMessageBox::question(this, "Close Dataset?", text,
-                                         QMessageBox::Ok, QMessageBox::Cancel);
+    if (dataset->state_changed()){
+        int response = QMessageBox::question(this,
+                                             "Save Dataset?",
+                                             "Would you like to save " +
+                                             dataset_key + "?", QMessageBox::Yes,
+                                             QMessageBox::No);
+        if (response == QMessageBox::Yes){
+            QString filename;
+            if (dataset->saved())
+                filename = dataset->last_save_filename();
+            else
+                filename = QFileDialog::getSaveFileName(this,
+                                                        "Save Dataset",
+                                                        workspace_->directory(),
+                                                        "Vespucci Dataset (*.h5)");
+            dataset->Save(filename);
+        }
 
-    if (response == QMessageBox::Ok){
-        emit DatasetToBeRemoved(dataset_key);
-        workspace_->RemoveDataset(dataset_key);
+
     }
 
+    emit DatasetToBeRemoved(dataset_key);
+    workspace_->RemoveDataset(dataset_key);
 }
 
 ///
@@ -1236,27 +1251,6 @@ void MainWindow::on_actionInterpolate_to_New_Abscissa_triggered()
 
 void MainWindow::on_actionSave_Log_File_triggered()
 {
-    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
-    if (item->type() == TreeItem::ItemType::Base){
-        QMessageBox::information(this,
-                                 "No datasets loaded",
-                                 "No dataset exists on which to perform this operation");
-        return;
-    }
-
-
-    QString dataset_key = item->DatasetKey();
-    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
-    QString filename = QFileDialog::getSaveFileName(this,
-                                                    "Save Log File",
-                                                    workspace_->directory(),
-                                                    "Text Files (*.txt)");
-    bool ok = dataset->SaveLogFile(filename);
-    QString message = (ok? "File Saved Successfully" : "Saving Log File Failed");
-    QString title = (ok? "Saved Log File" : "Saving Log File Failed");
-    QMessageBox::information(this, title, message);
-
-
 }
 
 void MainWindow::on_actionImport_Dataset_from_Multiple_Files_triggered()
@@ -1407,11 +1401,103 @@ void MainWindow::on_actionPlotResult_triggered()
     TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Matrix){
         QStringList data_keys = item->keys();
-        PlotMakerDialog *plot_maker_dialog = new PlotMakerDialog(this,
-                                                                 plot_viewer_,
-                                                                 workspace_,
-                                                                 data_keys);
+        PlotMakerDialog *plot_maker_dialog =
+                new PlotMakerDialog(this,
+                                    plot_viewer_,
+                                    workspace_,
+                                    data_keys);
         plot_maker_dialog->setAttribute(Qt::WA_DeleteOnClose);
         plot_maker_dialog->show();
     }
+}
+
+
+void MainWindow::on_actionSave_Dataset_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    QString dataset_name = item->keys().first();
+    QString path = workspace_->directory() + "/" + dataset_name;
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_name);
+    QString filename;
+    if (dataset->saved())
+        filename = dataset->last_save_filename();
+    else
+        filename = QFileDialog::getSaveFileName(this,
+                                                "Save Dataset",
+                                                path,
+                                                "Vespucci Dataset (*.h5)");
+    bool ok = dataset->Save(filename);
+    if (!ok) DisplayWarning("Dataset Not Saved", "The file failed to save");
+}
+
+void MainWindow::on_actionOpenDataset_triggered()
+{
+    QString filename = QFileDialog::getOpenFileName(this,
+                                                    "Open Dataset",
+                                                    workspace_->directory(),
+                                                    "Vespucci Dataset (*.h5)");
+    QSharedPointer<VespucciDataset> dataset(NULL);
+
+    try{
+        dataset = QSharedPointer<VespucciDataset>(new VespucciDataset(filename,
+                                                                      this,
+                                                                      workspace_));
+    }catch (exception e){
+        DisplayExceptionWarning("VespucciDataset::VespucciDataset", e);
+        return;
+    }
+
+    if (!dataset.isNull() && !dataset->ConstructorCancelled()){
+        int count = 1;
+        QString name = dataset->name();
+        while (workspace_->dataset_names().contains(dataset->name()))
+            dataset->SetName(name + "(" + QString::number(count++) + ")");
+        workspace_->AddDataset(dataset);
+    }
+    else{
+        DisplayWarning("Dataset Loading Error", "The dataset file could not be loaded");
+    }
+}
+
+void MainWindow::CloseDataset(const QString &name)
+{
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(name);
+
+    if (dataset->state_changed()){
+        int response = QMessageBox::question(this,
+                                             "Save Dataset?",
+                                             "Would you like to save " +
+                                             name + "?", QMessageBox::Yes,
+                                             QMessageBox::No);
+        if (response == QMessageBox::Yes){
+            QString filename;
+            if (dataset->saved())
+                filename = dataset->last_save_filename();
+            else
+                filename = QFileDialog::getSaveFileName(this,
+                                                        "Save Dataset",
+                                                        workspace_->directory(),
+                                                        "Vespucci Dataset (*.h5)");
+            dataset->Save(filename);
+        }
+
+
+    }
+
+    emit DatasetToBeRemoved(name);
+    workspace_->RemoveDataset(name);
+}
+
+void MainWindow::on_actionSave_Dataset_As_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    QString dataset_name = item->keys().first();
+    QString path = workspace_->directory() + "/" + dataset_name;
+    QString filename = QFileDialog::getSaveFileName(this,
+                                                    "Save Dataset",
+                                                   path,
+                                                    "Vespucci Dataset (*.h5)");
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_name);
+    bool ok = dataset->Save(filename);
+    if (!ok) DisplayWarning("Dataset Not Saved", "The file failed to save");
 }

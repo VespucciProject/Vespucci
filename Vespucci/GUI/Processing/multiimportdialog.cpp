@@ -109,7 +109,6 @@ void MultiImportDialog::on_buttonBox_accepted()
         QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename_map,
                                                                     workspace_->main_window(),
                                                                     workspace_->directory_ptr(),
-                                                                    workspace_->CreateLogFile(name),
                                                                     name,
                                                                     x_axis_description,
                                                                     y_axis_description,

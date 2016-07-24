@@ -76,17 +76,19 @@
     <property name="title">
      <string>Fi&amp;le</string>
     </property>
+    <addaction name="actionOpenDataset"/>
     <addaction name="actionImport_Dataset_from_File"/>
     <addaction name="actionImport_From_Multiple_Point_Spectra"/>
-    <addaction name="actionImport_Dataset_from_Multiple_Files"/>
-    <addaction name="separator"/>
     <addaction name="actionImport_Data_Into_Dataset"/>
     <addaction name="separator"/>
-    <addaction name="actionSave_Selected_Matrix"/>
-    <addaction name="actionBatch_File_Conversion"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_Dataset"/>
+    <addaction name="actionSave_Dataset_As"/>
+    <addaction name="actionExport_Matrix"/>
     <addaction name="separator"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -226,9 +228,9 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionOpenDataset"/>
+   <addaction name="actionSave_Dataset"/>
    <addaction name="actionImport_Dataset_from_File"/>
    <addaction name="actionImport_From_Multiple_Point_Spectra"/>
-   <addaction name="actionSaveDataset"/>
    <addaction name="actionClose_Dataset"/>
    <addaction name="separator"/>
    <addaction name="actionShow_in_Data_Viewer"/>
@@ -543,13 +545,13 @@
      <normaloff>:/icons/toolbar_icons/open.svg</normaloff>:/icons/toolbar_icons/open.svg</iconset>
    </property>
    <property name="text">
-    <string>OpenDataset</string>
+    <string>Open Dataset</string>
    </property>
    <property name="toolTip">
     <string>Open a dataset previously saved from Vespucci</string>
    </property>
   </action>
-  <action name="actionSaveDataset">
+  <action name="actionSave_Dataset">
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/save.svg</normaloff>:/icons/toolbar_icons/save.svg</iconset>
@@ -687,9 +689,9 @@
     <string>Statistics Viewer</string>
    </property>
   </action>
-  <action name="actionSave_Selected_Matrix">
+  <action name="actionExport_Matrix">
    <property name="text">
-    <string>Save Selected Matrix</string>
+    <string>Export Matrix</string>
    </property>
   </action>
   <action name="actionMultivariate_Analysis">
@@ -705,6 +707,11 @@
   <action name="actionOnline_Documentation">
    <property name="text">
     <string>Online Documentation</string>
+   </property>
+  </action>
+  <action name="actionSave_Dataset_As">
+   <property name="text">
+    <string>Save Dataset As</string>
    </property>
   </action>
  </widget>

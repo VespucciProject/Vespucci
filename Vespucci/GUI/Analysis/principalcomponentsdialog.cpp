@@ -47,17 +47,11 @@ PrincipalComponentsDialog::~PrincipalComponentsDialog()
 void PrincipalComponentsDialog::on_buttonBox_accepted()
 {
     QString name = ui->nameLineEdit->text();
-    QProgressDialog *progress =
-            Vespucci::DisplayProgressDialog(this,
-                                            "Principal Components",
-                                            "Calculating principal components data...");
     try{
         dataset_->PrincipalComponents(name);
     }catch(exception e){
-        progress->close();
         workspace_->main_window()->DisplayExceptionWarning(e);
     }
-    progress->close();
     close();
     dataset_.clear();
 }

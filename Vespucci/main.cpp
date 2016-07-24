@@ -48,16 +48,13 @@ int main(int argc, char *argv[])
 #endif
 
     //Launch QApplication instance
-    QCoreApplication::setOrganizationName("Wright State University");
-    QCoreApplication::setOrganizationDomain("chm.wright.edu");
+    QCoreApplication::setOrganizationName("Vespucci Project @ Wright State University");
+    QCoreApplication::setOrganizationDomain("vespucciproject.org");
     QCoreApplication::setApplicationName("Vespucci");
     QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
     QApplication a(argc, argv);
 
     QSharedPointer<VespucciWorkspace> ws(new VespucciWorkspace(a.applicationDirPath()));
-
-    //Clean up dataset log files from when it crashed last
-    ws->CleanLogFiles();
 
     //Instantiate main window
     MainWindow w(0, ws);

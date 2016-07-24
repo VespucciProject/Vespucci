@@ -293,7 +293,9 @@ unix:!macx{
     LIBS += -L/usr/lib -larpack
     PRE_TARGETDEPS += /usr/lib/libarpack.a
     LIBS += -L/usr/lib/x86_64-linux-gnu -lhdf5
+    LIBS += -L/usr/lib/x86_64-linux-gnu -lhdf5_cpp
     PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5.a
+    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5_cpp.a
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
 
@@ -364,6 +366,11 @@ macx{
     LIBS += -L/usr/local/lib/ -lhdf5
     PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
 
+    LIBS += -L/usr/local/lib/ -lhdf5_cpp
+    PRE_TARGETDEPS += /usr/local/lib/libhdf5_cpp.a
+
+    LIBS += -L/usr/local/lib -lhdf5
+
     LIBS += -L$$PWD/../../quazip/lib/ -lquazip
     INCLUDEPATH += $$PWD/../../quazip/include
     DEPENDPATH += $$PWD/../../quazip/include
@@ -405,9 +412,11 @@ win32:!win32-g++{
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/LAPACK/lapack_x64.lib
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lhdf5
+    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lhdf5_cpp
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/hdf5.lib
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependenceis/HDF5/lib/hdf5_cpp.lib
 
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/boost_1_61_0
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/boost_1_61_0

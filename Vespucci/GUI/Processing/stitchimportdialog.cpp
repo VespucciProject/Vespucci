@@ -37,7 +37,6 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
     QProgressDialog progress(this);
     for (uword j = 0; j < filenames.n_cols; ++j){
         for (uword i = 0; i < filenames.n_rows; ++i){
-            cout << "i = " << i << endl << "j = " << j << endl;
             QString filename;
             if (two_dim)
                 filename = path_ + "/" + QString::fromStdString(filenames(i, j));
@@ -82,7 +81,8 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
                                                 &progress);
             }
             else{
-                cout << "Improper!" << endl;
+                cout << "Improper!\n";
+
                 return false;
             }
 
@@ -148,8 +148,7 @@ void StitchImportDialog::on_buttonBox_accepted()
         QSharedPointer<VespucciDataset>
                 dataset(new VespucciDataset(name,
                                             workspace_->main_window(),
-                                            workspace_->directory_ptr(),
-                                            workspace_->CreateLogFile(name)));
+                                            workspace_));
         dataset->SetData(spectra, abscissa, x, y);
         dataset->SetXDescription(x_description + " (" + x_units + ")");
         dataset->SetYDescription(y_description + " (" + y_units + ")");

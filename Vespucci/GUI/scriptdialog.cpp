@@ -49,19 +49,22 @@ void ScriptDialog::on_buttonBox_accepted()
                 in_data[invars[i].toStdString()] = *matrix_ptr;
         }
 
-        std::cout << "parsing outvars" << endl;
+        std::cout << "parsing outvars\n";
+
         std::string interpreter_key;
         std::string vespucci_key;
         std::map<std::string, std::string> variable_keys;
         for (int i = 0; i < outvars.size(); ++i){
-            std::cout << "outvars[i] = " << outvars[i].toStdString() << endl;
+            std::cout << "outvars[i] = " << outvars[i].toStdString() << "\n";
+
             vespucci_key = outvars[i].split("=")[0].trimmed().toStdString();
             interpreter_key = outvars[i].split("=")[1].trimmed().toStdString();
             std::cout << vespucci_key << ", " << interpreter_key << std::endl;
             variable_keys[vespucci_key] = interpreter_key;
         }
         std::map<std::string, arma::mat> data;
-        std::cout << "R stuff" << endl;
+        std::cout << "R stuff\n";
+
         if (ui->interpreterComboBox->currentText() == "R"){
             workspace_->settings()->beginGroup("environment");
             QString r_home = workspace_->settings()->value("R_HOME").toString();

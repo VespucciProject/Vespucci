@@ -46,6 +46,7 @@ void StatsDialog::MatrixToBeRemoved(QStringList matrix_keys)
 
 void StatsDialog::DatasetToBeRemoved(QString name)
 {
+    if (!data_keys_.size()) return;
     if (data_keys_.first() == name){
         data_keys_ = QStringList();
         ClearFields();
@@ -109,8 +110,11 @@ void StatsDialog::GenerateHistogram()
     hist_plot->addData(edgesq, histq);
     hist_plot->setWidth(edges(1) - edges(0));
     edgesq.append(data.max()); //add maximum back in for plotting purposes
+    QVector<QString> labels;
+    for (auto value: edgesq) labels << QString::number(value, 'g', 3);
     ui->histogramCustomPlot->addPlottable(hist_plot);
     ui->histogramCustomPlot->xAxis->setTickVector(edgesq);
+    ui->histogramCustomPlot->xAxis->setTickVectorLabels(labels);
     ui->histogramCustomPlot->rescaleAxes();
     ui->histogramCustomPlot->replot();
 }

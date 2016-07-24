@@ -83,10 +83,6 @@ public:
     QCPRange *global_data_range();
     QCPColorGradient *global_gradient();
 
-    QFile *CreateLogFile(QString dataset_name);
-    void DestroyLogFile(QFile *log_file);
-
-
     void AddGlobalGradient(QString name, QString gradient_key, double lower, double upper);
     void RecalculateGlobalGradient(QString name);
     void RemoveColorRange(QString name);
@@ -102,7 +98,6 @@ public:
     QList<QSharedPointer<VespucciDataset> > *datasets();
     unsigned int UpdateCount();
     DatasetTreeModel *dataset_tree_model() const;
-    void CleanLogFiles();
 
     void ResetSettings();
     void CheckSettings();
@@ -116,8 +111,6 @@ public:
 
     bool Mappable(const QStringList &keys) const;
     bool Plottable(const QStringList &keys) const;
-
-
 
 private:
 
