@@ -1,23 +1,25 @@
 TEMPLATE = app
 CONFIG += console
 CONFIG -= app_bundle
+CONFIG += test
 QT += testlib
 QT += widgets
 QT += printsupport
 QT += svg
 
-SOURCES += main.cpp \
+SOURCES += \
     testfileio.cpp \
     testhelpers.cpp \
     testquantification.cpp \
     testnormalization.cpp \
-    testsmoothing.cpp \
     testfitting.cpp \
     testpeakfinding.cpp \
     testdatamodel.cpp \
     testworkspace.cpp \
     testdataset.cpp \
-    testsession.cpp
+    testsession.cpp \
+    testahca.cpp \
+    main.cpp
 
 INCLUDEPATH += ../VespucciLibrary/include
 DEPENDPATH += ../VespucciLibrary/include
@@ -30,13 +32,13 @@ HEADERS += test.h \
     testhelpers.h \
     testquantification.h \
     testnormalization.h \
-    testsmoothing.h \
     testfitting.h \
     testpeakfinding.h \
     testdatamodel.h \
     testworkspace.h \
     testdataset.h \
-    testsession.h
+    testsession.h \
+    testahca.h
 
 unix:!macx{
     QMAKE_CXX=/usr/bin/g++-4.9

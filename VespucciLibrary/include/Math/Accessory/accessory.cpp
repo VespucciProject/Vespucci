@@ -17,7 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include <Math/Accessory/accessory.h>
+#include "Math/Accessory/accessory.h"
+#include "Math/Accessory/distancemetricwrapper.h"
 
 ///
 /// \brief Vespucci::Math::LocalMaximum

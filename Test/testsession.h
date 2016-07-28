@@ -20,6 +20,7 @@
 #ifndef TESTSESSION_H
 #define TESTSESSION_H
 #include "../Vespucci/Data/Dataset/vespuccidataset.h"
+#include "test.h"
 using namespace std;
 using namespace arma;
 ///
@@ -32,6 +33,12 @@ public:
     void LoadMockData(QString manifest_path);
     QSharedPointer<VespucciDataset> DatasetAt(int row);
     void GetData(mat &spectra, vec &abscissa, vec &x, vec &y);
+
+    void GenerateMockData(mat &spectra, vec &abscissa, vec &x, vec &y, mat &peak_data, mat &baselines);
+    vec GenerateLinearBaseline(double min, double max, uword size);
+    vec GenerateRamanBaseline(double a0, double a1, double a2, const vec &abscissa);
+    vec GenerateGaussian(vec abscissa, vec centers, vec fwhm, vec intensities);
+    vec GenerateLorentzian(vec abscissa, vec centers, vec fwhm, vec intensities);
 private:
     QVector<QSharedPointer<VespucciDataset> > datasets_;
     QVector<mat> spectra_;

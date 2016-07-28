@@ -23,3 +23,33 @@ TestDataModel::TestDataModel(QObject *parent) : QObject(parent)
 {
 
 }
+
+void TestDataModel::DatasetInsertion()
+{
+
+}
+
+void TestDataModel::DatasetDeletion()
+{
+
+}
+
+void TestDataModel::MatrixInsertion()
+{
+
+}
+
+void TestDataModel::MatrixDeletion()
+{
+
+}
+
+void TestDataModel::MapInsertion()
+{
+
+}
+
+void TestDataModel::MapDeletion()
+{
+
+}

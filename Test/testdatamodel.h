@@ -21,6 +21,9 @@
 #define TESTDATAMODEL_H
 
 #include <QObject>
+#include <QtTest>
+#include "Global/datamodel.h"
+
 
 class TestDataModel : public QObject
 {
@@ -31,6 +34,16 @@ public:
 signals:
 
 public slots:
+private slots:
+    void DatasetInsertion();
+    void DatasetDeletion();
+    void MatrixInsertion();
+    void MatrixDeletion();
+    void MapInsertion();
+    void MapDeletion();
+private:
+    QSharedPointer<VespucciWorkspace> workspace_;
+    QSharedPointer<DataModel> data_model_;
 };
 
 #endif // TESTDATAMODEL_H

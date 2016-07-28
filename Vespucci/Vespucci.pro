@@ -105,7 +105,6 @@ SOURCES += main.cpp\
     GUI/Display/dataviewer.cpp \
     GUI/Processing/filterdialog.cpp \
     GUI/Analysis/kmeansdialog.cpp \
-    GUI/Processing/loaddataset.cpp \
     GUI/QAbstractItemModel/maplistmodel.cpp \
     GUI/Display/mapviewer.cpp \
     GUI/Processing/metadatasetdialog.cpp \
@@ -154,7 +153,8 @@ SOURCES += main.cpp\
     GUI/Display/mapplot.cpp \
     GUI/Display/globalgradientdialog.cpp \
     GUI/Display/colorrangedialog.cpp \
-    GUI/Display/spectrumeditor.cpp
+    GUI/Display/spectrumeditor.cpp \
+    GUI/Processing/datasetimportdialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -177,7 +177,6 @@ HEADERS  += \
     GUI/Display/dataviewer.h \
     GUI/Processing/filterdialog.h \
     GUI/Analysis/kmeansdialog.h \
-    GUI/Processing/loaddataset.h \
     GUI/QAbstractItemModel/maplistmodel.h \
     GUI/Display/mapviewer.h \
     GUI/Processing/metadatasetdialog.h \
@@ -226,7 +225,8 @@ HEADERS  += \
     GUI/Display/mapplot.h \
     GUI/Display/globalgradientdialog.h \
     GUI/Display/colorrangedialog.h \
-    GUI/Display/spectrumeditor.h
+    GUI/Display/spectrumeditor.h \
+    GUI/Processing/datasetimportdialog.h
 
 
 FORMS    += \
@@ -240,7 +240,6 @@ FORMS    += \
     GUI/Display/dataviewer.ui \
     GUI/Processing/filterdialog.ui \
     GUI/Analysis/kmeansdialog.ui \
-    GUI/Processing/loaddataset.ui \
     GUI/Display/mapviewer.ui \
     GUI/Processing/metadatasetdialog.ui \
     GUI/Analysis/plotmakerdialog.ui \
@@ -275,7 +274,8 @@ FORMS    += \
     GUI/Analysis/hypothesistestdialog.ui \
     GUI/Display/globalgradientdialog.ui \
     GUI/Display/colorrangedialog.ui \
-    GUI/Display/spectrumeditor.ui
+    GUI/Display/spectrumeditor.ui \
+    GUI/Processing/datasetimportdialog.ui
 
 RESOURCES += \
     resources.qrc

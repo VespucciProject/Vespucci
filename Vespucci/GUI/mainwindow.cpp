@@ -19,7 +19,7 @@
 *******************************************************************************/
 #include "GUI/mainwindow.h"
 #include "ui_mainwindow.h"
-#include "GUI/Processing/loaddataset.h"
+#include "GUI/Processing/datasetimportdialog.h"
 #include "GUI/Display/aboutdialog.h"
 #include "GUI/Display/citationdialog.h"
 #include "GUI/Analysis/univariatedialog.h"
@@ -177,9 +177,9 @@ void MainWindow::on_actionExit_triggered()
 ///Triggers the dialog to load a dataset.
 void MainWindow::on_actionImport_Dataset_from_File_triggered()
 {
-    LoadDataset *load_dataset_window = new LoadDataset(this,workspace_);
-    load_dataset_window->setAttribute(Qt::WA_DeleteOnClose);
-    load_dataset_window->show();
+    DatasetImportDialog *dataset_import_dialog = new DatasetImportDialog(this,workspace_);
+    dataset_import_dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dataset_import_dialog->show();
 }
 
 ///

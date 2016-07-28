@@ -17,20 +17,20 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "GUI/Processing/loaddataset.h"
-#include "ui_loaddataset.h"
+#include "GUI/Processing/datasetimportdialog.h"
+#include "ui_datasetimportdialog.h"
 #include <QFileDialog>
 #include "Data/Dataset/vespuccidataset.h"
 #include "Global/vespucciworkspace.h"
 
 ///
-/// \brief LoadDataset::LoadDataset
+/// \brief DatasetImportDialog::DatasetImportDialog
 /// \param parent QWidget parent (see QDialog)
 /// \param ws Current workspace
 ///
-LoadDataset::LoadDataset(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
+DatasetImportDialog::DatasetImportDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
-    ui(new Ui::LoadDataset)
+    ui(new Ui::DatasetImportDialog)
 {
     ui->setupUi(this);
     workspace_ = ws;
@@ -56,15 +56,15 @@ LoadDataset::LoadDataset(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) 
     connect(ui->filenameLineEdit,
             &QLineEdit::textChanged,
             this,
-            &LoadDataset::FilenameChanged);
+            &DatasetImportDialog::FilenameChanged);
 }
 
-LoadDataset::~LoadDataset()
+DatasetImportDialog::~DatasetImportDialog()
 {
     delete ui;
 }
 
-void LoadDataset::FilenameChanged(QString new_filename)
+void DatasetImportDialog::FilenameChanged(QString new_filename)
 {
     QFileInfo info(new_filename);
     QString basename = info.baseName();
@@ -78,9 +78,9 @@ void LoadDataset::FilenameChanged(QString new_filename)
 }
 
 ///
-/// \brief LoadDataset::on_browseButton_clicked
+/// \brief DatasetImportDialog::on_browseButton_clicked
 /// Triggers dialog to open input file
-void LoadDataset::on_browseButton_clicked()
+void DatasetImportDialog::on_browseButton_clicked()
 {
     QString filename;
 
@@ -93,10 +93,10 @@ void LoadDataset::on_browseButton_clicked()
 }
 
 ///
-/// \brief LoadDataset::on_buttonBox_accepted
+/// \brief DatasetImportDialog::on_buttonBox_accepted
 /// Loads dataset from the file into a new dataset object by triggering appropriate
 /// constructor.
-void LoadDataset::on_buttonBox_accepted()
+void DatasetImportDialog::on_buttonBox_accepted()
 {
     QString y_description = ui->yDescriptionLineEdit->text() + " (" + ui->yUnitsLineEdit->text() + ")";
     QString x_description = ui->xDescriptionLineEdit->text() + " (" + ui->xUnitsLineEdit->text() + ")";
@@ -157,14 +157,14 @@ void LoadDataset::on_buttonBox_accepted()
 
 
 ///
-/// \brief LoadDataset::on_buttonBox_rejected
+/// \brief DatasetImportDialog::on_buttonBox_rejected
 /// Closes window when "Cancel" is selected.
-void LoadDataset::on_buttonBox_rejected()
+void DatasetImportDialog::on_buttonBox_rejected()
 {
     close();
 }
 
-void LoadDataset::on_filenameLineEdit_textChanged(const QString &arg1)
+void DatasetImportDialog::on_filenameLineEdit_textChanged(const QString &arg1)
 {
     QFileInfo file_info(arg1);
     QPushButton *ok_button = ui->buttonBox->button(QDialogButtonBox::Ok);

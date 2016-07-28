@@ -17,20 +17,25 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef TESTSMOOTHING_H
-#define TESTSMOOTHING_H
-
+#ifndef TESTAHCA_H
+#define TESTAHCA_H
+#include "Math/Clustering/agglomerativeclustering.h"
 #include <QObject>
-
-class TestSmoothing : public QObject
+class TestAHCA : public QObject
 {
     Q_OBJECT
 public:
-    explicit TestSmoothing(QObject *parent = 0);
+    explicit TestAHCA(QObject *parent);
 
 signals:
 
 public slots:
+
+private slots:
+    void testCompleteClusters();
+    void testExclusiveClusters();
+private:
+    Vespucci::Math::Clustering::AHCA ahca_;
 };
 
-#endif // TESTSMOOTHING_H
+#endif // TESTAHCA_H

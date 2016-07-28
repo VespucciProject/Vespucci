@@ -17,26 +17,26 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef LOADDATASET_H
-#define LOADDATASET_H
+#ifndef datasetimportdialog.h
+#define datasetimportdialog.h
 
 #include <QDialog>
 #include "Global/vespucciworkspace.h"
 
 namespace Ui {
-class LoadDataset;
+class DatasetImportDialog;
 }
 
 ///
-/// \brief The LoadDataset class
+/// \brief The DatasetImportDialog class
 /// Dialog that allows the user to import files into the program
-class LoadDataset : public QDialog
+class DatasetImportDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit LoadDataset(QWidget *parent, QSharedPointer<VespucciWorkspace>  ws);
-    ~LoadDataset();
+    explicit DatasetImportDialog(QWidget *parent, QSharedPointer<VespucciWorkspace>  ws);
+    ~DatasetImportDialog();
 public slots:
     void FilenameChanged(QString new_filename);
 private slots:
@@ -49,7 +49,7 @@ private slots:
     void on_filenameLineEdit_textChanged(const QString &arg1);
 
 private:
-    Ui::LoadDataset *ui;
+    Ui::DatasetImportDialog *ui;
     ///
     /// \brief workspace
     /// The current workspace
@@ -61,4 +61,4 @@ private:
     QString *directory_;
 };
 
-#endif // LOADDATASET_H
+#endif // datasetimportdialog.h
