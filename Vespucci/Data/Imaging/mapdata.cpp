@@ -34,7 +34,7 @@ MapData::MapData(QString name,
     :name_(name), type_(type)
 {
     workspace_ = workspace;
-    if (workspace_->GetMatrix(data_keys).n_cols >= data_column)
+    if (workspace_->GetMatrix(data_keys).n_cols <= data_column)
         throw invalid_argument("Requested column out of bounds");
     map_display_ = new MapViewer(workspace->main_window(), QSharedPointer<MapData>(this), workspace);
     map_display_->setWindowTitle(name);
@@ -192,7 +192,7 @@ bool MapData::interpolate()
 void MapData::setInterpolate(bool enabled)
 {
     map_qcp_->setInterpolate(enabled);
-    map_qcp_->replot();
+    map_qcp_->replot(QCustomPlot::rpImmediate);
 }
 
 ///
@@ -214,7 +214,7 @@ void MapData::ShowAxes(bool enabled)
         if (!map_qcp_->xAxis->visible()){
             map_qcp_->xAxis->setVisible(true);
             map_qcp_->yAxis->setVisible(true);
-            map_qcp_->replot();
+            map_qcp_->replot(QCustomPlot::rpImmediate);
             map_qcp_->repaint();
         }
     }
@@ -223,7 +223,7 @@ void MapData::ShowAxes(bool enabled)
         if (map_qcp_->xAxis->visible()){
             map_qcp_->xAxis->setVisible(false);
             map_qcp_->yAxis->setVisible(false);
-            map_qcp_->replot();
+            map_qcp_->replot(QCustomPlot::rpImmediate);
             map_qcp_->repaint();
         }
     }
@@ -240,11 +240,13 @@ void MapData::ShowAxes(bool enabled)
 bool MapData::saveBmp(const QString &fileName, int width, int height, double scale)
 {
     map_qcp_->setBackground(Qt::white);
-    map_qcp_->replot();
+    map_qcp_->ShowCrosshairs(false);
+    map_qcp_->replot(QCustomPlot::rpImmediate);
     bool success = map_qcp_->saveBmp(fileName, width, height, scale);
 
     map_qcp_->setBackground(map_display_->palette().window());
-    map_qcp_->replot();
+    map_qcp_->ShowCrosshairs(true);
+    map_qcp_->replot(QCustomPlot::rpImmediate);
     return success;
 }
 
@@ -259,7 +261,11 @@ bool MapData::saveBmp(const QString &fileName, int width, int height, double sca
 /// Saves the map as a PDF. See QCustomPlot::saveBmp.
 bool MapData::savePdf(const QString &fileName, int width, int height)
 {
+    map_qcp_->ShowCrosshairs(false);
+    map_qcp_->replot(QCustomPlot::rpImmediate);
     bool success = map_qcp_->savePdf(fileName, true, width, height, "Vespucci", name());
+    map_qcp_->ShowCrosshairs(true);
+    map_qcp_->replot(QCustomPlot::rpImmediate);
     return success;
 }
 
@@ -275,10 +281,12 @@ bool MapData::savePdf(const QString &fileName, int width, int height)
 bool MapData::savePng(const QString &fileName, int width, int height, double scale, int quality)
 {
     map_qcp_->setBackground(Qt::transparent);
-    map_qcp_->replot();
+    map_qcp_->ShowCrosshairs(false);
+    map_qcp_->replot(QCustomPlot::rpImmediate);
     bool success = map_qcp_->savePng(fileName, width, height, scale, quality);
     map_qcp_->setBackground(map_display_->palette().window());
-    map_qcp_->replot();
+    map_qcp_->ShowCrosshairs(true);
+    map_qcp_->replot(QCustomPlot::rpImmediate);
     return success;
 }
 
@@ -294,10 +302,12 @@ bool MapData::savePng(const QString &fileName, int width, int height, double sca
 bool MapData::saveJpg(const QString &fileName, int width, int height, double scale, int quality)
 {
     map_qcp_->setBackground(Qt::white);
-    map_qcp_->replot();
+    map_qcp_->ShowCrosshairs(false);
+    map_qcp_->replot(QCustomPlot::rpImmediate);
     bool success = map_qcp_->saveJpg(fileName, width, height, scale, quality);
     map_qcp_->setBackground(map_display_->palette().window());
-    map_qcp_->replot();
+    map_qcp_->ShowCrosshairs(true);
+    map_qcp_->replot(QCustomPlot::rpImmediate);
     return success;
 }
 
@@ -313,10 +323,12 @@ bool MapData::saveJpg(const QString &fileName, int width, int height, double sca
 bool MapData::saveTiff(const QString &fileName, int width, int height, double scale, int quality)
 {
     map_qcp_->setBackground(Qt::transparent);
-    map_qcp_->replot();
+    map_qcp_->ShowCrosshairs(false);
+    map_qcp_->replot(QCustomPlot::rpImmediate);
     bool success = map_qcp_->saveRastered(fileName, width, height, scale, "TIF", quality);
     map_qcp_->setBackground(map_display_->palette().window());
-    map_qcp_->replot();
+    map_qcp_->ShowCrosshairs(true);
+    map_qcp_->replot(QCustomPlot::rpImmediate);
     return success;
 }
 
@@ -331,7 +343,7 @@ void MapData::setGradient(const QCPColorGradient &gradient)
     global_gradient_key_ = QString();
     map_qcp_->SetGradient(gradient);
     map_qcp_->rescaleDataRange();
-    map_qcp_->replot();
+    map_qcp_->replot(QCustomPlot::rpImmediate);
 }
 
 void MapData::SetColorScaleTickCount(int ticks)

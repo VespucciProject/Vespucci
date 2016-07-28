@@ -53,7 +53,6 @@ signals:
     void RequestHeldSpectrumPlot(QString dataset_key, QString map_name, size_t index);
 public slots:
     void SpectrumRequested(size_t index);
-    void SpectrumHoldRequested(size_t index);
 private slots:
     void on_actionInterpolate_toggled(bool arg1);
 
@@ -78,6 +77,8 @@ private slots:
     void on_actionSet_Color_Scale_Label_triggered();
 
     void on_actionSet_Global_Color_Scale_triggered();
+protected:
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     Ui::MapViewer *ui;

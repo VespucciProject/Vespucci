@@ -46,8 +46,6 @@ MapViewer::MapViewer(MainWindow *parent, QSharedPointer<MapData> map_data, QShar
             parent, &MainWindow::HeldSpectrumRequested);
     connect(ui->mapPlot, &MapPlot::SpectrumRequested,
             this, &MapViewer::SpectrumRequested);
-    connect(ui->mapPlot, &MapPlot::SpectrumHoldRequested,
-            this, &MapViewer::SpectrumHoldRequested);
 }
 
 MapViewer::~MapViewer()
@@ -66,14 +64,6 @@ void MapViewer::SpectrumRequested(size_t index)
                              map_data_->keys().last(),
                              index);
 }
-
-void MapViewer::SpectrumHoldRequested(size_t index)
-{
-    emit RequestHeldSpectrumPlot(map_data_->keys().first(),
-                                 map_data_->keys().last(),
-                                 index);
-}
-
 
 ///
 /// \brief MapViewer::on_actionInterpolate_toggled
@@ -214,4 +204,41 @@ void MapViewer::on_actionSet_Global_Color_Scale_triggered()
                                        0, false, &ok);
    if (ok)
        map_data_->SetGlobalGradient(key);
+}
+
+void MapViewer::keyPressEvent(QKeyEvent *event)
+{
+    //arrow keys on some laptops might be difficult to use
+    //so why not also accept WASD and HJKL?
+
+    switch (event->key()) {
+        case Qt::Key_Up:
+        case Qt::Key_W:
+        case Qt::Key_K:
+            ui->mapPlot->MoveHorizontalCrosshair(1);
+            return;
+        case Qt::Key_Down:
+        case Qt::Key_S:
+        case Qt::Key_J:
+            ui->mapPlot->MoveHorizontalCrosshair(-1);
+            return;
+        case Qt::Key_Left:
+        case Qt::Key_A:
+        case Qt::Key_H:
+            ui->mapPlot->MoveVerticalCrosshair(-1);
+            return;
+        case Qt::Key_Right:
+        case Qt::Key_F:
+        case Qt::Key_L:
+            ui->mapPlot->MoveVerticalCrosshair(1);
+            return;
+        case Qt::Key_Enter:
+        case Qt::Key_Space:
+            emit RequestHeldSpectrumPlot(map_data_->keys().first(),
+                                         map_data_->keys().last(),
+                                         ui->mapPlot->GetCrosshairPosition());
+            return;
+        default:
+            return;
+    }
 }

@@ -915,7 +915,10 @@ void MainWindow::SetActiveDatasetTreeIndex(const QModelIndex &index)
 
 void MainWindow::DisplayWarning(const QString &title, const QString &text)
 {
-    QMessageBox::warning(this, title, text);
+    QMessageBox *warning = new QMessageBox(QMessageBox::Warning, title, text,
+                                           QMessageBox::Ok, this);
+    warning->setAttribute(Qt::WA_DeleteOnClose);
+    warning->show();
 }
 
 void MainWindow::DisplayInformation(const QString &title, const QString &text)
@@ -1310,10 +1313,12 @@ void MainWindow::on_actionMacro_Editor_toggled(bool arg1)
 void MainWindow::on_actionMapResult_triggered()
 {
     TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
-    QStringList item_keys = item->keys();
-    MapDialog *map_dialog = new MapDialog(this, item_keys, workspace_);
-    map_dialog->setAttribute(Qt::WA_DeleteOnClose);
-    map_dialog->show();
+    if (item->type() == TreeItem::ItemType::Matrix){
+        QStringList item_keys = item->keys();
+        MapDialog *map_dialog = new MapDialog(this, item_keys, workspace_);
+        map_dialog->setAttribute(Qt::WA_DeleteOnClose);
+        map_dialog->show();
+    }
 }
 
 void MainWindow::on_actionSave_Selected_Matrix_triggered()
@@ -1358,6 +1363,7 @@ void MainWindow::on_actionGlobal_Color_Scales_triggered()
 void MainWindow::on_datasetTreeView_clicked(const QModelIndex &index)
 {
     TreeItem *item = dataset_tree_model_->getItem(index);
+    if (!item->keys().size()) return;
     QStringList data_keys = item->keys();
     emit DatasetSelectionChanged(data_keys.first());
     if (item->type() == TreeItem::ItemType::Matrix)
@@ -1368,6 +1374,7 @@ void MainWindow::on_datasetTreeView_doubleClicked(const QModelIndex &index)
 {
     TreeItem *item = dataset_tree_model_->getItem(index);
     QStringList data_keys = item->keys();
+    if (!data_keys.size()) return;
     emit DatasetSelectionChanged(data_keys.first());
     if (item->type() == TreeItem::ItemType::Matrix){
         data_viewer_->AddTab(data_keys);
@@ -1415,6 +1422,7 @@ void MainWindow::on_actionPlotResult_triggered()
 void MainWindow::on_actionSave_Dataset_triggered()
 {
     TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    if (!item->keys().size()) return;
     QString dataset_name = item->keys().first();
     QString path = workspace_->directory() + "/" + dataset_name;
     QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_name);
@@ -1488,6 +1496,7 @@ void MainWindow::CloseDataset(const QString &name)
 void MainWindow::on_actionSave_Dataset_As_triggered()
 {
     TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    if (!item->keys().size()) return;
     QString dataset_name = item->keys().first();
     QString path = workspace_->directory() + "/" + dataset_name;
     QString filename = QFileDialog::getSaveFileName(this,

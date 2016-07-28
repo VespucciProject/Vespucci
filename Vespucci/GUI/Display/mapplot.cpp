@@ -27,6 +27,7 @@ MapPlot::MapPlot(QWidget *parent)
     color_map_ = new QCPColorMap(xAxis, yAxis);
     color_scale_ = new QCPColorScale(this);
     color_map_->setColorScale(color_scale_);
+    color_map_->setInterpolate(false);
     addPlottable(color_map_);
     addItem(vertical_crosshair_);
     addItem(horizontal_crosshair_);
@@ -43,13 +44,12 @@ void MapPlot::SetMapData(const vec &x, const vec &y, const vec &z)
 {
     if ((x.n_elem != y.n_elem) || (x.n_elem != z.n_elem) || (y.n_elem != z.n_elem))
         throw std::invalid_argument("Vector sizes do not match!");
-    //in case the instrument rounds differently.
-    y_ = linspace(y.min(), y.max(), y.n_rows);
-    x_ = linspace(x.min(), x.max(), x.n_rows);
+    y_ = y;
+    x_ = x;
     z_ = z;
 
     for (uword i = 0; i < x.n_elem; ++i){
-        color_map_->data()->setData(x_(i), y_(i), z(i));
+        color_map_->data()->setData(x_(i), y_(i), z_(i));
     }
     rescaleAxes();
     CenterCrosshairs();
@@ -131,45 +131,6 @@ double MapPlot::min() const
 double MapPlot::max() const
 {
     return z_.max();
-}
-
-///
-/// \brief MapPlot::keyPressEvent
-/// \param event
-/// Override of QWidget::keyPressEvent to handle arrow keys and enter key
-void MapPlot::keyPressEvent(QKeyEvent *event)
-{
-    //arrow keys on some laptops might be difficult to use
-    //so why not also accept WASD and HJKL?
-
-    switch (event->key()) {
-        case Qt::Key_Up:
-        case Qt::Key_W:
-        case Qt::Key_K:
-            MoveHorizontalCrosshair(1);
-            return;
-        case Qt::Key_Down:
-        case Qt::Key_S:
-        case Qt::Key_J:
-            MoveHorizontalCrosshair(-1);
-            return;
-        case Qt::Key_Left:
-        case Qt::Key_A:
-        case Qt::Key_H:
-            MoveVerticalCrosshair(-1);
-            return;
-        case Qt::Key_Right:
-        case Qt::Key_F:
-        case Qt::Key_L:
-            MoveVerticalCrosshair(1);
-            return;
-        case Qt::Key_Enter:
-        case Qt::Key_Space:
-            emit SpectrumHoldRequested(GetCrosshairPosition());
-            return;
-        default:
-            return;
-    }
 }
 
 ///
@@ -316,4 +277,10 @@ QCPRange MapPlot::keyRange()
 QCPRange MapPlot::valueRange()
 {
     return color_map_->valueAxis()->range();
+}
+
+void MapPlot::ShowCrosshairs(bool show)
+{
+    vertical_crosshair_->setVisible(show);
+    horizontal_crosshair_->setVisible(show);
 }

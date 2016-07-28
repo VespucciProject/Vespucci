@@ -2858,7 +2858,7 @@ void VespucciDataset::CreateMap(const QString &map_name,
     if (!AnalysisResultsKeys().contains(results_key)) return;
     if (!GetAnalysisResult(results_key)->HasMatrix(matrix_key)) return;
     QStringList data_keys = {name_, results_key, matrix_key};
-    QString map_type = GetAnalysisResult(results_key)->type();
+    QString map_type = GetAnalysisResult(results_key)->type() + " Color Map";
     QSharedPointer<MapData> new_map(new MapData(map_name,
                                                 map_type,
                                                 data_keys,

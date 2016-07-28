@@ -60,15 +60,13 @@ public:
     int valueSize();
     QCPRange keyRange();
     QCPRange valueRange();
-
+    void ShowCrosshairs(bool show);
+    void MoveVerticalCrosshair(int units);
+    void MoveHorizontalCrosshair(int units);
 signals:
     void SpectrumRequested(size_t index);
     void SpectrumHoldRequested(size_t index);
-protected:
-    void keyPressEvent(QKeyEvent *event);
 private:
-    void MoveVerticalCrosshair(int units);
-    void MoveHorizontalCrosshair(int units);
     QCPColorMap *color_map_;
     QCPItemLine *horizontal_crosshair_;
     QCPItemLine *vertical_crosshair_;
