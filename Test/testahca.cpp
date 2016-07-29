@@ -38,7 +38,7 @@ TestAHCA::TestAHCA(QObject *parent)
     for (auto linkage: linkages)
         for (auto metric: metrics)
             ahca_obj.push_back(Vespucci::Math::Clustering::AHCA(linkage, metric));
-    arma::mat data = arma::randu<mat>(1024, 50);
+    arma::mat data = arma::randu<arma::mat>(1024, 50);
     for (auto ahca: ahca_obj){
         ahca.Link(data);
     }
