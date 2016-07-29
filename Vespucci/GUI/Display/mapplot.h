@@ -54,6 +54,8 @@ public:
     void SetColorScaleLabel(const QString &label_text);
     QString ColorScaleLabel() const;
     void SetColorScaleTickCount(int ticks);
+    void SetColorScaleTicks(double min, double max, size_t count);
+    void SetClusterTicks(size_t count);
     void setInterpolate(bool interpolate);
     bool interpolate() const;
     int keySize();
@@ -68,8 +70,8 @@ signals:
     void SpectrumHoldRequested(size_t index);
 private:
     QCPColorMap *color_map_;
-    QCPItemLine *horizontal_crosshair_;
-    QCPItemLine *vertical_crosshair_;
+    QCPItemStraightLine *horizontal_crosshair_;
+    QCPItemStraightLine *vertical_crosshair_;
     QCPColorScale *color_scale_;
     vec x_;
     vec y_;

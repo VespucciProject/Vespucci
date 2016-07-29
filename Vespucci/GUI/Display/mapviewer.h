@@ -25,6 +25,7 @@
 #include "GUI/Display/mapplot.h"
 #include "GUI/Display/scalebardialog.h"
 #include "Global/vespucciworkspace.h"
+#include "GUI/Display/mapplot.h"
 
 class ScaleBarDialog;
 class MapData;
@@ -32,6 +33,7 @@ class DataExtractorDialog;
 class SpectrumViewer;
 class MainWindow;
 class VespucciWorkspace;
+class MapPlot;
 
 namespace Ui {
 class MapViewer;
@@ -47,6 +49,7 @@ class MapViewer : public QMainWindow
 public:
     MapViewer(MainWindow *parent, QSharedPointer<MapData> map_data, QSharedPointer<VespucciWorkspace> ws);
     QCPColorGradient GetGradient(int gradient_number);
+    MapPlot *mapPlot();
     ~MapViewer();
 signals:
     void RequestSpectrumPlot(QString dataset_key, QString map_name, size_t index);

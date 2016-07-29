@@ -48,6 +48,11 @@ MapViewer::MapViewer(MainWindow *parent, QSharedPointer<MapData> map_data, QShar
             this, &MapViewer::SpectrumRequested);
 }
 
+MapPlot *MapViewer::mapPlot()
+{
+    return ui->mapPlot;
+}
+
 MapViewer::~MapViewer()
 {
     delete ui;

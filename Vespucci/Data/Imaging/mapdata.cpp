@@ -36,13 +36,11 @@ MapData::MapData(QString name,
     workspace_ = workspace;
     if (workspace_->GetMatrix(data_keys).n_cols <= data_column)
         throw invalid_argument("Requested column out of bounds");
-    map_display_ = new MapViewer(workspace->main_window(), QSharedPointer<MapData>(this), workspace);
-    map_display_->setWindowTitle(name);
-    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(data_keys.first());
-    vec x = dataset->x();
-    vec y = dataset->y();
-    vec z = workspace_->GetMatrix(data_keys).col(data_column);
-    map_qcp_->SetMapData(x, y, z);
+    data_keys_ = data_keys;
+    data_column_ = data_column;
+    dataset_ = workspace_->GetDataset(data_keys.first());
+
+
 }
 
 MapData::~MapData()
@@ -66,6 +64,21 @@ QString MapData::name()
 QString MapData::type()
 {
     return type_;
+}
+
+void MapData::InstantiateMapWindow()
+{
+    map_display_ = new MapViewer(workspace_->main_window(), workspace_->GetMap(dataset_->name(), name_), workspace_);
+    map_display_->setWindowTitle(name_);
+    LockMapDisplaySize(true);
+    map_qcp_ = map_display_->mapPlot();
+    vec x = dataset_->x();
+    vec y = dataset_->y();
+    vec z = workspace_->GetMatrix(data_keys_).col(data_column_);
+    map_qcp_->SetMapData(x, y, z);
+    vec unique_z = unique(z);
+    uword tick_count = std::max(unique_z.n_rows, uword(10));
+    map_qcp_->SetColorScaleTicks(z.min(), z.max(), tick_count);
 }
 
 void MapData::SetMapPlot(MapPlot *plot)
@@ -107,6 +120,11 @@ QStringList MapData::keys()
     return QStringList({dataset_->name(), name_});
 }
 
+MapPlot *MapData::map_qcp()
+{
+    return map_qcp_;
+}
+
 ///
 /// \brief MapData::ShowMapWindow
 /// Shows or hides the map window.
@@ -145,6 +163,7 @@ void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation, int
     map_qcp_->SetGradient(color_scheme);
     map_qcp_->rescaleDataRange(true);
     map_qcp_->rescaleAxes(true);
+    map_qcp_->SetColorScaleTickCount(tick_count);
 
     map_qcp_->setInterpolate(interpolation);
 
@@ -430,13 +449,13 @@ void MapData::DrawScaleBar(double width,
     scale_bar->topLeft->setCoords(x_min, y_max);
     double x_mid = ((x_max - x_min) / 2.0) + x_min;
     double y_text = y_max + 1;
-    if (font.pointSize() >= 10){
-        y_text += (font.pointSize() - 10) / 4;
+    if (font.pointSize() >= 32){
+        y_text += (font.pointSize() - 32) / 4;
     }
 
     scale_bar_text->position->setCoords(x_mid, y_text);
 
-    map_qcp_->show();
+    map_qcp_->replot(QCustomPlot::rpImmediate);
 }
 
 ///

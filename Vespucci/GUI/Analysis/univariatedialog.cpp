@@ -136,6 +136,7 @@ void UnivariateDialog::on_minLineEdit_textChanged(const QString &arg1)
     min_line_->point2->setCoords(value, 1);
     if(!ui->spectrumPlot->hasItem(min_line_))
         ui->spectrumPlot->addItem(min_line_);
+    ui->spectrumPlot->replot(QCustomPlot::rpImmediate);
 }
 
 void UnivariateDialog::on_maxLineEdit_textChanged(const QString &arg1)
@@ -150,4 +151,5 @@ void UnivariateDialog::on_maxLineEdit_textChanged(const QString &arg1)
 
     if(!ui->spectrumPlot->hasItem(max_line_))
         ui->spectrumPlot->addItem(max_line_);
+    ui->spectrumPlot->replot(QCustomPlot::rpImmediate);
 }

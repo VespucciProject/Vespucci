@@ -25,14 +25,17 @@ MapDialog::MapDialog(MainWindow *parent, QStringList data_keys, QSharedPointer<V
     ui(new Ui::MapDialog)
 {
     ui->setupUi(this);
-
-    if (data_keys.size() > 3 || data_keys.size() < 2){
-        main_window_->DisplayWarning("Cannot map this object", "Can't map object");
-        close();
-    }
-    main_window_ = parent;
-    data_keys_ = data_keys;
     workspace_ = ws;
+    data_keys_ = data_keys;
+    main_window_ = parent;
+
+    if (data_keys_.size() > 3 || data_keys_.size() < 2 || !workspace_->Mappable(data_keys)){
+        QMessageBox::warning(this, "Cannot map this object", "Object is not mappable");
+        hide();
+        close();
+        return;
+    }
+
     uword col_count;
     try{
         col_count = workspace_->GetMatrix(data_keys_).n_cols;
@@ -50,7 +53,8 @@ MapDialog::MapDialog(MainWindow *parent, QStringList data_keys, QSharedPointer<V
 
     ui->columnSpinBox->setRange(1, col_count);
     ui->nameLineEdit->setText(data_keys_.last());
-    QStringList color_list = workspace_->GradientNames();
+    uword unique_ct = vec(unique(workspace_->GetMatrix(data_keys_).col(0))).n_elem;
+    QStringList color_list = workspace_->GradientNames(unique_ct < 10);
     ui->gradientComboBox->addItems(color_list);
 }
 

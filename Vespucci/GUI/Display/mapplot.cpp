@@ -22,16 +22,17 @@
 MapPlot::MapPlot(QWidget *parent)
     : QCustomPlot(parent)
 {
-    vertical_crosshair_ = new QCPItemLine(this);
-    horizontal_crosshair_ = new QCPItemLine(this);
+    vertical_crosshair_ = new QCPItemStraightLine(this);
+    horizontal_crosshair_ = new QCPItemStraightLine(this);
     color_map_ = new QCPColorMap(xAxis, yAxis);
     color_scale_ = new QCPColorScale(this);
     color_map_->setColorScale(color_scale_);
     color_map_->setInterpolate(false);
-    addPlottable(color_map_);
     addItem(vertical_crosshair_);
     addItem(horizontal_crosshair_);
+    addPlottable(color_map_);
     plotLayout()->addElement(0, 1, color_scale_);
+    CenterCrosshairs();
 }
 
 ///
@@ -47,10 +48,20 @@ void MapPlot::SetMapData(const vec &x, const vec &y, const vec &z)
     y_ = y;
     x_ = x;
     z_ = z;
+    QCPRange x_range(x_.min(), x_.max());
+    QCPRange y_range(y_.min(), y_.max());
+    uword x_size = vec(unique(x_)).n_rows;
+    uword y_size = vec(unique(y_)).n_rows;
 
+
+    color_map_->data()->setKeySize(x_size);
+    color_map_->data()->setValueSize(y_size);
+    color_map_->data()->setKeyRange(x_range);
+    color_map_->data()->setValueRange(y_range);
     for (uword i = 0; i < x.n_elem; ++i){
         color_map_->data()->setData(x_(i), y_(i), z_(i));
     }
+    color_map_->rescaleDataRange(true);
     rescaleAxes();
     CenterCrosshairs();
     replot();
@@ -66,6 +77,7 @@ void MapPlot::SetColorScale(QCPColorScale *scale)
 void MapPlot::SetGradient(QCPColorGradient gradient)
 {
     color_map_->setGradient(gradient);
+    color_map_->rescaleDataRange(true);
     replot();
 }
 
@@ -81,17 +93,22 @@ void MapPlot::SetGlobalColorGradient(Vespucci::GlobalGradient gradient)
 /// Positions the crosshairs in the center of the map
 void MapPlot::CenterCrosshairs()
 {
-    double x_min = color_map_->data()->keyRange().lower;
-    double x_max = color_map_->data()->keyRange().upper;
-    double y_min = color_map_->data()->valueRange().lower;
-    double y_max = color_map_->data()->valueRange().upper;
-    double x_center = xAxis->range().center();
-    double y_center = yAxis->range().center();
+    double x_min = x_.min();
+    double x_max = x_.max();
+    double y_min = y_.min();
+    double y_max = y_.max();
+    double x_center = (x_min + x_max) / 2.0;
+    double y_center = (y_min + y_max) / 2.0;
 
-    horizontal_crosshair_->start->setCoords(x_min, y_center);
-    horizontal_crosshair_->end->setCoords(x_max, y_center);
-    vertical_crosshair_->start->setCoords(x_center, y_min);
-    vertical_crosshair_->end->setCoords(x_center, y_max);
+
+    horizontal_crosshair_->point1->setCoords(x_min, y_center);
+    horizontal_crosshair_->point2->setCoords(x_max, y_center);
+    vertical_crosshair_->point1->setCoords(x_center, y_min);
+    vertical_crosshair_->point2->setCoords(x_center, y_max);
+
+    horizontal_crosshair_->setVisible(true);
+    vertical_crosshair_->setVisible(true);
+
 }
 
 ///
@@ -112,8 +129,8 @@ uword MapPlot::GetCrosshairPosition(double &x, double &y, double &z) const
 
 uword MapPlot::GetCrosshairPosition() const
 {
-    double x_pos = vertical_crosshair_->start->coords().x();
-    double y_pos = horizontal_crosshair_->start->coords().y();
+    double x_pos = vertical_crosshair_->point1->coords().x();
+    double y_pos = horizontal_crosshair_->point1->coords().y();
 
     //find the values of x and y closest to the position of the crosshairs
     vec y_diff = y_ - y_pos*ones(y_.n_rows);
@@ -139,25 +156,16 @@ double MapPlot::max() const
 /// Moves the vertical crosshair left or right by a multiple of the x step
 void MapPlot::MoveVerticalCrosshair(int units)
 {
-    double x_step = (color_map_->data()->keyRange().upper
-                     - color_map_->data()->keyRange().lower)
-            / double(color_map_->data()->keySize());
+    double x_step = x_(1) - x_(0);
+    QPointF point1_pos = vertical_crosshair_->point1->coords();
+    QPointF point2_pos = vertical_crosshair_->point2->coords();
 
-    double current_x = vertical_crosshair_->start->coords().x();
-    double start_y = vertical_crosshair_->start->coords().y();
-    double end_y = vertical_crosshair_->end->coords().y();
-    QCPRange x_range = color_map_->data()->keyRange();
-    double new_x;
+    point1_pos.setX(point1_pos.x() + (double(units) * x_step));
+    point2_pos.setX(point2_pos.x() + (double(units) * x_step));
 
-    if (x_range.contains(current_x + x_step * double(units)))
-        new_x = current_x + x_step * double(units);
-    else if (current_x + x_step * double(units) >= x_range.upper)
-        new_x = x_range.upper;
-    else
-        new_x = x_range.lower;
-    vertical_crosshair_->start->setCoords(new_x, start_y);
-    vertical_crosshair_->end->setCoords(new_x, end_y);
-    repaint();
+    vertical_crosshair_->point1->setCoords(point1_pos);
+    vertical_crosshair_->point2->setCoords(point2_pos);
+    replot(QCustomPlot::rpImmediate);
     emit SpectrumRequested(GetCrosshairPosition());
 }
 
@@ -167,25 +175,17 @@ void MapPlot::MoveVerticalCrosshair(int units)
 /// moves the horizontal crosshair up or down by a multiple of the y step
 void MapPlot::MoveHorizontalCrosshair(int units)
 {
-    double y_step = (color_map_->data()->valueRange().upper
-                     - color_map_->data()->valueRange().lower)
-            / double(color_map_->data()->valueSize());
+    double y_step = y_(1) - y_(0);
+    QPointF point1_pos = horizontal_crosshair_->point1->coords();
+    QPointF point2_pos = horizontal_crosshair_->point2->coords();
 
-    double current_y = horizontal_crosshair_->start->coords().y();
-    double start_x = horizontal_crosshair_->start->coords().x();
-    double end_x = horizontal_crosshair_->end->coords().x();
-    QCPRange y_range = color_map_->data()->keyRange();
-    double new_y;
+    point1_pos.setY(point1_pos.y() + (double(units) * y_step));
+    point2_pos.setY(point2_pos.y() + (double(units) * y_step));
 
-    if (y_range.contains(current_y + y_step * double(units)))
-        new_y = current_y + y_step * double(units);
-    else if (current_y + y_step * double(units) >= y_range.upper)
-        new_y = y_range.upper;
-    else
-        new_y = y_range.lower;
-    vertical_crosshair_->start->setCoords(start_x, new_y);
-    vertical_crosshair_->end->setCoords(end_x, new_y);
-    repaint();
+    horizontal_crosshair_->point1->setCoords(point1_pos);
+    horizontal_crosshair_->point2->setCoords(point2_pos);
+
+    replot(QCustomPlot::rpImmediate);
     emit SpectrumRequested(GetCrosshairPosition());
 }
 
@@ -247,6 +247,23 @@ QString MapPlot::ColorScaleLabel() const
 void MapPlot::SetColorScaleTickCount(int ticks)
 {
     color_scale_->axis()->setAutoTickCount(ticks);
+}
+
+void MapPlot::SetColorScaleTicks(double min, double max, size_t count)
+{
+    color_scale_->axis()->setAutoTicks(false);
+    vec ticks = linspace(min, max, count);
+    qvec tick_qv = qvec::fromStdVector(conv_to<stdvec>::from(ticks));
+    color_scale_->axis()->setAutoTickLabels(true);
+    color_scale_->axis()->setTickVector(tick_qv);
+    replot(QCustomPlot::rpImmediate);
+}
+
+void MapPlot::SetClusterTicks(size_t count)
+{
+    vec ticks = linspace(1, count, count);
+    //shift ticks up to match center of color stops
+    QVector<QString> tick_labels;
 }
 
 void MapPlot::setInterpolate(bool interpolate)

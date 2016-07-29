@@ -35,45 +35,45 @@ VespucciWorkspace::VespucciWorkspace(QString settings_file) :
     data_model_ = new DataModel();
 
     gradients_ = {
-                    {"ColorBrewerBlueGreen", QCPColorGradient::cbBlues},
-                    {"ColorBrewerBluePurple", QCPColorGradient::cbBuPu},
-                    {"ColorBrewerGreenBlue", QCPColorGradient::cbGnBu},
-                    {"ColorBrewerOrangeRed", QCPColorGradient::cbOrRd},
-                    {"ColorBrewerPurpleBlue", QCPColorGradient::cbPuBu},
-                    {"ColorBrewerPurpleBlueGreen", QCPColorGradient::cbPuBuGn},
-                    {"ColorBrewerPurpleRed", QCPColorGradient::cbPuRd},
-                    {"ColorBrewerRedPurple", QCPColorGradient::cbRdPu},
-                    {"ColorBrewerYellowGreen", QCPColorGradient::cbYlGn},
-                    {"ColorBrewerYellowGreenBlue", QCPColorGradient::cbYlGnBu},
-                    {"ColorBrewerYellowOrangeBrown", QCPColorGradient::cbYlOrBr},
-                    {"ColorBrewerYellowOrangeRed", QCPColorGradient::cbYlOrRd},
-                    {"ColorBrewerBlues", QCPColorGradient::cbBlues},
-                    {"ColorBrewerGreens", QCPColorGradient::cbGreens},
-                    {"ColorBrewerOranges", QCPColorGradient::cbOranges},
-                    {"ColorBrewerPurples", QCPColorGradient::cbPurples},
-                    {"ColorBrewerReds", QCPColorGradient::cbReds},
-                    {"ColorBrewerGrayscale", QCPColorGradient::cbGreys},
-                    {"QCustomPlotGrayscale", QCPColorGradient::gpGrayscale},
-                    {"QCustomPlotNight", QCPColorGradient::gpNight},
-                    {"QCustomPlotCandy", QCPColorGradient::gpCandy},
-                    {"QCustomPlotIon", QCPColorGradient::gpIon},
-                    {"QCustomPlotThermal", QCPColorGradient::gpThermal},
-                    {"↔QCustomPlotPolar", QCPColorGradient::gpPolar},
-                    {"↔QCustomPlotSpectrum", QCPColorGradient::gpSpectrum},
-                    {"QCustomPlotJet", QCPColorGradient::gpJet},
-                    {"QCustomPlotHues", QCPColorGradient::gpHues},
-                    {"QCustomPlotHot", QCPColorGradient::gpHot},
-                    {"QCustomPlotCold", QCPColorGradient::gpCold},
-                    {"↔ColorBrewerBrownBlueGreen", QCPColorGradient::cbBrBG},
-                    {"↔ColorBrewerPinkYellowGreen", QCPColorGradient::cbPiYG},
-                    {"↔ColorBrewerPurpleGreen", QCPColorGradient::cbPRGn},
-                    {"↔ColorBrewerPurpleOrange", QCPColorGradient::cbPuOr},
-                    {"↔ColorBrewerRedBlue", QCPColorGradient::cbRdBu},
-                    {"↔ColorBrewerRedGray", QCPColorGradient::cbRdGy},
-                    {"↔ColorBrewerRedYellowBlue", QCPColorGradient::cbRdYlBu},
-                    {"↔ColorBrewerRedYellowGreen", QCPColorGradient::cbRdYlGn},
-                    {"↔ColorBrewerSpectral", QCPColorGradient::cbSpectral},
-                    {"↔VespucciSpectral", QCPColorGradient::vSpectral}
+                    {"ColorBrewer BlueGreen", QCPColorGradient::cbBlues},
+                    {"ColorBrewer BluePurple", QCPColorGradient::cbBuPu},
+                    {"ColorBrewer GreenBlue", QCPColorGradient::cbGnBu},
+                    {"ColorBrewer OrangeRed", QCPColorGradient::cbOrRd},
+                    {"ColorBrewer PurpleBlue", QCPColorGradient::cbPuBu},
+                    {"ColorBrewer PurpleBlueGreen", QCPColorGradient::cbPuBuGn},
+                    {"ColorBrewer PurpleRed", QCPColorGradient::cbPuRd},
+                    {"ColorBrewer RedPurple", QCPColorGradient::cbRdPu},
+                    {"ColorBrewer YellowGreen", QCPColorGradient::cbYlGn},
+                    {"ColorBrewer YellowGreenBlue", QCPColorGradient::cbYlGnBu},
+                    {"ColorBrewer YellowOrangeBrown", QCPColorGradient::cbYlOrBr},
+                    {"ColorBrewer YellowOrangeRed", QCPColorGradient::cbYlOrRd},
+                    {"ColorBrewer Blues", QCPColorGradient::cbBlues},
+                    {"ColorBrewer Greens", QCPColorGradient::cbGreens},
+                    {"ColorBrewer Oranges", QCPColorGradient::cbOranges},
+                    {"ColorBrewer Purples", QCPColorGradient::cbPurples},
+                    {"ColorBrewer Reds", QCPColorGradient::cbReds},
+                    {"ColorBrewer Grayscale", QCPColorGradient::cbGreys},
+                    {"QCustomPlot Grayscale", QCPColorGradient::gpGrayscale},
+                    {"QCustomPlot Night", QCPColorGradient::gpNight},
+                    {"QCustomPlot Candy", QCPColorGradient::gpCandy},
+                    {"QCustomPlot Ion", QCPColorGradient::gpIon},
+                    {"QCustomPlot Thermal", QCPColorGradient::gpThermal},
+                    {"↔QCustomPlot Polar", QCPColorGradient::gpPolar},
+                    {"↔QCustomPlot Spectrum", QCPColorGradient::gpSpectrum},
+                    {"QCustomPlot Jet", QCPColorGradient::gpJet},
+                    {"QCustomPlot Hues", QCPColorGradient::gpHues},
+                    {"QCustomPlot Hot", QCPColorGradient::gpHot},
+                    {"QCustomPlot Cold", QCPColorGradient::gpCold},
+                    {"↔ColorBrewer BrownBlueGreen", QCPColorGradient::cbBrBG},
+                    {"↔ColorBrewer PinkYellowGreen", QCPColorGradient::cbPiYG},
+                    {"↔ColorBrewer PurpleGreen", QCPColorGradient::cbPRGn},
+                    {"↔ColorBrewer PurpleOrange", QCPColorGradient::cbPuOr},
+                    {"↔ColorBrewer RedBlue", QCPColorGradient::cbRdBu},
+                    {"↔ColorBrewer RedGray", QCPColorGradient::cbRdGy},
+                    {"↔ColorBrewer RedYellowBlue", QCPColorGradient::cbRdYlBu},
+                    {"↔ColorBrewer RedYellowGreen", QCPColorGradient::cbRdYlGn},
+                    {"↔ColorBrewer Spectral", QCPColorGradient::cbSpectral},
+                    {"↔Vespucci Spectral", QCPColorGradient::vSpectral}
                 };
 }
 
@@ -311,8 +311,20 @@ QMap<QString, Vespucci::GlobalGradient> VespucciWorkspace::global_gradients()
     return global_gradients_;
 }
 
-QCPColorGradient VespucciWorkspace::GetGradient(QString key)
+QCPColorGradient VespucciWorkspace::GetGradient(QString key, int count)
 {
+    if (key == "ColorBrewer Cluster"){
+        switch (count){
+            case 2: return QCPColorGradient::cbCluster2;
+            case 3: return QCPColorGradient::cbCluster3;
+            case 4: return QCPColorGradient::cbCluster4;
+            case 5: return QCPColorGradient::cbCluster5;
+            case 6: return QCPColorGradient::cbCluster6;
+            case 7: return QCPColorGradient::cbCluster7;
+            case 8: return QCPColorGradient::cbCluster8;
+            case 9: default: return QCPColorGradient::cbCluster9;
+        }
+    }
     if (gradients_.contains(key))
         return gradients_.value(key);
     else
@@ -324,9 +336,12 @@ Vespucci::GlobalGradient VespucciWorkspace::GetGlobalGradient(QString key)
     return global_gradients_.value(key);
 }
 
-QStringList VespucciWorkspace::GradientNames()
+QStringList VespucciWorkspace::GradientNames(bool include_cluster)
 {
-    return gradients_.keys();
+    QStringList keys = gradients_.keys();
+    if (include_cluster)
+        keys.insert(0, "ColorBrewer Cluster");
+    return keys;
 }
 
 
@@ -517,12 +532,7 @@ bool VespucciWorkspace::HasMatrix(const QStringList &keys) const
 
 bool VespucciWorkspace::Mappable(const QStringList &keys) const
 {
-    try{
-        return data_model_->Mappable(keys);
-    }catch(exception e){
-        main_window_->DisplayExceptionWarning("VespucciWorkspace::Mappable", e);
-        return false;
-    }
+    return data_model_->Mappable(keys);
 }
 
 bool VespucciWorkspace::Plottable(const QStringList &keys) const

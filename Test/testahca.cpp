@@ -24,7 +24,24 @@
 TestAHCA::TestAHCA(QObject *parent)
     : QObject(parent)
 {
-
+    std::vector<std::string> metrics= {"euclidean",
+                                       "squaredeuclidean",
+                                       "manhattan",
+                                       "chebyshev",
+                                       "cosine",
+                                       "correlation"};
+    std::vector<std::string> linkages = {"average",
+                                         "centroid",
+                                         "ward",
+                                         "complete",
+                                         "single"};
+    for (auto linkage: linkages)
+        for (auto metric: metrics)
+            ahca_obj.push_back(Vespucci::Math::Clustering::AHCA(linkage, metric));
+    arma::mat data = arma::randu<mat>(1024, 50);
+    for (auto ahca: ahca_obj){
+        ahca.Link(data);
+    }
 }
 
 ///
@@ -32,10 +49,12 @@ TestAHCA::TestAHCA(QObject *parent)
 /// Guarantee that all clustering assignments are valid (every
 void TestAHCA::testCompleteClusters()
 {
-    arma::mat assignments = ahca_.Cluster(15);
-    for (arma::uword i = 0; i < assignments.n_cols; ++i){
-        arma::uvec unique_values = arma::find_unique(assignments.col(i));
-        QCOMPARE((i + 1), unique_values.n_elem);
+    for (auto ahca: ahca_obj){
+        arma::mat assignments = ahca.Cluster(15);
+        for (arma::uword i = 0; i < assignments.n_cols; ++i){
+            arma::uvec unique_values = arma::find_unique(assignments.col(i));
+            QCOMPARE((i + 1), unique_values.n_elem);
+        }
     }
 }
 
@@ -44,18 +63,20 @@ void TestAHCA::testCompleteClusters()
 /// Verify that all clusters within a clustering arrangement have unique indices
 void TestAHCA::testExclusiveClusters()
 {
-    std::map<size_t, nodevec> clusters = ahca_.clusters();
-    arma::uvec indices;
-    for (size_t i = 1; i < 15; ++i){
-        nodevec current_clusters = clusters[i];
-        for (auto current_cluster: current_clusters){
-            if (!indices.n_rows)
-                indices = current_cluster->GetChildIndices();
-            else
-                indices = arma::join_vert(indices, current_cluster->GetChildIndices());
+    for (auto ahca: ahca_obj){
+        std::map<size_t, nodevec> clusters = ahca.clusters();
+        arma::uvec indices;
+        for (size_t i = 1; i < 15; ++i){
+            nodevec current_clusters = clusters[i];
+            for (auto current_cluster: current_clusters){
+                if (!indices.n_rows)
+                    indices = current_cluster->GetChildIndices();
+                else
+                    indices = arma::join_vert(indices, current_cluster->GetChildIndices());
+            }
+            arma::uvec unique_values = arma::find_unique(indices);
+            arma::uword unique_count = unique_values.n_rows;
+            QCOMPARE(unique_count, indices.n_rows);
         }
-        arma::uvec unique_values = arma::find_unique(indices);
-        arma::uword unique_count = unique_values.n_rows;
-        QCOMPARE(unique_count, indices.n_rows);
     }
 }

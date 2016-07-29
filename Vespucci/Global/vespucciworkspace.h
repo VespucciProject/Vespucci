@@ -88,9 +88,9 @@ public:
     void RemoveColorRange(QString name);
     QStringList GlobalGradientKeys();
     QMap<QString, Vespucci::GlobalGradient> global_gradients();
-    QCPColorGradient GetGradient(QString key);
+    QCPColorGradient GetGradient(QString key, int count = 0);
     Vespucci::GlobalGradient GetGlobalGradient(QString key);
-    QStringList GradientNames();
+    QStringList GradientNames(bool include_cluster = false);
 
 
     void ClearDatasets();

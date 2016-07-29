@@ -143,7 +143,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
     int response = QMessageBox::question(this,
                                          "Exit?",
                                          "Are you sure you want to exit?");
-
     if (response == QMessageBox::Yes) {
         for (auto name: workspace_->dataset_names()){
             CloseDataset(name);
@@ -1313,7 +1312,7 @@ void MainWindow::on_actionMacro_Editor_toggled(bool arg1)
 void MainWindow::on_actionMapResult_triggered()
 {
     TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
-    if (item->type() == TreeItem::ItemType::Matrix){
+    if (item->type() == TreeItem::ItemType::Matrix && workspace_->Mappable(item->keys())){
         QStringList item_keys = item->keys();
         MapDialog *map_dialog = new MapDialog(this, item_keys, workspace_);
         map_dialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -1436,6 +1435,7 @@ void MainWindow::on_actionSave_Dataset_triggered()
                                                 "Vespucci Dataset (*.h5)");
     bool ok = dataset->Save(filename);
     if (!ok) DisplayWarning("Dataset Not Saved", "The file failed to save");
+    else QMessageBox::information(this, "Success", "Dataset saved successfully");
 }
 
 void MainWindow::on_actionOpenDataset_triggered()
@@ -1478,13 +1478,14 @@ void MainWindow::CloseDataset(const QString &name)
                                              name + "?", QMessageBox::Yes,
                                              QMessageBox::No);
         if (response == QMessageBox::Yes){
+            QString path = workspace_->directory() + "/" + dataset->name();
             QString filename;
             if (dataset->saved())
                 filename = dataset->last_save_filename();
             else
                 filename = QFileDialog::getSaveFileName(this,
                                                         "Save Dataset",
-                                                        workspace_->directory(),
+                                                        path,
                                                         "Vespucci Dataset (*.h5)");
             dataset->Save(filename);
         }

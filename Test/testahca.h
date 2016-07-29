@@ -21,6 +21,10 @@
 #define TESTAHCA_H
 #include "Math/Clustering/agglomerativeclustering.h"
 #include <QObject>
+///
+/// \brief The TestAHCA class
+/// Tests for complete clustering assignments (every point assigned to a cluster)
+/// and exclusive clustering assignments (every point is assigned to only one cluster)
 class TestAHCA : public QObject
 {
     Q_OBJECT
@@ -35,7 +39,7 @@ private slots:
     void testCompleteClusters();
     void testExclusiveClusters();
 private:
-    Vespucci::Math::Clustering::AHCA ahca_;
+    std::vector<Vespucci::Math::Clustering::AHCA> ahca_obj;
 };
 
 #endif // TESTAHCA_H

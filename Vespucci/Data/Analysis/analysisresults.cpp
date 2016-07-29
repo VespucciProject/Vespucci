@@ -108,3 +108,8 @@ const QString AnalysisResults::GetRowHeading(const QString &key, int row)
         return row_headings_[key][row];
     else return QString();
 }
+
+void AnalysisResults::SetName(const QString &new_name)
+{
+    name_ = new_name;
+}

@@ -53,6 +53,7 @@ public:
     QString name();
     QString type();
 
+    void InstantiateMapWindow();
     void SetMapPlot(MapPlot *plot);
 
     void setGradient(const QCPColorGradient &gradient);
@@ -122,6 +123,7 @@ public:
     void UpdateGlobalGradient();
 
     QStringList keys();
+    MapPlot *map_qcp();
 
 
 
@@ -176,6 +178,9 @@ private:
     QString global_gradient_key_;
 
     QSharedPointer<VespucciWorkspace> workspace_;
+
+    uword data_column_;
+    QStringList data_keys_;
 
 
 };

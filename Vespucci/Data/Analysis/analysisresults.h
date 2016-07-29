@@ -52,6 +52,7 @@ public:
     const QMap<QString, QString> GetMetadata() const;
     const QString GetColumnHeading(const QString &key, int column);
     const QString GetRowHeading(const QString &key, int row);
+    void SetName(const QString &new_name);
 
 private:
     ///

@@ -20,7 +20,11 @@
 #include "test.h"
 #include "testahca.h"
 #include "testdatamodel.h"
+#include <QtTest/QtTest>
 int main()
 {
+
+    TestAHCA ahca_test(0);
+    QTest::qExec(&ahca_test);
     return 0;
 }

@@ -62,12 +62,16 @@ bool VespucciDataset::Save(QString filename)
                                           PredType::NATIVE_DOUBLE, dataspace));
             ds.write(GetCoreMatrix(core_name).memptr(),
                      PredType::NATIVE_DOUBLE, dataspace);
+            ds.close();
         }
 
         for (auto results_name: results_names){
             QSharedPointer<AnalysisResults> results = GetAnalysisResult(results_name);
             QStringList matrix_names = results->KeyList();
             Group results_group(file.createGroup(results_name.toStdString()));
+            str_attr = file.createAttribute("type", str_type, str_dataspace);
+            std::string results_type = results->type().toStdString();
+            str_attr.write(str_type, results_type);
             for (auto matrix_name: matrix_names){
                 hsize_t dims[2];
                 dims[0] = results->GetMatrix(matrix_name).n_rows;
@@ -78,7 +82,9 @@ bool VespucciDataset::Save(QString filename)
                                                        dataspace));
                 ds.write(results->GetMatrix(matrix_name).memptr(),
                          PredType::NATIVE_DOUBLE);
+                ds.close();
             }
+            results_group.close();
         }
         file.close();
     }
@@ -190,7 +196,7 @@ bool VespucciDataset::saved() const
 /// Attributes will be used to set metadata
 ///
 ///
-/// All ananalysis results groups are added as base AnalysisResults
+/// All analysis results groups are added as base AnalysisResults
 VespucciDataset::VespucciDataset(const QString &h5_filename,
                                  MainWindow *main_window,
                                  QSharedPointer<VespucciWorkspace> ws)
@@ -264,11 +270,18 @@ VespucciDataset::VespucciDataset(const QString &h5_filename,
                 mat matrix(dims[0], dims[1]);
                 ds.read(matrix.memptr(), PredType::NATIVE_DOUBLE);
                 AddMatrix(QString::fromStdString(obj_name), matrix);
+                ds.close();
             }
             if (obj_type == H5G_GROUP){
                 Group group = file.openGroup(obj_name);
+                H5std_string result_type("");
+                if (group.attrExists("type")){
+                    Attribute attr = group.openAttribute("type");
+                    DataType type = attr.getDataType();
+                    attr.read(type, result_type);
+                }
+                QSharedPointer<AnalysisResults> result(new AnalysisResults(QString::fromStdString(obj_name), QString::fromStdString(result_type)));
                 for (hsize_t j = 0; j < group.getNumObjs(); ++ j){
-                    QSharedPointer<AnalysisResults> result(new AnalysisResults(QString::fromStdString(obj_name), ""));
                     H5G_obj_t subobj_type = group.getObjTypeByIdx(j);
                     string subobj_name = group.getObjnameByIdx(j);
                     if (subobj_type == H5G_DATASET){
@@ -280,8 +293,11 @@ VespucciDataset::VespucciDataset(const QString &h5_filename,
                         ds.read(matrix.memptr(), PredType::NATIVE_DOUBLE);
                         result->AddMatrix(QString::fromStdString(subobj_name),
                                           matrix);
+                        ds.close();
                     }//if (subobj_type == H5G_DATASET
                 }//for objects in group
+                AddAnalysisResult(result);
+                group.close();
             }//if (obj_type == H5G_GROUP)
         }//for objects in file
 
@@ -342,7 +358,7 @@ VespucciDataset::VespucciDataset(QString text_filename,
     workspace_ = main_window->workspace_ptr();
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     state_changed_ = true;
-    analysis_results_.append(auxiliary_matrices_);
+    AddAnalysisResult(auxiliary_matrices_);
 
     non_spatial_ = false;
     meta_ = false;
@@ -423,7 +439,7 @@ VespucciDataset::VespucciDataset(map<pair<int, int>, string> text_filenames,
     saved_ = false;
     text_filenames_ = text_filenames;
     workspace_ = main_window->workspace_ptr();
-    analysis_results_.append(auxiliary_matrices_);
+    AddAnalysisResult(auxiliary_matrices_);
     QDateTime datetime = QDateTime::currentDateTimeUtc();
     non_spatial_ = false;
     meta_ = false;
@@ -471,7 +487,7 @@ VespucciDataset::VespucciDataset(QString name,
 {
     saved_ = false;
     workspace_ = main_window->workspace_ptr();
-    analysis_results_.append(auxiliary_matrices_);
+    AddAnalysisResult(auxiliary_matrices_);
     state_changed_ = true;
     non_spatial_ = true;
     meta_ = original->meta();
@@ -517,7 +533,7 @@ VespucciDataset::VespucciDataset(QString name,
     : auxiliary_matrices_(new AnalysisResults("Auxiliary Matrices", "Auxiliary Matrices"))
 {
     workspace_ = main_window->workspace_ptr();
-    analysis_results_.append(auxiliary_matrices_);
+    AddAnalysisResult(auxiliary_matrices_);
     //map_list_model_ = new MapListModel(main_window, this);
     state_changed_ = true;
     non_spatial_ = true;
@@ -1621,7 +1637,7 @@ void VespucciDataset::Univariate(QString name,
         main_window_->DisplayExceptionWarning(e);
         return;
     }
-    analysis_results_.append(univariate_data);
+    AddAnalysisResult(univariate_data);
     workspace_->UpdateModel();
     cout << "end of VespucciDataset::Univariate\n";
 
@@ -1654,7 +1670,7 @@ void VespucciDataset::BandRatio(QString name, double &first_left_bound, double &
         main_window_->DisplayExceptionWarning(e);
         return;
     }
-    analysis_results_.append(univariate_data);
+    AddAnalysisResult(univariate_data);
     workspace_->UpdateModel();
     operations_ << "BandRatio("
                    + name + ", "
@@ -1685,7 +1701,7 @@ void VespucciDataset::PrincipalComponents(const QString &name, bool scale_data)
     catch(exception e){
         throw std::runtime_error("VespucciDataset::PrincipalComponents");
     }
-    analysis_results_.append(mlpack_pca_data);
+    AddAnalysisResult(mlpack_pca_data);
     workspace_->UpdateModel();
 
 }
@@ -1704,7 +1720,7 @@ void VespucciDataset::PrincipalComponents(const QString &name)
         string str = "PrincipalComponents: " + string(e.what());
         throw std::runtime_error(str);
     }
-    analysis_results_.append(pca_data);
+    AddAnalysisResult(pca_data);
     workspace_->UpdateModel();
     operations_ << "PrincipalComponents(" + name + ")";
 
@@ -1778,7 +1794,7 @@ void VespucciDataset::VertexComponents(QString name, uword endmembers)
 
         throw std::runtime_error("VertexComponents: " + string(e.what()));
     }
-    analysis_results_.append(vertex_components_data);
+    AddAnalysisResult(vertex_components_data);
     workspace_->UpdateModel();
     operations_ << "VertexComponents("
                    + name + ", "
@@ -1809,7 +1825,7 @@ void VespucciDataset::PartialLeastSquares(QString name, uword components)
         throw std::runtime_error(str);
     }
 
-    analysis_results_.append(pls_data);
+    AddAnalysisResult(pls_data);
     workspace_->UpdateModel();
     operations_ << "PartialLeastSquares("
                    + name + ", "
@@ -1846,7 +1862,7 @@ void VespucciDataset::CorrelationAnalysis(const QString &control_key, QString na
     }
 
     state_changed_ = true;
-    analysis_results_.append(univariate_data);
+    AddAnalysisResult(univariate_data);
     workspace_->UpdateModel();
 }
 
@@ -1922,7 +1938,7 @@ void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
    QSharedPointer<AnalysisResults> results(new AnalysisResults(name, "k-Means Analysis"));
    results->AddMatrix("Assignments", assignments_vec);
    results->AddMatrix("Centroids", centroids);
-   analysis_results_.append(results);
+   AddAnalysisResult(results);
    workspace_->UpdateModel();
    operations_ << "KMeans("
                   + QString::number(clusters) + ", "
@@ -1950,7 +1966,7 @@ void VespucciDataset::ClassicalLeastSquares(QString name, QString reference_key)
     QSharedPointer<AnalysisResults> results(new AnalysisResults(name, "CLS Analysis"));
     results->AddMatrix("Coefficients", coefs);
     results->AddMatrix("Reference Matrix", reference);
-    analysis_results_.append(results);
+    AddAnalysisResult(results);
     workspace_->UpdateModel();
 }
 
@@ -2687,6 +2703,12 @@ const QString VespucciDataset::last_operation() const
 
 void VespucciDataset::AddAnalysisResult(QSharedPointer<AnalysisResults> analysis_result)
 {
+    QString name = analysis_result->name();
+    QString new_name = name;
+    int i = 0;
+    while (AnalysisResultsKeys().contains(new_name))
+        new_name = name + " " + QString::number(++i);
+    analysis_result->SetName(new_name);
     analysis_results_.append(analysis_result);
     workspace_->UpdateModel();
 }
@@ -2864,9 +2886,11 @@ void VespucciDataset::CreateMap(const QString &map_name,
                                                 data_keys,
                                                 column,
                                                 workspace_));
+
+    maps_.append(new_map);
+    new_map->InstantiateMapWindow();
     new_map->setGradient(gradient);
     new_map->SetColorScaleTickCount(tick_count);
-    maps_.append(new_map);
     workspace_->UpdateModel();
 }
 

@@ -241,9 +241,15 @@ const mat & DataModel::GetMatrix(const QStringList &keys) const
 
 bool DataModel::Mappable(const QStringList &keys) const
 {
-    uword spatial_rows = GetDataset(keys[0])->x_ptr()->n_rows;
-    uword data_rows = GetMatrix(keys).n_rows;
-    return (data_rows == spatial_rows);
+    bool mappable;
+    try{
+        uword spatial_rows = GetDataset(keys[0])->x_ptr()->n_rows;
+        uword data_rows = GetMatrix(keys).n_rows;
+        mappable = (data_rows == spatial_rows);
+    }catch(exception e){
+        return false;
+    }
+    return mappable;
 }
 
 bool DataModel::Plottable(const QStringList &keys) const
