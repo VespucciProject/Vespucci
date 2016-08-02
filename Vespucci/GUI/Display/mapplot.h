@@ -42,8 +42,8 @@ public:
     void SetGradient(QCPColorGradient gradient);
     void SetGlobalColorGradient(Vespucci::GlobalGradient gradient);
     void CenterCrosshairs();
-    uword GetCrosshairPosition(double &x, double &y, double &z) const;
-    uword GetCrosshairPosition() const;
+    uword GetCrosshairPosition(double &x, double &y, double &z);
+    uword GetCrosshairPosition();
     double min() const;
     double max() const;
     void rescaleDataRange(bool onlyVisibleMaps = false);
@@ -68,6 +68,7 @@ public:
 signals:
     void SpectrumRequested(size_t index);
     void SpectrumHoldRequested(size_t index);
+    void CoordinatesChanged(double x, double y, double z);
 private:
     QCPColorMap *color_map_;
     QCPItemStraightLine *horizontal_crosshair_;
@@ -76,6 +77,8 @@ private:
     vec x_;
     vec y_;
     vec z_;
+    double x_step_;
+    double y_step_;
 };
 
 #endif // MAPPLOT_H

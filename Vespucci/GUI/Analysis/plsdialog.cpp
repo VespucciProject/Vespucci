@@ -29,8 +29,6 @@ PLSDialog::PLSDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, cons
     dataset_ = workspace_->GetDataset(dataset_key);
 
     ui->nameLineEdit->setEnabled(false);
-    color_selector_combo_box_->setEnabled(false);
-    image_component_selector_spin_box_->setEnabled(false);
 
     ui->browsePushButton->setVisible(false);
     ui->datasetLabel->setVisible(false);

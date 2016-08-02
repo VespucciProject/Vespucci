@@ -74,6 +74,7 @@ public:
     QSharedPointer<VespucciDataset> GetDataset(const QString &key) const;
     QSharedPointer<AnalysisResults> GetAnalysisResults(const QString &dataset_key, const QString &results_key) const;
     QSharedPointer<MapData> GetMap(const QString &dataset_key, const QString &map_key) const;
+    QSharedPointer<MapData> GetMap(const QStringList &map_keys);
     const mat & GetAuxiliaryMatrix(const QString &dataset_key, const QString &matrix_key) const;
     const mat & GetResultsMatrix(const QString &dataset_key, const QString &results_key, const QString &matrix_key) const;
     const mat &GetCoreMatrix(const QString &dataset_key, const QString &matrix_key) const;

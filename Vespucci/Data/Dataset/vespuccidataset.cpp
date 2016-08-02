@@ -44,13 +44,18 @@ bool VespucciDataset::Save(QString filename)
         H5File file(filename.toStdString(), H5F_ACC_TRUNC);
         DataSpace str_dataspace(H5S_SCALAR);
         StrType str_type(PredType::C_S1, H5T_VARIABLE);
-        Attribute str_attr = file.createAttribute("Name", str_type, str_dataspace);
+
+        Attribute str_attr;
+        if (file.attrExists("Name")) str_attr = file.openAttribute("Name");
+        else str_attr = file.createAttribute("Name", str_type, str_dataspace);
         str_attr.write(str_type, name_.toStdString());
 
-        str_attr = file.createAttribute("x-Axis Description", str_type, str_dataspace);
+        if (file.attrExists("x-Axis Description")) str_attr = file.openAttribute("x-Axis Description");
+        else str_attr = file.createAttribute("x-Axis Description", str_type, str_dataspace);
         str_attr.write(str_type, x_axis_description_.toStdString());
 
-        str_attr = file.createAttribute("y-Axis Description", str_type, str_dataspace);
+        if (file.attrExists("y-Axis Description")) str_attr = file.openAttribute("y-Axis Description");
+        else str_attr = file.createAttribute("y-Axis Description", str_type, str_dataspace);
         str_attr.write(str_type, y_axis_description_.toStdString());
 
         for (auto core_name: core_names){
@@ -69,7 +74,8 @@ bool VespucciDataset::Save(QString filename)
             QSharedPointer<AnalysisResults> results = GetAnalysisResult(results_name);
             QStringList matrix_names = results->KeyList();
             Group results_group(file.createGroup(results_name.toStdString()));
-            str_attr = file.createAttribute("type", str_type, str_dataspace);
+            if (results_group.attrExists("type")) str_attr = results_group.openAttribute("type");
+            else str_attr = results_group.createAttribute("type", str_type, str_dataspace);
             std::string results_type = results->type().toStdString();
             str_attr.write(str_type, results_type);
             for (auto matrix_name: matrix_names){
@@ -90,16 +96,20 @@ bool VespucciDataset::Save(QString filename)
     }
     catch(FileIException error){
         QString msg = QString::fromStdString(error.getDetailMsg());
-        main_window_->DisplayWarning("HDF5 FileIException",
-                                     msg);
+        main_window_->DisplayWarning("HDF5 FileIException", msg);
         return false;
     }
     catch(DataSetIException error){
         QString msg = QString::fromStdString(error.getDetailMsg());
-        main_window_->DisplayWarning("HDF5 DataSetIException",
-                                     msg);
+        main_window_->DisplayWarning("HDF5 DataSetIException", msg);
         return false;
     }
+    catch(AttributeIException error){
+        QString msg = QString::fromStdString(error.getDetailMsg());
+        main_window_->DisplayWarning("HDF5 AttributeIException", msg);
+        return false;
+    }
+
     last_save_filename_ = filename;
     saved_ = true;
     state_changed_ = false;
@@ -924,20 +934,15 @@ void VespucciDataset::AbsoluteValue()
 
     last_operation_ = "Absolute value";
     operations_ << "AbsoluteValue()";
-
 }
-
 
 ///
 /// \brief VespucciDataset::SubtractBackground
-/// Subtracts a known background spectrum. This can be extracted from a control
-/// map using this software (using * component analysis endmember extraction or
-/// average spectrum).
-/// \param background A matrix consisting of a single spectrum representing the
-/// background.
+/// \param data_keys location of matrix in workspace
 ///
-void VespucciDataset::SubtractBackground(mat background, QString filename)
+void VespucciDataset::SubtractBackground(const QStringList &data_keys)
 {
+    mat background = workspace_->GetMatrix(data_keys);
     state_changed_ = true;
     SetOldCopies();
     if (background.n_rows != spectra_.n_rows){
@@ -958,7 +963,6 @@ void VespucciDataset::SubtractBackground(mat background, QString filename)
         }
     }
     last_operation_ = "background correction";
-
 }
 
 ///
@@ -2887,10 +2891,8 @@ void VespucciDataset::CreateMap(const QString &map_name,
                                                 column,
                                                 workspace_));
 
-    maps_.append(new_map);
-    new_map->InstantiateMapWindow();
     new_map->setGradient(gradient);
-    new_map->SetColorScaleTickCount(tick_count);
+    maps_.append(new_map);
     workspace_->UpdateModel();
 }
 
@@ -2908,7 +2910,6 @@ void VespucciDataset::CreateMap(const QString &map_name,
                                                 column,
                                                 workspace_));
     new_map->setGradient(gradient);
-    new_map->SetColorScaleTickCount(tick_count);
     maps_.append(new_map);
     workspace_->UpdateModel();
 }

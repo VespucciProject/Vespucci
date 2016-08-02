@@ -81,11 +81,14 @@ void PlotMakerDialog::on_buttonBox_accepted()
     if (abscissa_type == "Row")
         x = workspace_->GetMatrix(data_keys_).row(x_ind).t();
 
-    if (y.n_elem && (x.n_rows == y.n_rows))
-        plot_viewer_->AddPlot(x, y, plot_title);
-    else
+    if (y.n_elem && (x.n_rows == y.n_rows)){
+        if (ui->typeComboBox->currentText() == "Scatter")
+            plot_viewer_->AddScatterPlot(x, y, plot_title);
+        else plot_viewer_->AddPlot(x, y, plot_title);
+    }
+    else{
         QMessageBox::warning(this, "Dimension Mismatch", "Matrix dimensions do not match");
-
+    }
     close();
 }
 

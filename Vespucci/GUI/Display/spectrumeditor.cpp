@@ -116,26 +116,30 @@ void SpectrumEditor::on_exportPushButton_clicked()
 {
     if (dataset_.isNull()) return; //should never happen, but let's be safe
 
-    int row = ui->tableView->currentIndex().row();
+    QModelIndexList model_indices = ui->tableView->selectionModel()->selectedIndexes();
+    mat data = dataset_->abscissa();
+    uvec indices(model_indices.size());
+    for (uword i = 0; i < indices.n_rows; ++i) indices(i) = model_indices[i].row();
+    data = join_horiz(data, dataset_->spectra(indices));
     QString filename =
             QFileDialog::getSaveFileName(this, "Save Spectrum",
                                          workspace_->directory(),
                                          "Comma-separated variables (*.csv);; "
                                          "Tab-delimited text (*.txt);; "
-                                         "Armadillo binary (*.arma)");
+                                         "Raw binary (*.bin)");
     QFileInfo file_info(filename);
     QString extension = file_info.suffix();
     bool success;
     file_type type;
 
-    if (extension.toLower() == "arma")
-        type = arma_binary;
-    if (extension.toLower() == "txt")
+    if (extension.toLower() == "bin")
+        type = raw_binary;
+    else if (extension.toLower() == "txt")
         type = raw_ascii;
     else
         type = csv_ascii;
 
-    success = dataset_->SaveSpectrum(filename, row, type);
+    success = data.save(filename.toStdString(), type);
     if (success)
         QMessageBox::information(main_window_, "File Saved", filename + " saved successfully");
     else

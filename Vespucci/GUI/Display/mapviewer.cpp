@@ -28,24 +28,25 @@
 /// \param directory Working directory for this window
 /// \param parent MapData associated with this image
 /// Constructor for this object
-MapViewer::MapViewer(MainWindow *parent, QSharedPointer<MapData> map_data, QSharedPointer<VespucciWorkspace> ws):
-    QMainWindow(parent),
+MapViewer::MapViewer(MainWindow *parent, QStringList map_keys, QSharedPointer<VespucciWorkspace> ws):
+    QMainWindow(parent), map_keys_(map_keys),
     ui(new Ui::MapViewer)
 {
     ui->setupUi(this);
     workspace_ = ws;
-    map_data_ = map_data;
-    name_ = map_data->name();
+    name_ = map_keys.last();
     directory_ = ws->directory_ptr();
     ui->mapPlot->setBackground(palette().window());
-    map_data->SetMapPlot(ui->mapPlot);
-    ui->statusbar->addWidget(new QLabel("(0,0,0)"));
+    statusbar_label_ = new QLabel("(0, 0, 0)");
+    ui->statusbar->addWidget(statusbar_label_);
     connect(this, &MapViewer::RequestSpectrumPlot,
             parent, &MainWindow::SpectrumRequested);
     connect(this, &MapViewer::RequestHeldSpectrumPlot,
             parent, &MainWindow::HeldSpectrumRequested);
     connect(ui->mapPlot, &MapPlot::SpectrumRequested,
             this, &MapViewer::SpectrumRequested);
+    connect(ui->mapPlot, &MapPlot::CoordinatesChanged,
+            this, &MapViewer::SetStatusbar);
 }
 
 MapPlot *MapViewer::mapPlot()
@@ -65,9 +66,17 @@ MapViewer::~MapViewer()
 /// the widget doesn't know everything main window needs to know
 void MapViewer::SpectrumRequested(size_t index)
 {
-    emit RequestSpectrumPlot(map_data_->keys().first(),
-                             map_data_->keys().last(),
+    emit RequestSpectrumPlot(map_keys_.first(),
+                             map_keys_.last(),
                              index);
+}
+
+void MapViewer::SetStatusbar(double x, double y, double z)
+{
+    QString text = "(" + QString::number(x) + ", " +
+            QString::number(y) + ", " +
+            QString::number(z) + ")";
+    statusbar_label_->setText(text);
 }
 
 ///
@@ -76,7 +85,7 @@ void MapViewer::SpectrumRequested(size_t index)
 /// Turns interpolation of the QCustomPlot object on and off
 void MapViewer::on_actionInterpolate_toggled(bool arg1)
 {
-    map_data_->setInterpolate(arg1);
+    workspace_->GetMap(map_keys_)->setInterpolate(arg1);
 }
 
 ///
@@ -107,7 +116,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
 /// Toggles whether or not the axes of the map are visible
 void MapViewer::on_actionShow_Axes_toggled(bool arg1)
 {
-    map_data_->ShowAxes(arg1);
+    workspace_->GetMap(map_keys_)->ShowAxes(arg1);
 }
 
 ///
@@ -116,7 +125,7 @@ void MapViewer::on_actionShow_Axes_toggled(bool arg1)
 /// toggles whether or not the color scale is visible
 void MapViewer::on_actionShow_Color_Scale_toggled(bool arg1)
 {
-    map_data_->ShowColorScale(arg1);
+    workspace_->GetMap(map_keys_)->ShowColorScale(arg1);
 }
 
 ///
@@ -124,7 +133,7 @@ void MapViewer::on_actionShow_Color_Scale_toggled(bool arg1)
 /// Opens a dialog to select a new color scheme
 void MapViewer::on_actionSet_Color_Scheme_triggered()
 {
-    if (!map_data_->global_gradient_key().isEmpty())
+    if (!workspace_->GetMap(map_keys_)->global_gradient_key().isEmpty())
         QMessageBox::warning(this, "Global Gradient",
                              "Changing the color gradient will detach this map"
                              "from the global gradient");
@@ -132,7 +141,7 @@ void MapViewer::on_actionSet_Color_Scheme_triggered()
     QString gradient_key = QInputDialog::getItem(this, "Select Gradient", "Gradient",
                                                  gradient_names);
     QCPColorGradient new_gradient = workspace_->GetGradient(gradient_key);
-    map_data_->setGradient(new_gradient);
+    workspace_->GetMap(map_keys_)->setGradient(new_gradient);
 }
 
 ///
@@ -141,7 +150,7 @@ void MapViewer::on_actionSet_Color_Scheme_triggered()
 void MapViewer::on_actionAdd_Scale_Bar_triggered()
 {
     //widget will delete itself
-    ScaleBarDialog *scale_bar_dialog = new ScaleBarDialog(this, map_data_);
+    ScaleBarDialog *scale_bar_dialog = new ScaleBarDialog(this, workspace_->GetMap(map_keys_));
     scale_bar_dialog->setAttribute(Qt::WA_DeleteOnClose);
     scale_bar_dialog->show();
 }
@@ -153,7 +162,7 @@ void MapViewer::on_actionAdd_Scale_Bar_triggered()
 /// Locks the size of the MapDisplay window
 void MapViewer::on_actionLock_Size_toggled(bool arg1)
 {
-    map_data_->LockMapDisplaySize(arg1);
+    workspace_->GetMap(map_keys_)->LockMapDisplaySize(arg1);
 }
 
 ///
@@ -161,7 +170,7 @@ void MapViewer::on_actionLock_Size_toggled(bool arg1)
 /// Resets the size to its original.
 void MapViewer::on_actionReset_Size_triggered()
 {
-    map_data_->ResetMapWidgetSize();
+    workspace_->GetMap(map_keys_)->ResetMapWidgetSize();
 }
 
 ///
@@ -170,7 +179,7 @@ void MapViewer::on_actionReset_Size_triggered()
 /// it had on instantiation.
 void MapViewer::on_actionReproportion_triggered()
 {
-    map_data_->RescaleMapWidget();
+    workspace_->GetMap(map_keys_)->RescaleMapWidget();
 }
 
 void MapViewer::on_actionSet_Font_triggered()
@@ -179,7 +188,7 @@ void MapViewer::on_actionSet_Font_triggered()
     QFont font = QFontDialog::getFont(&ok,
                                       QFont("Arial", 12, QFont::Normal),
                                       this, "Select Font");
-    if (ok) map_data_->SetFonts(font);
+    if (ok) workspace_->GetMap(map_keys_)->SetFonts(font);
 }
 
 void MapViewer::on_actionSet_Color_Scale_Label_triggered()
@@ -208,7 +217,7 @@ void MapViewer::on_actionSet_Global_Color_Scale_triggered()
                                        "Gradient", global_scale_names,
                                        0, false, &ok);
    if (ok)
-       map_data_->SetGlobalGradient(key);
+       workspace_->GetMap(map_keys_)->SetGlobalGradient(key);
 }
 
 void MapViewer::keyPressEvent(QKeyEvent *event)
@@ -233,17 +242,24 @@ void MapViewer::keyPressEvent(QKeyEvent *event)
             ui->mapPlot->MoveVerticalCrosshair(-1);
             return;
         case Qt::Key_Right:
-        case Qt::Key_F:
+        case Qt::Key_D:
         case Qt::Key_L:
             ui->mapPlot->MoveVerticalCrosshair(1);
             return;
         case Qt::Key_Enter:
         case Qt::Key_Space:
-            emit RequestHeldSpectrumPlot(map_data_->keys().first(),
-                                         map_data_->keys().last(),
+            emit RequestHeldSpectrumPlot(map_keys_.first(),
+                                         map_keys_.last(),
                                          ui->mapPlot->GetCrosshairPosition());
             return;
         default:
             return;
     }
+}
+
+void MapViewer::showEvent(QShowEvent *event)
+{
+    workspace_->main_window()->plot_viewer()->AddTab(name_);
+    workspace_->main_window()->SetPlotViewerActionChecked(true);
+    event->accept();
 }

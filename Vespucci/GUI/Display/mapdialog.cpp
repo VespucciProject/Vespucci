@@ -89,7 +89,7 @@ void MapDialog::on_buttonBox_accepted()
         gradient = dataset_->GetGradient(gradient_index);
     }
 
-    try{
+    //try{
         if (data_keys_.size() == 2)
             dataset_->CreateMap(map_name,
                                 data_keys_[1],
@@ -103,9 +103,9 @@ void MapDialog::on_buttonBox_accepted()
                                 column_index,
                                 gradient,
                                 tick_count);
-    }catch(exception e){
-        main_window_->DisplayExceptionWarning("VespucciDataset::CreateMap()", e);
-        close();
-    }
+    //}catch(exception e){
+    //    main_window_->DisplayExceptionWarning("VespucciDataset::CreateMap()", e);
+    //    close();
+    //}
     close();
 }

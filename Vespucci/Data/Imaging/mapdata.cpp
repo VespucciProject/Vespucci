@@ -39,8 +39,18 @@ MapData::MapData(QString name,
     data_keys_ = data_keys;
     data_column_ = data_column;
     dataset_ = workspace_->GetDataset(data_keys.first());
+    QStringList map_keys = {dataset_->name(), name_};
 
-
+    map_display_ = new MapViewer(workspace_->main_window(), map_keys, workspace_);
+    map_display_->setWindowTitle(name_);
+    map_qcp_ = map_display_->mapPlot();
+    vec x = dataset_->x();
+    vec y = dataset_->y();
+    vec z = workspace_->GetMatrix(data_keys_).col(data_column_);
+    map_qcp_->SetMapData(x, y, z);
+    //vec unique_z = unique(z);
+    //uword tick_count = std::max(unique_z.n_rows, uword(10));
+    //map_qcp_->SetColorScaleTicks(z.min(), z.max(), tick_count);
 }
 
 MapData::~MapData()
@@ -64,21 +74,6 @@ QString MapData::name()
 QString MapData::type()
 {
     return type_;
-}
-
-void MapData::InstantiateMapWindow()
-{
-    map_display_ = new MapViewer(workspace_->main_window(), workspace_->GetMap(dataset_->name(), name_), workspace_);
-    map_display_->setWindowTitle(name_);
-    LockMapDisplaySize(true);
-    map_qcp_ = map_display_->mapPlot();
-    vec x = dataset_->x();
-    vec y = dataset_->y();
-    vec z = workspace_->GetMatrix(data_keys_).col(data_column_);
-    map_qcp_->SetMapData(x, y, z);
-    vec unique_z = unique(z);
-    uword tick_count = std::max(unique_z.n_rows, uword(10));
-    map_qcp_->SetColorScaleTicks(z.min(), z.max(), tick_count);
 }
 
 void MapData::SetMapPlot(MapPlot *plot)

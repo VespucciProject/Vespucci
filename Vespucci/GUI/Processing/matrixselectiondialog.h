@@ -17,48 +17,36 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef DATASETIMPORTDIALOG_H
-#define DATASETIMPORTDIALOG_H
+#ifndef MATRIXSELECTIONDIALOG_H
+#define MATRIXSELECTIONDIALOG_H
 
 #include <QDialog>
-#include "Global/vespucciworkspace.h"
+#include "GUI/QAbstractItemModel/datasettreemodel.h"
 
 namespace Ui {
-class DatasetImportDialog;
+class MatrixSelectionDialog;
 }
 
-///
-/// \brief The DatasetImportDialog class
-/// Dialog that allows the user to import files into the program
-class DatasetImportDialog : public QDialog
+class MatrixSelectionDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit DatasetImportDialog(QWidget *parent, QSharedPointer<VespucciWorkspace>  ws);
-    ~DatasetImportDialog();
-public slots:
-    void FilenameChanged(QString new_filename);
-private slots:
-    void on_browseButton_clicked();
+    explicit MatrixSelectionDialog(QWidget *parent, DatasetTreeModel *model);
+    ~MatrixSelectionDialog();
+    TreeItem *GetSelectedItem();
+    bool accepted();
 
+private slots:
     void on_buttonBox_accepted();
 
     void on_buttonBox_rejected();
 
-    void on_filenameLineEdit_textChanged(const QString &arg1);
-
 private:
-    Ui::DatasetImportDialog *ui;
-    ///
-    /// \brief workspace
-    /// The current workspace
-    QSharedPointer<VespucciWorkspace> workspace_;
-
-    ///
-    /// \brief directory_
-    /// The current working directory
-    QString *directory_;
+    Ui::MatrixSelectionDialog *ui;
+    bool accepted_;
+    TreeItem *selected_item_;
+    DatasetTreeModel *tree_model_;
 };
 
-#endif // DATASETIMPORTDIALOG_H
+#endif // MATRIXSELECTIONDIALOG_H

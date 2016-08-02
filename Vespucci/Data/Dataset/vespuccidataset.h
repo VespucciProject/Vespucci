@@ -134,7 +134,7 @@ public:
 
     //Spectral Pre-processing
 
-    void SubtractBackground(mat background, QString filename);
+    void SubtractBackground(const QStringList &data_keys);
     void MedianFilter(unsigned int window_size);
     void LinearMovingAverage(unsigned int window_size);
     void SavitzkyGolay(unsigned int derivative_order,

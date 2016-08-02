@@ -24,6 +24,10 @@ public:
     void AddPlot(const vec& abscissa, const vec& data, const QString &tab_title);
     void AddTransientPlot(const vec &abscissa, const vec &data, const QString &tab_title);
     void AddTransientPlot(const mat & paired_data, const QString &tab_title);
+    void AddScatterPlot(const mat &paired_data, const QString &tab_title);
+    void AddScatterPlot(const vec &abscissa, const vec &data, const QString &tab_title);
+    void AddTab(const QString &tab_title);
+    void SetHoldCheckBoxChecked(bool checked);
     void CloseTransientTab();
 signals:
     void SetActionChecked(bool checked);
@@ -33,6 +37,9 @@ public slots:
 private slots:
 
     void on_tabWidget_tabCloseRequested(int index);
+
+
+    void on_exportPushButton_clicked();
 
 private:
     Ui::PlotViewer *ui;

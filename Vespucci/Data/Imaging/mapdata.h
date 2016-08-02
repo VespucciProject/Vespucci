@@ -53,7 +53,6 @@ public:
     QString name();
     QString type();
 
-    void InstantiateMapWindow();
     void SetMapPlot(MapPlot *plot);
 
     void setGradient(const QCPColorGradient &gradient);

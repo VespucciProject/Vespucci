@@ -194,8 +194,6 @@ private slots:
 
     void on_actionMapResult_triggered();
 
-    void on_actionSave_Selected_Matrix_triggered();
-
     void on_actionOnline_Documentation_triggered();
 
     void on_actionGlobal_Color_Scales_triggered();
@@ -215,6 +213,10 @@ private slots:
     void on_actionOpenDataset_triggered();
 
     void on_actionSave_Dataset_As_triggered();
+
+    void on_actionExport_Matrix_triggered();
+
+    void on_actionImport_Data_Into_Dataset_triggered();
 
 private:
     void CloseDataset(const QString &name);

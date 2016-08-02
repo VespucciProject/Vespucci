@@ -53,39 +53,6 @@ private:
     QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
-    /// \brief image_component_selector_spin_box_
-    /// Which component number to create the image from
-    QSpinBox *image_component_selector_spin_box_;
-
-    ///
-    /// \brief components_spin_box_
-    /// User selects how many components to calculate
-    QSpinBox *components_spin_box_;
-
-    ///
-    /// \brief color_selector_combo_box_
-    /// User selects color scheme here
-    QComboBox *color_selector_combo_box_;
-
-    ///
-    /// \brief name_line_edit_
-    /// User sets map name here
-    QLineEdit *name_line_edit_;
-
-    ///
-    /// \brief recalculate_check_box_
-    /// Whether or not to repeat PLS analysis
-    QCheckBox *recalculate_check_box_;
-
-
-    ///
-    /// \brief prediction_check_box_
-    /// User selects whether or not to allow prediction of dimensionality
-    QCheckBox *prediction_check_box_;
-
-    QCheckBox *map_check_box_;
-
-    ///
     /// \brief data_index_
     /// Index of the dataset in the various lists
     int data_index_;

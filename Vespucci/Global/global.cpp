@@ -41,11 +41,16 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         success = plot->savePdf(filename, false, 0, 0, "Vespucci 1.0", "Plot");
     else if (extension == "png"){
         bool ok;
+        QPixmap background = plot->background();
+        plot->setBackground(Qt::transparent);
+        plot->replot(QCustomPlot::rpImmediate);
         int quality = QInputDialog::getInt(plot->parentWidget(), "Enter Quality",
                                            "Quality (%)",
                                            80, 0, 100, 1, &ok);
         if (ok)
             plot->savePng(filename, 0, 0, 1.0, quality);
+        plot->setBackground(background);
+        plot->replot(QCustomPlot::rpImmediate);
     }
 
     else if (extension == "jpg"){
@@ -63,7 +68,7 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
 
         QPixmap old_background = plot->background();
         plot->setBackground(Qt::transparent);
-        plot->replot();
+        plot->replot(QCustomPlot::rpImmediate);
 
         plot->toPainter(&qcp_painter);
         qcp_painter.end();
@@ -78,7 +83,7 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         painter.end();
 
         plot->setBackground(old_background);
-        plot->replot();
+        plot->replot(QCustomPlot::rpImmediate);
     }
     else if (extension == "emf"){
         QStringList filename_trunk_list = filename_list;
@@ -91,7 +96,7 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         qcp_painter.setMode(QCPPainter::pmVectorized);
         QPixmap old_background = plot->background();
         plot->setBackground(Qt::transparent);
-        plot->replot();
+        plot->replot(QCustomPlot::rpImmediate);
 
         plot->toPainter(&qcp_painter);
         qcp_painter.end();
@@ -127,10 +132,10 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         if (ok){
             QPixmap background = plot->background();
             plot->setBackground(Qt::transparent);
-            plot->replot();
+            plot->replot(QCustomPlot::rpImmediate);
             success = plot->saveRastered(filename, 0, 0, 1.0, "TIF", quality);
             plot->setBackground(background);
-            plot->replot();
+            plot->replot(QCustomPlot::rpImmediate);
 
         }
     }

@@ -154,7 +154,8 @@ SOURCES += main.cpp\
     GUI/Display/globalgradientdialog.cpp \
     GUI/Display/colorrangedialog.cpp \
     GUI/Display/spectrumeditor.cpp \
-    GUI/Processing/datasetimportdialog.cpp
+    GUI/Processing/datasetimportdialog.cpp \
+    GUI/Processing/matrixselectiondialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -226,7 +227,8 @@ HEADERS  += \
     GUI/Display/globalgradientdialog.h \
     GUI/Display/colorrangedialog.h \
     GUI/Display/spectrumeditor.h \
-    GUI/Processing/datasetimportdialog.h
+    GUI/Processing/datasetimportdialog.h \
+    GUI/Processing/matrixselectiondialog.h
 
 
 FORMS    += \
@@ -275,7 +277,8 @@ FORMS    += \
     GUI/Display/globalgradientdialog.ui \
     GUI/Display/colorrangedialog.ui \
     GUI/Display/spectrumeditor.ui \
-    GUI/Processing/datasetimportdialog.ui
+    GUI/Processing/datasetimportdialog.ui \
+    GUI/Processing/matrixselectiondialog.ui
 
 RESOURCES += \
     resources.qrc

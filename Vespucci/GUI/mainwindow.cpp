@@ -50,6 +50,7 @@
 #include "GUI/Display/mapdialog.h"
 #include "GUI/Display/globalgradientdialog.h"
 #include "GUI/Analysis/plotmakerdialog.h"
+#include "GUI/Processing/matrixselectiondialog.h"
 
 ///
 /// \brief MainWindow::MainWindow
@@ -423,46 +424,23 @@ void MainWindow::on_actionSubtract_Background_triggered()
     QString dataset_key = item->DatasetKey();
 
     QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
-    QString filename =
-            QFileDialog::getOpenFileName(this,
-                                         tr("Select Background File"),
-                                         workspace_->directory(),
-                                         "Vespucci Spectrum Files (*.arma *.txt *.csv)");
-    mat input;
-    QFileInfo file_info(filename);
-    workspace_->set_directory(file_info.dir().path());
-    bool success = input.load(filename.toStdString());
-    //We take spectra inputs as row-major
-    if (input.n_rows < input.n_cols){
-        try{
-            input = input.t();
-        }catch(exception e){
-            DisplayExceptionWarning(e);
+
+    MatrixSelectionDialog *matrix_dialog = new MatrixSelectionDialog(this, dataset_tree_model_);
+    matrix_dialog->show();
+    if (matrix_dialog->accepted()){
+        TreeItem *matrix_item = matrix_dialog->GetSelectedItem();
+        if (matrix_item->type() == TreeItem::ItemType::Matrix){
+            try{
+                dataset->SubtractBackground(matrix_item->keys());
+            }catch(exception e){
+                DisplayExceptionWarning("VespucciDataset::SubtractBackground", e);
+            }
+        }
+        else{
+            DisplayWarning("Not a matrix", "Selected item is not a matrix");
         }
     }
-    //The first column is probably an abscissa.
-    if (input.n_cols > 2){
-        success = false;
-    }
-    if (input.n_cols == 2){
-        try{
-            input.shed_col(0);
-        }catch(exception e){
-            DisplayExceptionWarning(e);
-        }
-    }
-    if (!success){
-        QMessageBox::warning(this, "File Open Error", "File cannot be opened or contains improper data.");
-        return;
-    }
-    else{
-        try{
-            dataset->SubtractBackground(input, filename);
-        }
-        catch(exception e){
-            DisplayExceptionWarning(e);
-        }
-    }
+    delete matrix_dialog;
 }
 
 ///
@@ -1320,32 +1298,6 @@ void MainWindow::on_actionMapResult_triggered()
     }
 }
 
-void MainWindow::on_actionSave_Selected_Matrix_triggered()
-{
-    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
-    if (item->type() == TreeItem::ItemType::Matrix){
-        QString filename = QFileDialog::getSaveFileName(this, "Save " + item->keys().last(),
-                                                        workspace_->directory(),
-                                                        "Comma-separated text (*.csv);;"
-                                                        "Space-delimited text (*.txt);;"
-                                                        "Armadillo binary (*.arma);;"
-                                                        "Raw binary (*.bin)");
-        QString extension = QFileInfo(filename).suffix();
-        try{
-            if (extension == "bin")
-                workspace_->GetMatrix(item->keys()).save(filename.toStdString(), raw_binary);
-            else if (extension == "arma")
-                workspace_->GetMatrix(item->keys()).save(filename.toStdString(), arma_binary);
-            else if (extension == "csv")
-                workspace_->GetMatrix(item->keys()).save(filename.toStdString(), csv_ascii);
-            else
-                workspace_->GetMatrix(item->keys()).save(filename.toStdString(), raw_ascii);
-        }catch(exception e){
-            DisplayExceptionWarning(e);
-        }
-    }
-}
-
 void MainWindow::on_actionOnline_Documentation_triggered()
 {
     QUrl website_url("http://vespucciproject.org/Vespucci-docs");
@@ -1507,4 +1459,46 @@ void MainWindow::on_actionSave_Dataset_As_triggered()
     QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_name);
     bool ok = dataset->Save(filename);
     if (!ok) DisplayWarning("Dataset Not Saved", "The file failed to save");
+}
+
+void MainWindow::on_actionExport_Matrix_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    if (item->type() == TreeItem::ItemType::Matrix){
+        QString filename = QFileDialog::getSaveFileName(this, "Save " + item->keys().last(),
+                                                        workspace_->directory(),
+                                                        "Comma-separated text (*.csv);;"
+                                                        "Space-delimited text (*.txt);;"
+                                                        "Armadillo binary (*.arma);;"
+                                                        "Raw binary (*.bin)");
+        QString extension = QFileInfo(filename).suffix();
+        try{
+            if (extension == "bin")
+                workspace_->GetMatrix(item->keys()).save(filename.toStdString(), raw_binary);
+            else if (extension == "arma")
+                workspace_->GetMatrix(item->keys()).save(filename.toStdString(), arma_binary);
+            else if (extension == "csv")
+                workspace_->GetMatrix(item->keys()).save(filename.toStdString(), csv_ascii);
+            else
+                workspace_->GetMatrix(item->keys()).save(filename.toStdString(), raw_ascii);
+        }catch(exception e){
+            DisplayExceptionWarning(e);
+        }
+    }
+}
+
+void MainWindow::on_actionImport_Data_Into_Dataset_triggered()
+{
+   QString filename = QFileDialog::getOpenFileName(this, "Select data file",
+                                                   workspace_->directory());
+   mat matrix;
+   bool ok = matrix.load(filename.toStdString());
+   if (ok){
+       TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+       QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
+       dataset->AddAuxiliaryMatrix(filename, matrix);
+   }
+  else{
+       DisplayWarning("Could not load file", "The matrix could not be loaded from the selected file");
+   }
 }

@@ -19,6 +19,7 @@
 *******************************************************************************/
 #include "plotwidget.h"
 #include "ui_plotwidget.h"
+#include "Global/global.h"
 
 PlotWidget::PlotWidget(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QWidget(parent),
@@ -196,8 +197,9 @@ void PlotWidget::AddScatterPlot(const mat &paired_data)
     }
     ui->customPlot->graph(graph_count)->setPen(pen);
 
-    QCPScatterStyle style(QCPScatterStyle::ssDisc, pen_color, 6);
+    QCPScatterStyle style(QCPScatterStyle::ssDisc, pen_color, 4);
     ui->customPlot->graph(graph_count)->setScatterStyle(style);
+    ui->customPlot->graph(graph_count)->setLineStyle(QCPGraph::lsNone);
     ui->customPlot->rescaleAxes();
     ui->customPlot->replot(QCustomPlot::rpImmediate);
 }
@@ -224,8 +226,9 @@ void PlotWidget::AddScatterPlot(const vec &abscissa, const vec &data)
         ui->customPlot->graph(graph_count)->addData(abscissa_qvec, data_qvec);
     }
 
-    QCPScatterStyle style(QCPScatterStyle::ssDisc, pen_color, 6);
+    QCPScatterStyle style(QCPScatterStyle::ssDisc, pen_color, 4);
     ui->customPlot->graph(graph_count)->setScatterStyle(style);
+    ui->customPlot->graph(graph_count)->setLineStyle(QCPGraph::lsNone);
     ui->customPlot->rescaleAxes();
     ui->customPlot->replot(QCustomPlot::rpImmediate);
 }
@@ -249,7 +252,7 @@ void PlotWidget::AddMappedScatterPlot(const mat &paired_data, const vec &categor
         color_index = i;
         while (color_index >= colors_.size()){color_index -= colors_.size();}
         QColor color = colors_[color_index];
-        QCPScatterStyle style(QCPScatterStyle::ssDisc, color, 6);
+        QCPScatterStyle style(QCPScatterStyle::ssDisc, color, 4);
         double value = unique_values(i);
         uvec indices = arma::find(categorical == value);
         mat current_data = paired_data.rows(indices);
@@ -267,6 +270,7 @@ void PlotWidget::AddMappedScatterPlot(const mat &paired_data, const vec &categor
         }
 
         ui->customPlot->graph(graph_count)->setScatterStyle(style);
+        ui->customPlot->graph(graph_count)->setLineStyle(QCPGraph::lsNone);
     }
     ui->customPlot->rescaleAxes();
     ui->customPlot->replot(QCustomPlot::rpImmediate);
@@ -293,7 +297,7 @@ void PlotWidget::AddMappedScatterPlot(const vec &abscissa, const vec &data, cons
         color_index = i;
         while (color_index >= colors_.size()){color_index -= colors_.size();}
         QColor color = colors_[color_index];
-        QCPScatterStyle style(QCPScatterStyle::ssDisc, color, 6);
+        QCPScatterStyle style(QCPScatterStyle::ssDisc, color, 4);
         double value = unique_values(i);
         uvec indices = arma::find(categorical == value);
         vec current_data = data.rows(indices);
@@ -312,6 +316,8 @@ void PlotWidget::AddMappedScatterPlot(const vec &abscissa, const vec &data, cons
         }
 
         ui->customPlot->graph(graph_count)->setScatterStyle(style);
+        ui->customPlot->graph(graph_count)->setLineStyle(QCPGraph::lsNone);
+
     }
     ui->customPlot->rescaleAxes();
     ui->customPlot->replot(QCustomPlot::rpImmediate);
@@ -330,6 +336,11 @@ void PlotWidget::RemoveTransientPlot()
 bool PlotWidget::TransientOnly() const
 {
     return (transient_graph_ && ui->customPlot->graphCount() == 1);
+}
+
+void PlotWidget::SavePlot(QString filename)
+{
+    Vespucci::SavePlot(ui->customPlot, filename);
 }
 
 QColor PlotWidget::GetNextColor()

@@ -49,6 +49,7 @@ public:
     void AddMappedScatterPlot(const vec & abscissa, const vec &data, const vec &categorical);
     void RemoveTransientPlot();
     bool TransientOnly() const;
+    void SavePlot(QString filename);
 
 private:
     Ui::PlotWidget *ui;

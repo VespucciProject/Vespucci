@@ -248,6 +248,11 @@ QSharedPointer<MapData> VespucciWorkspace::GetMap(const QString &dataset_key, co
     return data_model_->GetMap(dataset_key, map_key);
 }
 
+QSharedPointer<MapData> VespucciWorkspace::GetMap(const QStringList &map_keys)
+{
+    return data_model_->GetMap(map_keys);
+}
+
 const mat & VespucciWorkspace::GetAuxiliaryMatrix(const QString &dataset_key, const QString &matrix_key) const
 {
     return data_model_->GetAuxiliaryMatrix(dataset_key, matrix_key);

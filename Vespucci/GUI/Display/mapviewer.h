@@ -47,7 +47,7 @@ class MapViewer : public QMainWindow
 {
     Q_OBJECT
 public:
-    MapViewer(MainWindow *parent, QSharedPointer<MapData> map_data, QSharedPointer<VespucciWorkspace> ws);
+    MapViewer(MainWindow *parent, QStringList map_keys, QSharedPointer<VespucciWorkspace> ws);
     QCPColorGradient GetGradient(int gradient_number);
     MapPlot *mapPlot();
     ~MapViewer();
@@ -56,6 +56,7 @@ signals:
     void RequestHeldSpectrumPlot(QString dataset_key, QString map_name, size_t index);
 public slots:
     void SpectrumRequested(size_t index);
+    void SetStatusbar(double x, double y, double z);
 private slots:
     void on_actionInterpolate_toggled(bool arg1);
 
@@ -82,6 +83,7 @@ private slots:
     void on_actionSet_Global_Color_Scale_triggered();
 protected:
     void keyPressEvent(QKeyEvent *event);
+    void showEvent(QShowEvent *event);
 
 private:
     Ui::MapViewer *ui;
@@ -95,12 +97,10 @@ private:
     /// The global working directory
     QString *directory_;
 
-    ///
-    /// \brief parent_map_data_
-    /// The MapData object that creates this display
-    QSharedPointer<MapData> map_data_;
-
+    QStringList map_keys_;
+    QStringList data_keys_;
     QSharedPointer<VespucciWorkspace> workspace_;
+    QLabel *statusbar_label_;
 
 
 };
