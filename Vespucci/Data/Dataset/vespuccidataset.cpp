@@ -1878,7 +1878,7 @@ void VespucciDataset::CorrelationAnalysis(const QString &control_key, QString na
 /// \param metric Distance metric
 /// \param name Name of map in workspace.
 ///
-void VespucciDataset::KMeans(size_t clusters, QString metric_text, QString name)
+void VespucciDataset::KMeans(QString name, size_t clusters, QString metric_text)
 {
     if(clusters == 0){
         state_changed_ = true;

@@ -204,7 +204,7 @@ public:
     void PartialLeastSquares(QString name, uword components);
     void CorrelationAnalysis(const QString &control_key, QString name);
     void VertexComponents(QString name, uword endmembers);
-    void KMeans(size_t clusters, QString metric_text, QString name);
+    void KMeans(QString name, size_t clusters, QString metric_text);
     void PrincipalComponents(const QString &name);
     void PrincipalComponents(const QString &name, bool scale_data);
     void FindPeaks(QString name, double sel, double threshold,
