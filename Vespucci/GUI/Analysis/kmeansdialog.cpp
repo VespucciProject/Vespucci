@@ -55,7 +55,7 @@ void KMeansDialog::on_buttonBox_accepted()
     else
         clusters = ui->clustersSpinBox->value();
     try{
-        dataset_->KMeans(clusters, metric_text, name);
+        dataset_->KMeans(name, clusters, metric_text);
     }catch(exception e){
         workspace_->main_window()->DisplayExceptionWarning(e);
     }
