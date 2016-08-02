@@ -46,10 +46,10 @@ deploy:
 - provider: BinTray
   username: dpfoose
   api_key:
-    secure: xJeROKVvw5l5QAfaHijL0+J7PKDG/QzvSV/aNpd0eZliEeQI1WWVP4T6FXmje1A3
+    secure: FOepYUlmZT0mXi85jjP9GpQABCfSygozdgH4ujjvolc7w9j0cOI7CS8Ukw8SAMKi
   subject: vespucciproject
   repo: Vespucci_automated_builds
-  package: Vespucci-w64-latest
+  package: Vespucci_latest
+  version: 1.0.0
   artifact: Vespucci_w64_$(appveyor_build_number).zip
   publish: true
-  explode: false
