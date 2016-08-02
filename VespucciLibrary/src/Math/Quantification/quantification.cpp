@@ -36,13 +36,22 @@
 /// Corrected Riemann Sum between inflextion points
 /// Empirical Full-width at half maximum.
 ///
-arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spectrum, const arma::vec &abscissa, double &min, double &max, arma::uword bound_window, arma::mat &total_baseline, arma::mat &inflection_baseline)
+arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spectrum,
+                                                          const arma::vec &abscissa,
+                                                          double &min,
+                                                          double &max,
+                                                          arma::uword bound_window,
+                                                          arma::mat &total_baseline,
+                                                          arma::mat &inflection_baseline)
 {
     //performs analysis of peak shape and magnitude
     arma::rowvec results(8);
 
     arma::uword min_index = Vespucci::Math::ClosestIndex(min, abscissa);
     arma::uword max_index = Vespucci::Math::ClosestIndex(max, abscissa);
+
+    arma::vec abscissa_part = abscissa.rows(min_index, max_index);
+    arma::vec spectrum_part = spectrum.rows(min_index, max_index);
 
     min = abscissa(min_index);
     max = abscissa(max_index);
@@ -55,13 +64,12 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     arma::uword max_end = max_index + bound_window;
     max_end = (max_end >= abscissa.n_rows ? abscissa.n_rows - 1 : max_end);
 
-    double total_area = arma::sum(spectrum.rows(min_index, max_index));
-    total_area = total_area / (abscissa(max_index) - abscissa(min_index));
+    double total_area = arma::as_scalar(arma::trapz(abscissa_part, spectrum_part));
 
     arma::uword window_size = max_index - min_index + 1;
     total_baseline = arma::linspace(spectrum(min_index), spectrum(max_index), window_size);
     arma::vec total_abscissa = abscissa.rows(min_index, max_index);
-    double baseline_area = arma::accu(total_baseline) / (abscissa(max_index) - abscissa(min_index));
+    double baseline_area = arma::as_scalar(arma::trapz(abscissa_part, total_baseline));
     total_baseline = arma::join_horiz(total_abscissa, total_baseline);
 
     arma::vec min_window = spectrum.rows(min_start, min_end);
@@ -69,9 +77,12 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     arma::uword inflection_min_index = Vespucci::Math::LocalMinimum(min_window, min) + min_start;
     arma::uword inflection_max_index = Vespucci::Math::LocalMinimum(max_window, max) + max_start;
 
+    abscissa_part = abscissa.rows(inflection_min_index, inflection_max_index);
+    spectrum_part = spectrum.rows(inflection_min_index, inflection_max_index);
+
     double area_between_inflection;
     try{
-        area_between_inflection = arma::sum(spectrum.rows(min_index, max_index));
+        area_between_inflection = arma::as_scalar(arma::trapz(abscissa_part, spectrum_part));
     }catch(std::exception e){
         std::cout << "Exception: invalid inflection points found" << std::endl;
         area_between_inflection = std::nan("");
@@ -79,10 +90,9 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
         inflection_max_index = max_index;
     }
 
-    area_between_inflection = area_between_inflection / (abscissa(inflection_max_index) - abscissa(inflection_min_index));
     window_size = inflection_max_index - inflection_min_index + 1;
     inflection_baseline = arma::linspace(spectrum(inflection_min_index), spectrum(inflection_max_index), window_size);
-    double inf_baseline_area = arma::accu(inflection_baseline) / (abscissa(inflection_min_index) - abscissa(inflection_max_index));
+    double inf_baseline_area = arma::as_scalar(arma::trapz(abscissa_part, inflection_baseline));
 
 
 
@@ -92,9 +102,9 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     arma::vec region = spectrum.rows(search_min_index, search_max_index);
     arma::vec region_abscissa = abscissa.rows(search_min_index, search_max_index);
     inflection_baseline = join_horiz(region_abscissa, region);
+
     double maximum = region.max();
-    arma::uvec max_loc = arma::find(region == maximum);
-    arma::uword max_pos = max_loc(0);
+    arma::uword max_pos = region.index_max();
     arma::vec search_baseline = arma::linspace(region(0), region(region.n_rows - 1), region.n_rows);
     double peak_center = region_abscissa(max_pos);
     double adj_maximum = maximum - search_baseline(max_pos);

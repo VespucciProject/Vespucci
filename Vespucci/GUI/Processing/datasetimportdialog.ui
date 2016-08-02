@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LoadDataset</class>
- <widget class="QDialog" name="LoadDataset">
+ <class>DatasetImportDialog</class>
+ <widget class="QDialog" name="DatasetImportDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -20,20 +20,20 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="fileInfoGroupBox">
      <property name="title">
       <string>File Information</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="filenameLabel">
         <property name="text">
          <string>Filename</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QHBoxLayout" name="filenameLayout">
         <item>
          <widget class="QLineEdit" name="filenameLineEdit">
           <property name="enabled">
@@ -56,7 +56,7 @@
        </layout>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="fileSizeLabel_2">
         <property name="text">
          <string>File Size (MB)</string>
         </property>
@@ -70,7 +70,7 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="formatLabel">
         <property name="text">
          <string>Data Format</string>
         </property>
@@ -106,7 +106,7 @@
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel" name="nameLabel">
         <property name="text">
          <string>Dataset Name</string>
         </property>
@@ -133,7 +133,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="spectraInfoGroupBox">
      <property name="title">
       <string>Spectra Information</string>
      </property>
@@ -142,7 +142,7 @@
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
       <item row="0" column="0">
-       <widget class="QLabel" name="label_6">
+       <widget class="QLabel" name="yLabel">
         <property name="text">
          <string>Y-axis Description</string>
         </property>
@@ -156,7 +156,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_7">
+       <widget class="QLabel" name="xLabel">
         <property name="text">
          <string>X-axis Description</string>
         </property>
@@ -170,14 +170,14 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_8">
+       <widget class="QLabel" name="yUnitsLabel">
         <property name="text">
          <string>Y-axis Units</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QLabel" name="label_9">
+       <widget class="QLabel" name="xUnitsLabel">
         <property name="text">
          <string>X-axis Units</string>
         </property>
@@ -218,38 +218,5 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>LoadDataset</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>207</x>
-     <y>359</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>LoadDataset</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>275</x>
-     <y>359</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

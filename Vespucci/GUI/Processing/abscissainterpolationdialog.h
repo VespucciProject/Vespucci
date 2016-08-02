@@ -12,7 +12,7 @@ class AbscissaInterpolationDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AbscissaInterpolationDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit AbscissaInterpolationDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~AbscissaInterpolationDialog();
 
 private slots:
@@ -24,22 +24,8 @@ private slots:
 
 private:
     Ui::AbscissaInterpolationDialog *ui;
-    QComboBox *dataset_combo_box_;
-    QRadioButton *dataset_radio_button_;
-    QLineEdit *filename_line_edit_;
-    QComboBox *method_combo_box_;
-    QComboBox *source_combo_box_;
-    QSpinBox *order_spin_box_;
-    QSpinBox *window_spin_box_;
-    QPushButton *browse_push_button_;
-
-    QLabel *window_label_;
-    QLabel *order_label_;
-    QLabel *file_label_;
-    QLabel *dataset_label_;
-
     QSharedPointer<VespucciDataset> dataset_;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 };
 
 #endif // ABSCISSAINTERPOLATIONDIALOG_H

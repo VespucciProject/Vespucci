@@ -20,18 +20,15 @@
 #include "GUI/Processing/metadatasetdialog.h"
 #include "ui_metadatasetdialog.h"
 #include "Data/Dataset/metadataset.h"
-MetaDatasetDialog::MetaDatasetDialog(QWidget *parent, VespucciWorkspace *ws) :
+MetaDatasetDialog::MetaDatasetDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
     ui(new Ui::MetaDatasetDialog)
 {
     ui->setupUi(this);
-    dataset_list_view_ = findChild<QListView*>("datasetListView");
-    workspace = ws;
-    dataset_list_model_ = new DatasetListModel(this, workspace->dataset_names());
-    dataset_list_view_->setModel(dataset_list_model_);
-    dataset_list_view_->setSelectionMode(QAbstractItemView::MultiSelection);
-    method_selection_box_ = findChild<QComboBox *>("methodComboBox");
-    name_line_edit_ = findChild<QLineEdit *>("nameLineEdit");
+    workspace_ = ws;
+    dataset_list_model_ = new DatasetListModel(this, workspace_->dataset_names());
+    ui->datasetListView->setModel(dataset_list_model_);
+    ui->datasetListView->setSelectionMode(QAbstractItemView::MultiSelection);
 }
 
 MetaDatasetDialog::~MetaDatasetDialog()
@@ -47,41 +44,46 @@ void MetaDatasetDialog::on_buttonBox_rejected()
 void MetaDatasetDialog::on_buttonBox_accepted()
 {
     QList<QSharedPointer<VespucciDataset> > parent_datasets;
-    QModelIndexList selected_indices = dataset_list_view_->selectionModel()->selectedRows();
+    QModelIndexList selected_indices = ui->datasetListView->selectionModel()->selectedRows();
     if (selected_indices.size() <= 0){
         return;
     }
     for (int i = 0; i < selected_indices.size(); ++i){
-        parent_datasets.append(workspace->GetDataset(dataset_list_model_->DatasetName(selected_indices[i].row())));
+        parent_datasets.append(workspace_->GetDataset(dataset_list_model_->DatasetName(selected_indices[i].row())));
     }
 
-    QString method_description = method_selection_box_->currentText();
+    QString method_description = ui->methodComboBox->currentText();
     MetaMethod::Method method;
-    switch(method_selection_box_->currentIndex()){
+    switch(ui->methodComboBox->currentIndex()){
     case 0:
-        cout << method_description.toStdString() << endl;
-        cout << "0" << endl;
+        cout << method_description.toStdString() << "\n";
+
+        cout << "0\n";
+
         method = MetaMethod::ConcatenateDatasets;
         break;
     case 1: default:
-        cout << method_description.toStdString() << endl;
-        cout << "1 or default" << endl;
+        cout << method_description.toStdString() << "\n";
+
+        cout << "1 or default\n";
+
         method = MetaMethod::AverageSpectra;
         break;
     }
 
-    QString name = name_line_edit_->text();
-    QFile *log_file = workspace->CreateLogFile(name);
+    QString name = ui->nameLineEdit->text();
     QSharedPointer<MetaDataset> new_dataset;
     try{
-        new_dataset = QSharedPointer<MetaDataset>(new MetaDataset(name, workspace->main_window(), log_file, workspace->directory_ptr(), method_description, method, parent_datasets));
+        new_dataset = QSharedPointer<MetaDataset>(new MetaDataset(name, workspace_->main_window(), workspace_->directory_ptr(), method_description, method, parent_datasets));
     }
     catch(exception e){
-        cerr << "Exception thrown" << endl;
-        cerr << e.what() << endl;
+        cerr << "Exception thrown\n";
+
+        cerr << e.what() << "\n";
+
         QMessageBox::warning(this, "Exception Occured", "An exception was thrown in the MetaDataset constructor");
         return;
     }
-    workspace->AddDataset(new_dataset);
+    workspace_->AddDataset(new_dataset);
 
 }

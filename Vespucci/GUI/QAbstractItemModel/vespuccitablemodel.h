@@ -33,14 +33,15 @@ class VespucciTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    VespucciTableModel(QObject *parent, const mat & input_data);
-    VespucciTableModel(QObject *parent, const mat & input_data, const uword &start_column);
+    VespucciTableModel(QObject *parent, const mat & input_data, const QStringList &data_keys);
+    VespucciTableModel(QObject *parent, const mat & input_data, const uword &start_column, const QStringList &data_keys);
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
     const mat& GetMatrix() const;
     bool SaveMatrix(const QString &filename, const QString &extension) const;
     uword MatrixColumns();
+    QStringList data_keys();
 
 signals:
 
@@ -56,6 +57,8 @@ private:
     /// \brief data_
     /// Pointer to the object being displayed
     const mat & data_;
+
+    QStringList data_keys_;
 };
 
 #endif // VESPUCCITABLEMODEL_H

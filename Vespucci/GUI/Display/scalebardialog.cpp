@@ -25,18 +25,11 @@
 /// \param parent See QWidget
 /// \param map_data MapData associated with the MapViewer that launches this dialog
 ///
-ScaleBarDialog::ScaleBarDialog(QWidget *parent, MapData *map_data) :
+ScaleBarDialog::ScaleBarDialog(QWidget *parent, QSharedPointer<MapData> map_data) :
     QDialog(parent),
     ui(new Ui::ScaleBarDialog)
 {
     ui->setupUi(this);
-    width_spin_box_ = findChild<QDoubleSpinBox *>("widthDoubleSpinBox");
-    height_spin_box_ = findChild<QDoubleSpinBox *>("heightDoubleSpinBox");
-    units_line_edit_ = findChild<QLineEdit *>("unitsLineEdit");
-    color_push_button_ = findChild<QPushButton *>("colorPushButton");
-    position_combo_box_ = findChild<QComboBox *>("positionComboBox");
-    font_combo_box_ = findChild<QFontComboBox *>("fontComboBox");
-    font_size_spin_box_ = findChild<QSpinBox *>("fontSizeSpinBox");
     color_ = Qt::black;
     map_data_ = map_data;
 }
@@ -60,12 +53,12 @@ void ScaleBarDialog::on_colorPushButton_clicked()
 void ScaleBarDialog::on_buttonBox_accepted()
 {
     QMessageBox::information(this, "Scale Bar", "Click on the map to show the scale bar.");
-    double width = width_spin_box_->value();
-    double height = height_spin_box_->value();
-    QString units = units_line_edit_->text();
-    QString position = position_combo_box_->currentText();
-    QFont font = font_combo_box_->currentFont();
-    int font_size = font_size_spin_box_->value();
+    double width = ui->widthDoubleSpinBox->value();
+    double height = ui->heightDoubleSpinBox->value();
+    QString units = ui->unitsLineEdit->text();
+    QString position = ui->positionComboBox->currentText();
+    QFont font = ui->fontComboBox->currentFont();
+    int font_size = ui->fontSizeSpinBox->value();
     font.setPointSize(font_size);
     font.setBold(true);
 

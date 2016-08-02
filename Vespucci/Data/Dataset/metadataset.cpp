@@ -33,32 +33,19 @@
 ///
 MetaDataset::MetaDataset(QString name,
                          MainWindow *main_window,
-                         QFile *log_file,
                          QString *directory,
                          QString method_description,
                          MetaMethod::Method method,
                          QList<QSharedPointer<VespucciDataset> > parent_datasets)
-    : VespucciDataset(name, main_window, directory, log_file)
+    : VespucciDataset(name, main_window, directory)
 {
     parent_datasets_ = parent_datasets;
 
     if(!ParentsValid()){
         throw std::runtime_error("Improper input to MetaDataset constructor");
-        cerr << "Improper input to MetaDataset constructor" << endl;
+        cerr << "Improper input to MetaDataset constructor\n";
+
     }
-
-
-    QDateTime datetime = QDateTime::currentDateTimeUtc();
-    log_text_stream_ << "Dataset " << name << "created "
-                << datetime.date().toString("yyyy-MM-dd") << "T"
-                << datetime.time().toString("hh:mm:ss") << "Z" << endl;
-    log_text_stream_ << "Created from previous datasets:" << endl;
-    for(int i = 0; i < parent_datasets_.size(); ++i){
-        log_text_stream_ << "  " << parent_datasets_[i]->name() << endl;
-    }
-
-    log_text_stream_ << endl;
-
     method_ = method;
     method_description_ = method_description;
     mat spectra;
@@ -99,8 +86,6 @@ MetaDataset::MetaDataset(QString name,
         indices_temp(i) = i;
     }
     SetIndices(indices_temp);
-
-
 }
 
 ///
@@ -134,7 +119,8 @@ mat MetaDataset::Concatenate(vec &x, vec &y)
     mat spectra;
     mat indices_buf;
     indices_buf.set_size(1, 3);
-    cout << "Concatenate()" << endl;
+    cout << "Concatenate()\n";
+
     for (int i = 0; i < parent_datasets_.size(); ++i){
         spectra.insert_cols(spectra.n_cols, parent_datasets_[i]->spectra());
         indices_buf.set_size(parent_datasets_[i]->x().n_rows, 3);

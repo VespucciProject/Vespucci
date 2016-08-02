@@ -54,7 +54,7 @@ bool MacroParser::LoadMacro(QString macro)
     //member of the list is the function name, and all subsequent entries are
     //parameters of the function.
     QRegExp sep("(\(|\)|,)");
-    foreach (const QString &command, command_list){
+    for (auto command: command_list){
         QStringList pieces = command.split(sep);
         QString function_name = pieces[0];
         pieces.removeAt(0); //now pieces has only the parameters

@@ -45,10 +45,6 @@ private slots:
 private:
     Ui::DataWidget *ui;
     VespucciTableModel *table_model_;
-    QTableView *table_view_;
-    QPushButton *forward_push_button_;
-    QPushButton *back_push_button_;
-    QLabel *column_label_;
     uword matrix_columns_;
     uword subviews_;
     uword current_start_column_;

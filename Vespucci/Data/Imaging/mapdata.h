@@ -22,26 +22,21 @@
 
 #include <QString>
 #include "Math/VespucciMath.h"
-#include <qcustomplot.h>
+#include "GUI/Display/mapplot.h"
 #include "GUI/Display/mapviewer.h"
-#include "GUI/Display/spectrumviewer.h"
 #include "Data/Dataset/vespuccidataset.h"
 #include "GUI/mainwindow.h"
 #include "Global/vespucciworkspace.h"
-#include "GUI/Display/statsdialog.h"
-
 
 using namespace std;
 using namespace arma;
 
-
-class MapViewer;
 class VespucciDataset;
-class PrincipalComponentsData;
-class SpectrumViewer;
-class StatsViewer;
+class PlotViewer;
 class MainWindow;
 class VespucciWorkspace;
+class MapPlot;
+class MapViewer;
 
 ///
 /// \brief The MapData class
@@ -50,74 +45,26 @@ class MapData
 {
 public:
     MapData(QString name,
-            QString x_axis_description,
-            QString y_axis_description,
-            colvec x,
-            colvec y,
-            colvec results,
-            QSharedPointer<VespucciDataset> parent,
-            QString *directory,
-            QCPColorGradient gradient,
-            int source_index,
-            int tick_count,
-            MainWindow* main_window);
-
+            QString type,
+            QStringList data_keys,
+            uword data_column,
+            QSharedPointer<VespucciWorkspace> workspace);
     ~MapData();
     QString name();
     QString type();
-    int source_index();
 
-    void set_type(QString type);
-    void set_name(QString name, QString type);
-    void set_baseline(vec abscissa, mat baseline);
-    void set_fwhm(mat mid_lines);
-    void set_baselines(vec first_abscissa, vec second_abscissa,
-                       mat first_baseline, mat second_baseline);
-    void set_deriv_baselines(field<vec> abscissae, field<vec> baselines);
-    void set_deriv_baselines(field<vec> first_abscissae, field<vec> second_abscissae,
-                             field<vec> first_baselines, field<vec> second_baselines);
-    bool univariate_bandwidth();
-    bool univariate_derivative();
-    bool band_ratio_derivative();
-    bool univariate_area();
-    bool band_ratio_area();
-
-
-    QVector<double> first_baseline(int i);
-    QVector<double> second_baseline(int i);
-    QVector<double> first_abscissa();
-    QVector<double> second_abscissa();
-    QVector<double> first_abscissa(int i);
-    QVector<double> second_abscissa(int i);
-    QVector<double> half_max(int i);
-    QVector<double> mid_line(int i);
-    QVector<double> mid_lines(int i);
-
-    mat stats_; //a statistics matrix like made by MATLAB
-
-    double x_dimension_;
-    double y_dimension_;
-
-    //These modify map_data, using QCP function names.
-    void setKeySize(int size);
-    void setValueSize(int size);
-    void setKeyRange(const QCPRange& range);
-    void setValueRange(const QCPRange& range);
-    //void setData(double key, double value, double z);
-    QCPRange dataRange();
+    void SetMapPlot(MapPlot *plot);
 
     void setGradient(const QCPColorGradient &gradient);
+    void SetColorScaleTickCount(int ticks);
+
     //Displays the map window
     void ShowMapWindow(bool show);
     void HideMapWindow();
     bool MapWindowVisible();
-    bool SpectrumViewerVisible();
-    void HideSpectrumViewer();
 
     void CreateImage(QCPColorGradient color_scheme, bool interpolation, int tick_count);
     void SetMapData(QCPColorMapData *map_data);
-
-    void ShowSpectrumViewer(bool enabled);
 
     void SetXDescription(QString description);
     void SetYDescription(QString description);
@@ -129,7 +76,6 @@ public:
     void ShowAxes(bool enabled);
 
     void SetDataRange(QCPRange new_range);
-    void RemoveThis();
 
     bool savePdf(const QString &fileName,
                  int width,
@@ -158,25 +104,27 @@ public:
                   double scale = 1.0,
                   int quality = 0);
 
-
-    void ExportText();
-
     void DrawScaleBar(double width, double height, QString units, QColor color, QString position, QFont font);
-
-    double results_at_position(double x, double y);
-
-    void UseGlobalColorScale(bool arg1);
 
     void RescaleMapWidget();
     void LockMapDisplaySize(bool lock);
     void ResetMapWidgetSize();
 
-    uvec extract_range(double lower, double upper);
-    colvec results_;
-    void LaunchDataExtractor();
-    bool crisp_clusters();
-    void SetCrispClusters(bool arg1);
     void SetFonts(const QFont &font);
+
+    QString global_gradient_key();
+
+    double min();
+    double max();
+
+    void SetName(QString name, QString type);
+    void SetGlobalGradient(QString name);
+    void UpdateGlobalGradient();
+
+    QStringList keys();
+    MapPlot *map_qcp();
+
+
 
 private:
     ///
@@ -220,85 +168,18 @@ private:
     MapViewer *map_display_;
 
     ///
-    /// \brief spectrum_display_
-    /// Pointer to the window that displays spectra when the image is clicked
-    SpectrumViewer *spectrum_display_; //pointer to the spectrum viewer window (not automatically opened).
-
-    ///
     /// \brief map_qcp_
     /// Pointer to the widget that displays the image
-    QCustomPlot *map_qcp_;
-
-    ///
-    /// \brief map_
-    /// Pointer to the QCPColorMap object within the QCustomPlot widget
-    QCPColorMap *map_;
-
-    ///
-    /// \brief spectrum_qcp_
-    /// Pointer to the QCustomPlot widget in the SpectrumViewer
-    QCustomPlot *spectrum_qcp_;
-
-    ///
-    /// \brief key_size_
-    /// Number of unique x values
-    int key_size_;
-
-    ///
-    /// \brief value_size_
-    /// Number of unique y values
-    int value_size_; //size of y (number of unique y values)
-
-    ///
-    /// \brief gradient_
-    /// Current color gradient
-    QCPColorGradient gradient_;
-
-    ///
-    /// \brief global_color_scale_
-    /// The global color scale
-    QSharedPointer<QCPColorScale> global_color_scale_;
-
-    ///
-    /// \brief new_color_scale_
-    /// Pointer to the global color scale (kept in the main window)
-    QCPColorScale *new_color_scale_;
-
-    ///
-    /// \brief directory_
-    /// The global working directory
-    QString *directory_;
-
-    ///
-    /// \brief color_scale_
-    /// The color scale displayed on the map viewer
-    QCPLayoutElement *color_scale_; //this color scale is not changed!
-
-    //stuff related to baselines and such
-    mat first_baseline_;
-    mat second_baseline_;
-    vec first_abscissa_;
-    vec second_abscissa_;
-    mat mid_lines_;
-
-    field<vec> first_baselines_;
-    field<vec> first_abscissae_;
-    field<vec> second_baselines_;
-    field<vec> second_abscissae_;
-
-    bool univariate_area_;
-    bool band_ratio_area_;
-    bool univariate_bandwidth_;
-    bool univariate_derivative_;
-    bool band_ratio_derivative_;
-    bool using_global_color_scale_;
-    bool k_means_;
-    bool principal_components_;
-    bool vertex_components_;
-    bool partial_least_squares_;
-    bool crisp_clusters_;
+    MapPlot *map_qcp_;
 
     QSize initial_map_size_;
+
+    QString global_gradient_key_;
+
+    QSharedPointer<VespucciWorkspace> workspace_;
+
+    uword data_column_;
+    QStringList data_keys_;
 
 
 };

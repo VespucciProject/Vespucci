@@ -37,7 +37,7 @@ class CropDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit CropDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit CropDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~CropDialog();
 
 private slots:
@@ -48,14 +48,7 @@ private slots:
 private:
     Ui::CropDialog *ui;
 
-    QDoubleSpinBox *x_min_box_;
-    QDoubleSpinBox *x_max_box_;
-    QDoubleSpinBox *y_min_box_;
-    QDoubleSpinBox *y_max_box_;
-    QDoubleSpinBox *wl_max_box_;
-    QDoubleSpinBox *wl_min_box_;
-
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
 };
 

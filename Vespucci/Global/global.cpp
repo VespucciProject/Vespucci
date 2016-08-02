@@ -41,11 +41,16 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         success = plot->savePdf(filename, false, 0, 0, "Vespucci 1.0", "Plot");
     else if (extension == "png"){
         bool ok;
+        QPixmap background = plot->background();
+        plot->setBackground(Qt::transparent);
+        plot->replot(QCustomPlot::rpImmediate);
         int quality = QInputDialog::getInt(plot->parentWidget(), "Enter Quality",
                                            "Quality (%)",
                                            80, 0, 100, 1, &ok);
         if (ok)
             plot->savePng(filename, 0, 0, 1.0, quality);
+        plot->setBackground(background);
+        plot->replot(QCustomPlot::rpImmediate);
     }
 
     else if (extension == "jpg"){
@@ -63,7 +68,7 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
 
         QPixmap old_background = plot->background();
         plot->setBackground(Qt::transparent);
-        plot->replot();
+        plot->replot(QCustomPlot::rpImmediate);
 
         plot->toPainter(&qcp_painter);
         qcp_painter.end();
@@ -78,7 +83,7 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         painter.end();
 
         plot->setBackground(old_background);
-        plot->replot();
+        plot->replot(QCustomPlot::rpImmediate);
     }
     else if (extension == "emf"){
         QStringList filename_trunk_list = filename_list;
@@ -91,7 +96,7 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         qcp_painter.setMode(QCPPainter::pmVectorized);
         QPixmap old_background = plot->background();
         plot->setBackground(Qt::transparent);
-        plot->replot();
+        plot->replot(QCustomPlot::rpImmediate);
 
         plot->toPainter(&qcp_painter);
         qcp_painter.end();
@@ -127,10 +132,10 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         if (ok){
             QPixmap background = plot->background();
             plot->setBackground(Qt::transparent);
-            plot->replot();
+            plot->replot(QCustomPlot::rpImmediate);
             success = plot->saveRastered(filename, 0, 0, 1.0, "TIF", quality);
             plot->setBackground(background);
-            plot->replot();
+            plot->replot(QCustomPlot::rpImmediate);
 
         }
     }
@@ -173,4 +178,16 @@ QProgressDialog *Vespucci::DisplayProgressDialog(QWidget *parent, QString title,
     progress->setRange(0,0);
     progress->exec();
     return progress;
+}
+
+bool Vespucci::KeysAreEqual(QStringList &keys1, QStringList &keys2)
+{
+    if (keys1.size() != keys2.size()) return false;
+    else{
+        bool key_equal = false;
+        for (int i = 0; i < keys1.size(); ++i){
+            key_equal = (keys1[i] == keys2[i]);
+        }
+        return key_equal;
+    }
 }

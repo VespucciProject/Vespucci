@@ -17,20 +17,17 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef TESTSMOOTHING_H
-#define TESTSMOOTHING_H
+#include "multianalysisdialog.h"
+#include "ui_multianalysisdialog.h"
 
-#include <QObject>
-
-class TestSmoothing : public QObject
+MultiAnalysisDialog::MultiAnalysisDialog(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::MultiAnalysisDialog)
 {
-    Q_OBJECT
-public:
-    explicit TestSmoothing(QObject *parent = 0);
+    ui->setupUi(this);
+}
 
-signals:
-
-public slots:
-};
-
-#endif // TESTSMOOTHING_H
+MultiAnalysisDialog::~MultiAnalysisDialog()
+{
+    delete ui;
+}

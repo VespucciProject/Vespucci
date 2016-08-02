@@ -27,8 +27,6 @@
 #include <fstream>
 #include "Data/Imaging/mapdata.h"
 #include "Global/vespucciworkspace.h"
-#include <boost/program_options.hpp>
-#include <cassert>
 
 ///
 /// \brief main
@@ -50,19 +48,16 @@ int main(int argc, char *argv[])
 #endif
 
     //Launch QApplication instance
-    QCoreApplication::setOrganizationName("Wright State University");
-    QCoreApplication::setOrganizationDomain("chm.wright.edu");
+    QCoreApplication::setOrganizationName("Vespucci Project @ Wright State University");
+    QCoreApplication::setOrganizationDomain("vespucciproject.org");
     QCoreApplication::setApplicationName("Vespucci");
     QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
     QApplication a(argc, argv);
 
-    VespucciWorkspace ws(a.applicationDirPath() + "/settings.ini");
-
-    //Clean up dataset log files from when it crashed last
-    ws.CleanLogFiles();
+    QSharedPointer<VespucciWorkspace> ws(new VespucciWorkspace(a.applicationDirPath()));
 
     //Instantiate main window
-    MainWindow w(0, &ws);
+    MainWindow w(0, ws);
 
     //show main window
     w.show();

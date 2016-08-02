@@ -22,17 +22,22 @@
 
 #include <QMainWindow>
 #include "Data/Imaging/mapdata.h"
+#include "GUI/Display/mapplot.h"
 #include "GUI/Display/scalebardialog.h"
-#include "GUI/Processing/dataextractordialog.h"
+#include "Global/vespucciworkspace.h"
+#include "GUI/Display/mapplot.h"
 
 class ScaleBarDialog;
 class MapData;
 class DataExtractorDialog;
 class SpectrumViewer;
-
+class MainWindow;
+class VespucciWorkspace;
+class MapPlot;
 
 namespace Ui {
 class MapViewer;
+class MapPlot;
 }
 
 ///
@@ -42,20 +47,17 @@ class MapViewer : public QMainWindow
 {
     Q_OBJECT
 public:
+    MapViewer(MainWindow *parent, QStringList map_keys, QSharedPointer<VespucciWorkspace> ws);
     QCPColorGradient GetGradient(int gradient_number);
-
-protected:
-    void closeEvent(QCloseEvent *event);
-public:
-    MapViewer(QString name, QString *directory, MapData *parent);
+    MapPlot *mapPlot();
     ~MapViewer();
+signals:
+    void RequestSpectrumPlot(QString dataset_key, QString map_name, size_t index);
+    void RequestHeldSpectrumPlot(QString dataset_key, QString map_name, size_t index);
 public slots:
-    void GlobalDataRangeChanged(QCPRange new_range);
-    void GlobalGradientChanged(QCPColorGradient new_gradient);
-
+    void SpectrumRequested(size_t index);
+    void SetStatusbar(double x, double y, double z);
 private slots:
-    void on_actionInterpolate_triggered();
-
     void on_actionInterpolate_toggled(bool arg1);
 
     void on_actionSave_Image_As_triggered();
@@ -68,24 +70,20 @@ private slots:
 
     void on_actionAdd_Scale_Bar_triggered();
 
-    void on_actionShow_Spectrum_Viewer_triggered();
-
-    void on_actionCommon_Color_Gradient_toggled(bool arg1);
-
-
     void on_actionLock_Size_toggled(bool arg1);
 
     void on_actionReset_Size_triggered();
 
     void on_actionReproportion_triggered();
 
-    void on_actionNew_Dataset_from_Map_triggered();
-
-    void on_actionStats_triggered();
-
-    void on_actionExport_Values_triggered();
-
     void on_actionSet_Font_triggered();
+
+    void on_actionSet_Color_Scale_Label_triggered();
+
+    void on_actionSet_Global_Color_Scale_triggered();
+protected:
+    void keyPressEvent(QKeyEvent *event);
+    void showEvent(QShowEvent *event);
 
 private:
     Ui::MapViewer *ui;
@@ -99,20 +97,10 @@ private:
     /// The global working directory
     QString *directory_;
 
-    ///
-    /// \brief qcp_
-    /// The QCustomPlot object located within this window
-    QCustomPlot *qcp_;
-
-    ///
-    /// \brief parent_map_data_
-    /// The MapData object that creates this display
-    MapData *parent_map_data_;
-
-    ///
-    /// \brief color_list_
-    /// A list of names of color shemes which
-    QStringList color_list_;
+    QStringList map_keys_;
+    QStringList data_keys_;
+    QSharedPointer<VespucciWorkspace> workspace_;
+    QLabel *statusbar_label_;
 
 
 };

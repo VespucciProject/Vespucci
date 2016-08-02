@@ -130,7 +130,8 @@ uvec Vespucci::Math::PeakFinding::FindPeakCenters(const vec &signal, const vec &
             }
         }
         else{
-            cerr << "should have thrown invalid_argument earlier!" << endl;
+            cerr << "should have thrown invalid_argument earlier!\n";
+
             return uvec();
         }
 

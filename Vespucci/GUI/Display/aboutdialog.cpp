@@ -31,9 +31,3 @@ AboutDialog::~AboutDialog()
 {
     delete ui;
 }
-
-void AboutDialog::on_buttonBox_accepted()
-{
-    close();
-
-}

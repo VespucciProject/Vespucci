@@ -34,7 +34,7 @@ class VCADialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit VCADialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit VCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~VCADialog();
 
 private slots:
@@ -49,28 +49,7 @@ private:
     ///
     /// \brief workspace
     /// The current workspace
-    VespucciWorkspace *workspace;
-
-    ///
-    /// \brief components_selector_spin_box_
-    /// The user selects the number of components to compute here
-    QSpinBox *components_selector_spin_box_;
-
-    ///
-    /// \brief color_selector_combo_box_
-    /// The user selects the color gradient of the image here
-    QComboBox *color_selector_combo_box_;
-
-    ///
-    /// \brief name_line_edit_
-    /// User sets the name of the image to be created here
-    QLineEdit *name_line_edit_;
-
-
-    ///
-    /// \brief prediction_check_box_
-    /// User selects whether or not to allow prediction of dimensionality
-    QCheckBox *prediction_check_box_;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief data_index_

@@ -102,11 +102,9 @@ SOURCES += main.cpp\
     GUI/Processing/booleanizedialog.cpp \
     GUI/Display/citationdialog.cpp \
     GUI/Processing/cropdialog.cpp \
-    GUI/Processing/dataextractordialog.cpp \
     GUI/Display/dataviewer.cpp \
     GUI/Processing/filterdialog.cpp \
     GUI/Analysis/kmeansdialog.cpp \
-    GUI/Processing/loaddataset.cpp \
     GUI/QAbstractItemModel/maplistmodel.cpp \
     GUI/Display/mapviewer.cpp \
     GUI/Processing/metadatasetdialog.cpp \
@@ -116,8 +114,6 @@ SOURCES += main.cpp\
     GUI/Processing/rangedialog.cpp \
     GUI/Display/scalebardialog.cpp \
     GUI/QAbstractItemModel/spectratablemodel.cpp \
-    GUI/Display/spectrumselectiondialog.cpp \
-    GUI/Display/spectrumviewer.cpp \
     GUI/Display/statsdialog.cpp \
     GUI/Processing/thresholddialog.cpp \
     GUI/Analysis/univariatedialog.cpp \
@@ -150,7 +146,16 @@ SOURCES += main.cpp\
     Global/datamodel.cpp \
     GUI/QAbstractItemModel/datasetlistmodel.cpp \
     GUI/pythonshelldialog.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    Data/Analysis/multianalyzer.cpp \
+    GUI/Analysis/multianalysisdialog.cpp \
+    GUI/Analysis/hypothesistestdialog.cpp \
+    GUI/Display/mapplot.cpp \
+    GUI/Display/globalgradientdialog.cpp \
+    GUI/Display/colorrangedialog.cpp \
+    GUI/Display/spectrumeditor.cpp \
+    GUI/Processing/datasetimportdialog.cpp \
+    GUI/Processing/matrixselectiondialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -168,13 +173,11 @@ HEADERS  += \
     GUI/Processing/baselinedialog.h \
     GUI/Processing/booleanizedialog.h \
     GUI/Processing/cropdialog.h \
-    GUI/Processing/dataextractordialog.h \
     GUI/Display/aboutdialog.h \
     GUI/Display/citationdialog.h \
     GUI/Display/dataviewer.h \
     GUI/Processing/filterdialog.h \
     GUI/Analysis/kmeansdialog.h \
-    GUI/Processing/loaddataset.h \
     GUI/QAbstractItemModel/maplistmodel.h \
     GUI/Display/mapviewer.h \
     GUI/Processing/metadatasetdialog.h \
@@ -183,8 +186,6 @@ HEADERS  += \
     GUI/Processing/rangedialog.h \
     GUI/Display/scalebardialog.h \
     GUI/QAbstractItemModel/spectratablemodel.h \
-    GUI/Display/spectrumselectiondialog.h \
-    GUI/Display/spectrumviewer.h \
     GUI/Display/statsdialog.h \
     GUI/Processing/thresholddialog.h \
     GUI/Analysis/univariatedialog.h \
@@ -218,7 +219,16 @@ HEADERS  += \
     Global/datamodel.h \
     GUI/QAbstractItemModel/datasetlistmodel.h \
     GUI/pythonshelldialog.h \
-    qcustomplot.h
+    qcustomplot.h \
+    Data/Analysis/multianalyzer.h \
+    GUI/Analysis/multianalysisdialog.h \
+    GUI/Analysis/hypothesistestdialog.h \
+    GUI/Display/mapplot.h \
+    GUI/Display/globalgradientdialog.h \
+    GUI/Display/colorrangedialog.h \
+    GUI/Display/spectrumeditor.h \
+    GUI/Processing/datasetimportdialog.h \
+    GUI/Processing/matrixselectiondialog.h
 
 
 FORMS    += \
@@ -229,11 +239,9 @@ FORMS    += \
     GUI/Processing/baselinedialog.ui \
     GUI/Display/citationdialog.ui \
     GUI/Processing/cropdialog.ui \
-    GUI/Processing/dataextractordialog.ui \
     GUI/Display/dataviewer.ui \
     GUI/Processing/filterdialog.ui \
     GUI/Analysis/kmeansdialog.ui \
-    GUI/Processing/loaddataset.ui \
     GUI/Display/mapviewer.ui \
     GUI/Processing/metadatasetdialog.ui \
     GUI/Analysis/plotmakerdialog.ui \
@@ -241,8 +249,6 @@ FORMS    += \
     GUI/Analysis/principalcomponentsdialog.ui \
     GUI/Processing/rangedialog.ui \
     GUI/Display/scalebardialog.ui \
-    GUI/Display/spectrumselectiondialog.ui \
-    GUI/Display/spectrumviewer.ui \
     GUI/Display/statsdialog.ui \
     GUI/Processing/thresholddialog.ui \
     GUI/Analysis/vcadialog.ui \
@@ -265,7 +271,14 @@ FORMS    += \
     GUI/Display/datawidget.ui \
     GUI/Display/plotwidget.ui \
     GUI/macrodialog.ui \
-    GUI/pythonshelldialog.ui
+    GUI/pythonshelldialog.ui \
+    GUI/Analysis/multianalysisdialog.ui \
+    GUI/Analysis/hypothesistestdialog.ui \
+    GUI/Display/globalgradientdialog.ui \
+    GUI/Display/colorrangedialog.ui \
+    GUI/Display/spectrumeditor.ui \
+    GUI/Processing/datasetimportdialog.ui \
+    GUI/Processing/matrixselectiondialog.ui
 
 RESOURCES += \
     resources.qrc
@@ -283,7 +296,9 @@ unix:!macx{
     LIBS += -L/usr/lib -larpack
     PRE_TARGETDEPS += /usr/lib/libarpack.a
     LIBS += -L/usr/lib/x86_64-linux-gnu -lhdf5
+    LIBS += -L/usr/lib/x86_64-linux-gnu -lhdf5_cpp
     PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5.a
+    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5_cpp.a
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
 
@@ -326,8 +341,14 @@ unix:!macx{
 macx{
     CONFIG += app_bundle
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
+    QMAKE_CXXFLAGS += --system-header-prefix=/usr \
+                      --system-header-prefix=$$PWD/../../armadillo \
+                      --system-header-prefix=$$PWD/../../mlpack \
+                      --system-header-prefix=$$PWD/../../yaml-cpp \
+                      --system-header-prefix=$$PWD/../../quazip
 
-    ICON = vespuccilogo.icns
+
+    ICON = $$PWD/vespuccilogo.icns
     LIBS += -L/usr/lib -lc++
 
     LIBS += -L$$OUT_PWD/../VespucciLibrary/ -lvespucci
@@ -347,6 +368,11 @@ macx{
 
     LIBS += -L/usr/local/lib/ -lhdf5
     PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
+
+    LIBS += -L/usr/local/lib/ -lhdf5_cpp
+    PRE_TARGETDEPS += /usr/local/lib/libhdf5_cpp.a
+
+    LIBS += -L/usr/local/lib -lhdf5
 
     LIBS += -L$$PWD/../../quazip/lib/ -lquazip
     INCLUDEPATH += $$PWD/../../quazip/include
@@ -389,9 +415,11 @@ win32:!win32-g++{
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/LAPACK/lapack_x64.lib
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lhdf5
+    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lhdf5_cpp
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/hdf5.lib
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependenceis/HDF5/lib/hdf5_cpp.lib
 
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/boost_1_61_0
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/boost_1_61_0
@@ -426,7 +454,7 @@ win32:!win32-g++{
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/zlib.lib
 
-    RC_ICONS=vespuccilogo.ico
+    RC_ICONS=$$PWD/vespuccilogo.ico
 }
 
 

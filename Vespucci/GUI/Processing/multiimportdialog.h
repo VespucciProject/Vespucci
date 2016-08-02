@@ -32,7 +32,7 @@ class MultiImportDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit MultiImportDialog(QWidget *parent, VespucciWorkspace * ws);
+    explicit MultiImportDialog(QWidget *parent, QSharedPointer<VespucciWorkspace>  ws);
     ~MultiImportDialog();
 
 private slots:
@@ -46,12 +46,7 @@ private slots:
 
 private:
     Ui::MultiImportDialog *ui;
-    VespucciWorkspace *workspace;
-    QTableWidget *filename_table_;
-    QLabel *count_label_;
-    QLineEdit *name_box_;
-    QLineEdit *abscissa_label_box_;
-    QLineEdit *ordinate_label_box_;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
 };
 

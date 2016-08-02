@@ -34,13 +34,16 @@ class MacroDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit MacroDialog(MainWindow *parent, VespucciWorkspace *ws);
+    explicit MacroDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws);
     ~MacroDialog();
     void SetActiveDataset(QSharedPointer<VespucciDataset> dataset);
-
+signals:
+    void SetActionChecked(bool checked);
+protected:
+    void closeEvent(QCloseEvent *ev);
 private:
     Ui::MacroDialog *ui;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
 };
 

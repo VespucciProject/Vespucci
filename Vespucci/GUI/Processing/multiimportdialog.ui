@@ -24,7 +24,7 @@
    <item>
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="nameLabel">
        <property name="text">
         <string>Dataset Name</string>
        </property>
@@ -38,7 +38,7 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="abscissaLabel">
        <property name="toolTip">
         <string>The title of the spectral x axis.</string>
        </property>
@@ -55,7 +55,7 @@
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_6">
+      <widget class="QLabel" name="ordinateLabel">
        <property name="toolTip">
         <string>The label of the spectral y axis.</string>
        </property>
@@ -74,9 +74,9 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="rowsLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="rowsLabel">
        <property name="text">
         <string>Rows</string>
        </property>
@@ -93,7 +93,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="columnsLabel">
        <property name="text">
         <string>Columns</string>
        </property>
@@ -110,7 +110,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="cellsLabel">
        <property name="text">
         <string>Total Cells: </string>
        </property>

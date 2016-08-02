@@ -26,8 +26,6 @@ private slots:
 
 private:
     Ui::ReportMessageDialog *ui;
-    QPlainTextEdit *plain_text_edit_;
-    QLabel *label_;
 };
 
 #endif // REPORTMESSAGEDIALOG_H

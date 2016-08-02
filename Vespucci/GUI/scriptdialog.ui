@@ -17,7 +17,7 @@
    <item>
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="interpreterLabel">
        <property name="text">
         <string>Interpreter</string>
        </property>
@@ -40,7 +40,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="codeLabel">
      <property name="toolTip">
       <string extracomment="Enter code exactly as you would in an editor (you can even copy and paste from an editor). Variables to send will show up with their assigned names. Names with spaces will have the spaces removed."/>
      </property>
@@ -60,7 +60,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="sendLabel">
      <property name="toolTip">
       <string extracomment="Enter either a protected keyword (spectra, abscissa, x, y) or the name of a dataset element including spaces, with no other characters. Spaces will be removed inside the R environment, so &quot;VCA Endmember Spectra&quot; will become &quot;VCAEndmemberSpectra&quot;."/>
      </property>
@@ -86,7 +86,7 @@ abscissa</string>
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="receiveLabel">
      <property name="toolTip">
       <string extracomment="Every statement here other than a protected keyword (x, y, spectra, abscissa) must consist of two names separated by an equals sign. Spaces will be included as the variable description in the data viewer."/>
      </property>

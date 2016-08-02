@@ -1,29 +1,15 @@
 #include "GUI/Display/statsdialog.h"
 #include "ui_statsdialog.h"
 #include <Math/Stats/confidenceinterval.h>
+#include <Math/Stats/histogram.h>
+#include "Global/global.h"
 
-StatsDialog::StatsDialog(MainWindow *parent, VespucciWorkspace *ws) :
+StatsDialog::StatsDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
     ui(new Ui::StatsDialog)
 {
-    workspace = ws;
+    workspace_ = ws;
     ui->setupUi(this);
-    min_line_edit_ = findChild<QLineEdit *>("minLineEdit");
-    max_line_edit_ = findChild<QLineEdit *>("maxLineEdit");
-    median_line_edit_ = findChild<QLineEdit *>("medLineEdit");
-    stddev_line_edit_ = findChild<QLineEdit *>("stddevLineEdit");
-    mean_line_edit_ = findChild<QLineEdit *>("meanLineEdit");
-    histogram_custom_plot_ = findChild<QCustomPlot *>("histogramCustomPlot");
-    dimension_label_ = findChild<QLabel *>("dimensionLabel");
-    plottable_label_ = findChild<QLabel *>("plottableLabel");
-    mappable_label_ = findChild<QLabel *>("mappableLabel");
-    name_label_ = findChild<QLabel *>("nameLabel");
-}
-
-void StatsDialog::SetActiveDataKeys(const QStringList &keys)
-{
-    data_keys_ = keys;
-    UpdateDisplayData();
 }
 
 StatsDialog::~StatsDialog()
@@ -31,14 +17,45 @@ StatsDialog::~StatsDialog()
     delete ui;
 }
 
-void StatsDialog::on_buttonBox_accepted()
+void StatsDialog::showEvent(QShowEvent *ev)
 {
-    close();
+    QDialog::showEvent(ev);
+    UpdateDisplayData();
+}
+
+void StatsDialog::closeEvent(QCloseEvent *ev)
+{
+    QDialog::closeEvent(ev);
+    emit SetActionChecked(false);
+}
+
+void StatsDialog::MatrixSelectionChanged(QStringList matrix_keys)
+{
+    data_keys_ = matrix_keys;
+    if (isVisible()) UpdateDisplayData();
+}
+
+void StatsDialog::MatrixToBeRemoved(QStringList matrix_keys)
+{
+    if (Vespucci::KeysAreEqual(data_keys_, matrix_keys)){
+        data_keys_ = QStringList();
+        ClearFields();
+    }
+
+}
+
+void StatsDialog::DatasetToBeRemoved(QString name)
+{
+    if (!data_keys_.size()) return;
+    if (data_keys_.first() == name){
+        data_keys_ = QStringList();
+        ClearFields();
+    }
 }
 
 double StatsDialog::CalculateMedian()
 {
-    const mat& data = workspace->GetMatrix(data_keys_);
+    const mat& data = workspace_->GetMatrix(data_keys_);
     if (!data.n_elem) return 0;
     if (data.n_cols == 1) return as_scalar(median(data));
     if (data.n_cols > 1){
@@ -52,7 +69,7 @@ double StatsDialog::CalculateMedian()
 
 double StatsDialog::CalculateStdDev()
 {
-    const mat& data = workspace->GetMatrix(data_keys_);
+    const mat& data = workspace_->GetMatrix(data_keys_);
     if (!data.n_elem) return 0;
     if (data.n_cols == 1) return as_scalar(stddev(data));
     if (data.n_cols > 1){
@@ -65,7 +82,7 @@ double StatsDialog::CalculateStdDev()
 
 double StatsDialog::CalculateMean()
 {
-    const mat& data = workspace->GetMatrix(data_keys_);
+    const mat& data = workspace_->GetMatrix(data_keys_);
     if (!data.n_elem) return 0;
     if (data.n_cols == 1) return as_scalar(mean(data));
     if (data.n_cols > 1){
@@ -78,64 +95,81 @@ double StatsDialog::CalculateMean()
 
 void StatsDialog::GenerateHistogram()
 {
-    const mat& data = workspace->GetMatrix(data_keys_);
+    ui->histogramCustomPlot->clearPlottables();
+    const mat& data = workspace_->GetMatrix(data_keys_);
     if (!data.n_elem) return;
-    //Sturges' rule for finding bin counts automagically
-    uword bin_count = std::round(1.0 + 3.332*std::log10((double) data.n_elem));
-    double range = data.max() - data.min();
-    double bin_width = range / ((double) bin_count);
-    vec edges(bin_count);
-    edges(0) = data.min();
-    for (uword i = 0; i < bin_count; ++i)
-        edges(i) = data.min() + bin_width*(double(i));
-    uvec hist_data;
-    if (data.n_cols == 1){hist_data = histc(data, edges);}
-    else{
-        mat data_copy = data;
-        data_copy.reshape(data.n_elem, 1);
-        hist_data = histc(data, edges);
-    }
+    vec edges;
+    uvec hist = Vespucci::Math::Stats::GenerateHistogram(data, edges);
+    edges.shed_row(edges.n_rows - 1);
 
-    QVector<double> hist_data_qvec =
-            QVector<double>::fromStdVector(conv_to<vector<double> >::from(hist_data));
-    QVector<double> hist_abs_qvec =
-            QVector<double>::fromStdVector(conv_to<vector<double> >::from(edges.rows(1, edges.n_rows - 2)));
+    qvec histq = qvec::fromStdVector(conv_to<stdvec>::from(hist));
+    qvec edgesq = qvec::fromStdVector(conv_to<stdvec>::from(edges));
 
-    QCPBars *hist_plot = new QCPBars(histogram_custom_plot_->xAxis,
-                                     histogram_custom_plot_->yAxis);
-    hist_plot->setData(hist_abs_qvec, hist_data_qvec);
-    histogram_custom_plot_->addPlottable(hist_plot);
+    QCPBars *hist_plot = new QCPBars(ui->histogramCustomPlot->xAxis,
+                                     ui->histogramCustomPlot->yAxis);
+    hist_plot->addData(edgesq, histq);
+    hist_plot->setWidth(edges(1) - edges(0));
+    edgesq.append(data.max()); //add maximum back in for plotting purposes
+    QVector<QString> labels;
+    for (auto value: edgesq) labels << QString::number(value, 'g', 3);
+    ui->histogramCustomPlot->addPlottable(hist_plot);
+    ui->histogramCustomPlot->xAxis->setTickVector(edgesq);
+    ui->histogramCustomPlot->xAxis->setTickVectorLabels(labels);
+    ui->histogramCustomPlot->rescaleAxes();
+    ui->histogramCustomPlot->replot();
 }
 
 void StatsDialog::UpdateDisplayData()
 {
+    if (data_keys_.size() < 2) ClearFields();
     GenerateHistogram();
     CalculateCI();
-    const mat& data = workspace->GetMatrix(data_keys_);
-    min_line_edit_->setText(QString::number(data.min()));
-    max_line_edit_->setText(QString::number(data.max()));
-    median_line_edit_->setText(QString::number(CalculateMedian()));
-    stddev_line_edit_->setText(QString::number(CalculateStdDev()));
-    mean_line_edit_->setText(QString::number(CalculateMean()));
-    name_label_->setText(data_keys_.last());
+    const mat& data = workspace_->GetMatrix(data_keys_);
+    if (!data.n_elem){
+        ClearFields();
+        return;
+    }
+    ui->minLineEdit->setText(QString::number(data.min()));
+    ui->maxLineEdit->setText(QString::number(data.max()));
+    ui->medLineEdit->setText(QString::number(CalculateMedian()));
+    ui->stddevLineEdit->setText(QString::number(CalculateStdDev()));
+    ui->meanLineEdit->setText(QString::number(CalculateMean()));
+    ui->nameLabel->setText(data_keys_.last());
     QString dimensions = QString::number(data.n_rows) + "×" + QString::number(data.n_cols);
-    dimension_label_->setText(dimensions);
-    plottable_label_->setText(workspace->Plottable(data_keys_) ? "True" : "False");
-    mappable_label_->setText(workspace->Mappable(data_keys_) ? "True" : "False");
+    ui->dimensionLabel->setText(dimensions);
+    ui->plottableLabel->setText(workspace_->Plottable(data_keys_) ? "True" : "False");
+    ui->mappableLabel->setText(workspace_->Mappable(data_keys_) ? "True" : "False");
 }
 
 void StatsDialog::CalculateCI()
 {
-    double alpha = alpha_double_spin_box_->value();
+    const mat& data = workspace_->GetMatrix(data_keys_);
+    if (!data.n_elem) return;
+    double alpha = ui->alphaDoubleSpinBox->value();
     double stddev = CalculateStdDev();
-    const mat& data = workspace->GetMatrix(data_keys_);
     unsigned int n = data.n_elem;
     double w = Vespucci::Math::Stats::TInterval(alpha, stddev, n);
-    confidence_line_edit_->setText(QString::number(w));
+    ui->confidenceLineEdit->setText(QString::number(w));
 }
 
 
 void StatsDialog::on_calculatePushButton_clicked()
 {
     CalculateCI();
+}
+
+void StatsDialog::ClearFields()
+{
+    ui->minLineEdit->setText("NA");
+    ui->maxLineEdit->setText("NA");
+    ui->medLineEdit->setText("NA");
+    ui->stddevLineEdit->setText("NA");
+    ui->meanLineEdit->setText("NA");
+    ui->nameLabel->setText("No matrix selected");
+    ui->dimensionLabel->setText("NA");
+    ui->plottableLabel->setText("NA");
+    ui->mappableLabel->setText("NA");
+    ui->confidenceLineEdit->setText("NA");
+    ui->histogramCustomPlot->clearPlottables();
+    ui->histogramCustomPlot->replot();
 }

@@ -47,7 +47,7 @@ void VCAData::Apply(const mat &spectra, int endmembers)
         indices_mat(i, 0) = indices(i);
 
     QStringList em_col_headings;
-    for (uword i = 1; i <= endmembers; ++i)
+    for (uword i = 1; i <= uword(endmembers); ++i)
         em_col_headings << "Endmember " + QString::number(i);
 
     AddMetadata("Endmembers calculated", QString::number(endmembers));

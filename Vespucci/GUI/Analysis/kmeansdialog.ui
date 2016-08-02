@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>202</height>
+    <height>155</height>
    </rect>
   </property>
   <property name="font">
@@ -18,89 +18,80 @@
   <property name="windowTitle">
    <string>k-Means Image</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>Analysis Options</string>
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="nameLabel">
+     <property name="text">
+      <string>Name</string>
      </property>
-     <layout class="QFormLayout" name="formLayout_2">
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Number of Clusters</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="clustersSpinBox">
-        <property name="minimum">
-         <number>2</number>
-        </property>
-        <property name="maximum">
-         <number>8</number>
-        </property>
-        <property name="value">
-         <number>5</number>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Distance Metric</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="metricComboBox">
-        <item>
-         <property name="text">
-          <string>Squared Euclidean</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Euclidean</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Chebyshev</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Manhattan</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="nameLineEdit">
-        <property name="text">
-         <string>k-Means</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Name</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QCheckBox" name="predictionCheckBox">
-        <property name="text">
-         <string>Predict Number of Clusters?</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
-   <item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="nameLineEdit">
+     <property name="text">
+      <string>k-Means</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="metricLabel">
+     <property name="text">
+      <string>Distance Metric</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QComboBox" name="metricComboBox">
+     <item>
+      <property name="text">
+       <string>Squared Euclidean</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Euclidean</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Chebyshev</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Manhattan</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="clusterLabel">
+     <property name="text">
+      <string>Number of Clusters</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QSpinBox" name="clustersSpinBox">
+     <property name="minimum">
+      <number>2</number>
+     </property>
+     <property name="maximum">
+      <number>8</number>
+     </property>
+     <property name="value">
+      <number>5</number>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QCheckBox" name="predictionCheckBox">
+     <property name="text">
+      <string>Predict Number of Clusters?</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="font">
       <font>

@@ -43,14 +43,26 @@ namespace TextImport
                               arma::vec &abscissa,
                               arma::vec &x, arma::vec &y);
 
-    VESPUCCI_EXPORT bool ImportWitec(std::string spec_filename,
-                                     std::string x_filename,
-                                     std::string y_filename,
+    VESPUCCI_EXPORT bool ImportWitec(std::string filename,
+                                     double x_start,
+                                     double y_start,
+                                     double x_end,
+                                     double y_end,
+                                     arma::uword x_count, arma::uword y_count,
                                      arma::mat &spectra,
                                      arma::vec &abscissa,
                                      arma::vec &x, arma::vec &y);
 
     VESPUCCI_EXPORT bool CheckFileValidity(QString filename, bool &comma_decimals);
+
+    VESPUCCI_EXPORT void GenerateSpatialData(double x_start,
+                                             double y_start,
+                                             double x_end,
+                                             double y_end,
+                                             arma::uword x_count,
+                                             arma::uword y_count,
+                                             arma::vec &x,
+                                             arma::vec &y);
 }
 
 #endif // TEXTIMPORT_H

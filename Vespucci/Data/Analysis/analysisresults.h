@@ -38,6 +38,7 @@ public:
     virtual ~AnalysisResults();
     const mat & GetMatrix(const QString &key);
     void AddMatrix(const QString &key, const mat &value, QStringList column_headings = QStringList());
+    void AddColumns(const QStringList &keys, const mat &value);
     void AddMetadata(QString key, QString value);
     void AddField(const QString &key, const field<mat> &value);
     const field<mat> & GetField(const QString &key);
@@ -50,6 +51,8 @@ public:
     const mat & EmptyMatrix();
     const QMap<QString, QString> GetMetadata() const;
     const QString GetColumnHeading(const QString &key, int column);
+    const QString GetRowHeading(const QString &key, int row);
+    void SetName(const QString &new_name);
 
 private:
     ///
@@ -69,6 +72,7 @@ private:
 
     QMap<QString, QString> metadata_;
     QMap<QString, QStringList> column_headings_;
+    QMap<QString, QStringList> row_headings_;
     QMap<QString, QSharedPointer<field<mat> > > fields_;
 
     mat empty_matrix_;

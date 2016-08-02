@@ -17,15 +17,14 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-
-#include <iostream>
-
-
-using namespace std;
-
+#include "test.h"
+#include "testahca.h"
+#include "testdatamodel.h"
+#include <QtTest/QtTest>
 int main()
 {
-    cout << "Hello World!" << endl;
+
+    TestAHCA ahca_test(0);
+    QTest::qExec(&ahca_test);
     return 0;
 }
-

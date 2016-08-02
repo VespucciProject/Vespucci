@@ -38,7 +38,7 @@ Names
 * Setters are named in PascalCase like other functions, but are named after the variables they set (e.g. `SetName()` for the setter of the `name_` member).
 * Getters are named after the member they return (e.g. the getter for `abscissa_` is named `abscissa()`). Getters that return pointers to members have `_ptr` appended to the end of their names. Where getters that return copies and getters that return references both exist, the getter that returns the reference is named with `_ref` appended.
 * Every function belongs to a namespace, either the namespace of its parent class or a namespace like `Vespucci::Math` or `BinaryImport`.
-* Widgets in Qt forms are named using Qt style inside .ui files, but use our style inside C++ classes (e.g. `nameLineEdit` becomes `name_line_edit_`). The type of the widget should be included in the name.
+* Widgets in Qt forms are named using Qt camelCase style inside .ui files. The type of the widget should be included in the name because they have to be called something. Widgets should be accessed using the ui member of the form class.
 * As mentioned above, an exception exists for a function whose sole purpose is to call the member of one of the class's members.
 
 Types

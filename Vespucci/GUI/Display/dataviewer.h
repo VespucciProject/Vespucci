@@ -38,22 +38,26 @@ class DataViewer;
 ///
 /// \brief The DataViewer class
 /// Window that displays dataset elements in a QTableView widget inside a QTabWidget
-class DataViewer : public QDialog
+class DataViewer : public QDockWidget
 {
     Q_OBJECT
 
 public:
-    explicit DataViewer(MainWindow *parent = 0);
+    explicit DataViewer(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws);
     ~DataViewer();
-    void AddTab(const mat & object, const QString &name);
-    const mat & EmptyMatrix();
-
+    void AddTab(QStringList keys);
+signals:
+    void SetActionChecked(bool checked);
+protected:
+    void closeEvent(QCloseEvent *ev);
 public slots:
     void RemoveTab(int index);
+    void DatasetToBeRemoved(QString name);
+    void MatrixToBeRemoved(QStringList keys);
 private:
     Ui::DataViewer *ui;
-    QTabWidget *tab_widget_;
     mat empty_matrix_;
+    QSharedPointer<VespucciWorkspace> workspace_;
 };
 
 #endif // DATAVIEWER_H

@@ -26,16 +26,13 @@
 /// \param ws Current workspace
 /// \param row Currently selected row in dataset list widget
 ///
-VCADialog::VCADialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
+VCADialog::VCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::VCADialog)
 {
     ui->setupUi(this);
-    workspace = ws;
-    dataset_ = workspace->GetDataset(dataset_key);
-    components_selector_spin_box_ = findChild<QSpinBox *>("endmembersSpinBox");
-    prediction_check_box_ = findChild<QCheckBox *>("predictionCheckBox");
-    name_line_edit_ = findChild<QLineEdit*>("nameLineEdit");
+    workspace_ = ws;
+    dataset_ = workspace_->GetDataset(dataset_key);
 }
 
 VCADialog::~VCADialog()
@@ -49,16 +46,16 @@ VCADialog::~VCADialog()
 void VCADialog::on_buttonBox_accepted()
 {
     int endmembers;
-    QString name = name_line_edit_->text();
-    if (prediction_check_box_->isChecked())
+    QString name = ui->nameLineEdit->text();
+    if (ui->predictionCheckBox->isChecked())
         endmembers = 0;
     else
-        endmembers = components_selector_spin_box_->value();
+        endmembers = ui->endmembersSpinBox->value();
 
     try{
         dataset_->VertexComponents(name, endmembers);
     }catch(std::exception e){
-        workspace->main_window()->DisplayExceptionWarning(e);
+        workspace_->main_window()->DisplayExceptionWarning(e);
     }
 
     close();
@@ -76,6 +73,6 @@ void VCADialog::on_buttonBox_rejected()
 
 void VCADialog::on_predictionCheckBox_clicked(bool checked)
 {
-    components_selector_spin_box_->setEnabled(!checked);
+    ui->endmembersSpinBox->setEnabled(!checked);
 
 }

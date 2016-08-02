@@ -32,7 +32,7 @@ class MapDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit MapDialog(MainWindow *parent, QStringList data_keys);
+    explicit MapDialog(MainWindow *parent, QStringList data_keys, QSharedPointer<VespucciWorkspace> ws);
     ~MapDialog();
 
 private slots:
@@ -41,11 +41,7 @@ private slots:
 private:
     Ui::MapDialog *ui;
     MainWindow *main_window_;
-    QComboBox *gradient_combo_box_;
-    QCheckBox *invert_check_box_;
-    QSpinBox *column_spin_box_;
-    QLineEdit *name_line_edit_;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
     QStringList data_keys_;
 };

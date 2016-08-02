@@ -96,7 +96,10 @@ SOURCES +=\
     src/Math/Stats/confidenceinterval.cpp \
     src/Math/Stats/hyptothesistests.cpp \
     src/Math/PeakFinding/kernelpeakfinding.cpp \
-    src/Math/Accessory/distancemetricwrapper.cpp
+    src/Math/Accessory/distancemetricwrapper.cpp \
+    src/Math/Stats/histogram.cpp \
+    src/Math/Clustering/agglomerativeclustering.cpp \
+    src/Math/Clustering/ahcanode.cpp
 
 
 HEADERS  += \
@@ -126,7 +129,10 @@ HEADERS  += \
     include/Math/Stats/confidenceinterval.h \
     include/Math/Stats/hypothesistests.h \
     include/Math/PeakFinding/kernelpeakfinding.h \
-    include/Math/Accessory/distancemetricwrapper.h
+    include/Math/Accessory/distancemetricwrapper.h \
+    include/Math/Stats/histogram.h \
+    include/Math/Clustering/agglomerativeclustering.h \
+    include/Math/Clustering/ahcanode.h
 
 #For all platforms:
 INCLUDEPATH += $$PWD/include
@@ -180,6 +186,12 @@ unix:!macx{
 macx{
     CONFIG += app_bundle
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
+
+    QMAKE_CXXFLAGS += --system-header-prefix=/usr \
+                      --system-header-prefix=$$PWD/../../armadillo \
+                      --system-header-prefix=$$PWD/../../mlpack \
+                      --system-header-prefix=$$PWD/../../yaml-cpp \
+                      --system-header-prefix=$$PWD/../../quazip
 
     ICON = vespuccilogo.icns
     LIBS += -L/usr/lib -lc++

@@ -14,7 +14,7 @@ class BooleanizeDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit BooleanizeDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit BooleanizeDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~BooleanizeDialog();
 
 private slots:
@@ -27,14 +27,7 @@ private slots:
 private:
     Ui::BooleanizeDialog *ui;
 
-
-    QDoubleSpinBox *min_box_;
-    QDoubleSpinBox *max_box_;
-    QCheckBox *oneify_box_;
-    QComboBox *behavior_box_;
-
-
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
 };
 

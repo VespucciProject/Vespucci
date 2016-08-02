@@ -4,17 +4,13 @@
 #include <cstdio>
 #include "External/fileinterprocess.h"
 
-ScriptDialog::ScriptDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
+ScriptDialog::ScriptDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::ScriptDialog)
 {
     ui->setupUi(this);
     dataset_ = ws->GetDataset(dataset_key);
-    code_plain_test_edit_ = findChild<QPlainTextEdit *>("codePlainTextEdit");
-    receive_plain_test_edit_ = findChild<QPlainTextEdit *>("receivePlainTextEdit");
-    send_plain_test_edit_ = findChild<QPlainTextEdit *>("sendPlainTextEdit");
-    interpreter_selector_combo_box_ = findChild<QComboBox *>("interpreterComboBox");
-    workspace = ws;
+    workspace_ = ws;
 }
 
 ScriptDialog::~ScriptDialog()
@@ -27,9 +23,9 @@ void ScriptDialog::on_buttonBox_accepted()
     //Parse input
     /*
     try{
-        std::string cmd = code_plain_test_edit_->document()->toPlainText().toStdString();
-        QStringList invars = send_plain_test_edit_->document()->toPlainText().split("\n");
-        QStringList outvars = receive_plain_test_edit_->document()->toPlainText().split("\n");
+        std::string cmd = ui->codePlainTextEdit->document()->toPlainText().toStdString();
+        QStringList invars = ui->sendPlainTextEdit->document()->toPlainText().split("\n");
+        QStringList outvars = ui->receivePlainTextEdit->document()->toPlainText().split("\n");
 
         //parse syntax for input box
         std::map<std::string, arma::mat> in_data;
@@ -53,23 +49,26 @@ void ScriptDialog::on_buttonBox_accepted()
                 in_data[invars[i].toStdString()] = *matrix_ptr;
         }
 
-        std::cout << "parsing outvars" << endl;
+        std::cout << "parsing outvars\n";
+
         std::string interpreter_key;
         std::string vespucci_key;
         std::map<std::string, std::string> variable_keys;
         for (int i = 0; i < outvars.size(); ++i){
-            std::cout << "outvars[i] = " << outvars[i].toStdString() << endl;
+            std::cout << "outvars[i] = " << outvars[i].toStdString() << "\n";
+
             vespucci_key = outvars[i].split("=")[0].trimmed().toStdString();
             interpreter_key = outvars[i].split("=")[1].trimmed().toStdString();
             std::cout << vespucci_key << ", " << interpreter_key << std::endl;
             variable_keys[vespucci_key] = interpreter_key;
         }
         std::map<std::string, arma::mat> data;
-        std::cout << "R stuff" << endl;
-        if (interpreter_selector_combo_box_->currentText() == "R"){
-            workspace->settings()->beginGroup("environment");
-            QString r_home = workspace->settings()->value("R_HOME").toString();
-            workspace->settings()->endGroup();
+        std::cout << "R stuff\n";
+
+        if (ui->interpreterComboBox->currentText() == "R"){
+            workspace_->settings()->beginGroup("environment");
+            QString r_home = workspace_->settings()->value("R_HOME").toString();
+            workspace_->settings()->endGroup();
             r_home = "R_HOME=" + r_home;
             char* R_HOME;
             snprintf(R_HOME, r_home.size(), r_home.toStdString().c_str());
@@ -90,7 +89,7 @@ void ScriptDialog::on_buttonBox_accepted()
             std::cout << "Add Results" << std::endl;
             dataset_->AddAnalysisResults(data);
         }
-        else if (interpreter_selector_combo_box_->currentText() == "Octave"){
+        else if (ui->interpreterComboBox->currentText() == "Octave"){
             //Do Octave stuff
         }
         else{

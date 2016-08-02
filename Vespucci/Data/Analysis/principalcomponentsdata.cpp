@@ -36,8 +36,8 @@ PrincipalComponentsData::PrincipalComponentsData(QString name):
 /// Perform analysis using arma::princomp
 void PrincipalComponentsData::Apply(const mat &spectra)
 {
-    mat coeff, score;
-    vec latent, tsquared, percent_variance;
+    mat coeff, score, percent_variance;
+    vec latent, tsquared;
     princomp(coeff, score, latent, tsquared, spectra.t());
     double eigenvalue_sum = sum(latent);
     percent_variance = latent / eigenvalue_sum;

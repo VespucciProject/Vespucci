@@ -12,7 +12,7 @@ class FourierTransformDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit FourierTransformDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit FourierTransformDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~FourierTransformDialog();
 
 private slots:
@@ -31,22 +31,8 @@ private slots:
 private:
     Ui::FourierTransformDialog *ui;
 
-    QDoubleSpinBox *end_double_spin_box_;
-    QLabel *end_label_;
-    QSpinBox *spectrum_spin_box_;
-    QComboBox *type_combo_box_;
-    QComboBox *weights_combo_box_;
-    QLabel *weights_label_;
-    QDoubleSpinBox *parameter_double_spin_box_;
-    QLabel *parameter_label_;
-    QCustomPlot *spectrum_custom_plot_;
-    QLabel *sine_power_label_;
-    QDoubleSpinBox *sine_power_double_spin_box_;
-    QSpinBox *power_spin_box_;
-    QLabel *value_label_;
-
     QSharedPointer<VespucciDataset> dataset_;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
 };
 

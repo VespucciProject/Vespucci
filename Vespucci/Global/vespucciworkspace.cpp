@@ -20,6 +20,8 @@
 #include "Global/vespucciworkspace.h"
 #include <iostream>
 #include <QtSvg>
+#include <H5Cpp.h>
+
 ///
 /// \brief VespucciWorkspace::VespucciWorkspace
 /// Constructor
@@ -31,6 +33,48 @@ VespucciWorkspace::VespucciWorkspace(QString settings_file) :
     directory_ = QDir::homePath();
     CheckSettings();
     data_model_ = new DataModel();
+
+    gradients_ = {
+                    {"ColorBrewer BlueGreen", QCPColorGradient::cbBlues},
+                    {"ColorBrewer BluePurple", QCPColorGradient::cbBuPu},
+                    {"ColorBrewer GreenBlue", QCPColorGradient::cbGnBu},
+                    {"ColorBrewer OrangeRed", QCPColorGradient::cbOrRd},
+                    {"ColorBrewer PurpleBlue", QCPColorGradient::cbPuBu},
+                    {"ColorBrewer PurpleBlueGreen", QCPColorGradient::cbPuBuGn},
+                    {"ColorBrewer PurpleRed", QCPColorGradient::cbPuRd},
+                    {"ColorBrewer RedPurple", QCPColorGradient::cbRdPu},
+                    {"ColorBrewer YellowGreen", QCPColorGradient::cbYlGn},
+                    {"ColorBrewer YellowGreenBlue", QCPColorGradient::cbYlGnBu},
+                    {"ColorBrewer YellowOrangeBrown", QCPColorGradient::cbYlOrBr},
+                    {"ColorBrewer YellowOrangeRed", QCPColorGradient::cbYlOrRd},
+                    {"ColorBrewer Blues", QCPColorGradient::cbBlues},
+                    {"ColorBrewer Greens", QCPColorGradient::cbGreens},
+                    {"ColorBrewer Oranges", QCPColorGradient::cbOranges},
+                    {"ColorBrewer Purples", QCPColorGradient::cbPurples},
+                    {"ColorBrewer Reds", QCPColorGradient::cbReds},
+                    {"ColorBrewer Grayscale", QCPColorGradient::cbGreys},
+                    {"QCustomPlot Grayscale", QCPColorGradient::gpGrayscale},
+                    {"QCustomPlot Night", QCPColorGradient::gpNight},
+                    {"QCustomPlot Candy", QCPColorGradient::gpCandy},
+                    {"QCustomPlot Ion", QCPColorGradient::gpIon},
+                    {"QCustomPlot Thermal", QCPColorGradient::gpThermal},
+                    {"↔QCustomPlot Polar", QCPColorGradient::gpPolar},
+                    {"↔QCustomPlot Spectrum", QCPColorGradient::gpSpectrum},
+                    {"QCustomPlot Jet", QCPColorGradient::gpJet},
+                    {"QCustomPlot Hues", QCPColorGradient::gpHues},
+                    {"QCustomPlot Hot", QCPColorGradient::gpHot},
+                    {"QCustomPlot Cold", QCPColorGradient::gpCold},
+                    {"↔ColorBrewer BrownBlueGreen", QCPColorGradient::cbBrBG},
+                    {"↔ColorBrewer PinkYellowGreen", QCPColorGradient::cbPiYG},
+                    {"↔ColorBrewer PurpleGreen", QCPColorGradient::cbPRGn},
+                    {"↔ColorBrewer PurpleOrange", QCPColorGradient::cbPuOr},
+                    {"↔ColorBrewer RedBlue", QCPColorGradient::cbRdBu},
+                    {"↔ColorBrewer RedGray", QCPColorGradient::cbRdGy},
+                    {"↔ColorBrewer RedYellowBlue", QCPColorGradient::cbRdYlBu},
+                    {"↔ColorBrewer RedYellowGreen", QCPColorGradient::cbRdYlGn},
+                    {"↔ColorBrewer Spectral", QCPColorGradient::cbSpectral},
+                    {"↔Vespucci Spectral", QCPColorGradient::vSpectral}
+                };
 }
 
 ///
@@ -38,7 +82,8 @@ VespucciWorkspace::VespucciWorkspace(QString settings_file) :
 /// Destructor
 VespucciWorkspace::~VespucciWorkspace()
 {
-    cout << "Workspace destructor" << endl;
+    cout << "Workspace destructor\n";
+
     delete data_model_;
 }
 
@@ -55,6 +100,7 @@ QStringList VespucciWorkspace::dataset_names() const
 void VespucciWorkspace::SetPointers(MainWindow *main_window, DatasetTreeModel *tree_model)
 {
     main_window_ = main_window;
+    dataset_tree_model_ = tree_model;
 }
 
 
@@ -81,6 +127,7 @@ void VespucciWorkspace::AddDataset(QSharedPointer<VespucciDataset> dataset)
 void VespucciWorkspace::RemoveDataset(QString name)
 {
     data_model_->RemoveDataset(name);
+    main_window_->RefreshTreeModel(data_model_);
 }
 
 ///
@@ -201,6 +248,11 @@ QSharedPointer<MapData> VespucciWorkspace::GetMap(const QString &dataset_key, co
     return data_model_->GetMap(dataset_key, map_key);
 }
 
+QSharedPointer<MapData> VespucciWorkspace::GetMap(const QStringList &map_keys)
+{
+    return data_model_->GetMap(map_keys);
+}
+
 const mat & VespucciWorkspace::GetAuxiliaryMatrix(const QString &dataset_key, const QString &matrix_key) const
 {
     return data_model_->GetAuxiliaryMatrix(dataset_key, matrix_key);
@@ -241,41 +293,62 @@ QString* VespucciWorkspace::directory_ptr()
     return &directory_;
 }
 
-///
-/// \brief VespucciWorkspace::RecalculateGlobalDataRange
-/// \param new_data_range Pointer to new data range
-/// \return Whether or not data range was changed
-///
-bool VespucciWorkspace::RecalculateGlobalDataRange(QCPRange *new_data_range)
-{
-    if (new_data_range->upper > global_data_range_.upper){
-        global_data_range_.upper = new_data_range->upper;
-        return true;
-    }
-    if (new_data_range->lower < global_data_range_.lower){
-        global_data_range_.lower = new_data_range->lower;
-        return true;
-    }
-    return false;
-}
+
 
 ///
-/// \brief VespucciWorkspace::RefreshGlobalColorGradient
-/// \param new_gradient New gradient
-/// Changes the global gradient
-void VespucciWorkspace::RefreshGlobalColorGradient(QCPColorGradient new_gradient)
+/// \brief VespucciWorkspace::RemoveColorRange
+/// \param name
+/// Removes a color range from the workspace.
+/// Maps using this color range are not affected.
+/// User must manually trigger recalculation per map
+void VespucciWorkspace::RemoveColorRange(QString name)
 {
-    global_color_gradient_ = new_gradient;
+    if (global_gradients_.contains(name)) global_gradients_.remove(name);
 }
 
-///
-/// \brief VespucciWorkspace::SetGlobalDataRange
-/// \param new_data_range
-/// Changes the global data range
-void VespucciWorkspace::SetGlobalDataRange(QCPRange *new_data_range)
+QStringList VespucciWorkspace::GlobalGradientKeys()
 {
-    global_data_range_ = *new_data_range;
+    return global_gradients_.keys();
 }
+
+QMap<QString, Vespucci::GlobalGradient> VespucciWorkspace::global_gradients()
+{
+    return global_gradients_;
+}
+
+QCPColorGradient VespucciWorkspace::GetGradient(QString key, int count)
+{
+    if (key == "ColorBrewer Cluster"){
+        switch (count){
+            case 2: return QCPColorGradient::cbCluster2;
+            case 3: return QCPColorGradient::cbCluster3;
+            case 4: return QCPColorGradient::cbCluster4;
+            case 5: return QCPColorGradient::cbCluster5;
+            case 6: return QCPColorGradient::cbCluster6;
+            case 7: return QCPColorGradient::cbCluster7;
+            case 8: return QCPColorGradient::cbCluster8;
+            case 9: default: return QCPColorGradient::cbCluster9;
+        }
+    }
+    if (gradients_.contains(key))
+        return gradients_.value(key);
+    else
+        return QCPColorGradient::gpJet;
+}
+
+Vespucci::GlobalGradient VespucciWorkspace::GetGlobalGradient(QString key)
+{
+    return global_gradients_.value(key);
+}
+
+QStringList VespucciWorkspace::GradientNames(bool include_cluster)
+{
+    QStringList keys = gradients_.keys();
+    if (include_cluster)
+        keys.insert(0, "ColorBrewer Cluster");
+    return keys;
+}
+
 
 ///
 /// \brief VespucciWorkspace::global_data_range
@@ -296,19 +369,42 @@ QCPColorGradient* VespucciWorkspace::global_gradient()
 }
 
 ///
-/// \brief VespucciWorkspace::CreateLogFile
-/// \param dataset_name
-/// \return
-/// Creates a pointer to a heap-allocated QFile which is open.
-QFile* VespucciWorkspace::CreateLogFile(QString dataset_name)
+/// \brief VespucciWorkspace::AddGlobalGradient
+/// \param name
+/// \param gradient_key
+/// \param lower
+/// \param upper
+///
+void VespucciWorkspace::AddGlobalGradient(QString name, QString gradient_key, double lower, double upper)
 {
-    //set up temporary filename (UTC date in close to ISO 8601 format)
-    QDateTime datetime = QDateTime::currentDateTimeUtc();
-    QString log_filename = datetime.toString("yyyy-MM-dd-hhmmss");
-    log_filename += "_" + dataset_name + ".temp.txt";
-    QFile *log_file = new QFile(log_filename);
-    log_file->open(QIODevice::ReadWrite);
-    return log_file;
+    Vespucci::GlobalGradient gradient;
+    gradient.gradient = GetGradient(gradient_key);
+    gradient.range = QCPRange(lower, upper);
+    global_gradients_[name] = gradient;
+}
+
+void VespucciWorkspace::RecalculateGlobalGradient(QString name)
+{
+    if (global_gradients_.contains(name)){
+        QList<QSharedPointer<MapData> > maps =
+                data_model_->GetMapsUsingColorRange(name);
+        if (maps.isEmpty()) return;
+        vec mins(maps.size());
+        vec maxes(maps.size());
+        for (uword i = 0; i < mins.n_elem; ++i){
+            mins(i) = maps[i]->min();
+            maxes(i) = maps[i]->max();
+        }
+        double new_min = mins.min();
+        double new_max = maxes.max();
+
+        Vespucci::GlobalGradient gradient = global_gradients_.value(name);
+        gradient.range = QCPRange(new_min, new_max);
+
+        for (auto map: maps){
+            map->SetGlobalGradient(name);
+        }
+    }
 }
 
 ///
@@ -334,15 +430,6 @@ unsigned int VespucciWorkspace::UpdateCount()
 DatasetTreeModel* VespucciWorkspace::dataset_tree_model() const
 {
     return main_window_->dataset_tree_model();
-}
-
-void VespucciWorkspace::CleanLogFiles()
-{
-    QDir current_dir = QDir::current();
-    QStringList filters;
-    filters << "*.txt";
-    foreach (QString filename, current_dir.entryList(filters, QDir::Files))
-        QFile::remove(filename);
 }
 
 void VespucciWorkspace::ResetSettings()
@@ -443,14 +530,14 @@ const mat & VespucciWorkspace::GetMatrix(const QStringList &keys) const
     }
 }
 
+bool VespucciWorkspace::HasMatrix(const QStringList &keys) const
+{
+    return data_model_->HasMatrix(keys);
+}
+
 bool VespucciWorkspace::Mappable(const QStringList &keys) const
 {
-    try{
-        return data_model_->Mappable(keys);
-    }catch(exception e){
-        main_window_->DisplayExceptionWarning("VespucciWorkspace::Mappable", e);
-        return false;
-    }
+    return data_model_->Mappable(keys);
 }
 
 bool VespucciWorkspace::Plottable(const QStringList &keys) const
@@ -463,112 +550,8 @@ bool VespucciWorkspace::Plottable(const QStringList &keys) const
     }
 }
 
+
 void VespucciWorkspace::UpdateTreeModel()
 {
     main_window_->dataset_tree_model()->UpdateData(data_model_);
 }
-
-
-
-
-/*
-///
-/// \brief VespucciWorkspace::SavePlot
-/// \param plot
-/// \param filename
-/// \return
-///
-bool VespucciWorkspace::SavePlot(QCustomPlot *plot, QString filename) const
-{
-    QStringList filename_list = filename.split(".");
-    QString extension = filename_list.last();
-
-    //this method of determining type may not be valid on non-Win platforms
-    //check this on GNU/Linux and Mac OSX later.
-
-    bool success = true;
-
-    if (extension == "bmp")
-        success = plot->saveBmp(filename, 0, 0, 1.0);
-    else if (extension == "pdf")
-        success = plot->savePdf(filename, false, 0, 0, "Vespucci 1.0", "Plot");
-    else if (extension == "png"){
-        bool ok;
-        int quality = QInputDialog::getInt(plot->parentWidget(), "Enter Quality",
-                                           "Quality (%)",
-                                           80, 0, 100, 1, &ok);
-        if (ok)
-            plot->savePng(filename, 0, 0, 1.0, quality);
-    }
-
-    else if (extension == "jpg"){
-        bool ok;
-        int quality = QInputDialog::getInt(plot->parentWidget(), "Enter Quality",
-                                           "Quality (%)",
-                                           80, 0, 100, 1, &ok);
-        if (ok)
-            plot->saveJpg(filename, 0, 0, 1.0, quality);
-    }
-    else if (extension == "svg"){
-        QPicture picture;
-        QCPPainter qcp_painter(&picture);
-        plot->toPainter(&qcp_painter);
-
-
-        QSvgGenerator generator;
-        generator.setFileName(filename);
-
-        QPainter painter;
-
-        painter.begin(&generator);
-        painter.drawPicture(0, 0, picture);
-        painter.end();
-    }
-    else if (extension == "emf"){
-        QStringList filename_trunk_list = filename_list;
-        filename_trunk_list.removeLast();
-        QString filename_trunk = filename_trunk_list.join(".");
-        QString SVG_filename = filename_trunk + ".svg";
-        QPicture picture;
-        QCPPainter qcp_painter(&picture);
-        plot->toPainter(&qcp_painter);
-
-        QSvgGenerator generator;
-        generator.setFileName(SVG_filename);
-
-        QPainter painter;
-
-        painter.begin(&generator);
-        painter.drawPicture(0, 0, picture);
-        painter.end();
-
-        //call java program "EMFGenerator" to convert svg file then
-        QProcess *process = new QProcess(0);
-        QString command = "java -jar EMFGenerator.jar \"" + SVG_filename + "\"";
-        process->start(command);
-    }
-
-    else{
-        //default to tif, force extension (for Windows compatability)
-        if (extension != "tif")
-            filename.append(".tif");
-        bool ok;
-        int quality = QInputDialog::getInt(plot->parentWidget(),
-                                           "Compression",
-                                           "Enter 0 for no compression,"
-                                           "1 for LZW lossless compression",
-                                           0, 0, 1, 1, &ok);
-        if (ok){
-            QPixmap background = plot->background();
-            plot->setBackground(Qt::transparent);
-            plot->replot();
-            success = plot->saveRastered(filename, 0, 0, 1.0, "TIF", quality);
-            plot->setBackground(background);
-            plot->replot();
-
-        }
-    }
-
-    return success;
-}
-*/

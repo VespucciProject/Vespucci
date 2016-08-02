@@ -13,32 +13,37 @@ class PlotViewer;
 using namespace std;
 using namespace arma;
 class MainWindow;
-class PlotViewer : public QDialog
+class PlotViewer : public QDockWidget
 {
     Q_OBJECT
 
 public:
-    explicit PlotViewer(MainWindow *parent);
+    explicit PlotViewer(MainWindow *parent, QSharedPointer<VespucciWorkspace> workspace);
     ~PlotViewer();
     void AddPlot(const mat& paired_data, const QString &tab_title);
     void AddPlot(const vec& abscissa, const vec& data, const QString &tab_title);
     void AddTransientPlot(const vec &abscissa, const vec &data, const QString &tab_title);
     void AddTransientPlot(const mat & paired_data, const QString &tab_title);
+    void AddScatterPlot(const mat &paired_data, const QString &tab_title);
+    void AddScatterPlot(const vec &abscissa, const vec &data, const QString &tab_title);
+    void AddTab(const QString &tab_title);
+    void SetHoldCheckBoxChecked(bool checked);
     void CloseTransientTab();
+signals:
+    void SetActionChecked(bool checked);
+protected:
+    void closeEvent(QCloseEvent *ev);
 public slots:
 private slots:
 
-    void on_stackCheckBox_stateChanged(int arg1);
-
-    void on_tabWidget_currentChanged(int index);
-
     void on_tabWidget_tabCloseRequested(int index);
+
+
+    void on_exportPushButton_clicked();
 
 private:
     Ui::PlotViewer *ui;
-    QTabWidget *tab_widget_;
-    QCheckBox *hold_check_box_;
-    QCheckBox *stack_check_box_;
+    QSharedPointer<VespucciWorkspace> workspace_;
 };
 
 #endif // PLOTVIEWER_H

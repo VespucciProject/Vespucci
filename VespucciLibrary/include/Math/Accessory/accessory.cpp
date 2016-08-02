@@ -17,7 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include <Math/Accessory/accessory.h>
+#include "Math/Accessory/accessory.h"
+#include "Math/Accessory/distancemetricwrapper.h"
 
 ///
 /// \brief Vespucci::Math::LocalMaximum
@@ -219,7 +220,8 @@ arma::mat Vespucci::Math::orth(arma::mat X)
     }
     else{
         std::cerr << "orth: no basis found" << std::endl;
-        //cout << "end orth" << endl;
+        //cout << "end orth\n";
+
         return arma::zeros(X.n_rows, X.n_cols);
     }
 }

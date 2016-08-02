@@ -37,32 +37,25 @@ class PlotWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit PlotWidget(QWidget *parent = 0, VespucciWorkspace *ws=0);
+    explicit PlotWidget(QWidget *parent, QSharedPointer<VespucciWorkspace> ws);
     ~PlotWidget();
     void AddPlot(const mat & paired_data);
     void AddPlot(const vec &abscissa, const vec &data);
     void AddTransientPlot(const vec &abscissa, const vec &data);
     void AddTransientPlot(const mat & paired_data);
+    void AddScatterPlot(const mat & paired_data);
+    void AddScatterPlot(const vec &abscissa, const vec &data);
+    void AddMappedScatterPlot(const mat & paired_data, const vec &categorical);
+    void AddMappedScatterPlot(const vec & abscissa, const vec &data, const vec &categorical);
     void RemoveTransientPlot();
-    void StackPlots(bool stack);
-    bool offset_plots() const;
     bool TransientOnly() const;
+    void SavePlot(QString filename);
 
-public slots:
 private:
     Ui::PlotWidget *ui;
-    QCustomPlot *plot_;
-    double offset_by_;
-    bool offset_plots_;
-    void DetermineOffset();
-    void DetermineOffset(const QVector<double> &new_data);
-    void ApplyOffset();
-    void RemoveOffset();
-    QVector<double> GetData(const QList<QCPData> &values) const;
-    QVector<double> GetAbscissa(const QList<QCPData> &keys) const;
     QList<QColor> colors_;
     QColor GetNextColor();
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
     QCPGraph *transient_graph_;
 };
 

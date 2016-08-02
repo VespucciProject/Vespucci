@@ -24,6 +24,11 @@ namespace Vespucci{
     bool SavePlot(QCustomPlot *plot, QString filename);
     void SetQCPFonts(QCustomPlot *plot, const QFont &font);
     QProgressDialog *DisplayProgressDialog(QWidget *parent, QString title, QString text);
+    bool KeysAreEqual(QStringList &keys1, QStringList &keys2);
+    struct GlobalGradient{
+        QCPColorGradient gradient;
+        QCPRange range;
+    };
 }
 #endif // GLOBAL
 

@@ -39,7 +39,7 @@ class FilterDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit FilterDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit FilterDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~FilterDialog();
 
 private slots:
@@ -53,15 +53,8 @@ private slots:
 
 private:
     Ui::FilterDialog *ui;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
-
-    QComboBox *method_box_;
-    QSpinBox *derivative_box_;
-    QSpinBox *polynomial_box_;
-    QSpinBox *window_box_;
-    QSpinBox *singular_values_box_;
-    QDoubleSpinBox *epsilon_box_;
 };
 
 #endif // FILTERDIALOG_H

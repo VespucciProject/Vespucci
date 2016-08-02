@@ -28,60 +28,30 @@
 /// \param directory Working directory for this window
 /// \param parent MapData associated with this image
 /// Constructor for this object
-MapViewer::MapViewer(QString name, QString *directory, MapData *parent):
-    QMainWindow(0),
+MapViewer::MapViewer(MainWindow *parent, QStringList map_keys, QSharedPointer<VespucciWorkspace> ws):
+    QMainWindow(parent), map_keys_(map_keys),
     ui(new Ui::MapViewer)
 {
     ui->setupUi(this);
-    name_ = name;
-    directory_ = directory;
+    workspace_ = ws;
+    name_ = map_keys.last();
+    directory_ = ws->directory_ptr();
+    ui->mapPlot->setBackground(palette().window());
+    statusbar_label_ = new QLabel("(0, 0, 0)");
+    ui->statusbar->addWidget(statusbar_label_);
+    connect(this, &MapViewer::RequestSpectrumPlot,
+            parent, &MainWindow::SpectrumRequested);
+    connect(this, &MapViewer::RequestHeldSpectrumPlot,
+            parent, &MainWindow::HeldSpectrumRequested);
+    connect(ui->mapPlot, &MapPlot::SpectrumRequested,
+            this, &MapViewer::SpectrumRequested);
+    connect(ui->mapPlot, &MapPlot::CoordinatesChanged,
+            this, &MapViewer::SetStatusbar);
+}
 
-    qcp_= findChild<QCustomPlot *>("mapView");
-    qcp_->setBackground(palette().window());
-
-    parent_map_data_ = parent;
-    //color_map_ = qobject_cast<QCPColorMap *>(color_map_abs);
-
-
-    color_list_ = QStringList({"ColorBrewerBlueGreen",
-                               "ColorBrewerBluePurple",
-                               "ColorBrewerGreenBlue",
-                               "ColorBrewerOrangeRed",
-                               "ColorBrewerPurpleBlue",
-                               "ColorBrewerPurpleBlueGreen",
-                               "ColorBrewerPurpleRed",
-                               "ColorBrewerRedPurple",
-                               "ColorBrewerYellowGreen",
-                               "ColorBrewerYellowGreenBlue",
-                               "ColorBrewerYellowOrangeBrown",
-                               "ColorBrewerYellowOrangeRed",
-                               "ColorBrewerBlues",
-                               "ColorBrewerGreens",
-                               "ColorBrewerOranges",
-                               "ColorBrewerPurples",
-                               "ColorBrewerReds",
-                               "ColorBrewerGrayscale",
-                               "QCustomPlotGrayscale",
-                               "QCustomPlotNight",
-                               "QCustomPlotCandy",
-                               "QCustomPlotIon",
-                               "QCustomPlotThermal",
-                               "↔QCustomPlotPolar",
-                               "↔QCustomPlotSpectrum",
-                               "QCustomPlotJet",
-                               "QCustomPlotHues",
-                               "QCustomPlotHot",
-                               "QCustomPlotCold",
-                               "↔ColorBrewerBrownBlueGreen",
-                               "↔ColorBrewerPinkYellowGreen",
-                               "↔ColorBrewerPurpleGreen",
-                               "↔ColorBrewerPurpleOrange",
-                               "↔ColorBrewerRedBlue",
-                               "↔ColorBrewerRedGray",
-                               "↔ColorBrewerRedYellowBlue",
-                               "↔ColorBrewerRedYellowGreen",
-                               "↔ColorBrewerSpectral",
-                               "↔VespucciSpectral"});
+MapPlot *MapViewer::mapPlot()
+{
+    return ui->mapPlot;
 }
 
 MapViewer::~MapViewer()
@@ -90,64 +60,23 @@ MapViewer::~MapViewer()
 }
 
 ///
-/// \brief MapViewer::GetGradient
-/// \param gradient_number index of color gradient
-/// \return Color gradient
-///
-QCPColorGradient MapViewer::GetGradient(int gradient_number)
+/// \brief MapViewer::SpectrumRequested
+/// \param index
+/// Passes signal on to main window
+/// the widget doesn't know everything main window needs to know
+void MapViewer::SpectrumRequested(size_t index)
 {
-    switch (gradient_number)
-    {
-    case 0: return QCPColorGradient::cbBuGn;
-    case 1: return QCPColorGradient::cbBuPu;
-    case 2: return QCPColorGradient::cbGnBu;
-    case 3: return QCPColorGradient::cbOrRd;
-    case 4: return QCPColorGradient::cbPuBu;
-    case 5: return QCPColorGradient::cbPuBuGn;
-    case 6: return QCPColorGradient::cbPuRd;
-    case 7: return QCPColorGradient::cbRdPu;
-    case 8: return QCPColorGradient::cbYlGn;
-    case 9: return QCPColorGradient::cbYlGnBu;
-    case 10: return QCPColorGradient::cbYlOrBr;
-    case 11: return QCPColorGradient::cbYlOrRd;
-    case 12: return QCPColorGradient::cbBlues;
-    case 13: return QCPColorGradient::cbGreens;
-    case 14: return QCPColorGradient::cbOranges;
-    case 15: return QCPColorGradient::cbPurples;
-    case 16: return QCPColorGradient::cbReds;
-    case 17: return QCPColorGradient::cbGreys;
-    case 18: return QCPColorGradient::gpGrayscale;
-    case 19: return QCPColorGradient::gpNight;
-    case 20: return QCPColorGradient::gpCandy;
-    case 21: return QCPColorGradient::gpIon;
-    case 22: return QCPColorGradient::gpThermal;
-    case 23: return QCPColorGradient::gpPolar;
-    case 24: return QCPColorGradient::gpSpectrum;
-    case 25: return QCPColorGradient::gpJet;
-    case 26: return QCPColorGradient::gpHues;
-    case 27: return QCPColorGradient::gpHot;
-    case 28: return QCPColorGradient::gpCold;
-    case 29: return QCPColorGradient::cbBrBG;
-    case 30: return QCPColorGradient::cbPiYG;
-    case 31: return QCPColorGradient::cbPRGn;
-    case 32: return QCPColorGradient::cbPuOr;
-    case 33: return QCPColorGradient::cbRdBu;
-    case 34: return QCPColorGradient::cbRdGy;
-    case 35: return QCPColorGradient::cbRdYlBu;
-    case 36: return QCPColorGradient::cbRdYlGn;
-    case 37: return QCPColorGradient::cbSpectral;
-    case 38: return QCPColorGradient::vSpectral;
-    default: return QCPColorGradient::gpCold;
-    }
+    emit RequestSpectrumPlot(map_keys_.first(),
+                             map_keys_.last(),
+                             index);
 }
 
-
-///
-/// \brief MapViewer::on_actionInterpolate_triggered
-/// see MapViewer::on_actionInterpolate_toggled
-void MapViewer::on_actionInterpolate_triggered()
+void MapViewer::SetStatusbar(double x, double y, double z)
 {
-    //see on_actionInterpolate_toggled
+    QString text = "(" + QString::number(x) + ", " +
+            QString::number(y) + ", " +
+            QString::number(z) + ")";
+    statusbar_label_->setText(text);
 }
 
 ///
@@ -156,7 +85,7 @@ void MapViewer::on_actionInterpolate_triggered()
 /// Turns interpolation of the QCustomPlot object on and off
 void MapViewer::on_actionInterpolate_toggled(bool arg1)
 {
-    parent_map_data_->setInterpolate(arg1);
+    workspace_->GetMap(map_keys_)->setInterpolate(arg1);
 }
 
 ///
@@ -178,56 +107,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
                                             "Windows Bitmap (*.bmp);; "
                                             "Portable Network Graphics (*.png);; "
                                             "JPEG (*.jpg)"));
-    Vespucci::SavePlot(qcp_, filename);
-
-    /*
-    QStringList filename_list = filename.split(".");
-    QString extension = filename_list.last();
-
-    //this method of determining type may not be valid on non-Win platforms
-    //check this on GNU/Linux and Mac OSX later.
-
-
-
-
-    if (extension == "bmp")
-        Vespucci::SavePlot(qcp_, filename);
-        parent_map_data_->saveBmp(filename, 0, 0, 1.0);
-    else if (extension == "pdf")
-        parent_map_data_->savePdf(filename, 0, 0);
-    else if (extension == "png"){
-        bool ok;
-        int quality = QInputDialog::getInt(this, "Enter Quality",
-                                           "Quality (%)",
-                                           80, 0, 100, 1, &ok);
-        if (ok)
-            parent_map_data_->savePng(filename, 0, 0, 1.0, quality);
-    }
-
-    else if (extension == "jpg"){
-        bool ok;
-        int quality = QInputDialog::getInt(this, "Enter Quality",
-                                           "Quality (%)",
-                                           80, 0, 100, 1, &ok);
-        if (ok)
-            parent_map_data_->saveJpg(filename, 0, 0, 1.0, quality);
-    }
-
-    else{
-        //default to tif, force extension (for Windows compatability)
-        if (extension != "tif")
-            filename.append(".tif");
-        bool ok;
-        int quality = QInputDialog::getInt(this,
-                                           "Compression",
-                                           "Enter 0 for no compression,"
-                                           "1 for LZW lossless compression",
-                                           0, 0, 1, 1, &ok);
-        if (ok)
-            parent_map_data_->saveTiff(filename, 0, 0, 1.0, quality);
-    }
-    */
-
+    Vespucci::SavePlot(ui->mapPlot, filename);
 }
 
 ///
@@ -236,7 +116,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
 /// Toggles whether or not the axes of the map are visible
 void MapViewer::on_actionShow_Axes_toggled(bool arg1)
 {
-    parent_map_data_->ShowAxes(arg1);
+    workspace_->GetMap(map_keys_)->ShowAxes(arg1);
 }
 
 ///
@@ -245,7 +125,7 @@ void MapViewer::on_actionShow_Axes_toggled(bool arg1)
 /// toggles whether or not the color scale is visible
 void MapViewer::on_actionShow_Color_Scale_toggled(bool arg1)
 {
-    parent_map_data_->ShowColorScale(arg1);
+    workspace_->GetMap(map_keys_)->ShowColorScale(arg1);
 }
 
 ///
@@ -253,10 +133,15 @@ void MapViewer::on_actionShow_Color_Scale_toggled(bool arg1)
 /// Opens a dialog to select a new color scheme
 void MapViewer::on_actionSet_Color_Scheme_triggered()
 {
-    QString color_name = QInputDialog::getItem(this, "Select Color Scheme", "Choose Scheme", color_list_);
-    int color_index = color_list_.indexOf(color_name);
-    QCPColorGradient new_gradient = GetGradient(color_index);
-    parent_map_data_->setGradient(new_gradient);
+    if (!workspace_->GetMap(map_keys_)->global_gradient_key().isEmpty())
+        QMessageBox::warning(this, "Global Gradient",
+                             "Changing the color gradient will detach this map"
+                             "from the global gradient");
+    QStringList gradient_names = workspace_->GradientNames();
+    QString gradient_key = QInputDialog::getItem(this, "Select Gradient", "Gradient",
+                                                 gradient_names);
+    QCPColorGradient new_gradient = workspace_->GetGradient(gradient_key);
+    workspace_->GetMap(map_keys_)->setGradient(new_gradient);
 }
 
 ///
@@ -265,44 +150,11 @@ void MapViewer::on_actionSet_Color_Scheme_triggered()
 void MapViewer::on_actionAdd_Scale_Bar_triggered()
 {
     //widget will delete itself
-    ScaleBarDialog *scale_bar_dialog = new ScaleBarDialog(this, parent_map_data_);
+    ScaleBarDialog *scale_bar_dialog = new ScaleBarDialog(this, workspace_->GetMap(map_keys_));
+    scale_bar_dialog->setAttribute(Qt::WA_DeleteOnClose);
     scale_bar_dialog->show();
 }
 
-///
-/// \brief MapViewer::on_actionShow_Spectrum_Viewer_triggered
-/// Makes the spectrum viewer visible
-void MapViewer::on_actionShow_Spectrum_Viewer_triggered()
-{
-    parent_map_data_->ShowSpectrumViewer(true);
-}
-
-///
-/// \brief MapViewer::on_actionCommon_Color_Gradient_toggled
-/// \param arg1 Whether or not Common Color Gradient option is selected.
-/// Sets the color scale to the global color scale.
-void MapViewer::on_actionCommon_Color_Gradient_toggled(bool arg1)
-{
-    parent_map_data_->UseGlobalColorScale(arg1);
-}
-
-///
-/// \brief MapViewer::GlobalDataRangeChanged
-/// \param new_range The new global color range
-/// Sets the range to the global color range. Associated with a signal in MainWindow
-void MapViewer::GlobalDataRangeChanged(QCPRange new_range)
-{
-    parent_map_data_->SetDataRange(new_range);
-}
-
-///
-/// \brief MapViewer::GlobalGradientChanged
-/// \param new_gradient
-/// Sets the new global color gradient when the global gradient is changed
-void MapViewer::GlobalGradientChanged(QCPColorGradient new_gradient)
-{
-    parent_map_data_->setGradient(new_gradient);
-}
 
 ///
 /// \brief MapViewer::on_actionLock_Size_toggled
@@ -310,7 +162,7 @@ void MapViewer::GlobalGradientChanged(QCPColorGradient new_gradient)
 /// Locks the size of the MapDisplay window
 void MapViewer::on_actionLock_Size_toggled(bool arg1)
 {
-    parent_map_data_->LockMapDisplaySize(arg1);
+    workspace_->GetMap(map_keys_)->LockMapDisplaySize(arg1);
 }
 
 ///
@@ -318,7 +170,7 @@ void MapViewer::on_actionLock_Size_toggled(bool arg1)
 /// Resets the size to its original.
 void MapViewer::on_actionReset_Size_triggered()
 {
-    parent_map_data_->ResetMapWidgetSize();
+    workspace_->GetMap(map_keys_)->ResetMapWidgetSize();
 }
 
 ///
@@ -327,33 +179,8 @@ void MapViewer::on_actionReset_Size_triggered()
 /// it had on instantiation.
 void MapViewer::on_actionReproportion_triggered()
 {
-    parent_map_data_->RescaleMapWidget();
+    workspace_->GetMap(map_keys_)->RescaleMapWidget();
 }
-
-///
-/// \brief MapViewer::on_actionNew_Dataset_from_Map_triggered
-/// Launches the data extractor from the MapData object.
-void MapViewer::on_actionNew_Dataset_from_Map_triggered()
-{
-    parent_map_data_->LaunchDataExtractor();
-}
-
-void MapViewer::closeEvent(QCloseEvent *event)
-{
-    if (parent_map_data_->SpectrumViewerVisible())
-        parent_map_data_->HideSpectrumViewer();
-    event->accept();
-}
-
-void MapViewer::on_actionStats_triggered()
-{
-}
-
-void MapViewer::on_actionExport_Values_triggered()
-{
-    parent_map_data_->ExportText();
-}
-
 
 void MapViewer::on_actionSet_Font_triggered()
 {
@@ -361,10 +188,78 @@ void MapViewer::on_actionSet_Font_triggered()
     QFont font = QFontDialog::getFont(&ok,
                                       QFont("Arial", 12, QFont::Normal),
                                       this, "Select Font");
-    if (ok){
-        parent_map_data_->SetFonts(font);
+    if (ok) workspace_->GetMap(map_keys_)->SetFonts(font);
+}
 
+void MapViewer::on_actionSet_Color_Scale_Label_triggered()
+{
+    QString current_label = ui->mapPlot->ColorScaleLabel();
+    bool ok = true;
+    QString new_label = QInputDialog::getText(this, "Enter label",
+                                              "Label",
+                                              QLineEdit::Normal,
+                                              current_label, &ok);
+    if (ok) ui->mapPlot->SetColorScaleLabel(new_label);
+}
+
+void MapViewer::on_actionSet_Global_Color_Scale_triggered()
+{
+   QStringList global_scale_names = workspace_->GlobalGradientKeys();
+   if (!global_scale_names.size()){
+       QMessageBox::information(this, "No Global Gradients",
+                                "No global gradients exist. To create a new"
+                                "gradient, select Tools->Global Color Scales"
+                                "in the main window");
+       return;
+   }
+   bool ok;
+   QString key = QInputDialog::getItem(this, "Select Global Gradient",
+                                       "Gradient", global_scale_names,
+                                       0, false, &ok);
+   if (ok)
+       workspace_->GetMap(map_keys_)->SetGlobalGradient(key);
+}
+
+void MapViewer::keyPressEvent(QKeyEvent *event)
+{
+    //arrow keys on some laptops might be difficult to use
+    //so why not also accept WASD and HJKL?
+
+    switch (event->key()) {
+        case Qt::Key_Up:
+        case Qt::Key_W:
+        case Qt::Key_K:
+            ui->mapPlot->MoveHorizontalCrosshair(1);
+            return;
+        case Qt::Key_Down:
+        case Qt::Key_S:
+        case Qt::Key_J:
+            ui->mapPlot->MoveHorizontalCrosshair(-1);
+            return;
+        case Qt::Key_Left:
+        case Qt::Key_A:
+        case Qt::Key_H:
+            ui->mapPlot->MoveVerticalCrosshair(-1);
+            return;
+        case Qt::Key_Right:
+        case Qt::Key_D:
+        case Qt::Key_L:
+            ui->mapPlot->MoveVerticalCrosshair(1);
+            return;
+        case Qt::Key_Enter:
+        case Qt::Key_Space:
+            emit RequestHeldSpectrumPlot(map_keys_.first(),
+                                         map_keys_.last(),
+                                         ui->mapPlot->GetCrosshairPosition());
+            return;
+        default:
+            return;
     }
+}
 
-
+void MapViewer::showEvent(QShowEvent *event)
+{
+    workspace_->main_window()->plot_viewer()->AddTab(name_);
+    workspace_->main_window()->SetPlotViewerActionChecked(true);
+    event->accept();
 }

@@ -35,7 +35,7 @@ class KMeansDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit KMeansDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key);
+    explicit KMeansDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
     ~KMeansDialog();
 
 private slots:
@@ -49,28 +49,7 @@ private:
     ///
     /// \brief workspace
     /// Current workspace
-    VespucciWorkspace *workspace;
-
-    ///
-    /// \brief cluster_spin_box_
-    /// User selects the number of clusters to compute here
-    QSpinBox *cluster_spin_box_;
-
-    ///
-    /// \brief prediction_check_box_
-    /// User selects whether or not to allow prediction of dimensionality
-    QCheckBox *prediction_check_box_;
-
-
-    ///
-    /// \brief name_line_edit_
-    /// User enters the name of the map here
-    QLineEdit *name_line_edit_;
-
-    ///
-    /// \brief metric_combo_box_
-    /// Selector for distance metric
-    QComboBox *metric_combo_box_;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief data_index_

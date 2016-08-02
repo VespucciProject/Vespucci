@@ -1,19 +1,14 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
 
-SettingsDialog::SettingsDialog(QWidget *parent, VespucciWorkspace *ws) :
+SettingsDialog::SettingsDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
     ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
-    r_home_line_edit_ = findChild<QLineEdit*>("rHomeLineEdit");
-    abs_label_line_edit_ = findChild<QLineEdit*>("absLabelLineEdit");
-    abs_units_line_edit_ = findChild<QLineEdit*>("absUnitsLineEdit");
-    ord_label_line_edit_ = findChild<QLineEdit*>("ordLabelLineEdit");
-    ord_units_line_edit_ = findChild<QLineEdit*>("ordUnitsLineEdit");
+    workspace_ = ws;
 
-    settings_ = workspace->settings();
+    settings_ = workspace_->settings();
     settings_->beginGroup("environment");
     QString r_home = settings_->value("R_HOME").toString();
     settings_->endGroup();
@@ -24,11 +19,11 @@ SettingsDialog::SettingsDialog(QWidget *parent, VespucciWorkspace *ws) :
     QString ord_units = settings_->value("ordUnits").toString();
     settings_->endGroup();
 
-    r_home_line_edit_->setText(r_home);
-    abs_label_line_edit_->setText(abs_label);
-    abs_units_line_edit_->setText(abs_units);
-    ord_label_line_edit_->setText(ord_label);
-    ord_units_line_edit_->setText(ord_units);
+    ui->rHomeLineEdit->setText(r_home);
+    ui->absLabelLineEdit->setText(abs_label);
+    ui->absUnitsLineEdit->setText(abs_units);
+    ui->ordLabelLineEdit->setText(ord_label);
+    ui->ordUnitsLineEdit->setText(ord_units);
 }
 
 SettingsDialog::~SettingsDialog()
@@ -38,11 +33,11 @@ SettingsDialog::~SettingsDialog()
 
 void SettingsDialog::on_buttonBox_accepted()
 {
-    QString r_home = r_home_line_edit_->text();
-    QString abs_label = abs_label_line_edit_->text();
-    QString abs_units = abs_units_line_edit_->text();
-    QString ord_label = ord_label_line_edit_->text();
-    QString ord_units = ord_units_line_edit_->text();
+    QString r_home = ui->rHomeLineEdit->text();
+    QString abs_label = ui->absLabelLineEdit->text();
+    QString abs_units = ui->absUnitsLineEdit->text();
+    QString ord_label = ui->ordLabelLineEdit->text();
+    QString ord_units = ui->ordUnitsLineEdit->text();
 
     settings_->beginGroup("environment");
     settings_->setValue("R_HOME", r_home);

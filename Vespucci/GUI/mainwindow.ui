@@ -6,14 +6,26 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>672</width>
-    <height>435</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>400</width>
-    <height>300</height>
+    <width>200</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="baseSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
    </size>
   </property>
   <property name="font">
@@ -23,10 +35,6 @@
   </property>
   <property name="windowTitle">
    <string>Vespucci</string>
-  </property>
-  <property name="windowIcon">
-   <iconset>
-    <normaloff>vespuccilogo.svg</normaloff>vespuccilogo.svg</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -38,7 +46,20 @@
      </widget>
     </item>
     <item>
-     <widget class="QTreeView" name="datasetTreeView"/>
+     <widget class="QTreeView" name="datasetTreeView">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>600</width>
+        <height>100</height>
+       </size>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -47,7 +68,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>672</width>
+     <width>800</width>
      <height>22</height>
     </rect>
    </property>
@@ -55,26 +76,28 @@
     <property name="title">
      <string>Fi&amp;le</string>
     </property>
+    <addaction name="actionOpenDataset"/>
     <addaction name="actionImport_Dataset_from_File"/>
     <addaction name="actionImport_From_Multiple_Point_Spectra"/>
-    <addaction name="actionImport_Dataset_from_Multiple_Files"/>
-    <addaction name="separator"/>
     <addaction name="actionImport_Data_Into_Dataset"/>
     <addaction name="separator"/>
-    <addaction name="actionSave_Selected_Matrix"/>
-    <addaction name="actionBatch_File_Conversion"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_Dataset"/>
+    <addaction name="actionSave_Dataset_As"/>
+    <addaction name="actionExport_Matrix"/>
     <addaction name="separator"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionDocumentation"/>
-    <addaction name="separator"/>
+    <addaction name="actionOnline_Documentation"/>
     <addaction name="actionAbout_Vespucci"/>
     <addaction name="actionCiting_Vespucci"/>
+    <addaction name="actionDocumentation"/>
    </widget>
    <widget class="QMenu" name="menuData">
     <property name="title">
@@ -101,10 +124,18 @@
      <property name="title">
       <string>&amp;Multivariate Analysis</string>
      </property>
+     <widget class="QMenu" name="menuHierarchical_Clustering">
+      <property name="title">
+       <string>Hierarchical Clustering</string>
+      </property>
+      <addaction name="actionGenerate_Dendrogram"/>
+      <addaction name="actionAssign_Clusters"/>
+     </widget>
      <addaction name="actionPrincipal_Components_Analysis"/>
      <addaction name="actionPartial_Least_Squares"/>
      <addaction name="actionVertex_Components"/>
      <addaction name="actionK_Means_Clustering"/>
+     <addaction name="menuHierarchical_Clustering"/>
      <addaction name="actionClassical_Least_Squares"/>
     </widget>
     <widget class="QMenu" name="menuPeak_Detection">
@@ -125,8 +156,8 @@
      <property name="title">
       <string>Between Datasets</string>
      </property>
-     <addaction name="actionT_Test"/>
-     <addaction name="actionANOVA"/>
+     <addaction name="actionMultivariate_Analysis"/>
+     <addaction name="actionHypothesis_Test_ANOVA"/>
     </widget>
     <addaction name="menuUnivariate_Analysis"/>
     <addaction name="menuNew_Multivariate_Map"/>
@@ -138,7 +169,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionSettings"/>
-    <addaction name="actionSet_Global_Color_Scale"/>
+    <addaction name="actionGlobal_Color_Scales"/>
    </widget>
    <widget class="QMenu" name="menuProcessing">
     <property name="title">
@@ -205,9 +236,9 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionOpenDataset"/>
+   <addaction name="actionSave_Dataset"/>
    <addaction name="actionImport_Dataset_from_File"/>
    <addaction name="actionImport_From_Multiple_Point_Spectra"/>
-   <addaction name="actionSaveDataset"/>
    <addaction name="actionClose_Dataset"/>
    <addaction name="separator"/>
    <addaction name="actionShow_in_Data_Viewer"/>
@@ -358,19 +389,14 @@
     <string>Cro&amp;p</string>
    </property>
   </action>
-  <action name="actionView_Dataset_Elements">
+  <action name="actionGlobal_Color_Scales">
    <property name="text">
-    <string>V&amp;iew Dataset Elements</string>
-   </property>
-  </action>
-  <action name="actionSet_Global_Color_Scale">
-   <property name="text">
-    <string>&amp;Set Global Color Scale...</string>
+    <string>Global Color Scales</string>
    </property>
   </action>
   <action name="actionK_Means_Clustering">
    <property name="text">
-    <string>&amp;K-Means Clustering</string>
+    <string>k-Means Clustering</string>
    </property>
   </action>
   <action name="actionUndo">
@@ -401,11 +427,6 @@
   <action name="actionSpectra_as_Columns">
    <property name="text">
     <string>Spectra (as Columns)</string>
-   </property>
-  </action>
-  <action name="actionView_Edit_Spectra">
-   <property name="text">
-    <string>&amp;View/Remove Spectra</string>
    </property>
   </action>
   <action name="actionBooleanize_Clamp">
@@ -532,13 +553,13 @@
      <normaloff>:/icons/toolbar_icons/open.svg</normaloff>:/icons/toolbar_icons/open.svg</iconset>
    </property>
    <property name="text">
-    <string>OpenDataset</string>
+    <string>Open Dataset</string>
    </property>
    <property name="toolTip">
     <string>Open a dataset previously saved from Vespucci</string>
    </property>
   </action>
-  <action name="actionSaveDataset">
+  <action name="actionSave_Dataset">
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/icons/toolbar_icons/save.svg</normaloff>:/icons/toolbar_icons/save.svg</iconset>
@@ -621,19 +642,22 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>ANOVA...</string>
+    <string>Hypothesis Test/ANOVA</string>
    </property>
   </action>
-  <action name="actionT_Test">
+  <action name="actionMultivariate">
    <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>t-Test...</string>
+    <string>Multivariate Analysis</string>
    </property>
   </action>
   <action name="actionPlot_Viewer">
    <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
     <bool>true</bool>
    </property>
    <property name="text">
@@ -644,12 +668,18 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Data Viewer</string>
    </property>
   </action>
   <action name="actionSpectrum_Editor">
    <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
     <bool>true</bool>
    </property>
    <property name="text">
@@ -660,13 +690,46 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Statistics Viewer</string>
    </property>
   </action>
-  <action name="actionSave_Selected_Matrix">
+  <action name="actionExport_Matrix">
    <property name="text">
-    <string>Save Selected Matrix</string>
+    <string>Export Matrix</string>
+   </property>
+  </action>
+  <action name="actionMultivariate_Analysis">
+   <property name="text">
+    <string>Multivariate Analysis</string>
+   </property>
+  </action>
+  <action name="actionHypothesis_Test_ANOVA">
+   <property name="text">
+    <string>Hypothesis Test/ANOVA</string>
+   </property>
+  </action>
+  <action name="actionOnline_Documentation">
+   <property name="text">
+    <string>Online Documentation</string>
+   </property>
+  </action>
+  <action name="actionSave_Dataset_As">
+   <property name="text">
+    <string>Save Dataset As</string>
+   </property>
+  </action>
+  <action name="actionGenerate_Dendrogram">
+   <property name="text">
+    <string>Generate Dendrogram</string>
+   </property>
+  </action>
+  <action name="actionAssign_Clusters">
+   <property name="text">
+    <string>Assign Clusters</string>
    </property>
   </action>
  </widget>

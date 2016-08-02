@@ -32,12 +32,15 @@ class PythonShellDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PythonShellDialog(MainWindow *parent, VespucciWorkspace *ws);
+    explicit PythonShellDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws);
     ~PythonShellDialog();
-
+signals:
+    void SetActionChecked(bool checked);
+protected:
+    void closeEvent(QCloseEvent *ev);
 private:
     Ui::PythonShellDialog *ui;
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 };
 
 #endif // PYTHONSHELLDIALOG_H

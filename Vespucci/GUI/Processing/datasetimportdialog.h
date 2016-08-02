@@ -17,26 +17,26 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef LOADDATASET_H
-#define LOADDATASET_H
+#ifndef DATASETIMPORTDIALOG_H
+#define DATASETIMPORTDIALOG_H
 
 #include <QDialog>
 #include "Global/vespucciworkspace.h"
 
 namespace Ui {
-class LoadDataset;
+class DatasetImportDialog;
 }
 
 ///
-/// \brief The LoadDataset class
+/// \brief The DatasetImportDialog class
 /// Dialog that allows the user to import files into the program
-class LoadDataset : public QDialog
+class DatasetImportDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit LoadDataset(QWidget *parent, VespucciWorkspace * ws);
-    ~LoadDataset();
+    explicit DatasetImportDialog(QWidget *parent, QSharedPointer<VespucciWorkspace>  ws);
+    ~DatasetImportDialog();
 public slots:
     void FilenameChanged(QString new_filename);
 private slots:
@@ -49,26 +49,16 @@ private slots:
     void on_filenameLineEdit_textChanged(const QString &arg1);
 
 private:
-    Ui::LoadDataset *ui;
+    Ui::DatasetImportDialog *ui;
     ///
     /// \brief workspace
     /// The current workspace
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
     /// \brief directory_
     /// The current working directory
     QString *directory_;
-    QDialogButtonBox *button_box_;
-    QLabel *file_size_label_;
-    QCheckBox *swap_check_box_;
-    QLineEdit *filename_line_edit_;
-    QLineEdit *name_line_edit_;
-    QLineEdit *y_description_line_edit_;
-    QLineEdit *x_description_line_edit_;
-    QLineEdit *y_units_line_edit_;
-    QLineEdit *x_units_line_edit_;
-    QComboBox *data_format_combo_box_;
 };
 
-#endif // LOADDATASET_H
+#endif // DATASETIMPORTDIALOG_H

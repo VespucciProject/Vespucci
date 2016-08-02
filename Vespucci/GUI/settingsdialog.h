@@ -12,7 +12,7 @@ class SettingsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit SettingsDialog(QWidget *parent, VespucciWorkspace *ws);
+    explicit SettingsDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws);
     ~SettingsDialog();
 
 private slots:
@@ -20,13 +20,7 @@ private slots:
 
 private:
     Ui::SettingsDialog *ui;
-    QLineEdit *r_home_line_edit_;
-    QLineEdit *abs_label_line_edit_;
-    QLineEdit *ord_label_line_edit_;
-    QLineEdit *abs_units_line_edit_;
-    QLineEdit *ord_units_line_edit_;
-
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
     QSettings *settings_;
 };
 

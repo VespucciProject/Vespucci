@@ -3,22 +3,12 @@
 #include <Data/Import/binaryimport.h>
 #include "Data/Import/textimportqpd.h"
 
-StitchImportDialog::StitchImportDialog(QWidget *parent, VespucciWorkspace *ws) :
+StitchImportDialog::StitchImportDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
     ui(new Ui::StitchImportDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
-
-    x_line_edit_ = findChild<QLineEdit*>("xLineEdit");
-    y_line_edit_ = findChild<QLineEdit*>("yLineEdit");
-    x_units_line_edit_ = findChild<QLineEdit*>("xUnitsLineEdit");
-    y_units_line_edit_ = findChild<QLineEdit*>("yUnitsLineEdit");
-    filename_line_edit_ = findChild<QLineEdit*>("filenameLineEdit");
-    data_format_combo_box_ = findChild<QComboBox*>("formatComboBox");
-    name_line_edit_ = findChild<QLineEdit*>("nameLineEdit");
-    swap_spatial_check_box_ = findChild<QCheckBox*>("swapSpatialCheckBox");
-
+    workspace_ = ws;
 }
 
 StitchImportDialog::~StitchImportDialog()
@@ -31,9 +21,9 @@ void StitchImportDialog::on_browsePushButton_clicked()
     QString filename =
             QFileDialog::getOpenFileName(this,
                                          "Select Instruction File",
-                                         workspace->directory(),
+                                         workspace_->directory(),
                                          "Instruction File (*.csv)");
-    filename_line_edit_->setText(filename);
+    ui->filenameLineEdit->setText(filename);
 }
 
 bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec &x, vec &y, vec &abscissa, bool swap_spatial, QString type)
@@ -47,7 +37,6 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
     QProgressDialog progress(this);
     for (uword j = 0; j < filenames.n_cols; ++j){
         for (uword i = 0; i < filenames.n_rows; ++i){
-            cout << "i = " << i << endl << "j = " << j << endl;
             QString filename;
             if (two_dim)
                 filename = path_ + "/" + QString::fromStdString(filenames(i, j));
@@ -92,7 +81,8 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
                                                 &progress);
             }
             else{
-                cout << "Improper!" << endl;
+                cout << "Improper!\n";
+
                 return false;
             }
 
@@ -112,7 +102,7 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
     try{
         ok = Vespucci::StitchDatasets(datasets, spectra, x, y, abscissa);
     }catch(exception e){
-        workspace->main_window()->DisplayExceptionWarning("Vespucci::StitchDatasets", e);
+        workspace_->main_window()->DisplayExceptionWarning("Vespucci::StitchDatasets", e);
         ok = false;
     }
 
@@ -121,10 +111,10 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
 
 void StitchImportDialog::on_buttonBox_accepted()
 {
-    QString filename = filename_line_edit_->text();
+    QString filename = ui->filenameLineEdit->text();
     path_ = QFileInfo(filename).absolutePath();
-    QString data_format = data_format_combo_box_->currentText();
-    bool swap_spatial = swap_spatial_check_box_->isChecked();
+    QString data_format = ui->formatComboBox->currentText();
+    bool swap_spatial = ui->swapSpatialCheckBox->isChecked();
     bool ok;
     mat spectra;
     vec x, y, abscissa;
@@ -140,7 +130,7 @@ void StitchImportDialog::on_buttonBox_accepted()
                           spectra, x, y, abscissa,
                           swap_spatial, data_format);
     }catch (exception e){
-        workspace->main_window()->DisplayExceptionWarning(e);
+        workspace_->main_window()->DisplayExceptionWarning(e);
         ok = false;
     }
     if (!ok){
@@ -150,19 +140,18 @@ void StitchImportDialog::on_buttonBox_accepted()
                              "datasets of incompatible spatial coordinates.");
     }
     else{
-        QString x_description = x_line_edit_->text();
-        QString x_units = x_units_line_edit_->text();
-        QString y_description = y_line_edit_->text();
-        QString y_units = y_units_line_edit_->text();
-        QString name = name_line_edit_->text();
+        QString x_description = ui->xLineEdit->text();
+        QString x_units = ui->xUnitsLineEdit->text();
+        QString y_description = ui->yLineEdit->text();
+        QString y_units = ui->yUnitsLineEdit->text();
+        QString name = ui->nameLineEdit->text();
         QSharedPointer<VespucciDataset>
                 dataset(new VespucciDataset(name,
-                                            workspace->main_window(),
-                                            workspace->directory_ptr(),
-                                            workspace->CreateLogFile(name)));
+                                            workspace_->main_window(),
+                                            workspace_));
         dataset->SetData(spectra, abscissa, x, y);
         dataset->SetXDescription(x_description + " (" + x_units + ")");
         dataset->SetYDescription(y_description + " (" + y_units + ")");
-        workspace->AddDataset(dataset);
+        workspace_->AddDataset(dataset);
     }
 }

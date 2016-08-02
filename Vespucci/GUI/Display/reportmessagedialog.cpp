@@ -6,19 +6,17 @@ ReportMessageDialog::ReportMessageDialog(QWidget *parent, const QString &title) 
     ui(new Ui::ReportMessageDialog)
 {
     ui->setupUi(this);
-    label_ = findChild<QLabel*>("label");
-    plain_text_edit_ = findChild<QPlainTextEdit*>("plainTextEdit");
     setWindowTitle(title);
 }
 
 void ReportMessageDialog::setLabel(const QString &new_label)
 {
-    label_->setText(new_label);
+    ui->label->setText(new_label);
 }
 
 void ReportMessageDialog::appendPlainText(const QString &text)
 {
-    plain_text_edit_->appendPlainText(text);
+    ui->plainTextEdit->appendPlainText(text);
 }
 
 

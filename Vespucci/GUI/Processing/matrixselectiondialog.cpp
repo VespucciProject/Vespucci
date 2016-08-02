@@ -17,9 +17,43 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "testsmoothing.h"
+#include "matrixselectiondialog.h"
+#include "ui_matrixselectiondialog.h"
 
-TestSmoothing::TestSmoothing(QObject *parent) : QObject(parent)
+MatrixSelectionDialog::MatrixSelectionDialog(QWidget *parent, DatasetTreeModel *model) :
+    QDialog(parent),
+    ui(new Ui::MatrixSelectionDialog)
 {
+    ui->setupUi(this);
+    tree_model_ = tree_model_;
+    accepted_ = false;
+    ui->treeView->setModel(tree_model_);
+}
 
+MatrixSelectionDialog::~MatrixSelectionDialog()
+{
+    delete ui;
+}
+
+TreeItem *MatrixSelectionDialog::GetSelectedItem()
+{
+    return selected_item_;
+}
+
+bool MatrixSelectionDialog::accepted()
+{
+    return accepted_;
+}
+
+void MatrixSelectionDialog::on_buttonBox_accepted()
+{
+    close();
+    selected_item_ = tree_model_->getItem(ui->treeView->currentIndex());
+    accepted_ = true;
+}
+
+void MatrixSelectionDialog::on_buttonBox_rejected()
+{
+    close();
+    accepted_ = false;
 }

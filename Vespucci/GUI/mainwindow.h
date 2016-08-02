@@ -24,12 +24,12 @@
 #include "Global/vespucciworkspace.h"
 #include "GUI/Processing/rangedialog.h"
 #include "GUI/Display/plotviewer.h"
-#include "GUI/Display/spectrumselectiondialog.h"
+#include "GUI/Display/spectrumeditor.h"
 #include "GUI/macrodialog.h"
 #include "GUI/pythonshelldialog.h"
 #include "GUI/Display/statsdialog.h"
 class PythonShellDialog;
-class SpectrumSelectionDialog;
+class SpectrumEditor;
 class VespucciWorkspace;
 class VespucciDataset;
 class DatasetTreeModel;
@@ -53,7 +53,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent, VespucciWorkspace *ws);
+    explicit MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws);
     ~MainWindow();
     void RefreshTreeModel(const DataModel *data_model);
     QCPRange *global_data_range();
@@ -61,7 +61,7 @@ public:
     void RecalculateGlobalDataRange(QCPRange* new_data_range);
     void RefreshGlobalColorGradient(QCPColorGradient new_gradient);
     void SetGlobalDataRange(QCPRange* new_data_range);
-    VespucciWorkspace *workspace_ptr(); //return the workspace
+    QSharedPointer<VespucciWorkspace> workspace_ptr(); //return the workspace
     void DisplayExceptionWarning(std::exception e);
     void DisplayExceptionWarning(std::string where, std::exception e);
     QListView *map_list_view();
@@ -76,15 +76,23 @@ public:
     DataViewer *data_viewer();
 
 signals:
-    void GlobalGradientChanged(QCPColorGradient gradient);
-    void GlobalDataRangeChanged(QCPRange data_range);
-
+    void DatasetSelectionChanged(QString dataset_key);
+    void MatrixSelectionChanged(QStringList matrix_keys);
+    void DatasetToBeRemoved(QString name);
+    void MatrixToBeRemoved(QStringList keys);
 
 protected:
     void closeEvent(QCloseEvent *event);
 public slots:
     void RangeDialogAccepted(double min, double max);
-    void TreeItemDoubleClicked(const QModelIndex &index);
+    void SetPlotViewerActionChecked(bool checked);
+    void SetDataViewerActionChecked(bool checked);
+    void SetStatsViewerActionChecked(bool checked);
+    void SetSpectrumEditorActionChecked(bool checked);
+    void SetMacroEditorActionChecked(bool checked);
+    void SetPythonShellActionChecked(bool checked);
+    void SpectrumRequested(QString dataset_key, QString map_name, size_t index);
+    void HeldSpectrumRequested(QString dataset_key, QString map_name, size_t index);
 private slots:
     void on_actionExit_triggered();
 
@@ -124,10 +132,6 @@ private slots:
 
     void on_actionCorrect_Baseline_triggered();
 
-    void on_actionView_Dataset_Elements_triggered();
-
-    void on_actionSet_Global_Color_Scale_triggered();
-
     void on_actionPartial_Least_Squares_triggered();
 
     void on_actionK_Means_Clustering_triggered();
@@ -143,8 +147,6 @@ private slots:
     void on_actionReject_Clipped_Spectra_triggered();
 
     void on_actionSpectra_as_Columns_triggered();
-
-    void on_actionView_Edit_Spectra_triggered();
 
     void on_actionBooleanize_Clamp_triggered();
 
@@ -176,8 +178,6 @@ private slots:
 
     void on_actionCreate_Plot_triggered();
 
-    void on_datasetTreeView_activated(const QModelIndex &index);
-
     void on_actionPlot_Viewer_toggled(bool arg1);
 
     void ChildDialogVisibleToggled(const QString &key, bool arg1);
@@ -192,40 +192,49 @@ private slots:
 
     void on_actionMacro_Editor_toggled(bool arg1);
 
+    void on_actionMapResult_triggered();
+
+    void on_actionOnline_Documentation_triggered();
+
+    void on_actionGlobal_Color_Scales_triggered();
+
     void on_datasetTreeView_clicked(const QModelIndex &index);
 
     void on_datasetTreeView_doubleClicked(const QModelIndex &index);
 
-    void on_actionMapResult_triggered();
+    void on_actionShow_in_Data_Viewer_triggered();
 
-    void on_actionSave_Selected_Matrix_triggered();
+    void on_actionView_Statistics_triggered();
+
+    void on_actionPlotResult_triggered();
+
+    void on_actionSave_Dataset_triggered();
+
+    void on_actionOpenDataset_triggered();
+
+    void on_actionSave_Dataset_As_triggered();
+
+    void on_actionExport_Matrix_triggered();
+
+    void on_actionImport_Data_Into_Dataset_triggered();
 
 private:
+    void CloseDataset(const QString &name);
     Ui::MainWindow *ui;
 
     PlotViewer *plot_viewer_;
     DataViewer *data_viewer_;
     StatsDialog *stats_viewer_;
     MacroDialog *macro_editor_;
-    SpectrumSelectionDialog *spectrum_editor_;
+    SpectrumEditor *spectrum_editor_;
     PythonShellDialog *python_shell_;
 
 
     ///
     /// \brief workspace
     /// The current workspace
-    VespucciWorkspace *workspace;
+    QSharedPointer<VespucciWorkspace> workspace_;
 
-    ///
-    /// \brief map_list_view_
-    /// The list view displaying the currently created for the currently (or most
-    /// recently) selected map.
-    QListView *map_list_view_;
-
-    ///
-    /// \brief dataset_list_widget_
-    /// The list widget displaying the currently loaded datasets
-    QTreeView *dataset_tree_view_;
 
     ///
     /// \brief dataset_list_model_
@@ -235,6 +244,7 @@ private:
     unsigned int global_map_count_;
 
     QMap<QString, QDialog*> child_dialogs_;
+
 };
 
 #endif // MAINWINDOW_H

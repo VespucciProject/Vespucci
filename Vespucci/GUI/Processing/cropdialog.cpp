@@ -28,26 +28,19 @@
 /// \param ws The current workspace
 /// \param row Currently selected row
 ///
-CropDialog::CropDialog(QWidget *parent, VespucciWorkspace *ws, const QString &dataset_key) :
+CropDialog::CropDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
     ui(new Ui::CropDialog)
 {
     ui->setupUi(this);
-    workspace = ws;
-    dataset_ = workspace->GetDataset(dataset_key);
-
-    x_min_box_ = findChild<QDoubleSpinBox*>("xMinDoubleSpinBox");
-    x_max_box_ = findChild<QDoubleSpinBox*>("xMaxDoubleSpinBox");
-    y_min_box_ = findChild<QDoubleSpinBox*>("yMinDoubleSpinBox");
-    y_max_box_ = findChild<QDoubleSpinBox*>("yMaxDoubleSpinBox");
-    wl_min_box_ = findChild<QDoubleSpinBox*>("wlMinDoubleSpinBox");
-    wl_max_box_ = findChild<QDoubleSpinBox*>("wlMaxDoubleSpinBox");
+    workspace_ = ws;
+    dataset_ = workspace_->GetDataset(dataset_key);
 
     if (dataset_->non_spatial()){
-        x_min_box_->setDisabled(true);
-        x_max_box_->setDisabled(true);
-        y_min_box_->setDisabled(true);
-        y_max_box_->setDisabled(true);
+        ui->xMinDoubleSpinBox->setDisabled(true);
+        ui->xMaxDoubleSpinBox->setDisabled(true);
+        ui->yMinDoubleSpinBox->setDisabled(true);
+        ui->yMaxDoubleSpinBox->setDisabled(true);
     }
 
     double wl_min = dataset_->wavelength().min();
@@ -56,20 +49,20 @@ CropDialog::CropDialog(QWidget *parent, VespucciWorkspace *ws, const QString &da
     QCPRange key_range = dataset_->KeyRange();
     QCPRange value_range = dataset_->ValueRange();
 
-    wl_min_box_->setMinimum(wl_min);
-    wl_min_box_->setMaximum(wl_max);
-    wl_max_box_->setMinimum(wl_min);
-    wl_max_box_->setMaximum(wl_max);
+    ui->wlMinDoubleSpinBox->setMinimum(wl_min);
+    ui->wlMinDoubleSpinBox->setMaximum(wl_max);
+    ui->wlMaxDoubleSpinBox->setMinimum(wl_min);
+    ui->wlMaxDoubleSpinBox->setMaximum(wl_max);
 
-    x_min_box_->setMinimum(key_range.lower);
-    x_min_box_->setMaximum(key_range.upper);
-    x_max_box_->setMinimum(key_range.lower);
-    x_max_box_->setMaximum(key_range.upper);
+    ui->xMinDoubleSpinBox->setMinimum(key_range.lower);
+    ui->xMinDoubleSpinBox->setMaximum(key_range.upper);
+    ui->xMaxDoubleSpinBox->setMinimum(key_range.lower);
+    ui->xMaxDoubleSpinBox->setMaximum(key_range.upper);
 
-    y_min_box_->setMinimum(value_range.lower);
-    y_min_box_->setMaximum(value_range.upper);
-    y_max_box_->setMinimum(value_range.lower);
-    y_max_box_->setMaximum(value_range.upper);
+    ui->yMinDoubleSpinBox->setMinimum(value_range.lower);
+    ui->yMinDoubleSpinBox->setMaximum(value_range.upper);
+    ui->yMaxDoubleSpinBox->setMinimum(value_range.lower);
+    ui->yMaxDoubleSpinBox->setMaximum(value_range.upper);
 
 }
 
@@ -85,12 +78,12 @@ CropDialog::~CropDialog()
 /// Calls crop method of the dataset when user clicks "Ok".
 void CropDialog::on_buttonBox_accepted()
 {
-    double x_min = x_min_box_->value();
-    double x_max = x_max_box_->value();
-    double y_min = y_min_box_->value();
-    double y_max = y_max_box_->value();
-    double wl_min = wl_min_box_->value();
-    double wl_max = wl_max_box_->value();
+    double x_min = ui->xMinDoubleSpinBox->value();
+    double x_max = ui->xMaxDoubleSpinBox->value();
+    double y_min = ui->yMinDoubleSpinBox->value();
+    double y_max = ui->yMaxDoubleSpinBox->value();
+    double wl_min = ui->wlMinDoubleSpinBox->value();
+    double wl_max = ui->wlMaxDoubleSpinBox->value();
 
     if (dataset_->non_spatial()){
         x_min = std::nan("");

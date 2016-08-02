@@ -221,7 +221,6 @@ arma::mat Vespucci::Math::orth(arma::mat X)
     }
     else{
         std::cerr << "orth: no basis found" << std::endl;
-        //cout << "end orth" << endl;
         return arma::zeros(X.n_rows, X.n_cols);
     }
 }
@@ -1003,7 +1002,7 @@ arma::vec Vespucci::Math::RepresentativeSpectrum(const arma::mat &spectra, arma:
 #else
   #pragma omp parallel for default(none) \
       shared(spectra, metric, distances)
-  for (size_t i = 0; i < spectra.n_cols; ++ i)
+  for (size_t i = 0; i < spectra.n_cols; ++i)
 #endif
     {
         arma::vec spectrum = spectra.col(i);
@@ -1011,4 +1010,21 @@ arma::vec Vespucci::Math::RepresentativeSpectrum(const arma::mat &spectra, arma:
     }
     index = distances.index_min();
     return spectra.col(index);
+}
+
+///
+/// \brief Vespucci::Math::Intersection
+/// \param x
+/// \param y
+/// \return
+/// Find the intersection between two sets of indices (the values in common between the two).
+arma::uvec Vespucci::Math::Intersection(arma::uvec &x, arma::uvec &y)
+{
+    std::vector<arma::uword> intersection;
+    std::sort(x.begin(), x.end());
+    std::sort(y.begin(), y.end());
+    std::set_intersection(x.begin(), x.end(),
+                          y.begin(), y.end(),
+                          std::back_inserter(intersection));
+    return arma::conv_to<arma::uvec>::from(intersection);
 }
