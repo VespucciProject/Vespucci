@@ -17,8 +17,6 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-//Skeleton functions to be filled by GABowers
-
 #include "macroparser.h"
 
 MacroParser::MacroParser(QSharedPointer<VespucciDataset> dataset)
@@ -35,19 +33,62 @@ MacroParser::MacroParser(QSharedPointer<VespucciDataset> dataset)
 /// warned of syntax err of this returns false
 bool MacroParser::LoadMacro(QString macro)
 {
-    //if the function takes no parameters, use an empty string list
-    //Initializer lists for Qt containers are not supported by Visual Studio yet,
-    //so we must create an empty current_params object;
-    QStringList current_params;
-    //Do the commands that take no arguments first
-    valid_commands_["MinMaxNormalize"] = current_params;
+	//if the function takes no parameters, use an empty string list
+	//Initializer lists for Qt containers are not supported by Visual Studio yet,
+	//so we must create an empty current_params object;
+	QStringList current_params;
+	//Do the commands that take no arguments first
+	valid_commands_["MinMaxNormalize"] = current_params;
+	valid_commands_["VectorNormalize"] = current_params;
+	valid_commands_["MeanCenter"] = current_params;
+	valid_commands_["ZScoreNormalize"] = current_params;
+	valid_commands_["AbsoluteValue"] = current_params;
+	valid_commands_["UnitAreaNormalize"] = current_params;
+	valid_commands_["ShedZeroSpectra"] = current_params;
+	valid_commands_["ShedZeroWavelengths"] = current_params;
 
-    //After adding a command that takes an argument, clear current_params;
-    current_params << "Double" << "Int";
-    valid_commands_["SNVNormalize"] = current_params;
-    current_params.clear();
+	valid_commands_["SNVNormalize"] = { "Double", "Bool" };
 
+	valid_commands_["PeakIntensityNormalize"] = { "Double", "Double" };
 
+	valid_commands_["Booleanize"] = { "Double" , "Double" , "Bool" , "Bool" };
+
+	valid_commands_["Clamp"] = { "Double" , "Double" };
+
+	valid_commands_["MedianFilter"] = { "UInt" };
+
+	valid_commands_["LinearMovingAverage"] = { "UInt" };
+
+	valid_commands_["SavitzkyGolay"] = { "UInt", "UInt", "UInt" };
+
+	valid_commands_["SingularValue"] = { "UInt" };
+
+	valid_commands_["QUIC_SVD"] = { "Double" };
+
+	valid_commands_["MFBaseline"] = { "Int", "Int" };
+
+	valid_commands_["IModPolyBaseline"] = { "UInt", "UInt", "Double" };
+
+	valid_commands_["RemoveClippedSpectra"] = { "Double" };
+
+	valid_commands_["RemoveFlatSpectra"] = { "Double" };
+
+	valid_commands_["Scale"] = { "Double" };
+
+	valid_commands_["ShedSpectrum"] = { "UInt" };
+
+	//These are ANALYSIS commands
+	valid_commands_["Univariate"] = { "String" , "Double" , "Double" , "UInt" };
+
+	valid_commands_["BandRatio"] = { "String" , "Double" , "Double" , "Double" , "Double" , "UInt" };
+
+	valid_commands_["PartialLeastSquares"] = { "String", "UInt" };
+
+	valid_commands_["VertexComponents"] = { "String", "UInt" };
+
+	valid_commands_["KMeans"] = { "String", "String", "UInt" };
+
+	valid_commands_["PrincipalComponents"] = { "String" };
 
     QStringList command_list = macro.split("\n");
     //this regular expression is used to split the commands so that the first
@@ -58,11 +99,9 @@ bool MacroParser::LoadMacro(QString macro)
         QStringList pieces = command.split(sep);
         QString function_name = pieces[0];
         pieces.removeAt(0); //now pieces has only the parameters
-        QPair<QString, QStringList> processed_command(function_name, pieces);
+        QMap<QString, QStringList> processed_command(function_name, pieces);
         commands_.push_back(processed_command);//insert at the end of the list
     }
-
-    return false;
 }
 
 ///
@@ -84,10 +123,9 @@ bool MacroParser::ExecuteMacro()
     }
 
     //if all commands are valid, execute each in order
-    for(int i = 0; i < commands_.size(); ++i){
-        ExecuteCommand(commands_[i].first, commands_[i].second);
+    foreach(QPair<QString, QStringList> command, commands_){
+        ExecuteCommand(command.first, command.second);
     }
-
     return true; //we've already handled the cases where it would return false
 }
 
@@ -100,7 +138,69 @@ bool MacroParser::ExecuteMacro()
 /// type conversion (QString, int, unint, double) of the parameters.
 void MacroParser::ExecuteCommand(QString command, QStringList params)
 {
+	if (command == "MinMaxNormalize")
+		dataset->MinMaxNormalize();
+	else if (command == "VectorNormalize")
+		dataset->VectorNormalize();
+	else if (command == "MeanCenter")
+		dataset->MeanCenter();
+	else if (command == "ZScoreNormalize")
+		dataset->ZScoreNormalize();
+	else if (command == "AbsoluteValue")
+		dataset->AbsoluteValue();
+	else if (command == "UnitAreaNormalize")
+		dataset->UnitAreaNormalize();
+	else if (command == "ShedZeroSpectra")
+		dataset->ShedZeroSpectra();
+	else if (command == "ShedZeroWavelengths")
+		dataset->ShedZeroWavelengths();
+	else if (command == "SNVNormalize")
+		dataset->SNVNormalize(params[0].toDouble(), ToBool(params[1]));
+	else if (command == "PeakIntensityNormalize")
+		dataset->PeakIntensityNormalize(params[0].toDouble(), params[1].toDouble());
+	else if (command == "Booleanize")
+		dataset->Booleanize(params[0].toDouble(), params[1].toDouble(), ToBool(params[2]), ToBool(params[3]));
+	else if (command == "Clamp")
+		dataset->Clamp(params[0].toDouble(), params[1].toDouble());
+	else if (command == "MedianFilter")
+		dataset->MedianFilter(params[0].toInt());
+	else if (command == "LinearMovingAverage")
+		dataset->LinearMovingAverage(params[0].toInt());
+	else if (command == "SavitzkyGolay")
+		dataset->SavitzkyGolay(params[0].toInt(), params[1].toInt(), params[2].toInt());
+	else if (command == "SingularValue")
+		dataset->SingularValue(params[0].toInt());
+	else if (command == "QUIC_SVD")
+		dataset->QUIC_SVD(params[0].toDouble());
+	else if (command == "MFBaseline")
+		dataset->MFBaseline(params[0].toInt(), params[1].toInt());
+	else if (command == "IModPolyBaseline")
+		dataset->IModPolyBaseline(params[0].toInt(), params[1].toInt(), params[2].toDouble());
+	else if (command == "RemoveClippedSpectra")
+		dataset->RemoveClippedSpectra(params[0].toDouble());
+	else if (command == "RemoveFlatSpectra")
+		dataset->RemoveFlatSpectra(params[0].toDouble());
+	else if (command == "Scale")
+		dataset->Scale(params[0].toDouble());
+	else if (command == "ShedSpectrum")
+		dataset->ShedSpectrum(params[0].toInt());
+	else if (command == "Univariate")
+		dataset->Univariate(params[0], params[1].toDouble(), params[2].toDouble(), params[3].toInt());
+	else if (command == "BandRatio")
+		dataset->BandRatio(params[0], params[1].toDouble(), params[2].toDouble(), params[3].toDouble(), params[4].toDouble(), params[5].toInt());
+	else if (command == "PartialLeastSquares")
+		dataset->PartialLeastSquares(params[0], params[1].toInt());
+	else if (command == "VertexComponents")
+		dataset->VertexComponents(params[0], params[1].toInt());
+	else if (command == "KMeans")
+		dataset->KMeans(params[0], params[1], params[2].toInt());
+	else if (command == "PrincipalComponents")
+		dataset->PrincipalComponents(params[0]);
+	else; //Do nothing
+}
 
+bool ToBool(const QString &param) {
+	return param.toLower() == "true";
 }
 
 ///
@@ -123,21 +223,29 @@ void MacroParser::ExecuteCommand(QString command, QStringList params)
 ///
 bool MacroParser::ValidateCommand(QString command, QStringList params, int &param_error)
 {
-    //the QString class has members named toDouble and toInt that take pointers
-    //to bools and change the values based on success or failure to convert
-    bool conversion_ok;
+	QStringList expected_types = valid_commands_[command];
+	
+	if (expected_types.size() != params.size()) {
+		param_error = 0;
+		return false;
+	}
+	for (int i = 0; i < params.size(); ++i) {
+		if (expected_type == "Bool")
+			conversion_ok = (params[i].toLower() == "true" || params[i].toLower() == "false");
+		else if (expected_type == "Int")
+			params[i].toInt(&conversion_ok);
+		else if (expected_type == "UInt") {
+			int val = params[i].toInt(&conversion_ok);
+			conversion_ok = (conversion_ok && val >= 0);
+		}
+		else if (expected_type == "Double")
+			params[i].toDouble(&conversion_ok);
+		else conversion_ok = true; //Treating as String
 
-    //iterate through commands (first member of pair), checking that it exists
-    //as a key in the valid map, and getting it's parameter type list.
-
-    //iterate through parameter list for this command, keeping count of what parameter we're on
-
-    //if conversion fails, set param_error to the parameter we're on (+1 if you start counting at 0) and return false
-
-
-
-
-    //The input_type will be "Bool, Int, UInt, String, Double, Invalid"
-    QString input_type;
-    return false;
+		if (!conversion_ok) {
+			param_error = i + 1;
+			return false;
+		}
+	}
+	return true;
 }
