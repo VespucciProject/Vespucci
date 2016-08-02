@@ -11,11 +11,7 @@
 
     "files":
         [
-<<<<<<< HEAD
-        {"includePattern": "package/(.*)", "uploadPattern":"/$1"}
-=======
         {"includePattern": "${TRAVIS_BUILD_DIR/package/(.*)", "uploadPattern":"/$1"}
->>>>>>> bdd4860bc0e8e88e0eb2ad57fa2cc78588fe34d9
         ],
     
     "publish":"true"
