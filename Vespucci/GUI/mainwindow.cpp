@@ -1423,13 +1423,15 @@ void MainWindow::CloseDataset(const QString &name)
 {
     QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(name);
 
+    int response;
+    QString filename;
     if (dataset->state_changed()){
-        int response = QMessageBox::question(this,
-                                             "Save Dataset?",
-                                             "Would you like to save " +
-                                             name + "?", QMessageBox::Yes,
-                                             QMessageBox::No);
-        if (response == QMessageBox::Yes){
+        response = QMessageBox::question(this,
+                                         "Save Dataset?",
+                                         "Would you like to save " +
+                                         name + "?", QMessageBox::Yes,
+                                         QMessageBox::No);
+        while (response == QMessageBox::Yes && filename.isEmpty()){
             QString path = workspace_->directory() + "/" + dataset->name();
             QString filename;
             if (dataset->saved())
@@ -1439,9 +1441,12 @@ void MainWindow::CloseDataset(const QString &name)
                                                         "Save Dataset",
                                                         path,
                                                         "Vespucci Dataset (*.h5)");
+        }
+        if (response == QMessageBox::Yes){
             dataset->Save(filename);
         }
     }
+
     emit DatasetToBeRemoved(name);
     workspace_->RemoveDataset(name);
 }
