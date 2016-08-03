@@ -29,7 +29,6 @@
 
 class ScaleBarDialog;
 class MapData;
-class DataExtractorDialog;
 class SpectrumViewer;
 class MainWindow;
 class VespucciWorkspace;
