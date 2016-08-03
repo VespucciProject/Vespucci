@@ -102,7 +102,7 @@ arma::vec TestSession::GenerateRamanBaseline(double a0, double a1, double a2, co
     return a0 + a1*abscissa + a2*arma::pow(abscissa, 2);
 }
 
-vec TestSession::GenerateGaussian(vec abscissa, vec centers, vec fwhm, vec intensities)
+arma::vec TestSession::GenerateGaussian(vec abscissa, vec centers, vec fwhm, vec intensities)
 {
-
+    return arma::vec();
 }

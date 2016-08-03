@@ -295,10 +295,12 @@ unix:!macx{
     LIBS += -L$$PWD/../../armadillo/lib -larmadillo
     LIBS += -L/usr/lib -larpack
     PRE_TARGETDEPS += /usr/lib/libarpack.a
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lhdf5
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lhdf5_cpp
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5.a
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5_cpp.a
+    LIBS += -L$$PWD/../../hdf5/lib -lhdf5
+    LIBS += -L$$PWD/../../hdf5/lib -lhdf5_cpp
+    PRE_TARGETDEPS += $$PWD/../../hdf5/lib/libhdf5.a
+    PRE_TARGETDEPS += $$PWD/../../hdf5/lib/libhdf5_cpp.a
+    INCLUDEPATH += $$PWD/../../hdf5/include
+    DEPENDPATH += $$PWD/../../hdf5/include
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
 

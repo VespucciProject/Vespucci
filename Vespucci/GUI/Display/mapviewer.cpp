@@ -247,6 +247,7 @@ void MapViewer::keyPressEvent(QKeyEvent *event)
             ui->mapPlot->MoveVerticalCrosshair(1);
             return;
         case Qt::Key_Enter:
+        case Qt::Key_Return:
         case Qt::Key_Space:
             emit RequestHeldSpectrumPlot(map_keys_.first(),
                                          map_keys_.last(),

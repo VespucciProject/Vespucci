@@ -1,5 +1,5 @@
 #include "GUI/Display/spectrumeditor.h"
-#include "ui_SpectrumEditor.h"
+#include "ui_spectrumeditor.h"
 
 SpectrumEditor::SpectrumEditor(MainWindow *main_window, QSharedPointer<VespucciWorkspace> workspace) :
     QDockWidget(main_window),
