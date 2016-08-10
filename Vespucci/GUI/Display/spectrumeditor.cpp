@@ -28,7 +28,7 @@ void SpectrumEditor::closeEvent(QCloseEvent *ev)
 void SpectrumEditor::keyPressEvent(QKeyEvent *event)
 {
     QModelIndex current_index = ui->tableView->currentIndex();
-    if (event->key() == Qt::Key_Enter)
+    if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
         RequestSpectrumPlot(current_index);
 }
 

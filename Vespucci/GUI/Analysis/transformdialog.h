@@ -22,6 +22,7 @@
 
 #include <QDialog>
 #include "Global/vespucciworkspace.h"
+#include "GUI/Processing/matrixselectiondialog.h"
 
 namespace Ui {
 class TransformDialog;
@@ -45,6 +46,8 @@ private:
     QSharedPointer<VespucciWorkspace> workspace_;
     QStringList data_keys_;
     QStringList operand_keys_;
+    MatrixSelectionDialog *matrix_selection_dialog_;
+
 };
 
 #endif // TRANSFORMDIALOG_H

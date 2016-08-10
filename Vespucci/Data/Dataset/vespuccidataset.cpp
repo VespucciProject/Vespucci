@@ -2819,7 +2819,13 @@ void VespucciDataset::ImportAuxiliaryMatrix(const QString &name, const QString &
 ///
 void VespucciDataset::AddAuxiliaryMatrix(const QString &name, mat &matrix)
 {
-    auxiliary_matrices_->AddMatrix(name, matrix);
+    QString basename = name;
+    QString new_name = name;
+    int i = 0;
+    while (auxiliary_matrices_->HasMatrix(new_name))
+        new_name = basename + " (" + QString::number(++i) + ")";
+    auxiliary_matrices_->AddMatrix(new_name, matrix);
+    workspace_->UpdateModel();
 }
 
 void VespucciDataset::AddMatrix(const QString &name, mat &matrix)

@@ -30,23 +30,23 @@ TransformDialog::TransformDialog(QWidget *parent, QSharedPointer<VespucciWorkspa
     workspace_ = ws;
     data_keys_ = keys;
     ui->constantLineEdit->setValidator(new QDoubleValidator(-DBL_MAX, DBL_MAX, 5));
+    matrix_selection_dialog_ = new MatrixSelectionDialog(this, workspace_->dataset_tree_model());
 }
 
 TransformDialog::~TransformDialog()
 {
     delete ui;
+    delete matrix_selection_dialog_;
 }
 
 void TransformDialog::on_selectPushButton_clicked()
 {
-    MatrixSelectionDialog *dialog = new MatrixSelectionDialog(this, workspace_->dataset_tree_model());
-    dialog->show();
-    if (dialog->accepted()){
-        operand_keys_ = dialog->GetSelectedItem()->keys();
+    matrix_selection_dialog_->show();
+    if (matrix_selection_dialog_->accepted()){
+        operand_keys_ = matrix_selection_dialog_->GetSelectedItem()->keys();
         ui->operandDisplayLabel->setText(operand_keys_.last());
     }
-    if (!dialog->isVisible()) dialog->close();
-    delete dialog;
+    if (matrix_selection_dialog_->isVisible()) matrix_selection_dialog_->close();
 }
 
 void TransformDialog::on_buttonBox_accepted()
@@ -107,6 +107,7 @@ void TransformDialog::on_buttonBox_accepted()
             return;
     }catch(...){
         QMessageBox::warning(this, "Cannot perform operation", "The operation could not be performed");
+        close();
         return;
     }
     dataset->AddAuxiliaryMatrix(name, new_matrix);
