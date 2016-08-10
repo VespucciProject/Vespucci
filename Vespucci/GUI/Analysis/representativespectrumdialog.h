@@ -17,43 +17,31 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "matrixselectiondialog.h"
-#include "ui_matrixselectiondialog.h"
+#ifndef REPRESENTATIVESPECTRUMDIALOG_H
+#define REPRESENTATIVESPECTRUMDIALOG_H
 
-MatrixSelectionDialog::MatrixSelectionDialog(QWidget *parent, DatasetTreeModel *model) :
-    QDialog(parent),
-    ui(new Ui::MatrixSelectionDialog)
-{
-    ui->setupUi(this);
-    tree_model_ = model;
-    accepted_ = false;
-    ui->treeView->setModel(tree_model_);
+#include <QDialog>
+#include "Global/vespucciworkspace.h"
+
+namespace Ui {
+class RepresentativeSpectrumDialog;
 }
 
-MatrixSelectionDialog::~MatrixSelectionDialog()
+class RepresentativeSpectrumDialog : public QDialog
 {
-    delete ui;
-}
+    Q_OBJECT
 
-TreeItem *MatrixSelectionDialog::GetSelectedItem()
-{
-    return selected_item_;
-}
+public:
+    explicit RepresentativeSpectrumDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
+    ~RepresentativeSpectrumDialog();
 
-bool MatrixSelectionDialog::accepted()
-{
-    return accepted_;
-}
+private slots:
+    void on_buttonBox_accepted();
 
-void MatrixSelectionDialog::on_buttonBox_accepted()
-{
-    close();
-    selected_item_ = tree_model_->getItem(ui->treeView->currentIndex());
-    accepted_ = true;
-}
+private:
+    Ui::RepresentativeSpectrumDialog *ui;
+    QSharedPointer<VespucciDataset> dataset_;
+    QSharedPointer<VespucciWorkspace> workspace_;
+};
 
-void MatrixSelectionDialog::on_buttonBox_rejected()
-{
-    close();
-    accepted_ = false;
-}
+#endif // REPRESENTATIVESPECTRUMDIALOG_H

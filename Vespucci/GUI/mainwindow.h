@@ -218,6 +218,12 @@ private slots:
 
     void on_actionImport_Data_Into_Dataset_triggered();
 
+    void on_actionCalculate_Representative_Spectrum_triggered();
+
+    void on_actionTransform_triggered();
+
+    void on_actionOn_Multiple_Datasets_triggered();
+
 private:
     void CloseDataset(const QString &name);
     Ui::MainWindow *ui;

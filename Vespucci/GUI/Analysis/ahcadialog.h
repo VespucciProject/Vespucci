@@ -17,43 +17,34 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "matrixselectiondialog.h"
-#include "ui_matrixselectiondialog.h"
+#ifndef AHCADIALOG_H
+#define AHCADIALOG_H
 
-MatrixSelectionDialog::MatrixSelectionDialog(QWidget *parent, DatasetTreeModel *model) :
-    QDialog(parent),
-    ui(new Ui::MatrixSelectionDialog)
-{
-    ui->setupUi(this);
-    tree_model_ = model;
-    accepted_ = false;
-    ui->treeView->setModel(tree_model_);
+#include <QDialog>
+
+#include <Global/vespucciworkspace.h>
+
+namespace Ui {
+class AHCADialog;
 }
 
-MatrixSelectionDialog::~MatrixSelectionDialog()
+class AHCADialog : public QDialog
 {
-    delete ui;
-}
+    Q_OBJECT
 
-TreeItem *MatrixSelectionDialog::GetSelectedItem()
-{
-    return selected_item_;
-}
+public:
+    explicit AHCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
+    explicit AHCADialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys);
+    ~AHCADialog();
 
-bool MatrixSelectionDialog::accepted()
-{
-    return accepted_;
-}
+private slots:
+    void on_buttonBox_accepted();
 
-void MatrixSelectionDialog::on_buttonBox_accepted()
-{
-    close();
-    selected_item_ = tree_model_->getItem(ui->treeView->currentIndex());
-    accepted_ = true;
-}
+private:
+    Ui::AHCADialog *ui;
+    QSharedPointer<VespucciWorkspace> workspace_;
+    QSharedPointer<VespucciDataset> dataset_;
+    QStringList dataset_keys_;
+};
 
-void MatrixSelectionDialog::on_buttonBox_rejected()
-{
-    close();
-    accepted_ = false;
-}
+#endif // AHCADIALOG_H

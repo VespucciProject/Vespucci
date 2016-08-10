@@ -67,13 +67,12 @@ DatasetImportDialog::~DatasetImportDialog()
 void DatasetImportDialog::FilenameChanged(QString new_filename)
 {
     QFileInfo info(new_filename);
-    QString basename = info.baseName();
+    QString basename = info.completeBaseName();
     QString dataset_name = basename;
     int i = 1;
-    while (workspace_->dataset_names().contains(dataset_name)){
-        dataset_name = basename + " (" + QString::number(i) + ")";
-        ++i;
-    }
+    while (workspace_->dataset_names().contains(dataset_name))
+        dataset_name = basename + " (" + QString::number(i++) + ")";
+
     ui->nameLineEdit->setText(dataset_name);
 }
 

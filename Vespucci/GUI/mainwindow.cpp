@@ -51,7 +51,9 @@
 #include "GUI/Display/globalgradientdialog.h"
 #include "GUI/Analysis/plotmakerdialog.h"
 #include "GUI/Processing/matrixselectiondialog.h"
-
+#include "GUI/Analysis/representativespectrumdialog.h"
+#include "GUI/Analysis/multianalysisdialog.h"
+#include "GUI/Analysis/transformdialog.h"
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent usually 0
@@ -737,31 +739,7 @@ void MainWindow::on_actionClose_Dataset_triggered()
 
     QString dataset_key = item->DatasetKey();
 
-    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
-
-    if (dataset->state_changed()){
-        int response = QMessageBox::question(this,
-                                             "Save Dataset?",
-                                             "Would you like to save " +
-                                             dataset_key + "?", QMessageBox::Yes,
-                                             QMessageBox::No);
-        if (response == QMessageBox::Yes){
-            QString filename;
-            if (dataset->saved())
-                filename = dataset->last_save_filename();
-            else
-                filename = QFileDialog::getSaveFileName(this,
-                                                        "Save Dataset",
-                                                        workspace_->directory(),
-                                                        "Vespucci Dataset (*.h5)");
-            dataset->Save(filename);
-        }
-
-
-    }
-
-    emit DatasetToBeRemoved(dataset_key);
-    workspace_->RemoveDataset(dataset_key);
+    CloseDataset(dataset_key);
 }
 
 ///
@@ -1425,15 +1403,15 @@ void MainWindow::CloseDataset(const QString &name)
 
     int response;
     QString filename;
+    QString path = workspace_->directory() + "/" + dataset->name();
     if (dataset->state_changed()){
-        response = QMessageBox::question(this,
-                                         "Save Dataset?",
-                                         "Would you like to save " +
-                                         name + "?", QMessageBox::Yes,
-                                         QMessageBox::No);
-        while (response == QMessageBox::Yes && filename.isEmpty()){
-            QString path = workspace_->directory() + "/" + dataset->name();
-            QString filename;
+        do{
+            response = QMessageBox::question(this,
+                                             "Save Dataset?",
+                                             "Would you like to save " +
+                                             name + "?", QMessageBox::Yes,
+                                             QMessageBox::No);
+            if (response == QMessageBox::No) break;
             if (dataset->saved())
                 filename = dataset->last_save_filename();
             else
@@ -1441,10 +1419,9 @@ void MainWindow::CloseDataset(const QString &name)
                                                         "Save Dataset",
                                                         path,
                                                         "Vespucci Dataset (*.h5)");
-        }
-        if (response == QMessageBox::Yes){
-            dataset->Save(filename);
-        }
+        }while (response == QMessageBox::Yes && filename.isEmpty());
+
+        if (response == QMessageBox::Yes) dataset->Save(filename);
     }
 
     emit DatasetToBeRemoved(name);
@@ -1506,4 +1483,34 @@ void MainWindow::on_actionImport_Data_Into_Dataset_triggered()
   else{
        DisplayWarning("Could not load file", "The matrix could not be loaded from the selected file");
    }
+}
+
+void MainWindow::on_actionCalculate_Representative_Spectrum_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    QString key = item->DatasetKey();
+    if (workspace_->dataset_names().contains(key)){
+        RepresentativeSpectrumDialog *dialog = new RepresentativeSpectrumDialog(this,
+                                                                            workspace_,
+                                                                            key);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->show();
+    }
+}
+
+void MainWindow::on_actionTransform_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    if (item->type() == TreeItem::ItemType::Matrix){
+        TransformDialog *dialog = new TransformDialog(this, workspace_, item->keys());
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->show();
+    }
+}
+
+void MainWindow::on_actionOn_Multiple_Datasets_triggered()
+{
+    MultiAnalysisDialog *dialog = new MultiAnalysisDialog(this, workspace_);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->show();
 }

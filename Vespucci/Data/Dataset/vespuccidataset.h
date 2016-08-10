@@ -209,7 +209,8 @@ public:
     void PrincipalComponents(const QString &name, bool scale_data);
     void FindPeaks(QString name, double sel, double threshold,
                    uword poly_order, uword window_size);
-
+    void AgglomerativeClustering(QString name, QString linkage, QString metric);
+    void CalculateRepresentativeSpectrum(QString name, QString statistic, QString metric);
 
 
     //MEMBER ACCESS FUNCTIONS:

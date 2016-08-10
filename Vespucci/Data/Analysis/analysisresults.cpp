@@ -113,3 +113,13 @@ void AnalysisResults::SetName(const QString &new_name)
 {
     name_ = new_name;
 }
+
+QSharedPointer<AnalysisResults> AnalysisResults::Subset(QStringList matrices, uword start_row, uword end_row)
+{
+    QSharedPointer<AnalysisResults> results(new AnalysisResults(name_ + " (subset)", type_ + " (subset)"));
+    for (auto matrix_key: matrices){
+        mat submatrix = matrices_.value(matrix_key)->rows(start_row, end_row);
+        results->AddMatrix(matrix_key, submatrix);
+    }
+    return results;
+}

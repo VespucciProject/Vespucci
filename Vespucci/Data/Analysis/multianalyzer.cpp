@@ -24,10 +24,36 @@
 #include "Data/Analysis/mlpackpcadata.h"
 #include "Data/Analysis/plsdata.h"
 #include <mlpack/methods/kmeans/kmeans.hpp>
-MultiAnalyzer::MultiAnalyzer(QSharedPointer<VespucciWorkspace> workspace)
+#include "Data/Analysis/univariatedata.h"
+#include <Math/Clustering/agglomerativeclustering.h>
+MultiAnalyzer::MultiAnalyzer(QSharedPointer<VespucciWorkspace> workspace, QStringList dataset_keys)
 {
     workspace_ = workspace;
+    GetDatasets(dataset_keys);
+    bool ok = ConcatenateSpectra(dataset_keys);
+    if (!ok) throw runtime_error("Could not concatenate datasets");
 }
+
+void MultiAnalyzer::Univariate(const QString &name, double &left_bound, double &right_bound, uword bound_window)
+{
+    QString new_name = FindUniqueName(name);
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(new_name));
+    univariate_data->Apply(left_bound, right_bound, bound_window, data_, abscissa_);
+    QStringList matrix_keys = univariate_data->KeyList();
+    AddAnalysisResults(univariate_data, matrix_keys);
+}
+
+void MultiAnalyzer::BandRatio(const QString &name, double &first_left_bound, double &first_right_bound, double &second_left_bound, double &second_right_bound, uword bound_window)
+{
+    QString new_name = FindUniqueName(name);
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(new_name));
+    univariate_data->Apply(first_left_bound, first_right_bound,
+                           second_left_bound, second_right_bound,
+                           bound_window, data_, abscissa_);
+    QStringList matrix_keys = univariate_data->KeyList();
+    AddAnalysisResults(univariate_data, matrix_keys);
+}
+
 
 ///
 /// \brief MultiAnalyzer::VertexComponents
@@ -35,21 +61,13 @@ MultiAnalyzer::MultiAnalyzer(QSharedPointer<VespucciWorkspace> workspace)
 /// \param name
 /// \param endmembers
 ///
-void MultiAnalyzer::VertexComponents(const QStringList &keys, const QString &name, uword endmembers)
+void MultiAnalyzer::VertexComponents(const QString &name, uword endmembers)
 {
-    QList<QSharedPointer<VespucciDataset> > datasets = GetDatasets(keys);
-    mat data;
-    uvec start_indices, end_indices;
-    ConcatenateSpectra(datasets, data, start_indices, end_indices);
-
-    QSharedPointer<VCAData> vca_data(new VCAData(name));
-    vca_data->Apply(data, endmembers);
-
-    for (int i = 0; i < datasets.size(); ++i){
-        datasets[i]->AddAnalysisResult(vca_data);
-        mat scores = vca_data->GetMatrix("Fractional Abundances").rows(start_indices(i), end_indices(i));
-        datasets[i]->AddAuxiliaryMatrix(name + ": Fractional Abundances", scores);
-    }
+    QString new_name = FindUniqueName(name);
+    QSharedPointer<VCAData> vca_data(new VCAData(new_name));
+    vca_data->Apply(data_, endmembers);
+    QStringList matrix_keys({"Fractional Abundances"});
+    AddAnalysisResults(vca_data, matrix_keys);
 }
 
 ///
@@ -59,38 +77,29 @@ void MultiAnalyzer::VertexComponents(const QStringList &keys, const QString &nam
 /// \param metric_text
 /// \param name
 ///
-void MultiAnalyzer::KMeans(const QStringList &keys, size_t clusters, const QString &metric_text, const QString &name)
+void MultiAnalyzer::KMeans(size_t clusters, const QString &metric_text, const QString &name)
 {
-    QList<QSharedPointer<VespucciDataset> > datasets = GetDatasets(keys);
-    mat data;
-    uvec start_indices, end_indices;
-    ConcatenateSpectra(datasets, data, start_indices, end_indices);
-
-    for (uword i = 1; i < start_indices.n_rows; ++ i){
-        start_indices(i) = data.n_cols;
-        data = join_horiz(data, datasets[i]->spectra_ref());
-        end_indices(i) = data.n_cols - 1;
-    }
+    QString new_name = FindUniqueName(name);
 
     mat centroids;
     Row<size_t> assignments;
-    QSharedPointer<AnalysisResults> km_results(new AnalysisResults(name, "k-Means Analysis"));
+    QSharedPointer<AnalysisResults> km_results(new AnalysisResults(new_name, "k-Means Analysis"));
 
     if (metric_text == "Euclidean"){
         mlpack::kmeans::KMeans<mlpack::metric::EuclideanDistance> k;
-        k.Cluster(data, clusters, assignments, centroids);
+        k.Cluster(data_, clusters, assignments, centroids);
     }
     else if (metric_text == "Manhattan"){
         mlpack::kmeans::KMeans<mlpack::metric::EuclideanDistance> k;
-        k.Cluster(data, clusters, assignments, centroids);
+        k.Cluster(data_, clusters, assignments, centroids);
     }
     else if (metric_text == "Chebyshev"){
         mlpack::kmeans::KMeans<mlpack::metric::ChebyshevDistance> k;
-        k.Cluster(data, clusters, assignments, centroids);
+        k.Cluster(data_, clusters, assignments, centroids);
     }
     else{ //Default to squared euclidean distance as in chemometrics literature
         mlpack::kmeans::KMeans<mlpack::metric::SquaredEuclideanDistance> k;
-        k.Cluster(data, clusters, assignments, centroids);
+        k.Cluster(data_, clusters, assignments, centroids);
     }
 
     mat assignments_mat(assignments.n_cols, 1);
@@ -100,12 +109,9 @@ void MultiAnalyzer::KMeans(const QStringList &keys, size_t clusters, const QStri
 
     km_results->AddMatrix("Assignments", assignments_mat);
     km_results->AddMatrix("Centroids", centroids);
+    QStringList matrix_keys({"Assignments"});
 
-    for (int i = 0; i < datasets.size(); ++i){
-        datasets[i]->AddAnalysisResult(km_results);
-        mat assignments = km_results->GetMatrix("Assignments").rows(start_indices(i), end_indices(i));
-        datasets[i]->AddAuxiliaryMatrix(name + ": Assignments", assignments);
-    }
+    AddAnalysisResults(km_results, matrix_keys);
 }
 
 ///
@@ -113,27 +119,14 @@ void MultiAnalyzer::KMeans(const QStringList &keys, size_t clusters, const QStri
 /// \param keys
 /// \param name
 ///
-void MultiAnalyzer::PrincipalComponents(const QStringList &keys, const QString &name)
+void MultiAnalyzer::PrincipalComponents(const QString &name)
 {
-    QList<QSharedPointer<VespucciDataset> > datasets = GetDatasets(keys);
-    mat data;
-    uvec start_indices, end_indices;
-    ConcatenateSpectra(datasets, data, start_indices, end_indices);
+    QString new_name = FindUniqueName(name);
 
-    for (uword i = 1; i < start_indices.n_rows; ++ i){
-        start_indices(i) = data.n_cols;
-        data = join_horiz(data, datasets[i]->spectra_ref());
-        end_indices(i) = data.n_cols - 1;
-    }
-
-    QSharedPointer<PrincipalComponentsData> pca_data(new PrincipalComponentsData(name));
-    pca_data->Apply(data);
-
-    for (int i = 0; i < datasets.size(); ++i){
-        datasets[i]->AddAnalysisResult(pca_data);
-        mat scores = pca_data->GetMatrix("Scores").rows(start_indices(i), end_indices(i));
-        datasets[i]->AddAuxiliaryMatrix(name + ": Scores", scores);
-    }
+    QSharedPointer<PrincipalComponentsData> pca_data(new PrincipalComponentsData(new_name));
+    pca_data->Apply(data_);
+    QStringList matrix_keys({"Scores"});
+    AddAnalysisResults(pca_data, matrix_keys);
 }
 
 ///
@@ -142,26 +135,13 @@ void MultiAnalyzer::PrincipalComponents(const QStringList &keys, const QString &
 /// \param name
 /// \param scale_data
 ///
-void MultiAnalyzer::PrincipalComponents(const QStringList &keys, const QString &name, bool scale_data)
+void MultiAnalyzer::PrincipalComponents(const QString &name, bool scale_data)
 {
-    QList<QSharedPointer<VespucciDataset> > datasets = GetDatasets(keys);
+    QString new_name = FindUniqueName(name);
 
-    mat data;
-    uvec start_indices, end_indices;
-    ConcatenateSpectra(datasets, data, start_indices, end_indices);
-
-    for (uword i = 1; i < start_indices.n_rows; ++ i){
-        start_indices(i) = data.n_cols;
-        data = join_horiz(data, datasets[i]->spectra_ref());
-        end_indices(i) = data.n_cols - 1;
-    }
-
-    QSharedPointer<MlpackPCAData> pca_data(new MlpackPCAData(name));
-    pca_data->Apply(data, scale_data);
-
-    for (int i = 0; i < datasets.size(); ++i){
-        datasets[i]->AddAnalysisResult(pca_data);
-    }
+    QSharedPointer<MlpackPCAData> pca_data(new MlpackPCAData(new_name));
+    pca_data->Apply(data_, scale_data);
+    AddAnalysisResults(pca_data, QStringList());
 }
 
 ///
@@ -170,88 +150,105 @@ void MultiAnalyzer::PrincipalComponents(const QStringList &keys, const QString &
 /// \param name
 /// \param components
 ///
-void MultiAnalyzer::PartialLeastSquares(const QStringList &keys, const QString &name, uword components)
+void MultiAnalyzer::PartialLeastSquares(const QString &name, uword components)
 {
-    QList<QSharedPointer<VespucciDataset> > datasets = GetDatasets(keys);
-    mat data;
-    uvec start_indices, end_indices;
-    ConcatenateSpectra(datasets, data, start_indices, end_indices);
+    QString new_name = FindUniqueName(name);
 
-    vec abscissa = datasets[0]->abscissa();
-    QSharedPointer<PLSData> pls_data(new PLSData(name));
-    pls_data->Classify(data, abscissa, components);
+    QSharedPointer<PLSData> pls_data(new PLSData(new_name));
+    pls_data->Classify(data_, abscissa_, components);
+    QStringList matrices({"Predictor Scores", "Response Scores"});
+    AddAnalysisResults(pls_data, matrices);
+}
 
-    for (int i = 0; i < datasets.size(); ++i){
-        datasets[i]->AddAnalysisResult(pls_data);
-        mat x_scores = pls_data->GetMatrix("Predictor Scores").rows(start_indices(i), end_indices(i));
-        datasets[i]->AddAuxiliaryMatrix(name + ": Predictor Scores", x_scores);
-        mat y_scores = pls_data->GetMatrix("Response Scores").rows(start_indices(i), end_indices(i));
-        datasets[i]->AddAuxiliaryMatrix(name + ": Response Scores", y_scores);
+void MultiAnalyzer::AgglomerativeClustering(const QString &name, const QString &metric, const QString &linkage)
+{
+    QSharedPointer<AnalysisResults> ahca_results(new AnalysisResults(name, "AHCA"));
+    mat assignments;
+    Vespucci::Math::Clustering::AHCA ahca;
+    try{
+        ahca.SetLinkage(linkage.toStdString());
+        ahca.SetMetric(metric.toStdString());
+        ahca.Link(data_);
+        assignments = ahca.Cluster(data_.n_cols);
+    }catch (exception e){
+        workspace_->main_window()->DisplayExceptionWarning(e);
     }
+
+    ahca_results->AddMatrix("Assignments", assignments);
+    ahca_results->AddMatrix("Spectrum Distances", ahca.dist());
+    ahca_results->AddMatrix("Cluster Distances", ahca.merge_data());
+    QStringList matrix_keys = QStringList({"Assignments"});
+    AddAnalysisResults(ahca_results, matrix_keys);
+}
+
+bool MultiAnalyzer::CheckMergability(const QStringList dataset_keys)
+{
+    for (auto key: dataset_keys)
+        if (workspace_->GetDataset(key)->spectra_ptr()->n_rows
+                != workspace_->GetDataset(dataset_keys.first())->spectra_ptr()->n_rows)
+            return false;
+    return true;
+}
+
+bool MultiAnalyzer::ConcatenateSpectra(QStringList dataset_keys)
+{
+    if (!CheckMergability(dataset_keys)) return false;
+
+    try{
+        start_indices_.set_size(datasets_.size());
+        end_indices_.set_size(datasets_.size());
+        data_ = datasets_[0]->spectra_ref();
+        abscissa_ = datasets_[0]->abscissa_ref();
+        start_indices_(0) = 0;
+        end_indices_(0) = datasets_[0]->spectra_ref().n_cols - 1;
+
+        for (uword i = 1; i < start_indices_.n_rows; ++ i){
+            start_indices_(i) = data_.n_cols;
+            data_ = join_horiz(data_, datasets_[i]->spectra_ref());
+            end_indices_(i) = data_.n_cols - 1;
+        }
+    }catch(...){
+        return false;
+    }
+
+    return true;
 }
 
 ///
-/// \brief MultiAnalyzer::CheckMergability
-/// \param keys
-/// \param problematic_keys
-/// \return
-/// Validates that all the keys exist and have the same number of rows in spectra_
-bool MultiAnalyzer::CheckMergability(QStringList &keys, QStringList &problematic_keys)
-{
-    for (auto key: keys){
-        if (!workspace_->dataset_names().contains(key))
-            problematic_keys << key;
-    }
-
-    bool found = false;
-    QString first_key;
-    for (int i = 0; !found && i < keys.size(); ++i){
-        if (workspace_->dataset_names().contains(keys[i])){
-            first_key = keys[i];
-            found = true;
-        }
-    }
-
-    if (!found) return false;
-
-    uword rows = workspace_->GetDataset(first_key)->spectra_ptr()->n_rows;
-    for (auto key: keys){
-        if (!problematic_keys.contains(key)){
-            uword current_rows = workspace_->GetDataset(key)->spectra_ptr()->n_rows;
-            if (current_rows != rows) problematic_keys << key;
-        }
-    }
-
-    return !problematic_keys.size();
-}
-
 ///
 /// \brief MultiAnalyzer::GetDatasets
 /// \param keys
 /// \return
 ///
-QList<QSharedPointer<VespucciDataset> > MultiAnalyzer::GetDatasets(QStringList keys)
+void MultiAnalyzer::GetDatasets(QStringList keys)
 {
-    QList<QSharedPointer<VespucciDataset> > datasets;
     for (auto key: keys){
         if (workspace_->dataset_names().contains(key)){
-            datasets.append(workspace_->GetDataset(key));
+            datasets_.append(workspace_->GetDataset(key));
         }
     }
-    return datasets;
 }
 
-void MultiAnalyzer::ConcatenateSpectra(QList<QSharedPointer<VespucciDataset> > datasets, mat &data, uvec &start_indices, uvec &end_indices)
+void MultiAnalyzer::AddAnalysisResults(QSharedPointer<AnalysisResults> results, QStringList matrices)
 {
-    start_indices.set_size(datasets.size());
-    end_indices.set_size(datasets.size());
-    data = datasets[0]->spectra_ref();
-    start_indices(0) = 0;
-    end_indices(0) = datasets[0]->spectra_ref().n_cols - 1;
-
-    for (uword i = 1; i < start_indices.n_rows; ++ i){
-        start_indices(i) = data.n_cols;
-        data = join_horiz(data, datasets[i]->spectra_ref());
-        end_indices(i) = data.n_cols - 1;
+    for (uword i = 0; i < datasets_.size(); ++i){
+        datasets_[i]->AddAnalysisResult(results);
+        if (!matrices.isEmpty())
+            datasets_[i]->AddAnalysisResult(results->Subset(matrices, start_indices_(i), end_indices_(i)));
     }
+}
+
+QString MultiAnalyzer::FindUniqueName(QString name)
+{
+    QString new_name = name;
+    QStringList results_names;
+    for (auto dataset: datasets_){
+        results_names = results_names + dataset->AnalysisResultsKeys();
+    }
+    int i = 0;
+    QString basename = name;
+    while (results_names.contains(new_name)){
+        new_name = basename + " (" + QString::number(i++) + ")";
+    }
+    return new_name;
 }

@@ -155,6 +155,7 @@ void Vespucci::Math::Clustering::AHCA::SetMetric(std::string metric_type)
 /// The linkage process will be repeated, but at a higher tree level with precalculated distances.
 arma::mat Vespucci::Math::Clustering::AHCA::Cluster(arma::uword k)
 {
+    k = (k > clusters_.size() ? clusters_.size() : k);
     arma::mat assignments = arma::zeros(dist_.n_rows, k);
     for (arma::uword i = 1; i <= k; ++i){
         nodevec cluster = clusters_.at(i);

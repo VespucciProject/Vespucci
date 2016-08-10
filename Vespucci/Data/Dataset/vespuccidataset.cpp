@@ -23,6 +23,7 @@
 #include "Data/Import/datasetloader.h"
 #include "Data/Import/datasetsaver.h"
 #include "Data/Import/textimport.h"
+#include "Math/Clustering/agglomerativeclustering.h"
 #include <H5Cpp.h>
 using namespace arma;
 using namespace std;
@@ -1762,6 +1763,59 @@ void VespucciDataset::FindPeaks(QString name, double sel, double threshold, uwor
 
 */}
 
+///
+/// \brief VespucciDataset::AgglomerativeClustering
+/// \param name
+/// \param linkage
+/// \param metric
+/// linkage and metric must be valid arguments for Vespucci::Math::Clustering::AHCA
+void VespucciDataset::AgglomerativeClustering(QString name, QString linkage, QString metric)
+{
+    QSharedPointer<AnalysisResults> ahca_results(new AnalysisResults(name, "AHCA"));
+    mat assignments;
+    Vespucci::Math::Clustering::AHCA ahca;
+    try{
+        ahca.SetLinkage(linkage.toStdString());
+        ahca.SetMetric(metric.toStdString());
+        ahca.Link(spectra_);
+        assignments = ahca.Cluster(spectra_.n_cols);
+    }catch (exception e){
+        string str = "AgglomerativeClustering: " + string(e.what());
+        throw runtime_error(str);
+    }
+
+    ahca_results->AddMatrix("Assignments", assignments);
+    ahca_results->AddMatrix("Spectrum Distances", ahca.dist());
+    ahca_results->AddMatrix("Cluster Distances", ahca.merge_data());
+    AddAnalysisResult(ahca_results);
+    state_changed_ = true;
+    operations_ << "AgglomerativeClustering(" + name + ", " + linkage + ", " + metric + ")";
+    workspace_->UpdateModel();
+}
+
+///
+/// \brief VespucciDataset::CalculateRepresentativeSpectrum
+/// \param name
+/// \param statistic Either "centroid" or "medoid"
+/// \param metric Valid for DistanceMetricWrapper
+/// statist
+void VespucciDataset::CalculateRepresentativeSpectrum(QString name, QString statistic, QString metric)
+{
+    uword index;
+    vec rep;
+    try{
+        rep = Vespucci::Math::RepresentativeSpectrum(spectra_, index, metric.toStdString(), statistic.toStdString());
+    }catch(exception e){
+        string str = "CalculateRepresentativeSpectrum: " + string(e.what());
+        throw runtime_error(str);
+    }
+    QString matrix_name = name;
+    int i = 1;
+    while (auxiliary_matrices_->HasMatrix(matrix_name))
+        matrix_name = name + " (" + QString::number(i++) + ")";
+    auxiliary_matrices_->AddMatrix(matrix_name, rep);
+}
+
 
 ///
 /// \brief VespucciDataset::VertexComponents
@@ -2714,6 +2768,7 @@ void VespucciDataset::AddAnalysisResult(QSharedPointer<AnalysisResults> analysis
         new_name = name + " " + QString::number(++i);
     analysis_result->SetName(new_name);
     analysis_results_.append(analysis_result);
+    state_changed_ = true;
     workspace_->UpdateModel();
 }
 

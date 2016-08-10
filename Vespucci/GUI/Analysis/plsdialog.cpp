@@ -19,6 +19,7 @@
 *******************************************************************************/
 #include "GUI/Analysis/plsdialog.h"
 #include "ui_plsdialog.h"
+#include "Data/Analysis/multianalyzer.h"
 
 PLSDialog::PLSDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
@@ -28,7 +29,7 @@ PLSDialog::PLSDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, cons
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
 
-    ui->nameLineEdit->setEnabled(false);
+    ui->nameLineEdit->setEnabled(true);
 
     ui->browsePushButton->setVisible(false);
     ui->datasetLabel->setVisible(false);
@@ -36,6 +37,27 @@ PLSDialog::PLSDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, cons
     ui->fileLineEdit->setVisible(false);
     ui->datasetComboBox->setVisible(false);
 
+}
+
+PLSDialog::PLSDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys)
+    : QDialog(ws->main_window()),
+      ui(new Ui::PLSDialog)
+{
+    ui->setupUi(this);
+    workspace_ = ws;
+    dataset_keys_ = dataset_keys;
+    if (dataset_keys_.isEmpty()) {
+        close();
+        return;
+    }
+    ui->predictionCheckBox->setEnabled(false);
+
+    dataset_ = workspace_->GetDataset(dataset_keys.first());
+    ui->browsePushButton->setVisible(false);
+    ui->datasetLabel->setVisible(false);
+    ui->fileLabel->setVisible(false);
+    ui->fileLineEdit->setVisible(false);
+    ui->datasetComboBox->setVisible(false);
 }
 
 PLSDialog::~PLSDialog()
@@ -49,8 +71,27 @@ PLSDialog::~PLSDialog()
 /// the user has entered when the user clicks "Ok"
 void PLSDialog::on_buttonBox_accepted()
 {
+    if (dataset_keys_.isEmpty() && dataset_.isNull()){
+        close();
+        return;
+    }
     int components = ui->componentsSpinBox->value();
     QString name = ui->nameLineEdit->text();
+
+    if (!dataset_keys_.isEmpty()){
+        try{
+            MultiAnalyzer analyzer(workspace_, dataset_keys_);
+            analyzer.PartialLeastSquares(name, components);
+        }catch(exception e){
+            workspace_->main_window()->DisplayExceptionWarning(e);
+            close();
+            return;
+        }
+        close();
+        dataset_.clear();
+        return;
+    }
+
     try{
         dataset_->PartialLeastSquares(name, components);
     }catch(exception e){
