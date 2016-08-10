@@ -34,6 +34,7 @@ AHCADialog::AHCADialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &
     QDialog(ws->main_window()),
     ui(new Ui::AHCADialog)
 {
+    ui->setupUi(this);
     workspace_ = ws;
     dataset_keys_ = dataset_keys;
 }
@@ -74,4 +75,22 @@ void AHCADialog::on_buttonBox_accepted()
         close();
         return;
     }
+}
+
+void AHCADialog::on_linkageComboBox_currentTextChanged(const QString &arg1)
+{
+    ui->metricComboBox->clear();
+    QStringList metric_list;
+    if (arg1 == "Ward"){
+        metric_list = QStringList({"Squared Euclidean"});
+    }
+    else{
+        metric_list = QStringList({"Squared Euclidean",
+                                  "Euclidean",
+                                  "Manhattan",
+                                  "Chebyshev",
+                                  "Cosine",
+                                  "Correlation"});
+    }
+    ui->linkageComboBox->addItems(metric_list);
 }

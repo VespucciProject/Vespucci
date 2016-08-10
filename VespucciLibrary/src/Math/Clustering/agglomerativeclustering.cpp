@@ -80,6 +80,9 @@ Vespucci::Math::Clustering::AHCA::AHCA()
 /// Perform the linkage to build the AHCA tree
 void Vespucci::Math::Clustering::AHCA::Link(const arma::mat &data)
 {
+    std::cout << "Begin AHCA::Link()" << std::endl;
+    arma::wall_clock timer;
+    timer.tic();
     observations_ = data.n_cols;
     merge_data_ = arma::mat(observations_, 2);
     merge_data_.col(0) = arma::linspace(1, observations_, observations_);
@@ -118,6 +121,8 @@ void Vespucci::Math::Clustering::AHCA::Link(const arma::mat &data)
     root_node_ = nodes[0]; //there is only one cluster left at this point
     clusters_[1] = nodes;
     merge_data_.shed_row(0);
+    std::cout << "End of AHCA::Link()" << std::endl;
+    std::cout << "took " << timer.toc() << " s" << std::endl;
 }
 
 void Vespucci::Math::Clustering::AHCA::SetLinkage(std::string linkage_method)
@@ -155,6 +160,9 @@ void Vespucci::Math::Clustering::AHCA::SetMetric(std::string metric_type)
 /// The linkage process will be repeated, but at a higher tree level with precalculated distances.
 arma::mat Vespucci::Math::Clustering::AHCA::Cluster(arma::uword k)
 {
+    std::cout << "Begin AHCA::Cluster()" << std::endl;
+    arma::wall_clock timer;
+    timer.tic();
     k = (k > clusters_.size() ? clusters_.size() : k);
     arma::mat assignments = arma::zeros(dist_.n_rows, k);
     for (arma::uword i = 1; i <= k; ++i){
@@ -165,6 +173,8 @@ arma::mat Vespucci::Math::Clustering::AHCA::Cluster(arma::uword k)
             assignments(rows, column).fill(j+1);
         }
     }
+    std::cout << "End AHCA::Cluster()" << std::endl;
+    std::cout << "Took " << timer.toc() << " s" << std::endl;
     return assignments;
 }
 

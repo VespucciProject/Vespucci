@@ -40,6 +40,8 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
+    void on_linkageComboBox_currentTextChanged(const QString &arg1);
+
 private:
     Ui::AHCADialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;
