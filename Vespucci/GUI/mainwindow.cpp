@@ -54,6 +54,7 @@
 #include "GUI/Analysis/representativespectrumdialog.h"
 #include "GUI/Analysis/multianalysisdialog.h"
 #include "GUI/Analysis/transformdialog.h"
+#include "GUI/Analysis/ahcadialog.h"
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent usually 0
@@ -1513,4 +1514,15 @@ void MainWindow::on_actionOn_Multiple_Datasets_triggered()
     MultiAnalysisDialog *dialog = new MultiAnalysisDialog(this, workspace_);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->show();
+}
+
+void MainWindow::on_actionHierarchical_Clustering_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    QString dataset_key = item->DatasetKey();
+    if (!dataset_key.isEmpty()){
+        AHCADialog *dialog = new AHCADialog(this, workspace_, dataset_key);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->show();
+    }
 }

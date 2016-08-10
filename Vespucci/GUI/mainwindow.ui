@@ -128,7 +128,7 @@
      <addaction name="actionPrincipal_Components_Analysis"/>
      <addaction name="actionVertex_Components"/>
      <addaction name="actionK_Means_Clustering"/>
-     <addaction name="actionHierarchical_Clustering_2"/>
+     <addaction name="actionHierarchical_Clustering"/>
      <addaction name="actionClassical_Least_Squares"/>
      <addaction name="actionPartial_Least_Squares"/>
      <addaction name="separator"/>
@@ -738,11 +738,6 @@
    </property>
   </action>
   <action name="actionHierarchical_Clustering">
-   <property name="text">
-    <string>Hierarchical Clustering</string>
-   </property>
-  </action>
-  <action name="actionHierarchical_Clustering_2">
    <property name="text">
     <string>Hierarchical Clustering</string>
    </property>

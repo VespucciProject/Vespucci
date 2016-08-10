@@ -224,6 +224,8 @@ private slots:
 
     void on_actionOn_Multiple_Datasets_triggered();
 
+    void on_actionHierarchical_Clustering_triggered();
+
 private:
     void CloseDataset(const QString &name);
     Ui::MainWindow *ui;

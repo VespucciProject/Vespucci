@@ -66,7 +66,7 @@
         </item>
         <item>
          <property name="text">
-          <string>Agglomerative Clustering</string>
+          <string>Hierarchical Clustering</string>
          </property>
         </item>
        </widget>

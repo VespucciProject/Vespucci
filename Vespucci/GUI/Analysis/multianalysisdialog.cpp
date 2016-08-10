@@ -25,6 +25,7 @@
 #include "GUI/Analysis/principalcomponentsdialog.h"
 #include "GUI/Analysis/univariatedialog.h"
 #include "GUI/Analysis/vcadialog.h"
+#include "GUI/Analysis/ahcadialog.h"
 
 MultiAnalysisDialog::MultiAnalysisDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
@@ -81,10 +82,10 @@ void MultiAnalysisDialog::on_buttonBox_accepted()
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->show();
     }
-    else if (analysis_description == "Agglomerative Clustering"){
-        //AgglomerativeDialog *dialog = new AgglomerativeDialog(workspace_, dataset_keys);
-        //dialog->setAttribute(Qt::WA_DeleteOnClose);
-        //dialog->show();
+    else if (analysis_description == "Hierarchical Clustering"){
+        AHCADialog *dialog = new AHCADialog(workspace_, dataset_keys);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->show();
     }
     else{
         close();
