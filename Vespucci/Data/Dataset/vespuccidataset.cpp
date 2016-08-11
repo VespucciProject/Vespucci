@@ -2268,6 +2268,11 @@ mat *VespucciDataset::indices_ptr()
     return (mat *) &indices_;
 }
 
+QStringList VespucciDataset::operations()
+{
+    return operations_;
+}
+
 ///
 /// \brief VespucciDataset::SetIndices
 /// \param indices A new indices_ vector
@@ -2826,6 +2831,7 @@ void VespucciDataset::AddAuxiliaryMatrix(const QString &name, mat &matrix)
         new_name = basename + " (" + QString::number(++i) + ")";
     auxiliary_matrices_->AddMatrix(new_name, matrix);
     workspace_->UpdateModel();
+    state_changed_ = true;
 }
 
 void VespucciDataset::AddMatrix(const QString &name, mat &matrix)
@@ -2840,6 +2846,8 @@ void VespucciDataset::AddMatrix(const QString &name, mat &matrix)
         abscissa_ = matrix.col(0);
     else
         AddAuxiliaryMatrix(name, matrix);
+    state_changed_ = true;
+    workspace_->UpdateModel();
 }
 
 ///

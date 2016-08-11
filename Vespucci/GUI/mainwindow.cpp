@@ -75,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     stats_viewer_ = new StatsDialog(this, workspace_);
     macro_editor_ = new MacroDialog(this, workspace_);
     python_shell_ = new PythonShellDialog(this, workspace_);
+    history_dialog_ = new HistoryDialog(this, workspace_);
 
     setCentralWidget(ui->datasetTreeView);
 
@@ -105,6 +106,12 @@ MainWindow::MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
             stats_viewer_, &StatsDialog::MatrixSelectionChanged);
     connect(this, &MainWindow::DatasetSelectionChanged,
             spectrum_editor_, &SpectrumEditor::DatasetSelectionChanged);
+    connect(this, &MainWindow::DatasetSelectionChanged,
+            history_dialog_, &HistoryDialog::DatasetSelectionChanged);
+    connect(this, &MainWindow::DatasetSelectionChanged,
+            macro_editor_, &MacroDialog::DatasetSelectionChanged);
+
+
 
     //Triggers the removal of references that are about to become bad
     connect(this, &MainWindow::DatasetToBeRemoved,
@@ -1525,4 +1532,13 @@ void MainWindow::on_actionHierarchical_Clustering_triggered()
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->show();
     }
+}
+
+
+void MainWindow::on_actionHistory_toggled(bool arg1)
+{
+   if (arg1 && !history_dialog_->isVisible())
+       history_dialog_->show();
+   if (!arg1 && history_dialog_->isVisible())
+       history_dialog_->close();
 }

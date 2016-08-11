@@ -158,7 +158,8 @@ SOURCES += main.cpp\
     GUI/Processing/matrixselectiondialog.cpp \
     GUI/Analysis/representativespectrumdialog.cpp \
     Data/Analysis/metaanalyzer.cpp \
-    GUI/Analysis/ahcadialog.cpp
+    GUI/Analysis/ahcadialog.cpp \
+    GUI/Display/historydialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -234,7 +235,8 @@ HEADERS  += \
     GUI/Processing/matrixselectiondialog.h \
     GUI/Analysis/representativespectrumdialog.h \
     Data/Analysis/metaanalyzer.h \
-    GUI/Analysis/ahcadialog.h
+    GUI/Analysis/ahcadialog.h \
+    GUI/Display/historydialog.h
 
 
 FORMS    += \
@@ -286,7 +288,8 @@ FORMS    += \
     GUI/Processing/datasetimportdialog.ui \
     GUI/Processing/matrixselectiondialog.ui \
     GUI/Analysis/representativespectrumdialog.ui \
-    GUI/Analysis/ahcadialog.ui
+    GUI/Analysis/ahcadialog.ui \
+    GUI/Display/historydialog.ui
 
 RESOURCES += \
     resources.qrc

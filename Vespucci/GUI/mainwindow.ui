@@ -199,6 +199,7 @@
     <addaction name="actionSpectrum_Editor"/>
     <addaction name="actionPython_Shell"/>
     <addaction name="actionMacro_Editor"/>
+    <addaction name="actionHistory"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuData"/>
@@ -760,6 +761,14 @@
   <action name="actionHypothesis_Testing">
    <property name="text">
     <string>Hypothesis Testing</string>
+   </property>
+  </action>
+  <action name="actionHistory">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Dataset History</string>
    </property>
   </action>
  </widget>

@@ -27,7 +27,7 @@ public:
     MacroParser(QSharedPointer<VespucciDataset> dataset);
     bool LoadMacro(QString macro);
     bool ExecuteMacro();
-    bool Error(int &error_line, int &error_param_);
+    void Error(int &error_line, int &error_param);
 private:
     void ExecuteCommand(QString command, QStringList params);
     bool ValidateCommand(QString command, QStringList params, int &param_error);

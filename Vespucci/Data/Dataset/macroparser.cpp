@@ -114,6 +114,12 @@ bool MacroParser::ExecuteMacro()
     return true; //we've already handled the cases where it would return false
 }
 
+void MacroParser::Error(int &error_line, int &error_param)
+{
+    error_line = error_line_;
+    error_param = error_param_;
+}
+
 ///
 /// \brief MacroParser::ExecuteCommand
 /// \param command
