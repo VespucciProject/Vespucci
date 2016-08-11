@@ -110,6 +110,8 @@ MainWindow::MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
             history_dialog_, &HistoryDialog::DatasetSelectionChanged);
     connect(this, &MainWindow::DatasetSelectionChanged,
             macro_editor_, &MacroDialog::DatasetSelectionChanged);
+    connect(history_dialog_, &HistoryDialog::MacroRequested,
+            macro_editor_, &MacroDialog::MacroRequested);
 
 
 
@@ -172,14 +174,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 ///Exits the program.
 void MainWindow::on_actionExit_triggered()
 {
-    int response = QMessageBox::question(this,
-                                         "Exit?",
-                                         "Are you sure you want to exit?");
-
-    if (response == QMessageBox::Yes) {
-        dataset_tree_model_->ClearDatasets();
-        qApp->exit();
-    }
+    close(); //triggers closeEvent.
 }
 
 ///
