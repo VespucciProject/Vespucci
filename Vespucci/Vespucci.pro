@@ -155,7 +155,11 @@ SOURCES += main.cpp\
     GUI/Display/colorrangedialog.cpp \
     GUI/Display/spectrumeditor.cpp \
     GUI/Processing/datasetimportdialog.cpp \
-    GUI/Processing/matrixselectiondialog.cpp
+    GUI/Processing/matrixselectiondialog.cpp \
+    GUI/Analysis/representativespectrumdialog.cpp \
+    Data/Analysis/metaanalyzer.cpp \
+    GUI/Analysis/ahcadialog.cpp \
+    GUI/Display/historydialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -228,7 +232,11 @@ HEADERS  += \
     GUI/Display/colorrangedialog.h \
     GUI/Display/spectrumeditor.h \
     GUI/Processing/datasetimportdialog.h \
-    GUI/Processing/matrixselectiondialog.h
+    GUI/Processing/matrixselectiondialog.h \
+    GUI/Analysis/representativespectrumdialog.h \
+    Data/Analysis/metaanalyzer.h \
+    GUI/Analysis/ahcadialog.h \
+    GUI/Display/historydialog.h
 
 
 FORMS    += \
@@ -278,7 +286,10 @@ FORMS    += \
     GUI/Display/colorrangedialog.ui \
     GUI/Display/spectrumeditor.ui \
     GUI/Processing/datasetimportdialog.ui \
-    GUI/Processing/matrixselectiondialog.ui
+    GUI/Processing/matrixselectiondialog.ui \
+    GUI/Analysis/representativespectrumdialog.ui \
+    GUI/Analysis/ahcadialog.ui \
+    GUI/Display/historydialog.ui
 
 RESOURCES += \
     resources.qrc

@@ -21,6 +21,7 @@
 #define MULTIANALYSISDIALOG_H
 
 #include <QDialog>
+#include "Global/vespucciworkspace.h"
 
 namespace Ui {
 class MultiAnalysisDialog;
@@ -31,11 +32,15 @@ class MultiAnalysisDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit MultiAnalysisDialog(QWidget *parent = 0);
+    explicit MultiAnalysisDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws);
     ~MultiAnalysisDialog();
+
+private slots:
+    void on_buttonBox_accepted();
 
 private:
     Ui::MultiAnalysisDialog *ui;
+    QSharedPointer<VespucciWorkspace> workspace_;
 };
 
 #endif // MULTIANALYSISDIALOG_H

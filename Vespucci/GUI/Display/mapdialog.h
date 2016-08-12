@@ -38,6 +38,8 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
+    void on_columnSpinBox_valueChanged(int arg1);
+
 private:
     Ui::MapDialog *ui;
     MainWindow *main_window_;

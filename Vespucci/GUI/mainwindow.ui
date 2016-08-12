@@ -110,6 +110,7 @@
     <addaction name="actionNew_Composite_Dataset"/>
     <addaction name="actionNew_Dataset_from_Object"/>
     <addaction name="separator"/>
+    <addaction name="actionView_History"/>
     <addaction name="actionSave_Log_File"/>
     <addaction name="actionClose_Dataset"/>
    </widget>
@@ -124,19 +125,13 @@
      <property name="title">
       <string>&amp;Multivariate Analysis</string>
      </property>
-     <widget class="QMenu" name="menuHierarchical_Clustering">
-      <property name="title">
-       <string>Hierarchical Clustering</string>
-      </property>
-      <addaction name="actionGenerate_Dendrogram"/>
-      <addaction name="actionAssign_Clusters"/>
-     </widget>
      <addaction name="actionPrincipal_Components_Analysis"/>
-     <addaction name="actionPartial_Least_Squares"/>
      <addaction name="actionVertex_Components"/>
      <addaction name="actionK_Means_Clustering"/>
-     <addaction name="menuHierarchical_Clustering"/>
+     <addaction name="actionHierarchical_Clustering"/>
      <addaction name="actionClassical_Least_Squares"/>
+     <addaction name="actionPartial_Least_Squares"/>
+     <addaction name="separator"/>
     </widget>
     <widget class="QMenu" name="menuPeak_Detection">
      <property name="title">
@@ -147,22 +142,18 @@
     </widget>
     <widget class="QMenu" name="menuUnivariate_Analysis">
      <property name="title">
-      <string>&amp;Univariate Analysis...</string>
+      <string>Univariate Analysis</string>
      </property>
      <addaction name="actionNew_Univariate_Map"/>
      <addaction name="actionNew_Band_Ratio_Map"/>
     </widget>
-    <widget class="QMenu" name="menuBetween_Datasets">
-     <property name="title">
-      <string>Between Datasets</string>
-     </property>
-     <addaction name="actionMultivariate_Analysis"/>
-     <addaction name="actionHypothesis_Test_ANOVA"/>
-    </widget>
     <addaction name="menuUnivariate_Analysis"/>
     <addaction name="menuNew_Multivariate_Map"/>
     <addaction name="menuPeak_Detection"/>
-    <addaction name="menuBetween_Datasets"/>
+    <addaction name="actionCalculate_Representative_Spectrum"/>
+    <addaction name="actionOn_Multiple_Datasets"/>
+    <addaction name="actionOn_Results"/>
+    <addaction name="actionHypothesis_Testing"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -208,6 +199,7 @@
     <addaction name="actionSpectrum_Editor"/>
     <addaction name="actionPython_Shell"/>
     <addaction name="actionMacro_Editor"/>
+    <addaction name="actionHistory"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuData"/>
@@ -599,6 +591,9 @@
    <property name="text">
     <string>Show in Data Viewer</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionPython_Shell">
    <property name="checkable">
@@ -610,13 +605,16 @@
    <property name="text">
     <string>Python Shell</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionMacro_Editor">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Macro Editor</string>
@@ -635,6 +633,9 @@
   <action name="actionTransform">
    <property name="text">
     <string>Transform...</string>
+   </property>
+   <property name="visible">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionANOVA">
@@ -730,6 +731,44 @@
   <action name="actionAssign_Clusters">
    <property name="text">
     <string>Assign Clusters</string>
+   </property>
+  </action>
+  <action name="actionCalculate_Representative_Spectrum">
+   <property name="text">
+    <string>Calculate Representative Spectrum</string>
+   </property>
+  </action>
+  <action name="actionHierarchical_Clustering">
+   <property name="text">
+    <string>Hierarchical Clustering</string>
+   </property>
+  </action>
+  <action name="actionView_History">
+   <property name="text">
+    <string>View History</string>
+   </property>
+  </action>
+  <action name="actionOn_Multiple_Datasets">
+   <property name="text">
+    <string>On Multiple Datasets</string>
+   </property>
+  </action>
+  <action name="actionOn_Results">
+   <property name="text">
+    <string>On Results</string>
+   </property>
+  </action>
+  <action name="actionHypothesis_Testing">
+   <property name="text">
+    <string>Hypothesis Testing</string>
+   </property>
+  </action>
+  <action name="actionHistory">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Dataset History</string>
    </property>
   </action>
  </widget>

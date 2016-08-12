@@ -14,6 +14,7 @@ class ClassicalLeastSquaresDialog : public QDialog
 
 public:
     explicit ClassicalLeastSquaresDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
+    explicit ClassicalLeastSquaresDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys);
     ~ClassicalLeastSquaresDialog();
 
 private slots:
@@ -23,6 +24,7 @@ private:
     Ui::ClassicalLeastSquaresDialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
+    QStringList dataset_keys_;
 };
 
 #endif // CLASSICALLEASTSQUARESDIALOG_H

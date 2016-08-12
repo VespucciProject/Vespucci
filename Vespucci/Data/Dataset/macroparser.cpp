@@ -68,11 +68,12 @@ bool MacroParser::LoadMacro(QString macro)
     //this regular expression is used to split the commands so that the first
     //member of the list is the function name, and all subsequent entries are
     //parameters of the function.
-    QRegExp sep("(\\(|\\)|,)");
+    QRegExp sep("(\\(|\\)|,|\\s)");
 
     bool command_valid;
     for (int i = 0; i < command_list.size(); ++i){
-        QStringList pieces = command_list[i].split(sep);
+        QStringList pieces = command_list[i].split(sep, QString::SkipEmptyParts);
+        if (!pieces.size()) continue;
         QString function_name = pieces.first();
         pieces.removeAt(0);
         command_valid = ValidateCommand(function_name, pieces, error_param_);
@@ -112,6 +113,12 @@ bool MacroParser::ExecuteMacro()
         ExecuteCommand(command.first, command.second);
     }
     return true; //we've already handled the cases where it would return false
+}
+
+void MacroParser::Error(int &error_line, int &error_param)
+{
+    error_line = error_line_;
+    error_param = error_param_;
 }
 
 ///

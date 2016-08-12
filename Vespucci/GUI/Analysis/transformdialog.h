@@ -21,6 +21,8 @@
 #define TRANSFORMDIALOG_H
 
 #include <QDialog>
+#include "Global/vespucciworkspace.h"
+#include "GUI/Processing/matrixselectiondialog.h"
 
 namespace Ui {
 class TransformDialog;
@@ -31,11 +33,21 @@ class TransformDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit TransformDialog(QWidget *parent = 0);
+    explicit TransformDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QStringList keys);
     ~TransformDialog();
+
+private slots:
+    void on_selectPushButton_clicked();
+
+    void on_buttonBox_accepted();
 
 private:
     Ui::TransformDialog *ui;
+    QSharedPointer<VespucciWorkspace> workspace_;
+    QStringList data_keys_;
+    QStringList operand_keys_;
+    MatrixSelectionDialog *matrix_selection_dialog_;
+
 };
 
 #endif // TRANSFORMDIALOG_H

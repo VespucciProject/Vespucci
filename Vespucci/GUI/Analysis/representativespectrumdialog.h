@@ -17,50 +17,31 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef MACRODIALOG_H
-#define MACRODIALOG_H
+#ifndef REPRESENTATIVESPECTRUMDIALOG_H
+#define REPRESENTATIVESPECTRUMDIALOG_H
 
 #include <QDialog>
 #include "Global/vespucciworkspace.h"
-class VespucciWorkspace;
-class VespucciDataset;
-class MainWindow;
+
 namespace Ui {
-class MacroDialog;
+class RepresentativeSpectrumDialog;
 }
 
-class MacroDialog : public QDialog
+class RepresentativeSpectrumDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit MacroDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws);
-    ~MacroDialog();
-    void SetActiveDataset(QSharedPointer<VespucciDataset> dataset);
-public slots:
-    void MacroRequested(const QStringList &macro);
-    void DatasetSelectionChanged(QString dataset_key);
-    void DatasetToBeRemoved(const QString &dataset_key);
-signals:
-    void SetActionChecked(bool checked);
-protected:
-    void closeEvent(QCloseEvent *ev);
+    explicit RepresentativeSpectrumDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
+    ~RepresentativeSpectrumDialog();
+
 private slots:
-    void on_openToolButton_clicked();
-
-    void on_saveToolButton_clicked();
-
-    void on_runToolButton_clicked();
-
-    void on_helpToolButton_clicked();
-
-    void on_runAllToolButton_clicked();
+    void on_buttonBox_accepted();
 
 private:
-    bool dataset_valid_;
-    Ui::MacroDialog *ui;
-    QSharedPointer<VespucciWorkspace> workspace_;
+    Ui::RepresentativeSpectrumDialog *ui;
     QSharedPointer<VespucciDataset> dataset_;
+    QSharedPointer<VespucciWorkspace> workspace_;
 };
 
-#endif // MACRODIALOG_H
+#endif // REPRESENTATIVESPECTRUMDIALOG_H

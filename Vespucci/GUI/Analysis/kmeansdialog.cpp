@@ -19,6 +19,7 @@
 *******************************************************************************/
 #include "GUI/Analysis/kmeansdialog.h"
 #include "ui_kmeansdialog.h"
+#include "Data/Analysis/multianalyzer.h"
 
 ///
 /// \brief KMeansDialog::KMeansDialog
@@ -36,6 +37,22 @@ KMeansDialog::KMeansDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws
     ui->clustersSpinBox->setRange(0, dataset_->spectra_ptr()->n_cols);
 }
 
+KMeansDialog::KMeansDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys)
+    :QDialog(ws->main_window()),
+      ui(new Ui::KMeansDialog)
+{
+    ui->setupUi(this);
+    dataset_keys_ = dataset_keys;
+    if (dataset_keys_.isEmpty()){
+        close();
+        return;
+    }
+    ui->predictionCheckBox->setEnabled(false);
+
+    workspace_ = ws;
+    dataset_ = workspace_->GetDataset(dataset_keys_.first());
+}
+
 KMeansDialog::~KMeansDialog()
 {
     delete ui;
@@ -47,6 +64,10 @@ KMeansDialog::~KMeansDialog()
 void KMeansDialog::on_buttonBox_accepted()
 {
 
+    if (dataset_keys_.isEmpty() && dataset_.isNull()){
+        close();
+        return;
+    }
     QString metric_text = ui->metricComboBox->currentText();
     int clusters;
     QString name = ui->nameLineEdit->text();
@@ -54,6 +75,20 @@ void KMeansDialog::on_buttonBox_accepted()
         clusters = 0;
     else
         clusters = ui->clustersSpinBox->value();
+    if (!dataset_keys_.isEmpty()){
+        try{
+            MultiAnalyzer analyzer(workspace_, dataset_keys_);
+            analyzer.KMeans(clusters, metric_text, name);
+        }catch(exception e){
+            workspace_->main_window()->DisplayExceptionWarning(e);
+            dataset_.clear();
+            close();
+            return;
+        }
+        dataset_.clear();
+        close();
+        return;
+    }
     try{
         dataset_->KMeans(name, clusters, metric_text);
     }catch(exception e){

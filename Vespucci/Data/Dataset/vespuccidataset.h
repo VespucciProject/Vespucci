@@ -192,7 +192,6 @@ public:
     bool Save(QString filename);
     bool Load(QString filename);
     bool SaveSpectrum(QString filename, uword column, file_type type);
-    // IMAGING FUNCTIONS //
 
     void Univariate(QString name, double &left_bound, double &right_bound,
                     uword bound_window);
@@ -209,7 +208,8 @@ public:
     void PrincipalComponents(const QString &name, bool scale_data);
     void FindPeaks(QString name, double sel, double threshold,
                    uword poly_order, uword window_size);
-
+    void AgglomerativeClustering(QString name, QString linkage, QString metric);
+    void CalculateRepresentativeSpectrum(QString name, QString statistic, QString metric);
 
 
     //MEMBER ACCESS FUNCTIONS:
@@ -229,6 +229,7 @@ public:
     const QString name() const;
     vec indices() const;
     mat *indices_ptr();
+    QStringList operations();
 
     bool principal_components_calculated() const;
     bool mlpack_pca_calculated() const;

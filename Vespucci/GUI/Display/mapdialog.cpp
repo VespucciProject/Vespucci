@@ -89,7 +89,7 @@ void MapDialog::on_buttonBox_accepted()
         gradient = dataset_->GetGradient(gradient_index);
     }
 
-    //try{
+    try{
         if (data_keys_.size() == 2)
             dataset_->CreateMap(map_name,
                                 data_keys_[1],
@@ -103,9 +103,25 @@ void MapDialog::on_buttonBox_accepted()
                                 column_index,
                                 gradient,
                                 tick_count);
-    //}catch(exception e){
-    //    main_window_->DisplayExceptionWarning("VespucciDataset::CreateMap()", e);
-    //    close();
-    //}
+    }catch(exception e){
+        main_window_->DisplayExceptionWarning("VespucciDataset::CreateMap()", e);
+        close();
+    }
     close();
+}
+
+void MapDialog::on_columnSpinBox_valueChanged(int arg1)
+{
+    mat data;
+    try{
+        data = workspace_->data_model()->GetMatrix(data_keys_).col(arg1);
+    }catch(exception e){
+        main_window_->DisplayExceptionWarning("DataModel::GetMatrix or mat::col", e);
+        close();
+    }
+
+    vec unique_values = unique(data);
+    QStringList color_list = workspace_->GradientNames(unique_values.n_rows < 10);
+    ui->gradientComboBox->clear();
+    ui->gradientComboBox->addItems(color_list);
 }

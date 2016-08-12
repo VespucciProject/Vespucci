@@ -17,43 +17,9 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "matrixselectiondialog.h"
-#include "ui_matrixselectiondialog.h"
+#include "metaanalyzer.h"
 
-MatrixSelectionDialog::MatrixSelectionDialog(QWidget *parent, DatasetTreeModel *model) :
-    QDialog(parent),
-    ui(new Ui::MatrixSelectionDialog)
+MetaAnalyzer::MetaAnalyzer()
 {
-    ui->setupUi(this);
-    tree_model_ = model;
-    accepted_ = false;
-    ui->treeView->setModel(tree_model_);
-}
 
-MatrixSelectionDialog::~MatrixSelectionDialog()
-{
-    delete ui;
-}
-
-TreeItem *MatrixSelectionDialog::GetSelectedItem()
-{
-    return selected_item_;
-}
-
-bool MatrixSelectionDialog::accepted()
-{
-    return accepted_;
-}
-
-void MatrixSelectionDialog::on_buttonBox_accepted()
-{
-    close();
-    selected_item_ = tree_model_->getItem(ui->treeView->currentIndex());
-    accepted_ = true;
-}
-
-void MatrixSelectionDialog::on_buttonBox_rejected()
-{
-    close();
-    accepted_ = false;
 }

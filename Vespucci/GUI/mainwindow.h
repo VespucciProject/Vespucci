@@ -28,7 +28,9 @@
 #include "GUI/macrodialog.h"
 #include "GUI/pythonshelldialog.h"
 #include "GUI/Display/statsdialog.h"
+#include "GUI/Display/historydialog.h"
 class PythonShellDialog;
+class HistoryDialog;
 class SpectrumEditor;
 class VespucciWorkspace;
 class VespucciDataset;
@@ -218,6 +220,17 @@ private slots:
 
     void on_actionImport_Data_Into_Dataset_triggered();
 
+    void on_actionCalculate_Representative_Spectrum_triggered();
+
+    void on_actionTransform_triggered();
+
+    void on_actionOn_Multiple_Datasets_triggered();
+
+    void on_actionHierarchical_Clustering_triggered();
+
+
+    void on_actionHistory_toggled(bool arg1);
+
 private:
     void CloseDataset(const QString &name);
     Ui::MainWindow *ui;
@@ -228,6 +241,7 @@ private:
     MacroDialog *macro_editor_;
     SpectrumEditor *spectrum_editor_;
     PythonShellDialog *python_shell_;
+    HistoryDialog *history_dialog_;
 
 
     ///

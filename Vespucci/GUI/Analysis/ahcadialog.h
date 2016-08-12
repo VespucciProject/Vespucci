@@ -17,50 +17,36 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef MACRODIALOG_H
-#define MACRODIALOG_H
+#ifndef AHCADIALOG_H
+#define AHCADIALOG_H
 
 #include <QDialog>
-#include "Global/vespucciworkspace.h"
-class VespucciWorkspace;
-class VespucciDataset;
-class MainWindow;
+
+#include <Global/vespucciworkspace.h>
+
 namespace Ui {
-class MacroDialog;
+class AHCADialog;
 }
 
-class MacroDialog : public QDialog
+class AHCADialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit MacroDialog(MainWindow *parent, QSharedPointer<VespucciWorkspace> ws);
-    ~MacroDialog();
-    void SetActiveDataset(QSharedPointer<VespucciDataset> dataset);
-public slots:
-    void MacroRequested(const QStringList &macro);
-    void DatasetSelectionChanged(QString dataset_key);
-    void DatasetToBeRemoved(const QString &dataset_key);
-signals:
-    void SetActionChecked(bool checked);
-protected:
-    void closeEvent(QCloseEvent *ev);
+    explicit AHCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
+    explicit AHCADialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys);
+    ~AHCADialog();
+
 private slots:
-    void on_openToolButton_clicked();
+    void on_buttonBox_accepted();
 
-    void on_saveToolButton_clicked();
-
-    void on_runToolButton_clicked();
-
-    void on_helpToolButton_clicked();
-
-    void on_runAllToolButton_clicked();
+    void on_linkageComboBox_currentTextChanged(const QString &arg1);
 
 private:
-    bool dataset_valid_;
-    Ui::MacroDialog *ui;
+    Ui::AHCADialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
+    QStringList dataset_keys_;
 };
 
-#endif // MACRODIALOG_H
+#endif // AHCADIALOG_H

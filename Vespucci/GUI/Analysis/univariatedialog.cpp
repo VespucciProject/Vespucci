@@ -19,6 +19,7 @@
 *******************************************************************************/
 #include "GUI/Analysis/univariatedialog.h"
 #include "ui_univariatedialog.h"
+#include "Data/Analysis/multianalyzer.h"
 
 ///
 /// \brief UnivariateDialog::UnivariateDialog
@@ -75,6 +76,60 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, QSharedPointer<VespucciWorks
 
 }
 
+UnivariateDialog::UnivariateDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys)
+    :QDialog(ws->main_window()),
+      ui(new Ui::UnivariateDialog)
+{
+    ui->setupUi(this);
+    workspace_ = ws;
+    dataset_keys_ = dataset_keys;
+    if (dataset_keys_.isEmpty()){
+        close();
+        return;
+    }
+
+    dataset_ = workspace_->GetDataset(dataset_keys.first());
+
+    min_line_ = new QCPItemStraightLine(ui->spectrumPlot);
+    min_line_->point1->setCoords(0, 0);
+    min_line_->point2->setCoords(0, 1);
+    max_line_ = new QCPItemStraightLine(ui->spectrumPlot);
+    max_line_->point1->setCoords(0, 0);
+    max_line_->point2->setCoords(0, 1);
+    double min, max;
+    try{
+        min = dataset_->wavelength_ptr()->min();
+        max = dataset_->wavelength_ptr()->max();
+    }
+    catch(exception e){
+        cerr << e.what();
+        workspace_->main_window()->DisplayExceptionWarning(e);
+        min = 0;
+        max = 0;
+    }
+
+    QString label_text = QString::number(min) + "–" + QString::number(max);
+    ui->rangeLabel->setText(label_text);
+
+    ui->minLineEdit->setValidator(new QDoubleValidator(min, max, 2, this));
+    ui->maxLineEdit->setValidator(new QDoubleValidator(min, max, 2, this));
+
+    uword origin = dataset_->FindOrigin();
+    QVector<double> plot_data, wavelength;
+
+    try{
+        plot_data = dataset_->PointSpectrum(origin);
+        wavelength = dataset_->WavelengthQVector();
+    }
+    catch(exception e){}
+    if (plot_data.isEmpty()){plot_data = dataset_->PointSpectrum(0);}
+    ui->spectrumPlot->addGraph();
+    ui->spectrumPlot->graph(0)->addData(wavelength, plot_data);
+    ui->spectrumPlot->rescaleAxes();
+    ui->spectrumPlot->setInteraction(QCP::iRangeDrag, true);
+    ui->spectrumPlot->setInteraction(QCP::iRangeZoom, true);
+}
+
 UnivariateDialog::~UnivariateDialog()
 {
     delete ui;
@@ -98,6 +153,18 @@ void UnivariateDialog::on_buttonBox_accepted()
         name = "Univariate " + QString::number(dataset_->UnivariateCount());
     }
     QString value_method = ui->methodComboBox->currentText();
+
+    if (!dataset_keys_.isEmpty()){
+        try{
+            MultiAnalyzer analyzer(workspace_, dataset_keys_);
+            analyzer.Univariate(name, entered_min, entered_max, bound_window);
+        }catch(exception e){
+            workspace_->main_window()->DisplayExceptionWarning(e);
+        }
+        close();
+        return;
+    }
+
     if (value_method == "Empirical"){
         try{
             dataset_->Univariate(name, entered_min, entered_max, bound_window);

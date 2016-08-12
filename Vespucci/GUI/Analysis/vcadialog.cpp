@@ -19,6 +19,7 @@
 *******************************************************************************/
 #include "GUI/Analysis/vcadialog.h"
 #include "ui_vcadialog.h"
+#include "Data/Analysis/multianalyzer.h"
 
 ///
 /// \brief VCADialog::VCADialog
@@ -35,6 +36,20 @@ VCADialog::VCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, cons
     dataset_ = workspace_->GetDataset(dataset_key);
 }
 
+VCADialog::VCADialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys)
+    :QDialog(ws->main_window()),
+      ui(new Ui::VCADialog)
+{
+    ui->setupUi(this);
+    workspace_ = ws;
+    dataset_keys_ = dataset_keys;
+    if (dataset_keys_.isEmpty()){
+        close();
+        return;
+    }
+    ui->predictionCheckBox->setEnabled(false);
+}
+
 VCADialog::~VCADialog()
 {
     delete ui;
@@ -47,6 +62,17 @@ void VCADialog::on_buttonBox_accepted()
 {
     int endmembers;
     QString name = ui->nameLineEdit->text();
+
+    if (!dataset_keys_.isEmpty()){
+        endmembers = ui->endmembersSpinBox->value();
+        try{
+            MultiAnalyzer analyzer(workspace_, dataset_keys_);
+            analyzer.VertexComponents(name, endmembers);
+        }catch (exception e){
+            workspace_->main_window()->DisplayExceptionWarning(e);
+        }
+    }
+
     if (ui->predictionCheckBox->isChecked())
         endmembers = 0;
     else

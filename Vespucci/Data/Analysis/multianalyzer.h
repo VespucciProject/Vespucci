@@ -31,30 +31,67 @@ using namespace arma;
 class MultiAnalyzer
 {
 public:
-    MultiAnalyzer(QSharedPointer<VespucciWorkspace> workspace);
-    void VertexComponents(const QStringList &keys,
-                          const QString &name,
+    MultiAnalyzer(QSharedPointer<VespucciWorkspace> workspace, QStringList dataset_keys);
+    void Univariate(const QString &name,
+                    double &left_bound,
+                    double &right_bound,
+                    uword bound_window);
+    void BandRatio(const QString &name,
+                   double &first_left_bound,
+                   double &first_right_bound,
+                   double &second_left_bound,
+                   double &second_right_bound,
+                   uword bound_window);
+    void ClassicalLeastSquares(const QString &name,
+                               const QString &reference_key);
+    void VertexComponents(const QString &name,
                           uword endmembers);
-    void KMeans(const QStringList & keys,
-                size_t clusters,
+    void KMeans(size_t clusters,
                 const QString &metric_text,
                 const QString &name);
-    void PrincipalComponents(const QStringList &keys,
-                             const QString &name);
-    void PrincipalComponents(const QStringList &keys,
-                             const QString &name,
+    void PrincipalComponents(const QString &name);
+    void PrincipalComponents(const QString &name,
                              bool scale_data);
-    void PartialLeastSquares(const QStringList &keys,
-                             const QString &name,
+    void PartialLeastSquares(const QString &name,
                              uword components);
+    void AgglomerativeClustering(const QString &name,
+                                 const QString &metric,
+                                 const QString &linkage);
     bool CheckMergability(QStringList &keys, QStringList &problematic_keys);
+    bool CheckMergability(const QStringList dataset_keys);
+    bool ConcatenateMatrices(const QList<QStringList> &keys,
+                             const sword &column);
+    bool ConcatenateSpectra(QStringList dataset_keys);
 private:
     QSharedPointer<VespucciWorkspace> workspace_;
-    QList<QSharedPointer<VespucciDataset> > GetDatasets(QStringList keys);
-    void ConcatenateSpectra(QList<QSharedPointer<VespucciDataset> > datasets,
-                            mat &data,
-                            uvec &start_indices,
-                            uvec &end_indices);
+    void GetDatasets(QStringList keys);
+    void AddAnalysisResults(QSharedPointer<AnalysisResults> results, QStringList matrices);
+    QString FindUniqueName(QString name);
+
+    ///
+    /// \brief data_
+    /// stores the concatenated matrix
+    mat data_;
+
+    ///
+    /// \brief abscissa_
+    /// stores the abscissa common to all datasets
+    vec abscissa_;
+    ///
+    /// \brief start_indices_
+    /// Where each dataset begins
+    uvec start_indices_;
+    ///
+    /// \brief end_indices_
+    /// Where each dataset ends
+    uvec end_indices_;
+
+    ///
+    /// \brief column_
+    /// Which column to pull from source data
+    sword column_;
+
+    QVector<QSharedPointer<VespucciDataset> > datasets_;
 };
 
 #endif // MULTIANALYZER_H

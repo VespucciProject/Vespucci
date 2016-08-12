@@ -53,6 +53,7 @@ public:
     const QString GetColumnHeading(const QString &key, int column);
     const QString GetRowHeading(const QString &key, int row);
     void SetName(const QString &new_name);
+    QSharedPointer<AnalysisResults> Subset(QStringList matrices, uword start_row, uword end_row);
 
 private:
     ///

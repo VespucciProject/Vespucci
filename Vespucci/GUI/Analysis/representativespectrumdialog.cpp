@@ -17,43 +17,34 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "matrixselectiondialog.h"
-#include "ui_matrixselectiondialog.h"
+#include "representativespectrumdialog.h"
+#include "ui_representativespectrumdialog.h"
 
-MatrixSelectionDialog::MatrixSelectionDialog(QWidget *parent, DatasetTreeModel *model) :
+RepresentativeSpectrumDialog::RepresentativeSpectrumDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
-    ui(new Ui::MatrixSelectionDialog)
+    ui(new Ui::RepresentativeSpectrumDialog)
 {
     ui->setupUi(this);
-    tree_model_ = model;
-    accepted_ = false;
-    ui->treeView->setModel(tree_model_);
+    workspace_ = ws;
+    dataset_ = ws->GetDataset(dataset_key);
 }
 
-MatrixSelectionDialog::~MatrixSelectionDialog()
+RepresentativeSpectrumDialog::~RepresentativeSpectrumDialog()
 {
     delete ui;
 }
 
-TreeItem *MatrixSelectionDialog::GetSelectedItem()
+void RepresentativeSpectrumDialog::on_buttonBox_accepted()
 {
-    return selected_item_;
-}
-
-bool MatrixSelectionDialog::accepted()
-{
-    return accepted_;
-}
-
-void MatrixSelectionDialog::on_buttonBox_accepted()
-{
-    close();
-    selected_item_ = tree_model_->getItem(ui->treeView->currentIndex());
-    accepted_ = true;
-}
-
-void MatrixSelectionDialog::on_buttonBox_rejected()
-{
-    close();
-    accepted_ = false;
+    if (!dataset_.isNull()){
+        QString name = ui->nameLineEdit->text();
+        QString metric = ui->metricComboBox->currentText().toLower();
+        metric.remove(" ");
+        QString statistic = ui->statisticComboBox->currentText().toLower();
+        try{
+            dataset_->CalculateRepresentativeSpectrum(name, statistic, metric);
+        }catch(exception e){
+            workspace_->main_window()->DisplayExceptionWarning("VespucciDataset::CalculateRepresentativeSpectrum", e);
+        }
+    }
 }

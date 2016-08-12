@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>548</width>
-    <height>538</height>
+    <height>352</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,35 +21,24 @@
      </property>
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="nameLabel">
-        <property name="text">
-         <string>Name</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="nameLineEdit">
-        <property name="text">
-         <string>Analysis</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="sourceLabel">
-        <property name="text">
-         <string>Source</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
        <widget class="QLabel" name="typeLabel">
         <property name="text">
          <string>Type</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="0" column="1">
        <widget class="QComboBox" name="typeComboBox">
+        <item>
+         <property name="text">
+          <string>Univariate Analysis</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Band Ratio Analysis</string>
+         </property>
+        </item>
         <item>
          <property name="text">
           <string>Principal Component Analysis</string>
@@ -75,18 +64,9 @@
           <string>k-Means Clustering</string>
          </property>
         </item>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="sourceComboBox">
         <item>
          <property name="text">
-          <string>Spectra</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Results</string>
+          <string>Hierarchical Clustering</string>
          </property>
         </item>
        </widget>
@@ -97,77 +77,16 @@
    <item>
     <widget class="QGroupBox" name="dataGroupBox">
      <property name="title">
-      <string>Data</string>
+      <string>Datasets</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QTreeView" name="datasetTreeView"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="parameterGroupBox">
-     <property name="title">
-      <string>Parameters</string>
-     </property>
-     <layout class="QFormLayout" name="formLayout_2">
-      <item row="0" column="0">
-       <widget class="QLabel" name="columnLabel">
-        <property name="enabled">
-         <bool>false</bool>
+       <widget class="QListWidget" name="datasetListWidget">
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
         </property>
-        <property name="text">
-         <string>Results Column</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QSpinBox" name="columnSpinBox">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="value">
-         <number>1</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="componentsLabel">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Components</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="componentsSpinBox">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="minimum">
-         <number>2</number>
-        </property>
-        <property name="maximum">
-         <number>2000</number>
-        </property>
-        <property name="value">
-         <number>5</number>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="scaleCheckBox">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Scale Data?</string>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::MultiSelection</enum>
         </property>
        </widget>
       </item>

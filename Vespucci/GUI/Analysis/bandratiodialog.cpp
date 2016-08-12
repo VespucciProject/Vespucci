@@ -19,6 +19,7 @@
 *******************************************************************************/
 #include "GUI/Analysis/bandratiodialog.h"
 #include "ui_bandratiodialog.h"
+#include "Data/Analysis/multianalyzer.h"
 
 BandRatioDialog::BandRatioDialog(QWidget *parent,
                                  QSharedPointer<VespucciWorkspace> ws,
@@ -74,6 +75,60 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     ui->spectrumCustomPlot->setInteraction(QCP::iRangeZoom, true);
 }
 
+BandRatioDialog::BandRatioDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys)
+    :QDialog(ws->main_window()),
+      ui(new Ui::BandRatioDialog)
+{
+    dataset_keys_ = dataset_keys;
+    if (dataset_keys_.isEmpty()) close();
+    ui->setupUi(this);
+
+    workspace_ = ws;
+    dataset_ = workspace_->GetDataset(dataset_keys.first());
+
+    first_min_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
+    first_max_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
+    second_min_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
+    second_max_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
+
+    first_min_line_->point1->setCoords(0, 0);
+    first_min_line_->point2->setCoords(0, 1);
+    first_max_line_->point1->setCoords(0, 0);
+    first_max_line_->point2->setCoords(0, 1);
+    second_min_line_->point1->setCoords(0, 0);
+    second_min_line_->point2->setCoords(0, 1);
+    second_max_line_->point1->setCoords(0, 0);
+    second_max_line_->point2->setCoords(0, 1);
+
+    second_min_line_->setPen(QPen(Qt::GlobalColor::red));
+    second_max_line_->setPen(QPen(Qt::GlobalColor::red));
+
+    double min = dataset_->abscissa_ptr()->min();
+    double max = dataset_->abscissa_ptr()->max();
+
+    QDoubleValidator *validator = new QDoubleValidator(min, max, 2, this);
+
+
+    QString label_text = QString::number(min) + "–" + QString::number(max);
+    ui->rangeLabel->setText(label_text);
+
+    uword origin = dataset_->FindOrigin();
+
+    QVector<double> plot_data = dataset_->PointSpectrum(origin);
+    QVector<double> wavelength = dataset_->WavelengthQVector();
+    if (plot_data.isEmpty()){plot_data = dataset_->PointSpectrum(0);}
+
+    ui->firstMinLineEdit->setValidator(validator);
+    ui->firstMaxLineEdit->setValidator(validator);
+    ui->secondMinLineEdit->setValidator(validator);
+    ui->secondMaxLineEdit->setValidator(validator);
+    ui->spectrumCustomPlot->addGraph();
+    ui->spectrumCustomPlot->graph(0)->addData(wavelength, plot_data);
+    ui->spectrumCustomPlot->rescaleAxes();
+    ui->spectrumCustomPlot->setInteraction(QCP::iRangeDrag, true);
+    ui->spectrumCustomPlot->setInteraction(QCP::iRangeZoom, true);
+}
+
 BandRatioDialog::~BandRatioDialog()
 {
     delete ui;
@@ -85,6 +140,11 @@ BandRatioDialog::~BandRatioDialog()
 /// instantiates the map data
 void BandRatioDialog::on_buttonBox_accepted()
 {
+    if (dataset_keys_.isEmpty() && dataset_.isNull()){
+        close();
+        return;
+    }
+
     if (ui->firstMinLineEdit->text().isEmpty() || ui->firstMaxLineEdit->text().isEmpty() || ui->secondMinLineEdit->text().isEmpty() || ui->secondMaxLineEdit->text().isEmpty()){
         QMessageBox::warning(this, "Invalid Input!", "You must enter numbers for left and right bounds.");
         return;
@@ -110,6 +170,30 @@ void BandRatioDialog::on_buttonBox_accepted()
 
     QString name = ui->nameLineEdit->text();
     QString value_method = ui->methodComboBox->currentText();
+
+    if (!dataset_keys_.isEmpty()){
+        if (value_method == "Empirical"){
+            try{
+                MultiAnalyzer analyzer(workspace_, dataset_keys_);
+                analyzer.BandRatio(name, first_entered_min, first_entered_max,
+                                 second_entered_min, second_entered_max,
+                                 bound_window);
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+            }
+        }
+        else if (value_method == "Gaussian Fit"){
+            try{
+
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+            }
+        }
+        else{
+            QMessageBox::warning(this, "Error Occurred", "A non-fatal error occurred: invalid input from ui->methodComboBox");
+        }
+        return;
+    }
 
     if (value_method == "Empirical"){
         try{

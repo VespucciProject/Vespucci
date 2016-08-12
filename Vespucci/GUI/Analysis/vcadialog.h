@@ -35,6 +35,7 @@ class VCADialog : public QDialog
 
 public:
     explicit VCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
+    explicit VCADialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys);
     ~VCADialog();
 
 private slots:
@@ -60,6 +61,9 @@ private:
     /// \brief dataset_
     /// The current dataset
     QSharedPointer<VespucciDataset> dataset_;
+
+
+    QStringList dataset_keys_;
 };
 
 #endif // VCADIALOG_H
