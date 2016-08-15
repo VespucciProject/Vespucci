@@ -95,7 +95,6 @@ SOURCES +=\
     src/Math/Quantification/correlation.cpp \
     src/Math/Quantification/quantification.cpp \
     src/Math/Stats/confidenceinterval.cpp \
-    src/Math/Stats/hyptothesistests.cpp \
     src/Math/PeakFinding/kernelpeakfinding.cpp \
     src/Math/Accessory/distancemetricwrapper.cpp \
     src/Math/Stats/histogram.cpp \
@@ -128,7 +127,6 @@ HEADERS  += \
     include/Math/Quantification/bandwidth.h \
     include/Math/Quantification/correlation.h \
     include/Math/Stats/confidenceinterval.h \
-    include/Math/Stats/hypothesistests.h \
     include/Math/PeakFinding/kernelpeakfinding.h \
     include/Math/Accessory/distancemetricwrapper.h \
     include/Math/Stats/histogram.h \

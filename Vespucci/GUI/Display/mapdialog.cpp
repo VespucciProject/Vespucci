@@ -114,7 +114,7 @@ void MapDialog::on_columnSpinBox_valueChanged(int arg1)
 {
     mat data;
     try{
-        data = workspace_->data_model()->GetMatrix(data_keys_).col(arg1);
+        data = workspace_->data_model()->GetMatrix(data_keys_).col(arg1-1);
     }catch(exception e){
         main_window_->DisplayExceptionWarning("DataModel::GetMatrix or mat::col", e);
         close();

@@ -146,14 +146,13 @@
      </property>
      <addaction name="actionNew_Univariate_Map"/>
      <addaction name="actionNew_Band_Ratio_Map"/>
+     <addaction name="actionConcatenate"/>
     </widget>
     <addaction name="menuUnivariate_Analysis"/>
     <addaction name="menuNew_Multivariate_Map"/>
     <addaction name="menuPeak_Detection"/>
     <addaction name="actionCalculate_Representative_Spectrum"/>
     <addaction name="actionOn_Multiple_Datasets"/>
-    <addaction name="actionOn_Results"/>
-    <addaction name="actionHypothesis_Testing"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -187,6 +186,7 @@
     <addaction name="actionPlotResult"/>
     <addaction name="actionView_Statistics"/>
     <addaction name="actionCalibrate"/>
+    <addaction name="actionAnalyze"/>
     <addaction name="actionTransform"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
@@ -621,6 +621,9 @@
    </property>
   </action>
   <action name="actionCalibrate">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Calibrate...</string>
    </property>
@@ -632,7 +635,7 @@
   </action>
   <action name="actionTransform">
    <property name="text">
-    <string>Transform...</string>
+    <string>Transform</string>
    </property>
    <property name="visible">
     <bool>true</bool>
@@ -753,9 +756,9 @@
     <string>On Multiple Datasets</string>
    </property>
   </action>
-  <action name="actionOn_Results">
+  <action name="actionAnalyze">
    <property name="text">
-    <string>On Results</string>
+    <string>Analyze</string>
    </property>
   </action>
   <action name="actionHypothesis_Testing">
@@ -769,6 +772,11 @@
    </property>
    <property name="text">
     <string>Dataset History</string>
+   </property>
+  </action>
+  <action name="actionConcatenate">
+   <property name="text">
+    <string>Concatenate</string>
    </property>
   </action>
  </widget>

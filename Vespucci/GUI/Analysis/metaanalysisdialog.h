@@ -17,3 +17,36 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
+#ifndef METAANALYSISDIALOG_H
+#define METAANALYSISDIALOG_H
+
+#include <QDialog>
+#include "Global/vespucciworkspace.h"
+
+
+namespace Ui {
+class MetaAnalysisDialog;
+}
+
+class MetaAnalysisDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit MetaAnalysisDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QStringList &data_keys);
+    ~MetaAnalysisDialog();
+
+private slots:
+    void on_typeComboBox_currentTextChanged(const QString &arg1);
+
+    void on_buttonBox_accepted();
+
+    void on_buttonBox_rejected();
+
+private:
+    Ui::MetaAnalysisDialog *ui;
+    QSharedPointer<VespucciWorkspace> workspace_;
+    QStringList data_keys_;
+};
+
+#endif // METAANALYSISDIALOG_H

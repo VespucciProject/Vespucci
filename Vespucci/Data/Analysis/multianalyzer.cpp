@@ -122,7 +122,6 @@ void MultiAnalyzer::KMeans(size_t clusters, const QString &metric_text, const QS
 void MultiAnalyzer::PrincipalComponents(const QString &name)
 {
     QString new_name = FindUniqueName(name);
-
     QSharedPointer<PrincipalComponentsData> pca_data(new PrincipalComponentsData(new_name));
     pca_data->Apply(data_);
     QStringList matrix_keys({"Scores"});
@@ -138,7 +137,6 @@ void MultiAnalyzer::PrincipalComponents(const QString &name)
 void MultiAnalyzer::PrincipalComponents(const QString &name, bool scale_data)
 {
     QString new_name = FindUniqueName(name);
-
     QSharedPointer<MlpackPCAData> pca_data(new MlpackPCAData(new_name));
     pca_data->Apply(data_, scale_data);
     AddAnalysisResults(pca_data, QStringList());
@@ -153,7 +151,6 @@ void MultiAnalyzer::PrincipalComponents(const QString &name, bool scale_data)
 void MultiAnalyzer::PartialLeastSquares(const QString &name, uword components)
 {
     QString new_name = FindUniqueName(name);
-
     QSharedPointer<PLSData> pls_data(new PLSData(new_name));
     pls_data->Classify(data_, abscissa_, components);
     QStringList matrices({"Predictor Scores", "Response Scores"});
@@ -232,7 +229,7 @@ void MultiAnalyzer::GetDatasets(QStringList keys)
 void MultiAnalyzer::AddAnalysisResults(QSharedPointer<AnalysisResults> results, QStringList matrices)
 {
     for (uword i = 0; i < datasets_.size(); ++i){
-        datasets_[i]->AddAnalysisResult(results);
+        datasets_[i]->AddAnalysisResult(results, start_indices_(i), end_indices_(i));
         if (!matrices.isEmpty())
             datasets_[i]->AddAnalysisResult(results->Subset(matrices, start_indices_(i), end_indices_(i)));
     }

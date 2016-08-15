@@ -20,11 +20,36 @@
 #ifndef METAANALYZER_H
 #define METAANALYZER_H
 
-
+#include "Global/vespucciworkspace.h"
 class MetaAnalyzer
 {
 public:
-    MetaAnalyzer();
+    MetaAnalyzer(QSharedPointer<VespucciWorkspace> ws, const QStringList &data_keys, bool transpose);
+    void ClassicalLeastSquares(const QString &name,
+                               const QString &reference_key);
+    void VertexComponents(const QString &name,
+                          uword endmembers);
+    void KMeans(size_t clusters,
+                const QString &metric_text,
+                const QString &name);
+    void PrincipalComponents(const QString &name);
+    void PrincipalComponents(const QString &name,
+                             bool scale_data);
+    void PartialLeastSquares(const QString &name,
+                             uword components);
+    void AgglomerativeClustering(const QString &name,
+                                 const QString &metric,
+                                 const QString &linkage);
+
+private:
+    void GetData();
+    QString FindUniqueName(QString name);
+    void AddResults(QSharedPointer<AnalysisResults> results, QStringList matrices);
+    QSharedPointer<VespucciWorkspace> workspace_;
+    QStringList data_keys_;
+    mat data_;
+    vec abscissa_;
+    bool transpose_;
 };
 
 #endif // METAANALYZER_H

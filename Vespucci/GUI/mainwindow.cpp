@@ -55,6 +55,8 @@
 #include "GUI/Analysis/multianalysisdialog.h"
 #include "GUI/Analysis/transformdialog.h"
 #include "GUI/Analysis/ahcadialog.h"
+#include "GUI/Processing/univariateconcatenationdialog.h"
+#include "GUI/Analysis/metaanalysisdialog.h"
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent usually 0
@@ -171,10 +173,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 ///
 /// \brief MainWindow::on_actionExit_triggered
-///Exits the program.
+///Triggers closeEvent
 void MainWindow::on_actionExit_triggered()
 {
-    close(); //triggers closeEvent.
+    close();
 }
 
 ///
@@ -1536,4 +1538,25 @@ void MainWindow::on_actionHistory_toggled(bool arg1)
        history_dialog_->show();
    if (!arg1 && history_dialog_->isVisible())
        history_dialog_->close();
+}
+
+void MainWindow::on_actionConcatenate_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    QString dataset_key = item->DatasetKey();
+    if (!dataset_key.isEmpty()){
+        UnivariateConcatenationDialog *dialog = new UnivariateConcatenationDialog(this, workspace_, dataset_key);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->show();
+    }
+}
+
+void MainWindow::on_actionAnalyze_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    if (item->type() == TreeItem::ItemType::Matrix){
+        MetaAnalysisDialog *dialog = new MetaAnalysisDialog(this, workspace_, item->keys());
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->show();
+    }
 }
