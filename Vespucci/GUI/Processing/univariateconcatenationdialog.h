@@ -17,19 +17,33 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef HYPOTHESISTESTS_H
-#define HYPOTHESISTESTS_H
-namespace Vespucci{
-    namespace Math{
-        namespace Stats{
-            double ZTest(double alpha, int tail,
-                         double mean1, double stddev1, unsigned int n1,
-                         double mean2, double stddev2, unsigned int n2);
+#ifndef UNIVARIATECONCATENATIONDIALOG_H
+#define UNIVARIATECONCATENATIONDIALOG_H
+#include "Global/vespucciworkspace.h"
 
-            double TTest(double alpha, int tail,
-                         double mean1, double stddev1, unsigned int n1,
-                         double mean2, double stddev2, unsigned int n2);
-        }
-    }
+#include <QDialog>
+
+namespace Ui {
+class UnivariateConcatenationDialog;
 }
-#endif // HYPOTHESISTESTS_H
+
+class UnivariateConcatenationDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit UnivariateConcatenationDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
+    ~UnivariateConcatenationDialog();
+
+private slots:
+    void on_buttonBox_accepted();
+
+    void on_buttonBox_rejected();
+
+private:
+    Ui::UnivariateConcatenationDialog *ui;
+    QSharedPointer<VespucciDataset> dataset_;
+    QSharedPointer<VespucciWorkspace> workspace_;
+};
+
+#endif // UNIVARIATECONCATENATIONDIALOG_H

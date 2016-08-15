@@ -231,6 +231,10 @@ private slots:
 
     void on_actionHistory_toggled(bool arg1);
 
+    void on_actionConcatenate_triggered();
+
+    void on_actionAnalyze_triggered();
+
 private:
     void CloseDataset(const QString &name);
     Ui::MainWindow *ui;

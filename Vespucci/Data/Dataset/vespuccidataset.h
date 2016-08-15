@@ -298,6 +298,7 @@ public:
     MapListModel *map_list_model();
 
     void AddAnalysisResult(QSharedPointer<AnalysisResults> analysis_result);
+    void AddAnalysisResult(QSharedPointer<AnalysisResults> analysis_result, uword start_row, uword end_row);
 
     QStringList AnalysisResultsKeys() const;
     QMap<QString, QStringList> AnalysisResultsTreeStructure() const;

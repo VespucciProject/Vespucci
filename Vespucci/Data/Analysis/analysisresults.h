@@ -53,7 +53,13 @@ public:
     const QString GetColumnHeading(const QString &key, int column);
     const QString GetRowHeading(const QString &key, int row);
     void SetName(const QString &new_name);
+    void SetType(const QString &new_type);
     QSharedPointer<AnalysisResults> Subset(QStringList matrices, uword start_row, uword end_row);
+    void AddParent(QString key, uword start_row, uword end_row);
+    QMap<QString, uvec> parent_rows();
+    bool Concatenate(QSharedPointer<AnalysisResults> other);
+    QSharedPointer<AnalysisResults> Replicate();
+    void RemoveMatrix(const QString &key);
 
 private:
     ///
@@ -75,7 +81,7 @@ private:
     QMap<QString, QStringList> column_headings_;
     QMap<QString, QStringList> row_headings_;
     QMap<QString, QSharedPointer<field<mat> > > fields_;
-
+    QMap<QString, uvec> parent_rows_;
     mat empty_matrix_;
 };
 

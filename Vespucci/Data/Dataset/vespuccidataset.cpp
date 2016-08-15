@@ -2772,6 +2772,21 @@ void VespucciDataset::AddAnalysisResult(QSharedPointer<AnalysisResults> analysis
     while (AnalysisResultsKeys().contains(new_name))
         new_name = name + " " + QString::number(++i);
     analysis_result->SetName(new_name);
+    analysis_result->AddParent(name_, 0, spectra_.n_cols);
+    analysis_results_.append(analysis_result);
+    state_changed_ = true;
+    workspace_->UpdateModel();
+}
+
+void VespucciDataset::AddAnalysisResult(QSharedPointer<AnalysisResults> analysis_result, uword start_row, uword end_row)
+{
+    QString name = analysis_result->name();
+    QString new_name = name;
+    int i = 0;
+    while (AnalysisResultsKeys().contains(new_name))
+        new_name = name + " " + QString::number(++i);
+    analysis_result->SetName(new_name);
+    analysis_result->AddParent(name_, start_row, end_row);
     analysis_results_.append(analysis_result);
     state_changed_ = true;
     workspace_->UpdateModel();
