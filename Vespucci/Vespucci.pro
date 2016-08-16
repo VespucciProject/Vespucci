@@ -126,7 +126,6 @@ SOURCES += main.cpp\
     GUI/Processing/abscissatransformdialog.cpp \
     GUI/Processing/fouriertransformdialog.cpp \
     GUI/Display/plotviewer.cpp \
-    Data/Import/textimportqpd.cpp \
     GUI/Analysis/classicalleastsquaresdialog.cpp \
     GUI/settingsdialog.cpp \
     GUI/Processing/abscissainterpolationdialog.cpp \
@@ -135,9 +134,7 @@ SOURCES += main.cpp\
     External/fileinterprocess.cpp \
     GUI/QAbstractItemModel/datasettreemodel.cpp \
     GUI/QAbstractItemModel/treeitem.cpp \
-    Data/Import/datasetloader.cpp \
     Data/Dataset/macroparser.cpp \
-    Data/Import/datasetsaver.cpp \
     GUI/Analysis/transformdialog.cpp \
     GUI/Display/mapdialog.cpp \
     GUI/Display/datawidget.cpp \
@@ -205,7 +202,6 @@ HEADERS  += \
     GUI/Processing/abscissatransformdialog.h \
     GUI/Processing/fouriertransformdialog.h \
     GUI/Display/plotviewer.h \
-    Data/Import/textimportqpd.h \
     GUI/Analysis/classicalleastsquaresdialog.h \
     GUI/settingsdialog.h \
     GUI/Processing/abscissainterpolationdialog.h \
@@ -214,9 +210,7 @@ HEADERS  += \
     External/fileinterprocess.h \
     GUI/QAbstractItemModel/datasettreemodel.h \
     GUI/QAbstractItemModel/treeitem.h \
-    Data/Import/datasetloader.h \
     Data/Dataset/macroparser.h \
-    Data/Import/datasetsaver.h \
     GUI/Analysis/transformdialog.h \
     GUI/Display/mapdialog.h \
     GUI/Display/datawidget.h \
@@ -305,13 +299,12 @@ INCLUDEPATH += $$PWD/../VespucciLibrary/include
 DEPENDPATH += $$PWD/../VespucciLibrary/include
 
 unix:!macx{
-    QMAKE_CXX=/usr/bin/g++-4.9
+    #QMAKE_CXX=/usr/bin/g++-4.9
     CONFIG += c++11
     QMAKE_CXXFLAGS += -fext-numeric-literals
+    QMAKE_RPATHDIR += $$(QTDIR)/lib
     LIBS += -L$$PWD/../../mlpack/lib -lmlpack
     LIBS += -L$$PWD/../../armadillo/lib -larmadillo
-    LIBS += -L/usr/lib -larpack
-    PRE_TARGETDEPS += /usr/lib/libarpack.a
     LIBS += -L$$PWD/../../hdf5/lib -lhdf5
     LIBS += -L$$PWD/../../hdf5/lib -lhdf5_cpp
     PRE_TARGETDEPS += $$PWD/../../hdf5/lib/libhdf5.a
@@ -323,13 +316,10 @@ unix:!macx{
 
     LIBS += -L$$PWD/../../yaml-cpp/lib -lyaml-cpp
     PRE_TARGETDEPS += $$PWD/../../yaml-cpp/lib/libyaml-cpp.a
-    LIBS += -L$$PWD/../../quazip/lib -lquazip
-    PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
-
+    
     LIBS += -L$$OUT_PWD/../VespucciLibrary -lvespucci
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu/ -lz
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libz.a
+    LIBS += -L/usr/lib/ -lz
 
     INCLUDEPATH += /usr/include
     DEPENDPATH += /usr/include
@@ -345,9 +335,6 @@ unix:!macx{
 
     INCLUDEPATH += $$PWD/../../armadillo/include
     DEPENDPATH += $$PWD/../../armadillo/include
-
-    INCLUDEPATH += $$PWD/../../quazip/include
-    DEPENDPATH += $$PWD/../../quazip/include
 
     INCLUDEPATH += $$PWD/../../yaml-cpp/include
     DEPENDPATH += $$PWD/../../yaml-cpp/include

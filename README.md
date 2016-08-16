@@ -39,7 +39,6 @@ Vespucci has the following prerequisites:
 * Armadillo (with BLAS/LAPACK and HDF5)
 * mlpack
 * yaml-cpp
-* quazip
 
 Look at the scripts used by .travis.yml and appveyor.yml to figure out how to
 build on your platform.

@@ -37,7 +37,7 @@
 #include "Data/Analysis/plsdata.h"
 #include "Data/Import/textimport.h"
 #include "Data/Import/binaryimport.h"
-#include "Data/Import/textimportqpd.h"
+#include "Data/Import/textimport.h"
 #include "GUI/QAbstractItemModel/maplistmodel.h"
 #include "Data/Analysis/univariatedata.h"
 #include "Data/Analysis/mlpackpcadata.h"

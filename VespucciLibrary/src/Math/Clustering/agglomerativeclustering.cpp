@@ -228,11 +228,11 @@ arma::uvec Vespucci::Math::Clustering::AHCA::FindClosest(const arma::mat &data,
     for (size_t i = 0; i < clusters.size(); ++i){
         #ifdef _WIN32
         #pragma omp parallel for default(none) \
-        shared(cluster_dist, clusters)
+        shared(cluster_dist, clusters, i, data, dist)
         for (intmax_t j = 0; j < (intmax_t) clusters.size(); ++j)
         #else
         #pragma omp parallel for default(none) \
-        shared(cluster_dist, clusters)
+        shared(cluster_dist, clusters, i, data, dist)
         for (size_t j = 0; j < clusters.size(); ++ j)
         #endif
         {
@@ -310,11 +310,11 @@ arma::mat Vespucci::Math::Clustering::pdist(const arma::mat &x,
     for (arma::uword i = 0; i < size; ++i){
         #ifdef _WIN32
         #pragma omp parallel for default(none) \
-        shared(pdist_mat, x)
+        shared(pdist_mat, x, size, i, metric, dim)
         for (intmax_t j = 0; j < (intmax_t) size; ++j)
         #else
         #pragma omp parallel for default(none) \
-        shared(pdist_mat, x)
+        shared(pdist_mat, x, size, i, metric, dim)
         for (size_t j = 0; j < size; ++ j)
         #endif
         {

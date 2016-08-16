@@ -156,11 +156,11 @@ arma::mat Vespucci::Math::Quantification::QuantifyPeakMat(const arma::mat &spect
 
 #ifdef _WIN32
   #pragma omp parallel for default(none) \
-      shared(spectra, inflection_baselines, total_baselines, results)
+      shared(spectra, inflection_baselines, total_baselines, results, min, max, bound_window, abscissa)
      for (intmax_t i = 0; i < (intmax_t) spectra.n_cols; ++i)
 #else
   #pragma omp parallel for default(none) \
-      shared(spectra, inflection_baselines, total_baselines, results)
+      shared(spectra, inflection_baselines, total_baselines, results, min, max, bound_window, abscissa)
     for (size_t i = 0; i < spectra.n_cols; ++ i)
 #endif
     {

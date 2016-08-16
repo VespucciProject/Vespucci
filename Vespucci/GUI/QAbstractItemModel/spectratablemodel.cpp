@@ -50,5 +50,6 @@ QVariant SpectraTableModel::headerData(int section, Qt::Orientation orientation,
     if (section == 0) return QVariant("ind");
     if (section == 1) return QVariant("x");
     if (section == 2) return QVariant("y");
+    return QVariant();
 }
 

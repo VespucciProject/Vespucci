@@ -20,8 +20,6 @@
 #include "Data/Dataset/vespuccidataset.h"
 #include <mlpack/methods/kmeans/kmeans.hpp>
 #include <mlpack/methods/quic_svd/quic_svd.hpp>
-#include "Data/Import/datasetloader.h"
-#include "Data/Import/datasetsaver.h"
 #include "Data/Import/textimport.h"
 #include "Math/Clustering/agglomerativeclustering.h"
 #include <H5Cpp.h>
@@ -412,12 +410,12 @@ VespucciDataset::VespucciDataset(QString text_filename,
     }
     else if (format == "LongTabDel" || format == "LongCSV"){
         try{
-            constructor_canceled_ = TextImport::ImportLongText(text_filename,
+
+            constructor_canceled_ = TextImport::ImportLongText(text_filename.toStdString(),
                                                                spectra_,
                                                                abscissa_,
                                                                x_, y_,
-                                                               swap_spatial,
-                                                               &progress);
+                                                               swap_spatial);
             indices_.set_size(x_.n_elem);
             for (uword i = 0; i < indices_.n_elem; ++i)
                 indices_(i) = i;

@@ -146,7 +146,7 @@ bool Vespucci::StitchDatasets(const arma::field<arma::field<arma::mat> > &datase
     arma::uword n_unique_y = 0;//per row block in new dataset
     arma::uword row_block_n_unique_y = 0;
     //building bottom to top, left to right
-    for (int i = datasets.n_rows - 1; i >= 0; --i){
+    for (size_t i = datasets.n_rows - 1; i >= 0; --i){
         row_block_n_unique_y = 0;
         unique_x = arma::unique(datasets(i, 0)(2));
         arma::uword n_unique_x = unique_x.n_rows;

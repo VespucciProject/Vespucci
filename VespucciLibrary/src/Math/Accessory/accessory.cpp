@@ -997,11 +997,11 @@ arma::vec Vespucci::Math::RepresentativeSpectrum(const arma::mat &spectra, arma:
 
 #ifdef _WIN32
   #pragma omp parallel for default(none) \
-      shared(spectra, metric, distances)
+      shared(spectra, metric, distances, center)
    for (intmax_t i = 0; i < (intmax_t) spectra.n_cols; ++i)
 #else
   #pragma omp parallel for default(none) \
-      shared(spectra, metric, distances)
+      shared(spectra, metric, distances, center)
   for (size_t i = 0; i < spectra.n_cols; ++i)
 #endif
     {
