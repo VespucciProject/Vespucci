@@ -36,6 +36,12 @@ namespace TextImport
                         arma::vec &x, arma::vec &y,
                         bool swap_spatial);
 
+    VESPUCCI_EXPORT bool ImportLongText(std::string filename,
+                                        arma::mat &spectra,
+                                        arma::mat &abscissa,
+                                        arma::vec &x, arma::vec &y,
+                                        bool swap_spatial);
+
     VESPUCCI_EXPORT bool ImportMultiplePoints(std::map<std::pair<int,int>, std::string> filenames,
                               int rows,
                               int cols,

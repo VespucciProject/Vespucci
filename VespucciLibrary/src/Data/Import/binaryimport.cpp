@@ -19,21 +19,55 @@
 *******************************************************************************/
 #include "Data/Import/binaryimport.h"
 #include "Global/vespucci.h"
+#include <H5Cpp.h>
 bool BinaryImport::ImportVespucciBinary(std::string filename,
                                         arma::mat &spectra,
                                         arma::vec &abscissa,
                                         arma::vec &x, arma::vec &y)
 {
     Vespucci::ResetDataset(spectra, x, y, abscissa);
-    arma::field<arma::mat> input_data;
-    bool success = input_data.load(filename);
-    std::cout << (success ? "success" : "failure") << std::endl;
-    if(success){
-        spectra = input_data(0);
-        abscissa = input_data(1);
-        x = input_data(2);
-        y = input_data(3);
+    using namespace H5;
+    bool success;
+    try{
+        H5File file(filename, H5F_ACC_RDONLY);
 
+        DataSet ds = file.openDataSet("Spectra");
+        DataSpace dspace = ds.getSpace();
+        hsize_t dims[2];
+        dspace.getSimpleExtentDims(dims);
+        spectra.set_size(dims[0], dims[1]);
+        ds.read(spectra.memptr(), PredType::NATIVE_DOUBLE);
+
+        ds = file.openDataSet("x");
+        dspace = ds.getSpace();
+        dspace.getSimpleExtentDims(dims);
+        if (dims[1] == 1){
+            x.set_size(dims[0]);
+            ds.read(x.memptr(), PredType::NATIVE_DOUBLE);
+        }
+
+        ds = file.openDataSet("y");
+        dspace = ds.getSpace();
+        dspace.getSimpleExtentDims(dims);
+        if (dims[1] == 1) {
+            y.set_size(dims[0]);
+            ds.read(y.memptr(), PredType::NATIVE_DOUBLE);
+        }
+
+        ds = file.openDataSet("Spectral Abscissa");
+        dspace = ds.getSpace();
+        dspace.getSimpleExtentDims(dims);
+        if (dims[1] == 1){
+            abscissa.set_size(dims[0]);
+            ds.read(abscissa.memptr(), PredType::NATIVE_DOUBLE);
+        }
+
+        success = true;
+    }catch (...){
+        success = false;
+    }
+
+    if(success){
         //check to make sure everything is sorted the way Vespucci expects
         arma::uvec sorted_indices = arma::stable_sort_index(abscissa);
         abscissa = abscissa.rows(sorted_indices);

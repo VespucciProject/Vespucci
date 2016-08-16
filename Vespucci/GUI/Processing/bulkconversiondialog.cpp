@@ -104,16 +104,14 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
     switch (intype){
       case wide_text:
         for(strvec_it it = infile_names.begin(); it!=infile_names.end(); ++it){
-            QString sep = GetSep(QString::fromStdString(*it));
             bool valid = TextImport::CheckFileValidity(QString::fromStdString(*it), comma_decimals);
 
             if (valid){
-                ok = TextImport::ImportWideText(QString::fromStdString(*it),
+                ok = TextImport::ImportWideText(*it,
                                                 spectra,
                                                 abscissa,
                                                 x, y,
-                                                swap_spatial,
-                                                progress, sep);
+                                                swap_spatial);
             }
 
             if (!valid || !ok){
@@ -134,12 +132,11 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
             valid = TextImport::CheckFileValidity(QString::fromStdString(*it), comma_decimals);
 
             if (valid){
-                ok = TextImport::ImportLongText(QString::fromStdString(*it),
+                ok = TextImport::ImportLongText(*it,
                                                 spectra,
                                                 abscissa,
                                                 x, y,
-                                                swap_spatial,
-                                                progress);
+                                                swap_spatial);
             }
 
             if (!valid || !ok){

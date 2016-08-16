@@ -138,24 +138,25 @@ INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include
 
 unix:!macx{
-    QMAKE_CXX=/usr/bin/g++-4.9
+    #QMAKE_CXX=/usr/bin/g++-4.9
     CONFIG += c++11
     QMAKE_CXXFLAGS += -fext-numeric-literals
+    QMAKE_RPATHDIR += $$(QTDIR)/lib
     LIBS += -L$$PWD/../../mlpack/lib -lmlpack
     LIBS += -L$$PWD/../../armadillo/lib -larmadillo
-    LIBS += -L/usr/lib -larpack
-    PRE_TARGETDEPS += /usr/lib/libarpack.a
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lhdf5
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libhdf5.a
+    LIBS += -L$$PWD/../../hdf5/lib -lhdf5
+    LIBS += -L$$PWD/../../hdf5/lib -lhdf5_cpp
+    PRE_TARGETDEPS += $$PWD/../../hdf5/lib/libhdf5.a
+    PRE_TARGETDEPS += $$PWD/../../hdf5/lib/libhdf5_cpp.a
+    INCLUDEPATH += $$PWD/../../hdf5/include
+    DEPENDPATH += $$PWD/../../hdf5/include
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
+
     LIBS += -L$$PWD/../../yaml-cpp/lib -lyaml-cpp
     PRE_TARGETDEPS += $$PWD/../../yaml-cpp/lib/libyaml-cpp.a
-    LIBS += -L$$PWD/../../quazip/lib -lquazip
-    PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu/ -lz
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libz.a
+    LIBS += -L/usr/lib/ -lz
 
     INCLUDEPATH += /usr/include
     DEPENDPATH += /usr/include
@@ -171,9 +172,6 @@ unix:!macx{
 
     INCLUDEPATH += $$PWD/../../armadillo/include
     DEPENDPATH += $$PWD/../../armadillo/include
-
-    INCLUDEPATH += $$PWD/../../quazip/include
-    DEPENDPATH += $$PWD/../../quazip/include
 
     INCLUDEPATH += $$PWD/../../yaml-cpp/include
     DEPENDPATH += $$PWD/../../yaml-cpp/include

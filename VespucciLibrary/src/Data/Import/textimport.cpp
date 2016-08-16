@@ -28,6 +28,12 @@
 #include <regex>
 
 using namespace arma;
+///
+/// \brief TextImport::CheckFileValidity
+/// \param filename
+/// \param comma_decimals
+/// \return
+///
 bool TextImport::CheckFileValidity(QString filename, bool &comma_decimals)
 {
     QFile inputfile(filename);
@@ -132,7 +138,17 @@ bool TextImport::ImportWideText(std::string filename,
     return true;
 }
 
-
+///
+/// \brief TextImport::ImportMultiplePoints
+/// \param filenames
+/// \param rows
+/// \param cols
+/// \param spectra
+/// \param abscissa
+/// \param x
+/// \param y
+/// \return
+///
 bool TextImport::ImportMultiplePoints(std::map<std::pair<int, int>, std::string> filenames,
                                       int rows, int cols,
                                       arma::mat &spectra,
@@ -202,7 +218,21 @@ bool TextImport::ImportMultiplePoints(std::map<std::pair<int, int>, std::string>
     return have_abscissa;
 }
 
-
+///
+/// \brief TextImport::ImportWitec
+/// \param filename
+/// \param x_start
+/// \param y_start
+/// \param x_end
+/// \param y_end
+/// \param x_count
+/// \param y_count
+/// \param spectra
+/// \param abscissa
+/// \param x
+/// \param y
+/// \return
+///
 bool TextImport::ImportWitec(std::string filename,
                              double x_start,
                              double y_start,
@@ -236,6 +266,17 @@ bool TextImport::ImportWitec(std::string filename,
     return true;
 }
 
+///
+/// \brief TextImport::GenerateSpatialData
+/// \param x_start
+/// \param y_start
+/// \param x_end
+/// \param y_end
+/// \param x_count
+/// \param y_count
+/// \param x
+/// \param y
+///
 void TextImport::GenerateSpatialData(double x_start, double y_start, double x_end, double y_end, arma::uword x_count, arma::uword y_count, arma::vec &x, arma::vec &y)
 {
     x.clear();
@@ -250,4 +291,39 @@ void TextImport::GenerateSpatialData(double x_start, double y_start, double x_en
         x.rows(i, i*x_count) = unique_x;
     }
 
+}
+
+///
+/// \brief TextImport::ImportLongText
+/// \param filename
+/// \param spectra
+/// \param x
+/// \param y
+/// \param swap_spatial
+/// \return
+///
+bool TextImport::ImportLongText(std::string filename, arma::mat &spectra, arma::mat &abscissa, arma::vec &x, arma::vec &y, bool swap_spatial)
+{
+    arma::mat all_data;
+    try{
+        all_data.load(filename);
+    }catch(...){
+        return false;
+    }
+    if (all_data.n_cols < 4) return false;
+    arma::vec all_x = (swap_spatial ? all_data.col(1) : all_data.col(0));
+    arma::vec all_y = (swap_spatial ? all_data.col(0) : all_data.col(1));
+    arma::vec all_abscissa = all_data.col(2);
+    arma::vec all_spectra = all_data.col(3);
+    double abscissa_max = all_abscissa.max();
+    arma::uvec max_indices = arma::find(all_abscissa == abscissa_max);
+    x = all_x.elem(max_indices);
+    y = all_y.elem(max_indices);
+    abscissa = arma::unique(all_abscissa);
+    spectra = arma::mat(all_spectra.memptr(), abscissa.n_rows, x.n_rows);
+
+    arma::uvec sorted_indices = arma::stable_sort_index(abscissa);
+    abscissa = abscissa.rows(sorted_indices);
+    spectra = spectra.rows(sorted_indices);
+    return true;
 }

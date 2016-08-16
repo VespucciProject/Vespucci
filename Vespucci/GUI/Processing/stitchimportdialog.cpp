@@ -1,7 +1,7 @@
 #include "stitchimportdialog.h"
 #include "ui_stitchimportdialog.h"
 #include <Data/Import/binaryimport.h>
-#include "Data/Import/textimportqpd.h"
+#include "Data/Import/textimport.h"
 
 StitchImportDialog::StitchImportDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
@@ -50,35 +50,24 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
                                                         current_x,
                                                         current_y);
             }
-            else if (type == "Wide Text"){
-                ok = TextImport::ImportWideText(filename,
+            else if (type == "Wide Text" || type == "Wide CSV"){
+                ok = TextImport::ImportWideText(filename.toStdString(),
                                                 current_spectra,
                                                 current_abscissa,
                                                 current_x,
                                                 current_y,
-                                                swap_spatial,
-                                                &progress,
-                                                "\t");
+                                                swap_spatial);
+
 
             }
-            else if (type == "Wide CSV"){
-                ok = TextImport::ImportWideText(filename,
-                                                current_spectra,
-                                                current_abscissa,
-                                                current_x,
-                                                current_y,
-                                                swap_spatial,
-                                                &progress,
-                                                ",");
-            }
+
             else if (type == "Long Text" || "Long CSV"){
-                ok = TextImport::ImportLongText(filename,
+                ok = TextImport::ImportLongText(filename.toStdString(),
                                                 current_spectra,
                                                 current_abscissa,
                                                 current_x,
                                                 current_y,
-                                                swap_spatial,
-                                                &progress);
+                                                swap_spatial);
             }
             else{
                 cout << "Improper!\n";
