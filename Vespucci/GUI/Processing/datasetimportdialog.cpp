@@ -120,14 +120,38 @@ void DatasetImportDialog::on_buttonBox_accepted()
         format = "LongTabDel";
     else if (data_format_string == "Long Text (CSV)")
         format = "LongCSV";
+    else if (data_format_string == "Old Vespucci Dataset")
+        format = "OldVBinary";
     else
         return;
 
 
 
-    //bool remove_at_position = false;
-    //int temp_position=0;
-    //int position;
+    if (data_format_string == "Old Vespucci Dataset"){
+        try{
+            mat spectra;
+            vec abscissa, x, y;
+            BinaryImport::ImportOldVespucciBinary(filename.toStdString(),
+                                                  spectra,
+                                                  abscissa,
+                                                  x, y);
+            QSharedPointer<VespucciDataset> dataset(new VespucciDataset(name,
+                                                                   workspace_->main_window(),
+                                                                   workspace_->directory_ptr()));
+            dataset->SetData(spectra, abscissa, x, y);
+            if (!dataset->ConstructorCancelled()){
+                workspace_->AddDataset(dataset);
+                workspace_->set_directory(file_info.dir().absolutePath());
+                dataset.clear();
+            }
+        }catch(exception e){
+            workspace_->main_window()->DisplayExceptionWarning(e);
+            workspace_->RemoveDataset(name);
+            return;
+        }
+        close();
+        return;
+    }
     bool swap = ui->swapCheckBox->isChecked();
 
     try{
@@ -147,6 +171,7 @@ void DatasetImportDialog::on_buttonBox_accepted()
     }
     catch(exception e){
         workspace_->main_window()->DisplayExceptionWarning(e);
+        workspace_->RemoveDataset(name);
         return;
     }
 
