@@ -19,11 +19,12 @@
 *******************************************************************************/
 #include "Data/Import/binaryimport.h"
 #include "Global/vespucci.h"
+
 #include <H5Cpp.h>
 bool BinaryImport::ImportVespucciBinary(std::string filename,
-                                        arma::mat &spectra,
-                                        arma::vec &abscissa,
-                                        arma::vec &x, arma::vec &y)
+                                           arma::mat &spectra,
+                                           arma::vec &abscissa,
+                                           arma::vec &x, arma::vec &y)
 {
     Vespucci::ResetDataset(spectra, x, y, abscissa);
     using namespace H5;
@@ -72,6 +73,25 @@ bool BinaryImport::ImportVespucciBinary(std::string filename,
         arma::uvec sorted_indices = arma::stable_sort_index(abscissa);
         abscissa = abscissa.rows(sorted_indices);
         spectra = spectra.rows(sorted_indices);
+    }
+    return success;
+
+}
+
+bool BinaryImport::ImportOldVespucciBinary(std::string filename,
+                                           arma::mat &spectra,
+                                           arma::vec &abscissa,
+                                           arma::vec &x, arma::vec &y)
+{
+    Vespucci::ResetDataset(spectra, x, y, abscissa);
+    arma::field<arma::mat> input_data;
+    bool success = input_data.load(filename);
+    std::cout << (success ? "success" : "failure") << std::endl;
+    if(success){
+        spectra = input_data(0);
+        abscissa = input_data(1);
+        x = input_data(2);
+        y = input_data(3);
     }
     return success;
 }

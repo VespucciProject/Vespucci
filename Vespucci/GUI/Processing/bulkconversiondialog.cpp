@@ -155,7 +155,7 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
 
       case binary: default:
         for(strvec_it it = infile_names.begin(); it!=infile_names.end(); ++it){
-            ok = BinaryImport::ImportVespucciBinary(*it,
+            ok = BinaryImport::ImportOldVespucciBinary(*it,
                                                spectra,
                                                abscissa,
                                                x, y);

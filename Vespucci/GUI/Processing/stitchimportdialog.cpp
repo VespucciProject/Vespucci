@@ -44,7 +44,7 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
                 filename = path_ + "/" + QString::fromStdString(filenames(i));
             if (type == "Vespucci Dataset"){
 
-                ok = BinaryImport::ImportVespucciBinary(filename.toStdString(),
+                ok = BinaryImport::ImportOldVespucciBinary(filename.toStdString(),
                                                         current_spectra,
                                                         current_abscissa,
                                                         current_x,
