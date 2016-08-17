@@ -22,9 +22,9 @@
 
 #include <H5Cpp.h>
 bool BinaryImport::ImportVespucciBinary(std::string filename,
-                                           arma::mat &spectra,
-                                           arma::vec &abscissa,
-                                           arma::vec &x, arma::vec &y)
+                                        arma::mat &spectra,
+                                        arma::vec &abscissa,
+                                        arma::vec &x, arma::vec &y)
 {
     Vespucci::ResetDataset(spectra, x, y, abscissa);
     using namespace H5;

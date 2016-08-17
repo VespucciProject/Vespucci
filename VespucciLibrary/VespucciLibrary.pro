@@ -144,10 +144,10 @@ unix:!macx{
     QMAKE_RPATHDIR += $$(QTDIR)/lib
     LIBS += -L$$PWD/../../mlpack/lib -lmlpack
     LIBS += -L$$PWD/../../armadillo/lib -larmadillo
-    LIBS += -L$$PWD/../../hdf5/lib -lhdf5
     LIBS += -L$$PWD/../../hdf5/lib -lhdf5_cpp
-    PRE_TARGETDEPS += $$PWD/../../hdf5/lib/libhdf5.a
+    LIBS += -L$$PWD/../../hdf5/lib -lhdf5
     PRE_TARGETDEPS += $$PWD/../../hdf5/lib/libhdf5_cpp.a
+    PRE_TARGETDEPS += $$PWD/../../hdf5/lib/libhdf5.a
     INCLUDEPATH += $$PWD/../../hdf5/include
     DEPENDPATH += $$PWD/../../hdf5/include
     LIBS += -L/usr/lib -lblas
@@ -207,6 +207,7 @@ macx{
 
     LIBS += -framework Accelerate
 
+    LIBS += -L/usr/local/opt/hdf5/lib -lhdf5_cpp
     LIBS += -L/usr/local/opt/hdf5/lib -lhdf5
 
     INCLUDEPATH += $$PWD/../../quazip/include

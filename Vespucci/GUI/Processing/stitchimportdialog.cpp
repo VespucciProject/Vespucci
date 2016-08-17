@@ -34,7 +34,6 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
     vec current_x, current_y, current_abscissa;
     bool ok;
     bool two_dim = datasets.n_rows > 1 && datasets.n_cols > 1;
-    QProgressDialog progress(this);
     for (uword j = 0; j < filenames.n_cols; ++j){
         for (uword i = 0; i < filenames.n_rows; ++i){
             QString filename;
@@ -44,7 +43,7 @@ bool StitchImportDialog::LoadDatasets(field<string> filenames, mat &spectra, vec
                 filename = path_ + "/" + QString::fromStdString(filenames(i));
             if (type == "Vespucci Dataset"){
 
-                ok = BinaryImport::ImportOldVespucciBinary(filename.toStdString(),
+                ok = BinaryImport::ImportVespucciBinary(filename.toStdString(),
                                                         current_spectra,
                                                         current_abscissa,
                                                         current_x,
