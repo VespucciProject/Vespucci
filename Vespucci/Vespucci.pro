@@ -401,6 +401,22 @@ win32:!win32-g++{
     CONFIG += release force_debug_info
     QMAKE_CXXFLAGS += /MP /openmp
 
+    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -llibhdf5_cpp
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/libhdf5_cpp.lib
+
+    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -llibhdf5
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/libhdf5.lib
+
+
+    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lhdf5_cpp
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
+
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/hdf5_cpp.lib
+
+
     LIBS += -L$$OUT_PWD/../VespucciLibrary/release -llibvespucci
     PRE_TARGETDEPS += $$OUT_PWD/../VespucciLibrary/release/libvespucci.lib
 
@@ -414,18 +430,15 @@ win32:!win32-g++{
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/armadillo/include
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/armadillo/lib/armadillo.lib
 
+    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lhdf5
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/hdf5.lib
+
     LIBS += -L$$PWD/../../Vespucci_dependencies/OpenBLAS/ -llibopenblas
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/OpenBLAS/libopenblas.lib
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/LAPACK/ -llapack_x64
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/LAPACK/lapack_x64.lib
 
-    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lhdf5
-    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lhdf5_cpp
-    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
-    DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/hdf5.lib
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/hdf5_cpp.lib
 
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/boost_1_61_0
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/boost_1_61_0
@@ -455,15 +468,15 @@ win32:!win32-g++{
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/yaml-cpp/include
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/yaml-cpp/lib/libyaml-cppmdd.lib
 
-    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lzlib
-    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
-    DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/zlib.lib
+    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -llibzlib
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/libzlib.lib
+
+    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -llibszip
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/libszip.lib
 
     RC_ICONS=$$PWD/vespuccilogo.ico
 }
 
 
-
-
-
+LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -llibzlib
+PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/libzlib.lib
