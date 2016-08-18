@@ -17,7 +17,7 @@
 namespace Vespucci{
 
     VESPUCCI_EXPORT bool SaveHDF5Obj(std::map<std::string, arma::mat*> objects, const std::string filename);
-    VESPUCCI_EXPORT bool SaveVespucciBinary(std::string filename, const arma::mat &spectra, const arma::vec &x, const arma::vec &y, const arma::vec &abscissa);
+    VESPUCCI_EXPORT bool SaveOldVespucciBinary(std::string filename, const arma::mat &spectra, const arma::vec &x, const arma::vec &y, const arma::vec &abscissa);
     VESPUCCI_EXPORT bool SaveText(std::string basename, const arma::mat &spectra, const arma::vec &x, const arma::vec &y, const arma::vec &abscissa, arma::file_type type);
     VESPUCCI_EXPORT bool StitchDatasets(const arma::field<arma::field<arma::mat> > &datasets, arma::mat &spectra, arma::vec &x, arma::vec &y, arma::vec &abscissa);
     VESPUCCI_EXPORT void ResetDataset(arma::mat &spectra, arma::vec &x, arma::vec &y, arma::vec &abscissa);

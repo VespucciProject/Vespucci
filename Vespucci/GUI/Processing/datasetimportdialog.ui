@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>399</width>
-    <height>387</height>
+    <height>372</height>
    </rect>
   </property>
   <property name="font">
@@ -16,7 +16,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Load Dataset</string>
+   <string>Import Dataset from File</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -100,7 +100,7 @@
         </item>
         <item>
          <property name="text">
-          <string>Vespucci Dataset</string>
+          <string>Old Vespucci Dataset</string>
          </property>
         </item>
        </widget>

@@ -1,4 +1,4 @@
-/*******************************************************************************
+ /*******************************************************************************
     Copyright (C) 2014-2016 Wright State University - All Rights Reserved
     Daniel P. Foose - Maintainer/Lead Developer
 
@@ -543,15 +543,10 @@ VespucciDataset::VespucciDataset(QString name,
 {
     workspace_ = main_window->workspace_ptr();
     AddAnalysisResult(auxiliary_matrices_);
-    //map_list_model_ = new MapListModel(main_window, this);
     state_changed_ = true;
     non_spatial_ = true;
     meta_ = true;
     map_loading_count_ = 0;
-    //principal_components_calculated_ = false;
-    //mlpack_pca_calculated_ = false;
-    //partial_least_squares_calculated_ = false;
-    //vertex_components_calculated_ = false;
     z_scores_calculated_ = false;
     directory_ = directory;
     name_ = name;

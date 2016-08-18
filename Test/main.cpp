@@ -21,6 +21,9 @@
 #include "testahca.h"
 #include "testdatamodel.h"
 #include <QtTest/QtTest>
+#include "Data/Dataset/vespuccidataset.h"
+#include <H5Cpp.h>
+
 int main()
 {
 
@@ -28,3 +31,5 @@ int main()
     QTest::qExec(&ahca_test);
     return 0;
 }
+
+

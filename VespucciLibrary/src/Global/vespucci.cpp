@@ -33,7 +33,7 @@
 /// \param abscissa
 /// \return
 ///
-bool Vespucci::SaveVespucciBinary(std::string filename, const arma::mat &spectra, const arma::vec &x, const arma::vec &y, const arma::vec &abscissa)
+bool Vespucci::SaveOldVespucciBinary(std::string filename, const arma::mat &spectra, const arma::vec &x, const arma::vec &y, const arma::vec &abscissa)
 {
     bool success;
     try{

@@ -118,6 +118,9 @@ macx{
     LIBS += -L/usr/local/lib/ -lhdf5
     PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
 
+    LIBS += -L/usr/local/lib -lhdf5_cpp
+    PRE_TARGETDEPS += /usr/local/lib/libhdf5_cpp.a
+
     LIBS += -L$$PWD/../../quazip/lib/ -lquazip
     INCLUDEPATH += $$PWD/../../quazip/include
     DEPENDPATH += $$PWD/../../quazip/include

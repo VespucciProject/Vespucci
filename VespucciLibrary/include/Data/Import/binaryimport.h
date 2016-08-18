@@ -27,10 +27,14 @@
 
 namespace BinaryImport
 {
-    VESPUCCI_EXPORT bool ImportVespucciBinary(std::string filename,
+    VESPUCCI_EXPORT bool ImportOldVespucciBinary(std::string filename,
                               arma::mat &spectra,
                               arma::vec &abscissa,
                               arma::vec &x, arma::vec &y);
+    VESPUCCI_EXPORT bool ImportVespucciBinary(std::string filename,
+                                               arma::mat &spectra,
+                                               arma::vec &abscissa,
+                                               arma::vec &x, arma::vec &y);
 }
 
 #endif // BINARYIMPORT_H

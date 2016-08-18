@@ -31,7 +31,12 @@ private:
     Ui::BulkConversionDialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;
 
-    enum infile_type{long_text, wide_text, binary};
+    bool SaveHDF5(string filename,
+                  const mat &spectra,
+                  const vec &abscissa,
+                  const vec &x,
+                  const vec &y) const;
+    enum infile_type{long_text, wide_text, binary, oldbinary};
     enum outfile_type{v_binary, text};
     vector<string> SaveFiles(vector<string> infile_names,
                              string outfile_path,

@@ -31,6 +31,7 @@ namespace Vespucci{
         namespace Quantification{
             VESPUCCI_EXPORT arma::rowvec QuantifyPeak(const arma::vec &spectrum, const arma::vec &abscissa, double &min, double &max, arma::uword bound_window, arma::mat &total_baseline, arma::mat &inflection_baseline);
             VESPUCCI_EXPORT arma::mat QuantifyPeakMat(const arma::mat &spectra, const arma::vec &abscissa, double &min, double &max, arma::uword bound_window, arma::mat &total_baselines, arma::field<arma::mat> &inflection_baselines);
+            VESPUCCI_EXPORT arma::mat ConvertInflectionBaselines(const arma::field<arma::mat> &inflection_baselines);
         }
     }
 }

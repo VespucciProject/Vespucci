@@ -5,6 +5,7 @@
 #include "Data/Import/textimport.h"
 #include "GUI/Display/reportmessagedialog.h"
 
+
 BulkConversionDialog::BulkConversionDialog(MainWindow *parent,
                                            QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
@@ -66,8 +67,10 @@ void BulkConversionDialog::on_buttonBox_accepted()
       case 1:
         intype = long_text;
         break;
-      case 2: default:
+      case 2:
         intype = binary;
+      case 3: default:
+        intype = oldbinary;
     }
 
     switch (ui->outputComboBox->currentIndex()){
@@ -100,7 +103,6 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
     mat spectra;
     vec x, y, abscissa;
     bool comma_decimals = false;
-    QProgressDialog *progress = new QProgressDialog("Loading file", "Cancel", 0, 100);
     switch (intype){
       case wide_text:
         for(strvec_it it = infile_names.begin(); it!=infile_names.end(); ++it){
@@ -124,7 +126,6 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
                     QFileInfo(QString::fromStdString(*it)).baseName().toStdString();
             WriteFile(outtype, outfilename, spectra, abscissa, x, y);
         }//for (infile)
-        progress->close();
         break;
 
       case long_text:
@@ -150,15 +151,27 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
 
             WriteFile(outtype, outfilename, spectra, abscissa, x, y);
         }//for (infiles)
-        progress->close();
         break;
+      case binary:
+        for (strvec_it it = infile_names.begin(); it != infile_names.end(); ++it){
+            QSharedPointer<VespucciDataset> dataset(new VespucciDataset(QString::fromStdString(*it), workspace_->main_window(), workspace_));
+            ok = dataset->ConstructorCancelled();
+            if (!ok){
+                skipped_files.push_back(*it);
+                infile_names.erase(it);
+            }
 
-      case binary: default:
+            string outfilename =
+                    outfile_path + "/" +
+                    QFileInfo(QString::fromStdString(*it)).fileName().toStdString();
+            WriteFile(outtype, outfilename, dataset->spectra(), dataset->abscissa(), dataset->x(), dataset->y());
+      }
+      case oldbinary: default:
         for(strvec_it it = infile_names.begin(); it!=infile_names.end(); ++it){
             ok = BinaryImport::ImportVespucciBinary(*it,
-                                               spectra,
-                                               abscissa,
-                                               x, y);
+                                                    spectra,
+                                                    abscissa,
+                                                    x, y);
             if (!ok){
                 skipped_files.push_back(*it);
                 infile_names.erase(it);
@@ -170,7 +183,6 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
             WriteFile(outtype, outfilename, spectra, abscissa, x, y);
         }//for (infiles)
     }//switch (intype)
-    delete progress; //not sure what happens to a QProgress dialog instantiated with null parent
     return skipped_files;
 }
 
@@ -207,8 +219,10 @@ void BulkConversionDialog::WriteFile(const arma::file_type &type,
     case csv_ascii: case raw_ascii:
         Vespucci::SaveText(filename, spectra, x, y, abscissa, type);
         break;
+    case hdf5_binary:
+        SaveHDF5(filename, spectra, abscissa, x, y);
     case arma_binary: default:
-        Vespucci::SaveVespucciBinary(filename + ".vds", spectra, x, y, abscissa);
+        Vespucci::SaveOldVespucciBinary(filename + ".vds", spectra, x, y, abscissa);
     }
 }
 
@@ -217,4 +231,17 @@ void BulkConversionDialog::on_BrowsePushButton_clicked()
     QString path = QFileDialog::getExistingDirectory(this, "Select Folder",
                                                      workspace_->directory());
     ui->targetLineEdit->setText(path);
+}
+
+bool BulkConversionDialog::SaveHDF5(string filename,
+                                    const mat &spectra,
+                                    const vec &abscissa,
+                                    const vec &x,
+                                    const vec &y) const
+{
+    VespucciDataset dataset(QString::fromStdString(filename),
+                           workspace_->main_window(),
+                           workspace_->directory_ptr());
+    dataset.SetData(spectra, abscissa, x, y);
+    return dataset.Save(QString::fromStdString(filename));
 }

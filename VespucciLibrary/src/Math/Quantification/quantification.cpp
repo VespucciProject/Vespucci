@@ -69,8 +69,12 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     arma::uword window_size = max_index - min_index + 1;
     total_baseline = arma::linspace(spectrum(min_index), spectrum(max_index), window_size);
     arma::vec total_abscissa = abscissa.rows(min_index, max_index);
-    double baseline_area = arma::as_scalar(arma::trapz(abscissa_part, total_baseline));
+    arma::uvec positive_indices = arma::find(spectrum_part > total_baseline);
+    double positive_area = arma::as_scalar(arma::trapz(abscissa_part.rows(positive_indices), spectrum_part.rows(positive_indices)));
+    double baseline_area = arma::as_scalar(arma::trapz(abscissa_part.rows(positive_indices), total_baseline.rows(positive_indices)));
     total_baseline = arma::join_horiz(total_abscissa, total_baseline);
+
+
 
     arma::vec min_window = spectrum.rows(min_start, min_end);
     arma::vec max_window = spectrum.rows(max_start, max_end);
@@ -93,6 +97,7 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     window_size = inflection_max_index - inflection_min_index + 1;
     inflection_baseline = arma::linspace(spectrum(inflection_min_index), spectrum(inflection_max_index), window_size);
     double inf_baseline_area = arma::as_scalar(arma::trapz(abscissa_part, inflection_baseline));
+    inflection_baseline = join_horiz(abscissa.rows(inflection_min_index, inflection_max_index), inflection_baseline);
 
 
 
@@ -101,7 +106,6 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     arma::uword search_max_index = (inflection_max_index > max_index ? max_index : inflection_max_index);
     arma::vec region = spectrum.rows(search_min_index, search_max_index);
     arma::vec region_abscissa = abscissa.rows(search_min_index, search_max_index);
-    inflection_baseline = join_horiz(region_abscissa, region);
 
     double maximum = region.max();
     arma::uword max_pos = region.index_max();
@@ -138,7 +142,7 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     results(1) = maximum;
     results(2) = adj_maximum;
     results(3) = total_area;
-    results(4) = total_area - baseline_area;
+    results(4) = positive_area - baseline_area;
     results(5) = area_between_inflection;
     results(6) = area_between_inflection - inf_baseline_area;
     results(7) = fwhm;
@@ -153,6 +157,7 @@ arma::mat Vespucci::Math::Quantification::QuantifyPeakMat(const arma::mat &spect
     total_baselines.clear();
     //total_baselines.set_size(spectra.n_cols, )
     inflection_baselines.set_size(spectra.n_cols);
+    arma::field<arma::mat> total_baselines_tmp(spectra.n_cols);
 
 #ifdef _WIN32
   #pragma omp parallel for default(none) \
@@ -170,14 +175,47 @@ arma::mat Vespucci::Math::Quantification::QuantifyPeakMat(const arma::mat &spect
         arma::mat inflection_baseline;
         results.row(i) = Vespucci::Math::Quantification::QuantifyPeak(spectra.col(i), abscissa, temp_min, temp_max, bound_window, total_baseline, inflection_baseline);
         inflection_baselines(i) = inflection_baseline;
+        total_baselines_tmp(i) = total_baseline;
+    }
+    for (size_t i = 0; i < total_baselines_tmp.n_rows; ++i){
         if (total_baselines.n_rows){
-            total_baselines = arma::join_vert(total_baselines, total_baseline.t());
+            total_baselines = arma::join_horiz(total_baselines, total_baselines_tmp(i).col(1));
         }
         else{
-            total_baselines = total_baseline.t();
+            total_baselines = total_baselines_tmp(i);
         }
-
     }
     return results;
 }
 
+///
+/// \brief Vespucci::Math::Quantification::ConvertInflectionBaselines
+/// \param inflection_baselines
+/// \return
+/// Create a matrix containing inflection point baselines. If a baseline does not contain a value for a particular abscissa point, the value is NaN
+/// first column will be the abscissa
+arma::mat Vespucci::Math::Quantification::ConvertInflectionBaselines(const arma::field<arma::mat> &inflection_baselines)
+{
+    arma::vec all_abscissa = inflection_baselines(0).col(0);
+
+    for (arma::uword i = 0; i < inflection_baselines.n_elem; ++i){
+        arma::vec current_baseline = inflection_baselines(i).col(0);
+        all_abscissa = arma::join_vert(all_abscissa, current_baseline);
+    }
+    arma::vec abscissa = arma::unique(all_abscissa);
+    abscissa = arma::sort(abscissa);
+    arma::mat baseline_matrix(abscissa.n_rows, inflection_baselines.n_elem);
+
+    for (arma::uword j = 0; j < inflection_baselines.n_elem; ++j){
+        arma::vec current_baseline = inflection_baselines(j).col(1);
+        arma::vec current_abscissa = inflection_baselines(j).col(0);
+        for (arma::uword i = 0; i < abscissa.n_rows; ++i){
+            arma::uvec indices = arma::find(current_abscissa == abscissa(i));
+            baseline_matrix(i, j) = (indices.n_rows > 0 ?
+                                         current_baseline(indices(0)) :
+                                         std::nan(""));
+        }
+    }
+    baseline_matrix = arma::join_horiz(abscissa, baseline_matrix);
+    return baseline_matrix;
+}
