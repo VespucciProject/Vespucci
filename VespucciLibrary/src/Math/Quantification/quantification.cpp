@@ -153,6 +153,7 @@ arma::mat Vespucci::Math::Quantification::QuantifyPeakMat(const arma::mat &spect
     total_baselines.clear();
     //total_baselines.set_size(spectra.n_cols, )
     inflection_baselines.set_size(spectra.n_cols);
+    arma::field<arma::mat> total_baselines_tmp(spectra.n_cols);
 
 #ifdef _WIN32
   #pragma omp parallel for default(none) \
@@ -170,13 +171,15 @@ arma::mat Vespucci::Math::Quantification::QuantifyPeakMat(const arma::mat &spect
         arma::mat inflection_baseline;
         results.row(i) = Vespucci::Math::Quantification::QuantifyPeak(spectra.col(i), abscissa, temp_min, temp_max, bound_window, total_baseline, inflection_baseline);
         inflection_baselines(i) = inflection_baseline;
+        total_baselines_tmp(i) = total_baseline;
+    }
+    for (size_t i = 0; i < total_baselines_tmp.n_rows; ++i){
         if (total_baselines.n_rows){
-            total_baselines = arma::join_vert(total_baselines, total_baseline.t());
+            total_baselines = arma::join_vert(total_baselines, total_baselines_tmp(i).t());
         }
         else{
-            total_baselines = total_baseline.t();
+            total_baselines = total_baselines_tmp(i).t();
         }
-
     }
     return results;
 }
