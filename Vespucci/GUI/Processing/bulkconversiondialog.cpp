@@ -243,5 +243,5 @@ bool BulkConversionDialog::SaveHDF5(string filename,
                            workspace_->main_window(),
                            workspace_->directory_ptr());
     dataset.SetData(spectra, abscissa, x, y);
-    dataset.Save(QString::fromStdString(filename));
+    return dataset.Save(QString::fromStdString(filename));
 }

@@ -409,14 +409,6 @@ win32:!win32-g++{
     LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -llibhdf5
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/libhdf5.lib
 
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lhdf5_cpp
-    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
-    DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
-
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/hdf5_cpp.lib
-
-
     LIBS += -L$$OUT_PWD/../VespucciLibrary/release -llibvespucci
     PRE_TARGETDEPS += $$OUT_PWD/../VespucciLibrary/release/libvespucci.lib
 
@@ -429,9 +421,6 @@ win32:!win32-g++{
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/armadillo/include
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/armadillo/include
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/armadillo/lib/armadillo.lib
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -lhdf5
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/hdf5.lib
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/OpenBLAS/ -llibopenblas
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/OpenBLAS/libopenblas.lib
@@ -478,5 +467,4 @@ win32:!win32-g++{
 }
 
 
-LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -llibzlib
-PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/libzlib.lib
+

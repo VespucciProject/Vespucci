@@ -43,6 +43,7 @@ void UnivariateData::Apply(double left_bound, double right_bound, uword bound_wi
     AddColumns(keys, results);
     AddMatrix("Inflection Points", inflection_points);
     AddMatrix("Baselines", baselines);
+    AddMatrix("Inflection Baselines", Vespucci::Math::Quantification::ConvertInflectionBaselines(inflection_baselines));
     AddField("Inflection Baselines", inflection_baselines);
 }
 
@@ -90,6 +91,8 @@ void UnivariateData::Apply(double first_left_bound, double first_right_bound, do
     AddMatrix("Second Region Baselines", second_baselines);
     AddMatrix("First Region Inflection Points", first_inflection_points);
     AddMatrix("Second Region Inflection Points", second_inflection_points);
+    AddMatrix("First Region Inflection Baselines", Vespucci::Math::Quantification::ConvertInflectionBaselines(inflection_first_baselines));
+    AddMatrix("Second Region Inflection Baselines", Vespucci::Math::Quantification::ConvertInflectionBaselines(inflection_second_baselines));
 
 }
 
