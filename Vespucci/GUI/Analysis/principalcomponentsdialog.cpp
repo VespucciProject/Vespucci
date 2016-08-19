@@ -68,20 +68,18 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
             analyzer.PrincipalComponents(name);
         }catch(exception e){
             workspace_->main_window()->DisplayExceptionWarning(e);
-            close();
-            return;
         }
-        close();
-        return;
     }
-
-    try{
-        dataset_->PrincipalComponents(name);
-    }catch(exception e){
-        workspace_->main_window()->DisplayExceptionWarning(e);
+    else{
+        try{
+            dataset_->PrincipalComponents(name);
+        }catch(exception e){
+            workspace_->main_window()->DisplayExceptionWarning(e);
+        }
     }
     close();
     dataset_.clear();
+    return;
 }
 
 ///

@@ -64,37 +64,35 @@ KMeansDialog::~KMeansDialog()
 void KMeansDialog::on_buttonBox_accepted()
 {
 
-    if (dataset_keys_.isEmpty() && dataset_.isNull()){
-        close();
-        return;
-    }
-    QString metric_text = ui->metricComboBox->currentText();
-    int clusters;
-    QString name = ui->nameLineEdit->text();
-    if (ui->predictionCheckBox->isChecked())
-        clusters = 0;
-    else
-        clusters = ui->clustersSpinBox->value();
-    if (!dataset_keys_.isEmpty()){
-        try{
-            MultiAnalyzer analyzer(workspace_, dataset_keys_);
-            analyzer.KMeans(clusters, metric_text, name);
-        }catch(exception e){
-            workspace_->main_window()->DisplayExceptionWarning(e);
+    if (!dataset_keys_.isEmpty() && !dataset_.isNull()){
+        QString metric_text = ui->metricComboBox->currentText();
+        int clusters;
+        QString name = ui->nameLineEdit->text();
+        if (ui->predictionCheckBox->isChecked())
+            clusters = 0;
+        else
+            clusters = ui->clustersSpinBox->value();
+        if (!dataset_keys_.isEmpty()){
+            try{
+                MultiAnalyzer analyzer(workspace_, dataset_keys_);
+                analyzer.KMeans(clusters, metric_text, name);
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+                dataset_.clear();
+                close();
+                return;
+            }
             dataset_.clear();
-            close();
-            return;
         }
-        dataset_.clear();
-        close();
-        return;
-    }
-    try{
-        dataset_->KMeans(name, clusters, metric_text);
-    }catch(exception e){
-        workspace_->main_window()->DisplayExceptionWarning(e);
-    }
+        else{
+            try{
+                dataset_->KMeans(name, clusters, metric_text);
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+            }
+        }
 
+    }
     dataset_.clear();
     close();
 }

@@ -140,83 +140,86 @@ BandRatioDialog::~BandRatioDialog()
 /// instantiates the map data
 void BandRatioDialog::on_buttonBox_accepted()
 {
-    if (dataset_keys_.isEmpty() && dataset_.isNull()){
-        close();
-        return;
+    bool ok = !dataset_keys_.isEmpty()
+            && !dataset_.isNull()
+            && !ui->firstMinLineEdit->text().isEmpty()
+            && !ui->firstMaxLineEdit->text().isEmpty()
+            && !ui->secondMinLineEdit->text().isEmpty()
+            && !ui->secondMaxLineEdit->text().isEmpty();
+
+    if (ok){
+        double first_entered_min = ui->firstMinLineEdit->text().toDouble();
+        double second_entered_min = ui->secondMinLineEdit->text().toDouble();
+        double first_entered_max = ui->firstMaxLineEdit->text().toDouble();
+        double second_entered_max = ui->secondMaxLineEdit->text().toDouble();
+
+        if (first_entered_min < dataset_->abscissa_ptr()->min() || second_entered_min < dataset_->abscissa_ptr()->min()){
+            QMessageBox::warning(this, "Invalid Input!", "You have entered a left bound that is smaller than the smallest number on the spectral abscissa");
+            return;
+        }
+
+        if (first_entered_max > dataset_->abscissa_ptr()->max() || second_entered_max > dataset_->abscissa_ptr()->max()){
+            QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abscissa");
+            return;
+        }
+        uint bound_window = ui->searchWindowSpinBox->value();
+
+
+        QString name = ui->nameLineEdit->text();
+        QString value_method = ui->methodComboBox->currentText();
+
+        if (!dataset_keys_.isEmpty()){
+            if (value_method == "Empirical"){
+                try{
+                    MultiAnalyzer analyzer(workspace_, dataset_keys_);
+                    analyzer.BandRatio(name, first_entered_min, first_entered_max,
+                                     second_entered_min, second_entered_max,
+                                     bound_window);
+                }catch(exception e){
+                    workspace_->main_window()->DisplayExceptionWarning(e);
+                }
+            }
+            else if (value_method == "Gaussian Fit"){
+                try{
+
+                }catch(exception e){
+                    workspace_->main_window()->DisplayExceptionWarning(e);
+                }
+            }
+            else{
+                QMessageBox::warning(this, "Error Occurred", "A non-fatal error occurred: invalid input from ui->methodComboBox");
+            }
+            return;
+        }
+        else{
+            if (value_method == "Empirical"){
+                try{
+                    dataset_->BandRatio(name, first_entered_min, first_entered_max,
+                                     second_entered_min, second_entered_max,
+                                     bound_window);
+                }catch(exception e){
+                    workspace_->main_window()->DisplayExceptionWarning(e);
+                }
+            }
+            else if (value_method == "Gaussian Fit"){
+                try{
+
+                }catch(exception e){
+                    workspace_->main_window()->DisplayExceptionWarning(e);
+                }
+            }
+            else{
+                QMessageBox::warning(this, "Error Occurred", "A non-fatal error occurred: invalid input from ui->methodComboBox");
+            }
+        }
     }
 
     if (ui->firstMinLineEdit->text().isEmpty() || ui->firstMaxLineEdit->text().isEmpty() || ui->secondMinLineEdit->text().isEmpty() || ui->secondMaxLineEdit->text().isEmpty()){
         QMessageBox::warning(this, "Invalid Input!", "You must enter numbers for left and right bounds.");
         return;
     }
-
-
-    double first_entered_min = ui->firstMinLineEdit->text().toDouble();
-    double second_entered_min = ui->secondMinLineEdit->text().toDouble();
-    double first_entered_max = ui->firstMaxLineEdit->text().toDouble();
-    double second_entered_max = ui->secondMaxLineEdit->text().toDouble();
-
-    if (first_entered_min < dataset_->abscissa_ptr()->min() || second_entered_min < dataset_->abscissa_ptr()->min()){
-        QMessageBox::warning(this, "Invalid Input!", "You have entered a left bound that is smaller than the smallest number on the spectral abscissa");
-        return;
-    }
-
-    if (first_entered_max > dataset_->abscissa_ptr()->max() || second_entered_max > dataset_->abscissa_ptr()->max()){
-        QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abscissa");
-        return;
-    }
-    uint bound_window = ui->searchWindowSpinBox->value();
-
-
-    QString name = ui->nameLineEdit->text();
-    QString value_method = ui->methodComboBox->currentText();
-
-    if (!dataset_keys_.isEmpty()){
-        if (value_method == "Empirical"){
-            try{
-                MultiAnalyzer analyzer(workspace_, dataset_keys_);
-                analyzer.BandRatio(name, first_entered_min, first_entered_max,
-                                 second_entered_min, second_entered_max,
-                                 bound_window);
-            }catch(exception e){
-                workspace_->main_window()->DisplayExceptionWarning(e);
-            }
-        }
-        else if (value_method == "Gaussian Fit"){
-            try{
-
-            }catch(exception e){
-                workspace_->main_window()->DisplayExceptionWarning(e);
-            }
-        }
-        else{
-            QMessageBox::warning(this, "Error Occurred", "A non-fatal error occurred: invalid input from ui->methodComboBox");
-        }
-        return;
-    }
-
-    if (value_method == "Empirical"){
-        try{
-            dataset_->BandRatio(name, first_entered_min, first_entered_max,
-                             second_entered_min, second_entered_max,
-                             bound_window);
-        }catch(exception e){
-            workspace_->main_window()->DisplayExceptionWarning(e);
-        }
-    }
-    else if (value_method == "Gaussian Fit"){
-        try{
-
-        }catch(exception e){
-            workspace_->main_window()->DisplayExceptionWarning(e);
-        }
-    }
-    else{
-        QMessageBox::warning(this, "Error Occurred", "A non-fatal error occurred: invalid input from ui->methodComboBox");
-    }
-
-    close();
     dataset_.clear();
+    close();
 }
 
 
