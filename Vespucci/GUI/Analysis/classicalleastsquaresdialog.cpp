@@ -35,27 +35,26 @@ ClassicalLeastSquaresDialog::~ClassicalLeastSquaresDialog()
     delete ui;
 }
 
-
-
 void ClassicalLeastSquaresDialog::on_buttonBox_accepted()
 {
-    if (dataset_keys_.isEmpty() && dataset_.isNull()){
-        close();
-        return;
-    }
-    QString name = ui->nameLineEdit->text();
-    if (!dataset_keys_.empty()){
-        try{
-            QScopedPointer<MultiAnalyzer> analyzer(new MultiAnalyzer(workspace_, dataset_keys_));
-            //analyzer->ClassicalLeastSquares(name, ui->referenceComboBox->currentText());
-        }catch(exception e){
-            workspace_->main_window()->DisplayExceptionWarning(e);
+    if (!dataset_keys_.isEmpty() && !dataset_.isNull()){
+        QString name = ui->nameLineEdit->text();
+        if (!dataset_keys_.empty()){
+            try{
+                QScopedPointer<MultiAnalyzer> analyzer(new MultiAnalyzer(workspace_, dataset_keys_));
+                //analyzer->ClassicalLeastSquares(name, ui->referenceComboBox->currentText());
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+            }
         }
-        return;
+        else{
+            try{
+                dataset_->ClassicalLeastSquares(name, ui->referenceComboBox->currentText());
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+            }
+        }
     }
-    try{
-        dataset_->ClassicalLeastSquares(name, ui->referenceComboBox->currentText());
-    }catch(exception e){
-        workspace_->main_window()->DisplayExceptionWarning(e);
-    }
+    dataset_.clear();
+    close();
 }

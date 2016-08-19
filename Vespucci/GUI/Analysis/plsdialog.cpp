@@ -71,31 +71,25 @@ PLSDialog::~PLSDialog()
 /// the user has entered when the user clicks "Ok"
 void PLSDialog::on_buttonBox_accepted()
 {
-    if (dataset_keys_.isEmpty() && dataset_.isNull()){
-        close();
-        return;
-    }
-    int components = ui->componentsSpinBox->value();
-    QString name = ui->nameLineEdit->text();
+    if (!dataset_keys_.isEmpty() && !dataset_.isNull()){
+        int components = ui->componentsSpinBox->value();
+        QString name = ui->nameLineEdit->text();
 
-    if (!dataset_keys_.isEmpty()){
-        try{
-            MultiAnalyzer analyzer(workspace_, dataset_keys_);
-            analyzer.PartialLeastSquares(name, components);
-        }catch(exception e){
-            workspace_->main_window()->DisplayExceptionWarning(e);
-            close();
-            return;
+        if (!dataset_keys_.isEmpty()){
+            try{
+                MultiAnalyzer analyzer(workspace_, dataset_keys_);
+                analyzer.PartialLeastSquares(name, components);
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+            }
         }
-        close();
-        dataset_.clear();
-        return;
-    }
-
-    try{
-        dataset_->PartialLeastSquares(name, components);
-    }catch(exception e){
-        workspace_->main_window()->DisplayExceptionWarning(e);
+        else{
+            try{
+                dataset_->PartialLeastSquares(name, components);
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+            }
+        }
     }
     close();
     dataset_.clear();

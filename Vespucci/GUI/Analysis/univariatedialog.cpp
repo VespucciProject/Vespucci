@@ -161,26 +161,26 @@ void UnivariateDialog::on_buttonBox_accepted()
         }catch(exception e){
             workspace_->main_window()->DisplayExceptionWarning(e);
         }
-        close();
-        return;
     }
-
-    if (value_method == "Empirical"){
-        try{
-            dataset_->Univariate(name, entered_min, entered_max, bound_window);
-        }catch(exception e){
-            workspace_->main_window()->DisplayExceptionWarning(e);
+    else{
+        if (value_method == "Empirical"){
+            try{
+                dataset_->Univariate(name, entered_min, entered_max, bound_window);
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+            }
         }
-    }
-    else if (value_method == "Gaussian Fit"){
-        try{
+        else if (value_method == "Gaussian Fit"){
+            try{
 
-        }catch(exception e){
+            }catch(exception e){
 
+            }
         }
+        else{}
     }
-    else{}
     dataset_.clear();
+    close();
 }
 
 

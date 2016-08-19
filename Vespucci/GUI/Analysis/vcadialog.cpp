@@ -63,6 +63,13 @@ void VCADialog::on_buttonBox_accepted()
     int endmembers;
     QString name = ui->nameLineEdit->text();
 
+
+
+    if (ui->predictionCheckBox->isChecked())
+        endmembers = 0;
+    else
+        endmembers = ui->endmembersSpinBox->value();
+
     if (!dataset_keys_.isEmpty()){
         endmembers = ui->endmembersSpinBox->value();
         try{
@@ -72,16 +79,12 @@ void VCADialog::on_buttonBox_accepted()
             workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
-
-    if (ui->predictionCheckBox->isChecked())
-        endmembers = 0;
-    else
-        endmembers = ui->endmembersSpinBox->value();
-
-    try{
-        dataset_->VertexComponents(name, endmembers);
-    }catch(std::exception e){
-        workspace_->main_window()->DisplayExceptionWarning(e);
+    else{
+        try{
+            dataset_->VertexComponents(name, endmembers);
+        }catch(std::exception e){
+            workspace_->main_window()->DisplayExceptionWarning(e);
+        }
     }
 
     close();
