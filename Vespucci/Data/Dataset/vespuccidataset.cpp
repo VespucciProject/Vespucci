@@ -2417,17 +2417,22 @@ int VespucciDataset::map_loading_count() const
 ///
 void VespucciDataset::AddMap(QSharedPointer<MapData> map)
 {
+    QString basename = map->name();
+    int i = 0;
+    while(MapKeys().contains(map->name()))
+        map->SetName(basename + " (" + QString::number(++i) + ")", map->type());
     maps_.append(map);
     workspace_->UpdateModel();
 }
 
 void VespucciDataset::RemoveMap(const QString &name)
 {
-    if (!MapKeys().contains(name)) return;
-    int i = maps_.size();
-    while (i--){
-        if (maps_[i]->name() == name)
-            maps_.removeAt(i); //might be safe to break the while here
+    if (MapKeys().contains(name)){
+        int i = maps_.size();
+        while (i--){
+            if (maps_[i]->name() == name)
+                maps_.removeAt(i); //might be safe to break the while here
+        }
     }
 }
 
@@ -2969,7 +2974,7 @@ void VespucciDataset::CreateMap(const QString &map_name,
                                                 workspace_));
 
     new_map->setGradient(gradient);
-    maps_.append(new_map);
+    AddMap(new_map);
     workspace_->UpdateModel();
 }
 
@@ -2987,7 +2992,7 @@ void VespucciDataset::CreateMap(const QString &map_name,
                                                 column,
                                                 workspace_));
     new_map->setGradient(gradient);
-    maps_.append(new_map);
+    AddMap(new_map);
     workspace_->UpdateModel();
 }
 
