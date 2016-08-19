@@ -114,6 +114,10 @@ void MapPlot::CenterCrosshairs()
     double x_center = (x_min + x_max) / 2.0;
     double y_center = (y_min + y_max) / 2.0;
 
+    vec xdif = arma::abs(x_ - x_center);
+    vec ydif = arma::abs(y_ - y_center);
+    x_center = x_(xdif.index_min());
+    y_center = y_(ydif.index_min());
 
     horizontal_crosshair_->point1->setCoords(x_min, y_center);
     horizontal_crosshair_->point2->setCoords(x_max, y_center);

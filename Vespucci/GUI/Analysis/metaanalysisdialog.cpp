@@ -135,8 +135,10 @@ void MetaAnalysisDialog::on_buttonBox_accepted()
             analyzer.KMeans(components, metric, name);
         }
         else if (type == "Hierarchical Clustering"){
-            QString metric = ui->metricComboBox->currentText();
-            QString linkage = ui->linkageComboBox->currentText();
+            QString metric = ui->metricComboBox->currentText().toLower();
+            QString linkage = ui->linkageComboBox->currentText().toLower();
+            metric.remove("\\s");
+            linkage.remove("\\s");
             analyzer.AgglomerativeClustering(name, metric, linkage);
         }
         else{

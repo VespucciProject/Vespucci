@@ -29,8 +29,8 @@
 /// \param parent MapData associated with this image
 /// Constructor for this object
 MapViewer::MapViewer(MainWindow *parent, QStringList map_keys, QSharedPointer<VespucciWorkspace> ws):
-    QMainWindow(parent), map_keys_(map_keys),
-    ui(new Ui::MapViewer)
+    QMainWindow(parent), ui(new Ui::MapViewer), map_keys_(map_keys)
+
 {
     ui->setupUi(this);
     workspace_ = ws;
@@ -47,6 +47,7 @@ MapViewer::MapViewer(MainWindow *parent, QStringList map_keys, QSharedPointer<Ve
             this, &MapViewer::SpectrumRequested);
     connect(ui->mapPlot, &MapPlot::CoordinatesChanged,
             this, &MapViewer::SetStatusbar);
+    parent->plot_viewer()->SetHoldCheckBoxChecked(true);
 }
 
 MapPlot *MapViewer::mapPlot()
