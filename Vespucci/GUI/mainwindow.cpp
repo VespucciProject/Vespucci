@@ -447,7 +447,7 @@ void MainWindow::on_actionSubtract_Background_triggered()
             DisplayWarning("Not a matrix", "Selected item is not a matrix");
         }
     }
-    delete matrix_dialog;
+    matrix_dialog->close();
 }
 
 ///
@@ -1480,10 +1480,12 @@ void MainWindow::on_actionImport_Data_Into_Dataset_triggered()
                                                    workspace_->directory());
    mat matrix;
    bool ok = matrix.load(filename.toStdString());
+   QFileInfo file_info(filename);
+   QString matrix_name = file_info.completeBaseName();
    if (ok){
        TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
        QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
-       dataset->AddAuxiliaryMatrix(filename, matrix);
+       dataset->AddAuxiliaryMatrix(matrix_name, matrix);
    }
   else{
        DisplayWarning("Could not load file", "The matrix could not be loaded from the selected file");

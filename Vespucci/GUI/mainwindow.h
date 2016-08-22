@@ -29,6 +29,7 @@
 #include "GUI/pythonshelldialog.h"
 #include "GUI/Display/statsdialog.h"
 #include "GUI/Display/historydialog.h"
+#include "GUI/Processing/matrixselectiondialog.h"
 class PythonShellDialog;
 class HistoryDialog;
 class SpectrumEditor;

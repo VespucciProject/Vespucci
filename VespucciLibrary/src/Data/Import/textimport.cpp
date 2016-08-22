@@ -190,10 +190,16 @@ bool TextImport::ImportMultiplePoints(std::map<std::pair<int, int>, std::string>
         }
         try{
             if (current_spectrum.n_rows > current_spectrum.n_cols){
-                spectra.col(i) = current_spectrum.col(0);
+                if (current_spectrum.n_cols > 1)
+                    spectra.col(i) = current_spectrum.col(1);
+                else
+                    spectra.col(i) = current_spectrum.col(0);
             }
             else{
-                spectra.col(i) = current_spectrum.row(0).t();
+                if (current_spectrum.n_rows > 1)
+                    spectra.col(i) = current_spectrum.row(1).t();
+                else
+                    spectra.col(i) = current_spectrum.row(0).t();
             }
         }catch(std::exception e){
             spectra.clear();

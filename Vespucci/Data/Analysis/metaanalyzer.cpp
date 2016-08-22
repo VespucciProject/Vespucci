@@ -32,6 +32,21 @@ MetaAnalyzer::MetaAnalyzer(QSharedPointer<VespucciWorkspace> ws, const QStringLi
     GetData();
 }
 
+void MetaAnalyzer::ClassicalLeastSquares(const QString &name, const QStringList &reference_keys)
+{
+    QString new_name = FindUniqueName(name);
+    QSharedPointer<AnalysisResults> cls_results(new AnalysisResults(new_name, "CLS Analysis"));
+    mat reference = workspace_->GetMatrix(reference_keys);
+    mat coefs;
+    try{
+        coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(reference, data_);
+    }catch(exception e){
+        workspace_->main_window()->DisplayExceptionWarning(e);
+    }
+    cls_results->AddMatrix("Coefficients", coefs.t());
+    AddResults(cls_results, QStringList({"Coefficients"}));
+}
+
 void MetaAnalyzer::VertexComponents(const QString &name, uword endmembers)
 {
     QString new_name = FindUniqueName(name);
@@ -100,6 +115,26 @@ void MetaAnalyzer::PartialLeastSquares(const QString &name, uword components)
     QString new_name = FindUniqueName(name);
     QSharedPointer<PLSData> pls_data(new PLSData(new_name));
     pls_data->Classify(data_, abscissa_, components);
+    QStringList matrices({"Predictor Scores", "Response Scores"});
+    AddResults(pls_data, matrices);
+}
+
+void MetaAnalyzer::PLSCalibration(const QString &name, const QStringList &control_keys)
+{
+    QString new_name = FindUniqueName(name);
+    QSharedPointer<PLSData> pls_data(new PLSData(new_name));
+    mat controls = workspace_->GetMatrix(control_keys);
+    pls_data->Calibrate(data_, controls);
+    QStringList matrices({"Predictor Scores", "Response Scores"});
+    AddResults(pls_data, matrices);
+}
+
+void MetaAnalyzer::TrainPLSDA(const QString &name, const QStringList &label_keys)
+{
+    QString new_name = FindUniqueName(name);
+    QSharedPointer<PLSData> pls_data(new PLSData(new_name));
+    mat labels = workspace_->GetMatrix(label_keys);
+    pls_data->Discriminate(data_, labels);
     QStringList matrices({"Predictor Scores", "Response Scores"});
     AddResults(pls_data, matrices);
 }

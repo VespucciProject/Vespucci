@@ -40,6 +40,11 @@ TreeItem *MatrixSelectionDialog::GetSelectedItem()
     return selected_item_;
 }
 
+QStringList MatrixSelectionDialog::GetDataKeys()
+{
+    return data_keys_;
+}
+
 bool MatrixSelectionDialog::accepted()
 {
     return accepted_;
@@ -47,13 +52,13 @@ bool MatrixSelectionDialog::accepted()
 
 void MatrixSelectionDialog::on_buttonBox_accepted()
 {
-    close();
     selected_item_ = tree_model_->getItem(ui->treeView->currentIndex());
+    data_keys_ = selected_item_->keys();
     accepted_ = true;
 }
 
 void MatrixSelectionDialog::on_buttonBox_rejected()
 {
-    close();
     accepted_ = false;
+    close();
 }

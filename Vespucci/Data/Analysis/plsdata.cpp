@@ -90,9 +90,30 @@ bool PLSData::Calibrate(const mat &spectra, const mat &controls)
 /// \param labels
 /// \return
 /// Perform PLS-DA
-bool PLSData::Discriminate(const mat &data, const vec &labels)
+bool PLSData::Discriminate(const mat &data, const mat &labels)
 {
-    //coming soon!
-    //uword unique_labels = unique(labels).n_rows;
+    //data (usually, but not necessarly spectra) is Y
+    //labels are X.
+    if (labels.n_rows != data.n_cols) return false;
+    mat X_loadings, Y_loadings, X_scores, Y_scores, coefficients, percent_variance, fitted;
+    bool success = Vespucci::Math::DimensionReduction::plsregress(data, labels, labels.n_cols,
+                                                                  X_loadings, Y_loadings,
+                                                                  X_scores, Y_scores,
+                                                                  coefficients, percent_variance,
+                                                                  fitted);
+
+    if (success){
+        AddMetadata("Type", "Calibration");
+        AddMetadata("Components calculated", QString::number(labels.n_cols));
+        AddMatrix("Percent Variance", percent_variance);
+        AddMatrix("Predictor Loadings", X_loadings);
+        AddMatrix("Response Loadings", Y_loadings);
+        AddMatrix("Predictor Scores", X_scores);
+        AddMatrix("Response Scores", Y_scores);
+        AddMatrix("Coefficients", coefficients);
+        AddMatrix("Fitted Data", fitted);
+    }
+
+    return success;
     return false;
 }

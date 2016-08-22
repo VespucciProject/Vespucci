@@ -32,7 +32,7 @@ public:
     PLSData(QString name);
     bool Classify(const mat &spectra, const vec &wavelength, int components);
     bool Calibrate(const mat &spectra, const mat &controls);
-    bool Discriminate(const mat &data, const vec &labels);
+    bool Discriminate(const mat &data, const mat &labels);
 };
 
 #endif // PLSDATA_H

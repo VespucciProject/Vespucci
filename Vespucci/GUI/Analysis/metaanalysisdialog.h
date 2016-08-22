@@ -22,6 +22,7 @@
 
 #include <QDialog>
 #include "Global/vespucciworkspace.h"
+#include "GUI/Processing/matrixselectiondialog.h"
 
 
 namespace Ui {
@@ -43,10 +44,14 @@ private slots:
 
     void on_buttonBox_rejected();
 
+    void on_selectPushButton_clicked();
+
 private:
     Ui::MetaAnalysisDialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;
     QStringList data_keys_;
+    QStringList control_data_keys_;
+    MatrixSelectionDialog *matrix_selection_dialog_;
 };
 
 #endif // METAANALYSISDIALOG_H

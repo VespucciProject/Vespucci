@@ -36,11 +36,16 @@ MetaAnalysisDialog::MetaAnalysisDialog(QWidget *parent,
     ui->metricLabel->setVisible(false);
     ui->componentsLabel->setVisible(false);
     ui->componentsSpinBox->setVisible(false);
+    ui->controlLabel->setVisible(false);
+    ui->controlDisplayLabel->setVisible(false);
+    ui->selectPushButton->setVisible(false);
+    matrix_selection_dialog_ = new MatrixSelectionDialog(this, workspace_->dataset_tree_model());
 }
 
 MetaAnalysisDialog::~MetaAnalysisDialog()
 {
     delete ui;
+    delete matrix_selection_dialog_;//should be deleted anyway?
 }
 
 void MetaAnalysisDialog::on_typeComboBox_currentTextChanged(const QString &arg1)
@@ -52,6 +57,9 @@ void MetaAnalysisDialog::on_typeComboBox_currentTextChanged(const QString &arg1)
         ui->metricLabel->setVisible(false);
         ui->componentsLabel->setVisible(false);
         ui->componentsSpinBox->setVisible(false);
+        ui->controlLabel->setVisible(false);
+        ui->controlDisplayLabel->setVisible(false);
+        ui->selectPushButton->setVisible(false);
     }
     else if (arg1 == "Vertex Component Analysis"){
         ui->linkageComboBox->setVisible(false);
@@ -60,6 +68,9 @@ void MetaAnalysisDialog::on_typeComboBox_currentTextChanged(const QString &arg1)
         ui->metricLabel->setVisible(false);
         ui->componentsLabel->setVisible(true);
         ui->componentsSpinBox->setVisible(true);
+        ui->controlLabel->setVisible(false);
+        ui->controlDisplayLabel->setVisible(false);
+        ui->selectPushButton->setVisible(false);
     }
     else if (arg1 == "Partial Least Squares (Classification)"){
         ui->linkageComboBox->setVisible(false);
@@ -68,6 +79,9 @@ void MetaAnalysisDialog::on_typeComboBox_currentTextChanged(const QString &arg1)
         ui->metricLabel->setVisible(false);
         ui->componentsLabel->setVisible(true);
         ui->componentsSpinBox->setVisible(true);
+        ui->controlLabel->setVisible(false);
+        ui->controlDisplayLabel->setVisible(false);
+        ui->selectPushButton->setVisible(false);
     }
     else if (arg1 == "k-Means Clustering"){
         ui->linkageComboBox->setVisible(false);
@@ -82,6 +96,9 @@ void MetaAnalysisDialog::on_typeComboBox_currentTextChanged(const QString &arg1)
                              "Chebyshev"});
         ui->metricComboBox->clear();
         ui->metricComboBox->addItems(metrics);
+        ui->controlLabel->setVisible(false);
+        ui->controlDisplayLabel->setVisible(false);
+        ui->selectPushButton->setVisible(false);
     }
     else if (arg1 == "Hierarchical Clustering"){
         ui->linkageComboBox->setVisible(true);
@@ -105,6 +122,20 @@ void MetaAnalysisDialog::on_typeComboBox_currentTextChanged(const QString &arg1)
         ui->metricComboBox->addItems(metrics);
         ui->linkageComboBox->clear();
         ui->linkageComboBox->addItems(linkages);
+        ui->controlLabel->setVisible(false);
+        ui->controlDisplayLabel->setVisible(false);
+        ui->selectPushButton->setVisible(false);
+    }
+    else if (arg1 == "Classical Least Squares"){
+        ui->linkageComboBox->setVisible(false);
+        ui->linkageLabel->setVisible(false);
+        ui->metricComboBox->setVisible(false);
+        ui->metricLabel->setVisible(false);
+        ui->componentsLabel->setVisible(false);
+        ui->componentsSpinBox->setVisible(false);
+        ui->controlLabel->setVisible(true);
+        ui->controlDisplayLabel->setVisible(true);
+        ui->selectPushButton->setVisible(true);
     }
     else{
         return;
@@ -141,6 +172,10 @@ void MetaAnalysisDialog::on_buttonBox_accepted()
             linkage.remove("\\s");
             analyzer.AgglomerativeClustering(name, metric, linkage);
         }
+        else if (type == "Classical Least Squares"){
+            if (workspace_->HasMatrix(control_data_keys_))
+                analyzer.ClassicalLeastSquares(name, control_data_keys_);
+        }
         else{
             close();
             return;
@@ -155,4 +190,14 @@ void MetaAnalysisDialog::on_buttonBox_accepted()
 void MetaAnalysisDialog::on_buttonBox_rejected()
 {
     close();
+}
+
+void MetaAnalysisDialog::on_selectPushButton_clicked()
+{
+    matrix_selection_dialog_->show();
+    if (matrix_selection_dialog_->accepted()){
+        control_data_keys_ = matrix_selection_dialog_->GetDataKeys();
+        ui->controlDisplayLabel->setText(control_data_keys_.last());
+    }
+    matrix_selection_dialog_->close();
 }

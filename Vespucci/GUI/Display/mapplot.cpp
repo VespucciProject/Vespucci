@@ -149,19 +149,14 @@ uword MapPlot::GetCrosshairPosition()
 {
     double x_pos = vertical_crosshair_->point1->coords().x();
     double y_pos = horizontal_crosshair_->point1->coords().y();
-    double z_val = color_map_->data()->cell(x_pos, y_pos);
-    emit CoordinatesChanged(x_pos, y_pos, z_val);
 
     if (x_pos > x_.max()) x_pos = x_.max();
     if (x_pos < x_.min()) x_pos = x_.min();
     if (y_pos > y_.max()) y_pos = y_.max();
     if (y_pos < y_.min()) y_pos = y_.min();
 
-    //find the values of x and y closest to the position of the crosshairs
-    uvec x_ind = arma::find(x_ < x_pos + 0.01 && x_ > x_pos - 0.01);
-    uvec y_ind = arma::find(y_ < y_pos + 0.01 && y_ > y_pos - 0.01);
-    uvec intersection = Vespucci::Math::Intersection(x_ind, y_ind);
-    uword index = intersection(0);
+    vec xy = arma::abs(x_ - x_pos) + arma::abs(y_ - y_pos);
+    uword index = xy.index_min();
     emit CoordinatesChanged(x_(index), y_(index), z_(index));
     return index;
 }

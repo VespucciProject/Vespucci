@@ -199,8 +199,10 @@ public:
                    double &first_left_bound, double &first_right_bound,
                    double &second_left_bound, double &second_right_bound,
                    uword bound_window);
-    void ClassicalLeastSquares(QString name, QString reference_key);
+    void ClassicalLeastSquares(QString name, const QStringList &reference_keys);
     void PartialLeastSquares(QString name, uword components);
+    void PLSCalibration(QString name, QStringList control_keys);
+    void TrainPLSDA(QString name, QStringList label_keys);
     void CorrelationAnalysis(const QString &control_key, QString name);
     void VertexComponents(QString name, uword endmembers);
     void KMeans(QString name, size_t clusters, QString metric_text);

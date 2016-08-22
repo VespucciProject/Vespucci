@@ -28,15 +28,10 @@ PLSDialog::PLSDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, cons
     ui->setupUi(this);
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
-
-    ui->nameLineEdit->setEnabled(true);
-
-    ui->browsePushButton->setVisible(false);
-    ui->datasetLabel->setVisible(false);
-    ui->fileLabel->setVisible(false);
-    ui->fileLineEdit->setVisible(false);
-    ui->datasetComboBox->setVisible(false);
-
+    ui->matrixDisplayLabel->setVisible(false);
+    ui->matrixLabel->setVisible(false);
+    ui->selectPushButton->setVisible(false);
+    matrix_selection_dialog_ = new MatrixSelectionDialog(this, workspace_->dataset_tree_model());
 }
 
 PLSDialog::PLSDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys)
@@ -50,14 +45,7 @@ PLSDialog::PLSDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &da
         close();
         return;
     }
-    ui->predictionCheckBox->setEnabled(false);
-
     dataset_ = workspace_->GetDataset(dataset_keys.first());
-    ui->browsePushButton->setVisible(false);
-    ui->datasetLabel->setVisible(false);
-    ui->fileLabel->setVisible(false);
-    ui->fileLineEdit->setVisible(false);
-    ui->datasetComboBox->setVisible(false);
 }
 
 PLSDialog::~PLSDialog()
@@ -74,18 +62,29 @@ void PLSDialog::on_buttonBox_accepted()
     if (!dataset_keys_.isEmpty() && !dataset_.isNull()){
         int components = ui->componentsSpinBox->value();
         QString name = ui->nameLineEdit->text();
+        QString type = ui->analysisTypeComboBox->currentText();
 
         if (!dataset_keys_.isEmpty()){
             try{
                 MultiAnalyzer analyzer(workspace_, dataset_keys_);
-                analyzer.PartialLeastSquares(name, components);
+                if (type == "Classification (Principal Components)")
+                    analyzer.PartialLeastSquares(name, components);
+                else if (type == "Calibration")
+                    analyzer.PLSCalibration(name, control_keys_);
+                else if (type == "Train PLS-DA")
+                    analyzer.TrainPLSDA(name, control_keys_);
             }catch(exception e){
                 workspace_->main_window()->DisplayExceptionWarning(e);
             }
         }
         else{
             try{
-                dataset_->PartialLeastSquares(name, components);
+                if (type == "Classification (Principal Components)")
+                    dataset_->PartialLeastSquares(name, components);
+                else if (type == "Calibration")
+                    dataset_->PLSCalibration(name, control_keys_);
+                else if (type == "Train PLS-DA")
+                    dataset_->TrainPLSDA(name, control_keys_);
             }catch(exception e){
                 workspace_->main_window()->DisplayExceptionWarning(e);
             }
@@ -107,4 +106,42 @@ void PLSDialog::on_buttonBox_rejected()
 void PLSDialog::on_predictionCheckBox_clicked(bool checked)
 {
     ui->componentsSpinBox->setVisible(!checked);
+}
+
+void PLSDialog::on_analysisTypeComboBox_currentIndexChanged(const QString &arg1)
+{
+    if (arg1 == "Classification (Principal Components)"){
+        ui->matrixDisplayLabel->setVisible(false);
+        ui->matrixLabel->setVisible(false);
+        ui->selectPushButton->setVisible(false);
+        ui->predictionCheckBox->setVisible(true);
+        ui->componentsLabel->setVisible(true);
+        ui->componentsSpinBox->setVisible(true);
+    }
+    else if (arg1 == "Calibration"){
+        ui->matrixDisplayLabel->setVisible(true);
+        ui->matrixLabel->setVisible(true);
+        ui->selectPushButton->setVisible(true);
+        ui->predictionCheckBox->setVisible(false);
+        ui->componentsLabel->setVisible(false);
+        ui->componentsSpinBox->setVisible(false);
+    }
+    else if (arg1 == "Train PLS-DA"){
+        ui->matrixDisplayLabel->setVisible(true);
+        ui->matrixLabel->setVisible(true);
+        ui->selectPushButton->setVisible(true);
+        ui->predictionCheckBox->setVisible(false);
+        ui->componentsLabel->setVisible(false);
+        ui->componentsSpinBox->setVisible(false);
+    }
+}
+
+void PLSDialog::on_selectPushButton_clicked()
+{
+    matrix_selection_dialog_->show();
+    if (matrix_selection_dialog_->accepted()){
+        control_keys_ = matrix_selection_dialog_->GetDataKeys();
+        ui->matrixDisplayLabel->setText(control_keys_.last());
+    }
+    matrix_selection_dialog_->close();
 }

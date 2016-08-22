@@ -43,10 +43,10 @@ void TransformDialog::on_selectPushButton_clicked()
 {
     matrix_selection_dialog_->show();
     if (matrix_selection_dialog_->accepted()){
-        operand_keys_ = matrix_selection_dialog_->GetSelectedItem()->keys();
+        operand_keys_ = matrix_selection_dialog_->GetDataKeys();
         ui->operandDisplayLabel->setText(operand_keys_.last());
     }
-    if (matrix_selection_dialog_->isVisible()) matrix_selection_dialog_->close();
+    matrix_selection_dialog_->close();
 }
 
 void TransformDialog::on_buttonBox_accepted()

@@ -53,7 +53,7 @@ void HistoryDialog::on_savePushButton_clicked()
     QFile outfile(filename);
     outfile.open(QFile::WriteOnly);
     QTextStream outstream(&outfile);
-    for (size_t i = 0; i < ui->actionsListWidget->count(); ++i)
+    for (int i = 0; i < ui->actionsListWidget->count(); ++i)
         outstream << ui->actionsListWidget->item(i)->text() << "\n";
     outfile.close();
 }
@@ -61,7 +61,7 @@ void HistoryDialog::on_savePushButton_clicked()
 void HistoryDialog::on_sendPushButton_clicked()
 {
     QStringList macro;
-    for (size_t i = 0; i < ui->actionsListWidget->count(); ++i)
+    for (int i = 0; i < ui->actionsListWidget->count(); ++i)
         macro << ui->actionsListWidget->item(i)->text();
     emit MacroRequested(macro);
 }

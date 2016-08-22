@@ -22,6 +22,8 @@
 
 #include <QDialog>
 #include "GUI/QAbstractItemModel/datasettreemodel.h"
+class DatasetTreeModel;
+class TreeItem;
 
 namespace Ui {
 class MatrixSelectionDialog;
@@ -35,6 +37,7 @@ public:
     explicit MatrixSelectionDialog(QWidget *parent, DatasetTreeModel *model);
     ~MatrixSelectionDialog();
     TreeItem *GetSelectedItem();
+    QStringList GetDataKeys();
     bool accepted();
 
 private slots:
@@ -45,8 +48,9 @@ private slots:
 private:
     Ui::MatrixSelectionDialog *ui;
     bool accepted_;
-    TreeItem *selected_item_;
+    QStringList data_keys_;
     DatasetTreeModel *tree_model_;
+    TreeItem *selected_item_;
 };
 
 #endif // MATRIXSELECTIONDIALOG_H

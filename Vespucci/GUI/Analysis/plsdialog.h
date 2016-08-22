@@ -46,6 +46,10 @@ private slots:
 
     void on_predictionCheckBox_clicked(bool checked);
 
+    void on_analysisTypeComboBox_currentIndexChanged(const QString &arg1);
+
+    void on_selectPushButton_clicked();
+
 private:
     Ui::PLSDialog *ui;
     ///
@@ -64,6 +68,9 @@ private:
     QSharedPointer<VespucciDataset> dataset_;
 
     QStringList dataset_keys_;
+    QStringList control_keys_;
+
+    MatrixSelectionDialog *matrix_selection_dialog_;
 };
 
 #endif // PLSDIALOG_H
