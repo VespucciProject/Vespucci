@@ -48,9 +48,10 @@ MapData::MapData(QString name,
     vec y = dataset_->y();
     vec z = workspace_->GetMatrix(data_keys_).col(data_column_);
     map_qcp_->SetMapData(x, y, z);
-    //vec unique_z = unique(z);
-    //uword tick_count = std::max(unique_z.n_rows, uword(10));
-    //map_qcp_->SetColorScaleTicks(z.min(), z.max(), tick_count);
+    vec unique_z = unique(z);
+    if (unique_z.n_rows < 10) map_qcp_->SetClusterTicks(unique_z.n_rows);
+
+    cout << "uniqe_z.n_rows " << unique_z.n_rows;
 }
 
 MapData::~MapData()
@@ -158,9 +159,6 @@ void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation, int
     map_qcp_->SetGradient(color_scheme);
     map_qcp_->rescaleDataRange(true);
     map_qcp_->rescaleAxes(true);
-    map_qcp_->SetColorScaleTickCount(tick_count);
-
-    map_qcp_->setInterpolate(interpolation);
 
     int key_size = map_qcp_->keySize();
     int value_size = map_qcp_->valueSize();

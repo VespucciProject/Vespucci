@@ -43,6 +43,9 @@ MapPlot::MapPlot(QWidget *parent)
     plotLayout()->addElement(0, 1, color_scale_);
     addLayer("colorscale");
     color_scale_->setLayer("colorscale");
+    QCPMarginGroup *group = new QCPMarginGroup(this);
+    color_scale_->setMarginGroup(QCP::msTop|QCP::msBottom, group);
+    this->axisRect()->setMarginGroup(QCP::msTop|QCP::msBottom, group);
 
 }
 
@@ -85,14 +88,14 @@ void MapPlot::SetColorScale(QCPColorScale *scale)
 {
     color_scale_ = scale;
     color_map_->setColorScale(scale);
-    replot();
+    replot(QCustomPlot::rpImmediate);
 }
 
 void MapPlot::SetGradient(QCPColorGradient gradient)
 {
     color_map_->setGradient(gradient);
     color_map_->rescaleDataRange(true);
-    replot();
+    replot(QCustomPlot::rpImmediate);
 }
 
 void MapPlot::SetGlobalColorGradient(Vespucci::GlobalGradient gradient)
@@ -287,9 +290,21 @@ void MapPlot::SetColorScaleTicks(double min, double max, size_t count)
 
 void MapPlot::SetClusterTicks(size_t count)
 {
-    vec ticks = linspace(1, count, count);
-    //shift ticks up to match center of color stops
     QVector<QString> tick_labels;
+    QVector<double> tick_vector;
+    double tick_step = (z_.max() - z_.min())/count;
+    color_scale_->axis()->setAutoTicks(false);
+    color_scale_->axis()->setAutoTickLabels(false);
+    color_scale_->axis()->setAutoTickStep(false);
+    color_scale_->axis()->setAutoSubTicks(false);
+    color_scale_->axis()->setSubTickCount(0);
+    for (size_t i = 0; i < count; ++i){
+        tick_vector.push_back(z_.min() + (tick_step / 2.0) + (double(i) * tick_step));
+        tick_labels.push_back(QString::number(i+1));
+    }
+    color_scale_->axis()->setTickVector(tick_vector);
+    color_scale_->axis()->setTickVectorLabels(tick_labels);
+    replot(QCustomPlot::rpImmediate);
 }
 
 void MapPlot::setInterpolate(bool interpolate)
