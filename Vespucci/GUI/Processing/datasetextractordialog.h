@@ -17,38 +17,31 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef TRANSFORMDIALOG_H
-#define TRANSFORMDIALOG_H
+#ifndef DATASETEXTRACTORDIALOG_H
+#define DATASETEXTRACTORDIALOG_H
 
 #include <QDialog>
 #include "Global/vespucciworkspace.h"
-#include "GUI/Processing/matrixselectiondialog.h"
 
 namespace Ui {
-class TransformDialog;
+class DatasetExtractorDialog;
 }
 
-class TransformDialog : public QDialog
+class DatasetExtractorDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit TransformDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QStringList keys);
-    ~TransformDialog();
-public slots:
-    void MatrixSelected(QStringList keys);
-private slots:
-    void on_selectPushButton_clicked();
+    explicit DatasetExtractorDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QStringList &matrix_keys);
+    ~DatasetExtractorDialog();
 
+private slots:
     void on_buttonBox_accepted();
 
 private:
-    Ui::TransformDialog *ui;
+    Ui::DatasetExtractorDialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;
-    QStringList data_keys_;
-    QStringList operand_keys_;
-    MatrixSelectionDialog *matrix_selection_dialog_;
-
+    QStringList matrix_keys_;
 };
 
-#endif // TRANSFORMDIALOG_H
+#endif // DATASETEXTRACTORDIALOG_H

@@ -57,6 +57,7 @@
 #include "GUI/Analysis/ahcadialog.h"
 #include "GUI/Processing/univariateconcatenationdialog.h"
 #include "GUI/Analysis/metaanalysisdialog.h"
+#include "GUI/Processing/datasetextractordialog.h"
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent usually 0
@@ -78,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     macro_editor_ = new MacroDialog(this, workspace_);
     python_shell_ = new PythonShellDialog(this, workspace_);
     history_dialog_ = new HistoryDialog(this, workspace_);
+    matrix_selection_dialog_ = new MatrixSelectionDialog(this, dataset_tree_model_);
 
     setCentralWidget(ui->datasetTreeView);
 
@@ -128,6 +130,9 @@ MainWindow::MainWindow(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
             data_viewer_, &DataViewer::MatrixToBeRemoved);
     connect(this, &MainWindow::MatrixToBeRemoved,
             stats_viewer_, &StatsDialog::MatrixToBeRemoved);
+    item_selected_ = false;
+    connect(matrix_selection_dialog_, &MatrixSelectionDialog::ItemSelected,
+            this, &MainWindow::ItemSelected);
 
 }
 
@@ -432,13 +437,12 @@ void MainWindow::on_actionSubtract_Background_triggered()
 
     QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
 
-    MatrixSelectionDialog *matrix_dialog = new MatrixSelectionDialog(this, dataset_tree_model_);
-    matrix_dialog->show();
-    if (matrix_dialog->accepted()){
-        TreeItem *matrix_item = matrix_dialog->GetSelectedItem();
-        if (matrix_item->type() == TreeItem::ItemType::Matrix){
+    matrix_selection_dialog_->SetModel(dataset_tree_model_);
+    matrix_selection_dialog_->show();
+    if (item_selected_){
+        if (selected_item_->type() == TreeItem::ItemType::Matrix){
             try{
-                dataset->SubtractBackground(matrix_item->keys());
+                dataset->SubtractBackground(selected_item_->keys());
             }catch(exception e){
                 DisplayExceptionWarning("VespucciDataset::SubtractBackground", e);
             }
@@ -447,7 +451,7 @@ void MainWindow::on_actionSubtract_Background_triggered()
             DisplayWarning("Not a matrix", "Selected item is not a matrix");
         }
     }
-    delete matrix_dialog;
+    item_selected_ = false;
 }
 
 ///
@@ -994,6 +998,11 @@ void MainWindow::SetPythonShellActionChecked(bool checked)
     ui->actionPython_Shell->setChecked(checked);
 }
 
+void MainWindow::SetHistoryDialogActionChecked(bool checked)
+{
+    ui->actionHistory->setChecked(checked);
+}
+
 void MainWindow::SpectrumRequested(QString dataset_key, QString map_name, size_t index)
 {
     QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_key);
@@ -1010,6 +1019,12 @@ void MainWindow::HeldSpectrumRequested(QString dataset_key, QString map_name, si
         mat spectrum = join_horiz(dataset->abscissa(), dataset->spectra(uvec({index})));
         plot_viewer_->AddPlot(spectrum, map_name);
     }
+}
+
+void MainWindow::ItemSelected(TreeItem *item)
+{
+    selected_item_ = item;
+    item_selected_ = true;
 }
 
 void MainWindow::on_actionBooleanize_Clamp_triggered()
@@ -1480,10 +1495,12 @@ void MainWindow::on_actionImport_Data_Into_Dataset_triggered()
                                                    workspace_->directory());
    mat matrix;
    bool ok = matrix.load(filename.toStdString());
+   QFileInfo file_info(filename);
+   QString matrix_name = file_info.completeBaseName();
    if (ok){
        TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
        QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
-       dataset->AddAuxiliaryMatrix(filename, matrix);
+       dataset->AddAuxiliaryMatrix(matrix_name, matrix);
    }
   else{
        DisplayWarning("Could not load file", "The matrix could not be loaded from the selected file");
@@ -1556,6 +1573,16 @@ void MainWindow::on_actionAnalyze_triggered()
     TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Matrix){
         MetaAnalysisDialog *dialog = new MetaAnalysisDialog(this, workspace_, item->keys());
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->show();
+    }
+}
+
+void MainWindow::on_actionNew_Dataset_from_Matrix_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    if (item->type() == TreeItem::ItemType::Matrix){
+        DatasetExtractorDialog *dialog = new DatasetExtractorDialog(this, workspace_, item->keys());
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->show();
     }

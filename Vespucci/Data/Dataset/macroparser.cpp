@@ -43,15 +43,18 @@ MacroParser::MacroParser(QSharedPointer<VespucciDataset> dataset)
     valid_commands_["IModPolyBaseline"] = QStringList({ "UInt", "UInt", "Double" });
     valid_commands_["RemoveClippedSpectra"] = QStringList({ "Double" });
     valid_commands_["RemoveFlatSpectra"] = QStringList({ "Double" });
+    valid_commands_["ZeroClippedSpectra"] = QStringList({ "Double" });
+    valid_commands_["ZeroFlatSpectra"] = QStringList({ "Double" });
     valid_commands_["Scale"] = QStringList({ "Double" });
     valid_commands_["ShedSpectrum"] = QStringList({ "UInt" });
+    valid_commands_["ZeroSpectrum"] = QStringList({ "UInt" });
     valid_commands_["Univariate"] = QStringList({ "String" , "Double" , "Double" , "UInt" });
     valid_commands_["BandRatio"] = QStringList({ "String" , "Double" , "Double" , "Double" , "Double" , "UInt" });
     valid_commands_["PartialLeastSquares"] = QStringList({ "String", "UInt" });
     valid_commands_["VertexComponents"] = QStringList({ "String", "UInt" });
     valid_commands_["KMeans"] = QStringList({ "String", "UInt" , "String" });
     valid_commands_["PrincipalComponents"] = QStringList({ "String" });
-
+    valid_commands_["ClassicalLeastSquares"] = QStringList({"String", "String", "String", "String"});
 }
 
 ///
@@ -127,7 +130,7 @@ void MacroParser::Error(int &error_line, int &error_param)
 /// This is a private member function that executes a single command. The list
 /// of valid commands is parsed. Commands are validated by ValidateCommand before
 /// this function is called by ExecuteMacro(). This command must make the appropriate
-/// type conversion (QString, int, unint, double) of the parameters.
+/// type conversion (QString, int, uint, double) of the parameters.
 void MacroParser::ExecuteCommand(QString command, QStringList params)
 {
 	if (command == "MinMaxNormalize")
@@ -170,10 +173,16 @@ void MacroParser::ExecuteCommand(QString command, QStringList params)
         dataset_->RemoveClippedSpectra(params[0].toDouble());
 	else if (command == "RemoveFlatSpectra")
         dataset_->RemoveFlatSpectra(params[0].toDouble());
+    else if (command == "ZeroFlatSpectra")
+        dataset_->ZeroFlatSpectra(params[0].toDouble());
+    else if (command == "ZeroClippedSpectra")
+        dataset_->ZeroClippedSpectra(params[0].toDouble());
 	else if (command == "Scale")
         dataset_->Scale(params[0].toDouble());
 	else if (command == "ShedSpectrum")
         dataset_->ShedSpectrum(params[0].toInt());
+    else if (command == "ZeroSpectrum")
+        dataset_->ZeroSpectrum(params[0].toInt());
     else if (command == "Univariate"){
         double param1 = params[1].toDouble();
         double param2 = params[2].toDouble();
@@ -194,6 +203,12 @@ void MacroParser::ExecuteCommand(QString command, QStringList params)
         dataset_->KMeans(params[0], params[1].toInt(), params[2]);
 	else if (command == "PrincipalComponents")
         dataset_->PrincipalComponents(params[0]);
+    else if (command == "ClassicalLeastSquares"){
+        QString name = params[0];
+        QStringList keys = params;
+        params.removeFirst();
+        dataset_->ClassicalLeastSquares(name, keys);
+    }
 	else; //Do nothing
 }
 

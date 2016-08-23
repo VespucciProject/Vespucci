@@ -26,7 +26,7 @@ class MetaAnalyzer
 public:
     MetaAnalyzer(QSharedPointer<VespucciWorkspace> ws, const QStringList &data_keys, bool transpose);
     void ClassicalLeastSquares(const QString &name,
-                               const QString &reference_key);
+                               const QStringList &reference_keys);
     void VertexComponents(const QString &name,
                           uword endmembers);
     void KMeans(size_t clusters,
@@ -37,6 +37,10 @@ public:
                              bool scale_data);
     void PartialLeastSquares(const QString &name,
                              uword components);
+    void PLSCalibration(const QString &name,
+                        const QStringList &control_keys);
+    void TrainPLSDA(const QString &name,
+                    const QStringList &label_keys);
     void AgglomerativeClustering(const QString &name,
                                  const QString &metric,
                                  const QString &linkage);

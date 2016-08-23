@@ -1335,6 +1335,22 @@ void VespucciDataset::ShedSpectrum(const uword index)
     workspace_->UpdateModel();
 }
 
+void VespucciDataset::ZeroSpectrum(const uword index)
+{
+    state_changed_ = true;
+    SetOldCopies();
+    try{
+        spectra_.col(index).fill(0);
+    }
+    catch(exception e){
+        cout << e.what();
+        std::runtime_error exc("VespucciDataset::ShedSpectrum");
+        main_window_->DisplayExceptionWarning(exc);
+    }
+    operations_ << "ZeroSpectrum(" + QString::number(index) + ")";
+    workspace_->UpdateModel();
+}
+
 ///
 /// \brief VespucciDataset::HySime
 /// \return Dimensionality predicted by HySime algorithm
@@ -1807,6 +1823,7 @@ void VespucciDataset::CalculateRepresentativeSpectrum(QString name, QString stat
     while (auxiliary_matrices_->HasMatrix(matrix_name))
         matrix_name = name + " (" + QString::number(i++) + ")";
     auxiliary_matrices_->AddMatrix(matrix_name, rep);
+    workspace_->UpdateModel();
 }
 
 
@@ -1882,6 +1899,40 @@ void VespucciDataset::PartialLeastSquares(QString name, uword components)
                    + name + ", "
                    + QString::number(components) + ")";
 
+}
+
+void VespucciDataset::PLSCalibration(QString name, QStringList control_keys)
+{
+    state_changed_ = true;
+    QSharedPointer<PLSData> pls_data(new PLSData(name));
+    mat controls = workspace_->GetMatrix(control_keys);
+
+    try{
+        pls_data->Calibrate(spectra_, controls);
+    }catch(exception e){
+        string str = "PartialLeastSquares: " + string(e.what());
+        throw std::runtime_error(str);
+    }
+
+    AddAnalysisResult(pls_data);
+    workspace_->UpdateModel();
+}
+
+void VespucciDataset::TrainPLSDA(QString name, QStringList label_keys)
+{
+    state_changed_ = true;
+    QSharedPointer<PLSData> pls_data(new PLSData(name));
+    mat labels = workspace_->GetMatrix(label_keys);
+
+    try{
+        pls_data->Discriminate(spectra_, labels);
+    }catch(exception e){
+        string str = "PartialLeastSquares: " + string(e.what());
+        throw std::runtime_error(str);
+    }
+
+    AddAnalysisResult(pls_data);
+    workspace_->UpdateModel();
 }
 
 ///
@@ -1992,20 +2043,15 @@ void VespucciDataset::KMeans(QString name, size_t clusters, QString metric_text)
    AddAnalysisResult(results);
    workspace_->UpdateModel();
    operations_ << "KMeans("
+                  + name + ", "
                   + QString::number(clusters) + ", "
-                  + metric_text + ", "
-                  + name + ")";
+                  + metric_text + ")";
 }
 
-void VespucciDataset::ClassicalLeastSquares(QString name, QString reference_key)
+void VespucciDataset::ClassicalLeastSquares(QString name, const QStringList &reference_keys)
 {
     state_changed_ = true;
-
-    if (!auxiliary_matrices_->HasMatrix(reference_key)){
-        main_window_->DisplayWarning("Matrix Not Found", "The reference matrix could not be found!");
-        return;
-    }
-    mat reference(auxiliary_matrices_->GetMatrix(reference_key));
+    mat reference = workspace_->GetMatrix(reference_keys);
     mat coefs;
     try{
         coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(reference, spectra_);
@@ -2013,12 +2059,16 @@ void VespucciDataset::ClassicalLeastSquares(QString name, QString reference_key)
         string str = "Vespucci::Math::LinLeastSq::OrdinaryLeastSquares" + string(e.what());
         throw runtime_error(str);
     }
-
+    coefs = coefs.t(); //to make coefficients mappable
     QSharedPointer<AnalysisResults> results(new AnalysisResults(name, "CLS Analysis"));
     results->AddMatrix("Coefficients", coefs);
-    results->AddMatrix("Reference Matrix", reference);
     AddAnalysisResult(results);
     workspace_->UpdateModel();
+    QString operation = "ClassicalLeastSquares(" + name;
+    for (auto param: reference_keys)
+        operation = operation + ", " + param;
+    operation = operation + ")";
+    operations_ << operation;
 }
 
 

@@ -31,6 +31,8 @@ TransformDialog::TransformDialog(QWidget *parent, QSharedPointer<VespucciWorkspa
     data_keys_ = keys;
     ui->constantLineEdit->setValidator(new QDoubleValidator(-DBL_MAX, DBL_MAX, 5));
     matrix_selection_dialog_ = new MatrixSelectionDialog(this, workspace_->dataset_tree_model());
+    connect(matrix_selection_dialog_, &MatrixSelectionDialog::MatrixSelected,
+            this, &TransformDialog::MatrixSelected);
 }
 
 TransformDialog::~TransformDialog()
@@ -39,14 +41,16 @@ TransformDialog::~TransformDialog()
     delete matrix_selection_dialog_;
 }
 
+void TransformDialog::MatrixSelected(QStringList keys)
+{
+    operand_keys_ = keys;
+    ui->matrixNameLabel->setText(keys.last());
+    raise();
+}
+
 void TransformDialog::on_selectPushButton_clicked()
 {
     matrix_selection_dialog_->show();
-    if (matrix_selection_dialog_->accepted()){
-        operand_keys_ = matrix_selection_dialog_->GetSelectedItem()->keys();
-        ui->operandDisplayLabel->setText(operand_keys_.last());
-    }
-    if (matrix_selection_dialog_->isVisible()) matrix_selection_dialog_->close();
 }
 
 void TransformDialog::on_buttonBox_accepted()

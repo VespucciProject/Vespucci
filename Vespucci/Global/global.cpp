@@ -18,6 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "global.h"
+#include "GUI/Processing/matrixselectiondialog.h"
 #include <QtSvg>
 ///
 /// \brief Vespucci::SavePlot

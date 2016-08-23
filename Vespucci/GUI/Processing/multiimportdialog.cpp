@@ -95,6 +95,7 @@ void MultiImportDialog::on_buttonBox_accepted()
         }
     }
 
+
     arma::mat spectra;
     arma::vec x, y, abscissa;
     bool ok = TextImport::ImportMultiplePoints(filename_map,
@@ -116,4 +117,9 @@ void MultiImportDialog::on_buttonBox_accepted()
         workspace_->AddDataset(dataset);
     }
 
+}
+
+void MultiImportDialog::on_buttonBox_rejected()
+{
+    close();
 }

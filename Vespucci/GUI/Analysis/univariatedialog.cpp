@@ -153,31 +153,31 @@ void UnivariateDialog::on_buttonBox_accepted()
         name = "Univariate " + QString::number(dataset_->UnivariateCount());
     }
     QString value_method = ui->methodComboBox->currentText();
-
-    if (!dataset_keys_.isEmpty()){
-        try{
-            MultiAnalyzer analyzer(workspace_, dataset_keys_);
-            analyzer.Univariate(name, entered_min, entered_max, bound_window);
-        }catch(exception e){
-            workspace_->main_window()->DisplayExceptionWarning(e);
-        }
-    }
-    else{
-        if (value_method == "Empirical"){
+    if (!dataset_keys_.isEmpty() || !dataset_.isNull()){
+        if (!dataset_keys_.isEmpty()){
             try{
-                dataset_->Univariate(name, entered_min, entered_max, bound_window);
+                MultiAnalyzer analyzer(workspace_, dataset_keys_);
+                analyzer.Univariate(name, entered_min, entered_max, bound_window);
             }catch(exception e){
                 workspace_->main_window()->DisplayExceptionWarning(e);
             }
         }
-        else if (value_method == "Gaussian Fit"){
-            try{
+        else{
+            if (value_method == "Empirical"){
+                try{
+                    dataset_->Univariate(name, entered_min, entered_max, bound_window);
+                }catch(exception e){
+                    workspace_->main_window()->DisplayExceptionWarning(e);
+                }
+            }
+            else if (value_method == "Gaussian Fit"){
+                try{
 
-            }catch(exception e){
+                }catch(exception e){
 
+                }
             }
         }
-        else{}
     }
     dataset_.clear();
     close();

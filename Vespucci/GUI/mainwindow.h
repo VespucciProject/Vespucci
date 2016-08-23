@@ -29,6 +29,9 @@
 #include "GUI/pythonshelldialog.h"
 #include "GUI/Display/statsdialog.h"
 #include "GUI/Display/historydialog.h"
+#include "GUI/Processing/matrixselectiondialog.h"
+#include "GUI/QAbstractItemModel/datasettreemodel.h"
+#include "GUI/Processing/matrixselectiondialog.h"
 class PythonShellDialog;
 class HistoryDialog;
 class SpectrumEditor;
@@ -42,6 +45,8 @@ class PlotViewer;
 class DataModel;
 class StatsDialog;
 class MacroDialog;
+class TreeItem;
+class MatrixSelectionDialog;
 namespace Ui {
 class MainWindow;
 }
@@ -93,8 +98,10 @@ public slots:
     void SetSpectrumEditorActionChecked(bool checked);
     void SetMacroEditorActionChecked(bool checked);
     void SetPythonShellActionChecked(bool checked);
+    void SetHistoryDialogActionChecked(bool checked);
     void SpectrumRequested(QString dataset_key, QString map_name, size_t index);
     void HeldSpectrumRequested(QString dataset_key, QString map_name, size_t index);
+    void ItemSelected(TreeItem *item);
 private slots:
     void on_actionExit_triggered();
 
@@ -235,6 +242,8 @@ private slots:
 
     void on_actionAnalyze_triggered();
 
+    void on_actionNew_Dataset_from_Matrix_triggered();
+
 private:
     void CloseDataset(const QString &name);
     Ui::MainWindow *ui;
@@ -246,6 +255,7 @@ private:
     SpectrumEditor *spectrum_editor_;
     PythonShellDialog *python_shell_;
     HistoryDialog *history_dialog_;
+    MatrixSelectionDialog *matrix_selection_dialog_;
 
 
     ///
@@ -263,6 +273,9 @@ private:
 
     QMap<QString, QDialog*> child_dialogs_;
 
+    TreeItem *selected_item_;
+
+    bool item_selected_;
 };
 
 #endif // MAINWINDOW_H

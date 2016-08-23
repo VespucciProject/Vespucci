@@ -35,9 +35,19 @@ MatrixSelectionDialog::~MatrixSelectionDialog()
     delete ui;
 }
 
+void MatrixSelectionDialog::SetModel(DatasetTreeModel *model)
+{
+    tree_model_ = model;
+}
+
 TreeItem *MatrixSelectionDialog::GetSelectedItem()
 {
     return selected_item_;
+}
+
+QStringList MatrixSelectionDialog::GetDataKeys()
+{
+    return data_keys_;
 }
 
 bool MatrixSelectionDialog::accepted()
@@ -47,13 +57,17 @@ bool MatrixSelectionDialog::accepted()
 
 void MatrixSelectionDialog::on_buttonBox_accepted()
 {
-    close();
     selected_item_ = tree_model_->getItem(ui->treeView->currentIndex());
+    data_keys_ = selected_item_->keys();
     accepted_ = true;
+    emit ItemSelected(selected_item_);
+    if (selected_item_->type() == TreeItem::ItemType::Matrix)
+        emit MatrixSelected(data_keys_);
+    close();
 }
 
 void MatrixSelectionDialog::on_buttonBox_rejected()
 {
-    close();
     accepted_ = false;
+    close();
 }

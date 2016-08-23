@@ -69,21 +69,22 @@ void VCADialog::on_buttonBox_accepted()
         endmembers = 0;
     else
         endmembers = ui->endmembersSpinBox->value();
-
-    if (!dataset_keys_.isEmpty()){
-        endmembers = ui->endmembersSpinBox->value();
-        try{
-            MultiAnalyzer analyzer(workspace_, dataset_keys_);
-            analyzer.VertexComponents(name, endmembers);
-        }catch (exception e){
-            workspace_->main_window()->DisplayExceptionWarning(e);
+    if (!dataset_keys_.isEmpty() || !dataset_.isNull()){
+        if (!dataset_keys_.isEmpty()){
+            endmembers = ui->endmembersSpinBox->value();
+            try{
+                MultiAnalyzer analyzer(workspace_, dataset_keys_);
+                analyzer.VertexComponents(name, endmembers);
+            }catch (exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+            }
         }
-    }
-    else{
-        try{
-            dataset_->VertexComponents(name, endmembers);
-        }catch(std::exception e){
-            workspace_->main_window()->DisplayExceptionWarning(e);
+        else{
+            try{
+                dataset_->VertexComponents(name, endmembers);
+            }catch(std::exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+            }
         }
     }
 

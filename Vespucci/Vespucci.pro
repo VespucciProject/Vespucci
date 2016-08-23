@@ -158,7 +158,8 @@ SOURCES += main.cpp\
     GUI/Analysis/ahcadialog.cpp \
     GUI/Display/historydialog.cpp \
     GUI/Processing/univariateconcatenationdialog.cpp \
-    GUI/Analysis/metaanalysisdialog.cpp
+    GUI/Analysis/metaanalysisdialog.cpp \
+    GUI/Processing/datasetextractordialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -234,7 +235,8 @@ HEADERS  += \
     GUI/Analysis/ahcadialog.h \
     GUI/Display/historydialog.h \
     GUI/Processing/univariateconcatenationdialog.h \
-    GUI/Analysis/metaanalysisdialog.h
+    GUI/Analysis/metaanalysisdialog.h \
+    GUI/Processing/datasetextractordialog.h
 
 
 FORMS    += \
@@ -289,7 +291,8 @@ FORMS    += \
     GUI/Analysis/ahcadialog.ui \
     GUI/Display/historydialog.ui \
     GUI/Processing/univariateconcatenationdialog.ui \
-    GUI/Analysis/metaanalysisdialog.ui
+    GUI/Analysis/metaanalysisdialog.ui \
+    GUI/Processing/datasetextractordialog.ui
 
 RESOURCES += \
     resources.qrc

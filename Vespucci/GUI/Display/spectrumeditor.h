@@ -35,6 +35,8 @@ private slots:
     void on_deletePushButton_clicked();
     void on_exportPushButton_clicked();
 
+    void on_zeroPushButton_clicked();
+
 private:
     void RequestSpectrumPlot(const QModelIndex &index);
     Ui::SpectrumEditor *ui;

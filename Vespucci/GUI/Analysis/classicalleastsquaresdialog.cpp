@@ -10,9 +10,9 @@ ClassicalLeastSquaresDialog::ClassicalLeastSquaresDialog(QWidget *parent, QShare
 
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
-    QStringList matrix_keys = dataset_->AuxiliaryMatrixKeys();
-    ui->referenceComboBox->addItems(matrix_keys);
-
+    matrix_selection_dialog_ = new MatrixSelectionDialog(this, workspace_->dataset_tree_model());
+    connect(matrix_selection_dialog_, &MatrixSelectionDialog::MatrixSelected,
+            this, &ClassicalLeastSquaresDialog::MatrixSelected);
 }
 
 ///
@@ -35,21 +35,28 @@ ClassicalLeastSquaresDialog::~ClassicalLeastSquaresDialog()
     delete ui;
 }
 
+void ClassicalLeastSquaresDialog::MatrixSelected(QStringList keys)
+{
+    matrix_keys_ = keys;
+    ui->matrixLabel->setText(matrix_keys_.last());
+    raise();
+}
+
 void ClassicalLeastSquaresDialog::on_buttonBox_accepted()
 {
-    if (!dataset_keys_.isEmpty() && !dataset_.isNull()){
+    if (!dataset_keys_.isEmpty() || !dataset_.isNull()){
         QString name = ui->nameLineEdit->text();
         if (!dataset_keys_.empty()){
             try{
-                QScopedPointer<MultiAnalyzer> analyzer(new MultiAnalyzer(workspace_, dataset_keys_));
-                //analyzer->ClassicalLeastSquares(name, ui->referenceComboBox->currentText());
+                MultiAnalyzer analyzer(workspace_, dataset_keys_);
+                analyzer.ClassicalLeastSquares(name, matrix_keys_);
             }catch(exception e){
                 workspace_->main_window()->DisplayExceptionWarning(e);
             }
         }
         else{
             try{
-                dataset_->ClassicalLeastSquares(name, ui->referenceComboBox->currentText());
+                dataset_->ClassicalLeastSquares(name, matrix_keys_);
             }catch(exception e){
                 workspace_->main_window()->DisplayExceptionWarning(e);
             }
@@ -57,4 +64,9 @@ void ClassicalLeastSquaresDialog::on_buttonBox_accepted()
     }
     dataset_.clear();
     close();
+}
+
+void ClassicalLeastSquaresDialog::on_selectPushButton_clicked()
+{
+    matrix_selection_dialog_->show();
 }

@@ -61,6 +61,11 @@
         </item>
         <item>
          <property name="text">
+          <string>Classical Least Squares Analysis</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>k-Means Clustering</string>
          </property>
         </item>

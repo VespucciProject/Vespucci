@@ -157,3 +157,25 @@ void SpectrumEditor::RequestSpectrumPlot(const QModelIndex &index)
             plot_viewer_->AddTransientPlot(*data, dataset_->name());
     }
 }
+
+void SpectrumEditor::on_zeroPushButton_clicked()
+{
+    if (dataset_.isNull()) return; //should never happen, but let's be safe
+
+    int row = ui->tableView->currentIndex().row();
+
+    int response = QMessageBox::question(this, "Zero Spectrum?",
+                                        "Are you sure you want to zero the spectrum at index " + QString::number(row) + "?",
+                                         QMessageBox::Yes, QMessageBox::No);
+    cout << (response == QMessageBox::Yes ? "QMessageBox::Yes" : "!QMessageBox::Yes") << "\n";
+
+    if (response == QMessageBox::Yes){
+        try{
+
+            dataset_->ShedSpectrum(row);
+        }
+        catch(std::exception e){
+            main_window_->DisplayExceptionWarning(e);
+        }
+    }
+}
