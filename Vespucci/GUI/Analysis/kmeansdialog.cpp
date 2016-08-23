@@ -64,7 +64,7 @@ KMeansDialog::~KMeansDialog()
 void KMeansDialog::on_buttonBox_accepted()
 {
 
-    if (!dataset_keys_.isEmpty() && !dataset_.isNull()){
+    if (!dataset_keys_.isEmpty() || !dataset_.isNull()){
         QString metric_text = ui->metricComboBox->currentText();
         int clusters;
         QString name = ui->nameLineEdit->text();

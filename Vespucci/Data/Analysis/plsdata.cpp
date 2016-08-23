@@ -42,6 +42,7 @@ bool PLSData::Classify(const mat &spectra, const vec &wavelength, int components
                                         coefficients, percent_variance,
                                         fitted);
 
+    //mat residuals = fitted - spectra;
     if (success){
         AddMetadata("Type", "Classification (PCA)");
         AddMetadata("Components calculated", QString::number(components));
@@ -52,6 +53,7 @@ bool PLSData::Classify(const mat &spectra, const vec &wavelength, int components
         AddMatrix("Response Scores", Y_scores);
         AddMatrix("Coefficients", coefficients);
         AddMatrix("Fitted Data", fitted);
+        //AddMatrix("Residuals", residuals);
     }
 
     return success;
@@ -69,6 +71,8 @@ bool PLSData::Calibrate(const mat &spectra, const mat &controls)
                                                                   coefficients, percent_variance,
                                                                   fitted);
 
+    inplace_trans(coefficients);
+    //mat residuals = fitted - spectra;
     if (success){
         AddMetadata("Type", "Calibration");
         AddMetadata("Components calculated", QString::number(controls.n_cols));
@@ -79,6 +83,7 @@ bool PLSData::Calibrate(const mat &spectra, const mat &controls)
         AddMatrix("Response Scores", Y_scores);
         AddMatrix("Coefficients", coefficients);
         AddMatrix("Fitted Data", fitted);
+        //AddMatrix("Residuals", residuals);
     }
 
     return success;
@@ -92,15 +97,16 @@ bool PLSData::Calibrate(const mat &spectra, const mat &controls)
 /// Perform PLS-DA
 bool PLSData::Discriminate(const mat &data, const mat &labels)
 {
-    //data (usually, but not necessarly spectra) is Y
-    //labels are X.
+    //data (usually, but not necessarly spectra) is X
+    //labels are Y;
     if (labels.n_rows != data.n_cols) return false;
     mat X_loadings, Y_loadings, X_scores, Y_scores, coefficients, percent_variance, fitted;
-    bool success = Vespucci::Math::DimensionReduction::plsregress(data, labels, labels.n_cols,
+    bool success = Vespucci::Math::DimensionReduction::plsregress(data.t(), labels, labels.n_cols,
                                                                   X_loadings, Y_loadings,
                                                                   X_scores, Y_scores,
                                                                   coefficients, percent_variance,
                                                                   fitted);
+    mat residuals = fitted - labels;
 
     if (success){
         AddMetadata("Type", "Calibration");
@@ -112,8 +118,8 @@ bool PLSData::Discriminate(const mat &data, const mat &labels)
         AddMatrix("Response Scores", Y_scores);
         AddMatrix("Coefficients", coefficients);
         AddMatrix("Fitted Data", fitted);
+        AddMatrix("Residuals", residuals);
     }
 
     return success;
-    return false;
 }

@@ -44,7 +44,9 @@ private slots:
     void on_sendPushButton_clicked();
 
     void on_refreshPushButton_clicked();
-
+protected:
+    void closeEvent(QCloseEvent *event);
+    void showEvent(QShowEvent *event);
 private:
     Ui::HistoryDialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;

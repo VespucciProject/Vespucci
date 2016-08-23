@@ -57,24 +57,21 @@ PrincipalComponentsDialog::~PrincipalComponentsDialog()
 void PrincipalComponentsDialog::on_buttonBox_accepted()
 {
     QString name = ui->nameLineEdit->text();
-    if (dataset_keys_.isEmpty() && dataset_.isNull()){
-        close();
-        return;
-    }
-
-    if (!dataset_keys_.isEmpty()){
-        try{
-            MultiAnalyzer analyzer(workspace_, dataset_keys_);
-            analyzer.PrincipalComponents(name);
-        }catch(exception e){
-            workspace_->main_window()->DisplayExceptionWarning(e);
+    if (!dataset_keys_.isEmpty() || !dataset_.isNull()){
+        if (!dataset_keys_.isEmpty()){
+            try{
+                MultiAnalyzer analyzer(workspace_, dataset_keys_);
+                analyzer.PrincipalComponents(name);
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+            }
         }
-    }
-    else{
-        try{
-            dataset_->PrincipalComponents(name);
-        }catch(exception e){
-            workspace_->main_window()->DisplayExceptionWarning(e);
+        else{
+            try{
+                dataset_->PrincipalComponents(name);
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+            }
         }
     }
     close();

@@ -32,6 +32,8 @@ PLSDialog::PLSDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, cons
     ui->matrixLabel->setVisible(false);
     ui->selectPushButton->setVisible(false);
     matrix_selection_dialog_ = new MatrixSelectionDialog(this, workspace_->dataset_tree_model());
+    connect(matrix_selection_dialog_, &MatrixSelectionDialog::MatrixSelected,
+            this, &PLSDialog::MatrixSelected);
 }
 
 PLSDialog::PLSDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys)
@@ -59,7 +61,7 @@ PLSDialog::~PLSDialog()
 /// the user has entered when the user clicks "Ok"
 void PLSDialog::on_buttonBox_accepted()
 {
-    if (!dataset_keys_.isEmpty() && !dataset_.isNull()){
+    if (!dataset_keys_.isEmpty() || !dataset_.isNull()){
         int components = ui->componentsSpinBox->value();
         QString name = ui->nameLineEdit->text();
         QString type = ui->analysisTypeComboBox->currentText();
@@ -139,9 +141,11 @@ void PLSDialog::on_analysisTypeComboBox_currentIndexChanged(const QString &arg1)
 void PLSDialog::on_selectPushButton_clicked()
 {
     matrix_selection_dialog_->show();
-    if (matrix_selection_dialog_->accepted()){
-        control_keys_ = matrix_selection_dialog_->GetDataKeys();
-        ui->matrixDisplayLabel->setText(control_keys_.last());
-    }
-    matrix_selection_dialog_->close();
+}
+
+void PLSDialog::MatrixSelected(QStringList keys)
+{
+    control_keys_ = keys;
+    ui->matrixDisplayLabel->setText(control_keys_.last());
+    raise();
 }

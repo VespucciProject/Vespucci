@@ -11,6 +11,8 @@ ClassicalLeastSquaresDialog::ClassicalLeastSquaresDialog(QWidget *parent, QShare
     workspace_ = ws;
     dataset_ = workspace_->GetDataset(dataset_key);
     matrix_selection_dialog_ = new MatrixSelectionDialog(this, workspace_->dataset_tree_model());
+    connect(matrix_selection_dialog_, &MatrixSelectionDialog::MatrixSelected,
+            this, &ClassicalLeastSquaresDialog::MatrixSelected);
 }
 
 ///
@@ -33,9 +35,16 @@ ClassicalLeastSquaresDialog::~ClassicalLeastSquaresDialog()
     delete ui;
 }
 
+void ClassicalLeastSquaresDialog::MatrixSelected(QStringList keys)
+{
+    matrix_keys_ = keys;
+    ui->matrixLabel->setText(matrix_keys_.last());
+    raise();
+}
+
 void ClassicalLeastSquaresDialog::on_buttonBox_accepted()
 {
-    if (!dataset_keys_.isEmpty() && !dataset_.isNull()){
+    if (!dataset_keys_.isEmpty() || !dataset_.isNull()){
         QString name = ui->nameLineEdit->text();
         if (!dataset_keys_.empty()){
             try{
@@ -60,9 +69,4 @@ void ClassicalLeastSquaresDialog::on_buttonBox_accepted()
 void ClassicalLeastSquaresDialog::on_selectPushButton_clicked()
 {
     matrix_selection_dialog_->show();
-    if (matrix_selection_dialog_->accepted()){
-        matrix_keys_ = matrix_selection_dialog_->GetDataKeys();
-        ui->matrixLabel->setText(matrix_keys_.last());
-    }
-    matrix_selection_dialog_->close();
 }

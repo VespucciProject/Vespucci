@@ -58,8 +58,6 @@ void AHCADialog::on_buttonBox_accepted()
         }catch(exception e){
             workspace_->main_window()->DisplayExceptionWarning(e);
         }
-        close();
-        return;
     }
     else if (!dataset_.isNull()){
         try{
@@ -67,14 +65,8 @@ void AHCADialog::on_buttonBox_accepted()
         }catch(exception e){
             workspace_->main_window()->DisplayExceptionWarning(e);
         }
-
-        close();
-        return;
-    }
-    else{
-        close();
-        return;
-    }
+   }
+    close();
 }
 
 void AHCADialog::on_linkageComboBox_currentTextChanged(const QString &arg1)

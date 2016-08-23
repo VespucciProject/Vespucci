@@ -36,6 +36,7 @@ class MatrixSelectionDialog : public QDialog
 public:
     explicit MatrixSelectionDialog(QWidget *parent, DatasetTreeModel *model);
     ~MatrixSelectionDialog();
+    void SetModel(DatasetTreeModel *model);
     TreeItem *GetSelectedItem();
     QStringList GetDataKeys();
     bool accepted();
@@ -44,6 +45,9 @@ private slots:
     void on_buttonBox_accepted();
 
     void on_buttonBox_rejected();
+signals:
+    void MatrixSelected(QStringList keys);
+    void ItemSelected(TreeItem *item);
 
 private:
     Ui::MatrixSelectionDialog *ui;

@@ -18,6 +18,8 @@ public:
     explicit ClassicalLeastSquaresDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys);
     ~ClassicalLeastSquaresDialog();
 
+public slots:
+    void MatrixSelected(QStringList keys);
 private slots:
     void on_buttonBox_accepted();
 

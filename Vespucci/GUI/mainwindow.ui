@@ -108,10 +108,7 @@
     <addaction name="actionDelete_Map"/>
     <addaction name="separator"/>
     <addaction name="actionNew_Composite_Dataset"/>
-    <addaction name="actionNew_Dataset_from_Object"/>
     <addaction name="separator"/>
-    <addaction name="actionView_History"/>
-    <addaction name="actionSave_Log_File"/>
     <addaction name="actionClose_Dataset"/>
    </widget>
    <widget class="QMenu" name="menuMap">
@@ -185,9 +182,9 @@
     <addaction name="actionMapResult"/>
     <addaction name="actionPlotResult"/>
     <addaction name="actionView_Statistics"/>
-    <addaction name="actionCalibrate"/>
     <addaction name="actionAnalyze"/>
     <addaction name="actionTransform"/>
+    <addaction name="actionNew_Dataset_from_Matrix"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
@@ -245,7 +242,7 @@
   </action>
   <action name="actionImport_Dataset_from_File">
    <property name="icon">
-    <iconset resource="../resources.qrc">
+    <iconset>
      <normaloff>:/icons/toolbar_icons/import.svg</normaloff>:/icons/toolbar_icons/import.svg</iconset>
    </property>
    <property name="text">
@@ -369,7 +366,7 @@
   </action>
   <action name="actionClose_Dataset">
    <property name="icon">
-    <iconset resource="../resources.qrc">
+    <iconset>
      <normaloff>:/icons/toolbar_icons/close.svg</normaloff>:/icons/toolbar_icons/close.svg</iconset>
    </property>
    <property name="text">
@@ -451,7 +448,7 @@
   </action>
   <action name="actionImport_From_Multiple_Point_Spectra">
    <property name="icon">
-    <iconset resource="../resources.qrc">
+    <iconset>
      <normaloff>:/icons/toolbar_icons/import_multiple.svg</normaloff>:/icons/toolbar_icons/import_multiple.svg</iconset>
    </property>
    <property name="text">
@@ -517,7 +514,7 @@
   </action>
   <action name="actionPlotResult">
    <property name="icon">
-    <iconset resource="../resources.qrc">
+    <iconset>
      <normaloff>:/icons/toolbar_icons/plot.svg</normaloff>:/icons/toolbar_icons/plot.svg</iconset>
    </property>
    <property name="text">
@@ -529,7 +526,7 @@
   </action>
   <action name="actionMapResult">
    <property name="icon">
-    <iconset resource="../resources.qrc">
+    <iconset>
      <normaloff>:/icons/toolbar_icons/map.svg</normaloff>:/icons/toolbar_icons/map.svg</iconset>
    </property>
    <property name="text">
@@ -541,7 +538,7 @@
   </action>
   <action name="actionOpenDataset">
    <property name="icon">
-    <iconset resource="../resources.qrc">
+    <iconset>
      <normaloff>:/icons/toolbar_icons/open.svg</normaloff>:/icons/toolbar_icons/open.svg</iconset>
    </property>
    <property name="text">
@@ -553,7 +550,7 @@
   </action>
   <action name="actionSave_Dataset">
    <property name="icon">
-    <iconset resource="../resources.qrc">
+    <iconset>
      <normaloff>:/icons/toolbar_icons/save.svg</normaloff>:/icons/toolbar_icons/save.svg</iconset>
    </property>
    <property name="text">
@@ -573,7 +570,7 @@
   </action>
   <action name="actionView_Statistics">
    <property name="icon">
-    <iconset resource="../resources.qrc">
+    <iconset>
      <normaloff>:/icons/toolbar_icons/stats.svg</normaloff>:/icons/toolbar_icons/stats.svg</iconset>
    </property>
    <property name="text">
@@ -585,7 +582,7 @@
   </action>
   <action name="actionShow_in_Data_Viewer">
    <property name="icon">
-    <iconset resource="../resources.qrc">
+    <iconset>
      <normaloff>:/icons/toolbar_icons/table.svg</normaloff>:/icons/toolbar_icons/table.svg</iconset>
    </property>
    <property name="text">
@@ -628,7 +625,7 @@
     <string>Calibrate...</string>
    </property>
   </action>
-  <action name="actionNew_Dataset_from_Object">
+  <action name="actionNew_Dataset_from_Matrix">
    <property name="text">
     <string>New Dataset from Matrix</string>
    </property>
@@ -781,8 +778,6 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="../resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -40,12 +40,20 @@ MetaAnalysisDialog::MetaAnalysisDialog(QWidget *parent,
     ui->controlDisplayLabel->setVisible(false);
     ui->selectPushButton->setVisible(false);
     matrix_selection_dialog_ = new MatrixSelectionDialog(this, workspace_->dataset_tree_model());
+    connect(matrix_selection_dialog_, &MatrixSelectionDialog::MatrixSelected,
+            this, &MetaAnalysisDialog::MatrixSelected);
 }
 
 MetaAnalysisDialog::~MetaAnalysisDialog()
 {
     delete ui;
     delete matrix_selection_dialog_;//should be deleted anyway?
+}
+
+void MetaAnalysisDialog::MatrixSelected(QStringList keys)
+{
+    control_data_keys_ = keys;
+    ui->controlDisplayLabel->setText(keys.last());
 }
 
 void MetaAnalysisDialog::on_typeComboBox_currentTextChanged(const QString &arg1)
@@ -195,9 +203,4 @@ void MetaAnalysisDialog::on_buttonBox_rejected()
 void MetaAnalysisDialog::on_selectPushButton_clicked()
 {
     matrix_selection_dialog_->show();
-    if (matrix_selection_dialog_->accepted()){
-        control_data_keys_ = matrix_selection_dialog_->GetDataKeys();
-        ui->controlDisplayLabel->setText(control_data_keys_.last());
-    }
-    matrix_selection_dialog_->close();
 }

@@ -75,3 +75,15 @@ void HistoryDialog::on_refreshPushButton_clicked()
         ui->actionsListWidget->addItems(operations);
     }
 }
+
+void HistoryDialog::closeEvent(QCloseEvent *event)
+{
+    workspace_->main_window()->SetHistoryDialogActionChecked(false);
+    event->accept();
+}
+
+void HistoryDialog::showEvent(QShowEvent *event)
+{
+    workspace_->main_window()->SetHistoryDialogActionChecked(true);
+    event->accept();
+}

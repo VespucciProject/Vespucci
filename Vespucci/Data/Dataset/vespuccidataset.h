@@ -151,6 +151,7 @@ public:
     void ZeroFlatSpectra(double threshold);
     void Scale(double scaling_factor);
     void ShedSpectrum(const uword index);
+    void ZeroSpectrum(const uword index);
     int HySime();
     void TransformAbscissa(QString input_units, double input_factor,
                            QString output_units, double output_factor, QString description);

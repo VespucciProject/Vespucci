@@ -49,7 +49,8 @@ private slots:
     void on_analysisTypeComboBox_currentIndexChanged(const QString &arg1);
 
     void on_selectPushButton_clicked();
-
+public slots:
+    void MatrixSelected(QStringList keys);
 private:
     Ui::PLSDialog *ui;
     ///

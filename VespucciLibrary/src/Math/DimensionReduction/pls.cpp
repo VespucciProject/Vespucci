@@ -127,7 +127,7 @@ bool Vespucci::Math::DimensionReduction::plsregress(arma::mat X, arma::mat Y,
     Y_scores = U;
     Y_loadings = Q;
     //projection = R;
-    percent_variance.set_size(2, coefficients.n_cols);
+    percent_variance.set_size(2, P.n_cols);
     percent_variance.row(0) = sum(arma::abs(P)%arma::abs(P)) / sum(sum(arma::abs(X)%arma::abs(X)));
     percent_variance.row(1) = sum(arma::abs(Q)%arma::abs(Q)) / sum(sum(arma::abs(Y)%arma::abs(Y)));
     return true;

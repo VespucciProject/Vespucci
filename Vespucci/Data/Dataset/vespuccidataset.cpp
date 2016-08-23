@@ -1335,6 +1335,22 @@ void VespucciDataset::ShedSpectrum(const uword index)
     workspace_->UpdateModel();
 }
 
+void VespucciDataset::ZeroSpectrum(const uword index)
+{
+    state_changed_ = true;
+    SetOldCopies();
+    try{
+        spectra_.col(index).fill(0);
+    }
+    catch(exception e){
+        cout << e.what();
+        std::runtime_error exc("VespucciDataset::ShedSpectrum");
+        main_window_->DisplayExceptionWarning(exc);
+    }
+    operations_ << "ZeroSpectrum(" + QString::number(index) + ")";
+    workspace_->UpdateModel();
+}
+
 ///
 /// \brief VespucciDataset::HySime
 /// \return Dimensionality predicted by HySime algorithm
@@ -1807,6 +1823,7 @@ void VespucciDataset::CalculateRepresentativeSpectrum(QString name, QString stat
     while (auxiliary_matrices_->HasMatrix(matrix_name))
         matrix_name = name + " (" + QString::number(i++) + ")";
     auxiliary_matrices_->AddMatrix(matrix_name, rep);
+    workspace_->UpdateModel();
 }
 
 
@@ -2047,11 +2064,11 @@ void VespucciDataset::ClassicalLeastSquares(QString name, const QStringList &ref
     results->AddMatrix("Coefficients", coefs);
     AddAnalysisResult(results);
     workspace_->UpdateModel();
-    operations_ << "ClassicalLeastSquares("
-                   +name + ", "
-                   +reference_keys[0] + ", "
-                   +reference_keys[1] + ", "
-                   +reference_keys[2] + ")";
+    QString operation = "ClassicalLeastSquares(" + name;
+    for (auto param: reference_keys)
+        operation = operation + ", " + param;
+    operation = operation + ")";
+    operations_ << operation;
 }
 
 
