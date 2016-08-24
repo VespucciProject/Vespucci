@@ -7,7 +7,7 @@ if [ ! -f /usr/local/lib/libhdf5.a]; then
 fi
 if [ ! -f /usr/local/lib/QtCore.framework ]; then
     brew install qt5
-    brew link qt5
+    brew link qt5 --force
 fi
 if [ ! -f /usr/local/lib/libarpack.dylib ]; then
     brew install arpack
@@ -20,6 +20,10 @@ fi
 if [! -f /usr/local/bin/wget ]; then
     brew install wget
     brew link wget
+fi
+if [! -f /usr/local/include/superlu/supermatrix.h ]; then
+    brew install superlu43
+    brew link superlu43
 fi
 wget https://github.com/VespucciProject/Vespucci_dependencies/releases/download/1/Vespucci_dependencies_macOS.zip
 unzip Vespucci_dependencies_macOS.zip
