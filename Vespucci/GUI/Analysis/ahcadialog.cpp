@@ -84,5 +84,5 @@ void AHCADialog::on_linkageComboBox_currentTextChanged(const QString &arg1)
                                   "Cosine",
                                   "Correlation"});
     }
-    ui->linkageComboBox->addItems(metric_list);
+    ui->metricComboBox->addItems(metric_list);
 }
