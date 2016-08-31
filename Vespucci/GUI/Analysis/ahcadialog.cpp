@@ -66,7 +66,7 @@ void AHCADialog::on_buttonBox_accepted()
             workspace_->main_window()->DisplayExceptionWarning(e);
         }
    }
-    close();
+   close();
 }
 
 void AHCADialog::on_linkageComboBox_currentTextChanged(const QString &arg1)
@@ -84,5 +84,5 @@ void AHCADialog::on_linkageComboBox_currentTextChanged(const QString &arg1)
                                   "Cosine",
                                   "Correlation"});
     }
-    ui->linkageComboBox->addItems(metric_list);
+    ui->metricComboBox->addItems(metric_list);
 }

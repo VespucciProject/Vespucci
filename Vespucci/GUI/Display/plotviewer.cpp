@@ -137,13 +137,15 @@ void PlotViewer::on_tabWidget_tabCloseRequested(int index)
 
 void PlotViewer::on_exportPushButton_clicked()
 {
-    QString filename = QFileDialog::getSaveFileName(this, "Export Plot",
-                                                    workspace_->directory(),
-                                                    "Tagged Image File Format (*.tif);;"
-                                                    "Portable Network Graphics (*.png);;"
-                                                    "Joint Photographic Experts Group (*.jpg);;"
-                                                    "Scalable Vector Graphics (*.svg);;"
-                                                    "Windows Bitmap (*.bmp)");
     PlotWidget *plot_widget = qobject_cast<PlotWidget *>(ui->tabWidget->currentWidget());
-    plot_widget->SavePlot(filename);
+    if (plot_widget != 0){
+        QString filename = QFileDialog::getSaveFileName(this, "Export Plot",
+                                                        workspace_->directory(),
+                                                        "Tagged Image File Format (*.tif);;"
+                                                        "Portable Network Graphics (*.png);;"
+                                                        "Joint Photographic Experts Group (*.jpg);;"
+                                                        "Scalable Vector Graphics (*.svg);;"
+                                                        "Windows Bitmap (*.bmp)");
+        plot_widget->SavePlot(filename);
+    }
 }

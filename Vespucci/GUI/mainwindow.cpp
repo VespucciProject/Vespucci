@@ -1383,9 +1383,11 @@ void MainWindow::on_actionSave_Dataset_triggered()
                                                 "Save Dataset",
                                                 path,
                                                 "Vespucci Dataset (*.h5)");
-    bool ok = dataset->Save(filename);
-    if (!ok) DisplayWarning("Dataset Not Saved", "The file failed to save");
-    else QMessageBox::information(this, "Success", "Dataset saved successfully");
+    if (!filename.isEmpty()){
+        bool ok = dataset->Save(filename);
+        if (!ok) DisplayWarning("Dataset Not Saved", "The file failed to save");
+        else QMessageBox::information(this, "Success", "Dataset saved successfully");
+    }
 }
 
 void MainWindow::on_actionOpenDataset_triggered()
@@ -1458,9 +1460,11 @@ void MainWindow::on_actionSave_Dataset_As_triggered()
                                                     "Save Dataset",
                                                    path,
                                                     "Vespucci Dataset (*.h5)");
-    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_name);
-    bool ok = dataset->Save(filename);
-    if (!ok) DisplayWarning("Dataset Not Saved", "The file failed to save");
+    if (!filename.isEmpty()){
+        QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(dataset_name);
+        bool ok = dataset->Save(filename);
+        if (!ok) DisplayWarning("Dataset Not Saved", "The file failed to save");
+    }
 }
 
 void MainWindow::on_actionExport_Matrix_triggered()
