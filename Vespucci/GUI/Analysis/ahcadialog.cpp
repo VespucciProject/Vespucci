@@ -66,7 +66,7 @@ void AHCADialog::on_buttonBox_accepted()
             workspace_->main_window()->DisplayExceptionWarning(e);
         }
    }
-    close();
+   close();
 }
 
 void AHCADialog::on_linkageComboBox_currentTextChanged(const QString &arg1)
