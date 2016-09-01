@@ -108,7 +108,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
                                             "Windows Bitmap (*.bmp);; "
                                             "Portable Network Graphics (*.png);; "
                                             "JPEG (*.jpg)"));
-    Vespucci::SavePlot(ui->mapPlot, filename);
+    ui->mapPlot->SaveImage(filename);
 }
 
 ///

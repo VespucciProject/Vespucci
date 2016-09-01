@@ -46,7 +46,11 @@ MapPlot::MapPlot(QWidget *parent)
     QCPMarginGroup *group = new QCPMarginGroup(this);
     color_scale_->setMarginGroup(QCP::msTop|QCP::msBottom, group);
     this->axisRect()->setMarginGroup(QCP::msTop|QCP::msBottom, group);
-
+    setBackground(Qt::white);
+    color_scale_->setLabel(" ");
+    xAxis->setVisible(false);
+    yAxis->setVisible(false);
+    replot(QCustomPlot::rpImmediate);
 }
 
 ///
@@ -62,14 +66,15 @@ void MapPlot::SetMapData(const vec &x, const vec &y, const vec &z)
     y_ = y;
     x_ = x;
     z_ = z;
-    QCPRange x_range(x_.min(), x_.max());
-    QCPRange y_range(y_.min(), y_.max());
     vec unique_x = sort(unique(x_));
     vec unique_y = sort(unique(y_));
     uword x_size = unique_x.n_rows;
     uword y_size = unique_y.n_rows;
     x_step_ = unique_x(1) - unique_x(0);
     y_step_ = unique_y(1) - unique_y(0);
+
+    QCPRange x_range(x_.min() - x_step_/2.0, x_.max() + x_step_/2.0);
+    QCPRange y_range(y_.min() - y_step_/2.0, y_.max() + y_step_/2.0);
 
     color_map_->data()->setKeySize(x_size);
     color_map_->data()->setValueSize(y_size);
@@ -78,8 +83,8 @@ void MapPlot::SetMapData(const vec &x, const vec &y, const vec &z)
     for (uword i = 0; i < x.n_elem; ++i){
         color_map_->data()->setData(x_(i), y_(i), z_(i));
     }
-    color_map_->rescaleDataRange(true);
-    rescaleAxes();
+    xAxis->setRange(x_range);
+    yAxis->setRange(y_range);
     CenterCrosshairs();
     replot(QCustomPlot::rpImmediate);
 }
@@ -216,6 +221,14 @@ void MapPlot::MoveHorizontalCrosshair(int units)
 
     replot(QCustomPlot::rpImmediate);
     emit SpectrumRequested(GetCrosshairPosition());
+}
+
+void MapPlot::SaveImage(QString filename)
+{
+    layer("crosshairs")->setVisible(false);
+    Vespucci::SavePlot(this, filename);
+    layer("crosshairs")->setVisible(true);
+    replot(QCustomPlot::rpImmediate);
 }
 
 void MapPlot::rescaleDataRange(bool onlyVisibleMaps)

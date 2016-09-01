@@ -157,9 +157,6 @@ bool MapData::MapWindowVisible()
 void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation, int tick_count)
 {
     map_qcp_->SetGradient(color_scheme);
-    map_qcp_->rescaleDataRange(true);
-    map_qcp_->rescaleAxes(true);
-
     int key_size = map_qcp_->keySize();
     int value_size = map_qcp_->valueSize();
     key_size *= 9;

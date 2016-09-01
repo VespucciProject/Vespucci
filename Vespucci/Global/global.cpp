@@ -42,7 +42,6 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         success = plot->savePdf(filename, false, 0, 0, "Vespucci 1.0", "Plot");
     else if (extension == "png"){
         bool ok;
-        QPixmap background = plot->background();
         plot->setBackground(Qt::transparent);
         plot->replot(QCustomPlot::rpImmediate);
         int quality = QInputDialog::getInt(plot->parentWidget(), "Enter Quality",
@@ -50,7 +49,7 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
                                            80, 0, 100, 1, &ok);
         if (ok)
             plot->savePng(filename, 0, 0, 1.0, quality);
-        plot->setBackground(background);
+        plot->setBackground(Qt::white);
         plot->replot(QCustomPlot::rpImmediate);
     }
 
@@ -67,7 +66,6 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         QCPPainter qcp_painter(&picture);
         qcp_painter.setMode(QCPPainter::pmVectorized);
 
-        QPixmap old_background = plot->background();
         plot->setBackground(Qt::transparent);
         plot->replot(QCustomPlot::rpImmediate);
 
@@ -83,7 +81,7 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         painter.drawPicture(0, 0, picture);
         painter.end();
 
-        plot->setBackground(old_background);
+        plot->setBackground(Qt::white);
         plot->replot(QCustomPlot::rpImmediate);
     }
     else if (extension == "emf"){
@@ -111,7 +109,7 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         painter.drawPicture(0, 0, picture);
         painter.end();
 
-        plot->setBackground(old_background);
+        plot->setBackground(Qt::white);
         plot->replot();
 
         //call java program "EMFGenerator" to convert svg file then
@@ -137,7 +135,7 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
             success = plot->saveRastered(filename, 0, 0, 1.0, "TIF", quality);
             plot->setBackground(background);
             plot->replot(QCustomPlot::rpImmediate);
-
+            plot->repaint();
         }
     }
 
