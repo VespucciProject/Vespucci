@@ -324,6 +324,18 @@ unix:!macx{
 
     LIBS += -L/usr/lib/ -lz
 
+    LIBS += -L$$PWD/../../EmfEngine/lib/ -lEmfEngine
+    INCLUDEPATH += $$PWD/../../EmfEngine/include
+    DEPENDPATH += $$PWD/../../EmfEngine/include
+    PRE_TARGETDEPS += $$PWD/../../EmfEngine/lib/libEmfEngine.a
+
+    LIBS += -L$$PWD/../../libemf/lib/ -lEMF
+    INCLUDEPATH += $$PWD/../../libemf/include
+    DEPENDPATH += $$PWD/../../libemf/include
+    INCLUDEPATH += $$PWD/../../libemf/include/libemf
+    DEPENDPATH += $$PWD/../../libemf/include/libemf
+    PRE_TARGETDEPS += $$PWD/../../libemf/lib/libEMF.a
+
     INCLUDEPATH += /usr/include
     DEPENDPATH += /usr/include
 
@@ -397,6 +409,18 @@ macx{
 
     INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
     DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
+
+    LIBS += -L$$PWD/../../EmfEngine/lib/ -lEmfEngine
+    INCLUDEPATH += $$PWD/../../EmfEngine/include
+    DEPENDPATH += $$PWD/../../EmfEngine/include
+    PRE_TARGETDEPS += $$PWD/../../EmfEngine/lib/libEmfEngine.a
+
+    LIBS += -L$$PWD/../../libemf/lib/ -lEMF
+    INCLUDEPATH += $$PWD/../../libemf/include
+    DEPENDPATH += $$PWD/../../libemf/include
+    INCLUDEPATH += $$PWD/../../libemf/include/libemf
+    DEPENDPATH += $$PWD/../../libemf/include/libemf
+    PRE_TARGETDEPS += $$PWD/../../libemf/lib/libEMF.a
 }
 
 #windows libraries for msvc (we don't currently build the libraries for g++ on windows)
@@ -466,8 +490,17 @@ win32:!win32-g++{
     LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -llibszip
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/libszip.lib
 
+    LIBS += -L$$PWD/../../Vespucci_dependencies/EmfEngine/lib -lEmfEngine
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/EmfEngine/lib/EmfEngine.lib
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/EmfEngine/include
+    DEPENDPATH += $$PWD/../../Vespuci_dependencies/EmfEngine/include
+
+    LIBS += -lgdi32
+
     RC_ICONS=$$PWD/vespuccilogo.ico
 }
+
+
 
 
 

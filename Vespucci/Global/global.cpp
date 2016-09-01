@@ -20,6 +20,7 @@
 #include "global.h"
 #include "GUI/Processing/matrixselectiondialog.h"
 #include <QtSvg>
+#include <EmfEngine.h>
 ///
 /// \brief Vespucci::SavePlot
 /// \param plot
@@ -85,37 +86,24 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
         plot->replot(QCustomPlot::rpImmediate);
     }
     else if (extension == "emf"){
-        QStringList filename_trunk_list = filename_list;
-        filename_trunk_list.removeLast();
-        QString filename_trunk = filename_trunk_list.join(".");
-        QString SVG_filename = filename_trunk + ".svg";
-
         QPicture picture;
         QCPPainter qcp_painter(&picture);
         qcp_painter.setMode(QCPPainter::pmVectorized);
-        QPixmap old_background = plot->background();
+
         plot->setBackground(Qt::transparent);
         plot->replot(QCustomPlot::rpImmediate);
 
         plot->toPainter(&qcp_painter);
         qcp_painter.end();
 
-        QSvgGenerator generator;
-        generator.setFileName(SVG_filename);
-
+        EmfPaintDevice emf(plot->size(), filename);
         QPainter painter;
-
-        painter.begin(&generator);
+        painter.begin(&emf);
         painter.drawPicture(0, 0, picture);
         painter.end();
 
         plot->setBackground(Qt::white);
-        plot->replot();
-
-        //call java program "EMFGenerator" to convert svg file then
-        QProcess *process = new QProcess(0);
-        QString command = "java -jar EMFGenerator.jar \"" + SVG_filename + "\"";
-        process->start(command);
+        plot->replot(QCustomPlot::rpImmediate);
     }
 
     else{
