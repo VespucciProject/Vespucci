@@ -1,7 +1,6 @@
 #!/bin/sh
 wget https://github.com/VespucciProject/Vespucci_dependencies/releases/download/1/Vespucci_dependencies_linux.tar.gz
 tar xvf Vespucci_dependencies_linux.tar.gz
-wget
 sudo apt-add-repository -y ppa:ubuntu-sdk-team
 sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
 sudo apt-add-repository -y ppa:beineri/opt-qt561-trusty
