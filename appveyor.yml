@@ -11,9 +11,9 @@ build_script:
 
     cd C:\Projects
 
-    IF NOT EXIST C:\Projects\Vespucci_dependencies appveyor DownloadFile https://github.com/VespucciProject/Vespucci_dependencies/releases/download/1/Vespucci_dependencies_w64.7z
+    appveyor DownloadFile https://github.com/VespucciProject/Vespucci_dependencies/releases/download/1/Vespucci_dependencies_w64.7z
 
-    IF NOT EXIST C:\Projects\Vespucci_dependencies 7z x Vespucci_dependencies_w64.7z -aoa > NUL
+    7z x Vespucci_dependencies_w64.7z -aoa > NUL
 
     set LIB_DIR=%CD%\Vespucci_dependencies
 
