@@ -1332,8 +1332,6 @@ void MainWindow::on_datasetTreeView_doubleClicked(const QModelIndex &index)
     }
     if (item->type() == TreeItem::ItemType::Map)
         workspace_->GetMap(data_keys.first(), data_keys.last())->ShowMapWindow(true);
-    if (item->type() == TreeItem::ItemType::Dataset)
-        spectrum_editor_->setVisible(true);
 }
 
 void MainWindow::on_actionShow_in_Data_Viewer_triggered()
