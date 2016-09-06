@@ -48,6 +48,8 @@ MapViewer::MapViewer(MainWindow *parent, QStringList map_keys, QSharedPointer<Ve
     connect(ui->mapPlot, &MapPlot::CoordinatesChanged,
             this, &MapViewer::SetStatusbar);
     parent->plot_viewer()->SetHoldCheckBoxChecked(true);
+    ui->mapPlot->setBackground(Qt::white);
+    ui->mapPlot->replot(QCustomPlot::rpImmediate);
 }
 
 MapPlot *MapViewer::mapPlot()
@@ -109,6 +111,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
                                             "Portable Network Graphics (*.png);; "
                                             "JPEG (*.jpg)"));
     ui->mapPlot->SaveImage(filename);
+    raise();
 }
 
 ///

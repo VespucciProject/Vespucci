@@ -25,14 +25,13 @@ MapPlot::MapPlot(QWidget *parent)
     vertical_crosshair_ = new QCPItemStraightLine(this);
     horizontal_crosshair_ = new QCPItemStraightLine(this);
     QPen crosshair_pen(Qt::red);
-    crosshair_pen.setWidth(4);
+    crosshair_pen.setWidth(3);
     vertical_crosshair_->setPen(crosshair_pen);
     horizontal_crosshair_->setPen(crosshair_pen);
     color_map_ = new QCPColorMap(xAxis, yAxis);
     color_scale_ = new QCPColorScale(this);
     color_map_->setColorScale(color_scale_);
     color_map_->setInterpolate(false);
-    color_map_->setTightBoundary(false);
     addLayer("crosshairs");
     vertical_crosshair_->setLayer("crosshairs");
     horizontal_crosshair_->setLayer("crosshairs");
@@ -46,10 +45,12 @@ MapPlot::MapPlot(QWidget *parent)
     QCPMarginGroup *group = new QCPMarginGroup(this);
     color_scale_->setMarginGroup(QCP::msTop|QCP::msBottom, group);
     this->axisRect()->setMarginGroup(QCP::msTop|QCP::msBottom, group);
-    setBackground(Qt::white);
     color_scale_->setLabel(" ");
     xAxis->setVisible(false);
     yAxis->setVisible(false);
+
+    color_map_->setTightBoundary(false);
+
     replot(QCustomPlot::rpImmediate);
 }
 
@@ -73,8 +74,8 @@ void MapPlot::SetMapData(const vec &x, const vec &y, const vec &z)
     x_step_ = unique_x(1) - unique_x(0);
     y_step_ = unique_y(1) - unique_y(0);
 
-    QCPRange x_range(x_.min() - x_step_/2.0, x_.max() + x_step_/2.0);
-    QCPRange y_range(y_.min() - y_step_/2.0, y_.max() + y_step_/2.0);
+    QCPRange x_range(x_.min(), x_.max());
+    QCPRange y_range(y_.min(), y_.max());
 
     color_map_->data()->setKeySize(x_size);
     color_map_->data()->setValueSize(y_size);
@@ -83,9 +84,14 @@ void MapPlot::SetMapData(const vec &x, const vec &y, const vec &z)
     for (uword i = 0; i < x.n_elem; ++i){
         color_map_->data()->setData(x_(i), y_(i), z_(i));
     }
-    xAxis->setRange(x_range);
-    yAxis->setRange(y_range);
+    rescaleAxes();
     CenterCrosshairs();
+
+    QCPRange x_axis_range(x_range.lower - (x_step_ / 2.0), x_range.upper + (x_step_ / 2.0));
+    QCPRange y_axis_range(y_range.lower - (y_step_ / 2.0), y_range.upper + (y_step_ / 2.0));
+
+    xAxis->setRange(x_axis_range);
+    yAxis->setRange(y_axis_range);
     replot(QCustomPlot::rpImmediate);
 }
 

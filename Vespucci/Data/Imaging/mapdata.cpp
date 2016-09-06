@@ -50,8 +50,6 @@ MapData::MapData(QString name,
     map_qcp_->SetMapData(x, y, z);
     vec unique_z = unique(z);
     if (unique_z.n_rows < 10) map_qcp_->SetClusterTicks(unique_z.n_rows);
-
-    cout << "uniqe_z.n_rows " << unique_z.n_rows;
 }
 
 MapData::~MapData()
@@ -127,8 +125,7 @@ MapPlot *MapData::map_qcp()
 void MapData::ShowMapWindow(bool show)
 {
     map_display_->setVisible(show);
-    if (show && !map_display_->isActiveWindow())
-        map_display_->activateWindow();
+    map_display_->raise();
 }
 
 ///
