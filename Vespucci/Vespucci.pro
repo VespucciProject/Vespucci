@@ -324,6 +324,23 @@ unix:!macx{
 
     LIBS += -L/usr/lib/ -lz
 
+    equals($$(TRAVIS), "true"){
+        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_program_options
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_program_options.a
+    
+        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_math_c99
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.a
+    
+        LIBS += /usr/lib/x86_64-linux-gnu/ -lboost_random
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_random.a
+    
+        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_serialization
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_serialization.a
+    
+        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_unit_test_framework
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.a
+    }
+    
     LIBS += -L$$PWD/../../EmfEngine/lib/ -lEmfEngine
     INCLUDEPATH += $$PWD/../../EmfEngine/include
     DEPENDPATH += $$PWD/../../EmfEngine/include
