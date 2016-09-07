@@ -404,11 +404,14 @@ macx{
 
     LIBS += -framework Accelerate
 
-    LIBS += -L/usr/local/lib/ -lhdf5
-    PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
+    LIBS += -L$$PWD/../../hdf5/lib -lhdf5
+    PRE_TARGETDEPS += $$PWD/../../hdf5/lib/libhdf5.a
 
-    LIBS += -L/usr/local/lib/ -lhdf5_cpp
-    PRE_TARGETDEPS += /usr/local/lib/libhdf5_cpp.a
+    LIBS += -L$$PWD/../../hdf5/lib/ -lhdf5_cpp
+    PRE_TARGETDEPS += $$PWD/../../hdf5/lib/libhdf5_cpp.a
+    
+    INCLUDEPATH += $$PWD/../../hdf5/include
+    DEPENDPATH += $$PWD/../../hdf5/include
 
     LIBS += -L/usr/local/lib -lhdf5
 
