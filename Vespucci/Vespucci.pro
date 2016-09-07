@@ -495,7 +495,7 @@ win32:!win32-g++{
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/EmfEngine/include
     DEPENDPATH += $$PWD/../../Vespuci_dependencies/EmfEngine/include
 
-    LIBS += -lgdi32
+    LIBS += -lgdiplus
 
     RC_ICONS=$$PWD/vespuccilogo.ico
 }
