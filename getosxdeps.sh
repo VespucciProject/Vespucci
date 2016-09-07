@@ -1,7 +1,6 @@
 #!/bin/sh
 #load Vespucci dependencies for osx using homebrew
 brew tap homebrew/science
-brew link hdf5
 
 if [ ! -f /usr/local/lib/QtCore.framework ]; then
     brew install qt5
