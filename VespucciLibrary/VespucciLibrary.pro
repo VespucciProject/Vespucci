@@ -152,7 +152,22 @@ unix:!macx{
     DEPENDPATH += $$PWD/../../hdf5/include
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
-
+    equals($$(TRAVIS), "true"){
+        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_program_options
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_program_options.a
+    
+        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_math_c99
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.a
+    
+        LIBS += /usr/lib/x86_64-linux-gnu/ -lboost_random
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_random.a
+    
+        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_serialization
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_serialization.a
+    
+        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_unit_test_framework
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.a
+    }
     LIBS += -L$$PWD/../../yaml-cpp/lib -lyaml-cpp
     PRE_TARGETDEPS += $$PWD/../../yaml-cpp/lib/libyaml-cpp.a
 
