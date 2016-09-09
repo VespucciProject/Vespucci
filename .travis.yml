@@ -29,8 +29,6 @@ install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH=$PATH:/usr/local/opt/qt5/bin;
   fi
 script:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export ARMA_HDF5_INCLUDE_DIR=$TRAVIS_BUILD_DIR/hdf5/include;
-  fi
 - mkdir $TRAVIS_BUILD_DIR/../build && cd $TRAVIS_BUILD_DIR/../build
 - qmake $TRAVIS_BUILD_DIR/buildall.pro
 - make
