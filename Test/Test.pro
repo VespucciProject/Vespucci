@@ -132,11 +132,10 @@ macx{
 
     LIBS += -framework Accelerate
 
-    LIBS += -L/usr/local/lib/ -lhdf5
-    PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
-
-    LIBS += -L/usr/local/lib -lhdf5_cpp
-    PRE_TARGETDEPS += /usr/local/lib/libhdf5_cpp.a
+    LIBS += -L$$PWD/../../hdf5/lib -lhdf5_cpp
+    LIBS += -L$$PWD/../../hdf5/lib -lhdf5
+    INCLUDEPATH += $$PWD/../../hdf5/include
+    DEPENDPATH += $$PWD/../../hdf5/include
 
     LIBS += -L$$PWD/../../quazip/lib/ -lquazip
     INCLUDEPATH += $$PWD/../../quazip/include
