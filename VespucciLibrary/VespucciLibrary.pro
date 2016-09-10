@@ -222,8 +222,10 @@ macx{
 
     LIBS += -framework Accelerate
 
-    LIBS += -L/usr/local/opt/hdf5/lib -lhdf5_cpp
-    LIBS += -L/usr/local/opt/hdf5/lib -lhdf5
+    LIBS += -L$$PWD/../../hdf5/lib -lhdf5_cpp
+    LIBS += -L$$PWD/../../hdf5/lib -lhdf5
+    INCLUDEPATH += $$PWD/../../hdf5/include
+    DEPENDPATH += $$PWD/../../hdf5/include
 
     INCLUDEPATH += $$PWD/../../quazip/include
     DEPENDPATH += $$PWD/../../quazip/include
