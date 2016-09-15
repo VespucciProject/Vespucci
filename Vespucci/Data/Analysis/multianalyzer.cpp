@@ -119,7 +119,7 @@ void MultiAnalyzer::KMeans(size_t clusters, const QString &metric_text, const QS
     }
 
     mat assignments_mat(assignments.n_cols, 1);
-    for (uword i = 0; i < assignments.n_rows; ++i){
+    for (uword i = 0; i < assignments_mat.n_rows; ++i){
         assignments_mat(i, 0) = assignments(i) + 1.0;
     }
 
