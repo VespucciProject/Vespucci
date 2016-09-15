@@ -7,14 +7,14 @@ matrix:
     dist: trusty
     sudo: required
     compiler: gcc
-  - os: osx
-    osx_image: xcode7.2
-    compiler: clang
-    cache:
-      directories:
-      - /usr/local/Cellar
-      - /usr/local/lib
-      - /usr/local/bin
+  #- os: osx
+  #  osx_image: xcode7.2
+  #  compiler: clang
+  #  cache:
+  #    directories:
+  #    - /usr/local/Cellar
+  #    - /usr/local/lib
+  #    - /usr/local/bin
 env:
   global:
     - secure: "C6mlFBRwzVOXNUAWJQX5Gru8wdxwFwm7CKuHLdjxiNtEYrx4BrbjkJRtLLpdsaIoDlM82WMNLOMTqHFD/+cAN1HXb8nZj2bl8IeKSAtQu7ocYZDqWqzRp4fhSh9dcUknGgjx8wqzGxSDDdS022WzXB/1rolwbRVkFy7U3x95ZYeUZv0jkv5kEq5+SOf4ozdALyhWjQ1AFtJu+UxxmmB1STAvn7ga26jDHuPF/l38gCRdUiYjyV1MdQldtVNhpLAZs+6PrLyQS99p9uJdNfJxZZo6pvb9asZ63p346tpGaKaWAhRhKRCaO5M4Lpr0tNwIqAU7pmzMyztbPq8Ai+hNITwyPVbSYjmju0VcbMu7gYawTweN4gWvpr0aLtlZC2Hnqc0kWpbK4yDvArvpMDC0oea58HuqYHLXLgbNu74M5AvanyNOzRQLcs3mbE0FacNGICOxBNoxyVdnFvgM6R5zSoiDQFwl7ULM9EdrLBafTIFOjcNTm0m8Ml8QebRPrKuIFzxXHX85G43RLBGFjmro/g3ii/TcAkUJa65uaTniIwf2+KzQXaxi5dB95HloK9CEXYYWff0NJX0O9pf+MF/MSl6MgAeRjDQsXJE0QPG0staXMga7gfUnpl7je1SdwjmXfHQKhGKZylGvKeQSFj2hillBx3BUV6wqKtPOxnlqFPQ="
