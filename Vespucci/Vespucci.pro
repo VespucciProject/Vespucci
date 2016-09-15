@@ -427,6 +427,7 @@ macx{
 win32:!win32-g++{
     CONFIG += release force_debug_info
     QMAKE_CXXFLAGS += /MP /openmp
+    QMAKE_LFLAGS += /LIBPATH:C:\Libraries\boost_1_60_0\lib64-msvc-14.0
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -llibhdf5_cpp
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
