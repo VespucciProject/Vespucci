@@ -62,6 +62,23 @@ unix:!macx{
     LIBS += -L$$OUT_PWD/../VespucciLibrary -lvespucci
 
     LIBS += -L/usr/lib/ -lz
+    
+    equals($$(TRAVIS), "true"){
+        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_program_options
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_program_options.a
+    
+        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_math_c99
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.a
+    
+        LIBS += /usr/lib/x86_64-linux-gnu/ -lboost_random
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_random.a
+    
+        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_serialization
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_serialization.a
+    
+        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_unit_test_framework
+        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.a
+    }
 
     INCLUDEPATH += /usr/include
     DEPENDPATH += /usr/include
@@ -115,11 +132,10 @@ macx{
 
     LIBS += -framework Accelerate
 
-    LIBS += -L/usr/local/lib/ -lhdf5
-    PRE_TARGETDEPS += /usr/local/lib/libhdf5.a
-
-    LIBS += -L/usr/local/lib -lhdf5_cpp
-    PRE_TARGETDEPS += /usr/local/lib/libhdf5_cpp.a
+    LIBS += -L$$PWD/../../hdf5/lib -lhdf5_cpp
+    LIBS += -L$$PWD/../../hdf5/lib -lhdf5
+    INCLUDEPATH += $$PWD/../../hdf5/include
+    DEPENDPATH += $$PWD/../../hdf5/include
 
     LIBS += -L$$PWD/../../quazip/lib/ -lquazip
     INCLUDEPATH += $$PWD/../../quazip/include
@@ -141,6 +157,7 @@ macx{
 win32:!win32-g++{
     CONFIG += release force_debug_info
     QMAKE_CXXFLAGS += /MP /openmp
+    QMAKE_LFLAGS += /LIBPATH:C:\Libraries\boost_1_60_0\lib64-msvc-14.0
 
     LIBS += -L$$OUT_PWD/../VespucciLibrary/release -llibvespucci
     PRE_TARGETDEPS += $$OUT_PWD/../VespucciLibrary/release/libvespucci.lib
@@ -166,23 +183,8 @@ win32:!win32-g++{
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/hdf5.lib
 
-    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/boost_1_61_0
-    DEPENDPATH += $$PWD/../../Vespucci_dependencies/boost_1_61_0
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_program_options-vc140-mt-1_61
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_program_options-vc140-mt-1_61.lib
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_math_c99-vc140-mt-1_61
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_math_c99-vc140-mt-1_61.lib
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_random-vc140-mt-1_61
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_random-vc140-mt-1_61.lib
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_serialization-vc140-mt-1_61
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_serialization-vc140-mt-1_61.lib
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_unit_test_framework-vc140-mt-1_61
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_unit_test_framework-vc140-mt-1_61.lib
+    INCLUDEPATH += C:/Libraries/boost_1_60_0
+    DEPENDPATH += C:/Libraries/boost_1_60_0
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/quazip/lib/ -lquazip
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/quazip/include
@@ -198,4 +200,5 @@ win32:!win32-g++{
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/zlib.lib
+
 }

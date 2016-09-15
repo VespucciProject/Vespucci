@@ -7,14 +7,14 @@ matrix:
     dist: trusty
     sudo: required
     compiler: gcc
-  - os: osx
-    osx_image: xcode7.2
-    compiler: clang
-    cache:
-      directories:
-      - /usr/local/Cellar
-      - /usr/local/lib
-      - /usr/local/bin
+  #- os: osx
+  #  osx_image: xcode7.2
+  #  compiler: clang
+  #  cache:
+  #    directories:
+  #    - /usr/local/Cellar
+  #    - /usr/local/lib
+  #    - /usr/local/bin
 env:
   global:
     - secure: "C6mlFBRwzVOXNUAWJQX5Gru8wdxwFwm7CKuHLdjxiNtEYrx4BrbjkJRtLLpdsaIoDlM82WMNLOMTqHFD/+cAN1HXb8nZj2bl8IeKSAtQu7ocYZDqWqzRp4fhSh9dcUknGgjx8wqzGxSDDdS022WzXB/1rolwbRVkFy7U3x95ZYeUZv0jkv5kEq5+SOf4ozdALyhWjQ1AFtJu+UxxmmB1STAvn7ga26jDHuPF/l38gCRdUiYjyV1MdQldtVNhpLAZs+6PrLyQS99p9uJdNfJxZZo6pvb9asZ63p346tpGaKaWAhRhKRCaO5M4Lpr0tNwIqAU7pmzMyztbPq8Ai+hNITwyPVbSYjmju0VcbMu7gYawTweN4gWvpr0aLtlZC2Hnqc0kWpbK4yDvArvpMDC0oea58HuqYHLXLgbNu74M5AvanyNOzRQLcs3mbE0FacNGICOxBNoxyVdnFvgM6R5zSoiDQFwl7ULM9EdrLBafTIFOjcNTm0m8Ml8QebRPrKuIFzxXHX85G43RLBGFjmro/g3ii/TcAkUJa65uaTniIwf2+KzQXaxi5dB95HloK9CEXYYWff0NJX0O9pf+MF/MSl6MgAeRjDQsXJE0QPG0staXMga7gfUnpl7je1SdwjmXfHQKhGKZylGvKeQSFj2hillBx3BUV6wqKtPOxnlqFPQ="
@@ -29,11 +29,9 @@ install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH=$PATH:/usr/local/opt/qt5/bin;
   fi
 script:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export ARMA_HDF5_INCLUDE_DIR=/usr/local/opt/hdf5/include;
-  fi
 - mkdir $TRAVIS_BUILD_DIR/../build && cd $TRAVIS_BUILD_DIR/../build
 - qmake $TRAVIS_BUILD_DIR/buildall.pro
-- make
+- make -j4
 after_success:
 
 - export BUILD_DIR=$TRAVIS_BUILD_DIR/../build
@@ -61,9 +59,9 @@ after_success:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x $TRAVIS_BUILD_DIR/createtarball.sh
   && $TRAVIS_BUILD_DIR/createtarball.sh $DEPLOY_DIR $OUT_PKG $SRC_DIR; fi
 deploy:
+    skip_cleanup: true
     provider: bintray
     file: $TRAVIS_BUILD_DIR/deploybintray.json
     user: dpfoose
     key:
         secure: CkzrPKCuAAQxnPSEXbtIbJzjFP1dDDQs0KdyxA10KvTapEOp/JppsUd2BQ7PRSIU1vdvLZM7ysnpMWsjAZQ2+MR5HxBBKRjgqjwy93XFgXS+RP36AagQIEhlu+aqvbDl9/cgMAxrj57lizQA2KUF+zIkonKByDmVNc6oExlUq0WfeCNQZ+RBb7aPfckVdViMsTtfP/3S56cY4kgcc+uVx9Au/YXTB+BHFiON7TL40CLm+FW3HArvBrmIQIBDNE50JfSBe+jCk2/wPFZnsv0FH6KcnT32cNiT2b8gUltOpHWoPbh2y5cRur6NgaAg+WaXy3XIb2KhphkA4ih5WhXGgJ+6X7V+DX1lJd/2abSJzstI+RfPnuIOxP4KjijjdhT96Gq9OLVAYT7VUcM+IyWmu/0PJCWlnFb03uJRos4QJ05QV8FxWD8K80TwfN3BIPvPwlN+uIaTsuGV6LSXIpj8zrBToM8r990kbDunxEAPBKZEP9SCpUT/26UPOp0ON2oMRSAgcFOw7c0nz+fkShWqzlaQ/VXZL4/4TYlga3ZGGWPDiEMQ0GUKZHylZZ11SrI4kuHbspGCBTb5xMrFqJ2pI+zUlPKSsInnDUHa+VDAUb0FoTwX/wSBnO6pQvT19LQLGIORMfOhTYARmz+6ChEGr4X5iO6+PQDGe95oJzy4tVI=
-    skip_cleanup: true

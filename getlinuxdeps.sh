@@ -10,6 +10,6 @@ sudo apt-get -y install qt56base qt56tools qt56imageformats
 sudo apt-get -y install qt56location qt56declarative libsqlite3-dev qt56svg
 sudo apt-get -y install mesa-common-dev freeglut3.dev
 sudo apt-get -y install libarpack2-dev
-sudo apt-get -y install libxml2-dev libboost1.55-dev libboost-math1.55-dev 
+sudo apt-get -y install libxml2-dev
 sudo apt-get -y install libboost1.55-all-dev
 sudo apt-get -y install zlib1g zlib1g-dev
