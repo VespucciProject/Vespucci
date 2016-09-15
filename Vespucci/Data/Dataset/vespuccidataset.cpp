@@ -2031,7 +2031,7 @@ void VespucciDataset::KMeans(QString name, size_t clusters, QString metric_text)
     }
 
    assignments_vec.set_size(assignments.n_elem);
-   for (uword i = 0; i < assignments.n_elem; ++i)
+   for (uword i = 0; i < assignments_vec.n_rows; ++i)
        assignments_vec(i) = double(assignments(i) + 1);
 
    state_changed_ = true;
