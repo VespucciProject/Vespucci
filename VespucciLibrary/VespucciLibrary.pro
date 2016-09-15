@@ -254,23 +254,8 @@ win32:!win32-g++{
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/HDF5/include
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/libhdf5.lib
 
-    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/boost_1_61_0
-    DEPENDPATH += $$PWD/../../Vespucci_dependencies/boost_1_61_0
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_program_options-vc140-mt-1_61
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_program_options-vc140-mt-1_61.lib
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_math_c99-vc140-mt-1_61
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_math_c99-vc140-mt-1_61.lib
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_random-vc140-mt-1_61
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_random-vc140-mt-1_61.lib
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_serialization-vc140-mt-1_61
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_serialization-vc140-mt-1_61.lib
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/ -llibboost_unit_test_framework-vc140-mt-1_61
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/boost_1_61_0/lib64-msvc-14.0/libboost_unit_test_framework-vc140-mt-1_61.lib
+    INCLUDEPATH += C:/Libraries/boost_1_60_0
+    DEPENDPATH += C:/Libraries/boost_1_60_0
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/quazip/lib/ -lquazip
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/quazip/include
@@ -290,4 +275,5 @@ win32:!win32-g++{
     LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -llibszip
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/libszip.lib
 }
+
 
