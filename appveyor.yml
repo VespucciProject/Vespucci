@@ -25,7 +25,9 @@ build_script:
     %QTDIR%\bin\qmake ..\Vespucci\buildall.pro
 
     nmake release
-
+    
+    cd Test
+    Test
 
     set DEPLOYMENT_DIR=Vespucci-w64-build_%APPVEYOR_BUILD_NUMBER%
 
