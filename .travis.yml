@@ -32,6 +32,8 @@ script:
 - mkdir $TRAVIS_BUILD_DIR/../build && cd $TRAVIS_BUILD_DIR/../build
 - qmake $TRAVIS_BUILD_DIR/buildall.pro
 - make -j4
+- cd $TRAVIS_BUILD_DIR/../build/Test
+- ./Test
 after_success:
 
 - export BUILD_DIR=$TRAVIS_BUILD_DIR/../build
