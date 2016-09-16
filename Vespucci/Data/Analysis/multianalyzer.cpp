@@ -247,6 +247,18 @@ bool MultiAnalyzer::ConcatenateSpectra(QStringList dataset_keys)
     return true;
 }
 
+void MultiAnalyzer::SNVNormalize(double offset)
+{
+   data_ = Vespucci::Math::Normalization::SNVNorm(data_, offset, true);
+   for (uword i = 0; i < start_indices_.n_rows; ++i){
+       mat spectra = data_.cols(start_indices_(i), end_indices_(i));
+       vec abscissa = datasets_[i]->abscissa();
+       vec x = datasets_[i]->x();
+       vec y = datasets_[i]->y();
+       datasets_[i]->SetData(spectra, abscissa, x, y);
+   }
+}
+
 ///
 ///
 /// \brief MultiAnalyzer::GetDatasets

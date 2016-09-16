@@ -74,6 +74,11 @@
           <string>Hierarchical Clustering</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>SNV Normalization</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>

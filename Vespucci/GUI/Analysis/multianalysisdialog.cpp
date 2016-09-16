@@ -26,6 +26,7 @@
 #include "GUI/Analysis/univariatedialog.h"
 #include "GUI/Analysis/vcadialog.h"
 #include "GUI/Analysis/ahcadialog.h"
+#include "Data/Analysis/multianalyzer.h"
 
 MultiAnalysisDialog::MultiAnalysisDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws) :
     QDialog(parent),
@@ -86,6 +87,16 @@ void MultiAnalysisDialog::on_buttonBox_accepted()
         AHCADialog *dialog = new AHCADialog(workspace_, dataset_keys);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->show();
+    }
+    else if (analysis_description == "SNV Normalization"){
+        bool ok;
+        double offset = QInputDialog::getDouble(this, "Enter Offset", "Offset",
+                                          0, -2147483647, 2147483647, 4, &ok);
+
+        if (ok){
+            MultiAnalyzer analyzer(workspace_, dataset_keys);
+            analyzer.SNVNormalize(offset);
+        }
     }
     else{
         close();

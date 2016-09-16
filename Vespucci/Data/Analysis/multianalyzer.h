@@ -66,6 +66,7 @@ public:
     bool ConcatenateMatrices(const QList<QStringList> &keys,
                              const sword &column);
     bool ConcatenateSpectra(QStringList dataset_keys);
+    void SNVNormalize(double offset);
 private:
     QSharedPointer<VespucciWorkspace> workspace_;
     void GetDatasets(QStringList keys);
