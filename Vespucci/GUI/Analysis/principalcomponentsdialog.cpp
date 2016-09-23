@@ -40,6 +40,7 @@ PrincipalComponentsDialog::PrincipalComponentsDialog(QSharedPointer<VespucciWork
     :QDialog(ws->main_window()),
     ui(new Ui::PrincipalComponentsDialog)
 {
+    ui->setupUi(this);
     workspace_ = ws;
     dataset_keys_ = dataset_keys;
     if (dataset_keys_.isEmpty()) close();

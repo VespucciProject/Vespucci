@@ -100,7 +100,8 @@ SOURCES +=\
     src/Math/Stats/histogram.cpp \
     src/Math/Clustering/agglomerativeclustering.cpp \
     src/Math/Clustering/ahcanode.cpp \
-    src/Math/Fitting/nonlinleastsq.cpp
+    src/Math/Fitting/nonlinleastsq.cpp \
+    src/Math/Accessory/Faddeeva.cpp
 
 
 HEADERS  += \
@@ -133,7 +134,8 @@ HEADERS  += \
     include/Math/Stats/histogram.h \
     include/Math/Clustering/agglomerativeclustering.h \
     include/Math/Clustering/ahcanode.h \
-    include/Math/Fitting/nonlinleastsq.h
+    include/Math/Fitting/nonlinleastsq.h \
+    include/Math/Accessory/Faddeeva.h
 
 #For all platforms:
 INCLUDEPATH += $$PWD/include
@@ -252,11 +254,6 @@ macx{
 
     INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
     DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
-
-    LIBS += -L$$PWD/../../libcerf/lib/ -lcerf
-    INCLUDEPATH += $$PWD/../../libcerf/include
-    DEPENDPATH += $$PWD/../../libcerf/include
-    PRE_TARGETDEPS += $$PWD/../../libcerf/lib/libcerf.a
 
     LIBS += -L$$PWD/../../lmfit/lib/ -llmfit
     INCLUDEPATH += $$PWD/../../lmfit/include

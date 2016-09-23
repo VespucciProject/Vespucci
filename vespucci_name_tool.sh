@@ -24,3 +24,4 @@ install_name_tool -change /usr/local/opt/qt5/lib/QtWidgets.framework/Versions/5/
 install_name_tool -change /usr/local/opt/qt5/lib/QtGui.framework/Versions/5/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/5/QtGui Frameworks/libvespucci.1.0.0.dylib
 install_name_tool -change /usr/local/opt/qt5/lib/QtCore.framework/Versions/5/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/5/QtCore Frameworks/libvespucci.1.0.0.dylib
 install_name_tool -change /usr/local/opt/qt5/lib/QtSvg.framework/Versions/5/QtSvg @executable_path/../Frameworks/QtSvg.framework/Versions/5/QtSvg Frameworks/libvespucci.1.0.0.dylib
+install_name_tool -change /usr/local/lib/liblmfit.6.dylib @executable_path/../Frameworks/liblmfit.6.dylib Frameworks/libvespucci.1.0.0.dylib

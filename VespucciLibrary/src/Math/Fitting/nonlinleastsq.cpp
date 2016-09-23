@@ -19,14 +19,15 @@
 *******************************************************************************/
 #include "Math/Fitting/nonlinleastsq.h"
 #include "Math/Fitting/linleastsq.h"
-
+#include <lmcurve.h>
+#include "Math/Accessory/Faddeeva.h"
 ///
 /// \brief Gaussian
 /// \param t values of t or x...
 /// \param p parameters A, b, c, in that order
 /// \return
 ///
-double Gaussian(double t, const double *p)
+double GaussianFn(double t, const double *p)
 {
     return p[0]*std::exp(-0.5*std::pow(t-p[1], 2)/std::pow(p[2], 2));
 }
@@ -34,30 +35,25 @@ double Gaussian(double t, const double *p)
 ///
 /// \brief Lorentzian
 /// \param t
-/// \param p parameters gamma and x0, in that order
+/// \param p parameters I, gamma and x0, in that order
 /// \return
 ///
-double Lorentzian(double t, const double *p)
+double LorentzianFn(double t, const double *p)
 {
-    return (1/(arma::datum::pi * p[0])) * std::pow(p[0], 2)/(std::pow(t - p[1], 2) + std::pow(p[0], 2));
+    return p[0] * std::pow(p[1], 2)/(std::pow(t - p[2], 2) + std::pow(p[1], 2));
 }
 
 ///
-/// \brief PseudoVoigt
+/// \brief VoigtFn
 /// \param t
-/// \param p 6 params, eta first, then Lorentzian, then Gaussian
+/// \param p amplitude, center, sigma, gamma
 /// \return
 ///
-double PseudoVoigt(double t, const double *p)
+double VoigtFn(double t, const double *p)
 {
-    double gauss_p[3];
-    double lorentz_p[2];
-    guass_p[0] = p[1];
-    gauss_p[1] = p[2];
-    gauss_p[2] = p[3];
-    lorentz_p[0] = p[4];
-    lorentz_p[1] = p[5];
-    return p[0] * Lorentzian(t, lorentz_p) + (1-p[0]) * Gaussian(t, gauss_p);
+    const std::complex<double> i(0.0, 1.0);
+    std::complex<double> z = (t - p[1] + i*p[3]) / (p[2] * arma::datum::sqrt2);
+    return p[0] * Faddeeva::w(z).real() / (p[2] * arma::datum::sqrt2);
 }
 
 arma::vec Vespucci::Math::NonLinLeastSq::EstimateGaussParams(arma::vec x, arma::vec y)
@@ -89,3 +85,51 @@ arma::vec Vespucci::Math::NonLinLeastSq::EstimateGaussParams(arma::vec x, arma::
     return arma::vec({A, mu, sigma});
 }
 
+///
+/// \brief Vespucci::Math::NonLinLeastSq::FitGaussianPeak
+/// \param x
+/// \param y
+/// \return
+/// Returns parameters A, intensity, b, the center, and c, the RMS width
+arma::vec Vespucci::Math::NonLinLeastSq::FitGaussian(arma::vec x, arma::vec y)
+{
+    if (x.n_rows != y.n_rows) throw(std::invalid_argument("FitGaussian: x and y must be same size!"));
+    arma::vec params(3);
+    lm_control_struct control = lm_control_double;
+    lm_status_struct status;
+    control.verbosity = 7;
+    params = Vespucci::Math::NonLinLeastSq::EstimateGaussParams(x, y);
+    lmcurve(3, params.memptr(), x.n_rows, x.memptr(), y.memptr(), GaussianFn, &control, &status);
+    return params;
+}
+
+arma::vec Vespucci::Math::NonLinLeastSq::FitLorentzian(arma::vec x, arma::vec y)
+{
+    if (x.n_rows != y.n_rows) throw(std::invalid_argument("FittLorentzian: x and y must be same size!"));
+    arma::vec params(2);
+    double I, x0, gamma;
+    return arma::vec({I, x0, gamma});
+
+}
+
+arma::vec Vespucci::Math::NonLinLeastSq::EstimateLorentzParams(arma::vec x, arma::vec y)
+{
+    arma::vec ysquared = arma::pow(y, 2);
+    arma::vec xsquared = arma::pow(x, 2);
+    arma::mat X(3, 3);
+    X(0,0) = arma::sum(ysquared);
+    X(0,1) = arma::sum(x % ysquared);
+    X(0,2) = arma::sum(ysquared % xsquared);
+    X(1,0) = arma::sum(x % ysquared);
+    X(1,1) = x(0,2);
+    X(1,2) = arma::sum(xsquared % x % ysquared);
+    X(2,0) = x(0,2);
+    X(2,1) = x(1,2);
+    X(2,2) = arma::sum(xsquared % xsquared % ysquared);
+
+    arma::mat Y(3,1);
+    arma::vec invy = y.transform([](const double t){return 1.0/t;});
+    Y(0,0) = arma::sum(ysquared % invy);
+    Y(1,0) = arma::sum(x % ysquared % invy);
+    Y(2,0) = arma::sum(xsquared % ysquared % invy);
+}

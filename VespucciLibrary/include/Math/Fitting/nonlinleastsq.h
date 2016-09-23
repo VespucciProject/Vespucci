@@ -23,14 +23,21 @@
 #include "Global/libvespucci.h"
 extern "C"
 {
-    double Gaussian(double t, const double *p);
-    double Lorentzian(double t, const double *p);
-    double PseudoVoigt(double t, const double *p);
+    double GaussianFn(double t, const double *p);
+    double LorentzianFn(double t, const double *p);
+    double VoigtFn(double t, const double *p);
 }
 namespace Vespucci{
     namespace Math{
         namespace NonLinLeastSq{
             VESPUCCI_EXPORT arma::vec EstimateGaussParams(arma::vec x, arma::vec y);
+            VESPUCCI_EXPORT arma::vec EstimateLorentzParams(arma::vec x, arma::vec y);
+            VESPUCCI_EXPORT arma::vec FitGaussian(arma::vec x,
+                                                  arma::vec y);
+            VESPUCCI_EXPORT arma::vec FitLorentzian(arma::vec x,
+                                                    arma::vec y);
+            VESPUCCI_EXPORT arma::vec FitVoigt(arma::vec x,
+                                               arma::vec y);
         }
     }
 }
