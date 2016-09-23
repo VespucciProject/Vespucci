@@ -18,6 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include <Math/Quantification/quantification.h>
+#include <Math/Fitting/linleastsq.h>
 ///
 /// \brief Vespucci::Math::Quantification::QuantifyPeak
 /// \param spectrum
@@ -219,4 +220,188 @@ arma::mat Vespucci::Math::Quantification::ConvertInflectionBaselines(const arma:
     }
     baseline_matrix = arma::join_horiz(abscissa, baseline_matrix);
     return baseline_matrix;
+}
+
+///
+/// \brief Vespucci::Math::Quantification::FitGaussianPeak
+/// \param spectrum A spectrum
+/// \param abscissa The spectral abscissa
+/// \param min Abscissa value of the left bound of the window
+/// This parameter will change to the value closest to the specified value
+/// \param max Abscissa value of the right bound of the window
+/// This parameter will change to the vlaue closest to the specified value
+/// \param iterations Number of iterations
+/// \param baseline The linear baseline drawn between spectral points at min and max
+/// \param gauss_params The parameters of the gaussian peak
+/// \param quad_params The parameters of the quadratic function used to fit gaussian
+/// \param gauss_error The uncertainties in the parameters in gauss_params
+/// \param quad_error The uncertainties in the parameters in quad_params
+/// \return
+///
+/// Fit a guassian peak through iterative weighted least squares as described by
+/// Guo in IEEE Signal Processing Magazine, DOI: 10.1109/MSP.2011.941846
+arma::rowvec Vespucci::Math::Quantification::FitGaussianPeak(const arma::vec &spectrum,
+                                                             const arma::vec &abscissa,
+                                                             double &min,
+                                                             double &max,
+                                                             arma::uword iterations,
+                                                             arma::mat &baseline,
+                                                             arma::mat &fit,
+                                                             arma::rowvec &gauss_params,
+                                                             arma::rowvec &quad_params,
+                                                             arma::mat residuals)
+{
+
+    arma::rowvec results(5);
+
+    arma::uword min_index = Vespucci::Math::ClosestIndex(min, abscissa);
+    arma::uword max_index = Vespucci::Math::ClosestIndex(max, abscissa);
+
+    arma::vec abscissa_part = abscissa.rows(min_index, max_index);
+    arma::vec spectrum_part = spectrum.rows(min_index, max_index);
+
+    min = abscissa(min_index);
+    max = abscissa(max_index);
+    arma::uword window_size = max_index - min_index;
+
+    baseline = arma::linspace(spectrum(min_index), spectrum(max_index), window_size);
+    spectrum_part -= baseline;
+
+    arma::vec xsquared = arma::pow(abscissa_part, 2);
+    arma::vec params;
+    for (arma::uword i = 0; i < iterations; ++i){
+        arma::mat X = Vespucci::Math::Quantification::GuoX(fit, abscissa_part);
+        arma::mat Y = Vespucci::Math::Quantification::GuoY(fit, abscissa_part);
+        params = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(X, Y);
+        fit = arma::exp(params(0,0) * arma::ones(spectrum_part.n_rows)
+                        + params(1,0) * abscissa_part
+                        + params(2,0) * xsquared);
+    }
+    quad_params = params.t();
+    residuals = spectrum_part - fit;
+    arma::vec centered = spectrum_part - arma::as_scalar(arma::mean(spectrum_part));
+    double residual_sumsq = arma::as_scalar(arma::sum(arma::pow(residuals, 2.0)));
+    double total_sumsq = arma::as_scalar(arma::sum(arma::pow(centered, 2.0)));
+    double R_squared = 1.0 - (residual_sumsq/total_sumsq);
+
+    double A = std::exp(quad_params(0) - (0.25*std::pow(quad_params(1), 2)/quad_params(3)));
+    double sigma = (quad_params(2) < 0 ? std::sqrt(-0.5/quad_params(2)) : std::nan(""));
+    double mu = -0.5*quad_params(1)/quad_params(2);
+    gauss_params = arma::rowvec({A, mu, sigma});
+
+    results(0) = mu; //center
+    results(1) = A; //intensity
+    results(2) = arma::datum::sqrt2 * std::abs(sigma) * std::sqrt(arma::datum::pi); //area
+    results(3) = 2 * std::sqrt(2 * std::log(2)) * sigma; //fwhm
+    results(4) = R_squared; //R-squared
+    fit += baseline;
+    baseline = arma::join_horiz(abscissa_part, baseline);
+    residuals = arma::join_horiz(abscissa_part, residuals);
+    fit = arma::join_horiz(abscissa_part, fit);
+
+    return results;
+}
+
+arma::mat Vespucci::Math::Quantification::GuoX(const arma::vec &x, const arma::vec &y)
+{
+    arma::vec ysquared = arma::pow(y, 2);
+    arma::vec xsquared = arma::pow(x, 2);
+    arma::mat X(3, 3);
+    X(0,0) = arma::sum(ysquared);
+    X(0,1) = arma::sum(x % ysquared);
+    X(0,2) = arma::sum(ysquared % xsquared);
+    X(1,0) = arma::sum(x % ysquared);
+    X(1,1) = x(0,2);
+    X(1,2) = arma::sum(xsquared % x % ysquared);
+    X(2,0) = x(0,2);
+    X(2,1) = x(1,2);
+    X(2,2) = arma::sum(xsquared % xsquared % ysquared);
+    return X;
+}
+
+arma::mat Vespucci::Math::Quantification::GuoY(const arma::vec &x, const arma::vec &y)
+{
+    arma::mat Y(3,1);
+    arma::vec ysquared = arma::pow(y, 2);
+    arma::vec xsquared = arma::pow(x, 2);
+    arma::vec logy = arma::log(y);
+    Y(0,0) = arma::sum(ysquared % logy);
+    Y(1,0) = arma::sum(x % ysquared % logy);
+    Y(2,0) = arma::sum(xsquared % ysquared % logy);
+    return Y;
+}
+
+arma::mat Vespucci::Math::Quantification::FitGaussianPeakMat(const arma::mat &spectra,
+                                                             const arma::vec &abscissa,
+                                                             double &min,
+                                                             double &max,
+                                                             arma::uword iterations,
+                                                             arma::mat &baselines,
+                                                             arma::mat &fits,
+                                                             arma::mat &gauss_params,
+                                                             arma::mat &quad_params,
+                                                             arma::mat &residuals)
+{
+    arma::mat results(spectra.n_cols, 5);
+    gauss_params.clear();
+    quad_params.clear();
+    fits.clear();
+    residuals.clear();
+    baselines.clear();
+    arma::field<arma::mat> baselines_tmp(spectra.n_cols);
+    arma::field<arma::mat> fits_tmp(spectra.n_cols);
+    arma::field<arma::mat> residuals_tmp(spectra.n_cols);
+    gauss_params.set_size(spectra.n_cols, 3);
+    quad_params.set_size(spectra.n_cols, 3);
+
+#ifdef _WIN32
+  #pragma omp parallel for default(none) \
+      shared(spectra, inflection_baselines, total_baselines_tmp, results, min, max, bound_window, abscissa)
+     for (intmax_t i = 0; i < (intmax_t) spectra.n_cols; ++i)
+#else
+  #pragma omp parallel for default(none) \
+      shared(spectra, inflection_baselines, total_baselines_tmp, results, min, max, bound_window, abscissa)
+    for (size_t i = 0; i < spectra.n_cols; ++ i)
+#endif
+    {
+        double temp_min = min;
+        double temp_max = max;
+        arma::vec baseline;
+        arma::rowvec gauss_params_tmp;
+        arma::rowvec quad_params_tmp;
+        arma::vec current_residuals;
+        arma::vec fit;
+        results.row(i) = Vespucci::Math::Quantification::FitGaussianPeak(spectra.col(i),
+                                                                         abscissa,
+                                                                         temp_min,
+                                                                         temp_max,
+                                                                         iterations,
+                                                                         baseline,
+                                                                         fit,
+                                                                         gauss_params_tmp,
+                                                                         quad_params_tmp,
+                                                                         current_residuals);
+        baselines_tmp(i) = baseline;
+        gauss_params.row(i) = gauss_params_tmp;
+        quad_params.row(i) = quad_params_tmp;
+        fits_tmp(i) = fit;
+        residuals_tmp(i) = current_residuals;
+    }
+
+    for (size_t i = 0; i < baselines_tmp.n_rows; ++i){
+        if (baselines.n_rows)
+            baselines = arma::join_horiz(baselines, baselines_tmp(i).col(1));
+        else
+            baselines = baselines_tmp(i);
+        if (fits.n_rows)
+            fits = arma::join_horiz(fits, fits_tmp(i).col(1));
+        else
+            fits = fits_tmp(i);
+        if (residuals.n_rows)
+            residuals = arma::join_horiz(residuals, residuals_tmp(i).col(1));
+        else
+            residuals = residuals_tmp(i);
+
+    }
+    return results;
 }
