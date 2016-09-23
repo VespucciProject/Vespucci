@@ -26,7 +26,6 @@ build_script:
 
     nmake release
 
-
     set DEPLOYMENT_DIR=Vespucci-w64-build_%APPVEYOR_BUILD_NUMBER%
 
     mkdir %DEPLOYMENT_DIR%

@@ -27,7 +27,7 @@ DatasetExtractorDialog::DatasetExtractorDialog(QWidget *parent, QSharedPointer<V
     ui->setupUi(this);
     matrix_keys_ = matrix_keys;
     workspace_ = ws;
-    ui->columnSpinBox->setMaximum(workspace_->GetMatrix(matrix_keys_).n_cols + 1);
+    ui->columnSpinBox->setMaximum(workspace_->GetMatrix(matrix_keys_).n_cols);
     ui->columnSpinBox->setMinimum(1);
     ui->valueDoubleSpinBox->setMinimum(workspace_->GetMatrix(matrix_keys_).min());
     ui->valueDoubleSpinBox->setMaximum(workspace_->GetMatrix(matrix_keys_).max());

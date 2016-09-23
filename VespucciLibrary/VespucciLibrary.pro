@@ -138,40 +138,40 @@ INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include
 
 unix:!macx{
-    #QMAKE_CXX=/usr/bin/g++-4.9
-    CONFIG += c++11
-    QMAKE_CXXFLAGS += -fext-numeric-literals
+    CONFIG += c++11 staticlib
+    CONFIG -= shared
+    QMAKE_CXXFLAGS += -fPIC -fext-numeric-literals -fopenmp
+    QMAKE_LFLAGS += -fopenmp
     QMAKE_RPATHDIR += $$(QTDIR)/lib
-    LIBS += -L$$PWD/../../mlpack/lib -lmlpack
-    LIBS += -L$$PWD/../../armadillo/lib -larmadillo
-    LIBS += -L$$PWD/../../hdf5/lib -lhdf5_cpp
-    LIBS += -L$$PWD/../../hdf5/lib -lhdf5
-    PRE_TARGETDEPS += $$PWD/../../hdf5/lib/libhdf5_cpp.a
-    PRE_TARGETDEPS += $$PWD/../../hdf5/lib/libhdf5.a
-    INCLUDEPATH += $$PWD/../../hdf5/include
-    DEPENDPATH += $$PWD/../../hdf5/include
+    LIBS += -L$$PWD/../../Vespucci_dependencies/mlpack/lib -lmlpack
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/mlpack/lib/libmlpack.a
+    LIBS += -L$$PWD/../../Vespucci_dependencies/armadillo/lib -larmadillo
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/armadillo/lib/libarmadillo.a
+    LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib -lhdf5
+    LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib -lhdf5_cpp
+    LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib -lz
+    LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib -lsz
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/hdf5/lib/libhdf5.a
+    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/hdf5/lib/libhdf5_cpp.a
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/hdf5/include
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/hdf5/include
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
-    equals($$(TRAVIS), "true"){
-        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_program_options
-        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_program_options.a
-    
-        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_math_c99
-        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.a
-    
-        LIBS += /usr/lib/x86_64-linux-gnu/ -lboost_random
-        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_random.a
-    
-        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_serialization
-        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_serialization.a
-    
-        LIBS += -L/usr/lib/x86_64-linux-gnu/ -lboost_unit_test_framework
-        PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.a
-    }
-    LIBS += -L$$PWD/../../yaml-cpp/lib -lyaml-cpp
-    PRE_TARGETDEPS += $$PWD/../../yaml-cpp/lib/libyaml-cpp.a
 
-    LIBS += -L/usr/lib/ -lz
+    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_program_options
+    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_program_options.a
+
+    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_math_c99
+    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.a
+
+    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_random
+    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_random.a
+
+    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_serialization
+    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_serialization.a
+
+    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_unit_test_framework
+    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.a
 
     INCLUDEPATH += /usr/include
     DEPENDPATH += /usr/include
@@ -182,14 +182,14 @@ unix:!macx{
     INCLUDEPATH += /usr/local/include
     DEPENDPATH += /usr/local/include
 
-    INCLUDEPATH += $$PWD/../../mlpack/include
-    DEPENDPATH += $$PWD/../../mlpack/include
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/mlpack/include
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/mlpack/include
 
-    INCLUDEPATH += $$PWD/../../armadillo/include
-    DEPENDPATH += $$PWD/../../armadillo/include
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/armadillo/include
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/armadillo/include
 
-    INCLUDEPATH += $$PWD/../../yaml-cpp/include
-    DEPENDPATH += $$PWD/../../yaml-cpp/include
+    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/yaml-cpp/include
+    DEPENDPATH += $$PWD/../../Vespucci_dependencies/yaml-cpp/include
 }
 
 #mac libraries. These are the same in Travis-CI as in most local environments
