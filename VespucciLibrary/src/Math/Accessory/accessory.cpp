@@ -523,37 +523,6 @@ double Vespucci::Math::quantile(arma::vec &data, double probs)
     }
 }
 
-
-double Vespucci::Math::mad(arma::vec &data)
-{
-    double median;
-    double value;
-    arma::vec sorted = sort(data);
-    //calculate median (we do it this way because of an error in MinGW)
-    arma::uword center = sorted.n_rows / 2;
-    if (sorted.n_rows % 2 != 0){
-        median = 0.5*(sorted(center) + sorted(center+1));
-    }
-    else{
-        median = sorted(center);
-    }
-
-    data -= median;
-    sorted = sort(data);
-
-    if (sorted.n_rows % 2 != 0){
-        value = 0.5*(sorted(center) + sorted(center+1));
-    }
-    else{
-        value = sorted(center);
-    }
-    return value;
-}
-
-
-
-
-
 ///
 /// \brief Vespucci::Math::RecalculateAverage Recalculate the average value when
 /// a new value is added to a list for which only the previous means, stddevs

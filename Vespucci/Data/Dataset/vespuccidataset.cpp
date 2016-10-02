@@ -1117,7 +1117,7 @@ void VespucciDataset::ZeroClippedSpectra(double threshold)
 
     try{
         for (uword i = 0; i < invalid_indices.n_rows; ++i)
-            spectra_.col(i) = zeros(spectra_.n_rows);
+            spectra_.col(invalid_indices(i)) = zeros(spectra_.n_rows);
     }
     catch(exception e){
         string str = "RemoveClipped Spectra: " + string(e.what());
@@ -1145,8 +1145,8 @@ void VespucciDataset::ZeroFlatSpectra(double threshold)
         return;
 
     try{
-        for (uword i = 0; i < spectra_.n_cols; ++i)
-            spectra_.col(i) = zeros(spectra_.n_rows);
+        for (uword i = 0; i < invalid_indices.n_rows; ++i)
+            spectra_.col(invalid_indices(i)) = zeros(spectra_.n_rows);
     }
     catch(exception e){
         string str = "RemoveClipped Spectra: " + string(e.what());

@@ -50,7 +50,6 @@ namespace Vespucci
         VESPUCCI_EXPORT arma::sp_mat LocalMaximaCWT(arma::mat coefs, arma::uvec scales, arma::uword min_window_size);
 
         VESPUCCI_EXPORT double quantile(arma::vec &data, double probs);
-        VESPUCCI_EXPORT double mad(arma::vec &data);
 
         VESPUCCI_EXPORT arma::vec ExtendToNextPow(arma::vec X, arma::uword n);
         VESPUCCI_EXPORT arma::uword NextPow(arma::uword number, arma::uword power);

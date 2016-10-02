@@ -24,7 +24,7 @@
 ///
 /// \brief Gaussian
 /// \param t values of t or x...
-/// \param p parameters A, b, c, in that order
+/// \param p parameters A, b (mu), c (sigma), in that order
 /// \return
 ///
 double GaussianFn(double t, const double *p)
@@ -56,6 +56,12 @@ double VoigtFn(double t, const double *p)
     return p[0] * Faddeeva::w(z).real() / (p[2] * arma::datum::sqrt2);
 }
 
+///
+/// \brief Vespucci::Math::NonLinLeastSq::EstimateGaussParams
+/// \param x
+/// \param y
+/// \return
+/// When estimated sigma parameter is nonreal, returns sigma as the standard deviation of y
 arma::vec Vespucci::Math::NonLinLeastSq::EstimateGaussParams(arma::vec x, arma::vec y)
 {
     arma::vec ysquared = arma::pow(y, 2);
@@ -77,39 +83,12 @@ arma::vec Vespucci::Math::NonLinLeastSq::EstimateGaussParams(arma::vec x, arma::
     Y(1,0) = arma::sum(x % ysquared % logy);
     Y(2,0) = arma::sum(xsquared % ysquared % logy);
 
-    arma::vec quad_params = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(X, Y);
+    arma::vec quad_params = arma::solve(X, Y);
     double A = std::exp(quad_params(0) - (0.25*std::pow(quad_params(1), 2)/quad_params(3)));
-    double sigma = (quad_params(2) < 0 ? std::sqrt(-0.5/quad_params(2)) : std::nan(""));
+    double sigma = (quad_params(2) < 0 ? std::sqrt(-0.5/quad_params(2)) : arma::stddev(y));
     double mu = -0.5*quad_params(1)/quad_params(2);
 
     return arma::vec({A, mu, sigma});
-}
-
-///
-/// \brief Vespucci::Math::NonLinLeastSq::FitGaussianPeak
-/// \param x
-/// \param y
-/// \return
-/// Returns parameters A, intensity, b, the center, and c, the RMS width
-arma::vec Vespucci::Math::NonLinLeastSq::FitGaussian(arma::vec x, arma::vec y)
-{
-    if (x.n_rows != y.n_rows) throw(std::invalid_argument("FitGaussian: x and y must be same size!"));
-    arma::vec params(3);
-    lm_control_struct control = lm_control_double;
-    lm_status_struct status;
-    control.verbosity = 7;
-    params = Vespucci::Math::NonLinLeastSq::EstimateGaussParams(x, y);
-    lmcurve(3, params.memptr(), x.n_rows, x.memptr(), y.memptr(), GaussianFn, &control, &status);
-    return params;
-}
-
-arma::vec Vespucci::Math::NonLinLeastSq::FitLorentzian(arma::vec x, arma::vec y)
-{
-    if (x.n_rows != y.n_rows) throw(std::invalid_argument("FittLorentzian: x and y must be same size!"));
-    arma::vec params(2);
-    double I, x0, gamma;
-    return arma::vec({I, x0, gamma});
-
 }
 
 arma::vec Vespucci::Math::NonLinLeastSq::EstimateLorentzParams(arma::vec x, arma::vec y)
@@ -132,4 +111,54 @@ arma::vec Vespucci::Math::NonLinLeastSq::EstimateLorentzParams(arma::vec x, arma
     Y(0,0) = arma::sum(ysquared % invy);
     Y(1,0) = arma::sum(x % ysquared % invy);
     Y(2,0) = arma::sum(xsquared % ysquared % invy);
+
+    arma::vec quad_params = arma::solve(X, Y);
+    double x0 = -0.5 * quad_params(1) / quad_params(0);
+    double inside_sqrt = (quad_params(2) - std::pow(x0, 1)) / quad_params(0);
+    double gamma = (inside_sqrt >= 0 ? std::sqrt(inside_sqrt) : arma::stddev(y));
+    double I = 1.0 / (quad_params(0) * gamma);
+
+    return arma::vec({I, gamma, x0});
+}
+///
+/// \brief Vespucci::Math::NonLinLeastSq::FitGaussianPeak
+/// \param x
+/// \param y
+/// \return
+/// Returns parameters A, intensity, b, the center, and c, the RMS width
+arma::vec Vespucci::Math::NonLinLeastSq::FitGaussian(arma::vec x, arma::vec y)
+{
+    if (x.n_rows != y.n_rows) throw(std::invalid_argument("FitGaussian: x and y must be same size!"));
+    lm_control_struct control = lm_control_double;
+    lm_status_struct status;
+    control.verbosity = 7;
+    arma::vec params = Vespucci::Math::NonLinLeastSq::EstimateGaussParams(x, y);
+    lmcurve(3, params.memptr(), x.n_rows, x.memptr(), y.memptr(), GaussianFn, &control, &status);
+    return params;
+}
+
+arma::vec Vespucci::Math::NonLinLeastSq::FitLorentzian(arma::vec x, arma::vec y)
+{
+    if (x.n_rows != y.n_rows) throw(std::invalid_argument("FittLorentzian: x and y must be same size!"));
+    lm_control_struct control = lm_control_double;
+    lm_status_struct status;
+    control.verbosity = 7;
+    arma::vec params = Vespucci::Math::NonLinLeastSq::EstimateLorentzParams(x, y);
+    lmcurve(3, params.memptr(), x.n_rows, x.memptr(), y.memptr(), LorentzianFn, &control, &status);
+    return params;
+}
+
+
+
+arma::vec Vespucci::Math::NonLinLeastSq::FitVoigt(arma::vec x, arma::vec y)
+{
+    if (x.n_rows != y.n_rows) throw(std::invalid_argument("FittLorentzian: x and y must be same size!"));
+    lm_control_struct control = lm_control_double;
+    lm_status_struct status;
+    control.verbosity = 7;
+    arma::vec lorentz_params = Vespucci::Math::NonLinLeastSq::EstimateLorentzParams(x, y);
+    arma::vec gauss_params = Vespucci::Math::NonLinLeastSq::EstimateGaussParams(x, y);
+    arma::vec params({gauss_params(0), gauss_params(1), gauss_params(2), lorentz_params(1)});
+    lmcurve(4, params.memptr(), x.n_rows, x.memptr(), y.memptr(), VoigtFn, &control, &status);
+    return params;
 }
