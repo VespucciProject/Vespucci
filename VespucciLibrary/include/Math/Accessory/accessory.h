@@ -101,6 +101,10 @@ namespace Vespucci
 
         VESPUCCI_EXPORT arma::uword ClosestIndex(double value, const arma::vec &vector);
         VESPUCCI_EXPORT arma::uvec Intersection(arma::uvec &x, arma::uvec &y);
+
+        VESPUCCI_EXPORT double CalculateRSquared(const arma::vec &data,
+                                                 const arma::vec &fit,
+                                                 arma::vec &residuals);
     }
 }
 

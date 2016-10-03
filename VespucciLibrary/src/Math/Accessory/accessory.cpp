@@ -997,3 +997,21 @@ arma::uvec Vespucci::Math::Intersection(arma::uvec &x, arma::uvec &y)
                           std::back_inserter(intersection));
     return arma::conv_to<arma::uvec>::from(intersection);
 }
+
+///
+/// \brief Vespucci::Math::CalculateRSquared
+/// \param data
+/// \param fit
+/// \param residuals
+/// \return
+/// calcuate residuals and R-squared from fit fit to data data.
+double Vespucci::Math::CalculateRSquared(const arma::vec &data,
+                                         const arma::vec &fit,
+                                         arma::vec &residuals)
+{
+    residuals = data - fit;
+    arma::vec centered = data - arma::as_scalar(arma::mean(data));
+    double residual_sumsq = arma::accu(arma::pow(residuals, 2.0));
+    double total_sumsq = arma::accu(arma::pow(centered, 2.0));
+    return 1.0 - (residual_sumsq/total_sumsq);
+}

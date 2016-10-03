@@ -100,10 +100,6 @@ namespace Vespucci{
                                                       arma::mat &fits,
                                                       arma::mat &params,
                                                       arma::mat &residuals);
-            VESPUCCI_EXPORT double CalculateRSquared(const arma::vec &data,
-                                                     const arma::vec &fit,
-                                                     arma::vec &residuals);
-
 
         }
     }

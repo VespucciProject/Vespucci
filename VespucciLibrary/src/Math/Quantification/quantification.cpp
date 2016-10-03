@@ -258,7 +258,7 @@ arma::rowvec Vespucci::Math::Quantification::FitGaussianPeak(const arma::vec &sp
         fit(i, 1) = GaussianFn(abscissa_part(i), params.memptr());
 
     arma::vec residuals_vec;
-    double R_squared = Vespucci::Math::Quantification::CalculateRSquared(spectrum_part, fit.col(1), residuals_vec);
+    double R_squared = Vespucci::Math::CalculateRSquared(spectrum_part, fit.col(1), residuals_vec);
 
     results(0) = params(0); //intensity
     results(1) = arma::datum::sqrt2 * std::abs(params[2]) * std::sqrt(arma::datum::pi); //area
@@ -368,7 +368,7 @@ arma::rowvec Vespucci::Math::Quantification::FitLorentzianPeak(const arma::vec &
         fit(i, 1) = LorentzianFn(abscissa_part(i), params.memptr());
 
     arma::vec residuals_vec;
-    double R_squared = Vespucci::Math::Quantification::CalculateRSquared(spectrum_part, fit.col(1), residuals_vec);
+    double R_squared = Vespucci::Math::CalculateRSquared(spectrum_part, fit.col(1), residuals_vec);
 
     results(0) = params(0); //intensity
     results(1) = arma::datum::sqrt2 * std::abs(params[2]) * std::sqrt(arma::datum::pi); //area
@@ -490,7 +490,7 @@ arma::rowvec Vespucci::Math::Quantification::FitVoigtPeak(const arma::vec &spect
         fit(i, 1) = VoigtFn(abscissa_part(i), params.memptr());
 
     arma::vec residuals_vec;
-    double R_squared = Vespucci::Math::Quantification::CalculateRSquared(spectrum_part, fit.col(1), residuals_vec);
+    double R_squared = Vespucci::Math::CalculateRSquared(spectrum_part, fit.col(1), residuals_vec);
 
     results(0) = params(0); //intensity
     results(1) = params(0); //area
@@ -575,13 +575,4 @@ arma::mat Vespucci::Math::Quantification::FitVoigtPeakMat(const arma::mat &spect
 
     }
     return results;
-}
-
-double Vespucci::Math::Quantification::CalculateRSquared(const arma::vec &data, const arma::vec &fit, arma::vec &residuals)
-{
-    residuals = data - fit;
-    arma::vec centered = data - arma::as_scalar(arma::mean(data));
-    double residual_sumsq = arma::accu(arma::pow(residuals, 2.0));
-    double total_sumsq = arma::accu(arma::pow(centered, 2.0));
-    return 1.0 - (residual_sumsq/total_sumsq);
 }
