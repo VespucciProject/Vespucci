@@ -34,6 +34,8 @@ MultiAnalyzer::MultiAnalyzer(QSharedPointer<VespucciWorkspace> workspace, QStrin
     if (!ok) throw runtime_error("Could not concatenate datasets");
 }
 
+MultiAnalyzer::~MultiAnalyzer(){}
+
 void MultiAnalyzer::Univariate(const QString &name, double &left_bound, double &right_bound, uword bound_window)
 {
     QString new_name = FindUniqueName(name);
@@ -93,7 +95,7 @@ void MultiAnalyzer::VertexComponents(const QString &name, uword endmembers)
 /// \param metric_text
 /// \param name
 ///
-void MultiAnalyzer::KMeans(size_t clusters, const QString &metric_text, const QString &name)
+void MultiAnalyzer::KMeans(const QString &name, const QString &metric_text, size_t clusters)
 {
     QString new_name = FindUniqueName(name);
 
@@ -259,6 +261,37 @@ void MultiAnalyzer::SNVNormalize(double offset)
    }
 }
 
+size_t MultiAnalyzer::columns() const
+{
+    return data_.n_cols;
+}
+
+double MultiAnalyzer::AbscissaMin() const
+{
+    return abscissa_.min();
+}
+
+double MultiAnalyzer::AbscissaMax() const
+{
+    return abscissa_.max();
+}
+
+///
+/// \brief MultiAnalyzer::PointSpectrum
+/// \param index
+/// \return
+/// Will not throw on index out of bounds, instead returns last column if index
+/// is greater than number of columns
+arma::vec MultiAnalyzer::PointSpectrum(arma::uword index) const
+{
+    return data_.col((index < data_.n_cols ? index : data_.n_cols - 1));
+}
+
+arma::vec MultiAnalyzer::abscissa() const
+{
+    return abscissa_;
+}
+
 ///
 ///
 /// \brief MultiAnalyzer::GetDatasets
@@ -276,7 +309,7 @@ void MultiAnalyzer::GetDatasets(QStringList keys)
 
 void MultiAnalyzer::AddAnalysisResults(QSharedPointer<AnalysisResults> results, QStringList matrices)
 {
-    for (uword i = 0; i < datasets_.size(); ++i){
+    for (uword i = 0; i < uword(datasets_.size()); ++i){
         datasets_[i]->AddAnalysisResult(results, start_indices_(i), end_indices_(i));
         if (!matrices.isEmpty())
             datasets_[i]->AddAnalysisResult(results->Subset(matrices, start_indices_(i), end_indices_(i)));

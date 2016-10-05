@@ -7,29 +7,86 @@
     <x>0</x>
     <y>0</y>
     <width>709</width>
-    <height>566</height>
+    <height>576</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Univariate Analysis</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="4" column="0">
-    <widget class="QDialogButtonBox" name="buttonBox">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QGroupBox" name="nameGroupBox">
      <property name="font">
       <font>
-       <pointsize>8</pointsize>
+       <pointsize>10</pointsize>
       </font>
      </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+     <property name="title">
+      <string>Map Name</string>
      </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
+     <layout class="QFormLayout" name="formLayout_3">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="nameLabel">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If no name entered, default &amp;quot;Univariate Analysis n&amp;quot; where n is the number performed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Name</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="nameLineEdit">
+        <property name="text">
+         <string>Univariate</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item>
+    <widget class="QGroupBox" name="previewGroupBox">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string>Spectrum Preview</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QCustomPlot" name="spectrumPlot" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>600</width>
+          <height>225</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="indexLabel">
+          <property name="text">
+           <string>Spectrum Index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="indexSpinBox"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="optionsGroupBox">
      <property name="font">
       <font>
@@ -124,62 +181,19 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QGroupBox" name="nameGroupBox">
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
      <property name="font">
       <font>
-       <pointsize>10</pointsize>
+       <pointsize>8</pointsize>
       </font>
      </property>
-     <property name="title">
-      <string>Map Name</string>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-     <layout class="QFormLayout" name="formLayout_3">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="nameLabel">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If no name entered, default &amp;quot;Univariate Analysis n&amp;quot; where n is the number performed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Name</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="nameLineEdit">
-        <property name="text">
-         <string>Univariate</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QGroupBox" name="previewGroupBox">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
-     <property name="title">
-      <string>Spectrum Preview (At Spatial Origin)</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QCustomPlot" name="spectrumPlot" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>600</width>
-          <height>225</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
   </layout>

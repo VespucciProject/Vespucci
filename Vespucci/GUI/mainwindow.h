@@ -244,6 +244,8 @@ private slots:
 
     void on_actionNew_Dataset_from_Matrix_triggered();
 
+    void on_actionEstimate_Dimensionality_triggered();
+
 private:
     void CloseDataset(const QString &name);
     Ui::MainWindow *ui;

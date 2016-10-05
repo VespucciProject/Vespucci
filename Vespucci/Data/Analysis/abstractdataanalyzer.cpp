@@ -17,20 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef GLOBAL
-#define GLOBAL
-#include "qcustomplot.h"
-#include <mlpack/core.hpp>
-namespace Vespucci{
-    bool SavePlot(QCustomPlot *plot, QString filename);
-    void SetQCPFonts(QCustomPlot *plot, const QFont &font);
-    QProgressDialog *DisplayProgressDialog(QWidget *parent, QString title, QString text);
-    bool KeysAreEqual(QStringList &keys1, QStringList &keys2);
-    struct GlobalGradient{
-        QCPColorGradient gradient;
-        QCPRange range;
-    };
-    QVector<double> FromArmaVec(const arma::vec &data);
+#include "Data/Analysis/abstractdataanalyzer.h"
+AbstractDataAnalyzer::~AbstractDataAnalyzer()
+{
+    std::cout << "~AbstractDataAnalyzer()" << std::endl;
 }
-#endif // GLOBAL
-

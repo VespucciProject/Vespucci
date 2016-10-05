@@ -20,7 +20,7 @@
 #ifndef VespucciDataset_H
 #define VespucciDataset_H
 #include "Math/VespucciMath.h"
-
+#include "Data/Analysis/abstractdataanalyzer.h"
 #include <QTextStream>
 #include <iostream>
 #include <QVector>
@@ -46,7 +46,6 @@
 
 
 
-
 class MapData;
 class PrincipalComponentsData;
 class MlpackPCAData;
@@ -67,14 +66,13 @@ using namespace std;
 using namespace arma;
 
 
-
 ///
 /// \brief The VespucciDataset class
 /// This is the main class for dealing with hyperspectral data. This handles the
 ///  import and export of spectra, and the creation of maps. Images are handled
 /// by the MapData class. This class is intended to be allocated on the heap inside
 /// of a smart pointer, there is no copy constructor.
-class VespucciDataset
+class VespucciDataset : public AbstractDataAnalyzer
 {
 public:
     VespucciDataset(const QString &h5_filename,
@@ -170,7 +168,7 @@ public:
     // HELPER FUNCTIONS //
 
     // Grabs one line of spectra_, at indices specified, recasts as QVector for QCustomPlot //
-    QVector<double> PointSpectrum(const uword index) const;
+    vec PointSpectrum(uword index) const;
 
     // Converts wavelength_ to QVector //
     QVector<double> WavelengthQVector() const;
@@ -194,25 +192,25 @@ public:
     bool Load(QString filename);
     bool SaveSpectrum(QString filename, uword column, file_type type);
 
-    void Univariate(QString name, double &left_bound, double &right_bound,
+    void Univariate(const QString &name, double &left_bound, double &right_bound,
                     uword bound_window);
-    void BandRatio(QString name,
+    void BandRatio(const QString &name,
                    double &first_left_bound, double &first_right_bound,
                    double &second_left_bound, double &second_right_bound,
                    uword bound_window);
-    void ClassicalLeastSquares(QString name, const QStringList &reference_keys);
-    void PartialLeastSquares(QString name, uword components);
-    void PLSCalibration(QString name, QStringList control_keys);
-    void TrainPLSDA(QString name, QStringList label_keys);
+    void ClassicalLeastSquares(const QString &name, const QStringList &reference_keys);
+    void PartialLeastSquares(const QString &name, uword components);
+    void PLSCalibration(const QString &name, const QStringList &control_keys);
+    void TrainPLSDA(const QString &name, const QStringList &label_keys);
     void CorrelationAnalysis(const QString &control_key, QString name);
-    void VertexComponents(QString name, uword endmembers);
-    void KMeans(QString name, size_t clusters, QString metric_text);
+    void VertexComponents(const QString &name, uword endmembers);
+    void KMeans(const QString &name, const QString &metric_text, size_t clusters);
     void PrincipalComponents(const QString &name);
     void PrincipalComponents(const QString &name, bool scale_data);
-    void FindPeaks(QString name, double sel, double threshold,
+    void FindPeaks(const QString &name, double sel, double threshold,
                    uword poly_order, uword window_size);
-    void AgglomerativeClustering(QString name, QString linkage, QString metric);
-    void CalculateRepresentativeSpectrum(QString name, QString statistic, QString metric);
+    void AgglomerativeClustering(const QString &name, const QString &linkage, const QString &metric);
+    void CalculateRepresentativeSpectrum(const QString &name, QString statistic, QString metric);
 
 
     //MEMBER ACCESS FUNCTIONS:
@@ -248,11 +246,6 @@ public:
 
     void SetIndices(vec indices);
 
-
-    //adds or removes dataset or map to relevant lists
-    void AddDataset(VespucciDataset dataset);
-    void RemoveDataset(QString name);
-
     void AddMap(QSharedPointer<MapData> map);
     void RemoveMap(const QString &name);
     int map_loading_count() const;
@@ -281,6 +274,9 @@ public:
     const vec &x_ref();
     const vec &y_ref();
 
+    size_t columns() const;
+    double AbscissaMin() const;
+    double AbscissaMax() const;
 
     bool non_spatial() const;
     bool meta() const;
@@ -324,13 +320,11 @@ public:
                    const QString &results_key,
                    const QString &matrix_key,
                    uword column,
-                   QCPColorGradient gradient,
-                   int tick_count);
+                   QCPColorGradient gradient);
     void CreateMap(const QString &map_name,
                    const QString &matrix_key,
                    uword column,
-                   QCPColorGradient gradient,
-                   int tick_count);
+                   QCPColorGradient gradient);
 
     bool ShowMapViewer(const QString &map_key, bool show);
 

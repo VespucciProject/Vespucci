@@ -46,8 +46,8 @@ BaselineDialog::BaselineDialog(QWidget *parent, QSharedPointer<VespucciWorkspace
     ui->param_2Label->setVisible(false);
     ui->param_3Label->setVisible(false);
 
-    spectrum_q_ = dataset_->PointSpectrum(0);
-    abscissa_q_ = dataset_->WavelengthQVector();
+    spectrum_q_ = Vespucci::FromArmaVec(dataset_->PointSpectrum(0));
+    abscissa_q_ = Vespucci::FromArmaVec(dataset_->abscissa());
     arma::uvec ind = {0};
     spectrum_ = dataset_->spectra(ind);
     abscissa_ = dataset_->abscissa();

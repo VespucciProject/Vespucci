@@ -17,20 +17,30 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef GLOBAL
-#define GLOBAL
-#include "qcustomplot.h"
-#include <mlpack/core.hpp>
-namespace Vespucci{
-    bool SavePlot(QCustomPlot *plot, QString filename);
-    void SetQCPFonts(QCustomPlot *plot, const QFont &font);
-    QProgressDialog *DisplayProgressDialog(QWidget *parent, QString title, QString text);
-    bool KeysAreEqual(QStringList &keys1, QStringList &keys2);
-    struct GlobalGradient{
-        QCPColorGradient gradient;
-        QCPRange range;
-    };
-    QVector<double> FromArmaVec(const arma::vec &data);
-}
-#endif // GLOBAL
+#ifndef DIMENSIONALITYESTIMATIONDIALOG_H
+#define DIMENSIONALITYESTIMATIONDIALOG_H
 
+#include <QDialog>
+#include "Global/vespucciworkspace.h"
+namespace Ui {
+class DimensionalityEstimationDialog;
+}
+
+class DimensionalityEstimationDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit DimensionalityEstimationDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> workspace, const QStringList &matrix_keys);
+    ~DimensionalityEstimationDialog();
+
+private slots:
+    void on_buttonBox_accepted();
+
+private:
+    Ui::DimensionalityEstimationDialog *ui;
+    QSharedPointer<VespucciWorkspace> workspace_;
+    QStringList matrix_keys_;
+};
+
+#endif // DIMENSIONALITYESTIMATIONDIALOG_H

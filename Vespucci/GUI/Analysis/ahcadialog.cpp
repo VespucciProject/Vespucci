@@ -21,22 +21,13 @@
 #include "ui_ahcadialog.h"
 #include "Data/Analysis/multianalyzer.h"
 
-AHCADialog::AHCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
+AHCADialog::AHCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer) :
     QDialog(parent),
-    ui(new Ui::AHCADialog)
+    ui(new Ui::AHCADialog),
+    workspace_(ws),
+    analyzer_(analyzer)
 {
     ui->setupUi(this);
-    workspace_ = ws;
-    dataset_ = workspace_->GetDataset(dataset_key);
-}
-
-AHCADialog::AHCADialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys) :
-    QDialog(ws->main_window()),
-    ui(new Ui::AHCADialog)
-{
-    ui->setupUi(this);
-    workspace_ = ws;
-    dataset_keys_ = dataset_keys;
 }
 
 AHCADialog::~AHCADialog()
@@ -51,21 +42,11 @@ void AHCADialog::on_buttonBox_accepted()
     QString linkage = ui->linkageComboBox->currentText().toLower();
     metric.remove(" ");
     linkage.remove(" ");
-    if (!dataset_keys_.isEmpty()){
-        try{
-            MultiAnalyzer analyzer(workspace_, dataset_keys_);
-            analyzer.AgglomerativeClustering(name, metric, linkage);
-        }catch(exception e){
-            workspace_->main_window()->DisplayExceptionWarning(e);
-        }
+    try{
+        analyzer_->AgglomerativeClustering(name, linkage, metric);
+    }catch(exception e){
+        workspace_->main_window()->DisplayExceptionWarning(e);
     }
-    else if (!dataset_.isNull()){
-        try{
-            dataset_->AgglomerativeClustering(name, linkage, metric);
-        }catch(exception e){
-            workspace_->main_window()->DisplayExceptionWarning(e);
-        }
-   }
    close();
 }
 

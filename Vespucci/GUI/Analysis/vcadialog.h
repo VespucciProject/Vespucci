@@ -34,16 +34,12 @@ class VCADialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit VCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
-    explicit VCADialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys);
+    explicit VCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer);
     ~VCADialog();
 
 private slots:
     void on_buttonBox_accepted();
-
     void on_buttonBox_rejected();
-
-    void on_predictionCheckBox_clicked(bool checked);
 
 private:
     Ui::VCADialog *ui;
@@ -53,17 +49,9 @@ private:
     QSharedPointer<VespucciWorkspace> workspace_;
 
     ///
-    /// \brief data_index_
-    /// Index of the current dataset in the relevant lists
-    int data_index_;
-
-    ///
     /// \brief dataset_
     /// The current dataset
-    QSharedPointer<VespucciDataset> dataset_;
-
-
-    QStringList dataset_keys_;
+    QSharedPointer<AbstractDataAnalyzer> analyzer_;
 };
 
 #endif // VCADIALOG_H

@@ -35,8 +35,7 @@ class UnivariateDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit UnivariateDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
-    explicit UnivariateDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys);
+    explicit UnivariateDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer);
     ~UnivariateDialog();
 
 private slots:
@@ -47,6 +46,8 @@ private slots:
     void on_minLineEdit_textChanged(const QString &arg1);
 
     void on_maxLineEdit_textChanged(const QString &arg1);
+
+    void on_indexSpinBox_editingFinished();
 
 private:
     Ui::UnivariateDialog *ui;
@@ -80,7 +81,7 @@ private:
     ///
     /// \brief dataset_
     /// The current dataset
-    QSharedPointer<VespucciDataset> dataset_;
+    QSharedPointer<AbstractDataAnalyzer> analyzer_;
 
     QStringList dataset_keys_;
 

@@ -58,6 +58,7 @@
 #include "GUI/Processing/univariateconcatenationdialog.h"
 #include "GUI/Analysis/metaanalysisdialog.h"
 #include "GUI/Processing/datasetextractordialog.h"
+#include "GUI/Analysis/dimensionalityestimationdialog.h"
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent usually 0
@@ -226,12 +227,11 @@ void MainWindow::on_actionNew_Univariate_Map_triggered()
                                  "No dataset exists on which to perform this operation");
         return;
     }
-    QString dataset_key = item->DatasetKey();
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
     UnivariateDialog *univariate_dialog =
-        new UnivariateDialog(this, workspace_, dataset_key);
+        new UnivariateDialog(this, workspace_, dataset);
     univariate_dialog->setAttribute(Qt::WA_DeleteOnClose);
     univariate_dialog->show();
-
 }
 
 ///
@@ -247,10 +247,9 @@ void MainWindow::on_actionNew_Band_Ratio_Map_triggered()
         return;
     }
 
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
 
-    QString dataset_key = item->DatasetKey();
-
-    BandRatioDialog *band_ratio_dialog = new BandRatioDialog(this, workspace_, dataset_key);
+    BandRatioDialog *band_ratio_dialog = new BandRatioDialog(this, workspace_, dataset);
     band_ratio_dialog->setAttribute(Qt::WA_DeleteOnClose);
     band_ratio_dialog->show();
 }
@@ -268,16 +267,12 @@ void MainWindow::on_actionPrincipal_Components_Analysis_triggered()
         return;
     }
 
-
-    QString dataset_key = item->DatasetKey();
-
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
 
     PrincipalComponentsDialog *principal_components_dialog =
-            new PrincipalComponentsDialog(this, workspace_, dataset_key);
+            new PrincipalComponentsDialog(this, workspace_, dataset);
     principal_components_dialog->setAttribute(Qt::WA_DeleteOnClose);
     principal_components_dialog->show();
-
-
 }
 
 
@@ -294,15 +289,11 @@ void MainWindow::on_actionVertex_Components_triggered()
         return;
     }
 
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
 
-    QString dataset_key = item->DatasetKey();
-
-
-    VCADialog *vca_dialog = new VCADialog(this, workspace_, dataset_key);
+    VCADialog *vca_dialog = new VCADialog(this, workspace_, dataset);
     vca_dialog->setAttribute(Qt::WA_DeleteOnClose);
     vca_dialog->show();
-
-
 }
 
 
@@ -321,15 +312,12 @@ void MainWindow::on_actionPartial_Least_Squares_triggered()
     }
 
 
-    QString dataset_key = item->DatasetKey();
-
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
 
     PLSDialog *pls_dialog =
-            new PLSDialog(this, workspace_, dataset_key);
+            new PLSDialog(this, workspace_, dataset);
     pls_dialog->setAttribute(Qt::WA_DeleteOnClose);
     pls_dialog->show();
-
-
 }
 
 ///
@@ -346,14 +334,13 @@ void MainWindow::on_actionK_Means_Clustering_triggered()
         return;
     }
 
-
-    QString dataset_key = item->DatasetKey();
-
-
-    KMeansDialog *k_means_dialog =
-            new KMeansDialog(this, workspace_, dataset_key);
-    k_means_dialog->setAttribute(Qt::WA_DeleteOnClose);
-    k_means_dialog->show();
+    if (!item->DatasetKey().isEmpty()){
+        QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
+        KMeansDialog *k_means_dialog =
+                new KMeansDialog(this, workspace_, dataset);
+        k_means_dialog->setAttribute(Qt::WA_DeleteOnClose);
+        k_means_dialog->show();
+    }
 }
 
 
@@ -1157,10 +1144,9 @@ void MainWindow::on_actionClassical_Least_Squares_triggered()
         return;
     }
 
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
 
-    QString dataset_key = item->DatasetKey();
-
-    ClassicalLeastSquaresDialog *cls_dialog = new ClassicalLeastSquaresDialog(this, workspace_, dataset_key);
+    ClassicalLeastSquaresDialog *cls_dialog = new ClassicalLeastSquaresDialog(this, workspace_, dataset);
     cls_dialog->setAttribute(Qt::WA_DeleteOnClose);
     cls_dialog->show();
 }
@@ -1542,9 +1528,9 @@ void MainWindow::on_actionOn_Multiple_Datasets_triggered()
 void MainWindow::on_actionHierarchical_Clustering_triggered()
 {
     TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
-    QString dataset_key = item->DatasetKey();
-    if (!dataset_key.isEmpty()){
-        AHCADialog *dialog = new AHCADialog(this, workspace_, dataset_key);
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
+    if (!item->DatasetKey().isEmpty()){
+        AHCADialog *dialog = new AHCADialog(this, workspace_, dataset);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->show();
     }
@@ -1585,6 +1571,16 @@ void MainWindow::on_actionNew_Dataset_from_Matrix_triggered()
     TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Matrix){
         DatasetExtractorDialog *dialog = new DatasetExtractorDialog(this, workspace_, item->keys());
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->show();
+    }
+}
+
+void MainWindow::on_actionEstimate_Dimensionality_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    if (item->type() == TreeItem::ItemType::Matrix){
+        DimensionalityEstimationDialog *dialog = new DimensionalityEstimationDialog(this, workspace_, item->keys());
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->show();
     }

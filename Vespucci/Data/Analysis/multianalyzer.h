@@ -20,6 +20,7 @@
 #ifndef MULTIANALYZER_H
 #define MULTIANALYZER_H
 #include "Global/vespucciworkspace.h"
+#include "Data/Analysis/abstractdataanalyzer.h"
 using namespace std;
 using namespace arma;
 ///
@@ -28,10 +29,11 @@ using namespace arma;
 /// datasets. Each analysis method will create an AnalysisResults object smart
 /// pointer that is shared by all datasets used, plus an auxiliary matrix in each
 /// dataset for data that corresponds to spectra.
-class MultiAnalyzer
+class MultiAnalyzer : public AbstractDataAnalyzer
 {
 public:
     MultiAnalyzer(QSharedPointer<VespucciWorkspace> workspace, QStringList dataset_keys);
+    ~MultiAnalyzer();
     void Univariate(const QString &name,
                     double &left_bound,
                     double &right_bound,
@@ -46,9 +48,9 @@ public:
                                const QStringList &reference_keys);
     void VertexComponents(const QString &name,
                           uword endmembers);
-    void KMeans(size_t clusters,
+    void KMeans(const QString &name,
                 const QString &metric_text,
-                const QString &name);
+                size_t clusters);
     void PrincipalComponents(const QString &name);
     void PrincipalComponents(const QString &name,
                              bool scale_data);
@@ -67,6 +69,11 @@ public:
                              const sword &column);
     bool ConcatenateSpectra(QStringList dataset_keys);
     void SNVNormalize(double offset);
+    size_t columns() const;
+    double AbscissaMin() const;
+    double AbscissaMax() const;
+    arma::vec PointSpectrum(arma::uword index) const;
+    arma::vec abscissa() const;
 private:
     QSharedPointer<VespucciWorkspace> workspace_;
     void GetDatasets(QStringList keys);

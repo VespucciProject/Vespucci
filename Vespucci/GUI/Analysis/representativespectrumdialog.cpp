@@ -22,10 +22,10 @@
 
 RepresentativeSpectrumDialog::RepresentativeSpectrumDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
-    ui(new Ui::RepresentativeSpectrumDialog)
+    ui(new Ui::RepresentativeSpectrumDialog),
+    workspace_(ws)
 {
     ui->setupUi(this);
-    workspace_ = ws;
     dataset_ = ws->GetDataset(dataset_key);
 }
 

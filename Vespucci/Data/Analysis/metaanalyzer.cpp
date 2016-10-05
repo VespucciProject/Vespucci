@@ -32,6 +32,28 @@ MetaAnalyzer::MetaAnalyzer(QSharedPointer<VespucciWorkspace> ws, const QStringLi
     GetData();
 }
 
+MetaAnalyzer::~MetaAnalyzer(){}
+
+void MetaAnalyzer::Univariate(const QString &name, double &left_bound, double &right_bound, arma::uword bound_window)
+{
+    QString new_name = FindUniqueName(name);
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(new_name));
+    univariate_data->Apply(left_bound, right_bound, bound_window, data_, abscissa_);
+    QStringList matrix_keys = univariate_data->KeyList();
+    AddResults(univariate_data, matrix_keys);
+}
+
+void MetaAnalyzer::BandRatio(const QString &name, double &first_left_bound, double &first_right_bound, double &second_left_bound, double &second_right_bound, arma::uword bound_window)
+{
+    QString new_name = FindUniqueName(name);
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(new_name));
+    univariate_data->Apply(first_left_bound, first_right_bound,
+                           second_left_bound, second_right_bound,
+                           bound_window, data_, abscissa_);
+    QStringList matrix_keys = univariate_data->KeyList();
+    AddResults(univariate_data, matrix_keys);
+}
+
 void MetaAnalyzer::ClassicalLeastSquares(const QString &name, const QStringList &reference_keys)
 {
     QString new_name = FindUniqueName(name);
@@ -56,7 +78,9 @@ void MetaAnalyzer::VertexComponents(const QString &name, uword endmembers)
     AddResults(vca_data, matrix_keys);
 }
 
-void MetaAnalyzer::KMeans(size_t clusters, const QString &metric_text, const QString &name)
+void MetaAnalyzer::KMeans(const QString &name,
+                          const QString &metric_text,
+                          size_t clusters)
 {
     QString new_name = FindUniqueName(name);
 
@@ -158,6 +182,31 @@ void MetaAnalyzer::AgglomerativeClustering(const QString &name, const QString &m
     ahca_results->AddMatrix("Cluster Distances", ahca.merge_data());
     QStringList matrix_keys = QStringList({"Assignments"});
     AddResults(ahca_results, matrix_keys);
+}
+
+size_t MetaAnalyzer::columns() const
+{
+    return data_.n_cols;
+}
+
+double MetaAnalyzer::AbscissaMin() const
+{
+    return abscissa_.min();
+}
+
+double MetaAnalyzer::AbscissaMax() const
+{
+    return abscissa_.max();
+}
+
+arma::vec MetaAnalyzer::abscissa() const
+{
+    return abscissa_;
+}
+
+arma::vec MetaAnalyzer::PointSpectrum(arma::uword index) const
+{
+    return data_.col((index < data_.n_cols ? index : data_.n_cols - 1));
 }
 
 void MetaAnalyzer::GetData()

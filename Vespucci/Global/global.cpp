@@ -178,3 +178,8 @@ bool Vespucci::KeysAreEqual(QStringList &keys1, QStringList &keys2)
         return key_equal;
     }
 }
+
+QVector<double> Vespucci::FromArmaVec(const arma::vec &data)
+{
+    return QVector<double>::fromStdVector(conv_to<std::vector<double> >::from(data));
+}

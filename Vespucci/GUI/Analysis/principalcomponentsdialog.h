@@ -37,8 +37,7 @@ class PrincipalComponentsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PrincipalComponentsDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
-    explicit PrincipalComponentsDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys);
+    explicit PrincipalComponentsDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer);
     ~PrincipalComponentsDialog();
 
 private slots:
@@ -54,18 +53,10 @@ private:
     /// The current dataset
     QSharedPointer<VespucciWorkspace> workspace_;
 
-
-    ///
-    /// \brief data_index_
-    /// Index of current dataset in relevant lists
-    int data_index_;
-
-    ///
     /// \brief dataset_
     /// Current dataset
-    QSharedPointer<VespucciDataset> dataset_;
+    QSharedPointer<AbstractDataAnalyzer> analyzer_;
 
-    QStringList dataset_keys_;
 };
 
 #endif // PRINCIPALCOMPONENTSDIALOG_H

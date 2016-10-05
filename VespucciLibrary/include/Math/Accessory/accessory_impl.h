@@ -113,7 +113,7 @@ template <typename T> T Vespucci::Math::conv_fft(const T &A, const T &B, std::st
         arma::cx_mat B_hat = fft(B, n);
         arma::cx_mat w = ifft(A_hat % B_hat, n);
         w = w.rows(0, A.n_rows - 1);
-        return real(w);
+        return arma::real(w);
     }
     else if (type == "circular"){
 
@@ -126,8 +126,7 @@ template <typename T> T Vespucci::Math::conv_fft(const T &A, const T &B, std::st
         arma::cx_mat A_hat = fft(A_padded, n);
         arma::cx_mat B_hat = fft(B_padded, n);
         arma::cx_mat w = ifft(A_hat % B_hat, n);
-        //w = w.rows(0, A.n_rows - 1);
-        return real(w);
+        return arma::real(w);
     }
     else
         throw(std::invalid_argument("argument 'type' invalid"));

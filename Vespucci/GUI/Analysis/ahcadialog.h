@@ -33,8 +33,7 @@ class AHCADialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AHCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
-    explicit AHCADialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys);
+    explicit AHCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer);
     ~AHCADialog();
 
 private slots:
@@ -45,8 +44,7 @@ private slots:
 private:
     Ui::AHCADialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;
-    QSharedPointer<VespucciDataset> dataset_;
-    QStringList dataset_keys_;
+    QSharedPointer<AbstractDataAnalyzer> analyzer_;
 };
 
 #endif // AHCADIALOG_H

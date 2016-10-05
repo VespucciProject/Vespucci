@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
+#include "Data/Analysis/abstractdataanalyzer.h"
 #include "Data/Dataset/vespuccidataset.h"
 #include <mlpack/methods/kmeans/kmeans.hpp>
 #include <mlpack/methods/quic_svd/quic_svd.hpp>
@@ -29,10 +30,8 @@ using namespace std;
 
 ///
 /// \brief VespucciDataset::~VespucciDataset
-/// Destructor deletes everything allocated with new that isn't a smart pointer
-VespucciDataset::~VespucciDataset()
-{
-}
+///
+VespucciDataset::~VespucciDataset(){}
 
 bool VespucciDataset::Save(QString filename)
 {
@@ -209,7 +208,7 @@ bool VespucciDataset::saved() const
 VespucciDataset::VespucciDataset(const QString &h5_filename,
                                  MainWindow *main_window,
                                  QSharedPointer<VespucciWorkspace> ws)
-    : auxiliary_matrices_(new AnalysisResults("Auxiliary Matrices", "Auxiliary Matrices")), empty_matrix_()
+    : auxiliary_matrices_(new AnalysisResults("Auxiliary Matrices", "Auxiliary Matrices"))
 {
     saved_ = true;
     filename_ = h5_filename;
@@ -1254,10 +1253,11 @@ int VespucciDataset::QUIC_SVD(double epsilon)
     mlpack::svd::QUIC_SVD svd_obj(spectra_, u, v, sigma, epsilon, 0.1);
     SVD_rank = u.n_cols;
     state_changed_ = true;
-
     spectra_ = u * sigma * v.t();
     last_operation_ = "QUIC_SVD de-noise";
     operations_ << "QUIC_SVD(" + QString::number(epsilon) +  " )";
+    vec SVD_vec({double(SVD_rank)});
+    AddAuxiliaryMatrix("QUIC-SVD Rank", SVD_vec);
     return SVD_rank;
 }
 
@@ -1269,7 +1269,7 @@ int VespucciDataset::QUIC_SVD(double epsilon)
 /// \param window_size The size of the filter window.
 ///
 void VespucciDataset::SavitzkyGolay(unsigned int derivative_order,
-                                 unsigned int polynomial_order,
+                                    unsigned int polynomial_order,
                                  unsigned int window_size)
 {
     state_changed_ = true;
@@ -1639,7 +1639,7 @@ void VespucciDataset::ApplyFTWeight(double start_offset,
 /// \param right_bound
 /// \param bound_window
 ///
-void VespucciDataset::Univariate(QString name,
+void VespucciDataset::Univariate(const QString &name,
                                  double &left_bound, double &right_bound,
                                  uword bound_window)
 {
@@ -1671,7 +1671,7 @@ void VespucciDataset::Univariate(QString name,
 /// \param second_right_bound
 /// \param bound_window
 ///
-void VespucciDataset::BandRatio(QString name, double &first_left_bound, double &first_right_bound, double &second_left_bound, double &second_right_bound, uword bound_window)
+void VespucciDataset::BandRatio(const QString &name, double &first_left_bound, double &first_right_bound, double &second_left_bound, double &second_right_bound, uword bound_window)
 {
     state_changed_ = true;
     QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name));
@@ -1748,7 +1748,7 @@ void VespucciDataset::PrincipalComponents(const QString &name)
 /// \param poly_order Polynomial order for Savitzky-Golay derivatization
 /// \param window_size Window size for Savitzky-Golay derivatization
 ///
-void VespucciDataset::FindPeaks(QString name, double sel, double threshold, uword poly_order, uword window_size)
+void VespucciDataset::FindPeaks(const QString &name, double sel, double threshold, uword poly_order, uword window_size)
 {/*
 
     mat peak_magnitudes;
@@ -1778,7 +1778,7 @@ void VespucciDataset::FindPeaks(QString name, double sel, double threshold, uwor
 /// \param linkage
 /// \param metric
 /// linkage and metric must be valid arguments for Vespucci::Math::Clustering::AHCA
-void VespucciDataset::AgglomerativeClustering(QString name, QString linkage, QString metric)
+void VespucciDataset::AgglomerativeClustering(const QString &name, const QString &linkage, const QString &metric)
 {
     QSharedPointer<AnalysisResults> ahca_results(new AnalysisResults(name, "AHCA"));
     mat assignments;
@@ -1808,7 +1808,7 @@ void VespucciDataset::AgglomerativeClustering(QString name, QString linkage, QSt
 /// \param statistic Either "centroid" or "medoid"
 /// \param metric Valid for DistanceMetricWrapper
 /// statist
-void VespucciDataset::CalculateRepresentativeSpectrum(QString name, QString statistic, QString metric)
+void VespucciDataset::CalculateRepresentativeSpectrum(const QString &name, QString statistic, QString metric)
 {
     uword index;
     vec rep;
@@ -1831,7 +1831,7 @@ void VespucciDataset::CalculateRepresentativeSpectrum(QString name, QString stat
 /// \brief VespucciDataset::VertexComponents
 /// \param endmembers
 /// Perform VCA without creating an image
-void VespucciDataset::VertexComponents(QString name, uword endmembers)
+void VespucciDataset::VertexComponents(const QString &name, uword endmembers)
 {
     state_changed_ = true;
 
@@ -1876,7 +1876,7 @@ void VespucciDataset::VertexComponents(QString name, uword endmembers)
 /// \brief VespucciDataset::PartialLeastSquares
 /// \param components
 /// Perform partial least squares without creating an image
-void VespucciDataset::PartialLeastSquares(QString name, uword components)
+void VespucciDataset::PartialLeastSquares(const QString &name, uword components)
 {
     state_changed_ = true;
     if(components == 0){
@@ -1901,7 +1901,7 @@ void VespucciDataset::PartialLeastSquares(QString name, uword components)
 
 }
 
-void VespucciDataset::PLSCalibration(QString name, QStringList control_keys)
+void VespucciDataset::PLSCalibration(const QString &name, const QStringList &control_keys)
 {
     state_changed_ = true;
     QSharedPointer<PLSData> pls_data(new PLSData(name));
@@ -1918,7 +1918,7 @@ void VespucciDataset::PLSCalibration(QString name, QStringList control_keys)
     workspace_->UpdateModel();
 }
 
-void VespucciDataset::TrainPLSDA(QString name, QStringList label_keys)
+void VespucciDataset::TrainPLSDA(const QString &name, const QStringList &label_keys)
 {
     state_changed_ = true;
     QSharedPointer<PLSData> pls_data(new PLSData(name));
@@ -1976,7 +1976,7 @@ void VespucciDataset::CorrelationAnalysis(const QString &control_key, QString na
 /// \param metric Distance metric
 /// \param name Name of map in workspace.
 ///
-void VespucciDataset::KMeans(QString name, size_t clusters, QString metric_text)
+void VespucciDataset::KMeans(const QString &name, const QString &metric_text, size_t clusters)
 {
     if(clusters == 0){
         state_changed_ = true;
@@ -2048,7 +2048,7 @@ void VespucciDataset::KMeans(QString name, size_t clusters, QString metric_text)
                   + metric_text + ")";
 }
 
-void VespucciDataset::ClassicalLeastSquares(QString name, const QStringList &reference_keys)
+void VespucciDataset::ClassicalLeastSquares(const QString &name, const QStringList &reference_keys)
 {
     state_changed_ = true;
     mat reference = workspace_->GetMatrix(reference_keys);
@@ -2111,35 +2111,9 @@ uword VespucciDataset::FindOrigin() const
 /// \param index
 /// \return
 ///
-QVector<double> VespucciDataset::PointSpectrum(const uword index) const
+vec VespucciDataset::PointSpectrum(uword index) const
 {
-    //perform bounds check.
-    std::vector<double> spectrum_stdvector;
-    QVector<double> spectrum_qvector;
-    cout << "index  = " << index << "\n";
-
-    try{
-        if (index > spectra_.n_cols){
-            spectrum_stdvector =
-                    conv_to< std::vector<double> >::from(spectra_.col(spectra_.n_cols - 1));
-        }
-        else{
-             spectrum_stdvector =
-                     conv_to< std::vector<double> >::from(spectra_.col(index));
-        }
-
-        spectrum_qvector = QVector<double>::fromStdVector(spectrum_stdvector);
-    }
-    catch(exception e){
-        cerr << "exception thrown!\n";
-
-        main_window_->DisplayExceptionWarning("VespucciDataset::PointSpectrum", e);
-    }
-
-    cout << "end of PointSpectrum\n";
-
-
-    return spectrum_qvector;
+    return spectra_.col((index < spectra_.n_cols ? index : spectra_.n_cols - 1));
 }
 
 QVector<double> VespucciDataset::WavelengthQVector() const
@@ -2706,6 +2680,21 @@ const vec &VespucciDataset::y_ref()
     return y_;
 }
 
+size_t VespucciDataset::columns() const
+{
+    return spectra_.n_cols;
+}
+
+double VespucciDataset::AbscissaMin() const
+{
+    return abscissa_.min();
+}
+
+double VespucciDataset::AbscissaMax() const
+{
+    return abscissa_.max();
+}
+
 
 ///
 /// \brief VespucciDataset::Undoable
@@ -3010,52 +2999,54 @@ void VespucciDataset::CreateMap(const QString &map_name,
                                 const QString &results_key,
                                 const QString &matrix_key,
                                 uword column,
-                                QCPColorGradient gradient,
-                                int tick_count)
+                                QCPColorGradient gradient)
 {
-    if (!AnalysisResultsKeys().contains(results_key)) return;
-    if (!GetAnalysisResult(results_key)->HasMatrix(matrix_key)) return;
-    QStringList data_keys = {name_, results_key, matrix_key};
-    QString map_type = GetAnalysisResult(results_key)->type() + " Color Map";
-    QSharedPointer<MapData> new_map(new MapData(map_name,
-                                                map_type,
-                                                data_keys,
-                                                column,
-                                                workspace_));
+    if (AnalysisResultsKeys().contains(results_key)
+            && GetAnalysisResult(results_key)->HasMatrix(matrix_key)){
+        QStringList data_keys = {name_, results_key, matrix_key};
+        QString map_type = GetAnalysisResult(results_key)->type() + " Color Map";
+        QSharedPointer<MapData> new_map(new MapData(map_name,
+                                                    map_type,
+                                                    data_keys,
+                                                    column,
+                                                    workspace_));
 
-    new_map->setGradient(gradient);
-    AddMap(new_map);
-    workspace_->UpdateModel();
+        new_map->setGradient(gradient);
+        AddMap(new_map);
+        workspace_->UpdateModel();
+    }
 }
 
 void VespucciDataset::CreateMap(const QString &map_name,
                                 const QString &matrix_key,
                                 uword column,
-                                QCPColorGradient gradient,
-                                int tick_count)
+                                QCPColorGradient gradient)
 {
-    if (!auxiliary_matrices_->HasMatrix(matrix_key)) return;
-    QStringList data_keys = {name_, matrix_key};
-    QSharedPointer<MapData> new_map(new MapData(map_name,
-                                                QString(),
-                                                data_keys,
-                                                column,
-                                                workspace_));
-    new_map->setGradient(gradient);
-    AddMap(new_map);
-    workspace_->UpdateModel();
+    if (auxiliary_matrices_->HasMatrix(matrix_key)){
+        QStringList data_keys = {name_, matrix_key};
+        QSharedPointer<MapData> new_map(new MapData(map_name,
+                                                    QString(),
+                                                    data_keys,
+                                                    column,
+                                                    workspace_));
+        new_map->setGradient(gradient);
+        AddMap(new_map);
+        workspace_->UpdateModel();
+    }
 }
 
 bool VespucciDataset::ShowMapViewer(const QString &map_key, bool show)
 {
     if (!MapKeys().contains(map_key)) return false;
-    for (auto map: maps_){
-        if (map->name() == map_key){
-            map->ShowMapWindow(show);
-            return true;
+    bool ok = MapKeys().contains(map_key);
+        if (ok){
+        for (auto map: maps_){
+            if (map->name() == map_key){
+                map->ShowMapWindow(show);
+            }
         }
     }
-    return false;
+    return ok;
 }
 
 QStringList VespucciDataset::MapKeys() const

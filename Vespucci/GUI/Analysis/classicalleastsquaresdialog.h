@@ -14,8 +14,7 @@ class ClassicalLeastSquaresDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ClassicalLeastSquaresDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
-    explicit ClassicalLeastSquaresDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys);
+    explicit ClassicalLeastSquaresDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer);
     ~ClassicalLeastSquaresDialog();
 
 public slots:
@@ -29,8 +28,7 @@ private:
     Ui::ClassicalLeastSquaresDialog *ui;
     MatrixSelectionDialog *matrix_selection_dialog_;
     QSharedPointer<VespucciWorkspace> workspace_;
-    QSharedPointer<VespucciDataset> dataset_;
-    QStringList dataset_keys_;
+    QSharedPointer<AbstractDataAnalyzer> analyzer_;
     QStringList matrix_keys_;
 };
 
