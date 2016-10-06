@@ -17,35 +17,22 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef METAANALYSISDIALOG_H
-#define METAANALYSISDIALOG_H
-
-#include <QDialog>
-#include "Global/vespucciworkspace.h"
-#include "GUI/Processing/matrixselectiondialog.h"
-
-
-namespace Ui {
-class MetaAnalysisDialog;
+#ifndef ROLLINGBALL_H
+#define ROLLINGBALL_H
+#include "Global/libvespucci.h"
+#include <mlpack/core.hpp>
+namespace Vespucci{
+    namespace Math{
+        namespace Baseline{
+            VESPUCCI_EXPORT arma::vec RollingBallBaseline(const arma::vec &spectrum,
+                                                          arma::vec &baseline,
+                                                          arma::uword wm,
+                                                          arma::uword ws);
+            VESPUCCI_EXPORT arma::mat RollingBallBaselineMat(const arma::mat &spectra,
+                                                             arma::mat &baselines,
+                                                             arma::uword wm,
+                                                             arma::uword ws);
+        }
+    }
 }
-
-class MetaAnalysisDialog : public QDialog
-{
-    Q_OBJECT
-
-public:
-    explicit MetaAnalysisDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QStringList &data_keys);
-    ~MetaAnalysisDialog();
-private slots:
-    void on_buttonBox_accepted();
-
-    void on_buttonBox_rejected();
-
-private:
-    Ui::MetaAnalysisDialog *ui;
-    QSharedPointer<VespucciWorkspace> workspace_;
-    QStringList data_keys_;
-    MatrixSelectionDialog *matrix_selection_dialog_;
-};
-
-#endif // METAANALYSISDIALOG_H
+#endif // ROLLINGBALL_H

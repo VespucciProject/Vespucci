@@ -41,7 +41,14 @@ void MultiAnalyzer::Univariate(const QString &name, double &left_bound, double &
     QString new_name = FindUniqueName(name);
     QSharedPointer<UnivariateData> univariate_data(new UnivariateData(new_name));
     univariate_data->Apply(left_bound, right_bound, bound_window, data_, abscissa_);
-    QStringList matrix_keys = univariate_data->KeyList();
+    QStringList matrix_keys({"Peak Centers",
+                             "Peak Intensities",
+                             "Adjusted Peak Intensities",
+                             "Total Area",
+                             "Adjusted Area",
+                             "Area Between Inflection Points",
+                             "Adjusted Area Between Inflection Points",
+                             "Empirical Full-Width at Half-Maximum"});
     AddAnalysisResults(univariate_data, matrix_keys);
 }
 
@@ -52,7 +59,7 @@ void MultiAnalyzer::BandRatio(const QString &name, double &first_left_bound, dou
     univariate_data->Apply(first_left_bound, first_right_bound,
                            second_left_bound, second_right_bound,
                            bound_window, data_, abscissa_);
-    QStringList matrix_keys = univariate_data->KeyList();
+    QStringList matrix_keys({"Band Ratios"});
     AddAnalysisResults(univariate_data, matrix_keys);
 }
 

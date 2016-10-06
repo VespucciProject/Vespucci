@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>700</width>
-    <height>532</height>
+    <height>474</height>
    </rect>
   </property>
   <property name="font">
@@ -64,6 +64,11 @@
        <item>
         <property name="text">
          <string>Median Filter</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rolling Ball</string>
         </property>
        </item>
        <item>

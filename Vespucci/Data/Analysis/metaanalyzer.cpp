@@ -39,8 +39,15 @@ void MetaAnalyzer::Univariate(const QString &name, double &left_bound, double &r
     QString new_name = FindUniqueName(name);
     QSharedPointer<UnivariateData> univariate_data(new UnivariateData(new_name));
     univariate_data->Apply(left_bound, right_bound, bound_window, data_, abscissa_);
-    QStringList matrix_keys = univariate_data->KeyList();
-    AddResults(univariate_data, matrix_keys);
+    QStringList matrix_keys({"Peak Centers",
+                             "Peak Intensities",
+                             "Adjusted Peak Intensities",
+                             "Total Area",
+                             "Adjusted Area",
+                             "Area Between Inflection Points",
+                             "Adjusted Area Between Inflection Points",
+                             "Empirical Full-Width at Half-Maximum"});
+    AddAnalysisResults(univariate_data, matrix_keys);
 }
 
 void MetaAnalyzer::BandRatio(const QString &name, double &first_left_bound, double &first_right_bound, double &second_left_bound, double &second_right_bound, arma::uword bound_window)
@@ -50,8 +57,8 @@ void MetaAnalyzer::BandRatio(const QString &name, double &first_left_bound, doub
     univariate_data->Apply(first_left_bound, first_right_bound,
                            second_left_bound, second_right_bound,
                            bound_window, data_, abscissa_);
-    QStringList matrix_keys = univariate_data->KeyList();
-    AddResults(univariate_data, matrix_keys);
+    QStringList matrix_keys({"Band Ratios"});
+    AddAnalysisResults(univariate_data, matrix_keys);
 }
 
 void MetaAnalyzer::ClassicalLeastSquares(const QString &name, const QStringList &reference_keys)
@@ -66,7 +73,7 @@ void MetaAnalyzer::ClassicalLeastSquares(const QString &name, const QStringList 
         workspace_->main_window()->DisplayExceptionWarning(e);
     }
     cls_results->AddMatrix("Coefficients", coefs.t());
-    AddResults(cls_results, QStringList({"Coefficients"}));
+    AddAnalysisResults(cls_results, QStringList({"Coefficients"}));
 }
 
 void MetaAnalyzer::VertexComponents(const QString &name, uword endmembers)
@@ -75,7 +82,7 @@ void MetaAnalyzer::VertexComponents(const QString &name, uword endmembers)
     QSharedPointer<VCAData> vca_data(new VCAData(new_name));
     vca_data->Apply(data_, endmembers);
     QStringList matrix_keys({"Fractional Abundances"});
-    AddResults(vca_data, matrix_keys);
+    AddAnalysisResults(vca_data, matrix_keys);
 }
 
 void MetaAnalyzer::KMeans(const QString &name,
@@ -114,7 +121,7 @@ void MetaAnalyzer::KMeans(const QString &name,
     km_results->AddMatrix("Centroids", centroids);
     QStringList matrix_keys({"Assignments"});
 
-    AddResults(km_results, matrix_keys);
+    AddAnalysisResults(km_results, matrix_keys);
 }
 
 void MetaAnalyzer::PrincipalComponents(const QString &name)
@@ -123,7 +130,7 @@ void MetaAnalyzer::PrincipalComponents(const QString &name)
     QSharedPointer<PrincipalComponentsData> pca_data(new PrincipalComponentsData(new_name));
     pca_data->Apply(data_);
     QStringList matrix_keys({"Scores"});
-    AddResults(pca_data, matrix_keys);
+    AddAnalysisResults(pca_data, matrix_keys);
 }
 
 void MetaAnalyzer::PrincipalComponents(const QString &name, bool scale_data)
@@ -131,7 +138,7 @@ void MetaAnalyzer::PrincipalComponents(const QString &name, bool scale_data)
     QString new_name = FindUniqueName(name);
     QSharedPointer<MlpackPCAData> pca_data(new MlpackPCAData(new_name));
     pca_data->Apply(data_, scale_data);
-    AddResults(pca_data, QStringList());
+    AddAnalysisResults(pca_data, QStringList());
 }
 
 void MetaAnalyzer::PartialLeastSquares(const QString &name, uword components)
@@ -140,7 +147,7 @@ void MetaAnalyzer::PartialLeastSquares(const QString &name, uword components)
     QSharedPointer<PLSData> pls_data(new PLSData(new_name));
     pls_data->Classify(data_, abscissa_, components);
     QStringList matrices({"Predictor Scores", "Response Scores"});
-    AddResults(pls_data, matrices);
+    AddAnalysisResults(pls_data, matrices);
 }
 
 void MetaAnalyzer::PLSCalibration(const QString &name, const QStringList &control_keys)
@@ -150,7 +157,7 @@ void MetaAnalyzer::PLSCalibration(const QString &name, const QStringList &contro
     mat controls = workspace_->GetMatrix(control_keys);
     pls_data->Calibrate(data_, controls);
     QStringList matrices({"Predictor Scores", "Response Scores"});
-    AddResults(pls_data, matrices);
+    AddAnalysisResults(pls_data, matrices);
 }
 
 void MetaAnalyzer::TrainPLSDA(const QString &name, const QStringList &label_keys)
@@ -160,7 +167,7 @@ void MetaAnalyzer::TrainPLSDA(const QString &name, const QStringList &label_keys
     mat labels = workspace_->GetMatrix(label_keys);
     pls_data->Discriminate(data_, labels);
     QStringList matrices({"Predictor Scores", "Response Scores"});
-    AddResults(pls_data, matrices);
+    AddAnalysisResults(pls_data, matrices);
 }
 
 void MetaAnalyzer::AgglomerativeClustering(const QString &name, const QString &metric, const QString &linkage)
@@ -181,7 +188,7 @@ void MetaAnalyzer::AgglomerativeClustering(const QString &name, const QString &m
     ahca_results->AddMatrix("Spectrum Distances", ahca.dist());
     ahca_results->AddMatrix("Cluster Distances", ahca.merge_data());
     QStringList matrix_keys = QStringList({"Assignments"});
-    AddResults(ahca_results, matrix_keys);
+    AddAnalysisResults(ahca_results, matrix_keys);
 }
 
 size_t MetaAnalyzer::columns() const
@@ -238,7 +245,7 @@ QString MetaAnalyzer::FindUniqueName(QString name)
     else return name; //unique name resolved by VespucciDataset::AddAnalysisResult
 }
 
-void MetaAnalyzer::AddResults(QSharedPointer<AnalysisResults> results, QStringList matrices)
+void MetaAnalyzer::AddAnalysisResults(QSharedPointer<AnalysisResults> results, QStringList matrices)
 {
     QString first_dataset_key = data_keys_.first();
     QSharedPointer<VespucciDataset> first_dataset = workspace_->GetDataset(first_dataset_key);

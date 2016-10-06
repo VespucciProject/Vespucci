@@ -65,7 +65,7 @@ public:
 private:
     void GetData();
     QString FindUniqueName(QString name);
-    void AddResults(QSharedPointer<AnalysisResults> results, QStringList matrices);
+    void AddAnalysisResults(QSharedPointer<AnalysisResults> results, QStringList matrices);
     QSharedPointer<VespucciWorkspace> workspace_;
     QStringList data_keys_;
     mat data_;

@@ -37,124 +37,12 @@ MetaAnalysisDialog::MetaAnalysisDialog(QWidget *parent,
     data_keys_(data_keys)
 {
     ui->setupUi(this);
-    ui->linkageComboBox->setVisible(false);
-    ui->linkageLabel->setVisible(false);
-    ui->metricComboBox->setVisible(false);
-    ui->metricLabel->setVisible(false);
-    ui->componentsLabel->setVisible(false);
-    ui->componentsSpinBox->setVisible(false);
-    ui->controlLabel->setVisible(false);
-    ui->controlDisplayLabel->setVisible(false);
-    ui->selectPushButton->setVisible(false);
-    matrix_selection_dialog_ = new MatrixSelectionDialog(this, workspace_->dataset_tree_model());
-    connect(matrix_selection_dialog_, &MatrixSelectionDialog::MatrixSelected,
-            this, &MetaAnalysisDialog::MatrixSelected);
 }
 
 MetaAnalysisDialog::~MetaAnalysisDialog()
 {
     delete ui;
     delete matrix_selection_dialog_;//should be deleted anyway?
-}
-
-void MetaAnalysisDialog::MatrixSelected(QStringList keys)
-{
-    control_data_keys_ = keys;
-    ui->controlDisplayLabel->setText(keys.last());
-}
-
-void MetaAnalysisDialog::on_typeComboBox_currentTextChanged(const QString &arg1)
-{
-    if (arg1 == "Principal Component Analysis"){
-        ui->linkageComboBox->setVisible(false);
-        ui->linkageLabel->setVisible(false);
-        ui->metricComboBox->setVisible(false);
-        ui->metricLabel->setVisible(false);
-        ui->componentsLabel->setVisible(false);
-        ui->componentsSpinBox->setVisible(false);
-        ui->controlLabel->setVisible(false);
-        ui->controlDisplayLabel->setVisible(false);
-        ui->selectPushButton->setVisible(false);
-    }
-    else if (arg1 == "Vertex Component Analysis"){
-        ui->linkageComboBox->setVisible(false);
-        ui->linkageLabel->setVisible(false);
-        ui->metricComboBox->setVisible(false);
-        ui->metricLabel->setVisible(false);
-        ui->componentsLabel->setVisible(true);
-        ui->componentsSpinBox->setVisible(true);
-        ui->controlLabel->setVisible(false);
-        ui->controlDisplayLabel->setVisible(false);
-        ui->selectPushButton->setVisible(false);
-    }
-    else if (arg1 == "Partial Least Squares (Classification)"){
-        ui->linkageComboBox->setVisible(false);
-        ui->linkageLabel->setVisible(false);
-        ui->metricComboBox->setVisible(false);
-        ui->metricLabel->setVisible(false);
-        ui->componentsLabel->setVisible(true);
-        ui->componentsSpinBox->setVisible(true);
-        ui->controlLabel->setVisible(false);
-        ui->controlDisplayLabel->setVisible(false);
-        ui->selectPushButton->setVisible(false);
-    }
-    else if (arg1 == "k-Means Clustering"){
-        ui->linkageComboBox->setVisible(false);
-        ui->linkageLabel->setVisible(false);
-        ui->metricComboBox->setVisible(true);
-        ui->metricLabel->setVisible(true);
-        ui->componentsLabel->setVisible(true);
-        ui->componentsSpinBox->setVisible(true);
-        QStringList metrics({"Squared Euclidean",
-                             "Euclidean",
-                             "Manhattan",
-                             "Chebyshev"});
-        ui->metricComboBox->clear();
-        ui->metricComboBox->addItems(metrics);
-        ui->controlLabel->setVisible(false);
-        ui->controlDisplayLabel->setVisible(false);
-        ui->selectPushButton->setVisible(false);
-    }
-    else if (arg1 == "Hierarchical Clustering"){
-        ui->linkageComboBox->setVisible(true);
-        ui->linkageLabel->setVisible(true);
-        ui->metricComboBox->setVisible(true);
-        ui->metricLabel->setVisible(true);
-        ui->componentsLabel->setVisible(false);
-        ui->componentsSpinBox->setVisible(false);
-        QStringList metrics({"Squared Euclidean",
-                            "Euclidean",
-                            "Manhattan",
-                            "Chebyshev",
-                            "Cosine",
-                            "Correlation"});
-        QStringList linkages({"Ward",
-                             "Average",
-                             "Centroid",
-                             "Single",
-                             "Complete"});
-        ui->metricComboBox->clear();
-        ui->metricComboBox->addItems(metrics);
-        ui->linkageComboBox->clear();
-        ui->linkageComboBox->addItems(linkages);
-        ui->controlLabel->setVisible(false);
-        ui->controlDisplayLabel->setVisible(false);
-        ui->selectPushButton->setVisible(false);
-    }
-    else if (arg1 == "Classical Least Squares"){
-        ui->linkageComboBox->setVisible(false);
-        ui->linkageLabel->setVisible(false);
-        ui->metricComboBox->setVisible(false);
-        ui->metricLabel->setVisible(false);
-        ui->componentsLabel->setVisible(false);
-        ui->componentsSpinBox->setVisible(false);
-        ui->controlLabel->setVisible(true);
-        ui->controlDisplayLabel->setVisible(true);
-        ui->selectPushButton->setVisible(true);
-    }
-    else{
-        return;
-    }
 }
 
 void MetaAnalysisDialog::on_buttonBox_accepted()
@@ -209,9 +97,4 @@ void MetaAnalysisDialog::on_buttonBox_accepted()
 void MetaAnalysisDialog::on_buttonBox_rejected()
 {
     close();
-}
-
-void MetaAnalysisDialog::on_selectPushButton_clicked()
-{
-    matrix_selection_dialog_->show();
 }

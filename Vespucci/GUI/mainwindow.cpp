@@ -1521,7 +1521,7 @@ void MainWindow::on_actionTransform_triggered()
 void MainWindow::on_actionOn_Multiple_Datasets_triggered()
 {
     MultiAnalysisDialog *dialog = new MultiAnalysisDialog(this, workspace_);
-    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    //dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->show();
 }
 
@@ -1561,7 +1561,7 @@ void MainWindow::on_actionAnalyze_triggered()
     TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Matrix){
         MetaAnalysisDialog *dialog = new MetaAnalysisDialog(this, workspace_, item->keys());
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        //dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->show();
     }
 }

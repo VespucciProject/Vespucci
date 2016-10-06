@@ -141,6 +141,7 @@ public:
     void SingularValue(unsigned int singular_values);
     int QUIC_SVD(double epsilon);
     void MFBaseline(int window_size, int iterations);
+    void RollingBallBaseline(size_t wm, size_t ws);
     void CWTBaseline(int lambda, int penalty_order, double SNR_threshold, double peak_shape_threshold);
     void IModPolyBaseline(const uword poly_order, const uword max_it, double threshold);
     void RemoveClippedSpectra(double threshold);

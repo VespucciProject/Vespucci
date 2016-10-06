@@ -24,6 +24,7 @@
 #include "Data/Import/textimport.h"
 #include "Math/Clustering/agglomerativeclustering.h"
 #include <H5Cpp.h>
+#include "Math/Baseline/rollingball.h"
 using namespace arma;
 using namespace std;
 
@@ -959,7 +960,7 @@ void VespucciDataset::SubtractBackground(const QStringList &data_keys)
 }
 
 ///
-/// \brief VespucciDataset::Baseline
+/// \brief VespucciDataset::MFBaseline
 /// Baseline-adjusts the data. This function uses a median filter with a large
 /// window to determine the baseline on the assumption that the median value
 /// is more likely to be basline than spectrum. This will complicate things if
@@ -988,6 +989,29 @@ void VespucciDataset::MFBaseline(int window_size, int iterations)
     operations_ << "MFBaseline("
                    + QString::number(window_size) + ", "
                    + QString::number(iterations) + ")";
+}
+
+///
+/// \brief VespucciDataset::RollingBallBaseline
+/// \param wm
+/// \param ws
+///
+void VespucciDataset::RollingBallBaseline(size_t wm, size_t ws)
+{
+    state_changed_ = true;
+    SetOldCopies();
+    try{
+        mat baselines;
+        spectra_ = Vespucci::Math::Baseline::RollingBallBaselineMat(spectra_, baselines, wm, ws);
+        AddAuxiliaryMatrix("Rolling Ball Baselines", baselines);
+    }catch(exception e){
+        string str = "RollingBallBaseline " + string(e.what());
+        throw std::runtime_error(str);
+    }
+    last_operation_ = "baseline correction (rolling ball)";
+    operations_ << "RollingBallBaseline("
+                   + QString::number(wm) + ", "
+                   + QString::number(ws) + ")";
 }
 
 void VespucciDataset::CWTBaseline(int lambda, int penalty_order, double SNR_threshold, double peak_shape_threshold)

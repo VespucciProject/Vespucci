@@ -24,10 +24,10 @@
 AHCADialog::AHCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer) :
     QDialog(parent),
     ui(new Ui::AHCADialog),
-    workspace_(ws),
-    analyzer_(analyzer)
+    workspace_(ws)
 {
     ui->setupUi(this);
+    analyzer_ = analyzer;
 }
 
 AHCADialog::~AHCADialog()

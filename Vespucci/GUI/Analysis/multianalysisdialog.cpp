@@ -96,9 +96,7 @@ void MultiAnalysisDialog::on_buttonBox_accepted()
                                           0, -2147483647, 2147483647, 4, &ok);
 
         if (ok){
-            MultiAnalyzer analyzer(workspace_, dataset_keys);
-            analyzer.SNVNormalize(offset);
+            analyzer->SNVNormalize(offset);
         }
     }
-    close();
 }
