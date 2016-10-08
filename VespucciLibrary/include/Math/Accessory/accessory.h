@@ -105,6 +105,9 @@ namespace Vespucci
         VESPUCCI_EXPORT double CalculateRSquared(const arma::vec &data,
                                                  const arma::vec &fit,
                                                  arma::vec &residuals);
+        VESPUCCI_EXPORT arma::mat SafeRows(const arma::mat &x,
+                                           arma::uword a,
+                                           arma::uword b);
     }
 }
 

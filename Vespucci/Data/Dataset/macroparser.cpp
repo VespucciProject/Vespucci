@@ -55,6 +55,7 @@ MacroParser::MacroParser(QSharedPointer<VespucciDataset> dataset)
     valid_commands_["KMeans"] = QStringList({ "String", "String", "UInt" });
     valid_commands_["PrincipalComponents"] = QStringList({ "String" });
     valid_commands_["ClassicalLeastSquares"] = QStringList({"String", "String", "String", "String"});
+    valid_commands_["RollingBallBaseline"] = QStringList({ "UInt", "UInt" });
 }
 
 ///
@@ -129,7 +130,7 @@ void MacroParser::Error(int &error_line, int &error_param)
 /// \param command
 /// This is a private member function that executes a single command. The list
 /// of valid commands is parsed. Commands are validated by ValidateCommand before
-/// this function is called by ExecuteMacro(). This command must make the appropriate
+/// this function is called by ExecuteMacro(). This methodÍd must make the appropriate
 /// type conversion (QString, int, uint, double) of the parameters.
 void MacroParser::ExecuteCommand(QString command, QStringList params)
 {
@@ -209,6 +210,8 @@ void MacroParser::ExecuteCommand(QString command, QStringList params)
         params.removeFirst();
         dataset_->ClassicalLeastSquares(name, keys);
     }
+    else if (command == "RollingBallBaseline")
+        dataset_->RollingBallBaseline(params[0].toInt(), params[1].toInt());
 	else; //Do nothing
 }
 

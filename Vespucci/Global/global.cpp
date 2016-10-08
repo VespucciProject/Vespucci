@@ -117,11 +117,9 @@ bool Vespucci::SavePlot(QCustomPlot *plot, QString filename)
                                            "1 for LZW lossless compression",
                                            0, 0, 1, 1, &ok);
         if (ok){
-            QPixmap background = plot->background();
-            plot->setBackground(Qt::transparent);
             plot->replot(QCustomPlot::rpImmediate);
             success = plot->saveRastered(filename, 0, 0, 1.0, "TIF", quality);
-            plot->setBackground(background);
+            plot->setBackground(Qt::white);
             plot->replot(QCustomPlot::rpImmediate);
             plot->repaint();
         }

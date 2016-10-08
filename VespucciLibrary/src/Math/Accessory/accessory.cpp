@@ -1015,3 +1015,27 @@ double Vespucci::Math::CalculateRSquared(const arma::vec &data,
     double total_sumsq = arma::accu(arma::pow(centered, 2.0));
     return 1.0 - (residual_sumsq/total_sumsq);
 }
+
+///
+/// \brief Vespucci::Math::SafeRows
+/// \param x
+/// \param a
+/// \param b
+/// \return
+/// An alternative to arma::mat::rows that allows a and b to be equal, a to be
+/// larger than b, and the range to be greater than the end of the vector (all
+///  things that are allowed in R).
+/// This makes translating from R easier.
+
+arma::mat Vespucci::Math::SafeRows(const arma::mat &x, arma::uword a, arma::uword b)
+{
+    if (a > b){
+        arma::uword a1 = a;
+        a = b;
+        b = a1;
+    }
+    else if (a == b && a < x.n_rows) return x.row(a);
+    else if (a < x.n_rows && b >= x.n_rows) return x.rows(a, x.n_rows - 1);
+    else if (a < x.n_rows) return x.rows(a, b);
+    return x.row(x.n_rows - 1);
+}

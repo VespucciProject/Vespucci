@@ -18,6 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "Math/Baseline/rollingball.h"
+#include "Math/Accessory/accessory.h"
 ///
 /// \brief Vespucci::Math::Baseline::RollingBallBaseline
 /// \param spectrum
@@ -26,6 +27,9 @@
 /// \return
 /// based on implementation of rolling balll baseline correction in the
 /// R package baseline.
+/// Indices are a bit weird. This is due to tranlation from the R baseline package.
+/// R indexing starts at 1. The decision has been made to subtract one every time
+/// an index is used rather than modifying other terms.
 arma::vec Vespucci::Math::Baseline::RollingBallBaseline(const arma::vec &spectrum,
                                                         arma::vec &baseline,
                                                         arma::uword wm,
@@ -36,113 +40,80 @@ arma::vec Vespucci::Math::Baseline::RollingBallBaseline(const arma::vec &spectru
     double v;  // sum holder
     baseline.clear();
     baseline.set_size(spectrum.n_rows);
-    arma::vec t1(spectrum.n_rows); // minimizers
-    arma::vec t2(spectrum.n_rows); // maximizers
+    arma::vec T1 = spectrum; // minimizers
+    arma::vec T2 = spectrum; // maximizers
 
     // minimize
-    u1 = arma::uword(std::ceil((wm+1)/2.0));
-    t1(0) = spectrum.rows(0, u1).min();
-    // start of spectrum
-    for (arma::uword i = 1; i < wm; ++i){
+    u1 = std::ceil((wm + 1) / 2) + 1;
+    T1(0) = Vespucci::Math::SafeRows(spectrum, 0, u1-1).min();
+    for (arma::uword i = 2; i <= wm; ++i){ // start of spectrum
         u2 = u1 + 1 + (i % 2);
-        double min;
-        if (u1 + 1 < u2)
-            min = spectrum.rows(u1+1, u2).min();
-        else
-            min = spectrum(u1);
-        t1(i) = std::min(min, t1(i - 1));
+        T1(i - 1) = std::min(Vespucci::Math::SafeRows(spectrum, u1, u2 - 1).min(), T1(i - 2));
         u1 = u2;
     }
-
-    // main part of spectrum
-    for (arma::uword i = wm; i < (spectrum.n_rows - wm); ++i){
-        if ((spectrum(u1 + 1) <= t1(i-1)) && (spectrum(u1 - wm) != t1(i-1)))
-            t1(i) = spectrum(u1 + 1);
+    for (arma::uword i = wm + 1; i <= spectrum.n_rows - wm; ++i){ // main part
+        if ((spectrum(u1) <= T1(i - 2)) && spectrum(u1 - wm - 1) != T1(i - 2))
+            T1(i) = spectrum(u1); // next smaller
         else
-            t1(i) = spectrum.rows(i - wm, i + wm).min();
+            T1(i) = Vespucci::Math::SafeRows(spectrum, i - wm - 1, i + wm - 1).min();
         u1++;
     }
-
-    // end of spectrum
-    for (arma::uword i = spectrum.n_rows - wm; i < spectrum.n_rows; ++i){
-        u2 = u1 + ((i + 1) % 2);
-        double min;
-        if (u2 - 1 > u1) min = spectrum.rows(u1, u2-1).min();
-        else min = spectrum(u1);
-        if (min > t1(i - 1))
-            t1(i) = t1(i-1);
-        else{
-            if (u2 < spectrum.n_rows - 1)
-                t1(i) = spectrum.rows(u2, spectrum.n_rows - 1).min();
-            else
-                t1(i) = spectrum(spectrum.n_rows - 1);
-
-        }
+    u1 = spectrum.n_rows - 2*wm - 1;
+    for (arma::uword i = spectrum.n_rows - wm + 1; i <= spectrum.n_rows; ++i){ // end
+        u2 = u1 + 1 + ((i + 1) % 2);
+        if (Vespucci::Math::SafeRows(spectrum, u1 - 1, u2 - 2).min() > T1(i-2))
+            T1(i-1) = T1(i-2); // removed larger
+        else
+            T1(i-1) = Vespucci::Math::SafeRows(spectrum, u2, spectrum.n_rows - 1).min();
         u1 = u2;
     }
 
     // maximize
-    u1 = arma::uword(std::ceil((wm + 1) / 2.0));
-    t2(0) = t1.rows(0, u1).max();
-    // start of spectrum
-    for (arma::uword i = 1; i < wm; ++i){
-        u2 = u1 + (i % 2);
-        t2(i) = std::max(t1.rows(u1 + 1, u2).max(), t2(i - 1));
+    u1 = std::ceil((wm + 1) / 2.0) + 1;
+    T2(0) = Vespucci::Math::SafeRows(T1, 0, u1).max();
+    for (arma::uword i = 2; i <= wm; ++i){ // start
+        u2 = u1 + 1 + (i % 2);
+        T2(i - 1) = std::max(Vespucci::Math::SafeRows(T1, u1, u2 - 1).max(), T2(i - 1)); // check if new is larger
         u1 = u2;
     }
-    // main part of spectrum
-    for (arma::uword i = wm; i < (spectrum.n_rows - wm); ++i){
-        if ((t1(u1 + 1) >= t2(i - 1)) && (t1(u1 - wm) != t2(i - 1)))
-            t2(i) = t1(u1 + 1);
+    for (arma::uword i = wm + 1; i <= spectrum.n_rows - wm; ++i){ // main part
+        if ((T1(u1) >= T2(i - 2)) && (T1(u1 - wm - 1) != T2(i - 2)))
+            T2(i - 1) = T1(u1); // next is larger
         else
-            t2(i) = t1.rows(i - wm, i + wm).max();
+            T2(i - 1) = Vespucci::Math::SafeRows(T1, i - wm - 1, i + wm - 1).max();
         u1++;
     }
-    // end of spectrum
-    for (arma::uword i = spectrum.n_rows - wm; i < spectrum.n_rows; ++i){
-        u2 = u1 + ((i + 1) % 2);
-        double max;
-        if (u1 < u2 - 1)
-            max = t1.rows(u1, u2-1).min();
+    for (arma::uword i = spectrum.n_rows - wm + 1; i <= spectrum.n_rows; ++i){ // end
+        u2 = u1 + 1 + ((i + 1) % 2);
+        if (Vespucci::Math::SafeRows(T1, u1 - 1, u2 - 2).max() < T2(i - 2))
+            T2(i - 1) = T2(i - 2); //removed is smaller
         else
-            max = t1(u1);
-        if (max < t2(i - 1))
-            t2(i) = t2(i - 1);
-        else{
-            if (u2 < spectrum.n_rows - 1)
-                t2(i) = t1.rows(u2, spectrum.n_rows - 1).max();
-            else
-                t2(i) = t1(u2);
-        }
+            T2(i - 1) = Vespucci::Math::SafeRows(T1, u2 - 1, spectrum.n_rows - 1).max();
         u1 = u2;
     }
 
     // smooth
-    u1 = arma::uword(std::ceil(ws / 2) - 1);
-    v = arma::accu(t2.rows(0, u1));
-    // start of spectrum
-    for (arma::uword i = 0; i < ws; ++i){
-        u2 = u1 + (i % 2);
-        v += arma::accu(t2(u1 + 1, u2));
-        baseline(i) = v / double(u2);
+    u1 = std::ceil(ws / 2.0);
+    v = arma::accu(Vespucci::Math::SafeRows(T2, 0, u1 - 1));
+    for (arma::uword i = 1; i <= ws; ++i){ // start
+        u2 = u1 + 1 + (i % 2);
+        v += arma::accu(Vespucci::Math::SafeRows(T2, u1, u2 - 1));
+        baseline(i - 1) = v / double(u2);
         u1 = u2;
     }
-    // main part of spectrum
-    v = arma::accu(t2.rows(0, 2*ws));
-    baseline(ws) = v / double(2 * ws + 1);
-    for (arma::uword i = ws + 1; i < spectrum.n_rows - ws; ++i){
-        v = v - t2(i - ws - 1) + t2(i + ws);
-        baseline(i) = v / double(2 + ws + 1);
+    v = arma::accu(Vespucci::Math::SafeRows(T2, 0, 2*ws));
+    baseline(ws) = v / (2*ws+1);
+    for (arma::uword i = ws + 2; i <= spectrum.n_rows - ws; ++i){
+        v = v - T2(i - ws - 2) + T2(i + ws - 1);
+        baseline(i - 1) = v / double(2*ws+1);
     }
-    u1 = spectrum.n_rows - 2*ws;
-    v = v - t2(u1);
-    baseline(spectrum.n_rows - ws) = v/double(2*ws);
-
-    // end of spectrum
-    for (arma::uword i = spectrum.n_rows - ws + 1; i < spectrum.n_rows; ++i){
-        u2 = u1 + ((i + 1) % 2);
-        v = v = arma::accu(t2(u1, u2 - 1));
-        baseline(i) = v / double(spectrum.n_rows - u2 + 1);
+    u1 = spectrum.n_rows - 2 * ws + 1;
+    v -= T2(u1 - 1);
+    baseline(spectrum.n_rows - ws) = v / double(2*ws);
+    for (arma::uword i = spectrum.n_rows - ws + 2; i <= spectrum.n_rows; ++i){
+        u2 = u1 + 1 + (i+1) % 2;
+        v -= arma::accu(Vespucci::Math::SafeRows(T2, u1 - 1, u2 - 2));
+        baseline(i - 1) = v / double(spectrum.n_rows - u2 + 1);
         u1 = u2;
     }
 
@@ -159,11 +130,11 @@ arma::mat Vespucci::Math::Baseline::RollingBallBaselineMat(const arma::mat &spec
     baselines.set_size(spectra.n_rows, spectra.n_cols);
     #ifdef _WIN32
       #pragma omp parallel for default(none) \
-          shared(spectra, baselines, wm, ws)
+          shared(spectra, baselines, wm, ws, corrected)
          for (intmax_t i = 0; i < (intmax_t) spectra.n_cols; ++i)
     #else
       #pragma omp parallel for default(none) \
-          shared(spectra, baselines, wm, ws)
+          shared(spectra, baselines, wm, ws, corrected)
         for (size_t i = 0; i < spectra.n_cols; ++i)
     #endif
     {

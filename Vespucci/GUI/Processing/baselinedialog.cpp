@@ -162,13 +162,15 @@ void BaselineDialog::on_methodComboBox_currentTextChanged(const QString &arg1)
         ui->param_1Label->setVisible(true);
         ui->param_0SpinBox->setVisible(true);
         ui->param_1SpinBox->setVisible(true);
-        ui->param_1SpinBox->setValue(1);
-        ui->param_0SpinBox->setValue(35);
+        ui->param_1SpinBox->setValue(25);
+        ui->param_0SpinBox->setValue(25);
         ui->param_0SpinBox->setSingleStep(2);
         ui->param_0SpinBox->setToolTip("Only odd window sizes are allowed. "
                                       "If you enter an even number, "
                                       "it will be rounded up.");
         ui->param_0SpinBox->setMinimum(3);
+        ui->param_1SpinBox->setMinimum(3);
+        ui->param_1SpinBox->setSingleStep(2);
 
         ui->param_2DoubleSpinBox->setVisible(false);
         ui->param_3DoubleSpinBox->setVisible(false);
@@ -197,6 +199,10 @@ void BaselineDialog::on_methodComboBox_currentTextChanged(const QString &arg1)
 
         ui->param_3Label->setVisible(false);
         ui->param_3DoubleSpinBox->setVisible(false);
+
+        ui->param_1SpinBox->setMinimum(1);
+        ui->param_1SpinBox->setSingleStep(1);
+
     }
     else if (arg1 == "CWT"){
         ui->param_0Label->setText("Whittaker Lambda");
@@ -218,6 +224,10 @@ void BaselineDialog::on_methodComboBox_currentTextChanged(const QString &arg1)
         ui->param_3DoubleSpinBox->setVisible(false);
         ui->param_3DoubleSpinBox->setValue(0.50);
         ui->param_3DoubleSpinBox->setRange(0, 1);
+
+        ui->param_1SpinBox->setMinimum(1);
+        ui->param_1SpinBox->setSingleStep(1);
+
     }
 }
 

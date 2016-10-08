@@ -1002,7 +1002,9 @@ void VespucciDataset::RollingBallBaseline(size_t wm, size_t ws)
     SetOldCopies();
     try{
         mat baselines;
-        spectra_ = Vespucci::Math::Baseline::RollingBallBaselineMat(spectra_, baselines, wm, ws);
+        spectra_ = Vespucci::Math::Baseline::RollingBallBaselineMat(spectra_,
+                                                                    baselines,
+                                                                    wm, ws);
         AddAuxiliaryMatrix("Rolling Ball Baselines", baselines);
     }catch(exception e){
         string str = "RollingBallBaseline " + string(e.what());
