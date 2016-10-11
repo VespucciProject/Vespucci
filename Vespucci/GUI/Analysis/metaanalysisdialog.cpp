@@ -19,7 +19,7 @@
 *******************************************************************************/
 #include "metaanalysisdialog.h"
 #include "ui_metaanalysisdialog.h"
-#include "Data/Analysis/metaanalyzer.h"
+#include "Data/Analysis/matrixanalyzer.h"
 #include "GUI/Analysis/bandratiodialog.h"
 #include "GUI/Analysis/kmeansdialog.h"
 #include "GUI/Analysis/plsdialog.h"
@@ -49,48 +49,53 @@ void MetaAnalysisDialog::on_buttonBox_accepted()
 {
     QString analysis_description = ui->typeComboBox->currentText();
     bool transpose = ui->transposeCheckBox->isChecked();
-    QSharedPointer<MetaAnalyzer> analyzer(new MetaAnalyzer(workspace_, data_keys_, transpose));
+    QSharedPointer<MatrixAnalyzer> analyzer(new MatrixAnalyzer(workspace_, data_keys_, transpose));
 
-    if (analysis_description == "Univariate Analysis"){
-        UnivariateDialog *dialog = new UnivariateDialog(this, workspace_, analyzer);
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->show();
+    try{
+        if (analysis_description == "Univariate Analysis"){
+            UnivariateDialog *dialog = new UnivariateDialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
+        }
+        else if (analysis_description == "Band Ratio Analysis"){
+            BandRatioDialog *dialog = new BandRatioDialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
+        }
+        else if (analysis_description == "Principal Component Analysis"){
+            PrincipalComponentsDialog *dialog = new PrincipalComponentsDialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
+        }
+        else if (analysis_description == "Principal Component Analysis (mlpack)"){
+            PrincipalComponentsDialog *dialog = new PrincipalComponentsDialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
+        }
+        else if (analysis_description == "Vertex Component Analysis"){
+            VCADialog *dialog = new VCADialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
+        }
+        else if (analysis_description == "Partial Least Squares (Classification)"){
+            PLSDialog *dialog = new PLSDialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
+        }
+        else if (analysis_description == "k-Means Clustering"){
+            KMeansDialog *dialog = new KMeansDialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
+        }
+        else if (analysis_description == "Hierarchical Clustering"){
+            AHCADialog *dialog = new AHCADialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
+        }
+    }catch (exception e){
+        workspace_->main_window()->DisplayExceptionWarning(e);
     }
-    else if (analysis_description == "Band Ratio Analysis"){
-        BandRatioDialog *dialog = new BandRatioDialog(this, workspace_, analyzer);
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->show();
-    }
-    else if (analysis_description == "Principal Component Analysis"){
-        PrincipalComponentsDialog *dialog = new PrincipalComponentsDialog(this, workspace_, analyzer);
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->show();
-    }
-    else if (analysis_description == "Principal Component Analysis (mlpack)"){
-        PrincipalComponentsDialog *dialog = new PrincipalComponentsDialog(this, workspace_, analyzer);
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->show();
-    }
-    else if (analysis_description == "Vertex Component Analysis"){
-        VCADialog *dialog = new VCADialog(this, workspace_, analyzer);
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->show();
-    }
-    else if (analysis_description == "Partial Least Squares (Classification)"){
-        PLSDialog *dialog = new PLSDialog(this, workspace_, analyzer);
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->show();
-    }
-    else if (analysis_description == "k-Means Clustering"){
-        KMeansDialog *dialog = new KMeansDialog(this, workspace_, analyzer);
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->show();
-    }
-    else if (analysis_description == "Hierarchical Clustering"){
-        AHCADialog *dialog = new AHCADialog(this, workspace_, analyzer);
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->show();
-    }
+
     close();
 }
 

@@ -17,22 +17,23 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include "metaanalyzer.h"
+#include "Data/Analysis/metaanalyzer.h"
 #include "Data/Analysis/vcadata.h"
-#include "Data/Analysis/plsdata.h"
 #include "Data/Analysis/principalcomponentsdata.h"
 #include "Data/Analysis/mlpackpcadata.h"
-#include "mlpack/methods/kmeans/kmeans.hpp"
-#include "Math/Clustering/agglomerativeclustering.h"
-
-MetaAnalyzer::MetaAnalyzer(QSharedPointer<VespucciWorkspace> ws, const QStringList &data_keys, bool transpose)
-    :workspace_(ws), data_keys_(data_keys)
+#include "Data/Analysis/plsdata.h"
+#include <mlpack/methods/kmeans/kmeans.hpp>
+#include "Data/Analysis/univariatedata.h"
+#include <Math/Clustering/agglomerativeclustering.h>
+MetaAnalyzer::MetaAnalyzer(QSharedPointer<VespucciWorkspace> ws)
 {
-    transpose_ = transpose;
-    GetData();
+    workspace_ = ws;
 }
 
-MetaAnalyzer::~MetaAnalyzer(){}
+MetaAnalyzer::~MetaAnalyzer()
+{
+
+}
 
 void MetaAnalyzer::Univariate(const QString &name, double &left_bound, double &right_bound, arma::uword bound_window)
 {
@@ -50,7 +51,36 @@ void MetaAnalyzer::Univariate(const QString &name, double &left_bound, double &r
     AddAnalysisResults(univariate_data, matrix_keys);
 }
 
-void MetaAnalyzer::BandRatio(const QString &name, double &first_left_bound, double &first_right_bound, double &second_left_bound, double &second_right_bound, arma::uword bound_window)
+void MetaAnalyzer::FitPeak(const QString &name, const QString &peak_shape, double &left_bound, double &right_bound)
+{
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name));
+    univariate_data->Apply(peak_shape, left_bound, right_bound, data_, abscissa_);
+    QStringList matrix_keys;
+    if (peak_shape == "Voigt"){
+        matrix_keys = QStringList({"Intensity",
+                                   "Area",
+                                   "Gaussian Full-Width at Half Maximum",
+                                   "Lorentzian Full-Width at Half Maximum",
+                                   "Full-Width at Half Maximum",
+                                   "Peak Centers",
+                                   "R²"});
+    }
+    else{
+        matrix_keys = QStringList({"Intensity",
+                                   "Area",
+                                   "Full-Width at Half Maximum",
+                                   "Peak Centers",
+                                   "R²"});
+    }
+    AddAnalysisResults(univariate_data, matrix_keys);
+}
+
+void MetaAnalyzer::BandRatio(const QString &name,
+                             double &first_left_bound,
+                             double &first_right_bound,
+                             double &second_left_bound,
+                             double &second_right_bound,
+                             arma::uword bound_window)
 {
     QString new_name = FindUniqueName(name);
     QSharedPointer<UnivariateData> univariate_data(new UnivariateData(new_name));
@@ -66,12 +96,7 @@ void MetaAnalyzer::ClassicalLeastSquares(const QString &name, const QStringList 
     QString new_name = FindUniqueName(name);
     QSharedPointer<AnalysisResults> cls_results(new AnalysisResults(new_name, "CLS Analysis"));
     mat reference = workspace_->GetMatrix(reference_keys);
-    mat coefs;
-    try{
-        coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(reference, data_);
-    }catch(exception e){
-        workspace_->main_window()->DisplayExceptionWarning(e);
-    }
+    mat coefs = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(reference, data_).t();
     cls_results->AddMatrix("Coefficients", coefs.t());
     AddAnalysisResults(cls_results, QStringList({"Coefficients"}));
 }
@@ -175,14 +200,10 @@ void MetaAnalyzer::AgglomerativeClustering(const QString &name, const QString &m
     QSharedPointer<AnalysisResults> ahca_results(new AnalysisResults(name, "AHCA"));
     mat assignments;
     Vespucci::Math::Clustering::AHCA ahca;
-    try{
-        ahca.SetLinkage(linkage.toStdString());
-        ahca.SetMetric(metric.toStdString());
-        ahca.Link(data_);
-        assignments = ahca.Cluster(data_.n_cols);
-    }catch (exception e){
-        workspace_->main_window()->DisplayExceptionWarning(e);
-    }
+    ahca.SetLinkage(linkage.toStdString());
+    ahca.SetMetric(metric.toStdString());
+    ahca.Link(data_);
+    assignments = ahca.Cluster(data_.n_cols);
 
     ahca_results->AddMatrix("Assignments", assignments);
     ahca_results->AddMatrix("Spectrum Distances", ahca.dist());
@@ -214,56 +235,4 @@ arma::vec MetaAnalyzer::abscissa() const
 arma::vec MetaAnalyzer::PointSpectrum(arma::uword index) const
 {
     return data_.col((index < data_.n_cols ? index : data_.n_cols - 1));
-}
-
-void MetaAnalyzer::GetData()
-{
-    if (transpose_){
-        data_ = workspace_->GetMatrix(data_keys_).t();
-        abscissa_ = linspace(0, data_.n_rows - 1, data_.n_rows);
-    }
-    else{
-        data_ = workspace_->GetMatrix(data_keys_);
-        abscissa_ = linspace(0, data_.n_cols - 1, data_.n_cols);
-    }
-}
-
-QString MetaAnalyzer::FindUniqueName(QString name)
-{
-    if (data_keys_.size() > 2){
-        QSharedPointer<AnalysisResults> results = workspace_->GetAnalysisResults(data_keys_[0], data_keys_[1]);
-        QMap<QString, uvec> parent_rows = results->parent_rows();
-        QString new_name = name;
-        QStringList results_names;
-        int i = 0;
-        for (auto dataset_key: parent_rows.keys())
-            results_names = results_names + workspace_->GetDataset(dataset_key)->AnalysisResultsKeys();
-        while (results_names.contains(new_name))
-            new_name = name + " (" + QString::number(++i) + ")";
-        return new_name;
-    }
-    else return name; //unique name resolved by VespucciDataset::AddAnalysisResult
-}
-
-void MetaAnalyzer::AddAnalysisResults(QSharedPointer<AnalysisResults> results, QStringList matrices)
-{
-    QString first_dataset_key = data_keys_.first();
-    QSharedPointer<VespucciDataset> first_dataset = workspace_->GetDataset(first_dataset_key);
-    if (data_keys_.size() < 3) first_dataset->AddAnalysisResult(results);
-    else{
-        QSharedPointer<AnalysisResults> parent_results = workspace_->GetAnalysisResults(data_keys_[0], data_keys_[1]);
-        QMap<QString, uvec> parent_rows = parent_results->parent_rows();
-        if (parent_rows.size() < 2){
-            first_dataset->AddAnalysisResult(results);
-            return;
-        }
-        else{
-            for (auto key: parent_rows.keys()){
-                QSharedPointer<VespucciDataset> current_dataset = workspace_->GetDataset(key);
-                current_dataset->AddAnalysisResult(results);
-                if (!matrices.isEmpty())
-                    current_dataset->AddAnalysisResult(results->Subset(matrices, parent_rows[key](0), parent_rows[key](1)));
-            }
-        }
-    }
 }

@@ -109,9 +109,9 @@ void UnivariateDialog::on_buttonBox_accepted()
                 workspace_->main_window()->DisplayExceptionWarning(e);
             }
         }
-        else if (value_method == "Gaussian Fit"){
+        else{
             try{
-
+                analyzer_->FitPeak(name, value_method, entered_min, entered_max);
             }catch(exception e){
 
             }

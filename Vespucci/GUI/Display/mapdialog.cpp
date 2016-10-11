@@ -65,7 +65,7 @@ MapDialog::~MapDialog()
 
 void MapDialog::on_buttonBox_accepted()
 {
-    uint gradient_index = ui->gradientComboBox->currentIndex();
+    uword unique_ct = vec(unique(workspace_->GetMatrix(data_keys_).col(0))).n_elem;
     uint column_index = ui->columnSpinBox->value() - 1;
     QString map_name = ui->nameLineEdit->text();
     vec data;
@@ -78,15 +78,8 @@ void MapDialog::on_buttonBox_accepted()
     }
 
     if (ok){
-        QCPColorGradient gradient;
+        QCPColorGradient gradient = workspace_->GetGradient(ui->gradientComboBox->currentText(), unique_ct);
 
-        if (ui->gradientComboBox->currentText() == "ColorBrewer Cluster"){
-            vec unique_values = unique(data);
-            gradient = dataset_->GetClusterGradient(unique_values.n_rows);
-        }
-        else{
-            gradient = dataset_->GetGradient(gradient_index);
-        }
         try{
             if (data_keys_.size() == 2)
                 dataset_->CreateMap(map_name,

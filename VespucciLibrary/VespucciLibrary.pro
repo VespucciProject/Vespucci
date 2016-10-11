@@ -102,7 +102,8 @@ SOURCES +=\
     src/Math/Clustering/ahcanode.cpp \
     src/Math/Fitting/nonlinleastsq.cpp \
     src/Math/Accessory/Faddeeva.cpp \
-    src/Math/Baseline/rollingball.cpp
+    src/Math/Baseline/rollingball.cpp \
+    src/Math/Smoothing/denoise.cpp
 
 
 HEADERS  += \
@@ -137,7 +138,8 @@ HEADERS  += \
     include/Math/Clustering/ahcanode.h \
     include/Math/Fitting/nonlinleastsq.h \
     include/Math/Accessory/Faddeeva.h \
-    include/Math/Baseline/rollingball.h
+    include/Math/Baseline/rollingball.h \
+    include/Math/Smoothing/denoise.h
 
 #For all platforms:
 INCLUDEPATH += $$PWD/include

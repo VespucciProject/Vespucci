@@ -17,33 +17,19 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef AHCADIALOG_H
-#define AHCADIALOG_H
-
-#include <QDialog>
-#include <Global/vespucciworkspace.h>
-
-namespace Ui {
-class AHCADialog;
+#include "Math/Smoothing/denoise.h"
+#include "mlpack/methods/quic_svd/quic_svd.hpp"
+arma::mat Vespucci::Math::Smoothing::SVDDenoise(const arma::mat &X, arma::uword k, arma::mat &U, arma::vec &s, arma::mat &V)
+{
+    arma::svds(U, s, V, arma::sp_mat(X), k);
+    return -1 * U * diagmat(s) * V.t();
 }
 
-class AHCADialog : public QDialog
+arma::mat Vespucci::Math::Smoothing::QUICSVDDenoise(const arma::mat &X, double epsilon, arma::mat &U, arma::vec &s, arma::mat &V, arma::uword &rank)
 {
-    Q_OBJECT
-
-public:
-    explicit AHCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer);
-    ~AHCADialog();
-
-private slots:
-    void on_buttonBox_accepted();
-
-    void on_linkageComboBox_currentTextChanged(const QString &arg1);
-
-private:
-    Ui::AHCADialog *ui;
-    QSharedPointer<VespucciWorkspace> workspace_;
-    QSharedPointer<AbstractDataAnalyzer> analyzer_;
-};
-
-#endif // AHCADIALOG_H
+    arma::mat s_mat;
+    mlpack::svd::QUIC_SVD(X, U, V, s_mat, epsilon, 0.1);
+    rank = U.n_cols;
+    s = s_mat.diag(0);
+    return U * s_mat * V.t();
+}

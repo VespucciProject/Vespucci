@@ -17,30 +17,36 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef UNIVARIATEDATA_H
-#define UNIVARIATEDATA_H
-#include "Global/enums.h"
-#include "Math/Quantification/quantification.h"
-#include "Data/Analysis/analysisresults.h"
-class UnivariateData: public AnalysisResults
+#ifndef MATRIXANALYZER_H
+#define MATRIXANALYZER_H
+
+#include "Global/vespucciworkspace.h"
+#include "Data/Analysis/metaanalyzer.h"
+class MatrixAnalyzer : public MetaAnalyzer
 {
 public:
-    UnivariateData(QString name);
-    UnivariateData(QString name, vec control);
+    MatrixAnalyzer(QSharedPointer<VespucciWorkspace> ws, const QStringList &data_keys, bool transpose);
+    ~MatrixAnalyzer();
+private:
+    void GetData();
 
-    void Apply(double left_bound, double right_bound,
-               uword bound_window, const mat &spectra, const vec &abscissa);
-    void Apply(QString peak_shape,
-               double left_bound,
-               double right_bound,
-               const mat &spectra,
-               const vec &abscissa);
-    void Apply(double first_left_bound, double first_right_bound,
-               double second_left_bound, double second_right_bound,
-               uword bound_window, const mat &spectra, const vec &abscissa);
-    void ApplyCorrelation(const mat &spectra, const vec &control);
-    void Calibrate(const vec &x, const vec &y, uword column);
+    ///
+    /// \brief FindUniqueName
+    /// \param name
+    /// \return
+    /// Makes sure that there is a unique name for any new matrices/results
+    QString FindUniqueName(QString name);
+    void AddAnalysisResults(QSharedPointer<AnalysisResults> results, QStringList matrices);
 
+    ///
+    /// \brief transpose_
+    /// Whether or not matrix should be transposed to perform analysis
+    bool transpose_;
+
+    ///
+    /// \brief data_keys_
+    /// Keys in the workspace for the matrix analyzed by this instance
+    QStringList data_keys_;
 };
 
-#endif // UNIVARIATEDATA_H
+#endif // MATRIXANALYZER_H

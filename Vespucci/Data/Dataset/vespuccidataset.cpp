@@ -20,11 +20,11 @@
 #include "Data/Analysis/abstractdataanalyzer.h"
 #include "Data/Dataset/vespuccidataset.h"
 #include <mlpack/methods/kmeans/kmeans.hpp>
-#include <mlpack/methods/quic_svd/quic_svd.hpp>
 #include "Data/Import/textimport.h"
 #include "Math/Clustering/agglomerativeclustering.h"
 #include <H5Cpp.h>
 #include "Math/Baseline/rollingball.h"
+#include <Math/Smoothing/denoise.h>
 using namespace arma;
 using namespace std;
 
@@ -1252,13 +1252,20 @@ void VespucciDataset::SingularValue(unsigned int singular_values)
     vec s;
     mat V;
     try{
-        svds(U, s, V, sp_mat(spectra_), singular_values);
-        spectra_ = -1 * U * diagmat(s) * V.t();
+        spectra_ = Vespucci::Math::Smoothing::SVDDenoise(spectra_, singular_values, U, s, V);
     }
     catch(exception e){
         string str = "SingularValue: " + string(e.what());
         throw std::runtime_error(str);
     }
+
+    vec SVD_vec({double(singular_values)});
+    QSharedPointer<AnalysisResults> results(new AnalysisResults("QUIC-SVD", "QUIC-SVD"));
+    results->AddMatrix("Left Singular Vectors", U);
+    results->AddMatrix("Right Singular Vectors", V);
+    results->AddMatrix("Singular Values", s);
+    results->AddMatrix("Rank", SVD_vec);
+    AddAnalysisResult(results);
 
     last_operation_ = "truncated SVD de-noise";
     operations_ << "SingularValue(" + QString::number(singular_values) + ")";
@@ -1273,18 +1280,29 @@ void VespucciDataset::SingularValue(unsigned int singular_values)
 int VespucciDataset::QUIC_SVD(double epsilon)
 {
     SetOldCopies();
-    int SVD_rank;
     state_changed_ = true;
-    mat u, sigma, v;
-    mlpack::svd::QUIC_SVD svd_obj(spectra_, u, v, sigma, epsilon, 0.1);
-    SVD_rank = u.n_cols;
-    state_changed_ = true;
-    spectra_ = u * sigma * v.t();
+
+    uword rank;
+    mat U, V;
+    vec s;
+    try{
+        spectra_ = Vespucci::Math::Smoothing::QUICSVDDenoise(spectra_, epsilon, U, s, V, rank);
+    }catch(exception e){
+        string str = "QUIC_SVD: " + string(e.what());
+        throw std::runtime_error(str);
+    }
+
+    vec SVD_vec({double(rank)});
+
+    QSharedPointer<AnalysisResults> results(new AnalysisResults("QUIC-SVD", "QUIC-SVD"));
+    results->AddMatrix("Left Singualr Vectors", U);
+    results->AddMatrix("Right Singualr Vectors", V);
+    results->AddMatrix("Singualr Values", s);
+    results->AddMatrix("Rank", SVD_vec);
+
     last_operation_ = "QUIC_SVD de-noise";
     operations_ << "QUIC_SVD(" + QString::number(epsilon) +  " )";
-    vec SVD_vec({double(SVD_rank)});
-    AddAuxiliaryMatrix("QUIC-SVD Rank", SVD_vec);
-    return SVD_rank;
+    return rank;
 }
 
 ///
@@ -1679,7 +1697,6 @@ void VespucciDataset::Univariate(const QString &name,
     }
     AddAnalysisResult(univariate_data);
     workspace_->UpdateModel();
-    cout << "end of VespucciDataset::Univariate\n";
 
     operations_ << "Univariate("
                    + name + ", "
@@ -1687,6 +1704,19 @@ void VespucciDataset::Univariate(const QString &name,
                    + QString::number(right_bound) + ", "
                    + QString::number(bound_window) + ")";
 
+}
+
+void VespucciDataset::FitPeak(const QString &name, const QString &peak_shape, double &left_bound, double &right_bound)
+{
+    state_changed_ = true;
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name));
+    try{
+        univariate_data->Apply(peak_shape, left_bound, right_bound, spectra_, abscissa_);
+    }catch (exception e){
+        main_window_->DisplayExceptionWarning(e);
+    }
+    AddAnalysisResult(univariate_data);
+    workspace_->UpdateModel();
 }
 
 ///

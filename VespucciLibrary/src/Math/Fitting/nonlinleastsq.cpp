@@ -121,7 +121,7 @@ arma::vec Vespucci::Math::NonLinLeastSq::EstimateLorentzParams(arma::vec x, arma
     return arma::vec({I, gamma, x0});
 }
 ///
-/// \brief Vespucci::Math::NonLinLeastSq::FitGaussianPeak
+/// \brief Vespucci::Math::NonLinLeastSq::FitGaussian
 /// \param x
 /// \param y
 /// \return

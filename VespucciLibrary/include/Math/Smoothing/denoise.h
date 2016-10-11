@@ -17,33 +17,16 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#ifndef AHCADIALOG_H
-#define AHCADIALOG_H
-
-#include <QDialog>
-#include <Global/vespucciworkspace.h>
-
-namespace Ui {
-class AHCADialog;
+#ifndef DENOISE_H
+#define DENOISE_H
+#include "Global/libvespucci.h"
+#include <mlpack/core.hpp>
+namespace Vespucci{
+    namespace Math{
+        namespace Smoothing{
+            VESPUCCI_EXPORT arma::mat SVDDenoise(const arma::mat &X, arma::uword k, arma::mat &U, arma::vec &s, arma::mat &V);
+            VESPUCCI_EXPORT arma::mat QUICSVDDenoise(const arma::mat &X, double epsilon, arma::mat &U, arma::vec &s, arma::mat &V, arma::uword &rank);
+        }
+    }
 }
-
-class AHCADialog : public QDialog
-{
-    Q_OBJECT
-
-public:
-    explicit AHCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer);
-    ~AHCADialog();
-
-private slots:
-    void on_buttonBox_accepted();
-
-    void on_linkageComboBox_currentTextChanged(const QString &arg1);
-
-private:
-    Ui::AHCADialog *ui;
-    QSharedPointer<VespucciWorkspace> workspace_;
-    QSharedPointer<AbstractDataAnalyzer> analyzer_;
-};
-
-#endif // AHCADIALOG_H
+#endif // DENOISE_H
