@@ -25,6 +25,7 @@
 #include <mlpack/methods/kmeans/kmeans.hpp>
 #include "Data/Analysis/univariatedata.h"
 #include <Math/Clustering/agglomerativeclustering.h>
+#include <Math/Clustering/kmeanswrapper.h>
 MetaAnalyzer::MetaAnalyzer(QSharedPointer<VespucciWorkspace> ws)
 {
     workspace_ = ws;
@@ -111,38 +112,16 @@ void MetaAnalyzer::VertexComponents(const QString &name, uword endmembers)
 }
 
 void MetaAnalyzer::KMeans(const QString &name,
-                          const QString &metric_text,
+                          const QString &metric_text, const QString &partition_policy, bool allow_empty,
                           size_t clusters)
 {
     QString new_name = FindUniqueName(name);
-
     mat centroids;
-    Row<size_t> assignments;
+    Vespucci::Math::KMeansWrapper k(partition_policy.toStdString(), metric_text.toStdString(), allow_empty);
+    vec assignments = k.Cluster(data_, clusters, centroids);
+
     QSharedPointer<AnalysisResults> km_results(new AnalysisResults(new_name, "k-Means Analysis"));
-
-    if (metric_text == "Euclidean"){
-        mlpack::kmeans::KMeans<mlpack::metric::EuclideanDistance> k;
-        k.Cluster(data_, clusters, assignments, centroids);
-    }
-    else if (metric_text == "Manhattan"){
-        mlpack::kmeans::KMeans<mlpack::metric::EuclideanDistance> k;
-        k.Cluster(data_, clusters, assignments, centroids);
-    }
-    else if (metric_text == "Chebyshev"){
-        mlpack::kmeans::KMeans<mlpack::metric::ChebyshevDistance> k;
-        k.Cluster(data_, clusters, assignments, centroids);
-    }
-    else{ //Default to squared euclidean distance as in chemometrics literature
-        mlpack::kmeans::KMeans<mlpack::metric::SquaredEuclideanDistance> k;
-        k.Cluster(data_, clusters, assignments, centroids);
-    }
-
-    mat assignments_mat(assignments.n_cols, 1);
-    for (uword i = 0; i < assignments_mat.n_rows; ++i){
-        assignments_mat(i, 0) = assignments(i) + 1.0;
-    }
-
-    km_results->AddMatrix("Assignments", assignments_mat);
+    km_results->AddMatrix("Assignments", assignments);
     km_results->AddMatrix("Centroids", centroids);
     QStringList matrix_keys({"Assignments"});
 
@@ -154,7 +133,7 @@ void MetaAnalyzer::PrincipalComponents(const QString &name)
     QString new_name = FindUniqueName(name);
     QSharedPointer<PrincipalComponentsData> pca_data(new PrincipalComponentsData(new_name));
     pca_data->Apply(data_);
-    QStringList matrix_keys({"Scores"});
+    QStringList matrix_keys({"Scores", "Hotelling t²"});
     AddAnalysisResults(pca_data, matrix_keys);
 }
 

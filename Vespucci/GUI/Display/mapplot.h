@@ -27,7 +27,6 @@ using namespace arma;
 typedef std::vector<double> stdvec;
 typedef QVector<double> qvec;
 
-///
 /// \brief The MapPlot class
 /// A subclass of QCustomPlot for handling a specfic kind of color map.
 /// Provides a wrapper for a QCPColorScale and a QCPColorMap which are child widgets.
@@ -66,6 +65,7 @@ public:
     void MoveVerticalCrosshair(int units);
     void MoveHorizontalCrosshair(int units);
     void SaveImage(QString filename);
+
 signals:
     void SpectrumRequested(size_t index);
     void SpectrumHoldRequested(size_t index);
@@ -80,6 +80,8 @@ private:
     vec z_;
     double x_step_;
     double y_step_;
+    QPair<int, int> rect_position_;
+    QPair<int, int> color_scale_position_;
 };
 
 #endif // MAPPLOT_H

@@ -19,12 +19,12 @@
 *******************************************************************************/
 #include "Data/Analysis/abstractdataanalyzer.h"
 #include "Data/Dataset/vespuccidataset.h"
-#include <mlpack/methods/kmeans/kmeans.hpp>
 #include "Data/Import/textimport.h"
 #include "Math/Clustering/agglomerativeclustering.h"
 #include <H5Cpp.h>
 #include "Math/Baseline/rollingball.h"
 #include <Math/Smoothing/denoise.h>
+#include <Math/Clustering/kmeanswrapper.h>
 using namespace arma;
 using namespace std;
 
@@ -2027,81 +2027,35 @@ void VespucciDataset::CorrelationAnalysis(const QString &control_key, QString na
 
 ///
 /// \brief VespucciDataset::KMeans
+///
 /// Implements K-means clustering using MLPACK
 /// \param clusters Number of clusters to find
 /// \param metric Distance metric
 /// \param name Name of map in workspace.
 ///
-void VespucciDataset::KMeans(const QString &name, const QString &metric_text, size_t clusters)
+void VespucciDataset::KMeans(const QString &name, const QString &metric_text, const QString &partition_policy, bool allow_empty, size_t clusters)
 {
-    if(clusters == 0){
-        state_changed_ = true;
-        clusters = HySime();
-    }
-    Row<size_t> assignments;
-    vec assignments_vec;
     mat centroids;
-
-    if (metric_text == "Euclidean"){
-        mlpack::kmeans::KMeans<mlpack::metric::EuclideanDistance> k;
-        try{
-            k.Cluster(spectra_, clusters, assignments, centroids);
-        }
-        catch(exception e){
-            string str = "KMeans: " + string(e.what());
-            throw std::runtime_error(str);
-        }
+    vec assignments;
+    try{
+        Vespucci::Math::KMeansWrapper k(partition_policy.toStdString(), metric_text.toStdString(), allow_empty);
+        assignments = k.Cluster(spectra_, clusters, centroids);
+    }catch(exception e){
+        main_window_->DisplayExceptionWarning("KMeansWrapper: ", e);
+        return;
     }
 
-    else if (metric_text == "Manhattan"){
-        mlpack::kmeans::KMeans<mlpack::metric::ManhattanDistance> k;
-        try{
-            k.Cluster(spectra_, clusters, assignments, centroids);
-        }
-        catch(exception e){
-            string str = "KMeans: " + string(e.what());
-            throw std::runtime_error(str);
-        }
-    }
-
-    else if (metric_text == "Chebyshev"){
-        mlpack::kmeans::KMeans<mlpack::metric::ChebyshevDistance> k;
-        try{
-            k.Cluster(spectra_, clusters, assignments, centroids);
-        }
-        catch(exception e){
-            string str = "KMeans: " + string(e.what());
-            throw std::runtime_error(str);
-        }
-    }
-
-    else{
-        mlpack::kmeans::KMeans<mlpack::metric::SquaredEuclideanDistance> k;
-        try{
-            k.Cluster(spectra_, clusters, assignments, centroids);
-        }
-        catch(exception e){
-            string str = "KMeans: " + string(e.what());
-            throw std::runtime_error(str);
-        }
-    }
-
-   assignments_vec.set_size(assignments.n_elem);
-   for (uword i = 0; i < assignments_vec.n_rows; ++i)
-       assignments_vec(i) = double(assignments(i) + 1);
-
-   state_changed_ = true;
-   if (clusters == 0) clusters = HySime();
-
-   QSharedPointer<AnalysisResults> results(new AnalysisResults(name, "k-Means Analysis"));
-   results->AddMatrix("Assignments", assignments_vec);
-   results->AddMatrix("Centroids", centroids);
-   AddAnalysisResult(results);
-   workspace_->UpdateModel();
-   operations_ << "KMeans("
-                  + name + ", "
-                  + QString::number(clusters) + ", "
-                  + metric_text + ")";
+    QSharedPointer<AnalysisResults> results(new AnalysisResults(name, "k-Means Analysis"));
+    results->AddMatrix("Assignments", assignments);
+    results->AddMatrix("Centroids", centroids);
+    AddAnalysisResult(results);
+    workspace_->UpdateModel();
+    operations_ << "KMeans("
+                   + name + ", "
+                   + QString::number(clusters) + ", "
+                   + metric_text + ", "
+                   + partition_policy + ", "
+                   + (allow_empty ? "true" : "false" ) + ")";
 }
 
 void VespucciDataset::ClassicalLeastSquares(const QString &name, const QStringList &reference_keys)

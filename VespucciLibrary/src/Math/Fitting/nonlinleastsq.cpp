@@ -21,6 +21,7 @@
 #include "Math/Fitting/linleastsq.h"
 #include <lmcurve.h>
 #include "Math/Accessory/Faddeeva.h"
+#include <limits>
 ///
 /// \brief Gaussian
 /// \param t values of t or x...
@@ -64,27 +65,11 @@ double VoigtFn(double t, const double *p)
 /// When estimated sigma parameter is nonreal, returns sigma as the standard deviation of y
 arma::vec Vespucci::Math::NonLinLeastSq::EstimateGaussParams(arma::vec x, arma::vec y)
 {
-    arma::vec ysquared = arma::pow(y, 2);
-    arma::vec xsquared = arma::pow(x, 2);
-    arma::mat X(3, 3);
-    X(0,0) = arma::sum(ysquared);
-    X(0,1) = arma::sum(x % ysquared);
-    X(0,2) = arma::sum(ysquared % xsquared);
-    X(1,0) = arma::sum(x % ysquared);
-    X(1,1) = x(0,2);
-    X(1,2) = arma::sum(xsquared % x % ysquared);
-    X(2,0) = x(0,2);
-    X(2,1) = x(1,2);
-    X(2,2) = arma::sum(xsquared % xsquared % ysquared);
-
-    arma::mat Y(3,1);
     arma::vec logy = arma::log(y);
-    Y(0,0) = arma::sum(ysquared % logy);
-    Y(1,0) = arma::sum(x % ysquared % logy);
-    Y(2,0) = arma::sum(xsquared % ysquared % logy);
+    arma::mat vdm = Vespucci::Math::LinLeastSq::Vandermonde(x, 2);
+    arma::vec quad_params = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(vdm, logy);
 
-    arma::vec quad_params = arma::solve(X, Y);
-    double A = std::exp(quad_params(0) - (0.25*std::pow(quad_params(1), 2)/quad_params(3)));
+    double A = std::exp(quad_params(0) - (0.25*std::pow(quad_params(1), 2)/quad_params(2)));
     double sigma = (quad_params(2) < 0 ? std::sqrt(-0.5/quad_params(2)) : arma::stddev(y));
     double mu = -0.5*quad_params(1)/quad_params(2);
 
@@ -93,31 +78,13 @@ arma::vec Vespucci::Math::NonLinLeastSq::EstimateGaussParams(arma::vec x, arma::
 
 arma::vec Vespucci::Math::NonLinLeastSq::EstimateLorentzParams(arma::vec x, arma::vec y)
 {
-    arma::vec ysquared = arma::pow(y, 2);
-    arma::vec xsquared = arma::pow(x, 2);
-    arma::mat X(3, 3);
-    X(0,0) = arma::sum(ysquared);
-    X(0,1) = arma::sum(x % ysquared);
-    X(0,2) = arma::sum(ysquared % xsquared);
-    X(1,0) = arma::sum(x % ysquared);
-    X(1,1) = x(0,2);
-    X(1,2) = arma::sum(xsquared % x % ysquared);
-    X(2,0) = x(0,2);
-    X(2,1) = x(1,2);
-    X(2,2) = arma::sum(xsquared % xsquared % ysquared);
-
-    arma::mat Y(3,1);
-    arma::vec invy = y.transform([](const double t){return 1.0/t;});
-    Y(0,0) = arma::sum(ysquared % invy);
-    Y(1,0) = arma::sum(x % ysquared % invy);
-    Y(2,0) = arma::sum(xsquared % ysquared % invy);
-
-    arma::vec quad_params = arma::solve(X, Y);
+    arma::vec invy = y.transform([](const double t){return (t != 0 ? 1.0/t : std::numeric_limits<double>::max());});
+    arma::mat vdm = Vespucci::Math::LinLeastSq::Vandermonde(x, 2);
+    arma::vec quad_params = Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(vdm, invy);
     double x0 = -0.5 * quad_params(1) / quad_params(0);
     double inside_sqrt = (quad_params(2) - std::pow(x0, 1)) / quad_params(0);
     double gamma = (inside_sqrt >= 0 ? std::sqrt(inside_sqrt) : arma::stddev(y));
     double I = 1.0 / (quad_params(0) * gamma);
-
     return arma::vec({I, gamma, x0});
 }
 ///

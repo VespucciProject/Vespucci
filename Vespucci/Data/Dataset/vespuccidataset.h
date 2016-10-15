@@ -209,7 +209,8 @@ public:
     void TrainPLSDA(const QString &name, const QStringList &label_keys);
     void CorrelationAnalysis(const QString &control_key, QString name);
     void VertexComponents(const QString &name, uword endmembers);
-    void KMeans(const QString &name, const QString &metric_text, size_t clusters);
+    void KMeans(const QString &name, const QString &metric_text,
+                const QString &partition_policy, bool allow_empty, size_t clusters);
     void PrincipalComponents(const QString &name);
     void PrincipalComponents(const QString &name, bool scale_data);
     void FindPeaks(const QString &name, double sel, double threshold,

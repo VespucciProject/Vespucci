@@ -103,7 +103,8 @@ SOURCES +=\
     src/Math/Fitting/nonlinleastsq.cpp \
     src/Math/Accessory/Faddeeva.cpp \
     src/Math/Baseline/rollingball.cpp \
-    src/Math/Smoothing/denoise.cpp
+    src/Math/Smoothing/denoise.cpp \
+    src/Math/Clustering/kmeanswrapper.cpp
 
 
 HEADERS  += \
@@ -139,7 +140,8 @@ HEADERS  += \
     include/Math/Fitting/nonlinleastsq.h \
     include/Math/Accessory/Faddeeva.h \
     include/Math/Baseline/rollingball.h \
-    include/Math/Smoothing/denoise.h
+    include/Math/Smoothing/denoise.h \
+    include/Math/Clustering/kmeanswrapper.h
 
 #For all platforms:
 INCLUDEPATH += $$PWD/include

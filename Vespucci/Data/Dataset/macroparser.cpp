@@ -52,7 +52,7 @@ MacroParser::MacroParser(QSharedPointer<VespucciDataset> dataset)
     valid_commands_["BandRatio"] = QStringList({ "String" , "Double" , "Double" , "Double" , "Double" , "UInt" });
     valid_commands_["PartialLeastSquares"] = QStringList({ "String", "UInt" });
     valid_commands_["VertexComponents"] = QStringList({ "String", "UInt" });
-    valid_commands_["KMeans"] = QStringList({ "String", "String", "UInt" });
+    valid_commands_["KMeans"] = QStringList({ "String", "String", "String", "Bool", "UInt" });
     valid_commands_["PrincipalComponents"] = QStringList({ "String" });
     valid_commands_["ClassicalLeastSquares"] = QStringList({"String", "String", "String", "String"});
     valid_commands_["RollingBallBaseline"] = QStringList({ "UInt", "UInt" });
@@ -201,7 +201,7 @@ void MacroParser::ExecuteCommand(QString command, QStringList params)
 	else if (command == "VertexComponents")
         dataset_->VertexComponents(params[0], params[1].toInt());
 	else if (command == "KMeans")
-        dataset_->KMeans(params[0], params[1], params[2].toInt());
+        dataset_->KMeans(params[0], params[1], params[2], ToBool(params[3]), params[4].toInt());
 	else if (command == "PrincipalComponents")
         dataset_->PrincipalComponents(params[0]);
     else if (command == "ClassicalLeastSquares"){

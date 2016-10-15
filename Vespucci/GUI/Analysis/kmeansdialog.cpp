@@ -51,9 +51,13 @@ void KMeansDialog::on_buttonBox_accepted()
 {
     QString name = ui->nameLineEdit->text();
     QString metric_text = ui->metricComboBox->currentText();
+    metric_text = metric_text.toLower().remove(" ");
+    QString partition_policy = ui->partitionComboBox->currentText();
+    partition_policy = partition_policy.toLower().remove(" ");
+    bool allow_empty = ui->emptyCheckBox->isChecked();
     size_t clusters = ui->clustersSpinBox->value();
     try{
-        analyzer_->KMeans(name, metric_text, clusters);
+        analyzer_->KMeans(name, metric_text, partition_policy, allow_empty, clusters);
     }catch(exception e){
         workspace_->main_window()->DisplayExceptionWarning(e);
     }

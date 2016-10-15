@@ -28,23 +28,37 @@ MapPlot::MapPlot(QWidget *parent)
     crosshair_pen.setWidth(3);
     vertical_crosshair_->setPen(crosshair_pen);
     horizontal_crosshair_->setPen(crosshair_pen);
-    color_map_ = new QCPColorMap(xAxis, yAxis);
+
+
+    addItem(vertical_crosshair_);
+    addItem(horizontal_crosshair_);
+
+    color_map_= new QCPColorMap(xAxis, yAxis);
     color_scale_ = new QCPColorScale(this);
     color_map_->setColorScale(color_scale_);
+
     color_map_->setInterpolate(false);
     addLayer("crosshairs");
     vertical_crosshair_->setLayer("crosshairs");
     horizontal_crosshair_->setLayer("crosshairs");
-    addItem(vertical_crosshair_);
-    addItem(horizontal_crosshair_);
+
     addPlottable(color_map_);
+
+    QCPAxisRect *rect = axisRect();
+    plotLayout()->addElement(0, 1, rect);
+    plotLayout()->remove(plotLayout()->element(0, 0));
+    plotLayout()->addElement(0, 0, color_scale_);
+    rect_position_ = QPair<int, int>(0, 1);
+    color_scale_position_ = QPair<int, int>(0, 0);
+
+
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    plotLayout()->addElement(0, 1, color_scale_);
+    color_scale_->setType(QCPAxis::atLeft);
     addLayer("colorscale");
     color_scale_->setLayer("colorscale");
     QCPMarginGroup *group = new QCPMarginGroup(this);
     color_scale_->setMarginGroup(QCP::msTop|QCP::msBottom, group);
-    this->axisRect()->setMarginGroup(QCP::msTop|QCP::msBottom, group);
+    axisRect()->setMarginGroup(QCP::msTop|QCP::msBottom, group);
     color_scale_->setLabel(" ");
     xAxis->setVisible(false);
     yAxis->setVisible(false);
@@ -285,6 +299,7 @@ void MapPlot::SetFonts(const QFont &font)
 void MapPlot::SetColorScaleLabel(const QString &label_text)
 {
     color_scale_->setLabel(label_text);
+    replot(QCustomPlot::rpImmediate);
 }
 
 QString MapPlot::ColorScaleLabel() const

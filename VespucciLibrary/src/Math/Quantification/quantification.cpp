@@ -246,7 +246,7 @@ arma::rowvec Vespucci::Math::Quantification::FitGaussianPeak(const arma::vec &sp
     min = abscissa(min_index);
     max = abscissa(max_index);
 
-    baseline = arma::linspace(spectrum(min_index), spectrum(max_index), max_index - min_index);
+    baseline = arma::linspace(spectrum(min_index), spectrum(max_index), max_index - min_index + 1);
     spectrum_part -= baseline;
 
     params = Vespucci::Math::NonLinLeastSq::FitGaussian(abscissa_part, spectrum_part).t();
@@ -356,7 +356,7 @@ arma::rowvec Vespucci::Math::Quantification::FitLorentzianPeak(const arma::vec &
     min = abscissa(min_index);
     max = abscissa(max_index);
 
-    baseline = arma::linspace(spectrum(min_index), spectrum(max_index), max_index - min_index);
+    baseline = arma::linspace(spectrum(min_index), spectrum(max_index), max_index - min_index + 1);
     spectrum_part -= baseline;
 
     params = Vespucci::Math::NonLinLeastSq::FitLorentzian(abscissa_part, spectrum_part).t();
@@ -478,7 +478,7 @@ arma::rowvec Vespucci::Math::Quantification::FitVoigtPeak(const arma::vec &spect
     min = abscissa(min_index);
     max = abscissa(max_index);
 
-    baseline = arma::linspace(spectrum(min_index), spectrum(max_index), max_index - min_index);
+    baseline = arma::linspace(spectrum(min_index), spectrum(max_index), max_index - min_index + 1);
     spectrum_part -= baseline;
 
     params = Vespucci::Math::NonLinLeastSq::FitVoigt(abscissa_part, spectrum_part).t();

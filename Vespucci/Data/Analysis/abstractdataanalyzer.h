@@ -50,6 +50,8 @@ public:
                                   arma::uword endmembers) = 0;
     virtual void KMeans(const QString &name,
                         const QString &metric_text,
+                        const QString &partition_policy,
+                        bool allow_empty,
                         size_t clusters) = 0;
     virtual void PrincipalComponents(const QString &name) = 0;
     virtual void PrincipalComponents(const QString &name,

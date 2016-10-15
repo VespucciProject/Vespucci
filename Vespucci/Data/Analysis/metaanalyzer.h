@@ -56,6 +56,8 @@ public:
                           uword endmembers);
     void KMeans(const QString &name,
                 const QString &metric_text,
+                const QString &partition_policy,
+                bool allow_empty,
                 size_t clusters);
     void PrincipalComponents(const QString &name);
     void PrincipalComponents(const QString &name,
