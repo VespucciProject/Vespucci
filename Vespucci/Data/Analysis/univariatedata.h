@@ -28,9 +28,16 @@ public:
     UnivariateData(QString name);
     UnivariateData(QString name, vec control);
 
-    void Apply(double left_bound, double right_bound, uword bound_window, const mat &spectra, const vec &abscissa);
+    void Apply(double left_bound, double right_bound,
+               uword bound_window, const mat &spectra, const vec &abscissa);
+    void Apply(QString peak_shape,
+               double left_bound,
+               double right_bound,
+               const mat &spectra,
+               const vec &abscissa);
     void Apply(double first_left_bound, double first_right_bound,
-               double second_left_bound, double second_right_bound, uword bound_window, const mat &spectra, const vec &abscissa);
+               double second_left_bound, double second_right_bound,
+               uword bound_window, const mat &spectra, const vec &abscissa);
     void ApplyCorrelation(const mat &spectra, const vec &control);
     void Calibrate(const vec &x, const vec &y, uword column);
 

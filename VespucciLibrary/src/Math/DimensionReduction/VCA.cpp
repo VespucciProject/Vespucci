@@ -156,10 +156,10 @@ double Vespucci::Math::DimensionReduction::estimate_snr(const arma::mat &R, arma
 /// \param Ek
 /// \return
 /// Performs the HySime algorithm to predict the rank of y
-int Vespucci::Math::DimensionReduction::HySime(arma::mat y,
-                     arma::mat n,
-                     arma::mat Rn,
-                     arma::mat &Ek)
+size_t Vespucci::Math::DimensionReduction::HySime(const arma::mat &y,
+                                                  const arma::mat &n,
+                                                  arma::mat &Rn,
+                                                  arma::mat &Ek)
 {
     std::cout << "Vespucci::Math::DimensionReduction::HySime()" << std::endl;
     if (n.n_rows != y.n_rows || n.n_cols  != y.n_cols){
@@ -196,6 +196,14 @@ int Vespucci::Math::DimensionReduction::HySime(arma::mat y,
     Ek = E.cols(sorted_cols);
     return kf;
 
+}
+
+size_t Vespucci::Math::DimensionReduction::HySime(const arma::mat &y,
+                                                  arma::mat &subspace)
+{
+    arma::mat noise, noise_correlation;
+    Vespucci::Math::DimensionReduction::EstimateAdditiveNoise(noise, noise_correlation, y);
+    return Vespucci::Math::DimensionReduction::HySime(y, noise, noise_correlation, subspace);
 }
 
 ///

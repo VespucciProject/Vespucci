@@ -50,7 +50,6 @@ namespace Vespucci
         VESPUCCI_EXPORT arma::sp_mat LocalMaximaCWT(arma::mat coefs, arma::uvec scales, arma::uword min_window_size);
 
         VESPUCCI_EXPORT double quantile(arma::vec &data, double probs);
-        VESPUCCI_EXPORT double mad(arma::vec &data);
 
         VESPUCCI_EXPORT arma::vec ExtendToNextPow(arma::vec X, arma::uword n);
         VESPUCCI_EXPORT arma::uword NextPow(arma::uword number, arma::uword power);
@@ -102,6 +101,13 @@ namespace Vespucci
 
         VESPUCCI_EXPORT arma::uword ClosestIndex(double value, const arma::vec &vector);
         VESPUCCI_EXPORT arma::uvec Intersection(arma::uvec &x, arma::uvec &y);
+
+        VESPUCCI_EXPORT double CalculateRSquared(const arma::vec &data,
+                                                 const arma::vec &fit,
+                                                 arma::vec &residuals);
+        VESPUCCI_EXPORT arma::mat SafeRows(const arma::mat &x,
+                                           arma::uword a,
+                                           arma::uword b);
     }
 }
 

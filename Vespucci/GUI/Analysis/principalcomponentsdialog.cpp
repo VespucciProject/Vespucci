@@ -27,24 +27,15 @@
 /// \param ws Current workspace
 /// \param row Currently selected row
 ///
-PrincipalComponentsDialog::PrincipalComponentsDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
+PrincipalComponentsDialog::PrincipalComponentsDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer) :
     QDialog(parent),
     ui(new Ui::PrincipalComponentsDialog)
 {
     ui->setupUi(this);
     workspace_ = ws;
-    dataset_ = workspace_->GetDataset(dataset_key);
+    analyzer_ = analyzer;
 }
 
-PrincipalComponentsDialog::PrincipalComponentsDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys)
-    :QDialog(ws->main_window()),
-    ui(new Ui::PrincipalComponentsDialog)
-{
-    workspace_ = ws;
-    dataset_keys_ = dataset_keys;
-    if (dataset_keys_.isEmpty()) close();
-
-}
 
 PrincipalComponentsDialog::~PrincipalComponentsDialog()
 {
@@ -57,25 +48,15 @@ PrincipalComponentsDialog::~PrincipalComponentsDialog()
 void PrincipalComponentsDialog::on_buttonBox_accepted()
 {
     QString name = ui->nameLineEdit->text();
-    if (!dataset_keys_.isEmpty() || !dataset_.isNull()){
-        if (!dataset_keys_.isEmpty()){
-            try{
-                MultiAnalyzer analyzer(workspace_, dataset_keys_);
-                analyzer.PrincipalComponents(name);
-            }catch(exception e){
-                workspace_->main_window()->DisplayExceptionWarning(e);
-            }
-        }
-        else{
-            try{
-                dataset_->PrincipalComponents(name);
-            }catch(exception e){
-                workspace_->main_window()->DisplayExceptionWarning(e);
-            }
+    if (!analyzer_.isNull()){
+        try{
+            analyzer_->PrincipalComponents(name);
+        }catch(exception e){
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
     close();
-    dataset_.clear();
+    analyzer_.clear();
     return;
 }
 
@@ -85,5 +66,5 @@ void PrincipalComponentsDialog::on_buttonBox_accepted()
 void PrincipalComponentsDialog::on_buttonBox_rejected()
 {
     close();
-    dataset_.clear();
+    analyzer_.clear();
 }

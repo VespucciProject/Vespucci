@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>447</width>
-    <height>187</height>
+    <height>159</height>
    </rect>
   </property>
   <property name="font">
@@ -104,14 +104,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
-    <widget class="QCheckBox" name="predictionCheckBox">
-     <property name="text">
-      <string>Predict Number of Components?</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0" colspan="2">
+   <item row="4" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>

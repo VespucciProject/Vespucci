@@ -99,7 +99,12 @@ SOURCES +=\
     src/Math/Accessory/distancemetricwrapper.cpp \
     src/Math/Stats/histogram.cpp \
     src/Math/Clustering/agglomerativeclustering.cpp \
-    src/Math/Clustering/ahcanode.cpp
+    src/Math/Clustering/ahcanode.cpp \
+    src/Math/Fitting/nonlinleastsq.cpp \
+    src/Math/Accessory/Faddeeva.cpp \
+    src/Math/Baseline/rollingball.cpp \
+    src/Math/Smoothing/denoise.cpp \
+    src/Math/Clustering/kmeanswrapper.cpp
 
 
 HEADERS  += \
@@ -131,7 +136,12 @@ HEADERS  += \
     include/Math/Accessory/distancemetricwrapper.h \
     include/Math/Stats/histogram.h \
     include/Math/Clustering/agglomerativeclustering.h \
-    include/Math/Clustering/ahcanode.h
+    include/Math/Clustering/ahcanode.h \
+    include/Math/Fitting/nonlinleastsq.h \
+    include/Math/Accessory/Faddeeva.h \
+    include/Math/Baseline/rollingball.h \
+    include/Math/Smoothing/denoise.h \
+    include/Math/Clustering/kmeanswrapper.h
 
 #For all platforms:
 INCLUDEPATH += $$PWD/include
@@ -190,6 +200,16 @@ unix:!macx{
 
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/yaml-cpp/include
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/yaml-cpp/include
+
+    #LIBS += -L$$PWD/../../Vespucci_dependencies/libcerf/lib/ -lcerf
+    #INCLUDEPATH += $$PWD/../../Vespucci_dependencies/libcerf/include
+    #DEPENDPATH += $$PWD/../../Vespucci_dependencies/libcerf/include
+    #PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/libcerf/lib/libcerf.a
+
+    #LIBS += -L$$PWD/../../Vespucci_dependencies/lmfit/lib/ -llmfit
+    #INCLUDEPATH += $$PWD/../../Vespucci_dependencies/lmfit/include
+    #DEPENDPATH += $$PWD/../../Vespucci_dependencies/lmfit/include
+    #PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/lmfit/lib/liblmfit.a
 }
 
 #mac libraries. These are the same in Travis-CI as in most local environments
@@ -240,6 +260,11 @@ macx{
 
     INCLUDEPATH += /usr/local/opt/libxml2/include/libxml2
     DEPENDPATH += /usr/local/opt/libxml2/include/libxml2
+
+    #LIBS += -L$$PWD/../../lmfit/lib/ -llmfit
+    #INCLUDEPATH += $$PWD/../../lmfit/include
+    #DEPENDPATH += $$PWD/../../lmfit/include
+    #PRE_TARGETDEPS += $$PWD/../../lmfit/lib/liblmfit.a
 }
 
 #windows libraries for msvc (we don't currently build the libraries for g++ on windows)
@@ -292,6 +317,10 @@ win32:!win32-g++{
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/HDF5/lib/ -llibszip
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/HDF5/lib/libszip.lib
-}
 
+    #LIBS += -L$$PWD/../../Vespucci_dependencies/lmfit/lib/ -llmfit
+    #INCLUDEPATH += $$PWD/../../Vespucci_dependencies/lmfit/include
+    #DEPENDPATH += $$PWD/../../Vespucci_dependencies/lmfit/include
+    #PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/lmfit/lib/liblmfit.lib
+}
 

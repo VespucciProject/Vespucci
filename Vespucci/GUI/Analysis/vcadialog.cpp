@@ -27,27 +27,13 @@
 /// \param ws Current workspace
 /// \param row Currently selected row in dataset list widget
 ///
-VCADialog::VCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
+VCADialog::VCADialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer) :
     QDialog(parent),
-    ui(new Ui::VCADialog)
+    ui(new Ui::VCADialog),
+    workspace_(ws),
+    analyzer_(analyzer)
 {
     ui->setupUi(this);
-    workspace_ = ws;
-    dataset_ = workspace_->GetDataset(dataset_key);
-}
-
-VCADialog::VCADialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys)
-    :QDialog(ws->main_window()),
-      ui(new Ui::VCADialog)
-{
-    ui->setupUi(this);
-    workspace_ = ws;
-    dataset_keys_ = dataset_keys;
-    if (dataset_keys_.isEmpty()){
-        close();
-        return;
-    }
-    ui->predictionCheckBox->setEnabled(false);
 }
 
 VCADialog::~VCADialog()
@@ -62,34 +48,19 @@ void VCADialog::on_buttonBox_accepted()
 {
     int endmembers;
     QString name = ui->nameLineEdit->text();
+    if (name.isEmpty()) name = "VCA";
+    endmembers = ui->endmembersSpinBox->value();
 
-
-
-    if (ui->predictionCheckBox->isChecked())
-        endmembers = 0;
-    else
-        endmembers = ui->endmembersSpinBox->value();
-    if (!dataset_keys_.isEmpty() || !dataset_.isNull()){
-        if (!dataset_keys_.isEmpty()){
-            endmembers = ui->endmembersSpinBox->value();
-            try{
-                MultiAnalyzer analyzer(workspace_, dataset_keys_);
-                analyzer.VertexComponents(name, endmembers);
-            }catch (exception e){
-                workspace_->main_window()->DisplayExceptionWarning(e);
-            }
-        }
-        else{
-            try{
-                dataset_->VertexComponents(name, endmembers);
-            }catch(std::exception e){
-                workspace_->main_window()->DisplayExceptionWarning(e);
-            }
+    if (!analyzer_.isNull()){
+        try{
+            analyzer_->VertexComponents(name, endmembers);
+        }catch(std::exception e){
+            workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
 
     close();
-    dataset_.clear();
+    analyzer_.clear();
 }
 
 ///
@@ -98,11 +69,5 @@ void VCADialog::on_buttonBox_accepted()
 void VCADialog::on_buttonBox_rejected()
 {
     close();
-    dataset_.clear();
-}
-
-void VCADialog::on_predictionCheckBox_clicked(bool checked)
-{
-    ui->endmembersSpinBox->setEnabled(!checked);
-
+    analyzer_.clear();
 }

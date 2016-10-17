@@ -18,8 +18,11 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include <Math/Quantification/quantification.h>
+#include <Math/Fitting/linleastsq.h>
+#include <Math/Fitting/nonlinleastsq.h>
+#include <Math/Accessory/accessory.h>
 ///
-/// \brief Vespucci::Math::Quantification::QuantifyPeak
+/// \brief Vespucci::Math::Quantification::QuantifyPeak Performs empirical analysis of peak shape and magnitude
 /// \param spectrum
 /// \param abscissa
 /// \param min
@@ -44,7 +47,6 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
                                                           arma::mat &total_baseline,
                                                           arma::mat &inflection_baseline)
 {
-    //performs analysis of peak shape and magnitude
     arma::rowvec results(8);
 
     arma::uword min_index = Vespucci::Math::ClosestIndex(min, abscissa);
@@ -73,8 +75,6 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     double positive_area = arma::as_scalar(arma::trapz(abscissa_part.rows(positive_indices), spectrum_part.rows(positive_indices)));
     double baseline_area = arma::as_scalar(arma::trapz(abscissa_part.rows(positive_indices), total_baseline.rows(positive_indices)));
     total_baseline = arma::join_horiz(total_abscissa, total_baseline);
-
-
 
     arma::vec min_window = spectrum.rows(min_start, min_end);
     arma::vec max_window = spectrum.rows(max_start, max_end);
@@ -219,4 +219,379 @@ arma::mat Vespucci::Math::Quantification::ConvertInflectionBaselines(const arma:
     }
     baseline_matrix = arma::join_horiz(abscissa, baseline_matrix);
     return baseline_matrix;
+}
+
+
+
+///
+/// \brief Vespucci::Math::Quantification::FitGaussianPeak Fit and analyze data with a Gaussian function
+/// \param spectrum
+/// \param abscissa
+/// \param min
+/// \param max
+/// \param baseline
+/// \param fit
+/// \param params
+/// \param residuals
+/// \return
+///
+arma::rowvec Vespucci::Math::Quantification::FitGaussianPeak(const arma::vec &spectrum, const arma::vec &abscissa, double &min, double &max, arma::mat &baseline, arma::mat &fit, arma::rowvec &params, arma::mat residuals)
+{
+    /*
+    arma::rowvec results(5);
+
+    arma::uword min_index = Vespucci::Math::ClosestIndex(min, abscissa);
+    arma::uword max_index = Vespucci::Math::ClosestIndex(max, abscissa);
+
+    arma::vec abscissa_part = abscissa.rows(min_index, max_index);
+    arma::vec spectrum_part = spectrum.rows(min_index, max_index);
+
+    min = abscissa(min_index);
+    max = abscissa(max_index);
+
+    baseline = arma::linspace(spectrum(min_index), spectrum(max_index), max_index - min_index + 1);
+    spectrum_part -= baseline;
+
+    params = Vespucci::Math::NonLinLeastSq::FitGaussian(abscissa_part, spectrum_part).t();
+
+    fit.clear();
+    fit.set_size(abscissa_part.n_rows, 2);
+    fit.col(0) = abscissa_part;
+    for (arma::uword i = 0; i < fit.n_rows; ++i)
+        fit(i, 1) = GaussianFn(abscissa_part(i), params.memptr());
+
+    arma::vec residuals_vec;
+    double R_squared = Vespucci::Math::CalculateRSquared(spectrum_part, fit.col(1), residuals_vec);
+
+    results(0) = params(0); //intensity
+    results(1) = arma::datum::sqrt2 * std::abs(params[2]) * std::sqrt(arma::datum::pi); //area
+    results(2) = 2 * std::sqrt(2 * std::log(2)) * params[2]; //fwhm
+    results(3) = params(1); //center
+    results(4) = R_squared; //R-squared
+    fit += baseline;
+    baseline = arma::join_horiz(abscissa_part, baseline);
+    residuals = arma::join_horiz(abscissa_part, residuals_vec);
+    return results;
+    */
+    return arma::rowvec();
+}
+
+arma::mat Vespucci::Math::Quantification::FitGaussianPeakMat(const arma::mat &spectra, const arma::vec &abscissa, double &min, double &max, arma::mat &baselines, arma::mat &fits, arma::mat &params, arma::mat &residuals)
+{
+/*
+    arma::mat results(spectra.n_cols, 5);
+    params.clear();
+    fits.clear();
+    residuals.clear();
+    baselines.clear();
+    arma::field<arma::mat> baselines_tmp(spectra.n_cols);
+    arma::field<arma::mat> fits_tmp(spectra.n_cols);
+    arma::field<arma::mat> residuals_tmp(spectra.n_cols);
+    params.set_size(spectra.n_cols, 3);
+
+#ifdef _WIN32
+  #pragma omp parallel for default(none) \
+      shared(spectra, baselines_tmp, residuals_tmp, params, fits_tmp, results, min, max, bound_window, abscissa)
+     for (intmax_t i = 0; i < (intmax_t) spectra.n_cols; ++i)
+#else
+  #pragma omp parallel for default(none) \
+      shared(spectra, baselines_tmp, residuals_tmp, params, fits_tmp, results, min, max, bound_window, abscissa)
+    for (size_t i = 0; i < spectra.n_cols; ++ i)
+#endif
+    {
+        double temp_min = min;
+        double temp_max = max;
+        arma::vec baseline;
+        arma::rowvec params_tmp;
+        arma::vec current_residuals;
+        arma::vec fit;
+        results.row(i) = Vespucci::Math::Quantification::FitGaussianPeak(spectra.col(i),
+                                                                         abscissa,
+                                                                         temp_min,
+                                                                         temp_max,
+                                                                         baseline,
+                                                                         fit,
+                                                                         params_tmp,
+                                                                         current_residuals);
+        baselines_tmp(i) = baseline;
+        params.row(i) = params_tmp;
+        fits_tmp(i) = fit;
+        residuals_tmp(i) = current_residuals;
+    }
+
+    for (size_t i = 0; i < baselines_tmp.n_rows; ++i){
+        if (baselines.n_rows)
+            baselines = arma::join_horiz(baselines, baselines_tmp(i).col(1));
+        else
+            baselines = baselines_tmp(i);
+        if (fits.n_rows)
+            fits = arma::join_horiz(fits, fits_tmp(i).col(1));
+        else
+            fits = fits_tmp(i);
+        if (residuals.n_rows)
+            residuals = arma::join_horiz(residuals, residuals_tmp(i).col(1));
+        else
+            residuals = residuals_tmp(i);
+
+    }
+    return results;
+    */return arma::mat();
+}
+
+///
+/// \brief Vespucci::Math::Quantification::FitLorentzianPeak
+/// \param spectrum
+/// \param abscissa
+/// \param min
+/// \param max
+/// \param baseline
+/// \param fit
+/// \param params
+/// \param residuals
+/// \return
+///
+arma::rowvec Vespucci::Math::Quantification::FitLorentzianPeak(const arma::vec &spectrum, const arma::vec &abscissa, double &min, double &max, arma::mat &baseline, arma::mat &fit, arma::rowvec &params, arma::mat residuals)
+{
+    /*
+    arma::rowvec results(5);
+
+    arma::uword min_index = Vespucci::Math::ClosestIndex(min, abscissa);
+    arma::uword max_index = Vespucci::Math::ClosestIndex(max, abscissa);
+
+    arma::vec abscissa_part = abscissa.rows(min_index, max_index);
+    arma::vec spectrum_part = spectrum.rows(min_index, max_index);
+
+    min = abscissa(min_index);
+    max = abscissa(max_index);
+
+    baseline = arma::linspace(spectrum(min_index), spectrum(max_index), max_index - min_index + 1);
+    spectrum_part -= baseline;
+
+    params = Vespucci::Math::NonLinLeastSq::FitLorentzian(abscissa_part, spectrum_part).t();
+
+    fit.clear();
+    fit.set_size(abscissa_part.n_rows, 2);
+    fit.col(0) = abscissa_part;
+    for (arma::uword i = 0; i < fit.n_rows; ++i)
+        fit(i, 1) = LorentzianFn(abscissa_part(i), params.memptr());
+
+    arma::vec residuals_vec;
+    double R_squared = Vespucci::Math::CalculateRSquared(spectrum_part, fit.col(1), residuals_vec);
+
+    results(0) = params(0); //intensity
+    results(1) = arma::datum::sqrt2 * std::abs(params[2]) * std::sqrt(arma::datum::pi); //area
+    results(2) = 2.0 * params(1); //fwhm
+    results(3) = params(2); //center
+    results(4) = R_squared; //R-squared
+    fit += baseline;
+    baseline = arma::join_horiz(abscissa_part, baseline);
+    residuals = arma::join_horiz(abscissa_part, residuals_vec);
+    return results;
+    */
+    return arma::rowvec();
+}
+
+///
+/// \brief Vespucci::Math::Quantification::FitLorentzianPeakMat
+/// \param spectra
+/// \param abscissa
+/// \param min
+/// \param max
+/// \param baselines
+/// \param fits
+/// \param params
+/// \param residuals
+/// \return
+///
+arma::mat Vespucci::Math::Quantification::FitLorentzianPeakMat(const arma::mat &spectra, const arma::vec &abscissa, double &min, double &max, arma::mat &baselines, arma::mat &fits, arma::mat &params, arma::mat &residuals)
+{
+    /*
+    arma::mat results(spectra.n_cols, 5);
+    params.clear();
+    fits.clear();
+    residuals.clear();
+    baselines.clear();
+    arma::field<arma::mat> baselines_tmp(spectra.n_cols);
+    arma::field<arma::mat> fits_tmp(spectra.n_cols);
+    arma::field<arma::mat> residuals_tmp(spectra.n_cols);
+    params.set_size(spectra.n_cols, 3);
+
+#ifdef _WIN32
+  #pragma omp parallel for default(none) \
+      shared(spectra, baselines_tmp, residuals_tmp, fits_tmp, params, results, min, max, bound_window, abscissa)
+     for (intmax_t i = 0; i < (intmax_t) spectra.n_cols; ++i)
+#else
+  #pragma omp parallel for default(none) \
+      shared(spectra, baselines_tmp, residuals_tmp, fits_tmp, params, results, min, max, bound_window, abscissa)
+    for (size_t i = 0; i < spectra.n_cols; ++ i)
+#endif
+    {
+        double temp_min = min;
+        double temp_max = max;
+        arma::vec baseline;
+        arma::rowvec params_tmp;
+        arma::vec current_residuals;
+        arma::vec fit;
+        results.row(i) = Vespucci::Math::Quantification::FitLorentzianPeak(spectra.col(i),
+                                                                           abscissa,
+                                                                           temp_min,
+                                                                           temp_max,
+                                                                           baseline,
+                                                                           fit,
+                                                                           params_tmp,
+                                                                           current_residuals);
+        baselines_tmp(i) = baseline;
+        params.row(i) = params_tmp;
+        fits_tmp(i) = fit;
+        residuals_tmp(i) = current_residuals;
+    }
+
+    for (size_t i = 0; i < baselines_tmp.n_rows; ++i){
+        if (baselines.n_rows)
+            baselines = arma::join_horiz(baselines, baselines_tmp(i).col(1));
+        else
+            baselines = baselines_tmp(i);
+        if (fits.n_rows)
+            fits = arma::join_horiz(fits, fits_tmp(i).col(1));
+        else
+            fits = fits_tmp(i);
+        if (residuals.n_rows)
+            residuals = arma::join_horiz(residuals, residuals_tmp(i).col(1));
+        else
+            residuals = residuals_tmp(i);
+
+    }
+    return results;
+    */
+    return arma::mat();
+}
+
+///
+/// \brief Vespucci::Math::Quantification::FitVoigtPeak
+/// \param spectrum
+/// \param abscissa
+/// \param min
+/// \param max
+/// \param baseline
+/// \param fit
+/// \param params
+/// \param residuals
+/// \return
+///
+arma::rowvec Vespucci::Math::Quantification::FitVoigtPeak(const arma::vec &spectrum, const arma::vec &abscissa, double &min, double &max, arma::mat &baseline, arma::mat &fit, arma::rowvec &params, arma::mat residuals)
+{
+    /*
+    arma::rowvec results(7);
+
+    arma::uword min_index = Vespucci::Math::ClosestIndex(min, abscissa);
+    arma::uword max_index = Vespucci::Math::ClosestIndex(max, abscissa);
+
+    arma::vec abscissa_part = abscissa.rows(min_index, max_index);
+    arma::vec spectrum_part = spectrum.rows(min_index, max_index);
+
+    min = abscissa(min_index);
+    max = abscissa(max_index);
+
+    baseline = arma::linspace(spectrum(min_index), spectrum(max_index), max_index - min_index + 1);
+    spectrum_part -= baseline;
+
+    params = Vespucci::Math::NonLinLeastSq::FitVoigt(abscissa_part, spectrum_part).t();
+
+    fit.clear();
+    fit.set_size(abscissa_part.n_rows, 2);
+    fit.col(0) = abscissa_part;
+    for (arma::uword i = 0; i < fit.n_rows; ++i)
+        fit(i, 1) = VoigtFn(abscissa_part(i), params.memptr());
+
+    arma::vec residuals_vec;
+    double R_squared = Vespucci::Math::CalculateRSquared(spectrum_part, fit.col(1), residuals_vec);
+
+    results(0) = params(0); //intensity
+    results(1) = params(0); //area
+    results(2) = 2.0*params(2)*std::sqrt(std::log(2.0));//gaussian fwhm
+    results(3) = 2.0*params(3); //lorentzian fwhm
+    results(4) = 0.5346 * results(3) + std::sqrt(0.2166*std::pow(results(3), 2.0) + std::pow(results(2), 2.0));
+    results(5) = params(1); //center
+    results(6) = R_squared; //R-squared
+    fit += baseline;
+    baseline = arma::join_horiz(abscissa_part, baseline);
+    residuals = arma::join_horiz(abscissa_part, residuals);
+    return results;
+    */
+    return arma::rowvec();
+}
+
+///
+/// \brief Vespucci::Math::Quantification::FitVoigtPeakMat
+/// \param spectra
+/// \param abscissa
+/// \param min
+/// \param max
+/// \param baselines
+/// \param fits
+/// \param params
+/// \param residuals
+/// \return
+///
+arma::mat Vespucci::Math::Quantification::FitVoigtPeakMat(const arma::mat &spectra, const arma::vec &abscissa, double &min, double &max, arma::mat &baselines, arma::mat &fits, arma::mat &params, arma::mat &residuals)
+{
+    /*
+    arma::mat results(spectra.n_cols, 5);
+    params.clear();
+    fits.clear();
+    residuals.clear();
+    baselines.clear();
+    arma::field<arma::mat> baselines_tmp(spectra.n_cols);
+    arma::field<arma::mat> fits_tmp(spectra.n_cols);
+    arma::field<arma::mat> residuals_tmp(spectra.n_cols);
+    params.set_size(spectra.n_cols, 3);
+
+#ifdef _WIN32
+  #pragma omp parallel for default(none) \
+      shared(spectra, baselines_tmp, residuals_tmp, fits_tmp, params, results, min, max, bound_window, abscissa)
+     for (intmax_t i = 0; i < (intmax_t) spectra.n_cols; ++i)
+#else
+  #pragma omp parallel for default(none) \
+      shared(spectra, baselines_tmp, residuals_tmp, fits_tmp, params, results, min, max, bound_window, abscissa)
+    for (size_t i = 0; i < spectra.n_cols; ++ i)
+#endif
+    {
+        double temp_min = min;
+        double temp_max = max;
+        arma::vec baseline;
+        arma::rowvec params_tmp;
+        arma::vec current_residuals;
+        arma::vec fit;
+        results.row(i) = Vespucci::Math::Quantification::FitVoigtPeak(spectra.col(i),
+                                                                         abscissa,
+                                                                         temp_min,
+                                                                         temp_max,
+                                                                         baseline,
+                                                                         fit,
+                                                                         params_tmp,
+                                                                         current_residuals);
+        baselines_tmp(i) = baseline;
+        params.row(i) = params_tmp;
+        fits_tmp(i) = fit;
+        residuals_tmp(i) = current_residuals;
+    }
+
+    for (size_t i = 0; i < baselines_tmp.n_rows; ++i){
+        if (baselines.n_rows)
+            baselines = arma::join_horiz(baselines, baselines_tmp(i).col(1));
+        else
+            baselines = baselines_tmp(i);
+        if (fits.n_rows)
+            fits = arma::join_horiz(fits, fits_tmp(i).col(1));
+        else
+            fits = fits_tmp(i);
+        if (residuals.n_rows)
+            residuals = arma::join_horiz(residuals, residuals_tmp(i).col(1));
+        else
+            residuals = residuals_tmp(i);
+
+    }
+    return results;
+    */
+    return arma::mat();
 }

@@ -36,8 +36,7 @@ class BandRatioDialog : public QDialog
     Q_OBJECT
 
 public:
-   explicit BandRatioDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
-   explicit BandRatioDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys);
+   explicit BandRatioDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer);
     ~BandRatioDialog();
 
 private slots:
@@ -52,6 +51,8 @@ private slots:
     void on_secondMinLineEdit_textChanged(const QString &arg1);
 
     void on_secondMaxLineEdit_textChanged(const QString &arg1);
+
+    void on_indexSpinBox_editingFinished();
 
 private:
     Ui::BandRatioDialog *ui;
@@ -80,8 +81,8 @@ private:
     ///
     /// \brief dataset_
     /// Points to the dataset we're working with.
-    QSharedPointer<VespucciDataset> dataset_;
     QSharedPointer<VespucciWorkspace> workspace_;
+    QSharedPointer<AbstractDataAnalyzer> analyzer_;
 
     QStringList dataset_keys_;
 

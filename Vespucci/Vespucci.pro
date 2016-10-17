@@ -154,12 +154,15 @@ SOURCES += main.cpp\
     GUI/Processing/datasetimportdialog.cpp \
     GUI/Processing/matrixselectiondialog.cpp \
     GUI/Analysis/representativespectrumdialog.cpp \
-    Data/Analysis/metaanalyzer.cpp \
     GUI/Analysis/ahcadialog.cpp \
     GUI/Display/historydialog.cpp \
     GUI/Processing/univariateconcatenationdialog.cpp \
     GUI/Analysis/metaanalysisdialog.cpp \
-    GUI/Processing/datasetextractordialog.cpp
+    GUI/Processing/datasetextractordialog.cpp \
+    GUI/Analysis/dimensionalityestimationdialog.cpp \
+    Data/Analysis/abstractdataanalyzer.cpp \
+    Data/Analysis/matrixanalyzer.cpp \
+    Data/Analysis/metaanalyzer.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -231,12 +234,15 @@ HEADERS  += \
     GUI/Processing/datasetimportdialog.h \
     GUI/Processing/matrixselectiondialog.h \
     GUI/Analysis/representativespectrumdialog.h \
-    Data/Analysis/metaanalyzer.h \
     GUI/Analysis/ahcadialog.h \
     GUI/Display/historydialog.h \
     GUI/Processing/univariateconcatenationdialog.h \
     GUI/Analysis/metaanalysisdialog.h \
-    GUI/Processing/datasetextractordialog.h
+    GUI/Processing/datasetextractordialog.h \
+    Data/Analysis/abstractdataanalyzer.h \
+    GUI/Analysis/dimensionalityestimationdialog.h \
+    Data/Analysis/matrixanalyzer.h \
+    Data/Analysis/metaanalyzer.h
 
 
 FORMS    += \
@@ -292,7 +298,8 @@ FORMS    += \
     GUI/Display/historydialog.ui \
     GUI/Processing/univariateconcatenationdialog.ui \
     GUI/Analysis/metaanalysisdialog.ui \
-    GUI/Processing/datasetextractordialog.ui
+    GUI/Processing/datasetextractordialog.ui \
+    GUI/Analysis/dimensionalityestimationdialog.ui
 
 RESOURCES += \
     resources.qrc

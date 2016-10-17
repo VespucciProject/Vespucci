@@ -523,37 +523,6 @@ double Vespucci::Math::quantile(arma::vec &data, double probs)
     }
 }
 
-
-double Vespucci::Math::mad(arma::vec &data)
-{
-    double median;
-    double value;
-    arma::vec sorted = sort(data);
-    //calculate median (we do it this way because of an error in MinGW)
-    arma::uword center = sorted.n_rows / 2;
-    if (sorted.n_rows % 2 != 0){
-        median = 0.5*(sorted(center) + sorted(center+1));
-    }
-    else{
-        median = sorted(center);
-    }
-
-    data -= median;
-    sorted = sort(data);
-
-    if (sorted.n_rows % 2 != 0){
-        value = 0.5*(sorted(center) + sorted(center+1));
-    }
-    else{
-        value = sorted(center);
-    }
-    return value;
-}
-
-
-
-
-
 ///
 /// \brief Vespucci::Math::RecalculateAverage Recalculate the average value when
 /// a new value is added to a list for which only the previous means, stddevs
@@ -1027,4 +996,46 @@ arma::uvec Vespucci::Math::Intersection(arma::uvec &x, arma::uvec &y)
                           y.begin(), y.end(),
                           std::back_inserter(intersection));
     return arma::conv_to<arma::uvec>::from(intersection);
+}
+
+///
+/// \brief Vespucci::Math::CalculateRSquared
+/// \param data
+/// \param fit
+/// \param residuals
+/// \return
+/// calcuate residuals and R-squared from fit fit to data data.
+double Vespucci::Math::CalculateRSquared(const arma::vec &data,
+                                         const arma::vec &fit,
+                                         arma::vec &residuals)
+{
+    residuals = data - fit;
+    arma::vec centered = data - arma::as_scalar(arma::mean(data));
+    double residual_sumsq = arma::accu(arma::pow(residuals, 2.0));
+    double total_sumsq = arma::accu(arma::pow(centered, 2.0));
+    return 1.0 - (residual_sumsq/total_sumsq);
+}
+
+///
+/// \brief Vespucci::Math::SafeRows
+/// \param x
+/// \param a
+/// \param b
+/// \return
+/// An alternative to arma::mat::rows that allows a and b to be equal, a to be
+/// larger than b, and the range to be greater than the end of the vector (all
+///  things that are allowed in R).
+/// This makes translating from R easier.
+
+arma::mat Vespucci::Math::SafeRows(const arma::mat &x, arma::uword a, arma::uword b)
+{
+    if (a > b){
+        arma::uword a1 = a;
+        a = b;
+        b = a1;
+    }
+    else if (a == b && a < x.n_rows) return x.row(a);
+    else if (a < x.n_rows && b >= x.n_rows) return x.rows(a, x.n_rows - 1);
+    else if (a < x.n_rows) return x.rows(a, b);
+    return x.row(x.n_rows - 1);
 }

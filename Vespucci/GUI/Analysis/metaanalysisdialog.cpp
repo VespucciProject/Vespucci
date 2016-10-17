@@ -19,29 +19,24 @@
 *******************************************************************************/
 #include "metaanalysisdialog.h"
 #include "ui_metaanalysisdialog.h"
-#include "Data/Analysis/metaanalyzer.h"
+#include "Data/Analysis/matrixanalyzer.h"
+#include "GUI/Analysis/bandratiodialog.h"
+#include "GUI/Analysis/kmeansdialog.h"
+#include "GUI/Analysis/plsdialog.h"
+#include "GUI/Analysis/principalcomponentsdialog.h"
+#include "GUI/Analysis/univariatedialog.h"
+#include "GUI/Analysis/vcadialog.h"
+#include "GUI/Analysis/ahcadialog.h"
 
 MetaAnalysisDialog::MetaAnalysisDialog(QWidget *parent,
                                        QSharedPointer<VespucciWorkspace> ws,
                                        const QStringList &data_keys) :
     QDialog(parent),
-    ui(new Ui::MetaAnalysisDialog)
+    ui(new Ui::MetaAnalysisDialog),
+    workspace_(ws),
+    data_keys_(data_keys)
 {
     ui->setupUi(this);
-    workspace_ = ws;
-    data_keys_ = data_keys;
-    ui->linkageComboBox->setVisible(false);
-    ui->linkageLabel->setVisible(false);
-    ui->metricComboBox->setVisible(false);
-    ui->metricLabel->setVisible(false);
-    ui->componentsLabel->setVisible(false);
-    ui->componentsSpinBox->setVisible(false);
-    ui->controlLabel->setVisible(false);
-    ui->controlDisplayLabel->setVisible(false);
-    ui->selectPushButton->setVisible(false);
-    matrix_selection_dialog_ = new MatrixSelectionDialog(this, workspace_->dataset_tree_model());
-    connect(matrix_selection_dialog_, &MatrixSelectionDialog::MatrixSelected,
-            this, &MetaAnalysisDialog::MatrixSelected);
 }
 
 MetaAnalysisDialog::~MetaAnalysisDialog()
@@ -50,157 +45,61 @@ MetaAnalysisDialog::~MetaAnalysisDialog()
     delete matrix_selection_dialog_;//should be deleted anyway?
 }
 
-void MetaAnalysisDialog::MatrixSelected(QStringList keys)
-{
-    control_data_keys_ = keys;
-    ui->controlDisplayLabel->setText(keys.last());
-}
-
-void MetaAnalysisDialog::on_typeComboBox_currentTextChanged(const QString &arg1)
-{
-    if (arg1 == "Principal Component Analysis"){
-        ui->linkageComboBox->setVisible(false);
-        ui->linkageLabel->setVisible(false);
-        ui->metricComboBox->setVisible(false);
-        ui->metricLabel->setVisible(false);
-        ui->componentsLabel->setVisible(false);
-        ui->componentsSpinBox->setVisible(false);
-        ui->controlLabel->setVisible(false);
-        ui->controlDisplayLabel->setVisible(false);
-        ui->selectPushButton->setVisible(false);
-    }
-    else if (arg1 == "Vertex Component Analysis"){
-        ui->linkageComboBox->setVisible(false);
-        ui->linkageLabel->setVisible(false);
-        ui->metricComboBox->setVisible(false);
-        ui->metricLabel->setVisible(false);
-        ui->componentsLabel->setVisible(true);
-        ui->componentsSpinBox->setVisible(true);
-        ui->controlLabel->setVisible(false);
-        ui->controlDisplayLabel->setVisible(false);
-        ui->selectPushButton->setVisible(false);
-    }
-    else if (arg1 == "Partial Least Squares (Classification)"){
-        ui->linkageComboBox->setVisible(false);
-        ui->linkageLabel->setVisible(false);
-        ui->metricComboBox->setVisible(false);
-        ui->metricLabel->setVisible(false);
-        ui->componentsLabel->setVisible(true);
-        ui->componentsSpinBox->setVisible(true);
-        ui->controlLabel->setVisible(false);
-        ui->controlDisplayLabel->setVisible(false);
-        ui->selectPushButton->setVisible(false);
-    }
-    else if (arg1 == "k-Means Clustering"){
-        ui->linkageComboBox->setVisible(false);
-        ui->linkageLabel->setVisible(false);
-        ui->metricComboBox->setVisible(true);
-        ui->metricLabel->setVisible(true);
-        ui->componentsLabel->setVisible(true);
-        ui->componentsSpinBox->setVisible(true);
-        QStringList metrics({"Squared Euclidean",
-                             "Euclidean",
-                             "Manhattan",
-                             "Chebyshev"});
-        ui->metricComboBox->clear();
-        ui->metricComboBox->addItems(metrics);
-        ui->controlLabel->setVisible(false);
-        ui->controlDisplayLabel->setVisible(false);
-        ui->selectPushButton->setVisible(false);
-    }
-    else if (arg1 == "Hierarchical Clustering"){
-        ui->linkageComboBox->setVisible(true);
-        ui->linkageLabel->setVisible(true);
-        ui->metricComboBox->setVisible(true);
-        ui->metricLabel->setVisible(true);
-        ui->componentsLabel->setVisible(false);
-        ui->componentsSpinBox->setVisible(false);
-        QStringList metrics({"Squared Euclidean",
-                            "Euclidean",
-                            "Manhattan",
-                            "Chebyshev",
-                            "Cosine",
-                            "Correlation"});
-        QStringList linkages({"Ward",
-                             "Average",
-                             "Centroid",
-                             "Single",
-                             "Complete"});
-        ui->metricComboBox->clear();
-        ui->metricComboBox->addItems(metrics);
-        ui->linkageComboBox->clear();
-        ui->linkageComboBox->addItems(linkages);
-        ui->controlLabel->setVisible(false);
-        ui->controlDisplayLabel->setVisible(false);
-        ui->selectPushButton->setVisible(false);
-    }
-    else if (arg1 == "Classical Least Squares"){
-        ui->linkageComboBox->setVisible(false);
-        ui->linkageLabel->setVisible(false);
-        ui->metricComboBox->setVisible(false);
-        ui->metricLabel->setVisible(false);
-        ui->componentsLabel->setVisible(false);
-        ui->componentsSpinBox->setVisible(false);
-        ui->controlLabel->setVisible(true);
-        ui->controlDisplayLabel->setVisible(true);
-        ui->selectPushButton->setVisible(true);
-    }
-    else{
-        return;
-    }
-}
-
 void MetaAnalysisDialog::on_buttonBox_accepted()
 {
-    QString type = ui->typeComboBox->currentText();
-    QString name = ui->nameLineEdit->text();
+    QString analysis_description = ui->typeComboBox->currentText();
     bool transpose = ui->transposeCheckBox->isChecked();
-    MetaAnalyzer analyzer(workspace_, data_keys_, transpose);
+    QSharedPointer<MatrixAnalyzer> analyzer(new MatrixAnalyzer(workspace_, data_keys_, transpose));
+
     try{
-        if (type == "Principal Component Analysis"){
-            analyzer.PrincipalComponents(name);
+        if (analysis_description == "Univariate Analysis"){
+            UnivariateDialog *dialog = new UnivariateDialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
         }
-        else if (type == "Vertex Component Analysis"){
-            uword components = ui->componentsSpinBox->value();
-            analyzer.VertexComponents(name, components);
+        else if (analysis_description == "Band Ratio Analysis"){
+            BandRatioDialog *dialog = new BandRatioDialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
         }
-        else if (type == "Partial Least Squares (Classification)"){
-            uword components = ui->componentsSpinBox->value();
-            analyzer.PartialLeastSquares(name, components);
+        else if (analysis_description == "Principal Component Analysis"){
+            PrincipalComponentsDialog *dialog = new PrincipalComponentsDialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
         }
-        else if (type == "k-Means Clustering"){
-            uword components = ui->componentsSpinBox->value();
-            QString metric = ui->metricComboBox->currentText();
-            analyzer.KMeans(components, metric, name);
+        else if (analysis_description == "Principal Component Analysis (mlpack)"){
+            PrincipalComponentsDialog *dialog = new PrincipalComponentsDialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
         }
-        else if (type == "Hierarchical Clustering"){
-            QString metric = ui->metricComboBox->currentText().toLower();
-            QString linkage = ui->linkageComboBox->currentText().toLower();
-            metric.remove(QRegExp("\\s"));
-            linkage.remove(QRegExp("\\s"));
-            analyzer.AgglomerativeClustering(name, metric, linkage);
+        else if (analysis_description == "Vertex Component Analysis"){
+            VCADialog *dialog = new VCADialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
         }
-        else if (type == "Classical Least Squares"){
-            if (workspace_->HasMatrix(control_data_keys_))
-                analyzer.ClassicalLeastSquares(name, control_data_keys_);
+        else if (analysis_description == "Partial Least Squares (Classification)"){
+            PLSDialog *dialog = new PLSDialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
         }
-        else{
-            close();
-            return;
+        else if (analysis_description == "k-Means Clustering"){
+            KMeansDialog *dialog = new KMeansDialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
+        }
+        else if (analysis_description == "Hierarchical Clustering"){
+            AHCADialog *dialog = new AHCADialog(this, workspace_, analyzer);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->show();
         }
     }catch (exception e){
         workspace_->main_window()->DisplayExceptionWarning(e);
-        return;
     }
+
     close();
 }
 
 void MetaAnalysisDialog::on_buttonBox_rejected()
 {
     close();
-}
-
-void MetaAnalysisDialog::on_selectPushButton_clicked()
-{
-    matrix_selection_dialog_->show();
 }

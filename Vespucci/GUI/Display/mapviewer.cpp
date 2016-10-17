@@ -121,6 +121,7 @@ void MapViewer::on_actionSave_Image_As_triggered()
 void MapViewer::on_actionShow_Axes_toggled(bool arg1)
 {
     workspace_->GetMap(map_keys_)->ShowAxes(arg1);
+    ui->mapPlot->replot(QCustomPlot::rpImmediate);
 }
 
 ///
@@ -130,6 +131,7 @@ void MapViewer::on_actionShow_Axes_toggled(bool arg1)
 void MapViewer::on_actionShow_Color_Scale_toggled(bool arg1)
 {
     workspace_->GetMap(map_keys_)->ShowColorScale(arg1);
+    ui->mapPlot->replot(QCustomPlot::rpImmediate);
 }
 
 ///

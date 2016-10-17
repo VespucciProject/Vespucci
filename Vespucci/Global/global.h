@@ -20,6 +20,7 @@
 #ifndef GLOBAL
 #define GLOBAL
 #include "qcustomplot.h"
+#include <mlpack/core.hpp>
 namespace Vespucci{
     bool SavePlot(QCustomPlot *plot, QString filename);
     void SetQCPFonts(QCustomPlot *plot, const QFont &font);
@@ -29,6 +30,7 @@ namespace Vespucci{
         QCPColorGradient gradient;
         QCPRange range;
     };
+    QVector<double> FromArmaVec(const arma::vec &data);
 }
 #endif // GLOBAL
 

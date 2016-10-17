@@ -34,16 +34,39 @@ namespace Vespucci
         ///
         namespace DimensionReduction
         {
-            VESPUCCI_EXPORT bool plsregress(arma::mat X, arma::mat Y, int components,
-                          arma::mat &X_loadings, arma::mat &Y_loadings,
-                          arma::mat &X_scores, arma::mat &Y_scores,
-                          arma::mat &coefficients, arma::mat &percent_variance, arma::mat &fitted);
-            VESPUCCI_EXPORT bool VCA(const arma::mat &R, arma::uword p, arma::uvec &indices, arma::mat &endmember_spectra,
-                     arma::mat &projected_data, arma::mat &fractional_abundances);
-            VESPUCCI_EXPORT double estimate_snr(const arma::mat &R, arma::vec r_m, arma::mat x);
-            VESPUCCI_EXPORT int HySime(arma::mat y, arma::mat n, arma::mat Rn, arma::mat &Ek);
-            VESPUCCI_EXPORT void EstimateAdditiveNoise(arma::mat &noise, arma::mat &noise_correlation, const arma::mat &sample);
-            VESPUCCI_EXPORT bool svds(const arma::mat &X, arma::uword k, arma::mat &U, arma::vec &s, arma::mat &V);
+            VESPUCCI_EXPORT bool plsregress(arma::mat X,
+                                            arma::mat Y,
+                                            int components,
+                                            arma::mat &X_loadings,
+                                            arma::mat &Y_loadings,
+                                            arma::mat &X_scores,
+                                            arma::mat &Y_scores,
+                                            arma::mat &coefficients,
+                                            arma::mat &percent_variance,
+                                            arma::mat &fitted);
+            VESPUCCI_EXPORT bool VCA(const arma::mat &R,
+                                     arma::uword p,
+                                     arma::uvec &indices,
+                                     arma::mat &endmember_spectra,
+                                     arma::mat &projected_data,
+                                     arma::mat &fractional_abundances);
+            VESPUCCI_EXPORT double estimate_snr(const arma::mat &R,
+                                                arma::vec r_m,
+                                                arma::mat x);
+            VESPUCCI_EXPORT size_t HySime(const arma::mat &y,
+                                          const arma::mat &n,
+                                          arma::mat &Rn,
+                                          arma::mat &Ek);
+            VESPUCCI_EXPORT size_t HySime(const arma::mat &y,
+                                          arma::mat &subspace);
+            VESPUCCI_EXPORT void EstimateAdditiveNoise(arma::mat &noise,
+                                                       arma::mat &noise_correlation,
+                                                       const arma::mat &sample);
+            VESPUCCI_EXPORT bool svds(const arma::mat &X,
+                                      arma::uword k,
+                                      arma::mat &U,
+                                      arma::vec &s,
+                                      arma::mat &V);
         }
     }
 }

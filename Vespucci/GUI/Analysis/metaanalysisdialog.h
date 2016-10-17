@@ -36,22 +36,15 @@ class MetaAnalysisDialog : public QDialog
 public:
     explicit MetaAnalysisDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QStringList &data_keys);
     ~MetaAnalysisDialog();
-public slots:
-    void MatrixSelected(QStringList keys);
 private slots:
-    void on_typeComboBox_currentTextChanged(const QString &arg1);
-
     void on_buttonBox_accepted();
 
     void on_buttonBox_rejected();
-
-    void on_selectPushButton_clicked();
 
 private:
     Ui::MetaAnalysisDialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;
     QStringList data_keys_;
-    QStringList control_data_keys_;
     MatrixSelectionDialog *matrix_selection_dialog_;
 };
 

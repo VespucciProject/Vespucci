@@ -33,8 +33,8 @@ UnivariateConcatenationDialog::UnivariateConcatenationDialog(QWidget *parent, QS
     //Check type, if can't be cast, ignore
     for (auto results_key: results_keys){
         QSharedPointer<AnalysisResults> results = dataset_->GetAnalysisResult(results_key);
-        QSharedPointer<UnivariateData> unidata = results.dynamicCast<UnivariateData>();
-        if (!unidata.isNull()) univariate_keys << results_key;
+        if (results->type() == "Univariate Analysis Results")
+            univariate_keys << results_key;
     }
     univariate_keys.sort();
     ui->resultsListWidget->addItems(univariate_keys);

@@ -65,47 +65,36 @@ MapDialog::~MapDialog()
 
 void MapDialog::on_buttonBox_accepted()
 {
-    uint gradient_index = ui->gradientComboBox->currentIndex();
+    uword unique_ct = vec(unique(workspace_->GetMatrix(data_keys_).col(0))).n_elem;
     uint column_index = ui->columnSpinBox->value() - 1;
     QString map_name = ui->nameLineEdit->text();
     vec data;
+    bool ok = true;
     try{
         data = workspace_->data_model()->GetMatrix(data_keys_).col(column_index);
     }catch(exception e){
         main_window_->DisplayExceptionWarning("DataModel::GetMatrix or mat::col", e);
-        close();
+        ok = false;
     }
 
-    QCPColorGradient gradient;
-    uint tick_count;
+    if (ok){
+        QCPColorGradient gradient = workspace_->GetGradient(ui->gradientComboBox->currentText(), unique_ct);
 
-    if (ui->gradientComboBox->currentText() == "ColorBrewer Cluster"){
-        vec unique_values = unique(data);
-        tick_count = unique_values.n_rows;
-        gradient = dataset_->GetClusterGradient(tick_count);
-    }
-    else{
-        tick_count = 6;
-        gradient = dataset_->GetGradient(gradient_index);
-    }
-
-    try{
-        if (data_keys_.size() == 2)
-            dataset_->CreateMap(map_name,
-                                data_keys_[1],
-                                column_index,
-                                gradient,
-                                tick_count);
-        else
-            dataset_->CreateMap(map_name,
-                                data_keys_[1],
-                                data_keys_[2],
-                                column_index,
-                                gradient,
-                                tick_count);
-    }catch(exception e){
-        main_window_->DisplayExceptionWarning("VespucciDataset::CreateMap()", e);
-        close();
+        try{
+            if (data_keys_.size() == 2)
+                dataset_->CreateMap(map_name,
+                                    data_keys_[1],
+                                    column_index,
+                                    gradient);
+            else
+                dataset_->CreateMap(map_name,
+                                    data_keys_[1],
+                                    data_keys_[2],
+                                    column_index,
+                                    gradient);
+        }catch(exception e){
+            main_window_->DisplayExceptionWarning("VespucciDataset::CreateMap()", e);
+        }
     }
     close();
 }
@@ -113,15 +102,18 @@ void MapDialog::on_buttonBox_accepted()
 void MapDialog::on_columnSpinBox_valueChanged(int arg1)
 {
     mat data;
+    bool ok = true;
     try{
         data = workspace_->data_model()->GetMatrix(data_keys_).col(arg1-1);
     }catch(exception e){
         main_window_->DisplayExceptionWarning("DataModel::GetMatrix or mat::col", e);
+        ok = false;
         close();
     }
-
-    vec unique_values = unique(data);
-    QStringList color_list = workspace_->GradientNames(unique_values.n_rows < 10);
-    ui->gradientComboBox->clear();
-    ui->gradientComboBox->addItems(color_list);
+    if (ok){
+        vec unique_values = unique(data);
+        QStringList color_list = workspace_->GradientNames(unique_values.n_rows < 10);
+        ui->gradientComboBox->clear();
+        ui->gradientComboBox->addItems(color_list);
+    }
 }

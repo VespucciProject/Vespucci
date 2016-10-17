@@ -23,14 +23,13 @@
 
 BandRatioDialog::BandRatioDialog(QWidget *parent,
                                  QSharedPointer<VespucciWorkspace> ws,
-                                 const QString &dataset_key) :
+                                 QSharedPointer<AbstractDataAnalyzer> analyzer) :
     QDialog(parent),
-    ui(new Ui::BandRatioDialog)
+    ui(new Ui::BandRatioDialog),
+    workspace_(ws),
+    analyzer_(analyzer)
 {
     ui->setupUi(this);
-
-    workspace_ = ws;
-    dataset_ = workspace_->GetDataset(dataset_key);
 
     first_min_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
     first_max_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
@@ -49,74 +48,22 @@ BandRatioDialog::BandRatioDialog(QWidget *parent,
     second_min_line_->setPen(QPen(Qt::GlobalColor::red));
     second_max_line_->setPen(QPen(Qt::GlobalColor::red));
 
-    double min = dataset_->abscissa_ptr()->min();
-    double max = dataset_->abscissa_ptr()->max();
+    double min = analyzer_->AbscissaMin();
+    double max = analyzer_->AbscissaMax();
 
     QDoubleValidator *validator = new QDoubleValidator(min, max, 2, this);
 
 
     QString label_text = QString::number(min) + "–" + QString::number(max);
     ui->rangeLabel->setText(label_text);
+    ui->indexSpinBox->setRange(0, analyzer_->columns() - 1);
 
-    uword origin = dataset_->FindOrigin();
+    uword middle = analyzer_->columns() / 2;
+    ui->indexSpinBox->setValue(middle);
 
-    QVector<double> plot_data = dataset_->PointSpectrum(origin);
-    QVector<double> wavelength = dataset_->WavelengthQVector();
-    if (plot_data.isEmpty()){plot_data = dataset_->PointSpectrum(0);}
-
-    ui->firstMinLineEdit->setValidator(validator);
-    ui->firstMaxLineEdit->setValidator(validator);
-    ui->secondMinLineEdit->setValidator(validator);
-    ui->secondMaxLineEdit->setValidator(validator);
-    ui->spectrumCustomPlot->addGraph();
-    ui->spectrumCustomPlot->graph(0)->addData(wavelength, plot_data);
-    ui->spectrumCustomPlot->rescaleAxes();
-    ui->spectrumCustomPlot->setInteraction(QCP::iRangeDrag, true);
-    ui->spectrumCustomPlot->setInteraction(QCP::iRangeZoom, true);
-}
-
-BandRatioDialog::BandRatioDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys)
-    :QDialog(ws->main_window()),
-      ui(new Ui::BandRatioDialog)
-{
-    dataset_keys_ = dataset_keys;
-    if (dataset_keys_.isEmpty()) close();
-    ui->setupUi(this);
-
-    workspace_ = ws;
-    dataset_ = workspace_->GetDataset(dataset_keys.first());
-
-    first_min_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
-    first_max_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
-    second_min_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
-    second_max_line_ = new QCPItemStraightLine(ui->spectrumCustomPlot);
-
-    first_min_line_->point1->setCoords(0, 0);
-    first_min_line_->point2->setCoords(0, 1);
-    first_max_line_->point1->setCoords(0, 0);
-    first_max_line_->point2->setCoords(0, 1);
-    second_min_line_->point1->setCoords(0, 0);
-    second_min_line_->point2->setCoords(0, 1);
-    second_max_line_->point1->setCoords(0, 0);
-    second_max_line_->point2->setCoords(0, 1);
-
-    second_min_line_->setPen(QPen(Qt::GlobalColor::red));
-    second_max_line_->setPen(QPen(Qt::GlobalColor::red));
-
-    double min = dataset_->abscissa_ptr()->min();
-    double max = dataset_->abscissa_ptr()->max();
-
-    QDoubleValidator *validator = new QDoubleValidator(min, max, 2, this);
-
-
-    QString label_text = QString::number(min) + "–" + QString::number(max);
-    ui->rangeLabel->setText(label_text);
-
-    uword origin = dataset_->FindOrigin();
-
-    QVector<double> plot_data = dataset_->PointSpectrum(origin);
-    QVector<double> wavelength = dataset_->WavelengthQVector();
-    if (plot_data.isEmpty()){plot_data = dataset_->PointSpectrum(0);}
+    QVector<double> plot_data = Vespucci::FromArmaVec(analyzer_->PointSpectrum(middle));
+    QVector<double> wavelength = Vespucci::FromArmaVec(analyzer_->abscissa());
+    if (plot_data.isEmpty()){plot_data = Vespucci::FromArmaVec(analyzer_->PointSpectrum(0));}
 
     ui->firstMinLineEdit->setValidator(validator);
     ui->firstMaxLineEdit->setValidator(validator);
@@ -140,12 +87,10 @@ BandRatioDialog::~BandRatioDialog()
 /// instantiates the map data
 void BandRatioDialog::on_buttonBox_accepted()
 {
-    bool ok = !dataset_keys_.isEmpty()
-            && !dataset_.isNull()
-            && !ui->firstMinLineEdit->text().isEmpty()
-            && !ui->firstMaxLineEdit->text().isEmpty()
-            && !ui->secondMinLineEdit->text().isEmpty()
-            && !ui->secondMaxLineEdit->text().isEmpty();
+    bool ok = !ui->firstMinLineEdit->text().isEmpty()
+              && !ui->firstMaxLineEdit->text().isEmpty()
+              && !ui->secondMinLineEdit->text().isEmpty()
+              && !ui->secondMaxLineEdit->text().isEmpty();
 
     if (ok){
         double first_entered_min = ui->firstMinLineEdit->text().toDouble();
@@ -153,13 +98,21 @@ void BandRatioDialog::on_buttonBox_accepted()
         double first_entered_max = ui->firstMaxLineEdit->text().toDouble();
         double second_entered_max = ui->secondMaxLineEdit->text().toDouble();
 
-        if (first_entered_min < dataset_->abscissa_ptr()->min() || second_entered_min < dataset_->abscissa_ptr()->min()){
-            QMessageBox::warning(this, "Invalid Input!", "You have entered a left bound that is smaller than the smallest number on the spectral abscissa");
+        if (first_entered_min < analyzer_->AbscissaMin()
+                || second_entered_min < analyzer_->AbscissaMin()){
+            QMessageBox::warning(this,
+                                 "Invalid Input!",
+                                 "You have entered a left bound that is smaller "
+                                 "than the smallest number on the spectral abscissa");
             return;
         }
 
-        if (first_entered_max > dataset_->abscissa_ptr()->max() || second_entered_max > dataset_->abscissa_ptr()->max()){
-            QMessageBox::warning(this, "Invalid Input!", "You have entered a right bound that is larger than the largest number on the spectral abscissa");
+        if (first_entered_max > analyzer_->AbscissaMax()
+                || second_entered_max > analyzer_->AbscissaMax()){
+            QMessageBox::warning(this,
+                                 "Invalid Input!",
+                                 "You have entered a right bound that is larger "
+                                 "than the largest number on the spectral abscissa");
             return;
         }
         uint bound_window = ui->searchWindowSpinBox->value();
@@ -168,57 +121,33 @@ void BandRatioDialog::on_buttonBox_accepted()
         QString name = ui->nameLineEdit->text();
         QString value_method = ui->methodComboBox->currentText();
 
-        if (!dataset_keys_.isEmpty()){
-            if (value_method == "Empirical"){
-                try{
-                    MultiAnalyzer analyzer(workspace_, dataset_keys_);
-                    analyzer.BandRatio(name, first_entered_min, first_entered_max,
-                                     second_entered_min, second_entered_max,
-                                     bound_window);
-                }catch(exception e){
-                    workspace_->main_window()->DisplayExceptionWarning(e);
-                }
+        if (value_method == "Empirical"){
+            try{
+                analyzer_->BandRatio(name, first_entered_min, first_entered_max,
+                                 second_entered_min, second_entered_max,
+                                 bound_window);
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
             }
-            else if (value_method == "Gaussian Fit"){
-                try{
+        }
+        else if (value_method == "Gaussian Fit"){
+            try{
 
-                }catch(exception e){
-                    workspace_->main_window()->DisplayExceptionWarning(e);
-                }
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
             }
-            else{
-                QMessageBox::warning(this, "Error Occurred", "A non-fatal error occurred: invalid input from ui->methodComboBox");
-            }
-            return;
         }
         else{
-            if (value_method == "Empirical"){
-                try{
-                    dataset_->BandRatio(name, first_entered_min, first_entered_max,
-                                     second_entered_min, second_entered_max,
-                                     bound_window);
-                }catch(exception e){
-                    workspace_->main_window()->DisplayExceptionWarning(e);
-                }
-            }
-            else if (value_method == "Gaussian Fit"){
-                try{
-
-                }catch(exception e){
-                    workspace_->main_window()->DisplayExceptionWarning(e);
-                }
-            }
-            else{
-                QMessageBox::warning(this, "Error Occurred", "A non-fatal error occurred: invalid input from ui->methodComboBox");
-            }
+            QMessageBox::warning(this, "Error Occurred",
+                                 "A non-fatal error occurred: invalid input from ui->methodComboBox");
         }
     }
-
-    if (ui->firstMinLineEdit->text().isEmpty() || ui->firstMaxLineEdit->text().isEmpty() || ui->secondMinLineEdit->text().isEmpty() || ui->secondMaxLineEdit->text().isEmpty()){
-        QMessageBox::warning(this, "Invalid Input!", "You must enter numbers for left and right bounds.");
-        return;
+    else{
+        QMessageBox::warning(this,
+                             "Invalid Input!",
+                             "You must enter numbers for left and right bounds.");
     }
-    dataset_.clear();
+    analyzer_.clear();
     close();
 }
 
@@ -229,7 +158,7 @@ void BandRatioDialog::on_buttonBox_accepted()
 void BandRatioDialog::on_buttonBox_rejected()
 {
     close();
-    dataset_.clear();
+    analyzer_.clear();
 }
 
 void BandRatioDialog::on_firstMinLineEdit_textChanged(const QString &arg1)
@@ -282,3 +211,13 @@ void BandRatioDialog::on_secondMaxLineEdit_textChanged(const QString &arg1)
         ui->spectrumCustomPlot->addItem(second_max_line_);
 }
 
+
+void BandRatioDialog::on_indexSpinBox_editingFinished()
+{
+    size_t index = ui->indexSpinBox->value();
+    QVector<double> plot_data = Vespucci::FromArmaVec(analyzer_->PointSpectrum(index));
+    QVector<double> abscissa = Vespucci::FromArmaVec(analyzer_->abscissa());
+    ui->spectrumCustomPlot->graph(0)->clearData();
+    ui->spectrumCustomPlot->graph(0)->addData(abscissa, plot_data);
+    ui->spectrumCustomPlot->replot(QCustomPlot::rpImmediate);
+}

@@ -27,14 +27,13 @@
 /// \param ws Current workspace
 /// \param row Selected row in the dataset list widget
 ///
-UnivariateDialog::UnivariateDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
+UnivariateDialog::UnivariateDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer) :
     QDialog(parent),
-    ui(new Ui::UnivariateDialog)
+    ui(new Ui::UnivariateDialog),
+    workspace_(ws),
+    analyzer_(analyzer)
 {
     ui->setupUi(this);
-    workspace_ = ws;
-    dataset_ = workspace_->GetDataset(dataset_key);
-
     min_line_ = new QCPItemStraightLine(ui->spectrumPlot);
     min_line_->point1->setCoords(0, 0);
     min_line_->point2->setCoords(0, 1);
@@ -43,8 +42,8 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, QSharedPointer<VespucciWorks
     max_line_->point2->setCoords(0, 1);
     double min, max;
     try{
-        min = dataset_->wavelength_ptr()->min();
-        max = dataset_->wavelength_ptr()->max();
+        min = analyzer_->AbscissaMin();
+        max = analyzer_->AbscissaMax();
     }
     catch(exception e){
         cerr << e.what();
@@ -59,75 +58,24 @@ UnivariateDialog::UnivariateDialog(QWidget *parent, QSharedPointer<VespucciWorks
     ui->minLineEdit->setValidator(new QDoubleValidator(min, max, 2, this));
     ui->maxLineEdit->setValidator(new QDoubleValidator(min, max, 2, this));
 
-    uword origin = dataset_->FindOrigin();
+    uword middle = analyzer_->columns() / 2;
+    ui->indexSpinBox->setRange(0, analyzer_->columns() - 1);
+    ui->indexSpinBox->setValue(middle);
     QVector<double> plot_data, wavelength;
 
     try{
-        plot_data = dataset_->PointSpectrum(origin);
-        wavelength = dataset_->WavelengthQVector();
+        plot_data = Vespucci::FromArmaVec(analyzer_->PointSpectrum(middle));
+        wavelength = Vespucci::FromArmaVec(analyzer_->abscissa());
     }
     catch(exception e){}
-    if (plot_data.isEmpty()){plot_data = dataset_->PointSpectrum(0);}
+    if (plot_data.isEmpty())
+        plot_data = Vespucci::FromArmaVec(analyzer_->PointSpectrum(0));
     ui->spectrumPlot->addGraph();
     ui->spectrumPlot->graph(0)->addData(wavelength, plot_data);
     ui->spectrumPlot->rescaleAxes();
     ui->spectrumPlot->setInteraction(QCP::iRangeDrag, true);
     ui->spectrumPlot->setInteraction(QCP::iRangeZoom, true);
 
-}
-
-UnivariateDialog::UnivariateDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys)
-    :QDialog(ws->main_window()),
-      ui(new Ui::UnivariateDialog)
-{
-    ui->setupUi(this);
-    workspace_ = ws;
-    dataset_keys_ = dataset_keys;
-    if (dataset_keys_.isEmpty()){
-        close();
-        return;
-    }
-
-    dataset_ = workspace_->GetDataset(dataset_keys.first());
-
-    min_line_ = new QCPItemStraightLine(ui->spectrumPlot);
-    min_line_->point1->setCoords(0, 0);
-    min_line_->point2->setCoords(0, 1);
-    max_line_ = new QCPItemStraightLine(ui->spectrumPlot);
-    max_line_->point1->setCoords(0, 0);
-    max_line_->point2->setCoords(0, 1);
-    double min, max;
-    try{
-        min = dataset_->wavelength_ptr()->min();
-        max = dataset_->wavelength_ptr()->max();
-    }
-    catch(exception e){
-        cerr << e.what();
-        workspace_->main_window()->DisplayExceptionWarning(e);
-        min = 0;
-        max = 0;
-    }
-
-    QString label_text = QString::number(min) + "–" + QString::number(max);
-    ui->rangeLabel->setText(label_text);
-
-    ui->minLineEdit->setValidator(new QDoubleValidator(min, max, 2, this));
-    ui->maxLineEdit->setValidator(new QDoubleValidator(min, max, 2, this));
-
-    uword origin = dataset_->FindOrigin();
-    QVector<double> plot_data, wavelength;
-
-    try{
-        plot_data = dataset_->PointSpectrum(origin);
-        wavelength = dataset_->WavelengthQVector();
-    }
-    catch(exception e){}
-    if (plot_data.isEmpty()){plot_data = dataset_->PointSpectrum(0);}
-    ui->spectrumPlot->addGraph();
-    ui->spectrumPlot->graph(0)->addData(wavelength, plot_data);
-    ui->spectrumPlot->rescaleAxes();
-    ui->spectrumPlot->setInteraction(QCP::iRangeDrag, true);
-    ui->spectrumPlot->setInteraction(QCP::iRangeZoom, true);
 }
 
 UnivariateDialog::~UnivariateDialog()
@@ -150,36 +98,26 @@ void UnivariateDialog::on_buttonBox_accepted()
     uint bound_window = ui->searchWindowSpinBox->value();
     QString name = ui->nameLineEdit->text();
     if(!name.size()){
-        name = "Univariate " + QString::number(dataset_->UnivariateCount());
+        name = "Univariate";
     }
     QString value_method = ui->methodComboBox->currentText();
-    if (!dataset_keys_.isEmpty() || !dataset_.isNull()){
-        if (!dataset_keys_.isEmpty()){
+    if (!analyzer_.isNull()){
+        if (value_method == "Empirical"){
             try{
-                MultiAnalyzer analyzer(workspace_, dataset_keys_);
-                analyzer.Univariate(name, entered_min, entered_max, bound_window);
+                analyzer_->Univariate(name, entered_min, entered_max, bound_window);
             }catch(exception e){
                 workspace_->main_window()->DisplayExceptionWarning(e);
             }
         }
         else{
-            if (value_method == "Empirical"){
-                try{
-                    dataset_->Univariate(name, entered_min, entered_max, bound_window);
-                }catch(exception e){
-                    workspace_->main_window()->DisplayExceptionWarning(e);
-                }
-            }
-            else if (value_method == "Gaussian Fit"){
-                try{
+            try{
+                analyzer_->FitPeak(name, value_method, entered_min, entered_max);
+            }catch(exception e){
 
-                }catch(exception e){
-
-                }
             }
         }
     }
-    dataset_.clear();
+    analyzer_.clear();
     close();
 }
 
@@ -189,7 +127,7 @@ void UnivariateDialog::on_buttonBox_accepted()
 /// Close window when "Cancel" clicked.
 void UnivariateDialog::on_buttonBox_rejected()
 {
-        dataset_.clear();
+    analyzer_.clear();
 }
 
 void UnivariateDialog::on_minLineEdit_textChanged(const QString &arg1)
@@ -218,5 +156,15 @@ void UnivariateDialog::on_maxLineEdit_textChanged(const QString &arg1)
 
     if(!ui->spectrumPlot->hasItem(max_line_))
         ui->spectrumPlot->addItem(max_line_);
+    ui->spectrumPlot->replot(QCustomPlot::rpImmediate);
+}
+
+void UnivariateDialog::on_indexSpinBox_editingFinished()
+{
+    size_t index = ui->indexSpinBox->value();
+    QVector<double> plot_data = Vespucci::FromArmaVec(analyzer_->PointSpectrum(index));
+    QVector<double> abscissa = Vespucci::FromArmaVec(analyzer_->abscissa());
+    ui->spectrumPlot->graph(0)->clearData();
+    ui->spectrumPlot->graph(0)->addData(abscissa, plot_data);
     ui->spectrumPlot->replot(QCustomPlot::rpImmediate);
 }

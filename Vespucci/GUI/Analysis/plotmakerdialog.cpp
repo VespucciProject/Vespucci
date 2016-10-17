@@ -5,10 +5,10 @@
 PlotMakerDialog::PlotMakerDialog(MainWindow *parent, PlotViewer *plot_viewer, QSharedPointer<VespucciWorkspace> ws, QStringList data_keys) :
     QDialog(parent),
     ui(new Ui::PlotMakerDialog),
+    workspace_(ws),
     data_keys_(data_keys)
 {
     ui->setupUi(this);
-    workspace_ = ws;
     parent_ = parent;
     plot_viewer_ = plot_viewer;
 

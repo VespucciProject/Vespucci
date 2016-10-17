@@ -188,7 +188,7 @@ arma::vec Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(const arma::mat &X,
 {
     double n = X.n_rows;
     double dof = n - 2; //for linear fit
-    double y_bar = mean(y);
+    double y_bar = arma::mean(y);
 
     arma::vec coefs = OrdinaryLeastSquares(X, y);
     fit = Vespucci::Math::LinLeastSq::CalcPoly(coefs, X.col(1));
@@ -221,6 +221,14 @@ arma::vec Vespucci::Math::LinLeastSq::OrdinaryLeastSquares(const arma::mat &X,
     return coefs;
 }
 
+///
+/// \brief Vespucci::Math::LinLeastSq::FitGaussian
+/// \param x
+/// \param y
+/// \param fit
+/// \param stats
+/// \return
+/// Fits a Gaussian using Caruana's algorithm
 arma::vec Vespucci::Math::LinLeastSq::FitGaussian(const arma::vec &x, const arma::vec &y, arma::vec &fit, std::map<std::string, double> &stats)
 {
     arma::vec log_x = arma::log(x);

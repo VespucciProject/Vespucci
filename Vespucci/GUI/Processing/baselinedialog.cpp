@@ -18,6 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "GUI/Processing/baselinedialog.h"
+#include "Math/Baseline/rollingball.h"
 #include "ui_baselinedialog.h"
 
 ///
@@ -46,8 +47,8 @@ BaselineDialog::BaselineDialog(QWidget *parent, QSharedPointer<VespucciWorkspace
     ui->param_2Label->setVisible(false);
     ui->param_3Label->setVisible(false);
 
-    spectrum_q_ = dataset_->PointSpectrum(0);
-    abscissa_q_ = dataset_->WavelengthQVector();
+    spectrum_q_ = Vespucci::FromArmaVec(dataset_->PointSpectrum(0));
+    abscissa_q_ = Vespucci::FromArmaVec(dataset_->abscissa());
     arma::uvec ind = {0};
     spectrum_ = dataset_->spectra(ind);
     abscissa_ = dataset_->abscissa();
@@ -83,6 +84,15 @@ void BaselineDialog::on_buttonBox_accepted()
             dataset_->MFBaseline(window_size, iterations);
         }
         catch(exception e){
+            workspace_->main_window()->DisplayExceptionWarning(e);
+        }
+    }
+    else if (method == "Rolling Ball"){
+        size_t wm = ui->param_0SpinBox->value();
+        size_t ws = ui->param_1SpinBox->value();
+        try{
+            dataset_->RollingBallBaseline(wm, ws);
+        }catch(exception e){
             workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
@@ -145,6 +155,28 @@ void BaselineDialog::on_methodComboBox_currentTextChanged(const QString &arg1)
         ui->param_2Label->setVisible(false);
         ui->param_3Label->setVisible(false);
     }
+    else if (arg1 == "Rolling Ball"){
+        ui->param_0Label->setText("Min/Max Window Size");
+        ui->param_1Label->setText("Smoothing Window Size");
+        ui->param_0Label->setVisible(true);
+        ui->param_1Label->setVisible(true);
+        ui->param_0SpinBox->setVisible(true);
+        ui->param_1SpinBox->setVisible(true);
+        ui->param_1SpinBox->setValue(25);
+        ui->param_0SpinBox->setValue(25);
+        ui->param_0SpinBox->setSingleStep(2);
+        ui->param_0SpinBox->setToolTip("Only odd window sizes are allowed. "
+                                      "If you enter an even number, "
+                                      "it will be rounded up.");
+        ui->param_0SpinBox->setMinimum(3);
+        ui->param_1SpinBox->setMinimum(3);
+        ui->param_1SpinBox->setSingleStep(2);
+
+        ui->param_2DoubleSpinBox->setVisible(false);
+        ui->param_3DoubleSpinBox->setVisible(false);
+        ui->param_2Label->setVisible(false);
+        ui->param_3Label->setVisible(false);
+    }
     else if (arg1 == "Vancouver Raman Algorithm (IModPoly)"){
         ui->param_0Label->setText("Polynomial Order");
         ui->param_0Label->setVisible(true);
@@ -159,7 +191,6 @@ void BaselineDialog::on_methodComboBox_currentTextChanged(const QString &arg1)
         ui->param_1SpinBox->setRange(1, 1000);
         ui->param_1SpinBox->setValue(100);
 
-
         ui->param_2Label->setText("Threshold");
         ui->param_2Label->setVisible(true);
         ui->param_2DoubleSpinBox->setVisible(true);
@@ -168,6 +199,10 @@ void BaselineDialog::on_methodComboBox_currentTextChanged(const QString &arg1)
 
         ui->param_3Label->setVisible(false);
         ui->param_3DoubleSpinBox->setVisible(false);
+
+        ui->param_1SpinBox->setMinimum(1);
+        ui->param_1SpinBox->setSingleStep(1);
+
     }
     else if (arg1 == "CWT"){
         ui->param_0Label->setText("Whittaker Lambda");
@@ -189,13 +224,15 @@ void BaselineDialog::on_methodComboBox_currentTextChanged(const QString &arg1)
         ui->param_3DoubleSpinBox->setVisible(false);
         ui->param_3DoubleSpinBox->setValue(0.50);
         ui->param_3DoubleSpinBox->setRange(0, 1);
+
+        ui->param_1SpinBox->setMinimum(1);
+        ui->param_1SpinBox->setSingleStep(1);
+
     }
 }
 
 void BaselineDialog::on_pushButton_clicked()
 {
-    typedef std::vector<double> stdvec;
-    typedef QVector<double> qvec;
     using namespace arma;
     QString method = ui->methodComboBox->currentText();
     if (ui->spectrumPlot->graph(1))
@@ -220,14 +257,35 @@ void BaselineDialog::on_pushButton_clicked()
                 baseline = Vespucci::Math::Smoothing::MedianFilter(baseline, window_size);
             }
             vec corrected = spectrum_ - baseline;
-            qvec baseline_q = qvec::fromStdVector(conv_to<stdvec>::from(baseline));
-            qvec corrected_q = qvec::fromStdVector(conv_to<stdvec>::from(corrected));
+            QVector<double> baseline_q = Vespucci::FromArmaVec(baseline);
+            QVector<double> corrected_q = Vespucci::FromArmaVec(corrected);
             ui->spectrumPlot->graph(1)->setPen(QColor("black"));
             ui->spectrumPlot->graph(1)->setData(abscissa_q_, baseline_q);
             ui->spectrumPlot->graph(2)->setPen(QColor("red"));
             ui->spectrumPlot->graph(2)->setData(abscissa_q_, corrected_q);
         }
         catch(exception e){
+            workspace_->main_window()->DisplayExceptionWarning(e);
+        }
+    }
+    else if (method == "Rolling Ball"){
+        size_t wm = ui->param_0SpinBox->value();
+        size_t ws = ui->param_1SpinBox->value();
+        if (wm % 2 == 0) wm++;
+        if (ws % 2 == 0) ws++;
+        vec baseline, corrected;
+        try{
+            corrected = Vespucci::Math::Baseline::RollingBallBaseline(spectrum_,
+                                                                      baseline,
+                                                                      wm,
+                                                                      ws);
+            QVector<double> corrected_q = Vespucci::FromArmaVec(corrected);
+            QVector<double> baseline_q = Vespucci::FromArmaVec(baseline);
+            ui->spectrumPlot->graph(1)->setPen(QColor("black"));
+            ui->spectrumPlot->graph(1)->setData(abscissa_q_, baseline_q);
+            ui->spectrumPlot->graph(2)->setPen(QColor("red"));
+            ui->spectrumPlot->graph(2)->setData(abscissa_q_, corrected_q);
+        }catch(exception e){
             workspace_->main_window()->DisplayExceptionWarning(e);
         }
     }
@@ -242,8 +300,8 @@ void BaselineDialog::on_pushButton_clicked()
                                                              baseline, corrected,
                                                              err, poly_order,
                                                              max_it, threshold);
-            qvec baseline_q = qvec::fromStdVector(conv_to<stdvec>::from(baseline));
-            qvec corrected_q = qvec::fromStdVector(conv_to<stdvec>::from(corrected));
+            QVector<double> baseline_q = Vespucci::FromArmaVec(baseline);
+            QVector<double> corrected_q = Vespucci::FromArmaVec(corrected);
             ui->spectrumPlot->graph(1)->setPen(QColor("black"));
             ui->spectrumPlot->graph(1)->setData(abscissa_q_, baseline_q);
             ui->spectrumPlot->graph(2)->setPen(QColor("red"));

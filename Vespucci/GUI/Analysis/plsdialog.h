@@ -35,8 +35,7 @@ class PLSDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PLSDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
-    explicit PLSDialog(QSharedPointer<VespucciWorkspace> ws, const QStringList &dataset_keys);
+    explicit PLSDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, QSharedPointer<AbstractDataAnalyzer> analyzer);
     ~PLSDialog();
 
 private slots:
@@ -66,9 +65,7 @@ private:
 
     /// \brief dataset_
     /// Current dataset
-    QSharedPointer<VespucciDataset> dataset_;
-
-    QStringList dataset_keys_;
+    QSharedPointer<AbstractDataAnalyzer> analyzer_;
     QStringList control_keys_;
 
     MatrixSelectionDialog *matrix_selection_dialog_;

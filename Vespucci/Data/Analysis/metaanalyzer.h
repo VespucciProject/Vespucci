@@ -19,19 +19,46 @@
 *******************************************************************************/
 #ifndef METAANALYZER_H
 #define METAANALYZER_H
-
+#include "Data/Analysis/abstractdataanalyzer.h"
+#include "Data/Analysis/analysisresults.h"
 #include "Global/vespucciworkspace.h"
-class MetaAnalyzer
+///
+/// \brief The MetaAnalyzer class
+/// This class is used to perform analysis on "pseudo-datasets". This allows us
+/// perform analysis on a concatentated spectra matrix from multiple datasets
+/// (the MultiAnalyzer derived class) or on a single matrix in a single dataset
+/// (the MatrixAnalyzer derived class). This class is not concerned with how
+/// the data_ and abscissa_ members are initialized (this is handled by GetData
+/// in derived classes).
+class MetaAnalyzer : public AbstractDataAnalyzer
 {
 public:
-    MetaAnalyzer(QSharedPointer<VespucciWorkspace> ws, const QStringList &data_keys, bool transpose);
+    MetaAnalyzer(QSharedPointer<VespucciWorkspace> ws);
+    ~MetaAnalyzer();
+
+    void Univariate(const QString &name,
+                    double &left_bound,
+                    double &right_bound,
+                    arma::uword bound_window);
+    void FitPeak(const QString &name,
+                 const QString &peak_shape,
+                 double &left_bound,
+                 double &right_bound);
+    void BandRatio(const QString &name,
+                   double &first_left_bound,
+                   double &first_right_bound,
+                   double &second_left_bound,
+                   double &second_right_bound,
+                   arma::uword bound_window);
     void ClassicalLeastSquares(const QString &name,
                                const QStringList &reference_keys);
     void VertexComponents(const QString &name,
                           uword endmembers);
-    void KMeans(size_t clusters,
+    void KMeans(const QString &name,
                 const QString &metric_text,
-                const QString &name);
+                const QString &partition_policy,
+                bool allow_empty,
+                size_t clusters);
     void PrincipalComponents(const QString &name);
     void PrincipalComponents(const QString &name,
                              bool scale_data);
@@ -45,15 +72,34 @@ public:
                                  const QString &metric,
                                  const QString &linkage);
 
+    size_t columns() const;
+    double AbscissaMin() const;
+    double AbscissaMax() const;
+    arma::vec abscissa() const;
+    arma::vec PointSpectrum(arma::uword index) const;
 private:
-    void GetData();
-    QString FindUniqueName(QString name);
-    void AddResults(QSharedPointer<AnalysisResults> results, QStringList matrices);
+    ///
+    /// \brief AddAnalysisResults
+    /// \param results
+    /// \param matrices
+    /// This is the method used by derived class to add analysis results to the
+    /// relevant datasets. Derived classes must implement this on their own (it
+    ///  is pure virtual after all)
+    virtual void AddAnalysisResults(QSharedPointer<AnalysisResults> results, QStringList matrices) = 0;
+
+    ///
+    /// \brief GetData
+    /// This is the method used to populate data_ in the derived classes
+    virtual void GetData() = 0;
+
+    virtual QString FindUniqueName(QString name) = 0;
+protected:
+    ///
+    /// \brief workspace_
+    /// The global workspace, used to obtain access to matrices
     QSharedPointer<VespucciWorkspace> workspace_;
-    QStringList data_keys_;
     mat data_;
     vec abscissa_;
-    bool transpose_;
 };
 
 #endif // METAANALYZER_H
