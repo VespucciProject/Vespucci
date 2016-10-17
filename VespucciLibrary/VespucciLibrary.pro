@@ -201,10 +201,10 @@ unix:!macx{
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/yaml-cpp/include
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/yaml-cpp/include
 
-    LIBS += -L$$PWD/../../Vespucci_dependencies/libcerf/lib/ -lcerf
-    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/libcerf/include
-    DEPENDPATH += $$PWD/../../Vespucci_dependencies/libcerf/include
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/libcerf/lib/libcerf.a
+    #LIBS += -L$$PWD/../../Vespucci_dependencies/libcerf/lib/ -lcerf
+    #INCLUDEPATH += $$PWD/../../Vespucci_dependencies/libcerf/include
+    #DEPENDPATH += $$PWD/../../Vespucci_dependencies/libcerf/include
+    #PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/libcerf/lib/libcerf.a
 
     #LIBS += -L$$PWD/../../Vespucci_dependencies/lmfit/lib/ -llmfit
     #INCLUDEPATH += $$PWD/../../Vespucci_dependencies/lmfit/include
