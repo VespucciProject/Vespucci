@@ -19,7 +19,7 @@
 *******************************************************************************/
 #include "Math/Fitting/nonlinleastsq.h"
 #include "Math/Fitting/linleastsq.h"
-#include <lmcurve.h>
+//#include <lmcurve.h>
 #include "Math/Accessory/Faddeeva.h"
 #include <limits>
 ///
@@ -95,17 +95,20 @@ arma::vec Vespucci::Math::NonLinLeastSq::EstimateLorentzParams(arma::vec x, arma
 /// Returns parameters A, intensity, b, the center, and c, the RMS width
 arma::vec Vespucci::Math::NonLinLeastSq::FitGaussian(arma::vec x, arma::vec y)
 {
+    /*
     if (x.n_rows != y.n_rows) throw(std::invalid_argument("FitGaussian: x and y must be same size!"));
     lm_control_struct control = lm_control_double;
     lm_status_struct status;
     control.verbosity = 7;
     arma::vec params = Vespucci::Math::NonLinLeastSq::EstimateGaussParams(x, y);
-    lmcurve(3, params.memptr(), x.n_rows, x.memptr(), y.memptr(), GaussianFn, &control, &status);
+    //lmcurve(3, params.memptr(), x.n_rows, x.memptr(), y.memptr(), GaussianFn, &control, &status);
     return params;
+*/  return arma::vec();
 }
 
 arma::vec Vespucci::Math::NonLinLeastSq::FitLorentzian(arma::vec x, arma::vec y)
 {
+/*
     if (x.n_rows != y.n_rows) throw(std::invalid_argument("FittLorentzian: x and y must be same size!"));
     lm_control_struct control = lm_control_double;
     lm_status_struct status;
@@ -113,12 +116,14 @@ arma::vec Vespucci::Math::NonLinLeastSq::FitLorentzian(arma::vec x, arma::vec y)
     arma::vec params = Vespucci::Math::NonLinLeastSq::EstimateLorentzParams(x, y);
     lmcurve(3, params.memptr(), x.n_rows, x.memptr(), y.memptr(), LorentzianFn, &control, &status);
     return params;
+  */return arma::vec();
 }
 
 
 
 arma::vec Vespucci::Math::NonLinLeastSq::FitVoigt(arma::vec x, arma::vec y)
 {
+    /*
     if (x.n_rows != y.n_rows) throw(std::invalid_argument("FittLorentzian: x and y must be same size!"));
     lm_control_struct control = lm_control_double;
     lm_status_struct status;
@@ -128,4 +133,5 @@ arma::vec Vespucci::Math::NonLinLeastSq::FitVoigt(arma::vec x, arma::vec y)
     arma::vec params({gauss_params(0), gauss_params(1), gauss_params(2), lorentz_params(1)});
     lmcurve(4, params.memptr(), x.n_rows, x.memptr(), y.memptr(), VoigtFn, &control, &status);
     return params;
+  */return arma::vec();
 }

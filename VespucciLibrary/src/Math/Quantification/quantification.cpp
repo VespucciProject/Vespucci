@@ -221,6 +221,8 @@ arma::mat Vespucci::Math::Quantification::ConvertInflectionBaselines(const arma:
     return baseline_matrix;
 }
 
+
+
 ///
 /// \brief Vespucci::Math::Quantification::FitGaussianPeak Fit and analyze data with a Gaussian function
 /// \param spectrum
@@ -235,6 +237,7 @@ arma::mat Vespucci::Math::Quantification::ConvertInflectionBaselines(const arma:
 ///
 arma::rowvec Vespucci::Math::Quantification::FitGaussianPeak(const arma::vec &spectrum, const arma::vec &abscissa, double &min, double &max, arma::mat &baseline, arma::mat &fit, arma::rowvec &params, arma::mat residuals)
 {
+    /*
     arma::rowvec results(5);
 
     arma::uword min_index = Vespucci::Math::ClosestIndex(min, abscissa);
@@ -269,10 +272,13 @@ arma::rowvec Vespucci::Math::Quantification::FitGaussianPeak(const arma::vec &sp
     baseline = arma::join_horiz(abscissa_part, baseline);
     residuals = arma::join_horiz(abscissa_part, residuals_vec);
     return results;
+    */
+    return arma::rowvec();
 }
 
 arma::mat Vespucci::Math::Quantification::FitGaussianPeakMat(const arma::mat &spectra, const arma::vec &abscissa, double &min, double &max, arma::mat &baselines, arma::mat &fits, arma::mat &params, arma::mat &residuals)
 {
+/*
     arma::mat results(spectra.n_cols, 5);
     params.clear();
     fits.clear();
@@ -329,6 +335,7 @@ arma::mat Vespucci::Math::Quantification::FitGaussianPeakMat(const arma::mat &sp
 
     }
     return results;
+    */return arma::mat();
 }
 
 ///
@@ -345,6 +352,7 @@ arma::mat Vespucci::Math::Quantification::FitGaussianPeakMat(const arma::mat &sp
 ///
 arma::rowvec Vespucci::Math::Quantification::FitLorentzianPeak(const arma::vec &spectrum, const arma::vec &abscissa, double &min, double &max, arma::mat &baseline, arma::mat &fit, arma::rowvec &params, arma::mat residuals)
 {
+    /*
     arma::rowvec results(5);
 
     arma::uword min_index = Vespucci::Math::ClosestIndex(min, abscissa);
@@ -379,6 +387,8 @@ arma::rowvec Vespucci::Math::Quantification::FitLorentzianPeak(const arma::vec &
     baseline = arma::join_horiz(abscissa_part, baseline);
     residuals = arma::join_horiz(abscissa_part, residuals_vec);
     return results;
+    */
+    return arma::rowvec();
 }
 
 ///
@@ -395,6 +405,7 @@ arma::rowvec Vespucci::Math::Quantification::FitLorentzianPeak(const arma::vec &
 ///
 arma::mat Vespucci::Math::Quantification::FitLorentzianPeakMat(const arma::mat &spectra, const arma::vec &abscissa, double &min, double &max, arma::mat &baselines, arma::mat &fits, arma::mat &params, arma::mat &residuals)
 {
+    /*
     arma::mat results(spectra.n_cols, 5);
     params.clear();
     fits.clear();
@@ -451,6 +462,8 @@ arma::mat Vespucci::Math::Quantification::FitLorentzianPeakMat(const arma::mat &
 
     }
     return results;
+    */
+    return arma::mat();
 }
 
 ///
@@ -467,6 +480,7 @@ arma::mat Vespucci::Math::Quantification::FitLorentzianPeakMat(const arma::mat &
 ///
 arma::rowvec Vespucci::Math::Quantification::FitVoigtPeak(const arma::vec &spectrum, const arma::vec &abscissa, double &min, double &max, arma::mat &baseline, arma::mat &fit, arma::rowvec &params, arma::mat residuals)
 {
+    /*
     arma::rowvec results(7);
 
     arma::uword min_index = Vespucci::Math::ClosestIndex(min, abscissa);
@@ -503,6 +517,8 @@ arma::rowvec Vespucci::Math::Quantification::FitVoigtPeak(const arma::vec &spect
     baseline = arma::join_horiz(abscissa_part, baseline);
     residuals = arma::join_horiz(abscissa_part, residuals);
     return results;
+    */
+    return arma::rowvec();
 }
 
 ///
@@ -519,6 +535,7 @@ arma::rowvec Vespucci::Math::Quantification::FitVoigtPeak(const arma::vec &spect
 ///
 arma::mat Vespucci::Math::Quantification::FitVoigtPeakMat(const arma::mat &spectra, const arma::vec &abscissa, double &min, double &max, arma::mat &baselines, arma::mat &fits, arma::mat &params, arma::mat &residuals)
 {
+    /*
     arma::mat results(spectra.n_cols, 5);
     params.clear();
     fits.clear();
@@ -575,4 +592,6 @@ arma::mat Vespucci::Math::Quantification::FitVoigtPeakMat(const arma::mat &spect
 
     }
     return results;
+    */
+    return arma::mat();
 }

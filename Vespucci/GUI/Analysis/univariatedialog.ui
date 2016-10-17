@@ -159,21 +159,6 @@
           <string>Empirical</string>
          </property>
         </item>
-        <item>
-         <property name="text">
-          <string>Gaussian</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Lorentzian</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Voigt</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item row="5" column="0">
