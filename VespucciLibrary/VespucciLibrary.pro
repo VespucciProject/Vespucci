@@ -148,6 +148,10 @@ INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include
 
 unix:!macx{
+    QMAKE_CXXFLAGS_RELEASE -= -O2
+    QMAKE_CXXFLAGS_RELEASE += -O3
+    QMAKE_CXXFLAGS_DEBUG -= -O2
+    QMAKE_CXXFLAGS_DEBUG += -Og
     CONFIG += c++11 staticlib
     CONFIG -= shared
     QMAKE_CXXFLAGS += -fPIC -fext-numeric-literals -fopenmp
@@ -216,6 +220,11 @@ unix:!macx{
 #with all dependencies of armadillo and mlpack installed using homebrew
 #and armadillo and mlpack installed to the ../armadillo and ../mlpack directories
 macx{
+    QMAKE_CXXFLAGS_RELEASE -= -O2
+    QMAKE_CXXFLAGS_RELEASE += -O3
+    QMAKE_CXXFLAGS_DEBUG -= -O2
+    QMAKE_CXXFLAGS_DEBUG += -O1
+
     CONFIG += app_bundle
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 
@@ -269,6 +278,7 @@ macx{
 
 #windows libraries for msvc (we don't currently build the libraries for g++ on windows)
 win32:!win32-g++{
+
     CONFIG += release force_debug_info
     QMAKE_CXXFLAGS += /MP /openmp
     QMAKE_LFLAGS += /LIBPATH:C:\Libraries\boost_1_60_0\lib64-msvc-14.0

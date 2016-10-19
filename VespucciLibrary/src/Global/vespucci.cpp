@@ -146,7 +146,7 @@ bool Vespucci::StitchDatasets(const arma::field<arma::field<arma::mat> > &datase
     arma::uword n_unique_y = 0;//per row block in new dataset
     arma::uword row_block_n_unique_y = 0;
     //building bottom to top, left to right
-    for (size_t i = datasets.n_rows - 1; i >= 0; --i){
+    for (size_t i = datasets.n_rows - 1; i+1 >= 1; --i){
         row_block_n_unique_y = 0;
         unique_x = arma::unique(datasets(i, 0)(2));
         arma::uword n_unique_x = unique_x.n_rows;
@@ -240,7 +240,6 @@ void Vespucci::ResetDataset(arma::mat &spectra, arma::vec &x, arma::vec &y, arma
 std::string Vespucci::CleanString(const std::string &in)
 {
     std::string out;
-    std::string::const_iterator it = in.begin();
     for (const char c : in){
         if (c == '\t' || c == ','){out.append(" ");}
         else{out.append(&c);}
