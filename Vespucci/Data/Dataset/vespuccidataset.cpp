@@ -32,7 +32,12 @@ using namespace std;
 ///
 /// \brief VespucciDataset::~VespucciDataset
 ///
-VespucciDataset::~VespucciDataset(){}
+VespucciDataset::~VespucciDataset()
+{
+    for (auto key : MapKeys())
+        workspace_->GetMap(name_, key)->HideMapWindow();
+
+}
 
 bool VespucciDataset::Save(QString filename)
 {
