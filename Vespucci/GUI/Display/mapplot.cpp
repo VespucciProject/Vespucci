@@ -251,6 +251,15 @@ void MapPlot::SaveImage(QString filename)
     replot(QCustomPlot::rpImmediate);
 }
 
+void MapPlot::CenterAtZero()
+{
+    double extremum = std::max(std::abs(color_map_->dataRange().upper),
+                               std::abs(color_map_->dataRange().lower));
+    color_map_->setDataRange(QCPRange(-1.0*extremum, extremum));
+    color_scale_->setDataRange(QCPRange(-1.0*extremum, extremum));
+    replot(QCustomPlot::rpImmediate);
+}
+
 void MapPlot::rescaleDataRange(bool onlyVisibleMaps)
 {
     color_scale_->rescaleDataRange(onlyVisibleMaps);

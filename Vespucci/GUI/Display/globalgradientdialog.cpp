@@ -84,5 +84,5 @@ void GlobalGradientDialog::on_recalculatePushButton_clicked()
 void GlobalGradientDialog::RefreshListWidget()
 {
     ui->gradientListWidget->clear();
-    ui->gradientListWidget->addItems(workspace_->GradientNames());
+    ui->gradientListWidget->addItems(workspace_->GlobalGradientKeys());
 }

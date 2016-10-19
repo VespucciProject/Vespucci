@@ -80,6 +80,9 @@ private slots:
     void on_actionSet_Color_Scale_Label_triggered();
 
     void on_actionSet_Global_Color_Scale_triggered();
+
+    void on_actionCenter_Color_Scale_at_0_triggered();
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void showEvent(QShowEvent *event);

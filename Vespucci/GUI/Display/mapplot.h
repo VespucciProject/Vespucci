@@ -65,7 +65,7 @@ public:
     void MoveVerticalCrosshair(int units);
     void MoveHorizontalCrosshair(int units);
     void SaveImage(QString filename);
-
+    void CenterAtZero();
 signals:
     void SpectrumRequested(size_t index);
     void SpectrumHoldRequested(size_t index);
