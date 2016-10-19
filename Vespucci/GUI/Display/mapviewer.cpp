@@ -270,3 +270,9 @@ void MapViewer::showEvent(QShowEvent *event)
     workspace_->main_window()->SetPlotViewerActionChecked(true);
     event->accept();
 }
+
+
+void MapViewer::on_actionCenter_Color_Scale_at_0_triggered()
+{
+    ui->mapPlot->CenterAtZero();
+}

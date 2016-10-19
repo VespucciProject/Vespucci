@@ -63,7 +63,7 @@ void ColorRangeDialog::on_buttonBox_accepted()
     double upper = ui->maxDoubleSpinBox->value();
     QString name = ui->nameLineEdit->text();
     QString gradient_key = ui->gradientComboBox->currentText();
-    if (upper >= lower){
+    if (upper <= lower){
         QMessageBox::warning(this, "Range Invalid",
                              "The range entered is not valid",
                              QMessageBox::Ok, 0);

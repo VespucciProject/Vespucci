@@ -64,6 +64,7 @@
     <addaction name="actionSet_Color_Scheme"/>
     <addaction name="actionSet_Font"/>
     <addaction name="separator"/>
+    <addaction name="actionCenter_Color_Scale_at_0"/>
    </widget>
    <addaction name="menuMap"/>
    <addaction name="menuDisplay"/>
@@ -185,6 +186,17 @@
   <action name="actionSet_Global_Color_Scale">
    <property name="text">
     <string>Set Global Color Scale...</string>
+   </property>
+  </action>
+  <action name="actionCenter_Color_Scale_at_0">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Center Color Scale at 0</string>
    </property>
   </action>
  </widget>
