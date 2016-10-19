@@ -34,7 +34,7 @@ script:
 - make -j4
 - cd $TRAVIS_BUILD_DIR/../build/Test
 - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/../Vespucci_dependencies/mlpack/lib:$TRAVIS_BUILD_DIR/../Vespucci_dependencies/armadillo/lib:$LD_LIBRARY_PATH
-- ./Test
+# - ./Test
 after_success:
 - export BUILD_DIR=$TRAVIS_BUILD_DIR/../build
 - export LIB_DIR=$TRAVIS_BUILD_DIR/..
