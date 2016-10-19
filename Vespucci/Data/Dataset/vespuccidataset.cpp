@@ -34,9 +34,9 @@ using namespace std;
 ///
 VespucciDataset::~VespucciDataset()
 {
+    // prevents a user-induced segfault
     for (auto key : MapKeys())
         workspace_->GetMap(name_, key)->HideMapWindow();
-
 }
 
 bool VespucciDataset::Save(QString filename)
@@ -62,10 +62,14 @@ bool VespucciDataset::Save(QString filename)
         else str_attr = file.createAttribute("y-Axis Description", str_type, str_dataspace);
         str_attr.write(str_type, y_axis_description_.toStdString());
 
+        if (file.attrExists("Vespucci Version")) str_attr = file.openAttribute("Vespucci Version");
+        else str_attr = file.createAttribute("Vespucci Version", str_type, str_dataspace);
+        str_attr.write(str_type, string("1.0.0"));
+
         for (auto core_name: core_names){
             hsize_t dims[2];
-            dims[0] = GetCoreMatrix(core_name).n_rows;
-            dims[1] = GetCoreMatrix(core_name).n_cols;
+            dims[0] = GetCoreMatrix(core_name).n_cols;
+            dims[1] = GetCoreMatrix(core_name).n_rows;
             DataSpace dataspace(2, dims);
             DataSet ds(file.createDataSet(core_name.toStdString(),
                                           PredType::NATIVE_DOUBLE, dataspace));
@@ -84,8 +88,8 @@ bool VespucciDataset::Save(QString filename)
             str_attr.write(str_type, results_type);
             for (auto matrix_name: matrix_names){
                 hsize_t dims[2];
-                dims[0] = results->GetMatrix(matrix_name).n_rows;
-                dims[1] = results->GetMatrix(matrix_name).n_cols;
+                dims[0] = results->GetMatrix(matrix_name).n_cols;
+                dims[1] = results->GetMatrix(matrix_name).n_rows;
                 DataSpace dataspace(2, dims);
                 DataSet ds(results_group.createDataSet(matrix_name.toStdString(),
                                                        PredType::NATIVE_DOUBLE,
@@ -272,6 +276,9 @@ VespucciDataset::VespucciDataset(const QString &h5_filename,
             y_axis_description_ = fallback_y_description;
         }
 
+        bool old_format = true;
+        if (file.attrExists("Vespucci Version"))
+            old_format = false;
         for (hsize_t i = 0; i < file.getNumObjs(); ++i){
             H5G_obj_t obj_type = file.getObjTypeByIdx(i);
             string obj_name = file.getObjnameByIdx(i);
@@ -281,7 +288,9 @@ VespucciDataset::VespucciDataset(const QString &h5_filename,
                 DataSpace dspace = ds.getSpace();
                 hsize_t dims[2];
                 dspace.getSimpleExtentDims(dims);
-                mat matrix(dims[0], dims[1]);
+                uword rows = (old_format ? dims[0] : dims[1]);
+                uword columns = (old_format ? dims[1] : dims[0]);
+                mat matrix(rows, columns);
                 ds.read(matrix.memptr(), PredType::NATIVE_DOUBLE);
                 AddMatrix(QString::fromStdString(obj_name), matrix);
                 ds.close();
@@ -303,7 +312,9 @@ VespucciDataset::VespucciDataset(const QString &h5_filename,
                         DataSpace dspace = ds.getSpace();
                         hsize_t dims[2];
                         dspace.getSimpleExtentDims(dims);
-                        mat matrix(dims[0], dims[1]);
+                        uword rows = (old_format ? dims[0] : dims[1]);
+                        uword columns = (old_format ? dims[1] : dims[0]);
+                        mat matrix(rows, columns);
                         ds.read(matrix.memptr(), PredType::NATIVE_DOUBLE);
                         result->AddMatrix(QString::fromStdString(subobj_name),
                                           matrix);
