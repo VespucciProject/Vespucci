@@ -67,7 +67,6 @@ public:
     void MoveHorizontalCrosshair(int units);
     void SaveImage(QString filename);
     void CenterAtZero();
-    void MoveColorScale(MapPlot::ColorScalePosition pos);
 signals:
     void SpectrumRequested(size_t index);
     void SpectrumHoldRequested(size_t index);

@@ -60,7 +60,6 @@
     <addaction name="separator"/>
     <addaction name="actionSet_Global_Color_Scale"/>
     <addaction name="actionSet_Color_Scale_Label"/>
-    <addaction name="actionSet_Color_Scale_Position"/>
     <addaction name="actionAdd_Scale_Bar"/>
     <addaction name="actionSet_Color_Scheme"/>
     <addaction name="actionSet_Font"/>
@@ -198,11 +197,6 @@
    </property>
    <property name="text">
     <string>Center Color Scale at 0</string>
-   </property>
-  </action>
-  <action name="actionSet_Color_Scale_Position">
-   <property name="text">
-    <string>Set Color Scale Position...</string>
    </property>
   </action>
  </widget>
