@@ -1,9 +1,9 @@
-#include "GUI/Processing/booleanizedialog.h"
-#include "ui_booleanizedialog.h"
+#include "GUI/Processing/binarizedialog.h"
+#include "ui_binarizedialog.h"
 
-BooleanizeDialog::BooleanizeDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
+BinarizeDialog::BinarizeDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key) :
     QDialog(parent),
-    ui(new Ui::BooleanizeDialog)
+    ui(new Ui::BinarizeDialog)
 {
     ui->setupUi(this);
 
@@ -16,12 +16,12 @@ BooleanizeDialog::BooleanizeDialog(QWidget *parent, QSharedPointer<VespucciWorks
 
 }
 
-BooleanizeDialog::~BooleanizeDialog()
+BinarizeDialog::~BinarizeDialog()
 {
     delete ui;
 }
 
-void BooleanizeDialog::on_behaviorComboBox_currentIndexChanged(const QString &arg1)
+void BinarizeDialog::on_behaviorComboBox_currentIndexChanged(const QString &arg1)
 {
     if (arg1 == "Set Values out of Range to Maximum (clamp)")
         ui->oneifyCheckBox->setEnabled(false);
@@ -31,7 +31,7 @@ void BooleanizeDialog::on_behaviorComboBox_currentIndexChanged(const QString &ar
 
 }
 
-void BooleanizeDialog::on_buttonBox_accepted()
+void BinarizeDialog::on_buttonBox_accepted()
 {
     double min = std::min(ui->minDoubleSpinBox->value(), ui->maxDoubleSpinBox->value());
     double max = std::max(ui->minDoubleSpinBox->value(), ui->maxDoubleSpinBox->value());
@@ -40,13 +40,13 @@ void BooleanizeDialog::on_buttonBox_accepted()
     if (ui->behaviorComboBox->currentText() == "Set Values out of Range to Maximum (clamp)")
         dataset_->Clamp(min, max);
     else if (ui->behaviorComboBox->currentText() == "Set Values out of Range to Zero")
-        dataset_->Booleanize(min, max, true, oneify);
+        dataset_->Binarize(min, max, true, oneify);
     else
-        dataset_->Booleanize(min, max, false, oneify);
+        dataset_->Binarize(min, max, false, oneify);
 
 }
 
-void BooleanizeDialog::on_buttonBox_rejected()
+void BinarizeDialog::on_buttonBox_rejected()
 {
     dataset_.clear();
     close();

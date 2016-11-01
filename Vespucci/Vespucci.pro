@@ -99,7 +99,6 @@ SOURCES += main.cpp\
     GUI/Display/aboutdialog.cpp \
     GUI/Analysis/bandratiodialog.cpp \
     GUI/Processing/baselinedialog.cpp \
-    GUI/Processing/booleanizedialog.cpp \
     GUI/Display/citationdialog.cpp \
     GUI/Processing/cropdialog.cpp \
     GUI/Display/dataviewer.cpp \
@@ -162,7 +161,8 @@ SOURCES += main.cpp\
     GUI/Analysis/dimensionalityestimationdialog.cpp \
     Data/Analysis/abstractdataanalyzer.cpp \
     Data/Analysis/matrixanalyzer.cpp \
-    Data/Analysis/metaanalyzer.cpp
+    Data/Analysis/metaanalyzer.cpp \
+    GUI/Processing/binarizedialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -178,7 +178,6 @@ HEADERS  += \
     Data/Dataset/metadataset.h \
     GUI/Analysis/bandratiodialog.h \
     GUI/Processing/baselinedialog.h \
-    GUI/Processing/booleanizedialog.h \
     GUI/Processing/cropdialog.h \
     GUI/Display/aboutdialog.h \
     GUI/Display/citationdialog.h \
@@ -242,14 +241,14 @@ HEADERS  += \
     Data/Analysis/abstractdataanalyzer.h \
     GUI/Analysis/dimensionalityestimationdialog.h \
     Data/Analysis/matrixanalyzer.h \
-    Data/Analysis/metaanalyzer.h
+    Data/Analysis/metaanalyzer.h \
+    GUI/Processing/binarizedialog.h
 
 
 FORMS    += \
     GUI/mainwindow.ui \
     GUI/Display/aboutdialog.ui \
     GUI/Analysis/bandratiodialog.ui \
-    GUI/Processing/booleanizedialog.ui \
     GUI/Processing/baselinedialog.ui \
     GUI/Display/citationdialog.ui \
     GUI/Processing/cropdialog.ui \
@@ -299,7 +298,8 @@ FORMS    += \
     GUI/Processing/univariateconcatenationdialog.ui \
     GUI/Analysis/metaanalysisdialog.ui \
     GUI/Processing/datasetextractordialog.ui \
-    GUI/Analysis/dimensionalityestimationdialog.ui
+    GUI/Analysis/dimensionalityestimationdialog.ui \
+    GUI/Processing/binarizedialog.ui
 
 RESOURCES += \
     resources.qrc

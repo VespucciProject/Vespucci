@@ -125,7 +125,7 @@ public:
     void AbsoluteValue();
     void PeakIntensityNormalize(double peak_position);
     void PeakIntensityNormalize(double left_bound, double right_bound);
-    void Booleanize(double min, double max, bool keep_inside, bool oneify);
+    void Binarize(double min, double max, bool keep_inside, bool oneify);
     void Clamp(double min, double max);
     void ShedZeroSpectra();
     void ShedZeroWavelengths();
