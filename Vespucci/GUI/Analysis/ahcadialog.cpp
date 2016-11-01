@@ -37,7 +37,7 @@ AHCADialog::~AHCADialog()
 
 void AHCADialog::on_buttonBox_accepted()
 {
-    QString name = ui->nameLineEdit->text().toLower();
+    QString name = ui->nameLineEdit->text();
     QString metric = ui->metricComboBox->currentText().toLower();
     QString linkage = ui->linkageComboBox->currentText().toLower();
     metric.remove(" ");

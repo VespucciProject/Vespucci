@@ -48,8 +48,7 @@ MapPlot::MapPlot(QWidget *parent)
     plotLayout()->addElement(0, 1, rect);
     plotLayout()->remove(plotLayout()->element(0, 0));
     plotLayout()->addElement(0, 0, color_scale_);
-    rect_position_ = QPair<int, int>(0, 1);
-    color_scale_position_ = QPair<int, int>(0, 0);
+    color_scale_position_ = MapPlot::ColorScalePosition::left;
 
 
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -259,6 +258,7 @@ void MapPlot::CenterAtZero()
     color_scale_->setDataRange(QCPRange(-1.0*extremum, extremum));
     replot(QCustomPlot::rpImmediate);
 }
+
 
 void MapPlot::rescaleDataRange(bool onlyVisibleMaps)
 {
