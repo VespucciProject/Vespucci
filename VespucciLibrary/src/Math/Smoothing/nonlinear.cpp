@@ -33,18 +33,12 @@ arma::vec Vespucci::Math::Smoothing::MedianFilter(const arma::vec &X, arma::uwor
 
     arma::vec filtered = X; //copy the whole thing, then add in the bit we actually filter
     arma::vec buffer;
-    arma::uvec sorted;
-    //The armadillo median function results in a crash on some mingw compilers
-    //This method might not be as fast, but it always works.
     try{
-        //sort the window then pick the middle value
+        // middle part of spectrum
         for (arma::uword i = k; i < (X.n_rows - k); ++i){
             buffer = X.subvec(i-k, i+k);
-            sorted = stable_sort_index(buffer);
-            filtered(i) = buffer(sorted(k));
-            //filtered(i) = median(buffer);
+            filtered(i) = arma::median(buffer);
         }
-
     }catch(std::exception e){
         std::cout << e.what();
     }
@@ -61,8 +55,20 @@ arma::vec Vespucci::Math::Smoothing::MedianFilter(const arma::vec &X, arma::uwor
 arma::mat Vespucci::Math::Smoothing::MedianFilterMat(const arma::mat &X, arma::uword window_size)
 {
     arma::mat filtered;
-    filtered.set_size(X.n_rows, X.n_cols);   
-    for(arma::uword i = 0; i < X.n_cols; ++i)
+    filtered.set_size(X.n_rows, X.n_cols);
+
+#ifdef _WIN32
+  #pragma omp parallel for default(none) \
+      shared(X, window_size, filtered)
+     for (intmax_t i = 0; i < (intmax_t) X.n_cols; ++i)
+#else
+  #pragma omp parallel for default(none) \
+      shared(X, window_size, filtered)
+    for (size_t i = 0; i < X.n_cols; ++i)
+#endif
+    {
         filtered.col(i) = MedianFilter(X.col(i), window_size);
+    }
+
     return filtered;
 }
