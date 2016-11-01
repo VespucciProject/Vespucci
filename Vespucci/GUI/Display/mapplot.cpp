@@ -48,8 +48,7 @@ MapPlot::MapPlot(QWidget *parent)
     plotLayout()->addElement(0, 1, rect);
     plotLayout()->remove(plotLayout()->element(0, 0));
     plotLayout()->addElement(0, 0, color_scale_);
-    rect_position_ = QPair<int, int>(0, 1);
-    color_scale_position_ = QPair<int, int>(0, 0);
+    color_scale_position_ = MapPlot::ColorScalePosition::left;
 
 
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -257,6 +256,63 @@ void MapPlot::CenterAtZero()
                                std::abs(color_map_->dataRange().lower));
     color_map_->setDataRange(QCPRange(-1.0*extremum, extremum));
     color_scale_->setDataRange(QCPRange(-1.0*extremum, extremum));
+    replot(QCustomPlot::rpImmediate);
+}
+
+void MapPlot::MoveColorScale(MapPlot::ColorScalePosition pos)
+{
+    QCPAxisRect *rect = axisRect();
+    QCPMarginGroup *group = new QCPMarginGroup(this);
+
+    switch (pos){
+    case MapPlot::ColorScalePosition::left:
+        plotLayout()->addElement(0, 1, rect);
+        plotLayout()->addElement(0, 0, color_scale_);
+        color_scale_->setType(QCPAxis::atLeft);
+        color_scale_->setMarginGroup(QCP::msTop|QCP::msBottom, group);
+        rect->setMarginGroup(QCP::msTop|QCP::msBottom, group);
+        if (plotLayout()->hasElement(1,0))
+            plotLayout()->remove(plotLayout()->element(1,0));
+        if (plotLayout()->hasElement(1,1))
+            plotLayout()->remove(plotLayout()->element(1,1));
+        break;
+    case MapPlot::ColorScalePosition::right:
+        plotLayout()->addElement(0, 0, rect);
+        plotLayout()->addElement(0, 1, color_scale_);
+        color_scale_->setType(QCPAxis::atRight);
+        color_scale_->setMarginGroup(QCP::msTop|QCP::msBottom, group);
+        rect->setMarginGroup(QCP::msTop|QCP::msBottom, group);
+        if (plotLayout()->hasElement(1,0))
+            plotLayout()->remove(plotLayout()->element(1,0));
+        if (plotLayout()->hasElement(1,1))
+            plotLayout()->remove(plotLayout()->element(1,1));
+        break;
+    case MapPlot::ColorScalePosition::top:
+        plotLayout()->addElement(0, 0, rect);
+        plotLayout()->addElement(1, 0, color_scale_);
+        color_scale_->setType(QCPAxis::atTop);
+        color_scale_->setMarginGroup(QCP::msLeft|QCP::msRight, group);
+        rect->setMarginGroup(QCP::msLeft|QCP::msRight, group);
+        if (plotLayout()->hasElement(0,1))
+            plotLayout()->remove(plotLayout()->element(0,1));
+        if (plotLayout()->hasElement(1,1))
+            plotLayout()->remove(plotLayout()->element(1,1));
+        break;
+    case MapPlot::ColorScalePosition::bottom:
+        plotLayout()->addElement(0, 0, rect);
+        plotLayout()->addElement(1, 0, color_scale_);
+        color_scale_->setType(QCPAxis::atBottom);
+        color_scale_->setMarginGroup(QCP::msLeft|QCP::msRight, group);
+        rect->setMarginGroup(QCP::msLeft|QCP::msRight, group);
+        if (plotLayout()->hasElement(0,1))
+            plotLayout()->remove(plotLayout()->element(0,1));
+        if (plotLayout()->hasElement(1,1))
+            plotLayout()->remove(plotLayout()->element(1,1));
+        break;
+    default:
+        break;
+    }
+    color_scale_position_ = pos;
     replot(QCustomPlot::rpImmediate);
 }
 

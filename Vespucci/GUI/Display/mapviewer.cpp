@@ -276,3 +276,29 @@ void MapViewer::on_actionCenter_Color_Scale_at_0_triggered()
 {
     ui->mapPlot->CenterAtZero();
 }
+
+void MapViewer::on_actionSet_Color_Scale_Position_triggered()
+{
+    QStringList positions({"Top",
+                          "Bottom",
+                          "Left",
+                          "Right"});
+    bool ok;
+    QString position = QInputDialog::getItem(this,
+                                             "Color Scale Position",
+                                             "Position",
+                                             positions,
+                                             0,
+                                             false,
+                                             &ok);
+    if (ok){
+        if (position == "Top")
+            ui->mapPlot->MoveColorScale(MapPlot::ColorScalePosition::top);
+        else if (position == "Bottom")
+            ui->mapPlot->MoveColorScale(MapPlot::ColorScalePosition::bottom);
+        else if (position == "Left")
+            ui->mapPlot->MoveColorScale(MapPlot::ColorScalePosition::left);
+        else if (position == "Right")
+            ui->mapPlot->MoveColorScale(MapPlot::ColorScalePosition::right);
+    }
+}

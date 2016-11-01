@@ -36,6 +36,7 @@ class MapPlot : public QCustomPlot
 
 public:
     MapPlot(QWidget *parent = 0);
+    enum class ColorScalePosition{top, bottom, left, right};
     void SetMapData(const vec &x, const vec &y, const vec &z);
     void SetColorScale(QCPColorScale *scale);
     void SetGradient(QCPColorGradient gradient);
@@ -66,6 +67,7 @@ public:
     void MoveHorizontalCrosshair(int units);
     void SaveImage(QString filename);
     void CenterAtZero();
+    void MoveColorScale(MapPlot::ColorScalePosition pos);
 signals:
     void SpectrumRequested(size_t index);
     void SpectrumHoldRequested(size_t index);
@@ -80,8 +82,7 @@ private:
     vec z_;
     double x_step_;
     double y_step_;
-    QPair<int, int> rect_position_;
-    QPair<int, int> color_scale_position_;
+    MapPlot::ColorScalePosition color_scale_position_;
 };
 
 #endif // MAPPLOT_H
