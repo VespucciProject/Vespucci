@@ -1,21 +1,21 @@
-#ifndef BOOLEANIZEDIALOG_H
-#define BOOLEANIZEDIALOG_H
+#ifndef BINARIZE_DIALOG_H
+#define BINARIZE_DIALOG_H
 
 #include <QDialog>
 #include "Global/vespucciworkspace.h"
 #include "Data/Dataset/vespuccidataset.h"
 
 namespace Ui {
-class BooleanizeDialog;
+class BinarizeDialog;
 }
 
-class BooleanizeDialog : public QDialog
+class BinarizeDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit BooleanizeDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
-    ~BooleanizeDialog();
+    explicit BinarizeDialog(QWidget *parent, QSharedPointer<VespucciWorkspace> ws, const QString &dataset_key);
+    ~BinarizeDialog();
 
 private slots:
     void on_behaviorComboBox_currentIndexChanged(const QString &arg1);
@@ -25,10 +25,10 @@ private slots:
     void on_buttonBox_rejected();
 
 private:
-    Ui::BooleanizeDialog *ui;
+    Ui::BinarizeDialog *ui;
 
     QSharedPointer<VespucciWorkspace> workspace_;
     QSharedPointer<VespucciDataset> dataset_;
 };
 
-#endif // BOOLEANIZEDIALOG_H
+#endif // BINARIZE_DIALOG_H

@@ -276,3 +276,4 @@ void MapViewer::on_actionCenter_Color_Scale_at_0_triggered()
 {
     ui->mapPlot->CenterAtZero();
 }
+

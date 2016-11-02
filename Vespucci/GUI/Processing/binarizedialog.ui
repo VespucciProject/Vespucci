@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>BooleanizeDialog</class>
- <widget class="QDialog" name="BooleanizeDialog">
+ <class>BinarizeDialog</class>
+ <widget class="QDialog" name="BinarizeDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>377</width>
+    <width>379</width>
     <height>144</height>
    </rect>
   </property>
@@ -113,7 +113,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>BooleanizeDialog</receiver>
+   <receiver>BinarizeDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -129,7 +129,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>BooleanizeDialog</receiver>
+   <receiver>BinarizeDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
