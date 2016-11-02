@@ -35,7 +35,7 @@
 #include "GUI/Processing/metadatasetdialog.h"
 #include "GUI/Processing/rangedialog.h"
 #include "GUI/Display/spectrumeditor.h"
-#include "GUI/Processing/booleanizedialog.h"
+#include "GUI/Processing/binarizedialog.h"
 #include "GUI/Processing/thresholddialog.h"
 #include "GUI/scriptdialog.h"
 #include "GUI/Processing/multiimportdialog.h"
@@ -1014,7 +1014,7 @@ void MainWindow::ItemSelected(TreeItem *item)
     item_selected_ = true;
 }
 
-void MainWindow::on_actionBooleanize_Clamp_triggered()
+void MainWindow::on_actionBinarize_Clamp_triggered()
 {
     TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
     if (item->type() == TreeItem::ItemType::Base){
@@ -1024,9 +1024,9 @@ void MainWindow::on_actionBooleanize_Clamp_triggered()
         return;
     }
     QString dataset_key = item->DatasetKey();
-    BooleanizeDialog *booleanize_dialog = new BooleanizeDialog(this, workspace_, dataset_key);
-    booleanize_dialog->setAttribute(Qt::WA_DeleteOnClose);
-    booleanize_dialog->show();
+    BinarizeDialog *Binarize_dialog = new BinarizeDialog(this, workspace_, dataset_key);
+    Binarize_dialog->setAttribute(Qt::WA_DeleteOnClose);
+    Binarize_dialog->show();
 }
 
 void MainWindow::on_actionRemove_Vectors_of_Zeros_triggered()
