@@ -1895,6 +1895,8 @@ void VespucciDataset::CalculateRepresentativeSpectrum(const QString &name, QStri
     while (auxiliary_matrices_->HasMatrix(matrix_name))
         matrix_name = name + " (" + QString::number(i++) + ")";
     auxiliary_matrices_->AddMatrix(matrix_name, rep);
+    vec index_vec({double(index)});
+    auxiliary_matrices_->AddMatrix(matrix_name + " (index)", index_vec);
     workspace_->UpdateModel();
 }
 
