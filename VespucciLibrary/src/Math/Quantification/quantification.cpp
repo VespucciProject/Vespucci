@@ -72,8 +72,13 @@ arma::rowvec Vespucci::Math::Quantification::QuantifyPeak(const arma::vec &spect
     total_baseline = arma::linspace(spectrum(min_index), spectrum(max_index), window_size);
     arma::vec total_abscissa = abscissa.rows(min_index, max_index);
     arma::uvec positive_indices = arma::find(spectrum_part > total_baseline);
-    double positive_area = arma::as_scalar(arma::trapz(abscissa_part.rows(positive_indices), spectrum_part.rows(positive_indices)));
-    double baseline_area = arma::as_scalar(arma::trapz(abscissa_part.rows(positive_indices), total_baseline.rows(positive_indices)));
+    double positive_area = 0;
+    double baseline_area = 0;
+    if (positive_indices.n_rows){
+        baseline_area = arma::as_scalar(arma::trapz(abscissa_part.rows(positive_indices), total_baseline.rows(positive_indices)));
+        positive_area = arma::as_scalar(arma::trapz(abscissa_part.rows(positive_indices), spectrum_part.rows(positive_indices)));
+    }
+
     total_baseline = arma::join_horiz(total_abscissa, total_baseline);
 
     arma::vec min_window = spectrum.rows(min_start, min_end);
