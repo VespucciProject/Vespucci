@@ -1024,9 +1024,9 @@ void MainWindow::on_actionBinarize_Clamp_triggered()
         return;
     }
     QString dataset_key = item->DatasetKey();
-    BinarizeDialog *Binarize_dialog = new BinarizeDialog(this, workspace_, dataset_key);
-    Binarize_dialog->setAttribute(Qt::WA_DeleteOnClose);
-    Binarize_dialog->show();
+    BinarizeDialog *binarize_dialog = new BinarizeDialog(this, workspace_, dataset_key);
+    binarize_dialog->setAttribute(Qt::WA_DeleteOnClose);
+    binarize_dialog->show();
 }
 
 void MainWindow::on_actionRemove_Vectors_of_Zeros_triggered()
