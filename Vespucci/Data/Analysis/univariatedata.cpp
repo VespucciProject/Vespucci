@@ -147,6 +147,25 @@ void UnivariateData::Apply(double first_left_bound, double first_right_bound, do
 
 }
 
+void UnivariateData::ApplyStatistics(double left_bound, double right_bound, const mat &spectra, const vec &abscissa)
+{
+    mat results = Vespucci::Math::Quantification::PeakStatistics(spectra,
+                                                                 abscissa,
+                                                                 left_bound,
+                                                                 right_bound);
+    QStringList names({
+                          "Area",
+                          "Maximum",
+                          "Minimum",
+                          "Mean",
+                          "Standard Deviation",
+                          "Median",
+                          "Minimum Position",
+                          "Maximum Position"
+                      });
+    AddColumns(names, results);
+}
+
 void UnivariateData::ApplyCorrelation(const mat &spectra, const vec &control)
 {
     AddMetadata("Type", "Correlation analysis");

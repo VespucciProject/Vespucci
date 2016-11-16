@@ -1722,6 +1722,27 @@ void VespucciDataset::Univariate(const QString &name,
 
 }
 
+void VespucciDataset::PeakStatistics(const QString &name, double &left_bound, double &right_bound)
+{
+    state_changed_ = true;
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name));
+    try{
+        univariate_data->ApplyStatistics(left_bound,
+                                         right_bound,
+                                         spectra_,
+                                         abscissa_);
+    }catch(exception e){
+        main_window_->DisplayExceptionWarning(e);
+        return;
+    }
+    AddAnalysisResult(univariate_data);
+    workspace_->UpdateModel();
+    operations_ << "Univariate("
+                   + name + ", "
+                   + QString::number(left_bound) + ", "
+                   + QString::number(right_bound) + ")";
+}
+
 void VespucciDataset::FitPeak(const QString &name, const QString &peak_shape, double &left_bound, double &right_bound)
 {
     state_changed_ = true;

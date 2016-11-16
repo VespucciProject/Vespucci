@@ -159,6 +159,11 @@
           <string>Empirical</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>Region Statistics</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="5" column="0">
