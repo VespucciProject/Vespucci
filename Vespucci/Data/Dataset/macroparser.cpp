@@ -32,7 +32,7 @@ MacroParser::MacroParser(QSharedPointer<VespucciDataset> dataset)
     valid_commands_["VectorNormalize"] = QStringList({ "UInt" });
     valid_commands_["SNVNormalize"] = QStringList({ "Double", "Bool" });
     valid_commands_["PeakIntensityNormalize"] = QStringList({ "Double", "Double" });
-    valid_commands_["Booleanize"] = QStringList({ "Double" , "Double" , "Bool" , "Bool" });
+    valid_commands_["Binarize"] = QStringList({ "Double" , "Double" , "Bool" , "Bool" });
     valid_commands_["Clamp"] = QStringList({ "Double" , "Double" });
     valid_commands_["MedianFilter"] = QStringList({ "UInt" });
     valid_commands_["LinearMovingAverage"] = QStringList({ "UInt" });
@@ -152,8 +152,8 @@ void MacroParser::ExecuteCommand(QString command, QStringList params)
         dataset_->SNVNormalize(params[0].toDouble(), ToBool(params[1]));
 	else if (command == "PeakIntensityNormalize")
         dataset_->PeakIntensityNormalize(params[0].toDouble(), params[1].toDouble());
-	else if (command == "Booleanize")
-        dataset_->Booleanize(params[0].toDouble(), params[1].toDouble(), ToBool(params[2]), ToBool(params[3]));
+	else if (command == "Binarize")
+        dataset_->Binarize(params[0].toDouble(), params[1].toDouble(), ToBool(params[2]), ToBool(params[3]));
 	else if (command == "Clamp")
         dataset_->Clamp(params[0].toDouble(), params[1].toDouble());
 	else if (command == "MedianFilter")

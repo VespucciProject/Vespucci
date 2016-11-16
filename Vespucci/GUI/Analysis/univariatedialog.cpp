@@ -109,6 +109,13 @@ void UnivariateDialog::on_buttonBox_accepted()
                 workspace_->main_window()->DisplayExceptionWarning(e);
             }
         }
+        else if (value_method == "Region Statistics"){
+            try{
+                analyzer_->PeakStatistics(name, entered_min, entered_max);
+            }catch(exception e){
+                workspace_->main_window()->DisplayExceptionWarning(e);
+            }
+        }
         else{
             try{
                 analyzer_->FitPeak(name, value_method, entered_min, entered_max);
