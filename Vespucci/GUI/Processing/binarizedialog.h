@@ -1,5 +1,5 @@
-#ifndef BinarizeDIALOG_H
-#define BinarizeDIALOG_H
+#ifndef BINARIZE_DIALOG_H
+#define BINARIZE_DIALOG_H
 
 #include <QDialog>
 #include "Global/vespucciworkspace.h"
@@ -31,4 +31,4 @@ private:
     QSharedPointer<VespucciDataset> dataset_;
 };
 
-#endif // BinarizeDIALOG_H
+#endif // BINARIZE_DIALOG_H
