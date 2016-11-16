@@ -34,6 +34,9 @@ public:
                             double &left_bound,
                             double &right_bound,
                             arma::uword bound_window) = 0;
+    virtual void PeakStatistics(const QString &name,
+                                double &left_bound,
+                                double &right_bound) = 0;
     virtual void FitPeak(const QString &name,
                          const QString &peak_shape,
                          double &left_bound,
