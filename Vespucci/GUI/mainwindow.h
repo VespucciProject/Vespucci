@@ -157,7 +157,7 @@ private slots:
 
     void on_actionSpectra_as_Columns_triggered();
 
-    void on_actionBooleanize_Clamp_triggered();
+    void on_actionBinarize_Clamp_triggered();
 
     void on_actionRemove_Vectors_of_Zeros_triggered();
 

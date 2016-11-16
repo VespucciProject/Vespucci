@@ -38,6 +38,8 @@ public:
     void Apply(double first_left_bound, double first_right_bound,
                double second_left_bound, double second_right_bound,
                uword bound_window, const mat &spectra, const vec &abscissa);
+    void ApplyStatistics(double left_bound, double right_bound,
+                         const mat &spectra, const vec &abscissa);
     void ApplyCorrelation(const mat &spectra, const vec &control);
     void Calibrate(const vec &x, const vec &y, uword column);
 

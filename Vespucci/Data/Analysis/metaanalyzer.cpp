@@ -52,6 +52,22 @@ void MetaAnalyzer::Univariate(const QString &name, double &left_bound, double &r
     AddAnalysisResults(univariate_data, matrix_keys);
 }
 
+void MetaAnalyzer::PeakStatistics(const QString &name, double &left_bound, double &right_bound)
+{
+    QString new_name = FindUniqueName(name);
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(new_name));
+    univariate_data->ApplyStatistics(left_bound, right_bound, data_, abscissa_);
+    QStringList names({
+                          "Area",
+                          "Maximum",
+                          "Minimum",
+                          "Mean",
+                          "Standard Deviation",
+                          "Median"
+                      });
+    AddAnalysisResults(univariate_data, names);
+}
+
 void MetaAnalyzer::FitPeak(const QString &name, const QString &peak_shape, double &left_bound, double &right_bound)
 {
     QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name));

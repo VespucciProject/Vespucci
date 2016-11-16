@@ -600,3 +600,48 @@ arma::mat Vespucci::Math::Quantification::FitVoigtPeakMat(const arma::mat &spect
     */
     return arma::mat();
 }
+
+///
+/// \brief Vespucci::Math::Quantification::PeakStatistics
+/// \param spectra
+/// \param abscissa
+/// \param min
+/// \param max
+/// \return
+/// Calculates some stats of the region bounded by min and max.
+/// This is useful especially after SG smoothing with even derivative order
+/// (the resultant changes in peak shape sometimes make univariate analysis difficult)
+arma::mat Vespucci::Math::Quantification::PeakStatistics(const arma::mat &spectra, const arma::vec &abscissa, double &min, double &max)
+{
+    arma::mat results(spectra.n_cols, 8);
+
+    arma::uword min_index = Vespucci::Math::ClosestIndex(min, abscissa);
+    arma::uword max_index = Vespucci::Math::ClosestIndex(max, abscissa);
+
+    arma::mat abscissa_part = abscissa.rows(min_index, max_index);
+    arma::mat spectra_part = spectra.rows(min_index, max_index);
+
+    min = abscissa(min_index);
+    max = abscissa(max_index);
+
+    arma::vec min_pos(spectra.n_cols);
+    arma::vec max_pos(spectra.n_cols);
+
+    for (arma::uword i = 0; i < spectra.n_cols; ++i){
+        arma::uword min_index = spectra_part.col(i).index_min();
+        arma::uword max_index = spectra_part.col(i).index_max();
+        min_pos(i) = abscissa_part(min_index);
+        max_pos(i) = abscissa_part(max_index);
+    }
+
+    results.col(0) = arma::trapz(abscissa_part, spectra_part).t();
+    results.col(1) = arma::max(spectra_part).t();
+    results.col(2) = arma::min(spectra_part).t();
+    results.col(3) = arma::mean(spectra_part).t();
+    results.col(4) = arma::stddev(spectra_part).t();
+    results.col(5) = arma::median(spectra_part).t();
+    results.col(6) = min_pos;
+    results.col(7) = max_pos;
+
+    return results;
+}
