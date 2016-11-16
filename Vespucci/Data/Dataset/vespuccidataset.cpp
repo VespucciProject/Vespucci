@@ -755,16 +755,16 @@ void VespucciDataset::PeakIntensityNormalize(double left_bound, double right_bou
 }
 
 ///
-/// \brief VespucciDataset::Booleanize
+/// \brief VespucciDataset::Binarize
 /// \param min
 /// \param max
 /// \param keep_inside
 /// \param oneify
 ///
-void VespucciDataset::Booleanize(double min, double max, bool keep_inside, bool oneify)
+void VespucciDataset::Binarize(double min, double max, bool keep_inside, bool oneify)
 {
     SetOldCopies();
-    last_operation_ = "Booleanize";
+    last_operation_ = "Binarize";
 
     //set all values on the outside (or inside) of the range to zero
     try{
@@ -781,10 +781,10 @@ void VespucciDataset::Booleanize(double min, double max, bool keep_inside, bool 
     }
     catch (exception e){
         cerr << e.what();
-        runtime_error f("Booleanize");
+        runtime_error f("Binarize");
         main_window_->DisplayExceptionWarning(f);
     }
-    operations_ << "Booleanize(" + QString::number(min) + ", "
+    operations_ << "Binarize(" + QString::number(min) + ", "
                    + QString::number(max) + ", "
                    + (keep_inside ? "true" : "false") + ", "
                    + (oneify ? "true" : "false") + ")";
@@ -1720,6 +1720,27 @@ void VespucciDataset::Univariate(const QString &name,
                    + QString::number(right_bound) + ", "
                    + QString::number(bound_window) + ")";
 
+}
+
+void VespucciDataset::PeakStatistics(const QString &name, double &left_bound, double &right_bound)
+{
+    state_changed_ = true;
+    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name));
+    try{
+        univariate_data->ApplyStatistics(left_bound,
+                                         right_bound,
+                                         spectra_,
+                                         abscissa_);
+    }catch(exception e){
+        main_window_->DisplayExceptionWarning(e);
+        return;
+    }
+    AddAnalysisResult(univariate_data);
+    workspace_->UpdateModel();
+    operations_ << "Univariate("
+                   + name + ", "
+                   + QString::number(left_bound) + ", "
+                   + QString::number(right_bound) + ")";
 }
 
 void VespucciDataset::FitPeak(const QString &name, const QString &peak_shape, double &left_bound, double &right_bound)

@@ -44,6 +44,10 @@ namespace Vespucci{
                                                       arma::uword bound_window,
                                                       arma::mat &total_baselines,
                                                       arma::field<arma::mat> &inflection_baselines);
+            VESPUCCI_EXPORT arma::mat PeakStatistics(const arma::mat &spectra,
+                                                     const arma::vec &abscissa,
+                                                     double &min,
+                                                     double &max);
 
             VESPUCCI_EXPORT arma::mat ConvertInflectionBaselines(const arma::field<arma::mat> &inflection_baselines);
 

@@ -125,7 +125,7 @@ public:
     void AbsoluteValue();
     void PeakIntensityNormalize(double peak_position);
     void PeakIntensityNormalize(double left_bound, double right_bound);
-    void Booleanize(double min, double max, bool keep_inside, bool oneify);
+    void Binarize(double min, double max, bool keep_inside, bool oneify);
     void Clamp(double min, double max);
     void ShedZeroSpectra();
     void ShedZeroWavelengths();
@@ -195,6 +195,7 @@ public:
 
     void Univariate(const QString &name, double &left_bound, double &right_bound,
                     uword bound_window);
+    void PeakStatistics(const QString &name, double &left_bound, double &right_bound);
     void FitPeak(const QString &name,
                  const QString &peak_shape,
                  double &left_bound,
