@@ -1369,9 +1369,15 @@ void MainWindow::on_actionSave_Dataset_triggered()
                                                 "Vespucci Dataset (*.h5)");
     if (!filename.isEmpty()){
         bool ok = dataset->Save(filename);
-        if (!ok) DisplayWarning("Dataset Not Saved", "The file failed to save");
-        else QMessageBox::information(this, "Success", "Dataset saved successfully");
+        if (!ok){
+            DisplayWarning("Dataset Not Saved", "The file failed to save");
+        }
+        else{
+            QMessageBox::information(this, "Success", "Dataset saved successfully");
+            workspace_->set_directory(QFileInfo(filename).absolutePath());
+        }
     }
+    workspace_->set_directory(QFileInfo(filename).absolutePath());
 }
 
 void MainWindow::on_actionOpenDataset_triggered()
@@ -1397,6 +1403,7 @@ void MainWindow::on_actionOpenDataset_triggered()
         while (workspace_->dataset_names().contains(dataset->name()))
             dataset->SetName(name + "(" + QString::number(count++) + ")");
         workspace_->AddDataset(dataset);
+        workspace_->set_directory(QFileInfo(filename).absolutePath());
     }
     else{
         DisplayWarning("Dataset Loading Error", "The dataset file could not be loaded");
@@ -1585,3 +1592,18 @@ void MainWindow::on_actionEstimate_Dimensionality_triggered()
         dialog->show();
     }
 }
+
+void MainWindow::on_actionRename_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
+    QString new_name = QInputDialog::getText(this, "Rename Dataset", "New Name",
+                                             QLineEdit::Normal,
+                                             dataset->name());
+    if (!workspace_->dataset_names().contains(new_name))
+        dataset->SetName(new_name);
+    else
+        QMessageBox::warning(this, "Duplicate Name",
+                             "The selected name is already in use");
+}
+
