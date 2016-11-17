@@ -109,6 +109,7 @@
     <addaction name="separator"/>
     <addaction name="actionNew_Composite_Dataset"/>
     <addaction name="separator"/>
+    <addaction name="actionRename"/>
     <addaction name="actionClose_Dataset"/>
    </widget>
    <widget class="QMenu" name="menuMap">
@@ -780,6 +781,11 @@
   <action name="actionEstimate_Dimensionality">
    <property name="text">
     <string>Estimate Dimensionality</string>
+   </property>
+  </action>
+  <action name="actionRename">
+   <property name="text">
+    <string>Rename</string>
    </property>
   </action>
  </widget>
