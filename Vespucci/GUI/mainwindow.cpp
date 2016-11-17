@@ -1585,3 +1585,18 @@ void MainWindow::on_actionEstimate_Dimensionality_triggered()
         dialog->show();
     }
 }
+
+void MainWindow::on_actionRename_triggered()
+{
+    TreeItem *item = dataset_tree_model_->getItem(ui->datasetTreeView->currentIndex());
+    QSharedPointer<VespucciDataset> dataset = workspace_->GetDataset(item->DatasetKey());
+    QString new_name = QInputDialog::getText(this, "Rename Dataset", "New Name",
+                                             QLineEdit::Normal,
+                                             dataset->name());
+    if (!workspace_->dataset_names().contains(new_name))
+        dataset->SetName(new_name);
+    else
+        QMessageBox::warning(this, "Duplicate Name",
+                             "The selected name is already in use");
+}
+
