@@ -246,6 +246,8 @@ private slots:
 
     void on_actionEstimate_Dimensionality_triggered();
 
+    void on_actionRename_triggered();
+
 private:
     void CloseDataset(const QString &name);
     Ui::MainWindow *ui;

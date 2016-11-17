@@ -16,7 +16,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>k-Means Image</string>
+   <string>k-Means</string>
   </property>
   <layout class="QFormLayout" name="formLayout">
    <item row="0" column="0">
@@ -30,7 +30,7 @@
     <widget class="QLineEdit" name="nameLineEdit">
      <property name="font">
       <font>
-       <pointsize>12</pointsize>
+       <pointsize>13</pointsize>
       </font>
      </property>
      <property name="text">
@@ -49,7 +49,7 @@
     <widget class="QComboBox" name="partitionComboBox">
      <property name="font">
       <font>
-       <pointsize>12</pointsize>
+       <pointsize>13</pointsize>
       </font>
      </property>
      <item>
@@ -80,7 +80,7 @@
     <widget class="QComboBox" name="metricComboBox">
      <property name="font">
       <font>
-       <pointsize>12</pointsize>
+       <pointsize>13</pointsize>
       </font>
      </property>
      <item>
@@ -109,7 +109,7 @@
     <widget class="QSpinBox" name="clustersSpinBox">
      <property name="font">
       <font>
-       <pointsize>12</pointsize>
+       <pointsize>13</pointsize>
       </font>
      </property>
      <property name="minimum">
