@@ -1369,9 +1369,15 @@ void MainWindow::on_actionSave_Dataset_triggered()
                                                 "Vespucci Dataset (*.h5)");
     if (!filename.isEmpty()){
         bool ok = dataset->Save(filename);
-        if (!ok) DisplayWarning("Dataset Not Saved", "The file failed to save");
-        else QMessageBox::information(this, "Success", "Dataset saved successfully");
+        if (!ok){
+            DisplayWarning("Dataset Not Saved", "The file failed to save");
+        }
+        else{
+            QMessageBox::information(this, "Success", "Dataset saved successfully");
+            workspace_->set_directory(QFileInfo(filename).absolutePath());
+        }
     }
+    workspace_->set_directory(QFileInfo(filename).absolutePath());
 }
 
 void MainWindow::on_actionOpenDataset_triggered()
@@ -1397,6 +1403,7 @@ void MainWindow::on_actionOpenDataset_triggered()
         while (workspace_->dataset_names().contains(dataset->name()))
             dataset->SetName(name + "(" + QString::number(count++) + ")");
         workspace_->AddDataset(dataset);
+        workspace_->set_directory(QFileInfo(filename).absolutePath());
     }
     else{
         DisplayWarning("Dataset Loading Error", "The dataset file could not be loaded");
