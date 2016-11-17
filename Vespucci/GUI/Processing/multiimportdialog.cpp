@@ -98,23 +98,28 @@ void MultiImportDialog::on_buttonBox_accepted()
 
     arma::mat spectra;
     arma::vec x, y, abscissa;
-    bool ok = TextImport::ImportMultiplePoints(filename_map,
-                                               rows, cols,
-                                               spectra,
-                                               abscissa,
-                                               x, y);
-    if (!ok)
-        QMessageBox::warning(this, "Import Failure", "Import of at least one file failed, or no abscissa present in any file.");
+    bool ok;
+    try{
+        ok = TextImport::ImportMultiplePoints(filename_map,
+                                              rows, cols,
+                                              spectra,
+                                              abscissa,
+                                              x, y);
+        if (!ok)
+            QMessageBox::warning(this, "Import Failure", "Import of at least one file failed, or no abscissa present in any file.");
 
-    else{
-        QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename_map,
-                                                                    workspace_->main_window(),
-                                                                    workspace_->directory_ptr(),
-                                                                    name,
-                                                                    x_axis_description,
-                                                                    y_axis_description,
-                                                                    rows, cols));
-        workspace_->AddDataset(dataset);
+        else{
+            QSharedPointer<VespucciDataset> dataset(new VespucciDataset(filename_map,
+                                                                        workspace_->main_window(),
+                                                                        workspace_->directory_ptr(),
+                                                                        name,
+                                                                        x_axis_description,
+                                                                        y_axis_description,
+                                                                        rows, cols));
+            workspace_->AddDataset(dataset);
+        }
+    }catch (exception e){
+        workspace_->main_window()->DisplayExceptionWarning(e);
     }
 
 }
