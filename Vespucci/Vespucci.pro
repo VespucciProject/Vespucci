@@ -26,9 +26,7 @@
 #On macOS, all other prerequisites are installed and linked using homebrew
 #On Linux, all other prerequisites are installed using apt (Ubuntu 14.04 LTS)
 
-QT       += core gui
-QT       += widgets printsupport
-QT       += svg
+QT       += core gui widgets printsupport svg network
 CONFIG   += static debug_and_release
 
 # Set the installation directory

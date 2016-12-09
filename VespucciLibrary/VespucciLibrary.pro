@@ -18,9 +18,7 @@
 ################################################################################
 ##############               LibVespucci Qt Profile               ##############
 ################################################################################
-QT       += core gui
-QT       += widgets printsupport
-QT       += svg
+QT       += core gui widgets printsupport svg
 CONFIG   += shared debug_and_release c++11
 #previously we handled this as a framework, but we're building dylib files now
 #mac: CONFIG += lib_bundle

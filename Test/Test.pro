@@ -2,10 +2,7 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= app_bundle
 CONFIG += test
-QT += testlib
-QT += widgets
-QT += printsupport
-QT += svg
+QT += testlib widgets printsupport svg
 
 SOURCES += \
     testfileio.cpp \
