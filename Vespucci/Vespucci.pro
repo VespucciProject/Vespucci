@@ -160,7 +160,8 @@ SOURCES += main.cpp\
     Data/Analysis/abstractdataanalyzer.cpp \
     Data/Analysis/matrixanalyzer.cpp \
     Data/Analysis/metaanalyzer.cpp \
-    GUI/Processing/binarizedialog.cpp
+    GUI/Processing/binarizedialog.cpp \
+    Global/tcprequesthandler.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -240,7 +241,8 @@ HEADERS  += \
     GUI/Analysis/dimensionalityestimationdialog.h \
     Data/Analysis/matrixanalyzer.h \
     Data/Analysis/metaanalyzer.h \
-    GUI/Processing/binarizedialog.h
+    GUI/Processing/binarizedialog.h \
+    Global/tcprequesthandler.h
 
 
 FORMS    += \
