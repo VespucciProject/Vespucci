@@ -162,7 +162,8 @@ SOURCES += main.cpp\
     Data/Analysis/abstractdataanalyzer.cpp \
     Data/Analysis/matrixanalyzer.cpp \
     Data/Analysis/metaanalyzer.cpp \
-    GUI/Processing/binarizedialog.cpp
+    GUI/Processing/binarizedialog.cpp \
+    GUI/Display/mapresizedialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -242,7 +243,8 @@ HEADERS  += \
     GUI/Analysis/dimensionalityestimationdialog.h \
     Data/Analysis/matrixanalyzer.h \
     Data/Analysis/metaanalyzer.h \
-    GUI/Processing/binarizedialog.h
+    GUI/Processing/binarizedialog.h \
+    GUI/Display/mapresizedialog.h
 
 
 FORMS    += \
@@ -299,7 +301,8 @@ FORMS    += \
     GUI/Analysis/metaanalysisdialog.ui \
     GUI/Processing/datasetextractordialog.ui \
     GUI/Analysis/dimensionalityestimationdialog.ui \
-    GUI/Processing/binarizedialog.ui
+    GUI/Processing/binarizedialog.ui \
+    GUI/Display/mapresizedialog.ui
 
 RESOURCES += \
     resources.qrc
