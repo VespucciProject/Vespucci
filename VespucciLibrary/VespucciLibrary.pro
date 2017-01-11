@@ -37,23 +37,7 @@ TEMPLATE = lib
 DEFINES += VESPUCCI_LIBRARY
 
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
-unix:!macx: QMAKE_CXXFLAGS += -std=c++0x \
-                        -fopenmp \
-                        -isystem "/usr/local/include" \
-                        -isystem "/usr/local/include/armadillo_bits" \
-                        -isystem "/usr/local/include/boost" \
-                        -isystem "/usr/include/mlpack" \
-                        -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/include" \
-                        -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.1/Rcpp/include" \
-                        -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.1/RInside/include" \
-                        -isystem "/usr/share/R/include" \
-                        -isystem /usr/include \
-                        -isystem /usr/local/include \
-                        -isystem /usr/local/include/cminpack-1 \
-                        -isystem /usr/local/opt/libxml2/include/libxml2 \
-                        -isystem $$PWD/../../Vespucci-QCP-sharedlib/include \
-                        -isystem $$PWD/include
-#Warnings in boost library not suppressed with -isystem in Clang++. These are always
+unix:!macx: QMAKE_CXXFLAGS += -std=c++0x -fopenmp
 macx: QMAKE_CXXFLAGS = -mmacosx-version-min=10.7 -std=c++11 -stdlib=libc++
 macx: QMAKE_CXXFLAGS_WARN_ON = -Wall -Wno-unused-parameter
 
@@ -150,11 +134,11 @@ DEPENDPATH += $$PWD/include
 unix:!macx{
     QMAKE_CXXFLAGS_RELEASE -= -O2
     QMAKE_CXXFLAGS_RELEASE += -O3
-    QMAKE_CXXFLAGS_DEBUG -= -O2
-    QMAKE_CXXFLAGS_DEBUG += -Og
     CONFIG += c++11 staticlib
     CONFIG -= shared
-    QMAKE_CXXFLAGS += -fPIC -fext-numeric-literals -fopenmp
+    QMAKE_CXXFLAGS += -fopenmp
+    linux-g++: QMAKE_CXXFLAGS += -fPIC -fext-numeric-literals
+
     QMAKE_LFLAGS += -fopenmp
     QMAKE_RPATHDIR += $$(QTDIR)/lib
     LIBS += -L$$PWD/../../Vespucci_dependencies/mlpack/lib -lmlpack
@@ -172,23 +156,20 @@ unix:!macx{
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_program_options
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_program_options.a
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_program_options
+    PRE_TARGETDEPS += $(BOOST_LIB_DIR)/libboost_program_options.a
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_math_c99
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.a
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_math_c99
+    PRE_TARGETDEPS +=$(BOOST_LIB_DIR)/libboost_math_c99.a
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_random
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_random.a
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_random
+    PRE_TARGETDEPS += $(BOOST_LIB_DIR)/libboost_random.a
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_serialization
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_serialization.a
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_serialization
+    PRE_TARGETDEPS += $(BOOST_LIB_DIR)/libboost_serialization.a
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_unit_test_framework
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.a
-
-    INCLUDEPATH += /usr/include
-    DEPENDPATH += /usr/include
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_unit_test_framework
+    PRE_TARGETDEPS += $(BOOST_LIB_DIR)/libboost_unit_test_framework.a
 
     INCLUDEPATH += /usr/include/libxml2
     DEPENDPATH += /usr/include/libxml2
