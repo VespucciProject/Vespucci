@@ -29,7 +29,6 @@ MapPlot::MapPlot(QWidget *parent)
     vertical_crosshair_->setPen(crosshair_pen);
     horizontal_crosshair_->setPen(crosshair_pen);
 
-
     addItem(vertical_crosshair_);
     addItem(horizontal_crosshair_);
 
@@ -105,6 +104,12 @@ void MapPlot::SetMapData(const vec &x, const vec &y, const vec &z)
 
     xAxis->setRange(x_axis_range);
     yAxis->setRange(y_axis_range);
+
+    color_scale_->axis()->setNumberPrecision(3);
+    if (z_.max() > 1000 || z_.max() < 0.01)
+        color_scale_->axis()->setNumberFormat("ebc");
+    else
+        color_scale_->axis()->setNumberFormat("gbc");
     replot(QCustomPlot::rpImmediate);
 }
 

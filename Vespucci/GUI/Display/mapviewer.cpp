@@ -21,6 +21,7 @@
 #include "ui_mapviewer.h"
 #include "Global/vespucci.h"
 #include "Global/global.h"
+#include "GUI/Display/mapresizedialog.h"
 
 ///
 /// \brief MapViewer::MapViewer
@@ -277,3 +278,9 @@ void MapViewer::on_actionCenter_Color_Scale_at_0_triggered()
     ui->mapPlot->CenterAtZero();
 }
 
+
+void MapViewer::on_actionSet_Size_triggered()
+{
+    MapResizeDialog *dialog = new MapResizeDialog(this, ui->mapPlot);
+    dialog->show();
+}

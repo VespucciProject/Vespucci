@@ -83,6 +83,8 @@ private slots:
 
     void on_actionCenter_Color_Scale_at_0_triggered();
 
+    void on_actionSet_Size_triggered();
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void showEvent(QShowEvent *event);

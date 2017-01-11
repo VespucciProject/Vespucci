@@ -21,6 +21,7 @@
 #define MAPRESIZEDIALOG_H
 
 #include <QDialog>
+#include "GUI/Display/mapplot.h"
 
 namespace Ui {
 class MapResizeDialog;
@@ -37,9 +38,14 @@ public:
 private slots:
     void on_unitComboBox_currentTextChanged(const QString &arg1);
 
+    void on_buttonBox_accepted();
+
 private:
     Ui::MapResizeDialog *ui;
     MapPlot *plot_;
+    QSize current_size_;
+    QString current_units_;
+    QScreen *screen_;
 };
 
 #endif // MAPRESIZEDIALOG_H
