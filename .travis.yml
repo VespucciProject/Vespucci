@@ -21,6 +21,7 @@ env:
 
 install:
 - cd $TRAVIS_BUILD_DIR/../
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export BOOST_LIB_DIR=/usr/lib/x86_64-linux-gnu fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x $TRAVIS_BUILD_DIR/getlinuxdeps.sh
   && $TRAVIS_BUILD_DIR/getlinuxdeps.sh; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt56/bin/qt56-env.sh; fi
