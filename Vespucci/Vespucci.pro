@@ -307,14 +307,14 @@ unix:!macx{
     LIBS += -L$$PWD/../../Vespucci_dependencies/armadillo/lib -larmadillo
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/armadillo/lib/libarmadillo.a
 
-
-    equals($(TRAVIS), "true"){
+    TRAVIS = $$(TRAVIS)
+    !isEmpty(TRAVIS){
         LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib/ -lhdf5
         PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/hdf5/lib/libhdf5.a
         LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib/ -lhdf5_cpp
         PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/hdf5/lib/libhdf5_cpp.a
     }
-    !equals($(TRAVIS), "true"){
+    isEmpty(TRAVIS){
         LIBS += -L$$PWD/usr/lib/ -lhdf5
         LIBS += -L$$PWD/usr/lib/ -lhdf5_cpp
     }
