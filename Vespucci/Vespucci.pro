@@ -307,9 +307,8 @@ unix:!macx{
     LIBS += -L$$PWD/../../Vespucci_dependencies/armadillo/lib -larmadillo
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/armadillo/lib/libarmadillo.a
 
-    LIBS += -L$$PWD/usr/lib/ -lhdf5
-    LIBS += -L$$PWD/usr/lib/ -lhdf5_cpp
-
+    LIBS += -L/usr/lib/ -lhdf5
+    LIBS += -L/usr/lib/ -lhdf5_cpp
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
 
