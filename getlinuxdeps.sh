@@ -13,3 +13,8 @@ sudo apt-get -y install libarpack2-dev
 sudo apt-get -y install libxml2-dev
 sudo apt-get -y install libboost1.55-all-dev
 sudo apt-get -y install zlib1g zlib1g-dev
+wget https://support.hdfgroup.org/ftp/HDF5/current18/bin/linux-centos6-x86_64-gcc447/hdf5-1.8.18-linux-centos6-x86_64-gcc447-shared.tar.gz
+tar xvf hdf5-1.8.18-linux-centos6-x86_64-gcc447-shared.tar.gz
+cd hdf5-1.8.18-linux-centos6-x86_64-gcc447-shared
+sudo cp include/* /usr/include
+sudo cp lib/* /usr/lib

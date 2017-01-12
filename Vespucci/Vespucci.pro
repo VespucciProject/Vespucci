@@ -308,16 +308,16 @@ unix:!macx{
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/armadillo/lib/libarmadillo.a
 
 
-    equals($(TRAVIS), "true"){
+    #equals($(TRAVIS), "true"){
         LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib/ -lhdf5
         PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/hdf5/lib/libhdf5.a
         LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib/ -lhdf5_cpp
         PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/hdf5/lib/libhdf5_cpp.a
-    }
-    !equals($(TRAVIS), "true"){
-        LIBS += -L$$PWD/usr/lib/ -lhdf5
-        LIBS += -L$$PWD/usr/lib/ -lhdf5_cpp
-    }
+    #}
+    #!equals($(TRAVIS), "true"){
+    #    LIBS += -L$$PWD/usr/lib/ -lhdf5
+    #    LIBS += -L$$PWD/usr/lib/ -lhdf5_cpp
+    #}
 
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
