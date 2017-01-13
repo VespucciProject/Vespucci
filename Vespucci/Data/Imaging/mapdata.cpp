@@ -158,10 +158,7 @@ void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation, int
     int value_size = map_qcp_->valueSize();
     key_size *= 9;
     value_size *= 9;
-    map_qcp_->resize(key_size, value_size);
-    key_size +=50;
-    value_size +=50;
-    map_display_->resize(key_size, value_size);
+    map_qcp_->axisRect()->setMinimumSize(key_size, value_size);
 }
 
 ///
