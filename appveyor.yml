@@ -39,16 +39,3 @@ test: off
 artifacts:
 - path: Vespucci_w64_$(appveyor_build_number).zip
   name: Vespucci_w64_$(appveyor_build_number).zip
-- path: build_log_$(appveyor_build_number).zip
-  name: build_log_$(appveyor_build_number).zip
-deploy:
-- provider: BinTray
-  username: dpfoose
-  api_key:
-    secure: FOepYUlmZT0mXi85jjP9GpQABCfSygozdgH4ujjvolc7w9j0cOI7CS8Ukw8SAMKi
-  subject: vespucciproject
-  repo: Vespucci_automated_builds
-  package: Vespucci_latest
-  version: 1.0.0
-  artifact: Vespucci_w64_$(appveyor_build_number).zip
-  publish: true

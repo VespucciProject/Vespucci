@@ -147,7 +147,8 @@ SOURCES += main.cpp\
     Data/Analysis/abstractdataanalyzer.cpp \
     Data/Analysis/matrixanalyzer.cpp \
     Data/Analysis/metaanalyzer.cpp \
-    GUI/Processing/binarizedialog.cpp
+    GUI/Processing/binarizedialog.cpp \
+    GUI/Display/mapresizedialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -227,7 +228,8 @@ HEADERS  += \
     GUI/Analysis/dimensionalityestimationdialog.h \
     Data/Analysis/matrixanalyzer.h \
     Data/Analysis/metaanalyzer.h \
-    GUI/Processing/binarizedialog.h
+    GUI/Processing/binarizedialog.h \
+    GUI/Display/mapresizedialog.h
 
 
 FORMS    += \
@@ -284,7 +286,8 @@ FORMS    += \
     GUI/Analysis/metaanalysisdialog.ui \
     GUI/Processing/datasetextractordialog.ui \
     GUI/Analysis/dimensionalityestimationdialog.ui \
-    GUI/Processing/binarizedialog.ui
+    GUI/Processing/binarizedialog.ui \
+    GUI/Display/mapresizedialog.ui
 
 RESOURCES += \
     resources.qrc
@@ -304,18 +307,8 @@ unix:!macx{
     LIBS += -L$$PWD/../../Vespucci_dependencies/armadillo/lib -larmadillo
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/armadillo/lib/libarmadillo.a
 
-
-    equals($(TRAVIS), "true"){
-        LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib/ -lhdf5
-        PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/hdf5/lib/libhdf5.a
-        LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib/ -lhdf5_cpp
-        PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/hdf5/lib/libhdf5_cpp.a
-    }
-    !equals($(TRAVIS), "true"){
-        LIBS += -L$$PWD/usr/lib/ -lhdf5
-        LIBS += -L$$PWD/usr/lib/ -lhdf5_cpp
-    }
-
+    LIBS += -L/usr/lib/ -lhdf5
+    LIBS += -L/usr/lib/ -lhdf5_cpp
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
 
