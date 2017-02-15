@@ -161,7 +161,9 @@ SOURCES += main.cpp\
     Data/Analysis/matrixanalyzer.cpp \
     Data/Analysis/metaanalyzer.cpp \
     GUI/Processing/binarizedialog.cpp \
-    Global/tcprequesthandler.cpp
+    Global/tcprequesthandler.cpp \
+    GUI/Processing/textimportdialog.cpp \
+    GUI/QAbstractItemModel/filetablemodel.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -242,7 +244,9 @@ HEADERS  += \
     Data/Analysis/matrixanalyzer.h \
     Data/Analysis/metaanalyzer.h \
     GUI/Processing/binarizedialog.h \
-    Global/tcprequesthandler.h
+    Global/tcprequesthandler.h \
+    GUI/Processing/textimportdialog.h \
+    GUI/QAbstractItemModel/filetablemodel.h
 
 
 FORMS    += \
@@ -299,7 +303,8 @@ FORMS    += \
     GUI/Analysis/metaanalysisdialog.ui \
     GUI/Processing/datasetextractordialog.ui \
     GUI/Analysis/dimensionalityestimationdialog.ui \
-    GUI/Processing/binarizedialog.ui
+    GUI/Processing/binarizedialog.ui \
+    GUI/Processing/textimportdialog.ui
 
 RESOURCES += \
     resources.qrc
