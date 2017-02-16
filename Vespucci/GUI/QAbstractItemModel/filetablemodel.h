@@ -3,12 +3,12 @@
 
 #include <QAbstractTableModel>
 
-class filetablemodel : public QAbstractTableModel
+class FileTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
-    explicit filetablemodel(QObject *parent = 0);
+    explicit FileTableModel(QObject *parent = 0);
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
