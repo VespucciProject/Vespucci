@@ -1,5 +1,5 @@
  /*******************************************************************************
-    Copyright (C) 2014-2016 Wright State University - All Rights Reserved
+    Copyright (C) 2014-2017 Wright State University - All Rights Reserved
     Daniel P. Foose - Maintainer/Lead Developer
 
     This file is part of Vespucci.
