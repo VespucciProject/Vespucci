@@ -7,7 +7,7 @@ set(DIRS
     Normalization
     PeakFinding
     Quantification
-    Smoothying
+    Smoothing
     Stats
     Transform
 )

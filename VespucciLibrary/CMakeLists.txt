@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 2.8.5)
 project(libvespucci C CXX)
-enable_cxx11() #c'mon its ${CURRENT_YEAR} already
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
 
 # If using clang, we have to link against libc++ depending on the
@@ -32,7 +31,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
   # Link everything with -lm.
   set(COMPILER_SUPPORT_LIBRARIES ${COMPILER_SUPPORT_LIBRARIES} "m")
-  set(MLPACK_LIBRARIES ${MLPACK_LIBRARIES} "m")
+  set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} "m")
 endif()
 
 # Debugging CFLAGS.  Turn optimizations off; turn debugging symbols on.
@@ -52,9 +51,9 @@ if(DEBUG)
     find_package(LibDL)
     if(LIBBFD_FOUND AND LIBDL_FOUND)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -rdynamic")
-      set(MLPACK_INCLUDE_DIRS ${MLPACK_INCLUDE_DIRS} ${LIBBFD_INCLUDE_DIRS}
+      set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} ${LIBBFD_INCLUDE_DIRS}
           ${LIBDL_INCLUDE_DIRS})
-      set(MLPACK_LIBRARIES ${MLPACK_LIBRARIES} ${LIBBFD_LIBRARIES}
+      set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} ${LIBBFD_LIBRARIES}
           ${LIBDL_LIBRARIES})
       add_definitions(-DHAS_BFD_DL)
     else()
@@ -146,11 +145,11 @@ set(LIBVESPUCCI_LIBRARY_DIRS ${LIBVESPUCCI_LIBRARY_DIRS} ${Boost_LIBRARY_DIRS})
 
 find_package(Qt5 
     COMPONENTS
-     core
-     gui
-     widgets
-     printsupport
-     svg
+     Core
+     Gui
+     Svg
+     Widgets
+     PrintSupport
      REQUIRED
 )
 
@@ -233,7 +232,7 @@ set (DIRS
 set (LIBVESPUCCI_INSTALL_DIRS
     ${CMAKE_CURRENT_SRC_DIR}/include
 )
-foreach(dir ${DIRS}}
+foreach(dir ${DIRS})
     add_subdirectory(${dir})
 endforeach()
 
@@ -253,16 +252,15 @@ add_custom_target(vespucci_headers)
 add_custom_command(TARGET vespucci_headers POST_BUILD
     COMMENT "Moving header files to include/Vespucci"
     COMMAND ${CMAKE_COMMAND} ARGS -E
-    make_directory ${CMAKE_BINARY_DIR}/include/Vespucci)
+      make_directory ${CMAKE_BINARY_DIR}/include/Vespucci)
 # copy the subdirs
-foreach(dir ${LIBVESPUCCI_INSTALL_DIRS})
-  COMMAND ${CMAKE_COMMAND} ARGS -E
-      copy ${dir} ${CMAKE_BINARY_DIR}/include/Vespucci/${dir}
-endforeach()
+add_custom_command(TARGET vespucci_headers POST_BUILD
+        COMMAND ${CMAKE_COMMAND} ARGS -E
+        copy ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}/include/Vespucci)
 
 #install the files
 install(DIRECTORY ${CMAKE_BINARY_DIR}/include/Vespucci DESTINATION include)
 install (TARGETS vespucci
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib)
-add_dependencies(Vespucci)
+add_dependencies(vespucci vespucci_headers) 
