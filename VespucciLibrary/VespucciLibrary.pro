@@ -1,4 +1,4 @@
-#    Copyright (C) 2015 Daniel P. Foose - All Rights Reserved
+#    Copyright (C) 2014-2017 Wright State Univserity - All Rights Reserved
 
 #    This file is part of Vespucci.
 
