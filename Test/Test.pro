@@ -40,7 +40,9 @@ HEADERS += test.h \
 unix:!macx{
     #QMAKE_CXX=/usr/bin/g++-4.9
     CONFIG += c++11
-    QMAKE_CXXFLAGS += -fext-numeric-literals -fopenmp
+    QMAKE_CXXFLAGS += -fopenmp
+    linux-g++: QMAKE_CXXFLAGS += -fext-numeric-literals
+
     QMAKE_RPATHDIR += $$(QTDIR)/lib
     QMAKE_LFLAGS += -fopenmp
  
@@ -59,20 +61,20 @@ unix:!macx{
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
     
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_program_options
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_program_options.a
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_program_options
+    PRE_TARGETDEPS += $(BOOST_LIB_DIR)/libboost_program_options.a
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_math_c99
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.a
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_math_c99
+    PRE_TARGETDEPS +=$(BOOST_LIB_DIR)/libboost_math_c99.a
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_random
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_random.a
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_random
+    PRE_TARGETDEPS += $(BOOST_LIB_DIR)/libboost_random.a
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_serialization
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_serialization.a
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_serialization
+    PRE_TARGETDEPS += $(BOOST_LIB_DIR)/libboost_serialization.a
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_unit_test_framework
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.a
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_unit_test_framework
+    PRE_TARGETDEPS += $(BOOST_LIB_DIR)/libboost_unit_test_framework.a
 
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/yaml-cpp/lib -lyaml-cpp
@@ -93,9 +95,6 @@ unix:!macx{
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/libemf/include/libemf
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/libemf/include/libemf
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/libemf/lib/libEMF.a
-
-    INCLUDEPATH += /usr/include
-    DEPENDPATH += /usr/include
 
     INCLUDEPATH += /usr/include/libxml2
     DEPENDPATH += /usr/include/libxml2

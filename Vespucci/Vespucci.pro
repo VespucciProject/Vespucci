@@ -46,22 +46,7 @@ for(somelib, $$list($$LIBS_USED_FOR_QT)) {
 mac: QMAKE_CXXFLAGS += -Wno-inconsistent-missing-override
 
 #Boost, MLPACK, and Armadillo have code that produces warnings. Change the directory as appropriate.
-unix:!macx: QMAKE_CXXFLAGS += -std=c++0x \
-                        -isystem "/usr/local/include" \
-                        -isystem "/usr/local/include/armadillo_bits" \
-                        -isystem "/usr/local/include/boost" \
-                        -isystem "/usr/include/mlpack" \
-                        -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.1/RcppArmadillo/include" \
-                        -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.1/Rcpp/include" \
-                        -isystem "/home/dan/x86_64-pc-linux-gnu-library/3.1/RInside/include" \
-                        -isystem "/usr/share/R/include" \
-                        -isystem /usr/include \
-                        -isystem /usr/local/include \
-                        -isystem /usr/local/include/cminpack-1 \
-                        -isystem /usr/local/opt/libxml2/include/libxml2 \
-                        -isystem $$PWD/../../Vespucci-QCP-sharedlib/include \
-                        -isystem $$PWD/include \
-                        -DARMA_DONT_USE_WRAPPER
+unix:!macx: QMAKE_CXXFLAGS += -std=c++0x -DARMA_DONT_USE_WRAPPER
 mac: QMAKE_CXXFLAGS =  -mmacosx-version-min=10.7 \
                        -stdlib=libc++ -std=c++11 \
                        --system-header-prefix=/usr/ \
@@ -164,6 +149,7 @@ SOURCES += main.cpp\
     Global/tcprequesthandler.cpp \
     GUI/Processing/textimportdialog.cpp \
     GUI/QAbstractItemModel/filetablemodel.cpp
+    GUI/Display/mapresizedialog.cpp
 
 HEADERS  += \
     GUI/mainwindow.h \
@@ -247,6 +233,7 @@ HEADERS  += \
     Global/tcprequesthandler.h \
     GUI/Processing/textimportdialog.h \
     GUI/QAbstractItemModel/filetablemodel.h
+    GUI/Display/mapresizedialog.h
 
 
 FORMS    += \
@@ -305,6 +292,7 @@ FORMS    += \
     GUI/Analysis/dimensionalityestimationdialog.ui \
     GUI/Processing/binarizedialog.ui \
     GUI/Processing/textimportdialog.ui
+    GUI/Display/mapresizedialog.ui
 
 RESOURCES += \
     resources.qrc
@@ -315,47 +303,41 @@ DEPENDPATH += $$PWD/../VespucciLibrary/include
 
 unix:!macx{
     CONFIG += c++11
-    QMAKE_CXXFLAGS += -fext-numeric-literals -fopenmp
+    QMAKE_CXXFLAGS += -fopenmp
+    linux-g++: QMAKE_CXXFLAGS += -fext-numeric-literals
     QMAKE_LFLAGS += -fopenmp
     QMAKE_RPATHDIR += $$(QTDIR)/lib
     LIBS += -L$$PWD/../../Vespucci_dependencies/mlpack/lib -lmlpack
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/mlpack/lib/libmlpack.a
     LIBS += -L$$PWD/../../Vespucci_dependencies/armadillo/lib -larmadillo
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/armadillo/lib/libarmadillo.a
-    LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib -lhdf5
-    LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib -lhdf5_cpp
-    LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib -lz
-    LIBS += -L$$PWD/../../Vespucci_dependencies/hdf5/lib -lsz
-    
 
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/hdf5/lib/libhdf5.a
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/hdf5/lib/libhdf5_cpp.a
-    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/hdf5/include
-    DEPENDPATH += $$PWD/../../Vespucci_dependencies/hdf5/include
+    LIBS += -L/usr/lib/ -lhdf5
+    LIBS += -L/usr/lib/ -lhdf5_cpp
     LIBS += -L/usr/lib -lblas
     LIBS += -L/usr/lib -llapack
-    
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_program_options
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_program_options.a
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_math_c99
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_math_c99.a
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_program_options
+    PRE_TARGETDEPS += $(BOOST_LIB_DIR)/libboost_program_options.a
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_random
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_random.a
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_math_c99
+    PRE_TARGETDEPS +=$(BOOST_LIB_DIR)/libboost_math_c99.a
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_serialization
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_serialization.a
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_random
+    PRE_TARGETDEPS += $(BOOST_LIB_DIR)/libboost_random.a
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_unit_test_framework
-    PRE_TARGETDEPS += /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.a
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_serialization
+    PRE_TARGETDEPS += $(BOOST_LIB_DIR)/libboost_serialization.a
+
+    LIBS += -L$(BOOST_LIB_DIR) -lboost_unit_test_framework
+    PRE_TARGETDEPS += $(BOOST_LIB_DIR)/libboost_unit_test_framework.a
 
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/yaml-cpp/lib -lyaml-cpp
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/yaml-cpp/lib/libyaml-cpp.a
     
     LIBS += -L$$OUT_PWD/../VespucciLibrary -lvespucci
-    PRE_TARGETDEPTS += $$OUT_PWD/../VespucciLibrary/libvespucci.a
+    PRE_TARGETDEPS += $$OUT_PWD/../VespucciLibrary/libvespucci.a
     LIBS += -L/usr/lib/ -lz
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/EmfEngine/lib/ -lEmfEngine
@@ -369,9 +351,6 @@ unix:!macx{
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/libemf/include/libemf
     DEPENDPATH += $$PWD/../../Vespucci_dependencies/libemf/include/libemf
     PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/libemf/lib/libEMF.a
-
-    INCLUDEPATH += /usr/include
-    DEPENDPATH += /usr/include
 
     INCLUDEPATH += /usr/include/libxml2
     DEPENDPATH += /usr/include/libxml2
@@ -522,6 +501,9 @@ win32:!win32-g++{
 
     RC_ICONS=$$PWD/vespuccilogo.ico
 }
+
+
+
 
 
 
