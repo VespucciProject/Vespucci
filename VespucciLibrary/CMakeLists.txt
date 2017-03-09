@@ -153,9 +153,18 @@ find_package(Qt5
      REQUIRED
 )
 
-set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} ${Qt5_INCLUDE_DIRS})
-set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} ${Qt5_LIBRARIES})
-set(LIBVESPUCCI_LIBRARY_DIRS ${LIBVESPUCCI_LIBRARY_DIRS} ${Qt5_LIBRARY_DIRS})
+set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} 
+    ${Qt5Core_INCLUDE_DIRS}
+    ${Qt5Gui_INCLUDE_DIRS}
+    ${Qt5Svg_INCLUDE_DIRS}
+    ${Qt5Widgets_INCLUDE_DIRS}
+    ${Qt5PrintSupport_INCLUDE_DIRS})
+set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} 
+    ${Qt5Core_LIBRARIES}
+    ${Qt5Gui_LIBRARIES}
+    ${Qt5Svg_LIBRARES}
+    ${Qt5Widgets_LIBRARIES}
+    ${Qt5PrintSupport_LIBRARIES})
 
 # Detect OpenMP support in a compiler. If the compiler supports OpenMP, flags
 # to compile with OpenMP are returned and added and the HAS_OPENMP definition is
@@ -167,7 +176,7 @@ set(LIBVESPUCCI_LIBRARY_DIRS ${LIBVESPUCCI_LIBRARY_DIRS} ${Qt5_LIBRARY_DIRS})
 #   ... openMP code here ...
 # }
 # #endif
-find_package(OpenMP)
+find_package(OpenMP REQUIRED)
 if (OPENMP_FOUND)
   add_definitions(-DHAS_OPENMP)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
@@ -254,12 +263,13 @@ add_custom_command(TARGET vespucci_headers POST_BUILD
     COMMAND ${CMAKE_COMMAND} ARGS -E
       make_directory ${CMAKE_BINARY_DIR}/include/Vespucci)
 # copy the subdirs
-add_custom_command(TARGET vespucci_headers POST_BUILD
-        COMMAND ${CMAKE_COMMAND} ARGS -E
-        copy ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}/include/Vespucci)
-
+foreach(dir ${CMAKE_SOURCE_DIR}/include)
+    add_custom_command(TARGET vespucci_headers POST_BUILD
+            COMMAND ${CMAKE_COMMAND} ARGS -E
+            copy ${dir} ${CMAKE_BINARY_DIR}/include/Vespucci)
+endforeach()
 #install the files
-install(DIRECTORY ${CMAKE_BINARY_DIR}/include/Vespucci DESTINATION include)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION include/Vespucci)
 install (TARGETS vespucci
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib)
