@@ -26,9 +26,7 @@
 #On macOS, all other prerequisites are installed and linked using homebrew
 #On Linux, all other prerequisites are installed using apt (Ubuntu 14.04 LTS)
 
-QT       += core gui
-QT       += widgets printsupport
-QT       += svg
+QT       += core gui widgets printsupport svg network
 CONFIG   += static debug_and_release
 
 # Set the installation directory
@@ -148,6 +146,9 @@ SOURCES += main.cpp\
     Data/Analysis/matrixanalyzer.cpp \
     Data/Analysis/metaanalyzer.cpp \
     GUI/Processing/binarizedialog.cpp \
+    Global/tcprequesthandler.cpp \
+    GUI/Processing/textimportdialog.cpp \
+    GUI/QAbstractItemModel/filetablemodel.cpp
     GUI/Display/mapresizedialog.cpp
 
 HEADERS  += \
@@ -229,6 +230,9 @@ HEADERS  += \
     Data/Analysis/matrixanalyzer.h \
     Data/Analysis/metaanalyzer.h \
     GUI/Processing/binarizedialog.h \
+    Global/tcprequesthandler.h \
+    GUI/Processing/textimportdialog.h \
+    GUI/QAbstractItemModel/filetablemodel.h
     GUI/Display/mapresizedialog.h
 
 
@@ -287,6 +291,7 @@ FORMS    += \
     GUI/Processing/datasetextractordialog.ui \
     GUI/Analysis/dimensionalityestimationdialog.ui \
     GUI/Processing/binarizedialog.ui \
+    GUI/Processing/textimportdialog.ui
     GUI/Display/mapresizedialog.ui
 
 RESOURCES += \
