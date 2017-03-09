@@ -20,7 +20,7 @@
 #ifndef MAPVIEWER_H
 #define MAPVIEWER_H
 
-#include <QMainWindow>
+#include <QDialog>
 #include "Data/Imaging/mapdata.h"
 #include "GUI/Display/mapplot.h"
 #include "GUI/Display/scalebardialog.h"
@@ -42,7 +42,7 @@ class MapPlot;
 ///
 /// \brief The MapViewer class
 /// Displays the image created by MapData
-class MapViewer : public QMainWindow
+class MapViewer : public QDialog
 {
     Q_OBJECT
 public:
@@ -82,6 +82,8 @@ private slots:
     void on_actionSet_Global_Color_Scale_triggered();
 
     void on_actionCenter_Color_Scale_at_0_triggered();
+
+    void on_actionSet_Size_triggered();
 
 protected:
     void keyPressEvent(QKeyEvent *event);

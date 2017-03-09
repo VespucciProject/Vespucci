@@ -21,6 +21,7 @@
 #include "ui_mapviewer.h"
 #include "Global/vespucci.h"
 #include "Global/global.h"
+#include "GUI/Display/mapresizedialog.h"
 
 ///
 /// \brief MapViewer::MapViewer
@@ -29,7 +30,7 @@
 /// \param parent MapData associated with this image
 /// Constructor for this object
 MapViewer::MapViewer(MainWindow *parent, QStringList map_keys, QSharedPointer<VespucciWorkspace> ws):
-    QMainWindow(parent), ui(new Ui::MapViewer), map_keys_(map_keys)
+    QDialog(parent), ui(new Ui::MapViewer), map_keys_(map_keys)
 
 {
     ui->setupUi(this);
@@ -277,3 +278,9 @@ void MapViewer::on_actionCenter_Color_Scale_at_0_triggered()
     ui->mapPlot->CenterAtZero();
 }
 
+
+void MapViewer::on_actionSet_Size_triggered()
+{
+    MapResizeDialog *dialog = new MapResizeDialog(this, ui->mapPlot);
+    dialog->show();
+}
