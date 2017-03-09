@@ -3,11 +3,11 @@ wget https://github.com/VespucciProject/Vespucci_dependencies/releases/download/
 tar xvf Vespucci_dependencies_linux.tar.gz
 sudo apt-add-repository -y ppa:ubuntu-sdk-team
 sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
-sudo apt-add-repository -y ppa:beineri/opt-qt57-trusty
+sudo add-apt-repository -y ppa:beineri/opt-qt58-trusty
 sudo apt-get -y update
 sudo apt-get -y install g++-4.9 build-essential
-sudo apt-get -y install qt57base qt57tools qt57imageformats 
-sudo apt-get -y install qt57location qt57declarative libsqlite3-dev qt57svg
+sudo apt-get -y install qt58base qt58tools qt58imageformats 
+sudo apt-get -y install qt58location qt58declarative libsqlite3-dev qt58svg
 sudo apt-get -y install mesa-common-dev freeglut3.dev
 sudo apt-get -y install libarpack2-dev
 sudo apt-get -y install libxml2-dev
