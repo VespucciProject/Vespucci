@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MapViewer</class>
- <widget class="QMainWindow" name="MapViewer">
+ <widget class="QDialog" name="MapViewer">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>400</height>
+    <width>436</width>
+    <height>274</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,52 +24,66 @@
   <property name="windowTitle">
    <string>Map Viewer</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="MapPlot" name="mapPlot" native="true"/>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>500</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuMap">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="actionSave_Image_As"/>
-   </widget>
-   <widget class="QMenu" name="menuDisplay">
-    <property name="title">
-     <string>Display</string>
-    </property>
-    <addaction name="actionReproportion"/>
-    <addaction name="actionReset_Size"/>
-    <addaction name="actionLock_Size"/>
-    <addaction name="separator"/>
-    <addaction name="actionInterpolate"/>
-    <addaction name="actionShow_Axes"/>
-    <addaction name="actionShow_Color_Scale"/>
-    <addaction name="separator"/>
-    <addaction name="actionSet_Global_Color_Scale"/>
-    <addaction name="actionSet_Color_Scale_Label"/>
-    <addaction name="actionAdd_Scale_Bar"/>
-    <addaction name="actionSet_Color_Scheme"/>
-    <addaction name="actionSet_Font"/>
-    <addaction name="separator"/>
-    <addaction name="actionCenter_Color_Scale_at_0"/>
-   </widget>
-   <addaction name="menuMap"/>
-   <addaction name="menuDisplay"/>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QMenuBar" name="menubar">
+     <widget class="QMenu" name="menuMap">
+      <property name="title">
+       <string>File</string>
+      </property>
+      <addaction name="actionSave_Image_As"/>
+     </widget>
+     <widget class="QMenu" name="menuDisplay">
+      <property name="title">
+       <string>Display</string>
+      </property>
+      <addaction name="actionReproportion"/>
+      <addaction name="actionReset_Size"/>
+      <addaction name="actionSet_Size"/>
+      <addaction name="actionLock_Size"/>
+      <addaction name="separator"/>
+      <addaction name="actionInterpolate"/>
+      <addaction name="actionShow_Axes"/>
+      <addaction name="actionShow_Color_Scale"/>
+      <addaction name="separator"/>
+      <addaction name="actionSet_Global_Color_Scale"/>
+      <addaction name="actionSet_Color_Scale_Label"/>
+      <addaction name="actionAdd_Scale_Bar"/>
+      <addaction name="actionSet_Color_Scheme"/>
+      <addaction name="actionSet_Font"/>
+      <addaction name="separator"/>
+      <addaction name="actionCenter_Color_Scale_at_0"/>
+     </widget>
+     <addaction name="menuMap"/>
+     <addaction name="menuDisplay"/>
+    </widget>
+   </item>
+   <item>
+    <widget class="MapPlot" name="mapPlot" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>200</width>
+       <height>200</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QStatusBar" name="statusbar"/>
+   </item>
+  </layout>
   <action name="actionSave_Image_As">
    <property name="text">
     <string>Save Image As...</string>
@@ -197,6 +211,11 @@
    </property>
    <property name="text">
     <string>Center Color Scale at 0</string>
+   </property>
+  </action>
+  <action name="actionSet_Size">
+   <property name="text">
+    <string>Set Size</string>
    </property>
   </action>
  </widget>

@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Vespucci Project @ Wright State University");
     QCoreApplication::setOrganizationDomain("vespucciproject.org");
     QCoreApplication::setApplicationName("Vespucci");
-    QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
+    //QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
     QApplication a(argc, argv);
 
     QSharedPointer<VespucciWorkspace> ws(new VespucciWorkspace(a.applicationDirPath()));
