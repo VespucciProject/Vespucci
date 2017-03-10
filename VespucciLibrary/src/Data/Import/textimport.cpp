@@ -20,12 +20,10 @@
 #include <Data/Import/textimport.h>
 #include <Global/vespucci.h>
 #include <regex>
-#include <QtCore>
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 #include <string>
 #include <iostream>
-#include <regex>
 
 using namespace arma;
 ///
@@ -34,52 +32,53 @@ using namespace arma;
 /// \param comma_decimals
 /// \return
 ///
-bool TextImport::CheckFileValidity(QString filename, bool &comma_decimals)
+bool TextImport::CheckFileValidity(std::string filename, bool &comma_decimals)
 {
-    QFile inputfile(filename);
-    inputfile.open(QIODevice::ReadOnly);
-    QTextStream inputstream(&inputfile);
-    QString line = inputstream.readLine();
-    QStringList tab_list = line.split("\t");
-    QStringList comma_list = line.split(",");
-    bool valid;
-
-    if(tab_list.size() <= 0 && comma_list.size() <= 0){
+    std::ifstream filestream(filename);
+    std::string line;
+    std::getline(filestream, line);
+    std::getline(filestream, line); //start from second line in case of single line header
+    std::regex comma(",");
+    std::regex tab("\\t");
+    std::sregex_token_iterator tab_it(line.begin(), line.end(), tab, -1);
+    std::sregex_token_iterator comma_it(line.begin(), line.end(), comma, -1);
+    std::sregex_token_iterator end;
+    unsigned int tab_count = std::distance(tab_it, end);
+    unsigned int comma_count = std::distance(comma_it, end);
+    if(tab_count <= 0 && comma_count <= 0){
         return false;
     }
-    else if(tab_list.size() > 0 && comma_list.size() > 0){
+    else if(tab_count > 0 && comma_count > 0){
         //we probably have a tab delimited file with commas for decimal points
         //import function will probabably throw exception if comma is separator
         //and type is wide text, so comma_decimals must be checked
         comma_decimals = true;
         return true;
     }
-    else if(tab_list.size() > 0 && comma_list.size() == 0){
+    else if(tab_count > 0 && comma_count == 0){
         comma_decimals = false;
-        for (int i = 0; i < tab_list.size(); ++i){
-            tab_list[i].toDouble(&valid);
-            if(!valid)
-                return false;
+        while(tab_it != end){
+            try{
+                double x = boost::lexical_cast<double>(*tab_it);
+                tab_it++;
+            }catch(...){return false;}
         }
         return true;
     }
-    else if(tab_list.size() == 0 && comma_list.size() > 0){
+    else if(tab_count == 0 && comma_count > 0){
         comma_decimals = false; //we don't know if this is true or not.
         //users using instruments that save csv files with local number formatting
         //in regions where commas are used for decimal places should be super
         //careful.
-        for (int i = 0; i < comma_list.size(); ++i){
-            comma_list[i].toDouble(&valid);
-            if(!valid)
-                return false;
+        while(comma_it != end){
+            try{
+                double x = boost::lexical_cast<double>(*comma_it);
+                comma_it++;
+            }catch(...){return false;}
         }
-        return true;
+       return true;
     }
-    else{
-        return false;
-    }
-
-
+    return false;
 }
 
 

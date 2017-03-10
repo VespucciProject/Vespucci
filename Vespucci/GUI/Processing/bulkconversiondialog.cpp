@@ -106,7 +106,7 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
     switch (intype){
       case wide_text:
         for(strvec_it it = infile_names.begin(); it!=infile_names.end(); ++it){
-            bool valid = TextImport::CheckFileValidity(QString::fromStdString(*it), comma_decimals);
+            bool valid = TextImport::CheckFileValidity(*it, comma_decimals);
 
             if (valid){
                 ok = TextImport::ImportWideText(*it,
