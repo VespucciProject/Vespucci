@@ -148,7 +148,8 @@ SOURCES += main.cpp\
     GUI/Processing/binarizedialog.cpp \
     Global/tcprequesthandler.cpp \
     GUI/Processing/textimportdialog.cpp \
-    GUI/QAbstractItemModel/filetablemodel.cpp
+    GUI/QAbstractItemModel/filetablemodel.cpp \
+    GUI/Display/mapresizedialog.cpp
     GUI/Display/mapresizedialog.cpp
 
 HEADERS  += \
@@ -232,7 +233,8 @@ HEADERS  += \
     GUI/Processing/binarizedialog.h \
     Global/tcprequesthandler.h \
     GUI/Processing/textimportdialog.h \
-    GUI/QAbstractItemModel/filetablemodel.h
+    GUI/QAbstractItemModel/filetablemodel.h \
+    GUI/Display/mapresizedialog.h
     GUI/Display/mapresizedialog.h
 
 
@@ -291,7 +293,8 @@ FORMS    += \
     GUI/Processing/datasetextractordialog.ui \
     GUI/Analysis/dimensionalityestimationdialog.ui \
     GUI/Processing/binarizedialog.ui \
-    GUI/Processing/textimportdialog.ui
+    GUI/Processing/textimportdialog.ui \
+    GUI/Display/mapresizedialog.ui
     GUI/Display/mapresizedialog.ui
 
 RESOURCES += \
