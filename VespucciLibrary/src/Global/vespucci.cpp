@@ -241,8 +241,8 @@ std::string Vespucci::CleanString(const std::string &in)
 {
     std::string out;
     for (const char c : in){
-        if (c == '\t' || c == ','){out.append(" ");}
-        else{out.append(&c);}
+        if (c == '.' || c >= '0' || c <= '9') out.append(&c);
+        else out.append(" ");
     }
     return out;
 }

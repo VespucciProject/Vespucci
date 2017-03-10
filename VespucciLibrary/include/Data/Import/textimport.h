@@ -59,7 +59,7 @@ namespace TextImport
                                      arma::vec &abscissa,
                                      arma::vec &x, arma::vec &y);
 
-    VESPUCCI_EXPORT bool CheckFileValidity(QString filename, bool &comma_decimals);
+    VESPUCCI_EXPORT bool CheckFileValidity(std::string filename, bool &comma_decimals);
 
     VESPUCCI_EXPORT void GenerateSpatialData(double x_start,
                                              double y_start,

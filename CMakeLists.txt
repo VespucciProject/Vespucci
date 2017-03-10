@@ -144,29 +144,6 @@ set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} ${Boost_LIBRARIES})
 set(LIBVESPUCCI_LIBRARY_DIRS ${LIBVESPUCCI_LIBRARY_DIRS} ${Boost_LIBRARY_DIRS})
 
-find_package(Qt5 
-    COMPONENTS
-     Core
-     Gui
-     Svg
-     Widgets
-     PrintSupport
-     REQUIRED
-)
-
-set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} 
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5Gui_INCLUDE_DIRS}
-    ${Qt5Svg_INCLUDE_DIRS}
-    ${Qt5Widgets_INCLUDE_DIRS}
-    ${Qt5PrintSupport_INCLUDE_DIRS})
-set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} 
-    ${Qt5Core_LIBRARIES}
-    ${Qt5Gui_LIBRARIES}
-    ${Qt5Svg_LIBRARES}
-    ${Qt5Widgets_LIBRARIES}
-    ${Qt5PrintSupport_LIBRARIES})
-
 # Detect OpenMP support in a compiler. If the compiler supports OpenMP, flags
 # to compile with OpenMP are returned and added and the HAS_OPENMP definition is
 # added for compilation.
@@ -217,6 +194,29 @@ set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} ${MLPACK_INCLUDE_DIR})
 set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} ${MLPACK_LIBRARY})
 
 if (BUILD_GUI)
+    find_package(Qt5 
+        COMPONENTS
+         Core
+         Gui
+         Svg
+         Widgets
+         PrintSupport
+         REQUIRED
+    )
+
+    set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} 
+        ${Qt5Core_INCLUDE_DIRS}
+        ${Qt5Gui_INCLUDE_DIRS}
+        ${Qt5Svg_INCLUDE_DIRS}
+        ${Qt5Widgets_INCLUDE_DIRS}
+        ${Qt5PrintSupport_INCLUDE_DIRS})
+    set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} 
+        ${Qt5Core_LIBRARIES}
+        ${Qt5Gui_LIBRARIES}
+        ${Qt5Svg_LIBRARES}
+        ${Qt5Widgets_LIBRARIES}
+        ${Qt5PrintSupport_LIBRARIES})
+
     find_path(EMFENGINE_INCLUDE_DIR
         NAMES EmfEngine.h emfengine.h
         PATHS /usr/include /usr/local/include /usr /usr/local
