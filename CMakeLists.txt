@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(vespucci C CXX)
+project(vespucci CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
 option(BUILD_GUI "Build the GUI application, set to OFF to build only Library" ON)
 option(BUILD_SHARED_LIBS "Build shared libraries (.so, .dll, .dylib)" ON)
@@ -196,7 +196,9 @@ set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} ${ARMADILLO_LIBRARIES})
 # The PATHS variable may be specified to give hints for where to find core.hpp.
 find_path(MLPACK_INCLUDE_DIR
   NAMES core.hpp prereqs.hpp
-  PATHS "$ENV{ProgramFiles}/mlpack/" /usr/local/include/
+  PATHS "$ENV{ProgramFiles}/mlpack/" 
+         /usr/local/include/
+         ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/mlpack
   REQUIRED
 )
 
@@ -205,7 +207,9 @@ find_path(MLPACK_INCLUDE_DIR
 # an MLPACK_LIBRARIES variable instead.
 find_library(MLPACK_LIBRARY
   NAMES mlpack
-  PATHS "$ENV{ProgramFiles}/mlpack/" /usr/lib64/ /usr/lib/ /usr/local/lib64/ /usr/local/
+  PATHS "$ENV{ProgramFiles}/mlpack/"
+         ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/mlpack
+         /usr/lib64/ /usr/lib/ /usr/local/lib64/ /usr/local/
   REQUIRED
 )
 
@@ -216,6 +220,7 @@ if (BUILD_GUI)
     find_path(EMFENGINE_INCLUDE_DIR
         NAMES EmfEngine.h emfengine.h
         PATHS /usr/include /usr/local/include /usr /usr/local
+              ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/EmfEngine
         REQUIRED
     )
 
