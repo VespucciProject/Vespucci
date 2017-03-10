@@ -33,12 +33,15 @@ Compiling Vespucci:
 -------------------
 Compiling Vespucci from source is not the easiest but still possible. Look at 
 .travis.yml for linux and mac builds and appveyor.yml for windows builds.
-
+Vespucci can be built using two different build systems, [CMake](https://cmake.org)
+ and [QMake](http://doc.qt.io/qt-5/qmake-manual.html). You will most likely have to
+ edit the .pro file to get qmake to work. CMake should work relatively easily.
 Vespucci has the following prerequisites:
 * Qt 5.5+
 * Armadillo (with BLAS/LAPACK and HDF5)
 * mlpack
 * yaml-cpp
+* EmfEngineGPL
 
 Look at the scripts used by .travis.yml and appveyor.yml to figure out how to
 build on your platform.
