@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(vespucci C CXX)
+project(vespucci CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
 option(BUILD_GUI "Build the GUI application, set to OFF to build only Library" ON)
 option(BUILD_SHARED_LIBS "Build shared libraries (.so, .dll, .dylib)" ON)
@@ -144,29 +144,6 @@ set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} ${Boost_LIBRARIES})
 set(LIBVESPUCCI_LIBRARY_DIRS ${LIBVESPUCCI_LIBRARY_DIRS} ${Boost_LIBRARY_DIRS})
 
-find_package(Qt5 
-    COMPONENTS
-     Core
-     Gui
-     Svg
-     Widgets
-     PrintSupport
-     REQUIRED
-)
-
-set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} 
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5Gui_INCLUDE_DIRS}
-    ${Qt5Svg_INCLUDE_DIRS}
-    ${Qt5Widgets_INCLUDE_DIRS}
-    ${Qt5PrintSupport_INCLUDE_DIRS})
-set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} 
-    ${Qt5Core_LIBRARIES}
-    ${Qt5Gui_LIBRARIES}
-    ${Qt5Svg_LIBRARES}
-    ${Qt5Widgets_LIBRARIES}
-    ${Qt5PrintSupport_LIBRARIES})
-
 # Detect OpenMP support in a compiler. If the compiler supports OpenMP, flags
 # to compile with OpenMP are returned and added and the HAS_OPENMP definition is
 # added for compilation.
@@ -196,7 +173,9 @@ set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} ${ARMADILLO_LIBRARIES})
 # The PATHS variable may be specified to give hints for where to find core.hpp.
 find_path(MLPACK_INCLUDE_DIR
   NAMES core.hpp prereqs.hpp
-  PATHS "$ENV{ProgramFiles}/mlpack/" /usr/local/include/
+  PATHS "$ENV{ProgramFiles}/mlpack/" 
+         /usr/local/include/
+         ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/mlpack
   REQUIRED
 )
 
@@ -205,7 +184,9 @@ find_path(MLPACK_INCLUDE_DIR
 # an MLPACK_LIBRARIES variable instead.
 find_library(MLPACK_LIBRARY
   NAMES mlpack
-  PATHS "$ENV{ProgramFiles}/mlpack/" /usr/lib64/ /usr/lib/ /usr/local/lib64/ /usr/local/
+  PATHS "$ENV{ProgramFiles}/mlpack/"
+         ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/mlpack
+         /usr/lib64/ /usr/lib/ /usr/local/lib64/ /usr/local/
   REQUIRED
 )
 
@@ -213,9 +194,33 @@ set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} ${MLPACK_INCLUDE_DIR})
 set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} ${MLPACK_LIBRARY})
 
 if (BUILD_GUI)
+    find_package(Qt5 
+        COMPONENTS
+         Core
+         Gui
+         Svg
+         Widgets
+         PrintSupport
+         REQUIRED
+    )
+
+    set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} 
+        ${Qt5Core_INCLUDE_DIRS}
+        ${Qt5Gui_INCLUDE_DIRS}
+        ${Qt5Svg_INCLUDE_DIRS}
+        ${Qt5Widgets_INCLUDE_DIRS}
+        ${Qt5PrintSupport_INCLUDE_DIRS})
+    set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} 
+        ${Qt5Core_LIBRARIES}
+        ${Qt5Gui_LIBRARIES}
+        ${Qt5Svg_LIBRARES}
+        ${Qt5Widgets_LIBRARIES}
+        ${Qt5PrintSupport_LIBRARIES})
+
     find_path(EMFENGINE_INCLUDE_DIR
         NAMES EmfEngine.h emfengine.h
         PATHS /usr/include /usr/local/include /usr /usr/local
+              ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/EmfEngine
         REQUIRED
     )
 
