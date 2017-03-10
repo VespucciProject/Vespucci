@@ -1,4 +1,4 @@
-#    Copyright (C) 2015 Daniel P. Foose - All Rights Reserved
+#    Copyright (C) 2014-2017 Wright State Univserity - All Rights Reserved
 
 #    This file is part of Vespucci.
 
@@ -18,9 +18,7 @@
 ################################################################################
 ##############               LibVespucci Qt Profile               ##############
 ################################################################################
-QT       += core gui
-QT       += widgets printsupport
-QT       += svg
+QT       += core gui widgets printsupport svg
 CONFIG   += shared debug_and_release c++11
 #previously we handled this as a framework, but we're building dylib files now
 #mac: CONFIG += lib_bundle
