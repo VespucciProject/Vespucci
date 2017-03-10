@@ -197,6 +197,7 @@ set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} ${ARMADILLO_LIBRARIES})
 find_path(MLPACK_INCLUDE_DIR
   NAMES core.hpp prereqs.hpp
   PATHS "$ENV{ProgramFiles}/mlpack/" /usr/local/include/
+  REQUIRED
 )
 
 # Find libmlpack.so (or equivalent) and store it in MLPACK_LIBRARY.
@@ -205,13 +206,37 @@ find_path(MLPACK_INCLUDE_DIR
 find_library(MLPACK_LIBRARY
   NAMES mlpack
   PATHS "$ENV{ProgramFiles}/mlpack/" /usr/lib64/ /usr/lib/ /usr/local/lib64/ /usr/local/
+  REQUIRED
 )
 
 set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} ${MLPACK_INCLUDE_DIR})
 set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} ${MLPACK_LIBRARY})
- 
 
+if (BUILD_GUI)
+    find_path(EMFENGINE_INCLUDE_DIR
+        NAMES EmfEngine.h emfengine.h
+        PATHS /usr/include /usr/local/include /usr /usr/local
+        REQUIRED
+    )
 
+    find_library(EMFENGINE_LIBRARY
+        NAMES emfengine
+        PATHS /usr/lib64 /usr/lib /usr/local/lib64 /usr/local/
+        ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/EmfEngine
+    )
+    set(VESPUCCI_INCLUDE_DIRS ${VESPUCCI_INCLUDE_DIRS} ${EMFENGINE_INCLUDE_DIR})
+    set(VESPUCCI_LIBRARIES ${VESPUCCI_LIBRARIES} ${EMF_ENGINE_LIBRARY})
+
+    find_path(YAMLCPP_INCLUDE_DIR
+        NAMES yaml.h
+        PATHS ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/yaml-cpp
+              /usr/include /usr/local/include /usr /usr/local/
+    )
+    find_library(YAMLCPP_LIBRARY
+        NAMES libyaml-cpp
+        PATHS ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/yaml-cpp/lib
+              /usr/lib64 /usr/lib /usr/local/lib64 /usr/local)
+endif()
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${LIBVESPUCCI_INCLUDE_DIRS})
 include_directories(${CMAKE_SOURCE_DIR}/VespucciLibrary/include)
