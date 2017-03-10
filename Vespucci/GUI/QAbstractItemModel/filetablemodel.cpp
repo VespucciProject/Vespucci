@@ -19,7 +19,7 @@
 *******************************************************************************/
 #include "filetablemodel.h"
 
-FileTableModel::filetablemodel(QObject *parent)
+FileTableModel::FileTableModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
 }
