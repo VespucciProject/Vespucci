@@ -19,7 +19,7 @@
 *******************************************************************************/
 #ifndef DENOISE_H
 #define DENOISE_H
-#include "Global/libvespucci.h"
+#include "libvespucci.h"
 #include <mlpack/core.hpp>
 namespace Vespucci{
     namespace Math{

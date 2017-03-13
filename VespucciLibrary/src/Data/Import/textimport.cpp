@@ -17,8 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
-#include <Data/Import/textimport.h>
-#include <Global/vespucci.h>
+#include "Data/Import/textimport.h"
+#include "vespucci.h"
 #include <regex>
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>

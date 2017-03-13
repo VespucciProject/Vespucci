@@ -1,6 +1,5 @@
 set(DIRS
     Data
-    Global
     Math
 )
 

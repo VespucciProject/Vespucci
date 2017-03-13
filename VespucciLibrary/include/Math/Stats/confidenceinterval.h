@@ -20,7 +20,7 @@
 #ifndef CONFIDENCEINTERVAL_H
 #define CONFIDENCEINTERVAL_H
 #include <utility>
-#include "Global/libvespucci.h"
+#include "libvespucci.h"
 namespace Vespucci{
     namespace Math{
         namespace Stats{

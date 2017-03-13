@@ -21,7 +21,7 @@
 #define ACCESSORY_H
 #include <mlpack/core.hpp>
 #include "Math/Accessory/accessory_impl.h"
-#include "Global/libvespucci.h"
+#include "libvespucci.h"
 namespace Vespucci
 {
     namespace Math

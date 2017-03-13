@@ -20,7 +20,7 @@
 #ifndef NONLINLEASTSQ_H
 #define NONLINLEASTSQ_H
 #include <mlpack/core.hpp>
-#include "Global/libvespucci.h"
+#include "libvespucci.h"
 extern "C"
 {
     double GaussianFn(double t, const double *p);

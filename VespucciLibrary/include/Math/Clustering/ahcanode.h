@@ -19,7 +19,7 @@
 *******************************************************************************/
 #ifndef AHCANODE_H
 #define AHCANODE_H
-#include "Global/libvespucci.h"
+#include "libvespucci.h"
 #include <mlpack/core.hpp>
 namespace Vespucci{
     namespace Math{

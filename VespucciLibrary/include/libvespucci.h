@@ -1,10 +1,9 @@
 #ifndef LIBVESPUCCI_H
 #define LIBVESPUCCI_H
-#include <QtCore/QtGlobal>
 #ifdef VESPUCCI_LIBRARY
-#  define VESPUCCI_EXPORT Q_DECL_EXPORT
+#  define VESPUCCI_EXPORT __declspec(dllexport)
 #else
-#  define VESPUCCI_EXPORT Q_DECL_IMPORT
+#  define VESPUCCI_EXPORT 
 #endif
 
 #endif // LIBVESPUCCI_H
