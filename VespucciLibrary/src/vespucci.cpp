@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
-#include "Global/vespucci.h"
+#include "vespucci.h"
 #include <QtSvg>
 #include <cstdlib>
 #include <QProcess>

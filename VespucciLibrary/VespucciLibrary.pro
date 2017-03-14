@@ -72,7 +72,6 @@ SOURCES +=\
     src/Math/Transform/cwt.cpp \
     src/Math/PeakFinding/peakfinding.cpp \
     src/Math/Fitting/linleastsq.cpp \
-    src/Global/vespucci.cpp \
     src/Math/Transform/fft.cpp \
     src/Math/Quantification/correlation.cpp \
     src/Math/Quantification/quantification.cpp \
@@ -86,7 +85,8 @@ SOURCES +=\
     src/Math/Accessory/Faddeeva.cpp \
     src/Math/Baseline/rollingball.cpp \
     src/Math/Smoothing/denoise.cpp \
-    src/Math/Clustering/kmeanswrapper.cpp
+    src/Math/Clustering/kmeanswrapper.cpp \
+    src/vespucci.cpp
 
 
 HEADERS  += \
@@ -123,7 +123,10 @@ HEADERS  += \
     include/Math/Accessory/Faddeeva.h \
     include/Math/Baseline/rollingball.h \
     include/Math/Smoothing/denoise.h \
-    include/Math/Clustering/kmeanswrapper.h
+    include/Math/Clustering/kmeanswrapper.h \
+    include/vespucci.h \
+    include/libvespucci.h \
+    include/enums.h
 
 #For all platforms:
 INCLUDEPATH += $$PWD/include
