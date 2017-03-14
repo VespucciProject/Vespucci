@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
+set (CMAKE_CXX_STANDARD 11)
 project(vespucci CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
 option(BUILD_GUI "Build the GUI application, set to OFF to build only Library" ON)
