@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
+set (CMAKE_CXX_STANDARD 11)
 project(vespucci CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
 option(BUILD_GUI "Build the GUI application, set to OFF to build only Library" ON)
@@ -175,6 +176,9 @@ find_path(MLPACK_INCLUDE_DIR
   NAMES core.hpp prereqs.hpp
   PATHS "$ENV{ProgramFiles}/mlpack/" 
          /usr/local/include/
+         /usr/local/include/mlpack
+         /usr/include
+         /usr/include/mlpack
          ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/mlpack
   REQUIRED
 )
