@@ -175,6 +175,9 @@ find_path(MLPACK_INCLUDE_DIR
   NAMES core.hpp prereqs.hpp
   PATHS "$ENV{ProgramFiles}/mlpack/" 
          /usr/local/include/
+         /usr/local/include/mlpack
+         /usr/include
+         /usr/include/mlpack
          ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/mlpack
   REQUIRED
 )
