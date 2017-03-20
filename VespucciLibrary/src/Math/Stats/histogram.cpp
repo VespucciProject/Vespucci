@@ -40,5 +40,5 @@ arma::uvec Vespucci::Math::Stats::GenerateHistogram(const arma::mat &data,
 uint Vespucci::Math::Stats::EstimateBinCount(const arma::mat &data)
 {
     //Sturges' rule for finding bin counts automagically
-    return uint(std::round(1.0 + 3.332*std::log10((double(data.n_elem)))));
+    return uint(std::round(1.0 + 3.332*std::log10(double(data.n_elem)));
 }
