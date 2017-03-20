@@ -1,6 +1,6 @@
 #ifndef LIBVESPUCCI_H
 #define LIBVESPUCCI_H
-#ifdef VESPUCCI_LIBRARY
+#ifdef _WIN32 || _WIN64
 #  define VESPUCCI_EXPORT __declspec(dllexport)
 #else
 #  define VESPUCCI_EXPORT 
