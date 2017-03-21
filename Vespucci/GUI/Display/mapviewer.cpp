@@ -19,7 +19,7 @@
 *******************************************************************************/
 #include "GUI/Display/mapviewer.h"
 #include "ui_mapviewer.h"
-#include "Global/vespucci.h"
+#include "vespucci.h"
 #include "Global/global.h"
 #include "GUI/Display/mapresizedialog.h"
 

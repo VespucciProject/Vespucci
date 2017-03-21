@@ -19,7 +19,7 @@
 *******************************************************************************/
 #ifndef ANALYSISRESULTS_H
 #define ANALYSISRESULTS_H
-#include "Global/libvespucci.h"
+#include "libvespucci.h"
 #include "Math/VespucciMath.h"
 #include <QStringList>
 #include <QMap>

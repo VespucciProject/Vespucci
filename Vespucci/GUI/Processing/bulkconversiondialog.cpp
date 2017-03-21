@@ -130,7 +130,7 @@ vector<string> BulkConversionDialog::SaveFiles(vector<string> infile_names, stri
 
       case long_text:
         for(strvec_it it = infile_names.begin(); it!=infile_names.end(); ++it){
-            valid = TextImport::CheckFileValidity(QString::fromStdString(*it), comma_decimals);
+            valid = TextImport::CheckFileValidity(*it, comma_decimals);
 
             if (valid){
                 ok = TextImport::ImportLongText(*it,

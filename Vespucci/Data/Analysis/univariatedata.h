@@ -19,7 +19,7 @@
 *******************************************************************************/
 #ifndef UNIVARIATEDATA_H
 #define UNIVARIATEDATA_H
-#include "Global/enums.h"
+#include "enums.h"
 #include "Math/Quantification/quantification.h"
 #include "Data/Analysis/analysisresults.h"
 class UnivariateData: public AnalysisResults

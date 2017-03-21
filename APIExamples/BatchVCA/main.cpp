@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
-#include <Global/libvespucci.h>
+#include <libvespucci.h>
 
 #include <QCoreApplication>
 #include <QCommandLineParser>

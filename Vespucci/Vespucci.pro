@@ -414,11 +414,6 @@ macx{
 
     LIBS += -L/usr/local/lib -lhdf5
 
-    LIBS += -L$$PWD/../../quazip/lib/ -lquazip
-    INCLUDEPATH += $$PWD/../../quazip/include
-    DEPENDPATH += $$PWD/../../quazip/include
-    PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
-
     LIBS += -L$$PWD/../../yaml-cpp/lib/ -lyaml-cpp
     INCLUDEPATH += $$PWD/../../yaml-cpp/include
     DEPENDPATH += $$PWD/../../yaml-cpp/include
@@ -478,11 +473,6 @@ win32:!win32-g++{
 
     INCLUDEPATH += C:/Libraries/boost_1_60_0
     DEPENDPATH += C:/Libraries/boost_1_60_0
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/quazip/lib/ -lquazip
-    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/quazip/include
-    DEPENDPATH += $$PWD/../../Vespucci_dependencies/quazip/include
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/quazip/lib/quazip.lib
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/yaml-cpp/lib/ -llibyaml-cppmdd
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/yaml-cpp/include
