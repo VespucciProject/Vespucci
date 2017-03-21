@@ -5,6 +5,4 @@
 #else
 #  define VESPUCCI_EXPORT 
 #endif
-
 #endif // LIBVESPUCCI_H
-
