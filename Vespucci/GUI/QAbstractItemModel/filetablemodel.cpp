@@ -27,6 +27,7 @@ FileTableModel::FileTableModel(QObject *parent)
 QVariant FileTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     // FIXME: Implement me!
+    return QVariant();
 }
 
 int FileTableModel::rowCount(const QModelIndex &parent) const
@@ -59,6 +60,7 @@ bool FileTableModel::insertRows(int row, int count, const QModelIndex &parent)
     beginInsertRows(parent, row, row + count - 1);
     // FIXME: Implement me!
     endInsertRows();
+    return false;
 }
 
 bool FileTableModel::insertColumns(int column, int count, const QModelIndex &parent)
@@ -66,6 +68,7 @@ bool FileTableModel::insertColumns(int column, int count, const QModelIndex &par
     beginInsertColumns(parent, column, column + count - 1);
     // FIXME: Implement me!
     endInsertColumns();
+    return false;
 }
 
 bool FileTableModel::removeRows(int row, int count, const QModelIndex &parent)
@@ -73,6 +76,7 @@ bool FileTableModel::removeRows(int row, int count, const QModelIndex &parent)
     beginRemoveRows(parent, row, row + count - 1);
     // FIXME: Implement me!
     endRemoveRows();
+    return false;
 }
 
 bool FileTableModel::removeColumns(int column, int count, const QModelIndex &parent)
@@ -80,4 +84,5 @@ bool FileTableModel::removeColumns(int column, int count, const QModelIndex &par
     beginRemoveColumns(parent, column, column + count - 1);
     // FIXME: Implement me!
     endRemoveColumns();
+    return false;
 }
