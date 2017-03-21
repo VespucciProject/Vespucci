@@ -26,7 +26,7 @@ namespace Vespucci{
         namespace Stats{
             VESPUCCI_EXPORT arma::uvec GenerateHistogram(const arma::mat &data,
                                                         arma::vec &edges,
-                                                        uint bins = 0);
+                                                        unsigned int bins = 0);
             VESPUCCI_EXPORT unsigned int EstimateBinCount(const arma::mat &data);
 
         }
