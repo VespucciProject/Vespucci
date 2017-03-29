@@ -1039,3 +1039,30 @@ arma::mat Vespucci::Math::SafeRows(const arma::mat &x, arma::uword a, arma::uwor
     else if (a < x.n_rows) return x.rows(a, b);
     return x.row(x.n_rows - 1);
 }
+
+///
+/// \brief Vespucci::Math::HzChemShiftToPpm
+/// \param x
+/// \param frequency
+/// \return
+/// convert a chemical shift in Hz to a chemical shift in ppm
+arma::vec Vespucci::Math::HzChemShiftToPpm(const arma::vec &x, double frequency)
+{
+    return (1000000/frequency) * x;
+}
+
+///
+/// \brief Vespucci::Math::HzToChemShift
+/// \param x
+/// \param reference
+/// \return
+/// convert a raw frequency into a chemical shift based on a reference value
+arma::vec Vespucci::Math::HzToChemShift(const arma::vec &x, double reference)
+{
+    return x - reference * arma::ones(x.n_rows);
+}
+
+arma::vec Vespucci::Math::HzToPpmChemShift(const arma::vec &x, double reference, double frequency)
+{
+    return (1000000/frequency) * (x - reference * arma::ones(x.n_rows));
+}

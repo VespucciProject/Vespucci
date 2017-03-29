@@ -89,6 +89,10 @@ namespace Vespucci
         VESPUCCI_EXPORT arma::vec EnergyToWavelength(const arma::vec &x, double wl_factor, double energy_factor);
         VESPUCCI_EXPORT arma::vec EnergyToWavenumber(const arma::vec &x, double wn_factor, double energy_factor);
         VESPUCCI_EXPORT arma::vec WavenumberToEnergy(const arma::vec &x, double energy_factor, double wn_factor);
+        VESPUCCI_EXPORT arma::vec HzChemShiftToPpm(const arma::vec &x, double frequency);
+        VESPUCCI_EXPORT arma::vec HzToChemShift(const arma::vec &x, double reference);
+        VESPUCCI_EXPORT arma::vec HzToPpmChemShift(const arma::vec  &x,  double reference, double frequency);
+
 
 
         VESPUCCI_EXPORT bool AreEqual(const arma::vec &a, const arma::vec &b);

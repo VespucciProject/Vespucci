@@ -94,7 +94,7 @@ bool TextImport::CheckFileValidity(std::string filename, bool &comma_decimals)
 /// \return
 /// May throw exceptions or give improper results. Not intended for use in GUI
 /// programs. See textimportqpd.h in Vespucci
-bool TextImport::ImportWideText(std::string filename,
+bool TextImport::ImportWideText(const std::__cxx11::string &filename,
                                 arma::mat &spectra,
                                 arma::vec &abscissa,
                                 arma::vec &x, arma::vec &y,
@@ -239,7 +239,7 @@ bool TextImport::ImportMultiplePoints(std::map<std::pair<int, int>, std::string>
 /// \param y
 /// \return
 ///
-bool TextImport::ImportWitec(std::string filename,
+bool TextImport::ImportWitec(const std::__cxx11::string &filename,
                              double x_start,
                              double y_start,
                              double x_end,
@@ -308,7 +308,7 @@ void TextImport::GenerateSpatialData(double x_start, double y_start, double x_en
 /// \param swap_spatial
 /// \return
 ///
-bool TextImport::ImportLongText(std::string filename, arma::mat &spectra, arma::mat &abscissa, arma::vec &x, arma::vec &y, bool swap_spatial)
+bool TextImport::ImportLongText(const std::__cxx11::string &filename, arma::mat &spectra, arma::mat &abscissa, arma::vec &x, arma::vec &y, bool swap_spatial)
 {
     arma::mat all_data;
     try{
@@ -375,5 +375,58 @@ bool TextImport::ImportTxtXY(const std::string &filename, arma::vec &spectrum, a
         abscissa = data.col(0);
     }
     infile.close();
+    return ok;
+}
+///
+/// \brief TextImport::ImportText
+/// \param filename what it says on the tin
+/// \param spectra
+/// \param abscissa
+/// \param start_row row where beginning of data to record is. everything after thus should be only numerical
+/// \param abs_col column in the file that holds spectral abscissa (or row, if transpose is true)
+/// \param spec_col column in the file that holds spectrum. If plural is true, it is assumed that all subsequent columns also contain spectra
+/// \param transpose whether or not data is in rows instead of columns
+/// \param plural whether or not there are multiple spectra
+/// \return
+/// Read a spectrum or collection of spectra from a generic text file
+bool TextImport::ImportText(const std::string &filename,
+                            arma::mat &spectra,
+                            arma::vec &abscissa,
+                            arma::uword start_row,
+                            arma::uword abs_col,
+                            arma::uword spec_col,
+                            bool transpose, bool plural)
+{
+    std::ifstream infile(filename);
+    std::string line;
+    for (arma::uword i = 0; i < start_row; ++i) std::getline(infile, line); //advance to start of data
+    arma::mat temp;
+    bool ok = temp.load(infile);
+    if (ok){
+        try{
+            if (!plural && !transpose){
+                spectra = temp.col(spec_col);
+                abscissa = temp.col(abs_col);
+            }
+            else if (plural && !transpose){
+                spectra = temp.cols(spec_col, temp.n_cols - 1);
+                abscissa = temp.col(abs_col);
+            }
+            else if (!plural && transpose){
+                spectra = temp.row(spec_col).t();
+                abscissa = temp.row(abs_col).t();
+            }
+            else if (plural && transpose){
+                spectra = temp.rows(spec_col, temp.n_rows - 1).t();
+                abscissa = temp.row(abs_col).t();
+            }
+            else{
+                ok = false;
+            }
+
+        }catch(std::exception e){
+            ok = false;
+        }
+    }
     return ok;
 }
