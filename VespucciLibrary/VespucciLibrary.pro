@@ -63,9 +63,6 @@ SOURCES +=\
     src/Math/DimensionReduction/svds.cpp \
     src/Math/DimensionReduction/VCA.cpp \
     src/Math/Normalization/normalization.cpp \
-    src/Math/Quantification/bandwidth.cpp \
-    src/Math/Quantification/integration.cpp \
-    src/Math/Quantification/maximum.cpp \
     src/Math/Smoothing/FIR.cpp \
     src/Math/Smoothing/nonlinear.cpp \
     src/Math/Smoothing/whittaker.cpp \
@@ -109,9 +106,6 @@ HEADERS  += \
     include/Math/Smoothing/FIR.h \
     include/Math/Smoothing/whittaker.h \
     include/Math/Smoothing/nonlinear.h \
-    include/Math/Quantification/integration.h \
-    include/Math/Quantification/maximum.h \
-    include/Math/Quantification/bandwidth.h \
     include/Math/Quantification/correlation.h \
     include/Math/Stats/confidenceinterval.h \
     include/Math/PeakFinding/kernelpeakfinding.h \

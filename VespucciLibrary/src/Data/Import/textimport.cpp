@@ -59,7 +59,7 @@ bool TextImport::CheckFileValidity(std::string filename, bool &comma_decimals)
         comma_decimals = false;
         while(tab_it != end){
             try{
-                double x = boost::lexical_cast<double>(*tab_it);
+                boost::lexical_cast<double>(*tab_it);
                 tab_it++;
             }catch(...){return false;}
         }
@@ -72,7 +72,7 @@ bool TextImport::CheckFileValidity(std::string filename, bool &comma_decimals)
         //careful.
         while(comma_it != end){
             try{
-                double x = boost::lexical_cast<double>(*comma_it);
+                boost::lexical_cast<double>(*comma_it);
                 comma_it++;
             }catch(...){return false;}
         }
