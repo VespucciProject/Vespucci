@@ -30,11 +30,6 @@ public:
 
     void Apply(double left_bound, double right_bound,
                uword bound_window, const mat &spectra, const vec &abscissa);
-    void Apply(QString peak_shape,
-               double left_bound,
-               double right_bound,
-               const mat &spectra,
-               const vec &abscissa);
     void Apply(double first_left_bound, double first_right_bound,
                double second_left_bound, double second_right_bound,
                uword bound_window, const mat &spectra, const vec &abscissa);

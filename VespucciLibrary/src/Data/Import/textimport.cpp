@@ -22,6 +22,7 @@
 #include <regex>
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
+#include <fstream>
 #include <string>
 #include <iostream>
 
@@ -331,4 +332,48 @@ bool TextImport::ImportLongText(std::string filename, arma::mat &spectra, arma::
     abscissa = abscissa.rows(sorted_indices);
     spectra = spectra.rows(sorted_indices);
     return true;
+}
+
+///
+/// \brief TextImport::ImportTxtXY
+/// \param filename
+/// \param spectrum
+/// \param abscissa
+/// \param metadata
+/// \return
+/// Import data from a file in the .txtXY format. Metadata entries with keys but no values are not saved
+bool TextImport::ImportTxtXY(const std::string &filename, arma::vec &spectrum, arma::vec &abscissa, std::map<std::string, std::string> metadata)
+{
+    std::ifstream infile(filename);
+    std::string line;
+    std::regex re("[\\$:]+");
+    int pos = 0; //how many times to call getline
+    while(std::getline(infile, line)){
+        pos++;
+        //if line starts with a $, then we parse as metadata, else, we've reached begining of data
+        if (line.size() && line[0] == '$'){
+           std::sregex_token_iterator it(line.begin(), line.end(), re, -1);
+           std::sregex_token_iterator reg_end;
+           std::pair<std::string, std::string> entry;
+           if (it != reg_end){
+               entry.first = *it; //key starts with '$'
+               if (++it != reg_end){
+                   entry.second = *it; //value starts with ':'
+                   metadata.insert(entry);
+               }
+           }
+        }
+        else break; //the metadata entries have been read, load data from stream armadillo's way
+    }
+    infile.seekg(0, std::ios::beg);
+    --pos;
+    for (int i = 0; i < pos; ++i) std::getline(infile, line); //run back to line before last line
+    arma::mat data;
+    bool ok = data.load(infile);
+    if (ok){
+        spectrum = data.col(1);
+        abscissa = data.col(0);
+    }
+    infile.close();
+    return ok;
 }

@@ -68,29 +68,6 @@ void MetaAnalyzer::PeakStatistics(const QString &name, double &left_bound, doubl
     AddAnalysisResults(univariate_data, names);
 }
 
-void MetaAnalyzer::FitPeak(const QString &name, const QString &peak_shape, double &left_bound, double &right_bound)
-{
-    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name));
-    univariate_data->Apply(peak_shape, left_bound, right_bound, data_, abscissa_);
-    QStringList matrix_keys;
-    if (peak_shape == "Voigt"){
-        matrix_keys = QStringList({"Intensity",
-                                   "Area",
-                                   "Gaussian Full-Width at Half Maximum",
-                                   "Lorentzian Full-Width at Half Maximum",
-                                   "Full-Width at Half Maximum",
-                                   "Peak Centers",
-                                   "R²"});
-    }
-    else{
-        matrix_keys = QStringList({"Intensity",
-                                   "Area",
-                                   "Full-Width at Half Maximum",
-                                   "Peak Centers",
-                                   "R²"});
-    }
-    AddAnalysisResults(univariate_data, matrix_keys);
-}
 
 void MetaAnalyzer::BandRatio(const QString &name,
                              double &first_left_bound,

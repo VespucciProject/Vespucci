@@ -69,6 +69,10 @@ namespace TextImport
                                              arma::uword y_count,
                                              arma::vec &x,
                                              arma::vec &y);
+    VESPUCCI_EXPORT bool ImportTxtXY(const std::string &filename,
+                                     arma::vec &spectrum,
+                                     arma::vec &abscissa,
+                                     std::map<std::string, std::string> metadata);
 }
 
 #endif // TEXTIMPORT_H

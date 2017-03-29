@@ -47,57 +47,6 @@ void UnivariateData::Apply(double left_bound, double right_bound, uword bound_wi
     AddField("Inflection Baselines", inflection_baselines);
 }
 
-void UnivariateData::Apply(QString peak_shape,
-                           double left_bound,
-                           double right_bound,
-                           const mat &spectra,
-                           const vec &abscissa)
-{
-    mat results, baselines, fits, params, residuals;
-    if (peak_shape == "Gaussian")
-        results = Vespucci::Math::Quantification::FitGaussianPeakMat(spectra, abscissa, left_bound, right_bound, baselines, fits, params, residuals);
-    else if (peak_shape == "Lorentzian")
-        results = Vespucci::Math::Quantification::FitLorentzianPeakMat(spectra, abscissa,
-                                                                       left_bound, right_bound,
-                                                                       baselines,
-                                                                       fits,
-                                                                       params,
-                                                                       residuals);
-    else if (peak_shape == "Voigt")
-        results = Vespucci::Math::Quantification::FitVoigtPeakMat(spectra,
-                                                                  abscissa,
-                                                                  left_bound,
-                                                                  right_bound,
-                                                                  baselines,
-                                                                  fits,
-                                                                  params,
-                                                                  residuals);
-    else throw invalid_argument("UnivariateData::Apply: improper peak shape specified");
-
-    QStringList columns;
-    if (peak_shape == "Voigt"){
-        columns = QStringList({"Intensity",
-                              "Area",
-                              "Gaussian Full-Width at Half Maximum",
-                              "Lorentzian Full-Width at Half Maximum",
-                              "Full-Width at Half Maximum",
-                              "Peak Centers",
-                              "R²"});
-    }
-    else{
-        columns = QStringList({"Intensity",
-                              "Area",
-                              "Full-Width at Half Maximum",
-                              "Peak Centers",
-                              "R²"});
-    }
-    AddColumns(columns, results);
-    AddMatrix("Baselines", baselines);
-    AddMatrix("Fits", fits);
-    AddMatrix("Parameters", params);
-    AddMatrix("Residuals", residuals);
-}
-
 void UnivariateData::Apply(double first_left_bound, double first_right_bound, double second_left_bound, double second_right_bound, uword bound_window, const mat &spectra, const vec &abscissa)
 {
     mat first_baselines, second_baselines;
