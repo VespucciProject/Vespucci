@@ -73,7 +73,7 @@ namespace TextImport
     VESPUCCI_EXPORT bool ImportTxtXY(const std::string &filename,
                                      arma::vec &spectrum,
                                      arma::vec &abscissa,
-                                     std::map<std::string, std::string> metadata);
+                                     std::map<std::string, std::string> &metadata);
     VESPUCCI_EXPORT bool ImportText(const std::string &filename,
                                     arma::mat &spectra,
                                     arma::vec &abscissa,

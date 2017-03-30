@@ -1045,7 +1045,7 @@ arma::mat Vespucci::Math::SafeRows(const arma::mat &x, arma::uword a, arma::uwor
 /// \param x
 /// \param frequency
 /// \return
-/// convert a chemical shift in Hz to a chemical shift in ppm
+/// convert an NMR chemical shift in Hz to a chemical shift in ppm
 arma::vec Vespucci::Math::HzChemShiftToPpm(const arma::vec &x, double frequency)
 {
     return (1000000/frequency) * x;
@@ -1056,12 +1056,19 @@ arma::vec Vespucci::Math::HzChemShiftToPpm(const arma::vec &x, double frequency)
 /// \param x
 /// \param reference
 /// \return
-/// convert a raw frequency into a chemical shift based on a reference value
+/// convert a raw NMR frequency into a chemical shift based on a reference value
 arma::vec Vespucci::Math::HzToChemShift(const arma::vec &x, double reference)
 {
     return x - reference * arma::ones(x.n_rows);
 }
 
+///
+/// \brief Vespucci::Math::HzToPpmChemShift
+/// \param x
+/// \param reference
+/// \param frequency
+/// \return
+/// convert a raw NMR frequency into chemical shift in ppmf
 arma::vec Vespucci::Math::HzToPpmChemShift(const arma::vec &x, double reference, double frequency)
 {
     return (1000000/frequency) * (x - reference * arma::ones(x.n_rows));

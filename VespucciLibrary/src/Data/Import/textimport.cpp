@@ -342,28 +342,23 @@ bool TextImport::ImportLongText(const std::__cxx11::string &filename, arma::mat 
 /// \param metadata
 /// \return
 /// Import data from a file in the .txtXY format. Metadata entries with keys but no values are not saved
-bool TextImport::ImportTxtXY(const std::string &filename, arma::vec &spectrum, arma::vec &abscissa, std::map<std::string, std::string> metadata)
+bool TextImport::ImportTxtXY(const std::string &filename, arma::vec &spectrum, arma::vec &abscissa, std::map<std::__cxx11::string, std::__cxx11::string> &metadata)
 {
+
     std::ifstream infile(filename);
     std::string line;
-    std::regex re("[\\$:]+");
+    std::regex re(":");
     int pos = 0; //how many times to call getline
     while(std::getline(infile, line)){
-        pos++;
-        //if line starts with a $, then we parse as metadata, else, we've reached begining of data
-        if (line.size() && line[0] == '$'){
-           std::sregex_token_iterator it(line.begin(), line.end(), re, -1);
-           std::sregex_token_iterator reg_end;
-           std::pair<std::string, std::string> entry;
-           if (it != reg_end){
-               entry.first = *it; //key starts with '$'
-               if (++it != reg_end){
-                   entry.second = *it; //value starts with ':'
-                   metadata.insert(entry);
-               }
-           }
+        ++pos;
+        if (line[0] == '$'){
+            std::pair<std::string, std::string> entry;
+            std::sregex_token_iterator it(line.begin() + 1, line.end(), re, -1);
+            std::sregex_token_iterator reg_end;
+            if (it != reg_end && std::next(it) != reg_end)
+                metadata.insert({it->str(), std::next(it)->str()});
         }
-        else break; //the metadata entries have been read, load data from stream armadillo's way
+        else break;
     }
     infile.seekg(0, std::ios::beg);
     --pos;
