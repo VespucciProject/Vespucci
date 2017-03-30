@@ -342,7 +342,7 @@ bool TextImport::ImportLongText(const std::__cxx11::string &filename, arma::mat 
 /// \param metadata
 /// \return
 /// Import data from a file in the .txtXY format. Metadata entries with keys but no values are not saved
-bool TextImport::ImportTxtXY(const std::string &filename, arma::vec &spectrum, arma::vec &abscissa, std::map<std::__cxx11::string, std::__cxx11::string> &metadata)
+bool TextImport::ImportTxtXY(const std::string &filename, arma::vec &spectrum, arma::vec &abscissa, std::map<std::string, std::string> &metadata)
 {
 
     std::ifstream infile(filename);
