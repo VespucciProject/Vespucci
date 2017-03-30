@@ -59,6 +59,7 @@
 #include "GUI/Analysis/metaanalysisdialog.h"
 #include "GUI/Processing/datasetextractordialog.h"
 #include "GUI/Analysis/dimensionalityestimationdialog.h"
+#include "GUI/Processing/textimportdialog.h"
 ///
 /// \brief MainWindow::MainWindow
 /// \param parent usually 0
@@ -1121,7 +1122,8 @@ void MainWindow::on_actionCalculate_Peak_Populations_triggered()
 
 void MainWindow::on_actionImport_From_Multiple_Point_Spectra_triggered()
 {
-    MultiImportDialog *import_dialog = new MultiImportDialog(this, workspace_);
+    TextImportDialog *import_dialog = new TextImportDialog(this, workspace_);
+    //MultiImportDialog *import_dialog = new MultiImportDialog(this, workspace_);
     import_dialog->setAttribute(Qt::WA_DeleteOnClose);
     import_dialog->show();
 }
