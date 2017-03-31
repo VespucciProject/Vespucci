@@ -208,13 +208,13 @@ if (BUILD_GUI)
          REQUIRED
     )
 
-    set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} 
+    set(VESPUCCI_INCLUDE_DIRS ${VESPUCCI_INCLUDE_DIRS} 
         ${Qt5Core_INCLUDE_DIRS}
         ${Qt5Gui_INCLUDE_DIRS}
         ${Qt5Svg_INCLUDE_DIRS}
         ${Qt5Widgets_INCLUDE_DIRS}
         ${Qt5PrintSupport_INCLUDE_DIRS})
-    set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} 
+    set(VESPUCCI_LIBRARIES ${VESPUCCI_LIBRARIES} 
         ${Qt5Core_LIBRARIES}
         ${Qt5Gui_LIBRARIES}
         ${Qt5Svg_LIBRARES}
@@ -256,8 +256,8 @@ if (BUILD_GUI)
             ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/libemf/lib
             REQUIRED
         )
-    set(VESPUCCI_INCLUDE_DIRS ${VESPUCCI_INCLUDE_DIRS} ${LIBEMF_INCLUDE_DIR}
-        ${LIBEMF_INCLUDE_DIR}/..)
+        set(VESPUCCI_INCLUDE_DIRS ${VESPUCCI_INCLUDE_DIRS} ${LIBEMF_INCLUDE_DIR}
+            ${LIBEMF_INCLUDE_DIR}/..)
         set(VESPUCCI_LIBRARIES ${VESPUCCI_LIBRARIES} ${LIBEMF_LIBRARY})
     endif()
     find_path(YAMLCPP_INCLUDE_DIR
@@ -269,8 +269,17 @@ if (BUILD_GUI)
         NAMES libyaml-cpp
         PATHS ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/yaml-cpp/lib
               /usr/lib64 /usr/lib /usr/local/lib64 /usr/local)
+    find_package(HDF5
+        COMPONENTS
+          CXX
+         REQUIRED
+    )
+    set(VESPUCCI_INCLUDE_DIRS ${VESPUCCI_INCLUDE_DIRS} ${HDF5_INCLUDE_DIRS})
+    set(VESPUCCI_LIBRARIES ${VESPUCCI_LIBRARIES} ${HDF5_LIBRARIES})
     include_directories(${VESPUCCI_INCLUDE_DIRS})
     message(STATUS ${VESPUCCI_INCLUDE_DIRS})
+        
+
 endif()
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${LIBVESPUCCI_INCLUDE_DIRS})
@@ -306,11 +315,16 @@ endforeach()
 
 # LIBVESPUCCI_SRCS is set in subdirs
 add_library(libvespucci ${LIBVESPUCCI_SRCS})
+target_link_libraries(libvespucci
+    ${LIBVESPUCCI_LIBRARES})
+
 if(BUILD_GUI)
     add_executable(vespucci ${VESPUCCI_SRCS})
     target_link_libraries(vespucci
+        libvespucci
         ${LIBVESPUCCI_LIBRARIES}
-        libvespucci)
+        ${VESPUCCI_LIBRARIES}
+    )
     set_target_properties(vespucci
         PROPERTIES
         VERSION 1.1
@@ -319,8 +333,6 @@ if(BUILD_GUI)
     install (TARGETS vespucci 
         RUNTIME DESTINATION bin)
 endif()
-target_link_libraries(libvespucci
-    ${LIBVESPUCCI_LIBRARES})
 set_target_properties(libvespucci
     PROPERTIES
     VERSION 1.1
