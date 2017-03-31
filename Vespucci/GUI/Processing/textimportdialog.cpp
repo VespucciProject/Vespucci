@@ -20,11 +20,11 @@ TextImportDialog::~TextImportDialog()
 
 void TextImportDialog::on_browseButton_clicked()
 {
-    QStringList filenames = QFileDialog::getOpenFileNames(this, "Select input files", workspace_->directory());
-    if (filenames.size()){
+    QStringList filenames_ = QFileDialog::getOpenFileNames(this, "Select input files", workspace_->directory());
+    if (filenames_.size()){
         ui->filenameListWidget->clear();
-        ui->filenameListWidget->addItems(filenames);
-        QFileInfo fi(filenames.first());
+        ui->filenameListWidget->addItems(filenames_);
+        QFileInfo fi(filenames_.first());
         QString name = fi.baseName();
         ui->nameLineEdit->setText(name);
     }
@@ -40,14 +40,16 @@ void TextImportDialog::on_buttonBox_accepted()
     bool ok = true;
     arma::uword start_row = ui->startRowSpinBox->value() - 1;
     arma::uword abs_col = ui->abscissaColumnSpinBox->value() - 1;
-    arma::uword spec_col = ui->abscissaColumnSpinBox->value() - 1;
+    arma::uword spec_col = ui->spectraColumnSpinBox->value() - 1;
     QString name = ui->nameLineEdit->text();
-    for (int i = 0; ok && (i < ui->filenameListWidget->count()); ++i){
-        std::string filename = ui->filenameListWidget->item(i)->text().toStdString();
-        ok = TextImport::ImportText(filename, temp_spectra, abscissa, start_row, abs_col, spec_col, transpose, plural);
+    for (auto filename : filenames_){
+        ok = TextImport::ImportText(filename.toStdString(), temp_spectra, abscissa, start_row, abs_col, spec_col, transpose, plural);
         if (ok){
             try {
-                spectra = arma::join_horiz(spectra, temp_spectra);
+                if (!spectra.n_elem)
+                    spectra = temp_spectra;
+                else
+                    spectra = arma::join_horiz(spectra, temp_spectra);
             }catch(...){
                 ok = false;
             }
@@ -59,6 +61,7 @@ void TextImportDialog::on_buttonBox_accepted()
         arma::vec y = x;
         QSharedPointer<VespucciDataset> dataset(new VespucciDataset(name, workspace_->main_window(), workspace_));
         dataset->SetData(spectra, abscissa, x, y);
+        dataset->SetName(name); //double check that SetData doesn't hurt name...
         workspace_->AddDataset(dataset);
     }
     else{

@@ -24,6 +24,7 @@ private slots:
 private:
     Ui::TextImportDialog *ui;
     QSharedPointer<VespucciWorkspace> workspace_;
+    QStringList filenames_;
 };
 
 #endif // TEXTIMPORTDIALOG_H
