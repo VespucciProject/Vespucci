@@ -94,7 +94,7 @@ bool TextImport::CheckFileValidity(std::string filename, bool &comma_decimals)
 /// \return
 /// May throw exceptions or give improper results. Not intended for use in GUI
 /// programs. See textimportqpd.h in Vespucci
-bool TextImport::ImportWideText(const std::__cxx11::string &filename,
+bool TextImport::ImportWideText(const std::string &filename,
                                 arma::mat &spectra,
                                 arma::vec &abscissa,
                                 arma::vec &x, arma::vec &y,
@@ -239,7 +239,7 @@ bool TextImport::ImportMultiplePoints(std::map<std::pair<int, int>, std::string>
 /// \param y
 /// \return
 ///
-bool TextImport::ImportWitec(const std::__cxx11::string &filename,
+bool TextImport::ImportWitec(const std::string &filename,
                              double x_start,
                              double y_start,
                              double x_end,
@@ -308,7 +308,7 @@ void TextImport::GenerateSpatialData(double x_start, double y_start, double x_en
 /// \param swap_spatial
 /// \return
 ///
-bool TextImport::ImportLongText(const std::__cxx11::string &filename, arma::mat &spectra, arma::mat &abscissa, arma::vec &x, arma::vec &y, bool swap_spatial)
+bool TextImport::ImportLongText(const std::string &filename, arma::mat &spectra, arma::mat &abscissa, arma::vec &x, arma::vec &y, bool swap_spatial)
 {
     arma::mat all_data;
     try{
