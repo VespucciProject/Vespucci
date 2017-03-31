@@ -20,11 +20,8 @@
 #ifndef QUANTIFICATION_H
 #define QUANTIFICATION_H
 #include <Math/Accessory/accessory.h>
-#include "Global/libvespucci.h"
-#include "Math/Quantification/bandwidth.h"
+#include "libvespucci.h"
 #include "Math/Quantification/correlation.h"
-#include "Math/Quantification/integration.h"
-#include "Math/Quantification/maximum.h"
 
 namespace Vespucci{
     namespace Math{

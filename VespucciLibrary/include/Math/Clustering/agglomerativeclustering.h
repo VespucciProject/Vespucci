@@ -19,7 +19,7 @@
 *******************************************************************************/
 #ifndef AGGLOMERATIVECLUSTERING_H
 #define AGGLOMERATIVECLUSTERING_H
-#include "Global/libvespucci.h"
+#include "libvespucci.h"
 #include <mlpack/core.hpp>
 #include "Math/Accessory/distancemetricwrapper.h"
 #include "Math/Clustering/ahcanode.h"

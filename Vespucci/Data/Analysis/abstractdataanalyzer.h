@@ -37,10 +37,6 @@ public:
     virtual void PeakStatistics(const QString &name,
                                 double &left_bound,
                                 double &right_bound) = 0;
-    virtual void FitPeak(const QString &name,
-                         const QString &peak_shape,
-                         double &left_bound,
-                         double &right_bound) = 0;
     virtual void BandRatio(const QString &name,
                            double &first_left_bound,
                            double &first_right_bound,

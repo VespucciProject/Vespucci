@@ -23,20 +23,21 @@
 #if !defined( SWIG )
     // SWIG should not see #inlcude<armadillo> as it can not handle it
     #include <mlpack/core.hpp>
-    #include "Global/libvespucci.h"
+    #include "libvespucci.h"
 #endif
+#include <string>
 #include <map>
 
 namespace TextImport
 {
 
-    VESPUCCI_EXPORT bool ImportWideText(std::string filename,
+    VESPUCCI_EXPORT bool ImportWideText(const std::string &filename,
                         arma::mat &spectra,
                         arma::vec &abscissa,
                         arma::vec &x, arma::vec &y,
                         bool swap_spatial);
 
-    VESPUCCI_EXPORT bool ImportLongText(std::string filename,
+    VESPUCCI_EXPORT bool ImportLongText(const std::string &filename,
                                         arma::mat &spectra,
                                         arma::mat &abscissa,
                                         arma::vec &x, arma::vec &y,
@@ -49,7 +50,7 @@ namespace TextImport
                               arma::vec &abscissa,
                               arma::vec &x, arma::vec &y);
 
-    VESPUCCI_EXPORT bool ImportWitec(std::string filename,
+    VESPUCCI_EXPORT bool ImportWitec(const std::string &filename,
                                      double x_start,
                                      double y_start,
                                      double x_end,
@@ -69,6 +70,18 @@ namespace TextImport
                                              arma::uword y_count,
                                              arma::vec &x,
                                              arma::vec &y);
+    VESPUCCI_EXPORT bool ImportTxtXY(const std::string &filename,
+                                     arma::vec &spectrum,
+                                     arma::vec &abscissa,
+                                     std::map<std::string, std::string> &metadata);
+    VESPUCCI_EXPORT bool ImportText(const std::string &filename,
+                                    arma::mat &spectra,
+                                    arma::vec &abscissa,
+                                    arma::uword start_row=0,
+                                    arma::uword abs_col=0,
+                                    arma::uword spec_col=1,
+                                    bool transpose = false,
+                                    bool plural = false);
 }
 
 #endif // TEXTIMPORT_H

@@ -18,7 +18,7 @@
     along with Vespucci.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 #include "Data/Import/binaryimport.h"
-#include "Global/vespucci.h"
+#include "vespucci.h"
 
 #include <H5Cpp.h>
 bool BinaryImport::ImportVespucciBinary(std::string filename,

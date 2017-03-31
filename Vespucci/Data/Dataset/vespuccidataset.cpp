@@ -744,9 +744,10 @@ void VespucciDataset::PeakIntensityNormalize(double left_bound, double right_bou
 {
     SetOldCopies();
     vec positions;
-    vec peak_maxes = Vespucci::Math::Quantification::FindPeakMaxMat(spectra_, abscissa_, left_bound, right_bound, positions);
+    uword left = abs(abscissa_ - left_bound * ones(abscissa_.n_rows)).index_min();
+    uword right = abs(abscissa_ - right_bound * (abscissa_.n_rows)).index_max();
     for (uword j = 0; j < spectra_.n_cols; ++j){
-        spectra_.col(j) /= peak_maxes(j);
+        spectra_.col(j) /= spectra_.col(j).rows(left, right).max();
     }
     last_operation_ = "Peak intensity normalize";
     operations_ << "PeakIntensityNormalize("
@@ -1743,18 +1744,6 @@ void VespucciDataset::PeakStatistics(const QString &name, double &left_bound, do
                    + QString::number(right_bound) + ")";
 }
 
-void VespucciDataset::FitPeak(const QString &name, const QString &peak_shape, double &left_bound, double &right_bound)
-{
-    state_changed_ = true;
-    QSharedPointer<UnivariateData> univariate_data(new UnivariateData(name));
-    try{
-        univariate_data->Apply(peak_shape, left_bound, right_bound, spectra_, abscissa_);
-    }catch (exception e){
-        main_window_->DisplayExceptionWarning(e);
-    }
-    AddAnalysisResult(univariate_data);
-    workspace_->UpdateModel();
-}
 
 ///
 /// \brief VespucciDataset::BandRatio

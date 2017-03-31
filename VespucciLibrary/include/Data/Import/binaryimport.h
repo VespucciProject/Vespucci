@@ -22,7 +22,7 @@
 #if !defined( SWIG )
     // SWIG should not see #inlcude<armadillo> as it can not handle it
     #include <mlpack/core.hpp>
-    #include "Global/libvespucci.h"
+    #include "libvespucci.h"
 #endif
 
 namespace BinaryImport

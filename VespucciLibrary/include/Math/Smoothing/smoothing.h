@@ -21,7 +21,7 @@
 #ifndef SMOOTHING_H
 #define SMOOTHING_H
 #include <Math/Accessory/accessory.h>
-#include <Global/libvespucci.h>
+#include <libvespucci.h>
 #include <Math/Smoothing/FIR.h>
 #include <Math/Smoothing/nonlinear.h>
 #include <Math/Smoothing/whittaker.h>

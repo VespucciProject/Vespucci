@@ -212,7 +212,6 @@ void MacroParser::ExecuteCommand(QString command, QStringList params)
     }
     else if (command == "RollingBallBaseline")
         dataset_->RollingBallBaseline(params[0].toInt(), params[1].toInt());
-	else; //Do nothing
 }
 
 bool ToBool(const QString &param) {

@@ -21,7 +21,7 @@
 #define ACCESSORY_IMPL_H
 //Implementation of template functions
 #include <Math/Accessory/accessory.h>
-#include <Global/libvespucci.h>
+#include <libvespucci.h>
 namespace Vespucci
 {
     namespace Math

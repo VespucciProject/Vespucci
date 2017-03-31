@@ -105,6 +105,9 @@ void MapResizeDialog::on_buttonBox_accepted()
         length_px = std::round((length / 2.54) * screen_->logicalDotsPerInchX());
         height_px = std::round((height / 2.54) * screen_->logicalDotsPerInchY());
     }
+    else{
+        return;
+    }
 
     plot_->axisRect()->setMinimumSize(length_px, height_px);
     plot_->axisRect()->setMaximumSize(length_px, height_px);

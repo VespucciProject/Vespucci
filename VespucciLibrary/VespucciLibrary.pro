@@ -63,16 +63,12 @@ SOURCES +=\
     src/Math/DimensionReduction/svds.cpp \
     src/Math/DimensionReduction/VCA.cpp \
     src/Math/Normalization/normalization.cpp \
-    src/Math/Quantification/bandwidth.cpp \
-    src/Math/Quantification/integration.cpp \
-    src/Math/Quantification/maximum.cpp \
     src/Math/Smoothing/FIR.cpp \
     src/Math/Smoothing/nonlinear.cpp \
     src/Math/Smoothing/whittaker.cpp \
     src/Math/Transform/cwt.cpp \
     src/Math/PeakFinding/peakfinding.cpp \
     src/Math/Fitting/linleastsq.cpp \
-    src/Global/vespucci.cpp \
     src/Math/Transform/fft.cpp \
     src/Math/Quantification/correlation.cpp \
     src/Math/Quantification/quantification.cpp \
@@ -86,11 +82,12 @@ SOURCES +=\
     src/Math/Accessory/Faddeeva.cpp \
     src/Math/Baseline/rollingball.cpp \
     src/Math/Smoothing/denoise.cpp \
-    src/Math/Clustering/kmeanswrapper.cpp
+    src/Math/Clustering/kmeanswrapper.cpp \
+    src/vespucci.cpp
 
 
 HEADERS  += \
-    include/Global/enums.h \
+    include/enums.h \
     include/Data/Import/binaryimport.h \
     include/Data/Import/textimport.h \
     include/Math/VespucciMath.h \
@@ -103,15 +100,12 @@ HEADERS  += \
     include/Math/PeakFinding/peakfinding.h \
     include/Math/Accessory/accessory_impl.h \
     include/Math/Fitting/linleastsq.h \
-    include/Global/vespucci.h \
-    include/Global/libvespucci.h \
+    include/vespucci.h \
+    include/libvespucci.h \
     include/Math/Transform/fft.h \
     include/Math/Smoothing/FIR.h \
     include/Math/Smoothing/whittaker.h \
     include/Math/Smoothing/nonlinear.h \
-    include/Math/Quantification/integration.h \
-    include/Math/Quantification/maximum.h \
-    include/Math/Quantification/bandwidth.h \
     include/Math/Quantification/correlation.h \
     include/Math/Stats/confidenceinterval.h \
     include/Math/PeakFinding/kernelpeakfinding.h \
@@ -123,7 +117,10 @@ HEADERS  += \
     include/Math/Accessory/Faddeeva.h \
     include/Math/Baseline/rollingball.h \
     include/Math/Smoothing/denoise.h \
-    include/Math/Clustering/kmeanswrapper.h
+    include/Math/Clustering/kmeanswrapper.h \
+    include/vespucci.h \
+    include/libvespucci.h \
+    include/enums.h
 
 #For all platforms:
 INCLUDEPATH += $$PWD/include
@@ -235,10 +232,6 @@ macx{
     INCLUDEPATH += $$PWD/../../hdf5/include
     DEPENDPATH += $$PWD/../../hdf5/include
 
-    INCLUDEPATH += $$PWD/../../quazip/include
-    DEPENDPATH += $$PWD/../../quazip/include
-    PRE_TARGETDEPS += $$PWD/../../quazip/lib/libquazip.a
-
     LIBS += -L$$PWD/../../yaml-cpp/lib/ -lyaml-cpp
     INCLUDEPATH += $$PWD/../../yaml-cpp/include
     DEPENDPATH += $$PWD/../../yaml-cpp/include
@@ -288,11 +281,6 @@ win32:!win32-g++{
 
     INCLUDEPATH += C:/Libraries/boost_1_60_0
     DEPENDPATH += C:/Libraries/boost_1_60_0
-
-    LIBS += -L$$PWD/../../Vespucci_dependencies/quazip/lib/ -lquazip
-    INCLUDEPATH += $$PWD/../../Vespucci_dependencies/quazip/include
-    DEPENDPATH += $$PWD/../../Vespucci_dependencies/quazip/include
-    PRE_TARGETDEPS += $$PWD/../../Vespucci_dependencies/quazip/lib/quazip.lib
 
     LIBS += -L$$PWD/../../Vespucci_dependencies/yaml-cpp/lib/ -llibyaml-cppmdd
     INCLUDEPATH += $$PWD/../../Vespucci_dependencies/yaml-cpp/include

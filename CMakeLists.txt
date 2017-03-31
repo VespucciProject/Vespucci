@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
+set (CMAKE_CXX_STANDARD 11)
 project(vespucci CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
 option(BUILD_GUI "Build the GUI application, set to OFF to build only Library" ON)
@@ -86,36 +87,30 @@ endif()
 #   BOOST_LIBRARYDIR - library directory for Boost
 #   MATHJAX_ROOT - root of MathJax installation
 
-find_package(Armadillo 4.200.0 REQUIRED)
+find_package(Armadillo 7.200.0 REQUIRED)
 
-# On Windows, Armadillo should be using LAPACK and BLAS but we still need to
-# link against it.  We don't want to use the FindLAPACK or FindBLAS modules
-# because then we are required to have a FORTRAN compiler (argh!) so we will try
-# and find LAPACK and BLAS ourselves, using a slightly modified variant of the
-# script Armadillo uses to find these.
-if (WIN32)
-  find_library(LAPACK_LIBRARY
-      NAMES lapack liblapack lapack_win32_MT lapack_win32
-      PATHS "C:/Program Files/Armadillo"
-      PATH_SUFFIXES "examples/lib_win32/")
+#force link lapack and blas,(if ARMA_USE_WRAPPER could be turned off TODO:check )
+find_library(LAPACK_LIBRARY
+  NAMES lapack liblapack lapack_win32_MT lapack_win32
+  PATHS "C:/Program Files/Armadillo"
+  PATH_SUFFIXES "examples/lib_win32/")
 
-  if (NOT LAPACK_LIBRARY)
-    message(FATAL_ERROR "Cannot find LAPACK library (.lib)!")
-  endif ()
-
-  find_library(BLAS_LIBRARY
-      NAMES blas libblas blas_win32_MT blas_win32
-      PATHS "C:/Program Files/Armadillo"
-      PATH_SUFFIXES "examples/lib_win32/")
-
-  if (NOT BLAS_LIBRARY)
-    message(FATAL_ERROR "Cannot find BLAS library (.lib)!")
-  endif ()
-
-  # Piggyback LAPACK and BLAS linking into Armadillo link.
-  set(ARMADILLO_LIBRARIES
-       ${ARMADILLO_LIBRARIES} ${BLAS_LIBRARY} ${LAPACK_LIBRARY})
+if (NOT LAPACK_LIBRARY)
+message(FATAL_ERROR "Cannot find LAPACK library (.lib)!")
 endif ()
+
+find_library(BLAS_LIBRARY
+  NAMES blas libblas blas_win32_MT blas_win32
+  PATHS "C:/Program Files/Armadillo"
+  PATH_SUFFIXES "examples/lib_win32/")
+
+if (NOT BLAS_LIBRARY)
+message(FATAL_ERROR "Cannot find BLAS library (.lib)!")
+endif ()
+
+# Piggyback LAPACK and BLAS linking into Armadillo link.
+set(ARMADILLO_LIBRARIES
+   ${ARMADILLO_LIBRARIES} ${BLAS_LIBRARY} ${LAPACK_LIBRARY})
 
 # Unfortunately this configuration variable is necessary and will need to be
 # updated as time goes on and new versions are released.
@@ -175,6 +170,9 @@ find_path(MLPACK_INCLUDE_DIR
   NAMES core.hpp prereqs.hpp
   PATHS "$ENV{ProgramFiles}/mlpack/" 
          /usr/local/include/
+         /usr/local/include/mlpack
+         /usr/include
+         /usr/include/mlpack
          ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/mlpack
   REQUIRED
 )
@@ -204,18 +202,23 @@ if (BUILD_GUI)
          REQUIRED
     )
 
-    set(LIBVESPUCCI_INCLUDE_DIRS ${LIBVESPUCCI_INCLUDE_DIRS} 
+    set(VESPUCCI_INCLUDE_DIRS ${VESPUCCI_INCLUDE_DIRS} 
         ${Qt5Core_INCLUDE_DIRS}
         ${Qt5Gui_INCLUDE_DIRS}
         ${Qt5Svg_INCLUDE_DIRS}
         ${Qt5Widgets_INCLUDE_DIRS}
         ${Qt5PrintSupport_INCLUDE_DIRS})
-    set(LIBVESPUCCI_LIBRARIES ${LIBVESPUCCI_LIBRARIES} 
+    set(VESPUCCI_LIBRARIES ${VESPUCCI_LIBRARIES} 
         ${Qt5Core_LIBRARIES}
         ${Qt5Gui_LIBRARIES}
         ${Qt5Svg_LIBRARES}
         ${Qt5Widgets_LIBRARIES}
         ${Qt5PrintSupport_LIBRARIES})
+    
+    #CMake Qt things
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTOUIC ON)
+    set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
     find_path(EMFENGINE_INCLUDE_DIR
         NAMES EmfEngine.h emfengine.h
@@ -225,13 +228,32 @@ if (BUILD_GUI)
     )
 
     find_library(EMFENGINE_LIBRARY
-        NAMES emfengine
+        NAMES emfengine EmfEngine
         PATHS /usr/lib64 /usr/lib /usr/local/lib64 /usr/local/
-        ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/EmfEngine
+        ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/EmfEngine/lib
+        REQUIRED
     )
     set(VESPUCCI_INCLUDE_DIRS ${VESPUCCI_INCLUDE_DIRS} ${EMFENGINE_INCLUDE_DIR})
-    set(VESPUCCI_LIBRARIES ${VESPUCCI_LIBRARIES} ${EMF_ENGINE_LIBRARY})
+    set(VESPUCCI_LIBRARIES ${VESPUCCI_LIBRARIES} ${EMFENGINE_LIBRARY})
+    if (NOT WIN32) #libemf only required for non windows
+        find_path(LIBEMF_INCLUDE_DIR
+            NAMES emf.h
+            PATHS /usr/include/libemf /usr/include /usr/local/include
+            /usr/local/include/libemf
+            ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/libemf/include/libemf
+            REQUIRED
+        )
 
+        find_library(LIBEMF_LIBRARY
+            NAMES emf EMF
+            PATHS /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local
+            ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/libemf/lib
+            REQUIRED
+        )
+        set(VESPUCCI_INCLUDE_DIRS ${VESPUCCI_INCLUDE_DIRS} ${LIBEMF_INCLUDE_DIR}
+            ${LIBEMF_INCLUDE_DIR}/..)
+        set(VESPUCCI_LIBRARIES ${VESPUCCI_LIBRARIES} ${LIBEMF_LIBRARY})
+    endif()
     find_path(YAMLCPP_INCLUDE_DIR
         NAMES yaml.h
         PATHS ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/yaml-cpp
@@ -241,6 +263,17 @@ if (BUILD_GUI)
         NAMES libyaml-cpp
         PATHS ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/yaml-cpp/lib
               /usr/lib64 /usr/lib /usr/local/lib64 /usr/local)
+    find_package(HDF5
+        COMPONENTS
+          CXX
+         REQUIRED
+    )
+    set(VESPUCCI_INCLUDE_DIRS ${VESPUCCI_INCLUDE_DIRS} ${HDF5_INCLUDE_DIRS})
+    set(VESPUCCI_LIBRARIES ${VESPUCCI_LIBRARIES} ${HDF5_LIBRARIES})
+    include_directories(${VESPUCCI_INCLUDE_DIRS})
+    message(STATUS ${VESPUCCI_INCLUDE_DIRS})
+        
+
 endif()
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${LIBVESPUCCI_INCLUDE_DIRS})
@@ -252,10 +285,6 @@ if (WIN32)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 else ()
-  # If not on Windows, put them under more standard UNIX-like places.  This is
-  # necessary, otherwise they would all end up in
-  # ${CMAKE_BINARY_DIR}/src/mlpack/methods/... or somewhere else random like
-  # that.
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/)
@@ -280,11 +309,16 @@ endforeach()
 
 # LIBVESPUCCI_SRCS is set in subdirs
 add_library(libvespucci ${LIBVESPUCCI_SRCS})
+target_link_libraries(libvespucci
+    ${LIBVESPUCCI_LIBRARES})
+target_compile_definitions(libvespucci PUBLIC -DVESPUCCI_LIBRARY) #to trigger symbol export
 if(BUILD_GUI)
     add_executable(vespucci ${VESPUCCI_SRCS})
     target_link_libraries(vespucci
+        libvespucci
         ${LIBVESPUCCI_LIBRARIES}
-        libvespucci)
+        ${VESPUCCI_LIBRARIES}
+    )
     set_target_properties(vespucci
         PROPERTIES
         VERSION 1.1
@@ -293,8 +327,6 @@ if(BUILD_GUI)
     install (TARGETS vespucci 
         RUNTIME DESTINATION bin)
 endif()
-target_link_libraries(libvespucci
-    ${LIBVESPUCCI_LIBRARES})
 set_target_properties(libvespucci
     PROPERTIES
     VERSION 1.1

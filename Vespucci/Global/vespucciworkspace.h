@@ -25,11 +25,11 @@
 #include "Data/Dataset/vespuccidataset.h"
 
 #include "Math/VespucciMath.h"
-#include "Global/vespucci.h"
+#include "vespucci.h"
 #include <qcustomplot.h>
 #include "GUI/mainwindow.h"
 #include "GUI/QAbstractItemModel/datasettreemodel.h"
-#include "Global/enums.h"
+#include "enums.h"
 #include "Global/datamodel.h"
 #include "Global/global.h"
 #include "Data/Analysis/analysisresults.h"

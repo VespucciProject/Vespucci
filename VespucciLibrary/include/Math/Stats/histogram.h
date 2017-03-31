@@ -19,15 +19,15 @@
 *******************************************************************************/
 #ifndef HISTOGRAM_H
 #define HISTOGRAM_H
-#include "Global/libvespucci.h"
+#include "libvespucci.h"
 #include <mlpack/core.hpp>
 namespace Vespucci{
     namespace Math{
         namespace Stats{
             VESPUCCI_EXPORT arma::uvec GenerateHistogram(const arma::mat &data,
                                                         arma::vec &edges,
-                                                        uint bins = 0);
-            VESPUCCI_EXPORT uint EstimateBinCount(const arma::mat &data);
+                                                        unsigned int bins = 0);
+            VESPUCCI_EXPORT unsigned int EstimateBinCount(const arma::mat &data);
 
         }
     }

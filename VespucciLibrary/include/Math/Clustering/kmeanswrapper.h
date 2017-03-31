@@ -19,7 +19,7 @@
 *******************************************************************************/
 #ifndef KMEANSWRAPPER_H
 #define KMEANSWRAPPER_H
-#include "Global/libvespucci.h"
+#include "libvespucci.h"
 #include <mlpack/core.hpp>
 
 namespace Vespucci{
