@@ -1,5 +1,6 @@
 set(SOURCES
     quantification.cpp
+    correlation.cpp
 )
 set(DIR_SRCS)
 foreach(file ${SOURCES})

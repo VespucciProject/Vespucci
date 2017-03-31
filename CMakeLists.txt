@@ -87,36 +87,30 @@ endif()
 #   BOOST_LIBRARYDIR - library directory for Boost
 #   MATHJAX_ROOT - root of MathJax installation
 
-find_package(Armadillo 4.200.0 REQUIRED)
+find_package(Armadillo 7.200.0 REQUIRED)
 
-# On Windows, Armadillo should be using LAPACK and BLAS but we still need to
-# link against it.  We don't want to use the FindLAPACK or FindBLAS modules
-# because then we are required to have a FORTRAN compiler (argh!) so we will try
-# and find LAPACK and BLAS ourselves, using a slightly modified variant of the
-# script Armadillo uses to find these.
-if (WIN32)
-  find_library(LAPACK_LIBRARY
-      NAMES lapack liblapack lapack_win32_MT lapack_win32
-      PATHS "C:/Program Files/Armadillo"
-      PATH_SUFFIXES "examples/lib_win32/")
+#force link lapack and blas,(if ARMA_USE_WRAPPER could be turned off TODO:check )
+find_library(LAPACK_LIBRARY
+  NAMES lapack liblapack lapack_win32_MT lapack_win32
+  PATHS "C:/Program Files/Armadillo"
+  PATH_SUFFIXES "examples/lib_win32/")
 
-  if (NOT LAPACK_LIBRARY)
-    message(FATAL_ERROR "Cannot find LAPACK library (.lib)!")
-  endif ()
-
-  find_library(BLAS_LIBRARY
-      NAMES blas libblas blas_win32_MT blas_win32
-      PATHS "C:/Program Files/Armadillo"
-      PATH_SUFFIXES "examples/lib_win32/")
-
-  if (NOT BLAS_LIBRARY)
-    message(FATAL_ERROR "Cannot find BLAS library (.lib)!")
-  endif ()
-
-  # Piggyback LAPACK and BLAS linking into Armadillo link.
-  set(ARMADILLO_LIBRARIES
-       ${ARMADILLO_LIBRARIES} ${BLAS_LIBRARY} ${LAPACK_LIBRARY})
+if (NOT LAPACK_LIBRARY)
+message(FATAL_ERROR "Cannot find LAPACK library (.lib)!")
 endif ()
+
+find_library(BLAS_LIBRARY
+  NAMES blas libblas blas_win32_MT blas_win32
+  PATHS "C:/Program Files/Armadillo"
+  PATH_SUFFIXES "examples/lib_win32/")
+
+if (NOT BLAS_LIBRARY)
+message(FATAL_ERROR "Cannot find BLAS library (.lib)!")
+endif ()
+
+# Piggyback LAPACK and BLAS linking into Armadillo link.
+set(ARMADILLO_LIBRARIES
+   ${ARMADILLO_LIBRARIES} ${BLAS_LIBRARY} ${LAPACK_LIBRARY})
 
 # Unfortunately this configuration variable is necessary and will need to be
 # updated as time goes on and new versions are released.
@@ -317,7 +311,7 @@ endforeach()
 add_library(libvespucci ${LIBVESPUCCI_SRCS})
 target_link_libraries(libvespucci
     ${LIBVESPUCCI_LIBRARES})
-
+target_compile_definitions(libvespucci PUBLIC -DVESPUCCI_LIBRARY) #to trigger symbol export
 if(BUILD_GUI)
     add_executable(vespucci ${VESPUCCI_SRCS})
     target_link_libraries(vespucci
