@@ -220,6 +220,11 @@ if (BUILD_GUI)
         ${Qt5Svg_LIBRARES}
         ${Qt5Widgets_LIBRARIES}
         ${Qt5PrintSupport_LIBRARIES})
+    
+    #CMake Qt things
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTOUIC ON)
+    set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
     find_path(EMFENGINE_INCLUDE_DIR
         NAMES EmfEngine.h emfengine.h
@@ -229,13 +234,32 @@ if (BUILD_GUI)
     )
 
     find_library(EMFENGINE_LIBRARY
-        NAMES emfengine
+        NAMES emfengine EmfEngine
         PATHS /usr/lib64 /usr/lib /usr/local/lib64 /usr/local/
-        ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/EmfEngine
+        ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/EmfEngine/lib
+        REQUIRED
     )
     set(VESPUCCI_INCLUDE_DIRS ${VESPUCCI_INCLUDE_DIRS} ${EMFENGINE_INCLUDE_DIR})
-    set(VESPUCCI_LIBRARIES ${VESPUCCI_LIBRARIES} ${EMF_ENGINE_LIBRARY})
+    set(VESPUCCI_LIBRARIES ${VESPUCCI_LIBRARIES} ${EMFENGINE_LIBRARY})
+    if (NOT WIN32) #libemf only required for non windows
+        find_path(LIBEMF_INCLUDE_DIR
+            NAMES emf.h
+            PATHS /usr/include/libemf /usr/include /usr/local/include
+            /usr/local/include/libemf
+            ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/libemf/include/libemf
+            REQUIRED
+        )
 
+        find_library(LIBEMF_LIBRARY
+            NAMES emf EMF
+            PATHS /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local
+            ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/libemf/lib
+            REQUIRED
+        )
+    set(VESPUCCI_INCLUDE_DIRS ${VESPUCCI_INCLUDE_DIRS} ${LIBEMF_INCLUDE_DIR}
+        ${LIBEMF_INCLUDE_DIR}/..)
+        set(VESPUCCI_LIBRARIES ${VESPUCCI_LIBRARIES} ${LIBEMF_LIBRARY})
+    endif()
     find_path(YAMLCPP_INCLUDE_DIR
         NAMES yaml.h
         PATHS ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/yaml-cpp
@@ -245,6 +269,8 @@ if (BUILD_GUI)
         NAMES libyaml-cpp
         PATHS ${CMAKE_SOURCE_DIR}/../Vespucci_dependencies/yaml-cpp/lib
               /usr/lib64 /usr/lib /usr/local/lib64 /usr/local)
+    include_directories(${VESPUCCI_INCLUDE_DIRS})
+    message(STATUS ${VESPUCCI_INCLUDE_DIRS})
 endif()
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${LIBVESPUCCI_INCLUDE_DIRS})
@@ -256,10 +282,6 @@ if (WIN32)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 else ()
-  # If not on Windows, put them under more standard UNIX-like places.  This is
-  # necessary, otherwise they would all end up in
-  # ${CMAKE_BINARY_DIR}/src/mlpack/methods/... or somewhere else random like
-  # that.
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/)
