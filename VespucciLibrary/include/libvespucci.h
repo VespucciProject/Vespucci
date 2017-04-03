@@ -1,9 +1,9 @@
 #ifndef LIBVESPUCCI_H
 #define LIBVESPUCCI_H
-  #if VESPUCCI_LIBRARY 
-    #define VESPUCCI_EXPORT __attribute__((__visibility__("default")))
-  #elif VESPUCCI_LIBRARY && defined _MSC_VER
+  #if VESPUCCI_LIBRARY && defined _MSC_VER
     #define VESPUCCI_EXPORT __declspec(dllexport)
+  #elif VESPUCCI_LIBRARY
+    #define VESPUCCI_EXPORT __attribute__((__visibility__("default")))
   #elif defined _MSC_VER
     #define VESPUCCI_EXPORT __declspec(dllimport)
   #else
