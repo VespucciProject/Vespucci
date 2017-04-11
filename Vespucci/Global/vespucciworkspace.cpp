@@ -33,6 +33,7 @@ VespucciWorkspace::VespucciWorkspace(QString settings_file) :
     directory_ = QDir::homePath();
     CheckSettings();
     data_model_ = new DataModel();
+    color_scale_parent_ = new QCustomPlot();
 
     gradients_ = {
                     {"ColorBrewer BlueGreen", QCPColorGradient::cbBlues},
@@ -303,7 +304,9 @@ QString* VespucciWorkspace::directory_ptr()
 /// User must manually trigger recalculation per map
 void VespucciWorkspace::RemoveColorRange(QString name)
 {
-    if (global_gradients_.contains(name)) global_gradients_.remove(name);
+    if (global_gradients_.contains(name)){
+        global_gradients_.remove(name);
+    }
 }
 
 QStringList VespucciWorkspace::GlobalGradientKeys()
@@ -338,7 +341,8 @@ QCPColorGradient VespucciWorkspace::GetGradient(QString key, int count)
 
 Vespucci::GlobalGradient VespucciWorkspace::GetGlobalGradient(QString key)
 {
-    return global_gradients_.value(key);
+    if (global_gradients_.contains(key)) return global_gradients_[key];
+    else return Vespucci::GlobalGradient(); //with default values and bad range
 }
 
 QStringList VespucciWorkspace::GradientNames(bool include_cluster)

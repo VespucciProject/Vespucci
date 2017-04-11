@@ -43,17 +43,12 @@ MapPlot::MapPlot(QWidget *parent)
 
     addPlottable(color_map_);
 
-    QCPAxisRect *rect = axisRect();
-    plotLayout()->addElement(0, 1, rect);
-    plotLayout()->remove(plotLayout()->element(0, 0));
+    plotLayout()->insertColumn(0);
     plotLayout()->addElement(0, 0, color_scale_);
     color_scale_position_ = MapPlot::ColorScalePosition::left;
 
-
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     color_scale_->setType(QCPAxis::atLeft);
-    addLayer("colorscale");
-    color_scale_->setLayer("colorscale");
     QCPMarginGroup *group = new QCPMarginGroup(this);
     color_scale_->setMarginGroup(QCP::msTop|QCP::msBottom, group);
     axisRect()->setMarginGroup(QCP::msTop|QCP::msBottom, group);
@@ -106,7 +101,7 @@ void MapPlot::SetMapData(const vec &x, const vec &y, const vec &z)
     yAxis->setRange(y_axis_range);
 
     color_scale_->axis()->setNumberPrecision(3);
-    if (z_.max() > 1000 || z_.max() < 0.01)
+    if (z_.max() > 10000 || z_.max() < 0.01)
         color_scale_->axis()->setNumberFormat("ebc");
     else
         color_scale_->axis()->setNumberFormat("gbc");
@@ -120,18 +115,32 @@ void MapPlot::SetColorScale(QCPColorScale *scale)
     replot(QCustomPlot::rpImmediate);
 }
 
-void MapPlot::SetGradient(QCPColorGradient gradient)
+void MapPlot::SetGradient(QCPColorGradient gradient, bool rescale)
 {
     color_map_->setGradient(gradient);
-    color_map_->rescaleDataRange(true);
+    if(rescale){
+        color_map_->rescaleDataRange(true);
+    }
     replot(QCustomPlot::rpImmediate);
 }
 
-void MapPlot::SetGlobalColorGradient(Vespucci::GlobalGradient gradient)
+void MapPlot::SetGlobalColorGradient(const Vespucci::GlobalGradient &gradient)
 {
+    QString label = color_scale_->label();
+    plotLayout()->remove(color_scale_); //should delete, but check for leaks later
+    color_scale_ = new QCPColorScale(this);
+    color_scale_->setLabel(label);
     color_scale_->setDataRange(gradient.range);
     color_scale_->setGradient(gradient.gradient);
-    color_map_->setGradient(gradient.gradient);
+    plotLayout()->addElement(0,0,color_scale_);
+    color_map_->setColorScale(color_scale_);
+    color_scale_position_ = MapPlot::ColorScalePosition::left;
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    color_scale_->setType(QCPAxis::atLeft);
+    QCPMarginGroup *group = new QCPMarginGroup(this);
+    color_scale_->setMarginGroup(QCP::msTop|QCP::msBottom, group);
+    axisRect()->setMarginGroup(QCP::msTop|QCP::msBottom, group);
+    replot(QCustomPlot::rpImmediate);
 }
 
 ///
@@ -262,6 +271,34 @@ void MapPlot::CenterAtZero()
     color_map_->setDataRange(QCPRange(-1.0*extremum, extremum));
     color_scale_->setDataRange(QCPRange(-1.0*extremum, extremum));
     replot(QCustomPlot::rpImmediate);
+}
+
+QCPLayoutElement* MapPlot::ColorScaleElement()
+{
+    switch (color_scale_position_){
+    case ColorScalePosition::right:
+        return plotLayout()->element(0,1);
+    case ColorScalePosition::bottom:
+        return plotLayout()->element(1,0);
+    case ColorScalePosition::top:
+        return plotLayout()->element(0,1);
+    case ColorScalePosition::left: default:
+        return plotLayout()->element(0,0);
+    }
+}
+
+QPair<int, int> MapPlot::ColorScaleCoords()
+{
+    switch (color_scale_position_){
+    case ColorScalePosition::right:
+        return QPair<int,int>(0,1);
+    case ColorScalePosition::bottom:
+        return QPair<int,int>(1,0);
+    case ColorScalePosition::top:
+        return QPair<int,int>(0,1);
+    case ColorScalePosition::left: default:
+        return QPair<int,int>(0,0);
+    }
 }
 
 

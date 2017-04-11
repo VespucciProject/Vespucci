@@ -105,8 +105,7 @@ void MapData::SetGlobalGradient(QString name)
 void MapData::UpdateGlobalGradient()
 {
     Vespucci::GlobalGradient gradient = workspace_->GetGlobalGradient(global_gradient_key_);
-    map_qcp_->setDataRange(gradient.range);
-    map_qcp_->SetGradient(gradient.gradient);
+    map_qcp_->SetGlobalColorGradient(gradient);
 }
 
 QStringList MapData::keys()
@@ -153,7 +152,7 @@ bool MapData::MapWindowVisible()
 /// Creates the image by sending data to the QCustomPlot widgets.
 void MapData::CreateImage(QCPColorGradient color_scheme, bool interpolation, int tick_count)
 {
-    map_qcp_->SetGradient(color_scheme);
+    map_qcp_->SetGradient(color_scheme, true);
     int key_size = map_qcp_->keySize();
     int value_size = map_qcp_->valueSize();
     key_size *= 9;

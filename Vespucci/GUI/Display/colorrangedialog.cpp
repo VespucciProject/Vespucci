@@ -19,6 +19,7 @@
 *******************************************************************************/
 #include "colorrangedialog.h"
 #include "ui_colorrangedialog.h"
+#include <climits>
 
 ColorRangeDialog::ColorRangeDialog(GlobalGradientDialog *parent) :
     QDialog(parent),
@@ -26,12 +27,10 @@ ColorRangeDialog::ColorRangeDialog(GlobalGradientDialog *parent) :
 {
     ui->setupUi(this);
     parent_ = parent;
-    ui->minDoubleSpinBox->setRange(std::numeric_limits<double>::min(),
-                                   std::numeric_limits<double>::max());
-    ui->maxDoubleSpinBox->setRange(std::numeric_limits<double>::min(),
-                                   std::numeric_limits<double>::max());
     ui->minDoubleSpinBox->setValue(0);
+    ui->minDoubleSpinBox->setRange(-DBL_MAX, DBL_MAX);
     ui->maxDoubleSpinBox->setValue(1000);
+    ui->maxDoubleSpinBox->setRange(-DBL_MAX, DBL_MAX);
 }
 
 void ColorRangeDialog::SetGradientNames(QStringList gradient_names)

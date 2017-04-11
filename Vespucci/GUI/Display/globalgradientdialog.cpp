@@ -54,7 +54,7 @@ void GlobalGradientDialog::on_addPushButton_clicked()
     while (workspace_->GradientNames().contains(name))
         name = basename + " (" + QString::number(i++) + ")";
 
-    color_range_dialog_->SetRange(0, 100);
+    //color_range_dialog_->SetRange(0, 100);
     color_range_dialog_->SetName(name, true);
     color_range_dialog_->show();
 }

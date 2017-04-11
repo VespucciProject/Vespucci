@@ -124,6 +124,8 @@ private:
     /// The main window of the program
     MainWindow *main_window_;
 
+    QCustomPlot *color_scale_parent_;
+
     ///
     /// \brief dataset_tree_model_
     /// The model for the dataset list widget.

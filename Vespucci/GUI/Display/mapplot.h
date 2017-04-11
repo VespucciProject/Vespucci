@@ -39,8 +39,8 @@ public:
     enum class ColorScalePosition{top, bottom, left, right};
     void SetMapData(const vec &x, const vec &y, const vec &z);
     void SetColorScale(QCPColorScale *scale);
-    void SetGradient(QCPColorGradient gradient);
-    void SetGlobalColorGradient(Vespucci::GlobalGradient gradient);
+    void SetGradient(QCPColorGradient gradient, bool rescale=true);
+    void SetGlobalColorGradient(const Vespucci::GlobalGradient &gradient);
     void CenterCrosshairs();
     uword GetCrosshairPosition(double &x, double &y, double &z);
     uword GetCrosshairPosition();
@@ -67,6 +67,8 @@ public:
     void MoveHorizontalCrosshair(int units);
     void SaveImage(QString filename);
     void CenterAtZero();
+    QCPLayoutElement *ColorScaleElement();
+    QPair<int, int> ColorScaleCoords();
 signals:
     void SpectrumRequested(size_t index);
     void SpectrumHoldRequested(size_t index);
