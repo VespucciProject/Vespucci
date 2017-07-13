@@ -117,6 +117,7 @@ HEADERS  += \
     include/Math/Fitting/nonlinleastsq.h \
     include/Math/Accessory/Faddeeva.h \
     include/Math/Baseline/rollingball.h \
+    include/Math/Baseline/mconvert.h \
     include/Math/Baseline/goldindec.h \
     include/Math/Smoothing/denoise.h \
     include/Math/Clustering/kmeanswrapper.h \
