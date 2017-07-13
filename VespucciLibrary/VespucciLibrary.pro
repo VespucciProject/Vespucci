@@ -81,6 +81,7 @@ SOURCES +=\
     src/Math/Fitting/nonlinleastsq.cpp \
     src/Math/Accessory/Faddeeva.cpp \
     src/Math/Baseline/rollingball.cpp \
+    src/Math/Baseline/goldindec.cpp \
     src/Math/Smoothing/denoise.cpp \
     src/Math/Clustering/kmeanswrapper.cpp \
     src/vespucci.cpp
@@ -116,6 +117,7 @@ HEADERS  += \
     include/Math/Fitting/nonlinleastsq.h \
     include/Math/Accessory/Faddeeva.h \
     include/Math/Baseline/rollingball.h \
+    include/Math/Baseline/goldindec.h \
     include/Math/Smoothing/denoise.h \
     include/Math/Clustering/kmeanswrapper.h \
     include/vespucci.h \
