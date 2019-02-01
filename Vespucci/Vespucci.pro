@@ -259,8 +259,6 @@ FORMS    += \
     GUI/Processing/thresholddialog.ui \
     GUI/Analysis/vcadialog.ui \
     GUI/scriptdialog.ui \
-    GUI/Analysis/peakfindingdialog.ui \
-    GUI/Analysis/haspeaksdialog.ui \
     GUI/Processing/multiimportdialog.ui \
     GUI/Processing/bulkconversiondialog.ui \
     GUI/Display/reportmessagedialog.ui \
