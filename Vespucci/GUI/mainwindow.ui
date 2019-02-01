@@ -69,7 +69,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -131,13 +131,6 @@
      <addaction name="actionPartial_Least_Squares"/>
      <addaction name="separator"/>
     </widget>
-    <widget class="QMenu" name="menuPeak_Detection">
-     <property name="title">
-      <string>&amp;Peak Detection</string>
-     </property>
-     <addaction name="actionDetect_Peaks"/>
-     <addaction name="actionCalculate_Peak_Populations"/>
-    </widget>
     <widget class="QMenu" name="menuUnivariate_Analysis">
      <property name="title">
       <string>Univariate Analysis</string>
@@ -148,7 +141,6 @@
     </widget>
     <addaction name="menuUnivariate_Analysis"/>
     <addaction name="menuNew_Multivariate_Map"/>
-    <addaction name="menuPeak_Detection"/>
     <addaction name="actionCalculate_Representative_Spectrum"/>
     <addaction name="actionOn_Multiple_Datasets"/>
    </widget>
