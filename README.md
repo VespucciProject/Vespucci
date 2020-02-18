@@ -2,6 +2,7 @@ Vespucci
 ========
 [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/yvo16f9ojkkkxi56?svg=true)](https://ci.appveyor.com/project/dpfoose/vespucci) [!["Travis-CI Build Status"](https://travis-ci.org/VespucciProject/Vespucci.svg?branch=master)](https://travis-ci.org/VespucciProject/Vespucci) 
 
+## *Vespucci is no longer maintained. It should still build via CMake and the binaries of the releases may still work.*
 Vespucci is a free/libre/open-source, cross-platform tool for spectroscopic
 imaging. Vespucci is regularly built on Windows, Mac and Linux operating systems.
 
