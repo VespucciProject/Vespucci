@@ -54,20 +54,21 @@ arma::vec Vespucci::Math::PeakFinding::FindPeaks(arma::vec X,
     dX.elem( find(dX == 0) ).fill(-arma::datum::eps); //to find first of repeated values
     double minimum_magnitude = X.min();
     double left_min = X(0);
-    arma::uword length = X.n_elem;
+    arma::uword length = dX.n_elem; // the length of dX is less one than X
     arma::uword temporary_location = 0;
 
     //Find where derivative changes sign:
     arma::uvec extrema_indices = find( (dX.subvec(0, length - 2) % dX.subvec(1, length - 1) )< 0);
+    extrema_indices = extrema_indices + 1; //from 1 start
     arma::vec X_extrema = X.elem(extrema_indices);
     length = X_extrema.n_elem;
     double temporary_magnitude = minimum_magnitude;
     bool peak_found = false;
-    arma::uword ii;
-    if (X(1) >= X(2))
-        ii = 1;
-    else
-        ii = 2;
+    arma::uword ii, ip;
+
+    ii = 0;
+    ip = 0;
+    peak_locations = uvec(length);
 
     //This loop finds the peak locations
     while (ii < length){
@@ -92,15 +93,18 @@ arma::vec Vespucci::Math::PeakFinding::FindPeaks(arma::vec X,
             peak_found = true;
             std::cout << "peak found!" << std::endl;
             left_min = X_extrema(ii);
-            peak_locations << temporary_location;
+            temporary_location = ii;
+            peak_locations[ip] = temporary_location;
+            ++ip;
         }
-        else if(X(ii) < left_min)
+        else if(X_extrema(ii) > left_min)
             left_min = X_extrema(ii);
 
         ++ii;
 
 
     }
+    peak_locations = peak_locations.head(ip);
     //remove all peaks below the threshold
 
     arma::vec results = arma::zeros(X.n_elem, 1);
